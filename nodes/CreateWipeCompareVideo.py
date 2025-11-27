@@ -60,7 +60,7 @@ class CreateWipeCompareVideo(io.ComfyNode):
                 do_resize = True
 
         if do_resize and resample is not None:
-            img1 = img1.resize(img2.size, resample=resample)
+            img2 = img2.resize(img1.size, resample=resample)
 
         # Ensure same size
         width, height = img2.size
