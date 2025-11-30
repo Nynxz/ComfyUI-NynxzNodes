@@ -1,7 +1,8 @@
-from enum import Enum
 from typing import Callable, Iterable, List, Optional
 
 from comfy_api.latest import io
+from .CompareVideoOptions import CompareVideoOptions
+from ..enums import UpscaleToEnum, ResizeModeEnum, WipeDirectionsEnum
 
 
 class CompareVideo:
@@ -11,16 +12,9 @@ class CompareVideo:
     attributes) — it is not a ComfyUI node itself. Nodes can import and reuse
     these helpers to keep code consistent across multiple node implementations.
     """
-
     # Common upscale/resampling method options shown in the UI
     UPSCALE_METHODS = ["nearest-exact",
                        "bilinear", "area", "bicubic", "lanczos"]
-
-    class WipeDirectionsEnum(Enum):
-        LEFT_TO_RIGHT = "Swipe Left to Right"
-        RIGHT_TO_LEFT = "Swipe Right to Left"
-        TOP_TO_BOTTOM = "Swipe Top to Bottom"
-        BOTTOM_TO_TOP = "Swipe Bottom to Top"
 
     @staticmethod
     def node_inputs() -> List[io.Input]:
@@ -29,57 +23,26 @@ class CompareVideo:
         Accepts a fade_width_default so callers can customize the default.
         """
         return [
-            io.Image.Input("start_image"),
-            io.Image.Input("end_image"),
-            io.Boolean.Input("force_upscale", default=False),
-            io.Float.Input("duration", default=1.0,
-                           min=0.1, max=10.0, step=0.1),
-            io.Float.Input("fps", default=8.0, min=1, max=60, step=1),
+            io.Image.Input("start_image", tooltip="Starting image",
+                           display_name="Start Image"),
+            io.Image.Input("end_image", tooltip="Ending image",
+                           display_name="End Image"),
+            CompareVideoOptions.Input("options", tooltip="Compare Video Options",
+                                      optional=True, display_name="Options"),
+            io.Combo.Input(
+                "upscale_to", options=[e.value for e in UpscaleToEnum], default="Larger Image", tooltip="Choose whether to upscale the start and end images to the larger or smaller of the two images", display_name="Upscale To"),
 
             io.Combo.Input(
-                "upscale_method", options=CompareVideo.UPSCALE_METHODS, default="lanczos"),
+                "scale_mode", options=[e.value for e in ResizeModeEnum], default="contain", tooltip="Choose whether to upscale the start and end images to the larger or smaller of the two images", display_name="Scale Mode"),
+            io.Float.Input("duration", default=1.0,
+                           min=0.1, max=10.0, step=0.1, tooltip="Duration of the compare video in seconds", display_name="Duration (s)"),
+            io.Float.Input("fps", default=8.0, min=1, max=60, step=1,
+                           tooltip="Frames per second of the compare video", display_name="FPS"),
+
+            io.Combo.Input(
+                "upscale_method", options=CompareVideo.UPSCALE_METHODS, default="lanczos", tooltip="Resampling method used when resizing images", display_name="Upscale Method"),
 
         ]
-
-    # ------- small reusable helpers that keep node code tidy -------
-    @staticmethod
-    def to_pil(img):
-        """Convert a comfy node image input (PIL, numpy, or torch) into an RGB PIL.Image
-
-        This function mirrors the existing conversion logic used by the node and
-        centralizes it so it can be re-used by any node.
-        """
-        from PIL import Image
-        import numpy as np
-
-        if isinstance(img, Image.Image):
-            return img.convert("RGB")
-
-        is_torch = hasattr(img, "cpu") and hasattr(img, "numpy")
-        if is_torch:
-            arr = img.cpu().numpy()
-        else:
-            arr = np.asarray(img)
-
-        arr = np.squeeze(arr)
-
-        if arr.ndim == 2:
-            arr = np.stack([arr] * 3, axis=-1)
-
-        if arr.ndim == 3:
-            # support CHW or HWC
-            if arr.shape[0] in (1, 3) and arr.shape[2] not in (1, 3):
-                arr = np.transpose(arr, (1, 2, 0))
-
-        if np.issubdtype(arr.dtype, np.floating):
-            arr = np.clip(arr, 0, 1) * 255
-
-        arr = np.clip(arr, 0, 255).astype(np.uint8)
-
-        if arr.ndim == 3 and arr.shape[2] == 4:
-            arr = arr[..., :3]
-
-        return Image.fromarray(arr)
 
     @staticmethod
     def resample_by_name(method_name: str):
@@ -116,10 +79,10 @@ class CompareVideo:
     def ops_for_direction(direction_value: str) -> List[Callable]:
         """Return the list of ops for a wipe direction string."""
         return {
-            CompareVideo.WipeDirectionsEnum.LEFT_TO_RIGHT.value: [],
-            CompareVideo.WipeDirectionsEnum.RIGHT_TO_LEFT.value: [CompareVideo._op_flip_lr],
-            CompareVideo.WipeDirectionsEnum.TOP_TO_BOTTOM.value: [CompareVideo._op_transpose_hw],
-            CompareVideo.WipeDirectionsEnum.BOTTOM_TO_TOP.value: [CompareVideo._op_transpose_hw, CompareVideo._op_flip_lr],
+            WipeDirectionsEnum.LEFT_TO_RIGHT.value: [],
+            WipeDirectionsEnum.RIGHT_TO_LEFT.value: [CompareVideo._op_flip_lr],
+            WipeDirectionsEnum.TOP_TO_BOTTOM.value: [CompareVideo._op_transpose_hw],
+            WipeDirectionsEnum.BOTTOM_TO_TOP.value: [CompareVideo._op_transpose_hw, CompareVideo._op_flip_lr],
         }[direction_value]
 
     @staticmethod
