@@ -4,15 +4,12 @@
 
 ## Nodes
 
-### Create Wipe Compare Video
 
-![Create Wipe Compare Video](doc/create_wipe_compare_video.gif)
+### Create Compare Video Nodes
+ - Fade Compare Video
+ - Wipe Compare Video
 
-- Directions: Left→Right, Right→Left, Top→Bottom, Bottom→Top.
-
-### Create Fade Compare Video
-
-![Create Fade Compare Video](doc/create_fade_compare_video.gif)
+![Create Fade Compare Video](doc/create_compare_video.png)
 
 ### String Template Parser
 
