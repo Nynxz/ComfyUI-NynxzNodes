@@ -5,7 +5,7 @@ import math
 
 from comfy_api.latest import io
 from .CompareVideoOptions import CompareVideoOptions
-from ..enums import UpscaleToEnum, ResizeModeEnum, WipeDirectionsEnum
+from ..enums import UpscaleToEnum,  WipeDirectionsEnum
 
 
 class CompareVideo:
