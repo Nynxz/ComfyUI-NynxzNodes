@@ -1,7 +1,6 @@
 from comfy_api.latest import ComfyExtension, io
 
 from .nodes.StringTemplateParser import StringTemplateParser
-from .nodes.preview_maker import GalleryLoaderNode, ImagesPreviewMakerNode, PreviewMakerThemePickerNode, VideoPreviewMakerNode
 from .nodes.compare_video import CompareVideoOptionsNode, CreateWipeCompareVideoNode, CreateFadeCompareVideoNode
 
 
@@ -12,12 +11,11 @@ class NynxzCustomNodesExtension(ComfyExtension):
             CreateFadeCompareVideoNode,
             CreateWipeCompareVideoNode,
             StringTemplateParser,
-            VideoPreviewMakerNode,
-            GalleryLoaderNode,
-            ImagesPreviewMakerNode,
-            PreviewMakerThemePickerNode,
         ]
 
 
 async def comfy_entrypoint() -> ComfyExtension:
     return NynxzCustomNodesExtension()
+
+WEB_DIRECTORY = "./js"
+__all__ = ["NynxzCustomNodesExtension", "comfy_entrypoint", "WEB_DIRECTORY"]
