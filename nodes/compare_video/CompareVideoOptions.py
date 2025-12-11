@@ -1,9 +1,6 @@
 from comfy_api.latest import io
-from typing import Optional
+from comfy_api.latest._io import ComfyTypeIO, comfytype
 
-from comfy_api.latest._io import ComfyTypeIO, WidgetInput, comfytype
-
-from custom_nodes.nynxz_custom_nodes.nodes.preview_maker.PreviewMaker import PreviewMaker
 from .utils import hex_to_rgb
 from ..enums import ResizeModeEnum
 
