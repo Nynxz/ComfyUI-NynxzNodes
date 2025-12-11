@@ -22,27 +22,24 @@ class CreateWipeCompareVideoNode(io.ComfyNode):
                     options=[e.value for e in WipeDirectionsEnum],
                     default=WipeDirectionsEnum.LEFT_TO_RIGHT.value,
                 ),
-                io.Int.Input("fade_width", default=20,
-                             min=0, max=100),
             ],
             outputs=[
-                io.Image.Output(id="frames"),
-            ]
+                io.Image.Output(display_name="images", id="frames"),
+                io.Float.Output(display_name="fps", id="fps"),
+            ],
         )
 
     @classmethod
-    def execute(cls,
-                start_image,
-                end_image,
-                upscale_method,
-                scale_mode,
-                upscale_to,
-                duration,
-                fps,
-                wipe_direction,
-                fade_width,
-                options=None,
-                ):
+    def execute(
+        cls,
+        start_image,
+        end_image,
+        upscale_to,
+        duration,
+        time_padding,
+        wipe_direction,
+        options=None,
+    ):
         """
         Creates frames for a comparison wipe video where:
         - Left side shows start_image
@@ -51,6 +48,15 @@ class CreateWipeCompareVideoNode(io.ComfyNode):
         - Optional fade_width for smooth transition
         - Includes all your resizing methods for fairness
         """
+
+        # Extract values from options with fallbacks
+        upscale_method = CompareVideo.get_option_value(
+            options, "upscale_method", "lanczos"
+        )
+        scale_mode = CompareVideo.get_option_value(options, "scale_mode", "contain")
+        fps = CompareVideo.get_option_value(options, "fps", 8.0)
+        fade_width = CompareVideo.get_option_value(options, "fade_width", 20)
+        wipe_angle = CompareVideo.get_option_value(options, "wipe_angle", None)
 
         img1 = tensor_to_pil(start_image)
         img2 = tensor_to_pil(end_image)
@@ -78,10 +84,16 @@ class CreateWipeCompareVideoNode(io.ComfyNode):
         target_size = (w, h)
 
         # Resize both images to the target
-        img1 = enforce_target(resize_fit(
-            img1, target_size, resample_method=resample, mode=scale_mode), target_size, hex_to_rgb(options.background_color if options else "#000000"))
-        img2 = enforce_target(resize_fit(
-            img2, target_size, resample_method=resample, mode=scale_mode), target_size, hex_to_rgb(options.background_color if options else "#000000"))
+        img1 = enforce_target(
+            resize_fit(img1, target_size, resample_method=resample, mode=scale_mode),
+            target_size,
+            hex_to_rgb(options.background_color if options else "#000000"),
+        )
+        img2 = enforce_target(
+            resize_fit(img2, target_size, resample_method=resample, mode=scale_mode),
+            target_size,
+            hex_to_rgb(options.background_color if options else "#000000"),
+        )
 
         # Convert both to float32 numpy arrays
         arr1 = np.array(img1).astype(np.float32)
@@ -90,11 +102,16 @@ class CreateWipeCompareVideoNode(io.ComfyNode):
         frames = []
 
         frames = CompareVideo.create_frames_from_arrays(
-            arr1, arr2, duration, fps, wipe_direction, fade_width
+            arr1,
+            arr2,
+            duration,
+            fps,
+            wipe_direction,
+            wipe_angle=wipe_angle,
+            fade_width=fade_width,
+            time_padding=time_padding,
         )
 
         stacked = torch.stack(frames, dim=0)
 
-        return io.NodeOutput(
-            stacked,
-        )
+        return io.NodeOutput(stacked, fps)
