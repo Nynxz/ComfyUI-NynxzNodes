@@ -1,3 +1,6 @@
+import numpy as np
+import torch
+
 from comfy_api.latest import io
 from comfy_api_nodes.util.conversions import tensor_to_pil
 from .CompareVideo import CompareVideo
@@ -35,8 +38,6 @@ class CreateFadeCompareVideoNode(io.ComfyNode):
                 fps,
                 options=None
                 ):
-        import numpy as np
-        import torch
 
         img1 = tensor_to_pil(start_image)
         img2 = tensor_to_pil(end_image)

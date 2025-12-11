@@ -1,4 +1,7 @@
 from typing import Callable, Iterable, List, Optional
+import numpy as np
+import torch
+import math
 
 from comfy_api.latest import io
 from .CompareVideoOptions import CompareVideoOptions
@@ -65,13 +68,11 @@ class CompareVideo:
     # left-right slicing algorithm for all directions
     @staticmethod
     def _op_flip_lr(x):
-        import numpy as np
 
         return np.fliplr(x)
 
     @staticmethod
     def _op_transpose_hw(x):
-        import numpy as np
 
         return np.transpose(x, (1, 0, 2))
 
@@ -105,8 +106,6 @@ class CompareVideo:
         Inputs are HWC numpy arrays (float or uint8). The function returns a
         list of torch tensors HWC float32 in 0..1 range, stacked per-frame.
         """
-        import numpy as np
-        import torch
 
         # normalize to float32 in 0..255 range (some inputs are already float)
         a = arr_start.astype(np.float32)
@@ -167,8 +166,6 @@ class CompareVideo:
 
         Inputs are HWC numpy arrays; returns a list of torch tensors HWC float32 in 0..1 range.
         """
-        import numpy as np
-        import torch
 
         a = arr_start.astype(np.float32)
         b = arr_end.astype(np.float32)
