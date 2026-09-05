@@ -1,0 +1,5 @@
+# pnpm rejects dependencies published within the last 24h as a supply-chain guard. These two are
+# ours, published from ZenKit's own CI, so the waiting period protects against nothing here.
+minimumReleaseAgeExclude:
+  - '@nynxz/zenkit-ui'
+  - '@nynxz/zenkit-nodekit'
