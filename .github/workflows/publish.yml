@@ -33,7 +33,10 @@ jobs:
             # staging it is what puts the bundle in the package. Never committed.
             - run: git add -f web
 
+            # skip_checkout is required, not cosmetic: the action checks out by default, and
+            # checkout cleans the workspace — removing the gitignored web/ and unstaging it.
             - name: Publish Custom Node
               uses: Comfy-Org/publish-node-action@v1
               with:
                   personal_access_token: ${{ secrets.REGISTRY_ACCESS_TOKEN }}
+                  skip_checkout: 'true'
