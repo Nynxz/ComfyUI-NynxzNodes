@@ -2,19 +2,13 @@ name: Publish to Comfy registry
 on:
     workflow_dispatch:
 
-permissions:
-    issues: write
-
 jobs:
     publish-node:
         name: Publish Custom Node to registry
         runs-on: ubuntu-latest
         if: ${{ github.repository_owner == 'Nynxz' }}
         steps:
-            - name: Check out code
-              uses: actions/checkout@v4
-              with:
-                  submodules: true
+            - uses: actions/checkout@v4
             - uses: pnpm/action-setup@v4
               with:
                   version: 11
@@ -22,21 +16,24 @@ jobs:
               with:
                   node-version: 22
                   cache: pnpm
+            - uses: actions/setup-python@v5
+              with:
+                  python-version: '3.12'
 
-            # The registry package ships web/, so build it here rather than relying on a
-            # committed bundle.
             - run: pnpm install --frozen-lockfile
             - run: pnpm build
             - run: test -f web/main.js
 
-            # web/ is gitignored, and the registry archive only contains git-tracked files —
-            # staging it is what puts the bundle in the package. Never committed.
+            # comfy-cli archives git-TRACKED files only, and web/ is gitignored. Staging is
+            # enough — `git ls-files` reads the index, so nothing is committed or pushed.
             - run: git add -f web
 
-            # skip_checkout is required, not cosmetic: the action checks out by default, and
-            # checkout cleans the workspace — removing the gitignored web/ and unstaging it.
-            - name: Publish Custom Node
-              uses: Comfy-Org/publish-node-action@v1
-              with:
-                  personal_access_token: ${{ secrets.REGISTRY_ACCESS_TOKEN }}
-                  skip_checkout: 'true'
+            - run: pip install comfy-cli
+
+            # Invoked directly rather than via publish-node-action@v1: that action runs its own
+            # checkout with clean:true, which deletes the staged bundle, and its skip_checkout
+            # input does not exist on the v1 tag.
+            - name: Publish to the ComfyUI registry
+              run: comfy node publish --token "$REGISTRY_TOKEN"
+              env:
+                  REGISTRY_TOKEN: ${{ secrets.REGISTRY_ACCESS_TOKEN }}
