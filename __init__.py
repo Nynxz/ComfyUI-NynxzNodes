@@ -1,21 +1,11 @@
-from comfy_api.latest import ComfyExtension, io
+"""ComfyUI-NynxzNodes entry point (V3).
 
-from .nodes.StringTemplateParser import StringTemplateParser
-from .nodes.compare_video import CompareVideoOptionsNode, CreateWipeCompareVideoNode, CreateFadeCompareVideoNode
+ComfyUI loads this module, calls `comfy_entrypoint` to register the nodes, and
+serves `WEB_DIRECTORY` (the built Vue frontend) at /extensions/<pack>/.
+"""
 
+from .nodes import comfy_entrypoint  # noqa: F401
 
-class NynxzCustomNodesExtension(ComfyExtension):
-    async def get_node_list(self) -> list[type[io.ComfyNode]]:
-        return [
-            CompareVideoOptionsNode,
-            CreateFadeCompareVideoNode,
-            CreateWipeCompareVideoNode,
-            StringTemplateParser,
-        ]
+WEB_DIRECTORY = "./web"
 
-
-async def comfy_entrypoint() -> ComfyExtension:
-    return NynxzCustomNodesExtension()
-
-WEB_DIRECTORY = "./js"
-__all__ = ["NynxzCustomNodesExtension", "comfy_entrypoint", "WEB_DIRECTORY"]
+print("[NynxzNodes] loaded")

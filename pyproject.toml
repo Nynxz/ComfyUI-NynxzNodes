@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=70.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "comfyui-nynxz-nodes"
 version = "0.0.4"
@@ -10,14 +14,44 @@ classifiers = []
 dependencies = []
 
 [project.urls]
-Repository = "https://github.com/nynxz-dev/ComfyUI-NynxzNodes"
-BugTracker = "https://github.com/nynxz-dev/ComfyUI-NynxzNodes/issues"
-Documentation = "https://github.com/nynxz-dev/ComfyUI-NynxzNodes/wiki"
-
+Repository = "https://github.com/Nynxz/ComfyUI-NynxzNodes"
+BugTracker = "https://github.com/Nynxz/ComfyUI-NynxzNodes/issues"
+Documentation = "https://github.com/Nynxz/ComfyUI-NynxzNodes/wiki"
 
 [tool.comfy]
 PublisherId = "nynxz"
 DisplayName = "Nynxz's Custom Nodes"
 Icon = "https://avatars.githubusercontent.com/u/60878743?v=4"
 Tags = []
-Repository = "https://github.com/nynxz-dev/ComfyUI-NynxzNodes"
+Repository = "https://github.com/Nynxz/ComfyUI-NynxzNodes"
+# The built frontend must ship in the registry package. It is gitignored, so CI
+# builds and stages it — see .github/workflows/publish.yml.
+includes = ["web"]
+
+[tool.setuptools.package-data]
+"*" = ["*.*"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+extend-exclude = ["web", "reference", "node_modules", "__pycache__"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort (import sorting)
+    "UP",  # pyupgrade (modern syntax)
+    "B",   # flake8-bugbear (likely bugs)
+    "C4",  # flake8-comprehensions
+    "SIM", # flake8-simplify
+    "BLE", # flake8-blind-except (the `# noqa: BLE001` sites opt into this)
+    "RUF", # ruff-specific rules
+]
+# `ruff format` owns code line width; E501 only fires on comments/docstrings it
+# deliberately leaves alone, so linting it here is just noise.
+ignore = ["E501"]
+
+[tool.ruff.format]
+docstring-code-format = true

@@ -1,11 +1,13 @@
-from typing import Callable, Iterable, List, Optional
+import math
+from collections.abc import Callable, Iterable
+from typing import ClassVar
+
 import numpy as np
 import torch
-import math
-
 from comfy_api.latest import io
-from .CompareVideoOptions import CompareVideoOptions
-from ..enums import UpscaleToEnum,  WipeDirectionsEnum
+
+from ._enums import UpscaleToEnum, WipeDirectionsEnum
+from .video_options import CompareVideoOptions
 
 
 class CompareVideo:
@@ -15,9 +17,15 @@ class CompareVideo:
     attributes) — it is not a ComfyUI node itself. Nodes can import and reuse
     these helpers to keep code consistent across multiple node implementations.
     """
+
     # Common upscale/resampling method options shown in the UI
-    UPSCALE_METHODS = ["nearest-exact",
-                       "bilinear", "area", "bicubic", "lanczos"]
+    UPSCALE_METHODS: ClassVar[list[str]] = [
+        "nearest-exact",
+        "bilinear",
+        "area",
+        "bicubic",
+        "lanczos",
+    ]
 
     @staticmethod
     def get_option_value(options, key, default):
@@ -27,24 +35,42 @@ class CompareVideo:
         return default
 
     @staticmethod
-    def node_inputs() -> List[io.Input]:
+    def node_inputs() -> list[io.Input]:
         """Return a list of io.Input objects reused by compare nodes.
 
         Common options now moved to the options node for cleaner interfaces.
         """
         return [
-            io.Image.Input("start_image", tooltip="Starting image",
-                           display_name="Start Image"),
-            io.Image.Input("end_image", tooltip="Ending image",
-                           display_name="End Image"),
-            CompareVideoOptions.Input("options", tooltip="Compare Video Options",
-                                      optional=True, display_name="Options"),
+            io.Image.Input("start_image", tooltip="Starting image", display_name="Start Image"),
+            io.Image.Input("end_image", tooltip="Ending image", display_name="End Image"),
+            CompareVideoOptions.Input(
+                "options", tooltip="Compare Video Options", optional=True, display_name="Options"
+            ),
             io.Combo.Input(
-                "upscale_to", options=[e.value for e in UpscaleToEnum], default="Larger Image", tooltip="Choose whether to upscale the start and end images to the larger or smaller of the two images", display_name="Upscale To"),
-            io.Float.Input("duration", default=1.0, min=0.1, max=10.0, step=0.1,
-                           tooltip="Duration of the compare video in seconds", display_name="Duration (s)"),
-            io.Float.Input("time_padding", default=0.0, min=0.0, max=5.0, step=0.1,
-                           tooltip="Optional time padding (in seconds) added to start and end of the video", display_name="Time Padding (s)"),
+                "upscale_to",
+                options=[e.value for e in UpscaleToEnum],
+                default="Larger Image",
+                tooltip="Choose whether to upscale the start and end images to the larger or smaller of the two images",
+                display_name="Upscale To",
+            ),
+            io.Float.Input(
+                "duration",
+                default=1.0,
+                min=0.1,
+                max=10.0,
+                step=0.1,
+                tooltip="Duration of the compare video in seconds",
+                display_name="Duration (s)",
+            ),
+            io.Float.Input(
+                "time_padding",
+                default=0.0,
+                min=0.0,
+                max=5.0,
+                step=0.1,
+                tooltip="Optional time padding (in seconds) added to start and end of the video",
+                display_name="Time Padding (s)",
+            ),
         ]
 
     @staticmethod
@@ -57,9 +83,13 @@ class CompareVideo:
             "nearest": Image.Resampling.NEAREST,
             "box": Image.Resampling.BOX if hasattr(Image, "BOX") else Image.Resampling.NEAREST,
             "bilinear": Image.Resampling.BILINEAR,
-            "hamming": Image.Resampling.HAMMING if hasattr(Image, "HAMMING") else Image.Resampling.BILINEAR,
+            "hamming": Image.Resampling.HAMMING
+            if hasattr(Image, "HAMMING")
+            else Image.Resampling.BILINEAR,
             "bicubic": Image.Resampling.BICUBIC,
-            "lanczos": Image.Resampling.LANCZOS if hasattr(Image, "LANCZOS") else Image.Resampling.BICUBIC,
+            "lanczos": Image.Resampling.LANCZOS
+            if hasattr(Image, "LANCZOS")
+            else Image.Resampling.BICUBIC,
             "none": None,
         }
         return resample_map.get(method, Image.Resampling.LANCZOS)
@@ -75,12 +105,11 @@ class CompareVideo:
         return np.transpose(x, (1, 0, 2))
 
     @staticmethod
-    def ops_for_angle(angle_degrees: float) -> List[Callable]:
+    def ops_for_angle(angle_degrees: float) -> list[Callable]:
         """Return the list of ops for a wipe angle in degrees.
 
         0° = right, 90° = down, 180° = left, 270° = up
         """
-        import math
 
         # Normalize angle to 0-360
         angle = angle_degrees % 360
@@ -117,13 +146,16 @@ class CompareVideo:
                 return []  # LEFT_TO_RIGHT equivalent
 
     @staticmethod
-    def ops_for_direction(direction_value: str) -> List[Callable]:
+    def ops_for_direction(direction_value: str) -> list[Callable]:
         """Return the list of ops for a wipe direction string."""
         return {
             WipeDirectionsEnum.LEFT_TO_RIGHT.value: [],
             WipeDirectionsEnum.RIGHT_TO_LEFT.value: [CompareVideo._op_flip_lr],
             WipeDirectionsEnum.TOP_TO_BOTTOM.value: [CompareVideo._op_transpose_hw],
-            WipeDirectionsEnum.BOTTOM_TO_TOP.value: [CompareVideo._op_transpose_hw, CompareVideo._op_flip_lr],
+            WipeDirectionsEnum.BOTTOM_TO_TOP.value: [
+                CompareVideo._op_transpose_hw,
+                CompareVideo._op_flip_lr,
+            ],
         }[direction_value]
 
     @staticmethod
@@ -140,7 +172,16 @@ class CompareVideo:
         return arr
 
     @staticmethod
-    def create_frames_from_arrays_angle(arr_start, arr_end, duration: float, fps: float, wipe_angle: float, fade_width: Optional[int] = 20, fade_fraction: float = 0.5, time_padding: float = 0.0):
+    def create_frames_from_arrays_angle(
+        arr_start,
+        arr_end,
+        duration: float,
+        fps: float,
+        wipe_angle: float,
+        fade_width: int | None = 20,
+        fade_fraction: float = 0.5,
+        time_padding: float = 0.0,
+    ):
         """Generate torch tensors frames for the wipe animation from any angle.
 
         Args:
@@ -164,12 +205,11 @@ class CompareVideo:
         dy = math.sin(angle_rad)
 
         # Create coordinate grids
-        y_coords, x_coords = np.meshgrid(
-            np.arange(height), np.arange(width), indexing='ij')
+        y_coords, x_coords = np.meshgrid(np.arange(height), np.arange(width), indexing="ij")
 
         # Calculate distance along the wipe direction for each pixel
         # Project each pixel onto the wipe direction vector
-        if dx != 0:
+        if dx != 0:  # noqa: SIM108 - per-branch comments are clearer than a ternary
             # For non-vertical wipes, use x-projection
             projected = x_coords * dx + y_coords * dy
         else:
@@ -207,24 +247,25 @@ class CompareVideo:
             if fade_width > 0:
                 # Create smooth transition
                 # Pixels are revealed when their normalized projection < progress
-                fade_mask = (normalized_proj > (
-                    progress - fade_fraction_normalized)) & (normalized_proj <= progress)
+                fade_mask = (normalized_proj > (progress - fade_fraction_normalized)) & (
+                    normalized_proj <= progress
+                )
 
                 # For fade region, blend between start and end
                 if np.any(fade_mask):
                     # Calculate blend factor for fade region
                     fade_region_proj = normalized_proj[fade_mask]
-                    blend_factor = (progress - fade_region_proj) / \
-                        fade_fraction_normalized
+                    blend_factor = (progress - fade_region_proj) / fade_fraction_normalized
                     blend_factor = np.clip(blend_factor, 0, 1)
 
                     # Apply blending
-                    out[fade_mask] = (a[fade_mask] * (1 - blend_factor[..., np.newaxis]) +
-                                      b[fade_mask] * blend_factor[..., np.newaxis])
+                    out[fade_mask] = (
+                        a[fade_mask] * (1 - blend_factor[..., np.newaxis])
+                        + b[fade_mask] * blend_factor[..., np.newaxis]
+                    )
 
                 # Set fully revealed pixels to end image
-                solid_reveal = normalized_proj < (
-                    progress - fade_fraction_normalized)
+                solid_reveal = normalized_proj < (progress - fade_fraction_normalized)
                 if np.any(solid_reveal):
                     out[solid_reveal] = b[solid_reveal]
             else:
@@ -244,7 +285,17 @@ class CompareVideo:
         return frames
 
     @staticmethod
-    def create_frames_from_arrays(arr_start, arr_end, duration: float, fps: float, wipe_direction: Optional[str] = None, wipe_angle: Optional[float] = None, fade_width: Optional[int] = 20, fade_fraction: float = 0.5, time_padding: float = 0.0):
+    def create_frames_from_arrays(
+        arr_start,
+        arr_end,
+        duration: float,
+        fps: float,
+        wipe_direction: str | None = None,
+        wipe_angle: float | None = None,
+        fade_width: int | None = 20,
+        fade_fraction: float = 0.5,
+        time_padding: float = 0.0,
+    ):
         """Generate torch tensors frames for the wipe animation from numpy arrays.
 
         Inputs are HWC numpy arrays (float or uint8). The function returns a
@@ -259,7 +310,14 @@ class CompareVideo:
         # Use angle-based approach if angle is provided
         if wipe_angle is not None and wipe_angle >= 0:
             return CompareVideo.create_frames_from_arrays_angle(
-                arr_start, arr_end, duration, fps, wipe_angle, fade_width, fade_fraction, time_padding
+                arr_start,
+                arr_end,
+                duration,
+                fps,
+                wipe_angle,
+                fade_width,
+                fade_fraction,
+                time_padding,
             )
 
         # Otherwise use the original transform-based approach
@@ -272,10 +330,7 @@ class CompareVideo:
         padding_frames = int(time_padding * fps) if time_padding > 0 else 0
 
         # pick ops based on direction
-        if wipe_direction:
-            ops = CompareVideo.ops_for_direction(wipe_direction)
-        else:
-            ops = []
+        ops = CompareVideo.ops_for_direction(wipe_direction) if wipe_direction else []
 
         a_t = CompareVideo.compose_ops(a, ops)
         b_t = CompareVideo.compose_ops(b, ops)
@@ -338,7 +393,9 @@ class CompareVideo:
         return frames
 
     @staticmethod
-    def create_fade_frames_from_arrays(arr_start, arr_end, duration: float, fps: float, time_padding: float = 0.0):
+    def create_fade_frames_from_arrays(
+        arr_start, arr_end, duration: float, fps: float, time_padding: float = 0.0
+    ):
         """Create alpha-blended crossfade frames between arr_start and arr_end.
 
         Inputs are HWC numpy arrays; returns a list of torch tensors HWC float32 in 0..1 range.

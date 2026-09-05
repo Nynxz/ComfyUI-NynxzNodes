@@ -1,13 +1,13 @@
 from PIL import Image, ImageOps
 
-from ..enums import ResizeModeEnum
+from ._enums import ResizeModeEnum
 
 
 def hex_to_rgb(hex_color: str) -> tuple:
     """Convert a hex color string to an RGB tuple."""
-    hex_color = hex_color.lstrip('#')
+    hex_color = hex_color.lstrip("#")
     lv = len(hex_color)
-    return tuple(int(hex_color[i:i + lv // 3], 16) for i in range(0, lv, lv // 3))
+    return tuple(int(hex_color[i : i + lv // 3], 16) for i in range(0, lv, lv // 3))
 
 
 def get_larger_and_smaller_images(img1, img2):
@@ -56,7 +56,7 @@ def resize_fit(img, target_size, resample_method, mode: ResizeModeEnum):
         # same as contain but pads to exact size
         img2 = ImageOps.contain(img, target_size, resample_method)
         padded = Image.new("RGB", target_size, (0, 0, 0))
-        padded.paste(img2, ((tw - img2.width)//2, (th - img2.height)//2))
+        padded.paste(img2, ((tw - img2.width) // 2, (th - img2.height) // 2))
         return padded
 
     elif mode == ResizeModeEnum.CROP_CENTER.value:

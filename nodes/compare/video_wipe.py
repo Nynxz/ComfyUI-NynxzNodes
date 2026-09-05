@@ -1,20 +1,20 @@
 import numpy as np
 import torch
-
 from comfy_api.latest import io
 from comfy_api_nodes.util.conversions import tensor_to_pil
-from ..enums import UpscaleToEnum, WipeDirectionsEnum
-from .CompareVideo import CompareVideo
-from .utils import hex_to_rgb, enforce_target, resize_fit
+
+from ._base import CompareNode
+from ._compare import CompareVideo
+from ._enums import UpscaleToEnum, WipeDirectionsEnum
+from ._utils import enforce_target, hex_to_rgb, resize_fit
 
 
-class CreateWipeCompareVideoNode(io.ComfyNode):
+class CreateWipeCompareVideoNode(CompareNode):
     @classmethod
     def define_schema(cls) -> io.Schema:
-        return io.Schema(
-            node_id="nynxz.Create.CompareVideo.Wipe",
+        return cls.make_schema(
+            node_id="Compare.VideoWipe",
             display_name="Create Wipe Compare Video",
-            category="Nynxz",
             inputs=[
                 *CompareVideo.node_inputs(),
                 io.Combo.Input(
@@ -50,9 +50,7 @@ class CreateWipeCompareVideoNode(io.ComfyNode):
         """
 
         # Extract values from options with fallbacks
-        upscale_method = CompareVideo.get_option_value(
-            options, "upscale_method", "lanczos"
-        )
+        upscale_method = CompareVideo.get_option_value(options, "upscale_method", "lanczos")
         scale_mode = CompareVideo.get_option_value(options, "scale_mode", "contain")
         fps = CompareVideo.get_option_value(options, "fps", 8.0)
         fade_width = CompareVideo.get_option_value(options, "fade_width", 20)

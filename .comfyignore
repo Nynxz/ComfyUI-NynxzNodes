@@ -1,0 +1,21 @@
+# Excluded from the published registry package (`comfy node pack`).
+# Only runtime files ship: __init__.py, nodes/, web/, pyproject.toml, README, LICENSE.
+
+.github/
+reference/
+scripts/
+
+frontend/
+node_modules
+package.json
+pnpm-lock.yaml
+tsconfig.json
+vite.config.mts
+eslint.config.js
+.prettierrc.json
+.prettierignore
+
+# local caches
+.ruff_cache
+__pycache__
+.venv

@@ -1,0 +1,29 @@
+# Node / frontend tooling — NOT shipped.
+# No trailing slash: under a pnpm workspace node_modules can be a symlink, and
+# `node_modules/` only matches a real directory, letting the symlink slip into
+# the commit.
+node_modules
+*.tsbuildinfo
+
+# Python
+**/__pycache__
+*.pyc
+*.egg-info/
+.venv/
+.mypy_cache/
+
+# Editor / OS
+.vscode/
+.DS_Store
+
+# Registry/publish package artifact (`comfy node pack` output) — not source.
+node.zip
+
+# Reference packs cloned locally for comparison — separate repos, not ours.
+reference/
+
+# Built frontend. Generated, so it stays out of the history — CI builds it and
+# force-adds it into the registry archive (see .github/workflows/publish.yml).
+web/
+
+favorites.json

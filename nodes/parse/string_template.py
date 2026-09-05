@@ -1,34 +1,40 @@
-from comfy_api.latest import io, ui
-import re
 import json
+import re
+
+from comfy_api.latest import io
+
+from ._base import ParseNode
 
 
-class StringTemplateParser(io.ComfyNode):
-
+class StringTemplateParser(ParseNode):
     @classmethod
     def define_schema(cls) -> io.Schema:
-        return io.Schema(
-            node_id="nynxz.Parse.StringTemplate",
+        return cls.make_schema(
+            node_id="Parse.StringTemplate",
             display_name="String Template Parser",
-            category="Nynxz",
             inputs=[
                 io.String.Input("source_text", default=""),
                 io.String.Input("variable_name", default=""),
                 io.String.Input("replacement_text", default=""),
-                io.String.Input("replacements_json",
-                                default="", multiline=True),
+                io.String.Input("replacements_json", default="", multiline=True),
                 io.String.Input("default_for_missing", default=""),
-                io.Boolean.Input(
-                    "replace_missing_with_default", default=False),
-
+                io.Boolean.Input("replace_missing_with_default", default=False),
             ],
             outputs=[
                 io.String.Output("result"),
-            ]
+            ],
         )
 
     @classmethod
-    def execute(cls, source_text, variable_name, replacement_text, replacements_json, default_for_missing, replace_missing_with_default):
+    def execute(
+        cls,
+        source_text,
+        variable_name,
+        replacement_text,
+        replacements_json,
+        default_for_missing,
+        replace_missing_with_default,
+    ):
         """Replace placeholders in the form {{name}} inside source_text.
 
         Usage modes:
@@ -56,7 +62,7 @@ class StringTemplateParser(io.ComfyNode):
                 parsed = json.loads(replacements_json)
                 if isinstance(parsed, dict):
                     mapping.update({str(k): str(v) for k, v in parsed.items()})
-            except Exception:
+            except (json.JSONDecodeError, TypeError):
                 # invalid JSON — ignore mapping
                 mapping = {}
 
