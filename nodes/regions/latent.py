@@ -9,14 +9,15 @@ keeping the image *for* is gone.
 
 So the denoise is per region. Every region carries its own `denoise` — set by Regions from Masks
 and overridden by Region Denoise — and this node composites them into one graded mask, using the
-same overlap rule the gates use, so the map the LoRA is routed by and the map the pixels are
-rewritten by cannot disagree.
+same overlap rule the gates use. Optional context repair gives the surrounding pixels some
+denoise without expanding the regional LoRA gates. A protect mask overrides all denoise and
+flattening in areas such as the face.
 
 **That mask needs Differential Diffusion to mean anything.** Core's node
 (`comfy_extras/nodes_differential_diffusion.py`) is what reads a graded mask as a *per-pixel start
-time*: a value of 1 is denoised from step 0, 0.4 stays frozen until 60% through the run, 0 never
-moves. Without it a mask is binary — inpaint or don't — and every gradation collapses. Wire it on
-the model, after Apply::
+time*: higher values start earlier, lower values later, according to the model's timestep
+schedule (not a literal percentage of sampler steps). Without it, soft masks blend latents
+rather than scheduling their start time. Wire it on the model, after Apply::
 
     Region Latent  ──> latent ──────────────────────────────> KSampler
     Regions Apply  ──> model ──> Differential Diffusion ────> KSampler   (denoise 1.0)
@@ -40,7 +41,7 @@ import logging
 import torch
 from comfy_api.latest import io
 
-from . import _mask
+from . import _edit, _mask
 from ._base import RegionNode
 from ._io_types import Regions
 
@@ -117,9 +118,9 @@ class NynxzRegionLatent(RegionNode):
                     max=1.0,
                     step=0.01,
                     tooltip="Denoise for everything no region claims. Low keeps the original "
-                    "background, lighting and framing. 0 freezes it exactly, which can leave a "
-                    "visible seam where a rebuilt character meets it — a little movement helps "
-                    "them agree.",
+                    "background, lighting and framing. Use 0 with context_radius to allow local "
+                    "seam repair while preserving distant latents. VAE decoding can still change "
+                    "image pixels even where latents are preserved.",
                 ),
                 io.Float.Input(
                     "flatten",
@@ -131,6 +132,35 @@ class NynxzRegionLatent(RegionNode):
                     "survives the denoise is a correctly-placed blob rather than the old "
                     "character's face. Scaled by each region's denoise. Most useful in the 0.6-0.8 "
                     "denoise band; pointless at 1.0, where the latent is erased anyway.",
+                ),
+                io.Int.Input(
+                    "context_radius",
+                    default=0,
+                    min=0,
+                    max=512,
+                    optional=True,
+                    tooltip="Repair distance outside the regions, in source-image pixels. Denoise "
+                    "fades smoothly to zero across this band. 0 disables local repair. Try 32 "
+                    "with background 0. Does not expand the regional LoRA gates.",
+                ),
+                io.Float.Input(
+                    "context_denoise",
+                    default=0.18,
+                    min=0.0,
+                    max=1.0,
+                    step=0.01,
+                    optional=True,
+                    tooltip="Maximum denoise in the repair band. With Differential Diffusion, "
+                    "low values allow it to adapt late in sampling. Never exceeds the originating "
+                    "region's denoise. Overlapping bands do not add strength.",
+                ),
+                io.Mask.Input(
+                    "protect_mask",
+                    optional=True,
+                    tooltip="White preserves source latents and disables flattening, overriding "
+                    "regions, context repair and background denoise. Black allows editing. Use "
+                    "for face/hands; align to the source image. One mask or one per source image. "
+                    "Does not mask LoRA attention or guarantee identical decoded pixels.",
                 ),
             ],
             outputs=[
@@ -147,7 +177,17 @@ class NynxzRegionLatent(RegionNode):
         )
 
     @classmethod
-    def execute(cls, vae, image, regions, background=0.05, flatten=0.0) -> io.NodeOutput:
+    def execute(
+        cls,
+        vae,
+        image,
+        regions,
+        background=0.05,
+        flatten=0.0,
+        context_radius=0,
+        context_denoise=0.18,
+        protect_mask=None,
+    ) -> io.NodeOutput:
         entries = list(regions or [])
         if not entries:
             raise ValueError("No regions arrived on the wire — there is nothing to grade.")
@@ -161,16 +201,27 @@ class NynxzRegionLatent(RegionNode):
         # Background is a floor, not a competitor: it fills only what no region claimed, so raising
         # a region's denoise never quietly drags the background's up with it.
         residual = _mask.background(claim).reshape(height, width)
-        field = field + residual * float(background)
+        context = _edit.context_field(
+            claim,
+            entries,
+            (height, width),
+            image.shape[1:3],
+            float(context_radius),
+            float(context_denoise),
+        )
+        field = field + residual * context.clamp(min=float(background))
 
+        source_samples = samples
         samples = flatten_latent(samples, claim, entries, float(flatten))
 
-        mask = field.clamp(0.0, 1.0)
+        mask = field.clamp(0.0, 1.0).reshape(1, 1, height, width)
+        if protect_mask is not None:
+            samples, mask = _edit.apply_protection(source_samples, samples, mask, protect_mask)
         if float(mask.min()) > 0.97:
             logging.warning(
                 "Nynxz Regions: every region is at full denoise, so none of the source image "
                 "survives and this is a text-to-image run with extra steps. `denoise` defaults to "
                 "1.0 on Regions from Masks — lower it there, or per region with Region Denoise."
             )
-        latent = {"samples": samples, "noise_mask": mask.reshape(1, 1, height, width)}
-        return io.NodeOutput(latent, mask.unsqueeze(0))
+        latent = {"samples": samples, "noise_mask": mask}
+        return io.NodeOutput(latent, mask[:, 0])

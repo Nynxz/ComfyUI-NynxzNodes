@@ -212,7 +212,7 @@ class NynxzRegionsApply(RegionNode):
             )
 
         patched = model.clone()
-        loaded, warnings = _load(patched, entries)
+        loaded, report = _load(patched, entries)
 
         schedule = _schedule.Schedule(
             commit_at=commit_at, preheat=preheat, ramp=ramp, release=release
@@ -237,52 +237,46 @@ class NynxzRegionsApply(RegionNode):
         # having when something is wrong and worth nothing the rest of the time, which is exactly
         # a log line and not an output every graph has to route somewhere. Region Inspect shows
         # the bindings before the run and Regions Preview shows the map after it.
-        logging.info("Nynxz Regions: %s", _summary(entries, loaded, config, schedule, total_blocks))
-        for line in warnings:
-            logging.warning("Nynxz Regions: %s", line)
+        logging.info("Nynxz Regions: %s", _summary(report, config, schedule, total_blocks))
         return io.NodeOutput(patched)
 
 
 def _load(patcher, entries):
-    """`([(region_index, branches)], warnings)` — every LoRA on every region, in region order.
+    """`([(region_index, branches)], [report line])` — every LoRA on every region, in region order.
 
     Pairs and not one entry per region, because a region may carry several. Each LoRA's own
     strength is applied when it LOADS rather than to the region's gate: the gate is per REGION and
-    several LoRAs share it, so a per-LoRA strength has nowhere else to live — and a DoRA or an OFT
-    is not linear in strength, so inside `calculate_weight` is the only faithful place for it.
+    several LoRAs share it, so a per-LoRA strength has nowhere else to live.
+
+    The report line is built here, where the name, the strength and the branches that came back are
+    all in hand. `_summary` used to re-derive it by zipping the loaded list against each region's
+    bound specs by position, which silently skewed the moment a spec was skipped for having no
+    `lora_name` — every line after it then named the wrong LoRA.
     """
-    loaded, warnings = [], []
+    loaded, report = [], []
     for index, region in enumerate(entries):
-        for bound in region.get("loras") or []:
-            name = bound.get("lora_name")
-            if not name:
-                continue
-            branches, notes = load_branches(patcher, name, float(bound.get("strength", 1.0)))
-            loaded.append((index, branches))
-            warnings.extend(notes)
-    return loaded, warnings
-
-
-def _summary(entries, loaded, config, schedule, total_blocks) -> str:
-    """What will actually run. Deliberately states the mechanism state, not just the settings."""
-    lines = []
-    by_region: dict[int, list] = {}
-    for index, branches in loaded:
-        by_region.setdefault(index, []).append(branches)
-    for index, region in enumerate(entries):
-        label = f"region {index + 1}"
         bound = region.get("loras") or []
         if not bound:
-            lines.append(f"{label}: no LoRA — holds territory only")
+            report.append(f"region {index + 1}: no LoRA — holds territory only")
             continue
-        for slot, spec in enumerate(bound):
-            branches = by_region.get(index, [])
-            layers = branches[slot] if slot < len(branches) else {}
-            mlp = sum(1 for path in layers if ".mlp." in path)
-            lines.append(
-                f"{label}: {spec.get('lora_name')} @ {spec.get('strength', 1.0):.2f} — "
-                f"{len(layers)} layers ({len(layers) - mlp} attn, {mlp} mlp)"
+        for spec in bound:
+            name = spec.get("lora_name")
+            if not name:
+                continue
+            strength = float(spec.get("strength", 1.0))
+            branches = load_branches(patcher, name, strength)
+            loaded.append((index, branches))
+            mlp = sum(1 for path in branches if ".mlp." in path)
+            report.append(
+                f"region {index + 1}: {name} @ {strength:.2f} — "
+                f"{len(branches)} layers ({len(branches) - mlp} attn, {mlp} mlp)"
             )
+    return loaded, report
+
+
+def _summary(report, config, schedule, total_blocks) -> str:
+    """What will actually run. Deliberately states the mechanism state, not just the settings."""
+    lines = list(report)
 
     blocks = _patches.route_block(config.route_at, total_blocks, config.route_blocks)
     lines.append("")

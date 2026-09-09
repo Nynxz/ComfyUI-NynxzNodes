@@ -28,6 +28,7 @@ from __future__ import annotations
 import logging
 
 import comfy.utils
+import torch
 from comfy.patcher_extension import PatcherInjection
 
 #: Key under which this pack's injection is registered on the ModelPatcher.
@@ -39,6 +40,13 @@ def _hook(entries, state):
 
     `entries` is `[(region_index, Branch), ...]` — only the regions whose LoRA actually touches this
     module, so a layer that only one LoRA trains costs only that one branch.
+
+    Accumulated with `addcmul` into a single tensor we own, because everything here is
+    `[batch, seq, out]` and on an MLP projection that is hundreds of MB. The obvious spelling,
+    `out = out + branch.delta(x) * gate`, allocates one of those for the gated product and another
+    for the sum, per region, per module, every step. Fused and then in-place, only `branch.delta(x)`
+    is transient and there is exactly one accumulator. `output` itself is never written to: it is
+    the module's own tensor and the caller may still hold it.
     """
 
     def hook(module, args, output):
@@ -46,13 +54,16 @@ def _hook(entries, state):
         if x.ndim != 3:
             return output
         batch, seqlen, _ = x.shape
-        out = output
+        out = None
         for region, branch in entries:
             gate = state.for_tokens(batch, seqlen, region, x.device, x.dtype)
             if gate is None:
                 continue
-            out = out + branch.delta(x) * gate
-        return out
+            if out is None:
+                out = torch.addcmul(output, branch.delta(x), gate)
+            else:
+                out.addcmul_(branch.delta(x), gate)
+        return output if out is None else out
 
     return hook
 
