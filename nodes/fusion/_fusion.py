@@ -12,8 +12,10 @@ the math. The pipeline is split into reusable pieces so we can grow it later:
     from. Today: geometric patterns, optionally feathered. Future: content
     saliency / cross-source attention plug in here.
   * `_content_weights(...)`                      — data-driven weights from the tokens.
+  * `_coverage_weights(...)`                     — alpha as coverage: a transparent area stops
+    contributing and its share goes to whoever is still opaque there.
   * `_strength_weights(...)`                     — per-source prevalence, applied last so
-    it scales whatever the geometry/content stages decided.
+    it scales whatever the geometry/content/coverage stages decided.
   * `_blend(visuals, weights, ...)`              — how weights combine embeddings
     (weighted sum with optional norm preservation so blends don't wash out).
 
@@ -86,6 +88,20 @@ FIT_OVERRIDE_OPTIONS = [FIT_OVERRIDE, *FIT_MODES]
 # fit was a choice).
 DEFAULT_FIT = "contain"
 
+# What a source's alpha channel means. ComfyUI carries alpha as a 4th IMAGE channel where 1 is
+# opaque and 0 transparent — what `Join Image with Alpha` writes when you hand it a MASK, and what
+# a cut-out PNG loads as. "exclude" treats transparency as "this image is not here", so the masked
+# area drops out of the blend entirely; "ignore" is the pre-alpha behaviour (blend the RGB whole).
+# Sources with no alpha channel cover their whole frame and are unaffected by either.
+ALPHA_MODES = ["exclude", "ignore"]
+DEFAULT_ALPHA_MODE = "exclude"
+
+# What a transparent pixel becomes before it reaches the encoder. Those pixels end up zero-weighted
+# in the blend, so what fills the hole should not matter — except the vision tower attends globally,
+# so whatever is in the hole still colours the tokens that survive. Mid-grey is the least assertive
+# filler and sits near the encoder's own normalisation mean; black would read as a real dark object.
+ALPHA_BACKGROUND = 0.5
+
 # Explicit aspect choices for the visual grid; "auto" takes it from the first source.
 ASPECTS = {
     "1:1": 1.0,
@@ -124,6 +140,7 @@ class FusionSettings:
     seed: int = 0
     visual_aspect: str = "auto"
     visual_size: int = 384
+    alpha_mode: str = DEFAULT_ALPHA_MODE
 
 
 def _spatial_fusion_mask(
@@ -446,6 +463,76 @@ def _strength_weights(weights, strengths):
     return scaled / totals.clamp_min(1e-6)
 
 
+def _coverage_field(alphas, grid_height, grid_width):
+    """Per-source alpha coverage on the token grid: `[sources, tokens]` in [0, 1], or None.
+
+    Each source's fitted alpha is area-averaged down to one value per token cell, so a cell the
+    cutout only half covers comes out at 0.5 — the mask edge lands softly at grid resolution
+    without needing a feather of its own. A source with no alpha covers its whole frame (all
+    ones), and if no source has any, there is nothing to mask and this returns None so every
+    downstream step stays an exact no-op.
+
+    `alphas` are the *fitted* alphas, so a "contain" letterbox is already transparent padding —
+    an RGBA source's bars are correctly outside the image rather than black content.
+    """
+    if not any(alpha is not None for alpha in alphas):
+        return None
+    tokens = grid_height * grid_width
+    rows = []
+    for alpha in alphas:
+        if alpha is None:
+            rows.append(torch.ones(tokens, dtype=torch.float32))
+            continue
+        # adaptive_avg_pool2d IS the area downsample: each output cell is the mean of the input
+        # pixels that land in it, which is exactly "what fraction of this cell is opaque".
+        cell = F.adaptive_avg_pool2d(alpha.movedim(-1, 1).float(), (grid_height, grid_width))
+        rows.append(cell.reshape(tokens).clamp(0.0, 1.0))
+    return torch.stack(rows)
+
+
+def _coverage_weights(weights, coverage):
+    """Zero each source where its alpha says transparent, then renormalize per token.
+
+    This is what makes a mask *remove* something rather than dim it: a masked source stops
+    contributing to the tokens it does not cover, and because the column is renormalized, its
+    share there goes to whichever sources are still opaque. The unwanted element is not blended
+    down, it is absent, and the rest of the stack closes over the gap.
+
+    It runs after geometry and content but before strength: coverage is a fact about the image
+    (there are no pixels here), so it overrules where the pattern wanted to put the source, while
+    strength stays the last word on the sources that do cover a cell.
+
+    A cell can lose all its weight this way, and there are two reasons why, which need different
+    answers:
+
+    * The cell was assigned to a masked source and the sources that ARE there had no geometric
+      weight in it. Under a hard mosaic (blend_strength 0) the weights are one-hot, so this is
+      every masked cell — renormalizing alone would leave the mask doing nothing at all. Those
+      cells are handed to whoever covers them, split by how much: the pattern reflows around the
+      hole instead of ignoring it.
+    * Nothing covers the cell — every source is transparent there. There is no one to give it to,
+      so it keeps its uncovered weights: the same fallback `_strength_weights` makes for an
+      all-muted cell, and for the same reason, that a blend beats a hole in the grid.
+
+    Neither branch fires when no source is masked (coverage is all ones, so the columns already
+    sum to 1), which keeps this an exact no-op for an RGB-only stack.
+    """
+    if coverage is None:
+        return weights
+    coverage = coverage.to(weights.device, weights.dtype)
+    scaled = weights * coverage
+    totals = scaled.sum(dim=0, keepdim=True)  # [1, tokens]
+    dead = totals <= 1e-6
+    if bool(dead.any()):
+        covered = coverage.sum(dim=0, keepdim=True) > 1e-6
+        # Covered but weightless -> coverage itself is the weight; wholly transparent -> keep what
+        # geometry decided. Strength still runs after this, so neither branch revives a muted source.
+        scaled = torch.where(dead & covered, coverage, scaled)
+        scaled = torch.where(dead & ~covered, weights, scaled)
+        totals = scaled.sum(dim=0, keepdim=True)
+    return scaled / totals.clamp_min(1e-6)
+
+
 def _visual_token_span(tokens, cond_length, visual_tokens):
     if len(tokens) != 1:
         raise ValueError("Visual fusion requires a Qwen3-VL or Krea2 text encoder.")
@@ -471,14 +558,22 @@ def _visual_token_span(tokens, cond_length, visual_tokens):
 
 
 def _compute_weights(
-    num_sources, visual_height, visual_width, settings, strengths, device, visuals=None
+    num_sources,
+    visual_height,
+    visual_width,
+    settings,
+    strengths,
+    device,
+    visuals=None,
+    coverage=None,
 ):
     """The blend weight field `[num_sources, tokens]` the fusion applies: geometry, optional content
-    weighting, then per-source strength.
+    weighting, alpha coverage, then per-source strength.
 
     Shared by `_fuse_conditionings` and the inspector, so what is drawn is exactly the field that
     ran — they cannot drift. `visuals` (the stacked source tokens) is only needed for content_mode;
-    pass None to skip it (content_mode is off by default).
+    pass None to skip it (content_mode is off by default). `coverage` is the alpha field from
+    `_coverage_field`, or None when no source is masked.
     """
     weights = _fusion_weights(
         visual_height,
@@ -498,7 +593,10 @@ def _compute_weights(
     if visuals is not None and settings.content_mode != "none" and settings.content_strength > 0.0:
         content = _content_weights(visuals, settings.content_mode, settings.content_temperature)
         weights = _combine_weights(weights, content, settings.content_strength)
-    # Strength goes last: it re-weights whatever geometry + content settled on.
+    # Alpha before strength: transparency says a source is not *there*, which no amount of
+    # geometry or content weighting gets to overrule. Strength then scales what is left.
+    weights = _coverage_weights(weights, coverage)
+    # Strength goes last: it re-weights whatever geometry + content + coverage settled on.
     return _strength_weights(weights, strengths)
 
 
@@ -510,6 +608,7 @@ def _fuse_conditionings(
     settings,
     strengths=None,
     debug=None,
+    coverage=None,
 ):
     schedule_count = len(conditionings[0])
     if any(len(source) != schedule_count for source in conditionings):
@@ -536,6 +635,7 @@ def _fuse_conditionings(
             strengths,
             visuals.device,
             visuals,
+            coverage,
         )
         if debug is not None:
             # Hand the exact field back for the Fusion Weight Map (last schedule wins; normally one).
@@ -600,14 +700,43 @@ def group_images(images):
     return groups
 
 
+def split_alpha(source):
+    """[1, H, W, C] -> (rgb [1, H, W, 3], alpha [1, H, W, 1] or None).
+
+    ComfyUI's convention: a 4-channel IMAGE carries alpha last, 1 opaque and 0 transparent.
+    Three channels or fewer means no alpha, i.e. the image covers its whole frame.
+    """
+    if source.shape[-1] < 4:
+        return source[:, :, :, :3], None
+    return source[:, :, :, :3], source[:, :, :, 3:4].clamp(0.0, 1.0)
+
+
+def flatten_alpha(rgb, alpha, background=ALPHA_BACKGROUND):
+    """Composite `rgb` over a flat `background` wherever `alpha` says transparent.
+
+    The encoder's patch embedding is built for three channels, so alpha has to be resolved into
+    pixels before tokenizing either way. Resolving it toward neutral grey (rather than keeping
+    whatever RGB happened to sit under the mask) is what stops a removed element leaking back in
+    through the vision tower's global attention.
+    """
+    if alpha is None:
+        return rgb
+    return rgb * alpha + background * (1.0 - alpha)
+
+
 def fit_image(source, width, height, fit="cover"):
     """Resample one [1, H, W, C] source into the shared (width, height) grid.
 
     * "cover"   — fill the frame, center-cropping the overflow (no distortion).
     * "contain" — fit the whole image inside, letterboxing the remainder in black.
     * "stretch" — squash to the exact frame, ignoring the source aspect.
+
+    Every channel rides through, alpha included, so the mask is resampled by exactly the same
+    transform as the pixels it belongs to. "contain" pads with zeros, which for an RGBA source
+    makes the letterbox fully transparent — correct, since the bars are not part of the image,
+    and it drops them out of the blend along with the rest of the masked area.
     """
-    samples = source[:, :, :, :3].movedim(-1, 1)  # [1, 3, H, W]
+    samples = source.movedim(-1, 1)  # [1, C, H, W]
     if fit == "cover":
         out = comfy.utils.common_upscale(samples, width, height, "area", "center")
     elif fit == "stretch":
@@ -723,7 +852,11 @@ PROMPT_TEMPLATE = (
 
 
 def _prepare_sources(sources, settings, fits=None):
-    """Fit every source into the shared grid and report the token grid the encoder will make.
+    """Fit every source into the shared grid; report the token grid and the alpha coverage field.
+
+    Returns `(processed, coverage, grid_height, grid_width)`. `processed` is three-channel — alpha
+    is resolved into pixels here because the encoder only takes RGB — and `coverage` is what
+    carries the mask on into the blend, or None when no source is masked.
 
     The grid comes from the encoder's own sizing rule, so callers never have to re-derive it.
     """
@@ -732,13 +865,21 @@ def _prepare_sources(sources, settings, fits=None):
     def fit_of(i):
         return fits[i] if fits else "cover"
 
-    processed = [fit_image(source, width, height, fit_of(i)) for i, source in enumerate(sources)]
+    fitted = [fit_image(source, width, height, fit_of(i)) for i, source in enumerate(sources)]
+    split = [split_alpha(image) for image in fitted]
+    if settings.alpha_mode == "ignore":
+        # Drop the alpha on the floor: no coverage field, no compositing — byte-identical to what
+        # this node did before it read alpha at all.
+        split = [(rgb, None) for rgb, _ in split]
+    processed = [flatten_alpha(rgb, alpha) for rgb, alpha in split]
 
     # Ask the encoder's own sizing rule what grid it will produce rather than re-deriving it:
     # it also clamps to its min/max pixel budget, and a grid that disagrees with the encoder's
     # would slice the wrong span out of the conditioning.
     grid_height, grid_width = qwen2vl_image_size(height, width, patch_size=16, merge_size=2)
-    return processed, grid_height // 32, grid_width // 32
+    grid_height, grid_width = grid_height // 32, grid_width // 32
+    coverage = _coverage_field([alpha for _, alpha in split], grid_height, grid_width)
+    return processed, coverage, grid_height, grid_width
 
 
 def _check_sources(sources, strengths, fits):
@@ -755,13 +896,15 @@ def _check_sources(sources, strengths, fits):
 def encode_fusion(clip, prompt, sources, settings, strengths=None, fits=None, vae=None, debug=None):
     """Encode each source through the Qwen3-VL encoder and fuse their visual tokens.
 
-    sources:   list of [1, H, W, C] IMAGE tensors (at least one).
+    sources:   list of [1, H, W, C] IMAGE tensors (at least one). A 4-channel source carries
+               alpha, and under `settings.alpha_mode == "exclude"` its transparent area is left
+               out of the blend entirely — the mask removes content rather than dimming it.
     strengths: per-source prevalence, or None for an even blend.
     fits:      per-source fit mode into the shared grid, or None for all-"cover"
                (the old center-crop default).
     """
     _check_sources(sources, strengths, fits)
-    processed, visual_height, visual_width = _prepare_sources(sources, settings, fits)
+    processed, coverage, visual_height, visual_width = _prepare_sources(sources, settings, fits)
 
     full_prompt = PROMPT_TEMPLATE.format(prompt=prompt)
     # tokenize stays every run — it's the cheap image preprocessing + tokenizing, and the fuse
@@ -789,12 +932,20 @@ def encode_fusion(clip, prompt, sources, settings, strengths=None, fits=None, va
     # per-schedule fuse, so every schedule shares one roll.
     strengths = _roll_strengths(strengths, settings.strength_roll, settings.seed)
     conditioning = _fuse_conditionings(
-        conditionings, tokens, visual_height, visual_width, settings, strengths, debug
+        conditionings, tokens, visual_height, visual_width, settings, strengths, debug, coverage
     )
 
     if vae is not None:
+        # The reference latents get the same alpha treatment as the visual tokens. They are a
+        # second, independent path from the source pixels to the sampler, so leaving the raw RGB
+        # under the mask here would hand the removed element straight back to the model.
+        references = (
+            sources
+            if settings.alpha_mode == "ignore"
+            else [flatten_alpha(*split_alpha(source)) for source in sources]
+        )
         conditioning = node_helpers.conditioning_set_values(
-            conditioning, {"reference_latents": _reference_latents(vae, sources)}, append=True
+            conditioning, {"reference_latents": _reference_latents(vae, references)}, append=True
         )
     return conditioning
 
@@ -938,6 +1089,25 @@ def seed_input() -> io.Input:
             max=0xFFFFFFFFFFFFFFFF,
             tooltip="Seed for spatial-dither-random and for pattern_jitter / strength_roll. Fixed by "
             "default; change it to re-roll the variety features. Leaving it fixed keeps the encode cached.",
+        )
+    )
+
+
+def alpha_input() -> io.Input:
+    """The alpha knob. Its own function rather than part of `tuning_inputs` so the legacy autogrow
+    node's widget layout stays frozen, same as style_inputs / variation_inputs."""
+    return advanced(
+        io.Combo.Input(
+            "alpha_mode",
+            options=ALPHA_MODES,
+            default=DEFAULT_ALPHA_MODE,
+            tooltip="What a source's alpha channel means. 'exclude' (default) treats a transparent "
+            "area as 'this image is not here': it drops out of the blend and the other images "
+            "fill its place, which is how you remove an unwanted element with a mask. Cut one "
+            "out with 'Join Image with Alpha' (mask -> alpha) before Fusion Images, or drop a "
+            "transparent PNG on the Fusion Input grid. 'ignore' blends the RGB whole and "
+            "pretends there is no alpha (what this node did before). Images with no alpha "
+            "channel are unaffected either way.",
         )
     )
 

@@ -10,6 +10,11 @@ visual tokens are mixed token by token under a weight field you control — by s
 `qwen3vl_8b` tokenizer, which is what Krea 2 uses as well — hence `Text Encode (Fusion)` rather
 than any model's name.
 
+A source's alpha channel is read as coverage: it only contributes where it is opaque, and the
+transparent area's share of the blend goes to whoever else is there. That is the way to *remove* an
+element from a reference rather than fight it with strength — cut it out with core's `Join Image
+with Alpha`, or drop a transparent PNG on the grid. `alpha_mode` on the encode node turns it off.
+
 Two collectors, split by where the images live, both emitting the same `fusion_input` and either
 chainable into the other:
 

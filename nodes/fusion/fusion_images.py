@@ -10,6 +10,12 @@ than per-socket fields because an autogrow template takes exactly one input per 
 there's no way to pair each `image_N` with its own controls — for per-image strength or fit,
 use the grid instead. A batched IMAGE contributes one source per frame at that same strength
 and fit, and an optional upstream fusion_input is prepended so this still chains with the grid.
+
+Alpha rides through untouched. A 4-channel IMAGE — what `Join Image with Alpha` makes from an
+IMAGE plus a MASK — reaches the encode node with its alpha intact, and the encode reads that as
+coverage: the transparent area contributes nothing and the other sources take those tokens. That
+is how you remove an element from the blend with a mask, and it is per-image without needing a
+per-socket widget, because the mask travels inside the image.
 """
 
 from __future__ import annotations
@@ -42,8 +48,9 @@ class NynxzFusionImages(FusionNode):
             node_id="Fusion.Images",
             display_name="Fusion Images",
             description="Collect several IMAGE sockets into a fusion_input — wire Load Image "
-            "nodes straight in, no chaining. One strength and fit apply to every wired image. "
-            "Feeds a fusion encode node.",
+            "nodes straight in, no chaining. One strength and fit apply to every wired image, but "
+            "alpha is per-image: feed an RGBA image (Join Image with Alpha) and its transparent "
+            "area is excluded from the blend. Feeds a fusion encode node.",
             inputs=[
                 _image_sockets(),
                 io.Float.Input(

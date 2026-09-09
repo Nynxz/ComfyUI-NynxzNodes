@@ -295,6 +295,17 @@ const settingGroups = computed(() => {
       ],
     },
     {
+      title: "Alpha",
+      rows: [
+        { k: "mode", v: str("alpha_mode", "exclude"), dim: num("alpha_sources") <= 0 },
+        {
+          k: "masked",
+          v: `${num("alpha_sources")}/${p.num_sources}`,
+          dim: num("alpha_sources") <= 0,
+        },
+      ],
+    },
+    {
       title: "Grid",
       rows: [
         { k: "size", v: String(num("visual_size")) },

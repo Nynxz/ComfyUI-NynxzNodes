@@ -13,6 +13,10 @@ Each card carries its own fit into the visual grid, defaulting to "contain" (the
 letterboxed) since a reference is usually there to be looked at whole. Set a card to "cover"
 (center-crop) or "stretch" per image, or force one mode for every source on the encode node.
 
+A PNG with transparency keeps its alpha, and the encode node reads that alpha as coverage: the
+transparent area is left out of the blend and the other sources fill it. That is the way to cut an
+unwanted element out of a reference — mask it out in an editor, save as PNG, drop it on the grid.
+
 Output is a NYNXZ_FUSION_INPUT list of `{image, strength, fit, label}` for a fusion node.
 Chain several of these into one encode when you want to group sources.
 """
@@ -79,11 +83,17 @@ def _resolve_path(ref, folder_type="input") -> str | None:
 
 
 def _load_image(path) -> torch.Tensor | None:
-    """Load a file as a single [1, H, W, 3] source (first frame, EXIF-corrected, RGB)."""
+    """Load a file as a single [1, H, W, C] source (first frame, EXIF-corrected).
+
+    RGBA when the file carries transparency, RGB otherwise — the same detection core's Load Image
+    uses. Keeping the alpha is what lets a cut-out PNG dropped on the grid exclude its masked area
+    from the blend instead of contributing whatever is hiding underneath.
+    """
     try:
         img = _pillow(Image.open, path)
         img = _pillow(ImageOps.exif_transpose, img)
-        arr = np.array(img.convert("RGB")).astype(np.float32) / 255.0
+        transparent = "A" in img.getbands() or (img.mode == "P" and "transparency" in img.info)
+        arr = np.array(img.convert("RGBA" if transparent else "RGB")).astype(np.float32) / 255.0
         return torch.from_numpy(arr)[None,]
     except Exception as exc:  # noqa: BLE001 - unreadable image, skip the row
         print(f"[NynxzNodes] fusion input could not read {path}: {exc}")
