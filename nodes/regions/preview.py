@@ -135,11 +135,22 @@ def _report(captured, mask_grid, map_grid) -> str:
         f"  grid: {height}x{width} canvas tokens ({height * width})",
         f"  schedule: {captured['schedule']}",
     ]
+    if not captured.get("stepped", True):
+        lines.append(
+            "  WARNING: the schedule never advanced — this model call carried no 'sigmas' in its "
+            "transformer_options, so commit_at, preheat, ramp and release ALL did nothing and the "
+            "LoRAs ran at full strength from step 0 with the map never freezing. That is the "
+            "no-schedule baseline, not the schedule you configured. If preheat 0 and preheat 1 "
+            "look identical, this is why."
+        )
     if captured.get("fallback_progress"):
         lines.append(
             "  NOTE: this sampler published no step schedule, so commit_at was resolved against "
-            "sigma instead of steps. The window is in the right order but not at the right place — "
-            "expect it to fire earlier than the number says on a shifted schedule."
+            "sigma instead of steps. The window is in the right order but not at the right place: "
+            "on a SHIFTED schedule sigma falls slowly at first, so the fraction climbs slowly and "
+            "the commit fires LATER than the number says — measured at 8 steps with shift 3, "
+            "commit_at 0.30 freezes at step 5 instead of step 3, and the fraction never reaches "
+            "1.0 at all. If you cannot get the commit early enough, this is why."
         )
 
     flat_map = map_grid.reshape(-1, count)
@@ -160,11 +171,23 @@ def _report(captured, mask_grid, map_grid) -> str:
 
     trace = captured.get("trace") or []
     if trace:
+        # DISTINCT fractions, not len(trace): when CFG runs cond and uncond as separate passes
+        # the model is called twice per step, and counting calls would report double the steps.
+        fractions = sorted({f for f, _, _ in trace})
         commits = [f for f, _, frozen in trace if frozen]
-        first = f"{commits[0]:.0%}" if commits else "never"
+        where = f"step {fractions.index(min(commits))} of {len(fractions)}" if commits else "never"
         lines.append(
-            f"  ran {len(trace)} steps; map froze at {first} of the run, "
+            f"  ran {len(fractions)} steps; map froze at {where}, "
             f"final LoRA scale {trace[-1][1]:.2f}x"
+        )
+        lines.append(
+            "  per-step LoRA scale: "
+            + " ".join(
+                f"{index}:{scale:.2f}{'F' if frozen else ''}"
+                for index, (_, scale, frozen) in enumerate(
+                    sorted({f: (f, s, z) for f, s, z in trace}.values())
+                )
+            )
         )
 
     if unclaimed > 0.9:

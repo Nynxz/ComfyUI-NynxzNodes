@@ -43,6 +43,7 @@ def remember(state, drift: float = 0.0) -> None:
         "track": float(state.track),
         "schedule": state.schedule.describe(),
         "fallback_progress": state.progress.used_fallback,
+        "stepped": state.stepped,
     }
 
 

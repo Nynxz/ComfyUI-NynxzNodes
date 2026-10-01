@@ -27,3 +27,6 @@ reference/
 web/
 
 favorites.json
+
+# Video-preview poster frames (nodes/lora/meta.py).
+.cache/

@@ -4,13 +4,17 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@nynxz/zenkit-nodekit': link:../ZenKit/packages/nodekit
+  '@nynxz/zenkit-ui': link:../ZenKit/packages/ui
+
 importers:
 
   .:
     dependencies:
       '@nynxz/zenkit-ui':
-        specifier: ^0.2.0
-        version: 0.2.0(vue@3.5.42(typescript@5.9.3))
+        specifier: link:../ZenKit/packages/ui
+        version: link:../ZenKit/packages/ui
       primevue:
         specifier: 5.0.1
         version: 5.0.1(vue@3.5.42(typescript@5.9.3))
@@ -28,8 +32,8 @@ importers:
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.9.1)
       '@nynxz/zenkit-nodekit':
-        specifier: ^0.2.0
-        version: 0.2.0(@vitejs/plugin-vue@6.0.8(vite@8.2.2(@types/node@26.4.1))(vue@3.5.42(typescript@5.9.3)))(vite@8.2.2(@types/node@26.4.1))(vue@3.5.42(typescript@5.9.3))
+        specifier: link:../ZenKit/packages/nodekit
+        version: link:../ZenKit/packages/nodekit
       '@types/node':
         specifier: ^26.4.1
         version: 26.4.1
@@ -170,23 +174,6 @@ packages:
 
   '@jridgewell/sourcemap-codec@1.6.0':
     resolution: {integrity: sha512-T7jf+5zgsZHwNJ4lvQ7/aezbyk0nNX+zJVWpmHA7VYsEx7a7qr5Rg5IbtJFqkgze5Y2sruq1RUY8Q837Od7iFw==}
-
-  '@nynxz/zenkit-nodekit@0.2.0':
-    resolution: {integrity: sha512-/Bu91kVwzZgdfd6qhiIq5kEkUA+L77t8s0Z2N6SM0HO9TVYrSvU53CgLivGBC8cNFYVp2e+bTaxYn2PycK3//g==}
-    peerDependencies:
-      '@vitejs/plugin-vue': '>=5'
-      vite: ^6.0.0 || ^7.0.0 || ^8.0.0
-      vue: ^3.5.0
-    peerDependenciesMeta:
-      '@vitejs/plugin-vue':
-        optional: true
-      vite:
-        optional: true
-
-  '@nynxz/zenkit-ui@0.2.0':
-    resolution: {integrity: sha512-vuTTplIF4n9jByD+xvp7WSxS2SYWkeMPIm0J3rdaZeIq6DR+AJvv8D9Ayu4mL5j+SakHJ9JUy/XXRRxNILmL2Q==}
-    peerDependencies:
-      vue: ^3.5.0
 
   '@oxc-project/types@0.148.0':
     resolution: {integrity: sha512-Nm4s/jB+4FpFsPhWGEC4h7rzksesmtnMXomo6rCMcg/b8zLQuOziRgkCS1fxDCXOlJB/6Q8oABOZ/OP6RIPj9A==}
@@ -1067,17 +1054,6 @@ snapshots:
   '@intlify/shared@11.4.10': {}
 
   '@jridgewell/sourcemap-codec@1.6.0': {}
-
-  '@nynxz/zenkit-nodekit@0.2.0(@vitejs/plugin-vue@6.0.8(vite@8.2.2(@types/node@26.4.1))(vue@3.5.42(typescript@5.9.3)))(vite@8.2.2(@types/node@26.4.1))(vue@3.5.42(typescript@5.9.3))':
-    dependencies:
-      vue: 3.5.42(typescript@5.9.3)
-    optionalDependencies:
-      '@vitejs/plugin-vue': 6.0.8(vite@8.2.2(@types/node@26.4.1))(vue@3.5.42(typescript@5.9.3))
-      vite: 8.2.2(@types/node@26.4.1)
-
-  '@nynxz/zenkit-ui@0.2.0(vue@3.5.42(typescript@5.9.3))':
-    dependencies:
-      vue: 3.5.42(typescript@5.9.3)
 
   '@oxc-project/types@0.148.0': {}
 

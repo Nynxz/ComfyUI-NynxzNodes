@@ -4,9 +4,13 @@
 import {
   createNodekit,
   defineNode,
+  openZenPanel,
   useDragSurface,
+  viewUrl,
   type DOMWidget,
   type NodeDef,
+  type NodeHeaderButtonHandle,
+  type NodeHeaderButtonOptions,
   type NodeWidgetDef,
   type WidgetFileExports,
   type WidgetOptions,
@@ -27,7 +31,17 @@ export const {
   discoverWidgets,
   widgetTypes,
   mountWidget,
+  addNodeHeaderButton,
 } = createNodekit(manifest);
 
-export { defineNode, useDragSurface };
-export type { DOMWidget, NodeDef, NodeWidgetDef, WidgetFileExports, WidgetOptions };
+// Identity-free helpers pass straight through.
+export { defineNode, openZenPanel, useDragSurface, viewUrl };
+export type {
+  DOMWidget,
+  NodeDef,
+  NodeHeaderButtonHandle,
+  NodeHeaderButtonOptions,
+  NodeWidgetDef,
+  WidgetFileExports,
+  WidgetOptions,
+};

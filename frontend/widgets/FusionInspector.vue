@@ -151,12 +151,29 @@ interface Source {
   share: number;
   thumb: string;
 }
+type Rect = [number, number, number, number];
+interface Region {
+  box: Rect;
+  box_px: [number, number];
+  flipped: boolean;
+  copies: (Rect | null)[];
+  copies_px: ([number, number] | null)[];
+}
+interface RegionLayout {
+  canvas: [number, number];
+  fit: string;
+  outside: string;
+  mirror: string;
+  padding: number;
+  regions: Region[];
+}
 interface Payload {
   grid: [number, number];
   num_sources: number;
   sources: Source[];
   weights: number[][];
   settings: Record<string, unknown>;
+  regions: RegionLayout | null;
 }
 interface DOMWidget {
   value: unknown;
@@ -203,6 +220,7 @@ function parse(v: unknown): Payload | null {
     sources: Array.isArray(o.sources) ? o.sources : [],
     weights: o.weights,
     settings: o.settings && typeof o.settings === "object" ? o.settings : {},
+    regions: o.regions && Array.isArray(o.regions.regions) ? o.regions : null,
   };
 }
 
@@ -283,10 +301,7 @@ const settingGroups = computed(() => {
         },
       ],
     },
-    {
-      title: "Regions",
-      rows: [{ k: "strength", v: f2("region_strength"), dim: num("region_strength") <= 0 }],
-    },
+    ...regionGroups(p),
     {
       title: "Variation",
       rows: [
@@ -316,6 +331,30 @@ const settingGroups = computed(() => {
     },
   ];
 });
+
+// Fusion Regions' layout: one row per region, sized for the source picked in the legend.
+function regionGroups(p: Payload) {
+  const layout = p.regions;
+  if (!layout) return [];
+  const src = Math.min(selected.value, p.num_sources - 1);
+  const px = (s: [number, number] | null | undefined) => (s ? `${s[0]}×${s[1]}` : "—");
+  return [
+    {
+      title: "Regions",
+      rows: [
+        { k: "canvas", v: px(layout.canvas) },
+        { k: "fit", v: layout.fit },
+        { k: "padding", v: `${Math.round(layout.padding * 100)}%`, dim: layout.padding <= 0 },
+        { k: "outside", v: layout.outside },
+        { k: "mirror", v: layout.mirror, dim: layout.mirror === "none" },
+        ...layout.regions.map((r, i) => ({
+          k: `R${i + 1}`,
+          v: `box ${px(r.box_px)} · copy ${px(r.copies_px[src])}${r.flipped ? " · flipped" : ""}`,
+        })),
+      ],
+    },
+  ];
+}
 
 // per-cell breakdown for the hovered token, sorted by weight desc
 const cellBreakdown = computed(() => {
@@ -446,6 +485,7 @@ function draw() {
       ctx.stroke();
     }
   }
+  drawRegions(ctx);
   if (hovered.value >= 0) {
     const col = hovered.value % w;
     const row = Math.floor(hovered.value / w);
@@ -453,6 +493,52 @@ function draw() {
     ctx.lineWidth = 2;
     ctx.strokeRect(col * cw + 1, row * ch + 1, cw - 2, ch - 2);
   }
+}
+
+// Region boxes (dashed) and where the selected source's copy landed in each (solid, its colour),
+// numbered to match the Settings tab; a flipped copy is marked with a mirror arrow.
+function drawRegions(ctx: CanvasRenderingContext2D) {
+  const p = payload.value;
+  const layout = p?.regions;
+  if (!p || !layout) return;
+  const src = Math.min(selected.value, p.num_sources - 1);
+  const W = cssW.value;
+  const H = cssH.value;
+  const rect = (r: Rect) => [r[1] * W, r[0] * H, (r[3] - r[1]) * W, (r[2] - r[0]) * H] as const;
+  ctx.save();
+  // Outside every region no reference is present — those cells are only the backdrop.
+  ctx.beginPath();
+  ctx.rect(0, 0, W, H);
+  for (const region of layout.regions) ctx.rect(...rect(region.box));
+  ctx.fillStyle = "rgba(0,0,0,0.6)";
+  ctx.fill("evenodd");
+  ctx.lineWidth = 1.5;
+  ctx.font = "600 10px system-ui, sans-serif";
+  layout.regions.forEach((region, i) => {
+    const [x, y, w, h] = rect(region.box);
+    ctx.setLineDash([4, 3]);
+    ctx.strokeStyle = "rgba(255,255,255,0.85)";
+    ctx.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
+    const copy = region.copies[src];
+    if (copy) {
+      const [cx, cy, cw, chh] = rect(copy);
+      ctx.setLineDash([]);
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = "rgba(0,0,0,0.75)";
+      ctx.strokeRect(cx + 2, cy + 2, cw - 4, chh - 4);
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = p.sources[src]?.color ?? "#fff";
+      ctx.strokeRect(cx + 2, cy + 2, cw - 4, chh - 4);
+      ctx.lineWidth = 1.5;
+    }
+    const tag = `R${i + 1}${region.flipped ? " ⇋" : ""}`;
+    const tw = ctx.measureText(tag).width + 8;
+    ctx.fillStyle = "rgba(0,0,0,0.7)";
+    ctx.fillRect(x + 2, y + 2, tw, 14);
+    ctx.fillStyle = "#fff";
+    ctx.fillText(tag, x + 6, y + 12.5);
+  });
+  ctx.restore();
 }
 
 function trunc(label: string, widthPx: number): string {
@@ -588,13 +674,6 @@ onMounted(() => {
   }
   fit();
   draw();
-  if (wrapEl.value && typeof ResizeObserver !== "undefined") {
-    ro = new ResizeObserver(() => {
-      fit();
-      draw();
-    });
-    ro.observe(wrapEl.value);
-  }
   [0, 80, 300].forEach((t) =>
     window.setTimeout(() => {
       fit();
@@ -602,10 +681,25 @@ onMounted(() => {
     }, t),
   );
 });
-watch([payload, view, selected, hovered], () => {
-  fit();
-  draw();
+// The grid only exists once a payload has arrived, so it is observed whenever it appears, and a
+// new payload is drawn after the render that creates it rather than before.
+watch(wrapEl, (el) => {
+  ro?.disconnect();
+  if (!el || typeof ResizeObserver === "undefined") return;
+  ro = new ResizeObserver(() => {
+    fit();
+    draw();
+  });
+  ro.observe(el);
 });
+watch(
+  [payload, view, selected, hovered],
+  () => {
+    fit();
+    draw();
+  },
+  { flush: "post" },
+);
 onBeforeUnmount(() => {
   ro?.disconnect();
   if (onExec) {

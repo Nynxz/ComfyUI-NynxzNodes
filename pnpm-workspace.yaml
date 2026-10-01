@@ -3,3 +3,6 @@
 minimumReleaseAgeExclude:
   - '@nynxz/zenkit-ui'
   - '@nynxz/zenkit-nodekit'
+overrides:
+  '@nynxz/zenkit-nodekit': link:../ZenKit/packages/nodekit
+  '@nynxz/zenkit-ui': link:../ZenKit/packages/ui

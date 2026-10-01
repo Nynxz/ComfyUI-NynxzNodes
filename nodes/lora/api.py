@@ -1,4 +1,4 @@
-"""HTTP routes for the LoRA widget: list LoRAs, serve sidecar previews, manage favorites.
+"""HTTP routes for the LoRA widget: list LoRAs, serve previews and details, manage favorites.
 
 Self-contained so the group drops cleanly into other packs. Routes register on
 import (see nodes/lora/__init__.py).
@@ -6,11 +6,13 @@ import (see nodes/lora/__init__.py).
 
 from __future__ import annotations
 
+import asyncio
 import os
+from urllib.parse import quote
 
 from aiohttp import web
 
-from . import favorites
+from . import favorites, lora_manager, meta
 
 try:
     import folder_paths
@@ -24,8 +26,6 @@ try:
 except Exception:  # noqa: BLE001 - no server (import-time checks, tests)
     _routes = None
 
-_PREVIEW_EXTS = (".preview.png", ".preview.jpg", ".png", ".jpg", ".jpeg", ".webp", ".gif")
-
 
 def _lora_path(name: str) -> str | None:
     if not folder_paths or not name:
@@ -33,16 +33,24 @@ def _lora_path(name: str) -> str | None:
     return folder_paths.get_full_path("loras", name)
 
 
-def _preview_for(path: str | None) -> str | None:
-    """First sidecar image sharing the LoRA's base name, else None."""
-    if not path:
-        return None
-    base = os.path.splitext(path)[0]
-    for ext in _PREVIEW_EXTS:
-        cand = base + ext
-        if os.path.isfile(cand):
-            return cand
-    return None
+def _preview_kinds(names: list[str]) -> dict[str, str | None]:
+    """Preview kind per LoRA, listing each folder once instead of stat-ing every candidate."""
+    dirs: dict[str, set[str]] = {}
+    out: dict[str, str | None] = {}
+    for n in names:
+        path = _lora_path(n)
+        if not path:
+            out[n] = None
+            continue
+        folder = os.path.dirname(path)
+        if folder not in dirs:
+            try:
+                dirs[folder] = set(os.listdir(folder))
+            except OSError:
+                dirs[folder] = set()
+        found = meta.find_preview(path, dirs[folder])
+        out[n] = found[1] if found else None
+    return out
 
 
 if _routes is not None:
@@ -54,10 +62,12 @@ if _routes is not None:
         except Exception:  # noqa: BLE001 - folder_paths quirks shouldn't 500 the listing
             names = []
         favs = set(favorites.get_favorites())
+        kinds = await asyncio.to_thread(_preview_kinds, names)
         loras = [
             {
                 "name": n.replace("\\", "/"),
-                "has_preview": _preview_for(_lora_path(n)) is not None,
+                "has_preview": kinds[n] is not None,
+                "preview": kinds[n],
                 "favorite": n.replace("\\", "/") in favs,
             }
             for n in names
@@ -66,11 +76,48 @@ if _routes is not None:
 
     @_routes.get("/nynxz/lora/preview")
     async def nynxz_preview(request):
-        name = request.query.get("name", "")
-        path = _preview_for(_lora_path(name))
-        if not path:
+        """The preview as a still; `raw=1` serves a video preview as the video itself."""
+        found = meta.find_preview(_lora_path(request.query.get("name", "")))
+        if not found:
             return web.Response(status=404)
+        path, kind = found
+        if kind == "video" and request.query.get("raw") != "1":
+            path = await asyncio.to_thread(meta.poster, path)
+            if not path:
+                return web.Response(status=404)
         return web.FileResponse(path)
+
+    @_routes.get("/nynxz/lora/info")
+    async def nynxz_info(request):
+        name = request.query.get("name", "").replace("\\", "/")
+        path = _lora_path(name)
+        if not path:
+            return web.json_response({"error": "not found"}, status=404)
+        info = await asyncio.to_thread(meta.read_info, path)
+        # Downloaded examples are served from disk; the Civitai URL stays as a fallback.
+        q = "?name=" + quote(name)
+        for img in info.get("images", []):
+            file = img.pop("file", None)
+            img["remote"] = img["url"] or None
+            if file:
+                img["url"] = "/nynxz/lora/example" + q + "&file=" + quote(file)
+        found = meta.find_preview(path)
+        info.update(
+            name=name,
+            preview=found[1] if found else None,
+            favorite=name in favorites.get_favorites(),
+        )
+        return web.json_response(info)
+
+    @_routes.get("/nynxz/lora/example")
+    async def nynxz_example(request):
+        """One of Lora Manager's downloaded example files for a LoRA."""
+        path = _lora_path(request.query.get("name", ""))
+        sha = await asyncio.to_thread(meta.sha256_of, path) if path else None
+        file = await asyncio.to_thread(lora_manager.resolve, sha, request.query.get("file", ""))
+        if not file:
+            return web.Response(status=404)
+        return web.FileResponse(file)
 
     @_routes.get("/nynxz/favorites")
     async def nynxz_favorites_get(_request):

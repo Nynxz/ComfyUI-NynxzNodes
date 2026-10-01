@@ -16,12 +16,18 @@
         class="rg-group"
         :class="{ drop: dropRegion === group.region, source: dragRegion === group.region }"
         :data-region="group.region"
-        :style="{ '--rg-hue': hue(group.region) }"
       >
         <div class="rg-head">
-          <span class="rg-badge">{{ group.region }}</span>
-          <span class="rg-title">Region {{ group.region }}</span>
-          <span class="rg-note">{{ group.entries.length ? "" : "holds territory only" }}</span>
+          <span class="rg-label" :title="`The ${ordinal(group.region)} mask in the regions batch`">
+            <span class="rg-title">Region {{ group.region }}</span>
+            <span v-if="group.entries.length" class="rg-count">{{ group.entries.length }}</span>
+          </span>
+          <ZenIconButton
+            v-if="group.region === regionCount && canRemoveRegion"
+            icon="mdi mdi-close"
+            title="Remove this region slot"
+            @click="removeRegion"
+          />
           <ZenIconButton
             icon="mdi mdi-plus"
             title="Add a LoRA to this region"
@@ -91,12 +97,6 @@
         @primary="addRegion"
       >
         <ZenIconButton
-          v-if="canRemoveRegion"
-          icon="mdi mdi-minus"
-          title="Remove the last region slot"
-          @click="removeRegion"
-        />
-        <ZenIconButton
           v-if="rows.length"
           icon="mdi mdi-broom"
           danger
@@ -105,10 +105,6 @@
         />
       </WidgetActions>
     </div>
-
-    <p v-if="!rows.length" class="rg-hint">
-      Regions are numbered by their mask's place in the batch — region 1 is the first mask.
-    </p>
 
     <LoraBrowser
       v-model:open="browse"
@@ -124,6 +120,7 @@ import type { WidgetOptions } from "@/framework";
 /** Per-widget overrides picked up by lib/autoRegister.ts. */
 export const widgetOptions: WidgetOptions = {
   minHeight: 90,
+  minWidth: 260,
 };
 </script>
 
@@ -151,10 +148,8 @@ import { computed, ref } from "vue";
 import { useDragSurface } from "@nynxz/zenkit-nodekit";
 import { ZenDot, ZenIconButton, ZenNumber, ZenWidget } from "@nynxz/zenkit-ui";
 
-import LoraBrowser from "@/components/LoraBrowser.vue";
-import LoraPicker from "@/components/LoraPicker.vue";
 import WidgetActions from "@/components/WidgetActions.vue";
-import * as lib from "@/lib/loraLibrary";
+import { loraLibrary as lib, LoraBrowser, LoraPicker } from "@nynxz/zenkit-ui";
 import { rowsFrom } from "@/lib/widgetRows";
 
 interface RegionRow {
@@ -223,9 +218,10 @@ const canRemoveRegion = computed(
   () => regionCount.value > 1 && !rows.value.some((r) => r.region === regionCount.value),
 );
 
-/** A stable colour per region, so a row's group is readable at a glance. */
-function hue(region: number): string {
-  return `${(region * 67 + 200) % 360}`;
+function ordinal(n: number): string {
+  const suffix =
+    n % 100 >= 11 && n % 100 <= 13 ? "th" : ({ 1: "st", 2: "nd", 3: "rd" }[n % 10] ?? "th");
+  return `${n}${suffix}`;
 }
 
 const browse = ref(false);
@@ -353,14 +349,16 @@ const drag = useDragSurface({
   display: flex;
   flex-direction: column;
   gap: 5px;
-  padding: 5px 6px 6px;
-  border: 1px solid var(--zen-border, #34343c);
-  border-left: 3px solid hsl(var(--rg-hue) 62% 58%);
+  padding: 4px 6px 6px;
+  border: 1px solid var(--zen-surface-border, var(--zen-border, #34343c));
   border-radius: var(--zen-radius, 8px);
-  background: color-mix(in srgb, var(--zen-text, #fff) 2%, transparent);
+  background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);
   transition:
-    border-color 0.1s ease,
-    background 0.1s ease;
+    border-color 0.12s ease,
+    background 0.12s ease;
+}
+.rg-group:hover {
+  background: color-mix(in srgb, var(--zen-text, #fff) 5%, transparent);
 }
 /* the group the pointer is over, and the one the row came from */
 .rg-group.drop {
@@ -374,35 +372,31 @@ const drag = useDragSurface({
 .rg-head {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
+  min-height: 24px;
+  padding-left: 2px;
 }
-.rg-badge {
-  flex: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 17px;
-  height: 17px;
-  border-radius: 50%;
-  background: hsl(var(--rg-hue) 62% 58%);
-  color: #101014;
-  font-size: 10px;
-  font-weight: 700;
-}
-.rg-title {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--zen-text, #e5e5ea);
-}
-.rg-note {
+.rg-label {
   flex: 1;
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: help;
+}
+.rg-title {
+  font-size: 12px;
+  color: var(--zen-text, #e5e5ea);
   white-space: nowrap;
-  font-size: 10px;
-  font-style: italic;
+}
+.rg-count {
+  flex: none;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--zen-text, #fff) 7%, transparent);
   color: var(--zen-muted, #9aa0aa);
+  font-size: 10px;
+  line-height: 15px;
 }
 /* An empty group still has to be a target big enough to aim at, so it keeps a row's worth of
    height rather than collapsing to its header. */
@@ -412,7 +406,7 @@ const drag = useDragSurface({
   text-align: center;
   font-size: 10px;
   color: var(--zen-muted, #9aa0aa);
-  border: 1px dashed var(--zen-border, #34343c);
+  border: 1px dashed var(--zen-surface-border, var(--zen-border, #34343c));
   border-radius: var(--zen-radius, 6px);
 }
 
@@ -476,12 +470,5 @@ const drag = useDragSurface({
    can produce, so every row lines up at exactly the size the digits need and nothing clips. */
 .rg-str {
   flex: none;
-}
-.rg-hint {
-  margin: 0;
-  text-align: center;
-  font-size: 10px;
-  line-height: 1.4;
-  color: var(--zen-muted, #9aa0aa);
 }
 </style>

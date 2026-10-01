@@ -1,5 +1,6 @@
-"""LoRA Loader (CLIP) — all-in-one multi-LoRA stack loader: MODEL + CLIP in, on-node
-stack widget, MODEL + CLIP out. The plain LoRA Loader is model-only.
+"""LoRA Loader (CLIP) — deprecated: the LoRA Loader now applies to MODEL, CLIP or both.
+
+Kept registered so saved workflows still load; hidden from the node library.
 """
 
 from __future__ import annotations
@@ -18,9 +19,10 @@ class NynxzLoraLoaderCLIP(LoraNode):
             node_id="Lora.LoaderCLIP",
             display_name="LoRA Loader (CLIP)",
             description=(
-                "Applies a stack of LoRAs to MODEL + CLIP. Use the plain 'LoRA Loader' if "
-                "you don't need CLIP."
+                "Deprecated — use LoRA Loader and set it to apply to Model + CLIP. Applies a "
+                "stack of LoRAs to MODEL + CLIP."
             ),
+            is_deprecated=True,
             inputs=[
                 io.Model.Input("model"),
                 io.Clip.Input("clip"),

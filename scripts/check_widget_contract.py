@@ -28,11 +28,15 @@ def component_keys() -> dict[str, str]:
 
 
 def declared_widget_types() -> dict[str, str]:
-    """io_types declared via widget_type("Component", ...) across nodes/."""
+    """io_types declared via widget_type("Component", ...) or inline_widget(input, "Component")."""
     found: dict[str, str] = {}
     for path in sorted((ROOT / "nodes").rglob("*.py")):
         text = path.read_text(encoding="utf-8")
         for m in re.finditer(r'widget_type\(\s*["\']([A-Za-z0-9_]+)["\']', text):
+            found[to_widget_key(m.group(1))] = str(path.relative_to(ROOT))
+        for m in re.finditer(
+            r'inline_widget\(.*?,\s*["\']([A-Z][A-Za-z0-9_]*)["\']\s*\)', text, re.DOTALL
+        ):
             found[to_widget_key(m.group(1))] = str(path.relative_to(ROOT))
     return found
 

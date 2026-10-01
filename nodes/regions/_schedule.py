@@ -34,12 +34,26 @@ def _smoothstep(t: float) -> float:
     return t * t * (3.0 - 2.0 * t)
 
 
+#: How close a sigma must be to a scheduled one to count as THAT step, as a share of the
+#: smallest gap in the schedule. Loose enough to survive an fp16 round trip, far too tight to
+#: reach a neighbouring step.
+MATCH_TOLERANCE = 0.25
+
+
 def step_fraction(sigma: float, schedule) -> float | None:
     """Where `sigma` falls in the schedule that is running, as 0..1 over the model calls.
 
     A schedule of N steps is N+1 sigmas, and the model is called at the first N of them, so the
-    first call is 0.0 and the last is 1.0. Returns None when there is no schedule to locate against
-    — the caller falls back to `Progress`, below.
+    first call is 0.0 and the last is 1.0.
+
+    **Only an ACTUAL scheduled sigma locates a step.** Second-order samplers (heun, dpmpp_2s,
+    dpmpp_sde) call the model again at a midpoint that is in no schedule, and snapping that to
+    the nearest entry used to report the NEXT step early — so a commit could land half a step
+    before it was asked to, and the fraction ran 0.143, 0.143, 0.143, 0.286… instead of counting.
+    An unscheduled sigma returns None and the caller holds the step it was already on.
+
+    Returns None when there is no schedule to locate against at all, too; `Progress` says which
+    of the two happened.
     """
     if schedule is None:
         return None
@@ -47,7 +61,13 @@ def step_fraction(sigma: float, schedule) -> float | None:
     if values.numel() < 2:
         return None
     calls = values.numel() - 1  # the terminal sigma is a destination, not a call
-    index = int(torch.argmin((values[:calls] - float(sigma)).abs()).item())
+    distance = (values[:calls] - float(sigma)).abs()
+    index = int(torch.argmin(distance).item())
+    if calls > 1:
+        gaps = (values[:-1] - values[1:]).abs()
+        tolerance = float(gaps.min()) * MATCH_TOLERANCE
+        if float(distance[index]) > tolerance:
+            return None  # an intermediate evaluation, not a step of its own
     return index / max(calls - 1, 1)
 
 
@@ -60,20 +80,27 @@ class Progress:
     preview reports which of the two was used.
     """
 
-    __slots__ = ("first", "used_fallback")
+    __slots__ = ("first", "held", "used_fallback")
 
     def __init__(self):
         self.first: float | None = None
+        self.held: float | None = None
         self.used_fallback = False
 
     def reset(self):
         self.first = None
+        self.held = None
         self.used_fallback = False
 
     def of(self, sigma: float, schedule) -> float:
         exact = step_fraction(sigma, schedule)
         if exact is not None:
+            self.held = exact
             return exact
+        if schedule is not None and self.held is not None:
+            # A schedule exists and this sigma simply is not a step in it — a second-order
+            # sampler's midpoint evaluation. Hold the step we are on rather than inventing one.
+            return self.held
         self.used_fallback = True
         if self.first is None or sigma > self.first:
             self.first = sigma

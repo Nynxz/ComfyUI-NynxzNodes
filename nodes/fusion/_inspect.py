@@ -38,6 +38,7 @@ def build_inspect_payload(
     fits=None,
     settings=None,
     thumbs=None,
+    regions=None,
 ) -> dict:
     """Pack the weight field + context into the inspector payload (all JSON-safe).
 
@@ -75,6 +76,52 @@ def build_inspect_payload(
         # [num_sources][tokens], row-major (H then W) — matches the engine's token order.
         "weights": [[_f(v) for v in row] for row in w.tolist()],
         "settings": _clean(settings),
+        "regions": region_layout(regions or []),
+    }
+
+
+def region_layout(per_source) -> dict | None:
+    """Fusion Regions' layout, one entry per region with each source's copy — or None when the
+    sources weren't laid out. Rects are [top, left, bottom, right] as fractions of the canvas, so
+    they draw straight onto the token grid; `*_px` keep the canvas-pixel sizes for reading."""
+    first = next((info for info in per_source if info), None)
+    if not first:
+        return None
+    canvas_w, canvas_h = first["canvas"]
+
+    def frac(rect):
+        top, left, bottom, right = rect
+        return [
+            _f(top / canvas_h, 4),
+            _f(left / canvas_w, 4),
+            _f(bottom / canvas_h, 4),
+            _f(right / canvas_w, 4),
+        ]
+
+    def size(rect):
+        return [int(rect[3] - rect[1]), int(rect[2] - rect[0])]
+
+    regions = []
+    for k, box in enumerate(first["boxes"]):
+        copies = [
+            info["copies"][k] if info and k < len(info["copies"]) else None for info in per_source
+        ]
+        regions.append(
+            {
+                "box": frac(box),
+                "box_px": size(box),
+                "flipped": bool(first["flipped"][k]),
+                "copies": [frac(c) if c else None for c in copies],
+                "copies_px": [size(c) if c else None for c in copies],
+            }
+        )
+    return {
+        "canvas": [int(canvas_w), int(canvas_h)],
+        "fit": str(first["fit"]),
+        "outside": str(first["outside"]),
+        "mirror": str(first["mirror"]),
+        "padding": _f(first["padding"]),
+        "regions": regions,
     }
 
 

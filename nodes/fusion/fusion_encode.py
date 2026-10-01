@@ -23,14 +23,19 @@ from ._base import FusionNode
 from ._fusion import (
     ASPECT_OPTIONS,
     DEFAULT_ALPHA_MODE,
+    DEFAULT_REFERENCE_MODE,
+    DEFAULT_STRUCTURE_SOURCE,
     FIT_OVERRIDE,
     FIT_OVERRIDE_OPTIONS,
     FusionSettings,
     alpha_input,
+    empty_latent,
     encode_fusion,
     flatten_alpha,
+    reference_mode_input,
     seed_input,
     split_alpha,
+    structure_inputs,
     style_inputs,
     tuning_inputs,
     variation_inputs,
@@ -60,6 +65,26 @@ def _source_thumb(image: torch.Tensor, size: int = 72) -> str:
         return ""
 
 
+def _region_settings(entries) -> dict:
+    """Fusion Regions' layout for the blend: its boxes as frame fractions with each copy's flip,
+    and whether it asked for the pattern and the content weights per region. Empty when the
+    sources weren't laid out over regions, which leaves the blend exactly as it always was."""
+    info = next((entry.get("regions") for entry in entries if entry.get("regions")), None)
+    if not info:
+        return {}
+    width, height = info["canvas"]
+    return {
+        "regions": tuple(
+            ((top / height, left / width, bottom / height, right / width), bool(flipped))
+            for (top, left, bottom, right), flipped in zip(
+                info["boxes"], info["flipped"], strict=True
+            )
+        ),
+        "region_pattern": info.get("pattern") == "per region",
+        "shared_content": info.get("content") == "shared",
+    }
+
+
 class NynxzFusionEncode(FusionNode):
     @classmethod
     def define_schema(cls):
@@ -68,7 +93,15 @@ class NynxzFusionEncode(FusionNode):
             display_name="Text Encode (Fusion)",
             description="Fuses the images from a Fusion Input node into one Qwen3-VL conditioning, "
             "blending their visual tokens by each image's strength. Images with an alpha channel "
-            "only contribute where they are opaque, so a mask removes an element from the blend.",
+            "only contribute where they are opaque, so a mask removes an element from the blend. "
+            "Works with any Qwen3-VL encoder (Krea 2 and Mage-Flow at 4B; Qwen Image 2.1 and "
+            "Ideogram 4 at 8B) and adapts the chat template, alpha handling and reference sizing "
+            "to whichever is wired. On Qwen Image 2.1, `reference_mode` additionally chooses "
+            "between blending the visual tokens and blending the VAE references the DiT receives. "
+            "On 2.1 the reference's pixels and its meaning travel separately, so "
+            "`structure_source` + `semantic_strength` let one image anchor the composition while "
+            "the rest still contribute meaning. Note 2.1 wants `visual_size` near 1024, not the "
+            "384 default.",
             inputs=[
                 io.Clip.Input("clip"),
                 io.String.Input("prompt", multiline=True, dynamic_prompts=True),
@@ -84,10 +117,13 @@ class NynxzFusionEncode(FusionNode):
                     "visual_size",
                     default=384,
                     min=128,
-                    max=1024,
+                    max=2048,
                     step=32,
                     tooltip="Square-equivalent side length of the visual grid. Higher = more visual "
-                    "tokens = finer fusion detail, at more compute.",
+                    "tokens = finer fusion detail, at more compute. On Qwen Image 2.1 this also "
+                    "sets the resolution the reference latents are encoded at (the two share one "
+                    "resize), so raise it to ~1024 there — the 384 default is tuned for the "
+                    "token-only blend and makes a soft reference on 2.1.",
                 ),
                 io.Combo.Input(
                     "fit",
@@ -103,10 +139,19 @@ class NynxzFusionEncode(FusionNode):
                 *variation_inputs(),
                 seed_input(),
                 alpha_input(),
+                reference_mode_input(),
+                *structure_inputs(),
                 io.Vae.Input("vae", optional=True),
             ],
             outputs=[
                 io.Conditioning.Output(),
+                io.Latent.Output(
+                    display_name="latent",
+                    tooltip="Empty latent matching the visual grid, shaped for the wired VAE. "
+                    "Qwen Image 2.1 samples 64-channel at 1/16 scale and nothing in core builds "
+                    "that shape except its own encode node, so this saves wiring one in just for "
+                    "the canvas. With no VAE wired it falls back to 16 channels at 1/8.",
+                ),
                 FusionInspect.Output(
                     display_name="fusion_inspect",
                     tooltip="Wire into a Fusion Inspector node for an interactive view of the blend "
@@ -142,6 +187,9 @@ class NynxzFusionEncode(FusionNode):
         vae=None,
         seed=0,
         alpha_mode=DEFAULT_ALPHA_MODE,
+        reference_mode=DEFAULT_REFERENCE_MODE,
+        structure_source=DEFAULT_STRUCTURE_SOURCE,
+        semantic_strength=1.0,
     ) -> io.NodeOutput:
         # One image is fine: the blend is a passthrough, which is what you want when this node
         # is doing style release or standing in for a plain single-reference encode.
@@ -171,9 +219,28 @@ class NynxzFusionEncode(FusionNode):
             visual_aspect=visual_aspect,
             visual_size=visual_size,
             alpha_mode=alpha_mode,
+            reference_mode=reference_mode,
+            structure_source=structure_source,
+            semantic_strength=semantic_strength,
+            **_region_settings(entries),
         )
         # "per image" keeps each source's own fit; any other value forces all of them.
         fits = [entry.get("fit", "contain") if fit == FIT_OVERRIDE else fit for entry in entries]
+        # Fusion Regions' "one copy": the prompt reads each reference whole, not the tiled frame.
+        separate_reading = any("prompt_image" in entry for entry in entries)
+        text_sources = (
+            [entry.get("prompt_image", entry["image"]) for entry in entries]
+            if separate_reading
+            else None
+        )
+        text_fits = (
+            [
+                entry.get("prompt_fit", entry.get("fit", "contain")) if fit == FIT_OVERRIDE else fit
+                for entry in entries
+            ]
+            if separate_reading
+            else None
+        )
         debug: dict = {}
         conditioning = encode_fusion(
             clip,
@@ -184,6 +251,8 @@ class NynxzFusionEncode(FusionNode):
             fits=fits,
             vae=vae,
             debug=debug,
+            text_sources=text_sources,
+            text_fits=text_fits,
         )
         weights = debug.get("weights")
         labels = [entry.get("label", "") for entry in entries]
@@ -197,6 +266,7 @@ class NynxzFusionEncode(FusionNode):
                 strengths=[entry.get("strength", 1.0) for entry in entries],
                 fits=fits,
                 thumbs=[_source_thumb(entry["image"]) for entry in entries],
+                regions=[entry.get("regions") for entry in entries],
                 settings={
                     "fusion_method": settings.fusion_method,
                     "block_size": settings.block_size,
@@ -214,6 +284,17 @@ class NynxzFusionEncode(FusionNode):
                     "visual_size": settings.visual_size,
                     "visual_aspect": settings.visual_aspect,
                     "alpha_mode": settings.alpha_mode,
+                    # Resolved, not requested: 'auto' is the default, so echoing the widget back
+                    # would leave the inspector unable to say which of the two blends actually
+                    # ran. The encoder name goes with it because the mode only makes sense
+                    # against the encoder that allowed it.
+                    "encoder": debug.get("profile", ""),
+                    "reference_mode": debug.get("reference_mode", settings.reference_mode),
+                    # Only meaningful in reference-latent mode, and absent from debug otherwise —
+                    # so the inspector can tell "not used here" from "used and set to fused".
+                    "structure_source": debug.get("structure_source", ""),
+                    "structure_anchor": debug.get("structure_anchor", -1),
+                    "semantic_strength": settings.semantic_strength,
                     # How many sources actually carry a mask — the inspector dims the alpha row
                     # when it's none, so the knob reads as inert rather than ignored.
                     "alpha_sources": sum(1 for entry in entries if entry["image"].shape[-1] >= 4),
@@ -221,4 +302,5 @@ class NynxzFusionEncode(FusionNode):
             )
         else:
             inspect = {}
-        return io.NodeOutput(conditioning, inspect)
+        width, height = debug.get("pixels", (settings.visual_size, settings.visual_size))
+        return io.NodeOutput(conditioning, empty_latent(width, height, vae), inspect)

@@ -490,11 +490,54 @@ async function addFiles(files: File[]) {
   }
 }
 
-// --- drop zone (files from the OS) --------------------------------------------------
+// --- drop zone -----------------------------------------------------------------------
+// Three kinds of drag land here: files from the OS, an image already on the server (ComfyUI's
+// own asset MIME — what its asset cards and the ZenSuite asset browser set, and what Load Image
+// takes), and a bare image link. The asset one is referenced where it lives, never re-uploaded.
+const COMFY_ASSET_MIME = "application/x-comfy-asset-info";
+const IMAGE_EXT = /\.(png|jpe?g|webp|gif|bmp|tiff?)$/i;
+const DROP_TYPES = ["Files", COMFY_ASSET_MIME, "text/uri-list"];
+
 function onDragOver(e: DragEvent) {
   if (dragIndex.value >= 0) return; // a card reorder is in flight, not a file drop
-  if (!e.dataTransfer?.types?.includes("Files")) return;
+  const types = e.dataTransfer?.types ?? [];
+  if (!DROP_TYPES.some((t) => types.includes(t))) return;
+  if (e.dataTransfer) e.dataTransfer.dropEffect = "copy";
   dragOver.value = true;
+}
+
+/** An image already on the server, from ComfyUI's asset drag payload. */
+function droppedAsset(dt: DataTransfer): { ref: string; type: SourceType } | null {
+  try {
+    const info = JSON.parse(dt.getData(COMFY_ASSET_MIME) || "null") as {
+      filename?: string;
+      subfolder?: string;
+      type?: string;
+    } | null;
+    if (!info?.filename || !IMAGE_EXT.test(info.filename)) return null;
+    const type = (TYPES.includes(info.type as SourceType) ? info.type : "input") as SourceType;
+    return { ref: info.subfolder ? `${info.subfolder}/${info.filename}` : info.filename, type };
+  } catch {
+    return null;
+  }
+}
+
+/** A dragged image link, fetched into a File so it goes through the same path as a dropped one. */
+async function droppedLink(dt: DataTransfer): Promise<File | null> {
+  const url = dt
+    .getData("text/uri-list")
+    .split("\n")
+    .map((line) => line.trim())
+    .find((line) => line && !line.startsWith("#"));
+  if (!url) return null;
+  try {
+    const blob = await (await fetch(url)).blob();
+    if (!blob.type.startsWith("image/")) return null;
+    const name = new URL(url, location.href).searchParams.get("filename") ?? "dropped.png";
+    return new File([blob], name, { type: blob.type });
+  } catch {
+    return null;
+  }
 }
 /** dragleave also fires on the root the instant the pointer crosses into a card, so the mask
  *  only clears once the pointer has actually left the widget (relatedTarget is null when it
@@ -506,8 +549,20 @@ function onDragLeave(e: DragEvent) {
 }
 async function onDrop(e: DragEvent) {
   dragOver.value = false;
-  if (dragIndex.value >= 0) return;
-  await addFiles([...(e.dataTransfer?.files ?? [])]);
+  const dt = e.dataTransfer;
+  if (dragIndex.value >= 0 || !dt) return;
+  const asset = droppedAsset(dt);
+  if (asset) {
+    addRef(asset.ref, asset.type);
+    commit();
+    return;
+  }
+  if (dt.files.length) {
+    await addFiles([...dt.files]);
+    return;
+  }
+  const linked = await droppedLink(dt);
+  if (linked) await addFiles([linked]);
 }
 
 // --- reorder (source order drives the spatial patterns, so it's worth dragging) ------

@@ -36,6 +36,7 @@ class GateState:
         "regions",
         "scale",
         "schedule",
+        "stepped",
         "trace",
         "track",
         "txtlen",
@@ -58,14 +59,20 @@ class GateState:
         self.last_sigma: float | None = None
         self.progress = _schedule.Progress()
         self.fraction = 0.0
+        #: Scale 1.0 / frozen False is the NO-SCHEDULE baseline — an ordinary LoRA at full
+        #: strength. It is also what the state holds if `note_step` is never reached, which makes
+        #: a missing `sigmas` look exactly like a working run with every knob set to nothing. So
+        #: the fact that a step was seen is recorded, and the preview says so when it was not.
         self.scale = 1.0
         self.floor = 0.0
         self.frozen = False
+        self.stepped = False
         #: `[(step_fraction, scale, frozen)]` for the preview, so the schedule that RAN can be
         #: shown rather than the one that was configured.
         self.trace: list[tuple[float, float, bool]] = []
 
     def reset(self):
+        self.stepped = False
         self.anchor = None
         self.map = None
         self.gates = None
@@ -103,6 +110,7 @@ class GateState:
 
     def note_step(self, sigma: float, schedule) -> None:
         """Advance the schedule's view of the run. Called once per forward, from `post_input`."""
+        self.stepped = True
         self.fraction = self.progress.of(sigma, schedule)
         self.scale = self.schedule.scale(self.fraction)
         self.floor = self.schedule.floor(self.fraction)

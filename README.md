@@ -46,6 +46,22 @@ Regions from Masks ──> Region LoRAs ──> Regions Apply ──> MODEL ─�
   baseline: `track=0` is a static mask, `preheat=1` is a LoRA from step 0, `refine=0` is no
   clustering. Turn them all off and this is plain regional LoRA, which is the thing to beat.
 
+For **NK2E edits with seams**, keep the edit LoRA loaded normally and the source image connected
+as reference conditioning. In **Region Latent**, try `background=0`, `flatten=0`,
+`context_radius=32`, and `context_denoise=0.18`, keeping the region denoise that already produces
+the desired edit (for example, `0.97`). Use **Differential Diffusion** on the sampling model.
+The context band gives nearby pixels some freedom to adapt late in sampling, fading to zero
+within the chosen radius in source-image pixels. This changes the denoise mask only; it does not
+expand the regional clothing LoRA's gate. Keep Regions Apply's global `release=0` for this test.
+Leave the source-reference configuration that works with your edit checkpoint unchanged.
+
+An optional **`protect_mask`** on Region Latent uses white for protected areas such as the face
+and hands, overriding region, background, context denoise, and flattening. Supply one mask for all
+source images or a matching batch. Protection operates on latent cells, conservatively retaining
+small protected features; it does not guarantee identical RGB pixels after VAE decoding. Preview
+the existing `denoise_mask` output to check the repair band and protected areas. Radius `0`
+disables the new band and is the default, preserving existing workflows.
+
 Two nodes exist only to answer "what actually happened", so the working nodes don't each carry a
 report socket:
 
@@ -55,6 +71,41 @@ report socket:
   mask, a subject that moved, and a LoRA bleeding for some other reason stop looking alike. Wire the
   sampler's `LATENT` in to sequence it after the run. The *post*-sampling view.
 
+### SAM3 — segmentation with subtraction
+
+- **SAM3 Detect (Signed)** — core's `SAM3 Detect` with a minus sign. Prefix any term with `-` and
+  it is removed from what the other terms found:
+
+  ```
+  person:2, -head:2      two people, minus their heads
+  woman, man, -hands     both subjects, minus every hand
+  ```
+
+  The syntax is SAM3's own `category:N`, unchanged — a prompt with no `-` in it means exactly what
+  it means in the stock node. The node takes `CLIP` and a prompt where stock takes a
+  `CONDITIONING`, and that is not a style choice: core parses `category:N` in the *tokenizer*
+  (`_parse_prompts` in `comfy/text_encoders/sam3_clip.py`) and hands the detector anonymous
+  `(embedding, max_detections)` pairs, so a sign written into a `CLIPTextEncode` would be gone
+  before the node could read it. Encoding each term here is what keeps the sign attached to it.
+
+  **`N` means something different on a negative.** On a positive it is core's own default of 1,
+  trap and all — `person` finds one person, `person:2` finds two. On a negative it defaults to
+  *all* matches, because subtracting one of the two heads in frame leaves the other one sitting in
+  the mask. Write `-head:2` to cap it.
+
+  Two knobs beyond stock's, both advanced. **`negative_grow`** (4px) dilates the negatives before
+  removing them: a negative traces its own silhouette, so an exact subtraction leaves a ring of its
+  edge behind — a collar of neck where a head was. **`drop_empty`** (off) discards positives the
+  negatives consumed entirely, instead of emitting a blank mask; it is off by default because
+  dropping one renumbers everything after it, and region numbers are what **Region LoRAs** binds
+  to. `bboxes` are measured from the mask *after* subtraction, so a box and its mask always
+  describe the same pixels.
+
+  Subtraction is union-then-remove: every negative in a frame merges into one keep-out mask that
+  comes off each positive. Under occlusion — person B's head overlapping person A's body — that
+  punches a hole in A. Matching each negative to the positive containing it would fix that, and is
+  not implemented.
+
 ### Fusion — several reference images in one conditioning
 
 Wire two references into an edit and the model gets one after the other; it takes what it likes
@@ -63,24 +114,92 @@ visual block to prompt against. So the blend happens inside the conditioning: ea
 encoded independently through the Qwen3-VL vision tower, and their visual tokens are mixed token by
 token under a weight field you control — by spatial pattern or by content.
 
-> Needs a **Qwen3-VL text encoder** (`qwen3vl_4b` / `qwen3vl_8b`) — which is what Krea 2 uses too,
-> hence `Text Encode (Fusion)` rather than any one model's name.
+> Needs a **Qwen3-VL text encoder** (`qwen3vl_4b` / `qwen3vl_8b`) — hence `Text Encode (Fusion)`
+> rather than any one model's name. Krea 2 and Mage-Flow at 4B; **Qwen Image 2.1** and Ideogram 4
+> at 8B. The node detects which is wired and adapts the chat template, alpha handling and
+> reference sizing to it.
+
+**Qwen Image 2.1 is built differently, and it changes what you fuse.** Krea 2 and
+Qwen-Image-Edit 2509 trim only the system prefix from their conditioning, so the vision tower's
+tokens stay in it and the DiT consumes them as semantic conditioning — that is the lever this
+group blends. 2.1 *deletes* those tokens and splices VAE reference latents at `image_slots`
+instead, through a separate `img_in` path (2D RoPE, bidirectional block attention) distinct from
+its causal text path. The vision tokens are a discarded intermediate whose job was to
+contextualise the text.
+
+So on 2.1 the reference's **semantics** survive in the text tokens and its **pixels** arrive as
+latents. `reference_mode` picks what the weight field acts on:
+
+| mode | blends | needs |
+|---|---|---|
+| `reference latents` | the VAE latents the DiT receives (as ONE fused reference) **and** the per-image text readings — the trained path | 2.1 + a VAE |
+| `visual tokens` | the vision tower's tokens inside the text stream — the normal path on Krea 2 / Edit, **out of distribution on 2.1** | any Qwen3-VL encoder |
+| `auto` (default) | reference latents on 2.1 with a VAE; visual tokens otherwise | — |
+
+`visual tokens` on 2.1 is core's own no-VAE fallback: it forces `keep_vision` so the tokens
+survive, then pushes them through the *text* projection at causal text positions that hold no
+vision tokens in training. It runs, and it is interesting to experiment with, but it is not what
+2.1 was trained on — wire a VAE and let `auto` take the latent path.
+
+**Pixels and meaning travel separately on 2.1, so they get separate knobs.** In reference-latent
+mode the spliced latent is the reference's *pixels*; the text conditioning is the vision tower's
+*reading* of it. Two controls:
+
+- **`structure_source`** — where the spliced latent comes from. `fused` (default) blends every
+  source under the weight field. `strongest` / `first` hand one source's latent through whole.
+- **`semantic_strength`** — how much the per-source text readings blend. `1.0` (default) mixes
+  every source by its share of the field; `0.0` uses the structure source's reading alone.
+
+Which makes "**this one's composition, everyone's ideas**" a two-widget setting:
+
+```
+structure_source:  strongest     ← the highest-strength image anchors the pixels
+semantic_strength: 1.0           ← every image still contributes its meaning
+```
+
+Set `semantic_strength` to `0.0` alongside a non-fused `structure_source` and you get a plain
+single-reference encode — useful as an A/B against the blend. Both knobs are inert on every other
+encoder, which blends visual tokens instead.
+
+2.1 shares one resize between its vision tower and its VAE, so `visual_size` sets the reference
+resolution there as well — raise it to ~1024 on 2.1 (the 384 default suits the token-only blend).
+The node's `latent` output hands back a correctly shaped empty canvas (64-channel at 1/16 for
+2.1), which otherwise only core's own encode node produces.
 
 ```
 Fusion Input ─┐
               ├─> Text Encode (Fusion) ──> CONDITIONING ──> KSampler
-Fusion Images ┘             └────────────> fusion_inspect ──> Fusion Inspector
+Fusion Images ┘             ├────────────> latent ────────> KSampler
+                            └────────────> fusion_inspect ──> Fusion Inspector
 ```
 
 - **Fusion Input** — drop images onto an on-node grid; each carries its own strength, fit and mute,
   and they reorder by dragging. Reads files from `input/`, `temp/` or `output/` so every card shows
   a real thumbnail.
 - **Fusion Images** — the wire-side collector: plain `IMAGE` sockets with one shared strength and
-  fit. Chains with the grid either way round.
+  fit. Chains with the grid either way round. Alpha is still per-image, because the mask travels
+  inside the image.
 - **Text Encode (Fusion)** — the node that does the work. Prompt plus the fusion tuning.
 - **Fusion Inspector** — hover the token grid to see which source won which cell, the per-source
   shares, and the settings that produced them. It shows the field that actually ran, captured
   inside the encode.
+
+**Masking a source with alpha.** An image with an alpha channel only contributes where it is
+opaque. Cut an element out and it is *absent* from the blend rather than dimmed — its share of
+every token it covered goes to the other sources, and the pattern reflows to close the gap. That
+is how you remove an unwanted element from a reference:
+
+```
+Load Image ──> image ──┐
+             └> mask ──┴> Join Image with Alpha ──> Fusion Images ──> Text Encode (Fusion)
+```
+
+Core's `Join Image with Alpha` turns a `MASK` into the alpha channel; a transparent PNG dropped on
+the Fusion Input grid works the same way. Masked pixels are composited to neutral grey before the
+encoder sees them, so the removed element cannot leak back in through the vision tower's global
+attention, and the same treatment is applied to the `vae` reference latents. Images without an
+alpha channel are unaffected. Set `alpha_mode` to `ignore` on the encode node to blend the RGB
+whole and pretend the alpha isn't there.
 
 Fusion and the Regions group are separate things that share a word: fusion decides *which reference
 wins a token*, Regions decides *which LoRA fires on one*.
@@ -90,6 +209,129 @@ wins a token*, Regions decides *which LoRA fires on one*.
 - **Qwen3-VL Describe** — the same CLIP you feed `Text Encode (Fusion)`, run as an LLM: image +
   prompt → text, through ComfyUI's native generate path. No llama.cpp, no transformers, no second
   model in VRAM. Captioning, prompt expansion, VQA.
+
+### MiniMax H3 — per-reference roles
+
+> Experimental. The nodes work and the plumbing is verified against core, but the *result* is
+> untested on a GPU — see the honest limit at the end.
+
+H3 conditions on a reference image through two independent channels: its **vision tokens**, which
+enter the Qwen3-VL-32B conditioning behind a `<Picture i>` label, and its **pixels**, as a VAE
+latent packed into the DiT sequence. Core's `MiniMax H3 Reference to Video` couples them with one
+check — wire a VAE and *every* reference becomes a latent, leave it out and *none* does.
+
+These two nodes decouple it per reference:
+
+- **H3 Reference** — takes up to 9 images and tags them `reference` (both channels) or `semantic`
+  (vision tokens only). Chain several nodes to mix roles in one run.
+- **H3 Reference to Video** — core's ref2va node, honouring those roles. Outputs the usual
+  `positive` + `latent`, plus a `picture_map` string telling you which `<Picture i>` each
+  reference became.
+
+- **H3 Mood Board** — several images that share a *look* but not a subject, collapsed into
+  **one** `<Picture>`. Each is encoded by the vision tower separately, then their token spans are
+  blended position by position and the spare brackets are cut out. Chains like an H3 Reference.
+
+So a hero shot can carry its identity as pixels while a board of style images steers the look:
+
+```
+H3 Mood Board [3 refs, average, 384] ─┐
+H3 Reference  [hero.png, reference]  ─┴→ H3 Reference to Video → positive, latent
+```
+
+This is the same technique as the mood board in
+[ComfyUI-QI21Remix](https://github.com/nynxz/ComfyUI-QI21Remix), ported — the blend engine is
+shared, only the span-finding differs. It ports *better* here: 2.1's encoder deletes vision
+tokens so the surgery needs `image_slots`, while H3 keeps them and hands over a map
+(`minimax_token_tags`), so a run of vision tags simply *is* a picture.
+
+- `average` — a weighted mean at every grid position. Where the images agree the vectors
+  reinforce; where they differ they partly cancel, and the residual is the shared look.
+- `mosaic` — each cell taken whole from one source, checkerboard-style, with `block_size`,
+  `feather` and `jitter`. Keeps each image's local coherence instead of averaging it away.
+
+`weights` (e.g. `1, 0.5, 2`) biases both, but means different things: under `average` it is how
+much of the mix a source carries; under `mosaic`, which never mixes, how many *cells* it claims.
+They are normalised, so raising all of them changes nothing.
+
+#### `semantic` does not mean "abstract" — resolution does
+
+This is the part worth understanding, and it is the one thing that will surprise you: a
+`semantic` reference can still transfer almost exactly.
+
+Qwen3-VL patches at 16px and merges 2×2 — **one vision token per 32×32 pixels** — and it never
+downscales what it is handed (its cap is 12.8M pixels, far above any reference). DeepStack then
+injects multi-level ViT features at those same positions. So a generation-sized reference is
+**1008 tokens** of dense, spatially-resolved encoding: enough to reproduce the image closely with
+no latent at all. Dropping the VAE latent removes one transfer channel; it does not abstract the
+other.
+
+What buys abstraction is the token budget, and it falls with the square of resolution:
+
+| reference size | vision tokens |
+|---|---|
+| 1344×768 (a full `match`-sized reference) | 1008 |
+| 512×512 | 256 |
+| 384×384 | 144 |
+| 256×256 | 64 |
+
+Two ways to spend less:
+
+- **`vision_size`** on H3 Reference caps what the *text encoder* sees, independently of the VAE
+  latent — so a `reference` can keep full-detail pixels while its vision tokens stay coarse.
+- **H3 Mood Board**'s `resolution` sets the grid every board image is fitted to, which is both
+  what makes them blendable and the board's whole cost. 384 is 144 tokens for the lot.
+
+The encode node reports what each picture cost in its `picture_map`, so you can see what you are
+spending rather than guess.
+
+> Collapsing a board leaves **gaps** in the picture numbering — the surviving `<Picture i>` label
+> was written by the tokenizer's counter before the cut. The `picture_map` is the authoritative
+> list of what to prompt with; do not assume pictures run 1..N.
+
+**Read the `picture_map` before you write the prompt.** Nothing tells H3 which `<Picture i>` a
+latent belongs to except order — the tokenizer labels from a plain counter and the DiT reads
+`refs[k]` as the k-th picture. Latent-bearing references are therefore emitted first, so
+`<Picture 1>` is always a `reference`, and the numbering is *not* chain order.
+
+A `semantic` reference costs no latent slot: core's `PackedLayout` gives reference image k the
+time position `text_len + k`, packed as a run after the whole text rather than spliced at its tag,
+so dropping one simply closes the gap.
+
+Images only. Reference videos and audio carry their own timeline spans and soundtrack pairing —
+chain core's node for those.
+
+**Honest limit:** a `<Picture N>` that has vision tokens but no latent is a shape H3 was probably
+never trained on, so `semantic` is an extrapolation, not a documented mode. Both endpoints of it
+are supported by core (all-latent, and no-VAE-at-all), and the equivalent split demonstrably does
+something on Qwen Image 2.1 — but whether the middle is *useful* here is exactly what this group
+exists to find out.
+
+### Batch
+
+- **Get from Index** — one item out of a batch of **any** type. Core needs a different node per
+  type (`Get Image from Batch`, `Latent From Batch`); this works the batch dimension out from the
+  value itself and uses `MatchType`, so the output socket takes whatever type you wired in and
+  the graph still type-checks.
+
+Handles every way ComfyUI batches something:
+
+| type | batched on |
+|---|---|
+| `IMAGE`, `MASK` | a tensor's first dimension |
+| `LATENT` | `samples`, with `noise_mask` sliced alongside it |
+| `AUDIO` | `waveform`, keeping `sample_rate` |
+| `CONDITIONING`, any list | list entries |
+
+Index conventions match core's, so it is not a surprise next to the nodes it replaces: negative
+counts from the end (`-1` is the last), and the result **keeps its batch dimension**, so it drops
+straight back into anything that took the original. `length` takes a sub-batch instead of a
+single item, trimmed to what is actually there.
+
+`out_of_range` decides what an index past the end means — `clamp` (core's behaviour, the
+default), `wrap` for driving it from a counter, or `error` when out-of-range means something
+upstream is wrong. The node also outputs the `index` it actually used and the batch `count`, so a
+clamped or wrapped index is visible rather than guessed at.
 
 ### Conditioning
 

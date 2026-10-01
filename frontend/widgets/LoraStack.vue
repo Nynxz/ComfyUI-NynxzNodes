@@ -61,20 +61,42 @@
       </div>
     </div>
 
-    <WidgetActions label="Add LoRA" :count="rows.length" @primary="addRow()">
-      <ZenIconButton
-        icon="mdi mdi-view-grid-outline"
-        title="Browse library"
-        @click="openBrowse(-1)"
-      />
-      <ZenIconButton
-        v-if="rows.length"
-        icon="mdi mdi-broom"
-        danger
-        title="Clear all"
-        @click="clearAll"
-      />
-    </WidgetActions>
+    <template #footer>
+      <WidgetActions label="Add LoRA" :count="rows.length" @primary="addRow()">
+        <ZenIconButton
+          icon="mdi mdi-view-grid-outline"
+          title="Browse library"
+          @click="openBrowse(-1)"
+        />
+        <ZenPopover v-if="mode" placement="top-end">
+          <template #trigger="{ toggle }">
+            <ZenIconButton
+              :icon="modeInfo.icon"
+              :title="`Applies to: ${modeInfo.label}`"
+              @click="toggle"
+            />
+          </template>
+          <template #default="{ close }">
+            <ZenMenuItem
+              v-for="m in LORA_MODES"
+              :key="m.value"
+              :icon="m.icon"
+              @select="pickMode(m.value, close)"
+            >
+              {{ m.label }}
+              <template v-if="m.value === mode" #hint><i class="mdi mdi-check" /></template>
+            </ZenMenuItem>
+          </template>
+        </ZenPopover>
+        <ZenIconButton
+          v-if="rows.length"
+          icon="mdi mdi-broom"
+          danger
+          title="Clear all"
+          @click="clearAll"
+        />
+      </WidgetActions>
+    </template>
 
     <LoraBrowser
       v-model:open="browse"
@@ -94,19 +116,32 @@ import type { WidgetOptions } from "@/framework";
  */
 export const widgetOptions: WidgetOptions = {
   minHeight: 60,
+  minWidth: 260,
 };
 </script>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useDragSurface } from "@nynxz/zenkit-nodekit";
-import { ZenDot, ZenIconButton, ZenNumber, ZenWidget } from "@nynxz/zenkit-ui";
+import {
+  ZenDot,
+  ZenIconButton,
+  ZenMenuItem,
+  ZenNumber,
+  ZenPopover,
+  ZenWidget,
+} from "@nynxz/zenkit-ui";
 
-import LoraBrowser from "@/components/LoraBrowser.vue";
-import LoraPicker from "@/components/LoraPicker.vue";
 import WidgetActions from "@/components/WidgetActions.vue";
-import * as lib from "@/lib/loraLibrary";
+import { loraLibrary as lib, LoraBrowser, LoraPicker } from "@nynxz/zenkit-ui";
 import { rowsFrom } from "@/lib/widgetRows";
+import {
+  LORA_MODES,
+  loraMode,
+  setLoraMode,
+  type LoraMode,
+  type LoraNodeLike,
+} from "@/lib/loraMode";
 
 interface LoraRow {
   id: number;
@@ -140,6 +175,17 @@ const store = rowsFrom<LoraRow>(props, {
   sort: (a, b) => a.name.localeCompare(b.name) || a.strength - b.strength || +a.on - +b.on,
 });
 const { rows, commit } = store;
+
+// Only LoRA Loader has an "apply to" setting; the deprecated CLIP loader shares this widget.
+const loraNode = props.node as LoraNodeLike | undefined;
+const mode = ref<LoraMode | null>(loraNode ? loraMode(loraNode) : null);
+const modeInfo = computed(() => LORA_MODES.find((m) => m.value === mode.value) ?? LORA_MODES[0]!);
+function pickMode(next: LoraMode, close: () => void) {
+  close();
+  if (!loraNode) return;
+  setLoraMode(loraNode, next);
+  mode.value = next;
+}
 
 const dragIndex = ref(-1); // row being dragged, or -1
 const dropIndex = ref(-1); // index the dragged row would land at, or -1

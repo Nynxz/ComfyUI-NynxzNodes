@@ -46,3 +46,8 @@ FusionInput = io.Custom("NYNXZ_FUSION_INPUT")
 
 #: The blend payload, encode -> inspector.
 FusionInspect = io.Custom("NYNXZ_FUSION_INSPECT")
+
+#: Where Fusion Regions puts each reference copy and which copies are mirrored, from a layout node
+#: (Region Grid): `{"canvas": [w, h], "boxes": [[top, left, bottom, right], ...], "flipped": [...]}`
+#: in canvas pixels. A mask batch can't say which copy flips, so this carries it alongside.
+FusionLayout = io.Custom("NYNXZ_FUSION_LAYOUT")

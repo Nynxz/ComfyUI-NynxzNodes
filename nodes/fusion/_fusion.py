@@ -32,6 +32,7 @@ import math
 from collections import OrderedDict
 from dataclasses import dataclass
 
+import comfy.model_management
 import comfy.utils
 import node_helpers
 import torch
@@ -39,6 +40,15 @@ import torch.nn.functional as F
 from comfy_api.latest import io
 
 from .._lib.io_types import advanced
+from ._encoders import (
+    MERGE_SIZE,
+    PATCH_SIZE,
+    QWEN3VL,
+    VISION_FACTOR,
+    check_token_key,
+    detect_profile,
+    token_pairs,
+)
 
 try:
     # Newer cores expose the sizing rule; older ones keep it inline in
@@ -96,6 +106,43 @@ DEFAULT_FIT = "contain"
 ALPHA_MODES = ["exclude", "ignore"]
 DEFAULT_ALPHA_MODE = "exclude"
 
+# WHAT gets fused, and on 2.1 the two options are NOT equivalent — see `_encoders.py` for why.
+#
+# Krea 2 and Qwen-Image-Edit 2509 keep the vision tower's tokens in the conditioning (their text
+# encoders trim only the system prefix), so those tokens ARE semantic conditioning the DiT
+# consumes, and blending them is the lever this pack was built on. Qwen Image 2.1 deletes them and
+# splices VAE latents at `image_slots` instead, through a separate `img_in` projection with 2D
+# RoPE and bidirectional block attention. So on 2.1:
+#
+#   "reference latents" — the TRAINED path. Blend the VAE latents the DiT actually receives, then
+#                         splice ONE fused reference at the slot the encoder reports. The text
+#                         conditionings are blended too, and on 2.1 they are the only thing
+#                         carrying the vision tower's *reading* of each image. 2.1 + a VAE.
+#   "visual tokens"     — forces keep_vision so the tokens survive 2.1's trim, then blends them.
+#                         OUT OF DISTRIBUTION on 2.1: those tokens go through the TEXT projection
+#                         with 1D causal text positions, which in training hold no vision tokens
+#                         at all. It is core's own no-VAE fallback, not a trained mode. On every
+#                         other Qwen3-VL encoder this is the normal, trained path.
+#   "auto"              — reference latents when the encoder supports them AND a VAE is wired,
+#                         visual tokens otherwise. Every non-2.1 encoder lands on visual tokens.
+REFERENCE_MODES = ["auto", "visual tokens", "reference latents"]
+DEFAULT_REFERENCE_MODE = "auto"
+TOKEN_MODE, LATENT_MODE = "visual tokens", "reference latents"
+
+# Reference-latent mode splits into two channels, because on Qwen Image 2.1 they carry different
+# things: the spliced latent is the reference's PIXELS, and the text conditioning is the vision
+# tower's READING of it (the LM attended to the image before 2.1 dropped the vision tokens). They
+# are therefore controlled separately — "one image's structure, several images' semantics" is a
+# real request, and on this model it is the in-distribution way to ask for it.
+#
+# `structure_source` picks where the spliced latent comes from:
+#   "fused"     — blend every source's latent under the weight field (the default).
+#   "strongest" — the highest-strength source's latent, whole. Strength is the grid slider, so
+#                 the anchor is already something you control per image.
+#   "first"     — source 1's latent, whole.
+STRUCTURE_SOURCES = ["fused", "strongest", "first"]
+DEFAULT_STRUCTURE_SOURCE = "fused"
+
 # What a transparent pixel becomes before it reaches the encoder. Those pixels end up zero-weighted
 # in the blend, so what fills the hole should not matter — except the vision tower attends globally,
 # so whatever is in the hole still colours the tokens that survive. Mid-grey is the least assertive
@@ -141,6 +188,17 @@ class FusionSettings:
     visual_aspect: str = "auto"
     visual_size: int = 384
     alpha_mode: str = DEFAULT_ALPHA_MODE
+    reference_mode: str = DEFAULT_REFERENCE_MODE
+    structure_source: str = DEFAULT_STRUCTURE_SOURCE
+    semantic_strength: float = 1.0
+    #: Fusion Regions' layout: `((top, left, bottom, right), flipped)` per region, the box as
+    #: fractions of the frame. Empty = the sources weren't laid out over regions.
+    regions: tuple = ()
+    #: Run the blend pattern inside each region instead of once over the whole grid.
+    region_pattern: bool = False
+    #: Take the content weights from the first region and reuse them, flipped with each copy, in
+    #: the others — so mirrored copies blend as exact mirrors.
+    shared_content: bool = False
 
 
 def _spatial_fusion_mask(
@@ -533,28 +591,90 @@ def _coverage_weights(weights, coverage):
     return scaled / totals.clamp_min(1e-6)
 
 
-def _visual_token_span(tokens, cond_length, visual_tokens):
-    if len(tokens) != 1:
-        raise ValueError("Visual fusion requires a Qwen3-VL or Krea2 text encoder.")
+def _image_position(pairs):
+    """Index of the single image embed in a token-pair list, with the tail checked.
 
-    token_pairs = next(iter(tokens.values()))[0]
-    image_positions = [
+    The tail matters: the span is measured backwards from the END of the conditioning, which is
+    the one anchor that survives a text encoder trimming its own output. Krea 2, Mage-Flow and
+    Qwen Image 2.1 all drop the system turn before handing the conditioning back, so any position
+    counted forwards from the start would be wrong by however much they removed. Counting back
+    only works while every token after the image is a plain id worth exactly one position.
+    """
+    positions = [
         i
-        for i, pair in enumerate(token_pairs)
+        for i, pair in enumerate(pairs)
         if isinstance(pair[0], dict) and pair[0].get("type") == "image"
     ]
-    if len(image_positions) != 1:
+    if len(positions) != 1:
         raise ValueError("Visual fusion requires exactly one visual token block per encoding pass.")
-
-    image_position = image_positions[0]
-    if any(not isinstance(pair[0], (int, float)) for pair in token_pairs[image_position + 1 :]):
+    position = positions[0]
+    if any(not isinstance(pair[0], (int, float)) for pair in pairs[position + 1 :]):
         raise ValueError("Visual fusion does not support embeddings after the image token block.")
+    return position
 
-    end = cond_length - (len(token_pairs) - image_position - 1)
+
+def _visual_token_span(tokens, cond_length, visual_tokens):
+    _, pairs = token_pairs(tokens)
+    position = _image_position(pairs)
+    end = cond_length - (len(pairs) - position - 1)
     start = end - visual_tokens
     if start < 0 or end > cond_length:
-        raise ValueError("Could not locate the visual token block in the encoded conditioning.")
+        raise ValueError(
+            "Could not locate the visual token block in the encoded conditioning. On a Qwen Image "
+            "2.1 encoder this means the visual tokens were dropped — that encoder replaces them "
+            "with VAE reference latents unless keep_vision is set."
+        )
     return start, end
+
+
+def _regional_pattern(pattern, height, width, regions):
+    """The geometric field, laid out per region when the sources were (Fusion Regions).
+
+    Each region holds a whole copy of every reference, so each gets the whole pattern at its own
+    size — with the same seed, so repeated regions carry the same arrangement — flipped with its
+    copy. Outside the regions no source is present and the full-grid pattern is left as it was.
+    """
+    weights = pattern(height, width)
+    if not regions:
+        return weights
+    grid = weights.reshape(weights.shape[0], height, width).clone()
+    for box, flipped in regions:
+        y0, y1, x0, x1 = _cells(box, height, width)
+        local = pattern(y1 - y0, x1 - x0).reshape(weights.shape[0], y1 - y0, x1 - x0)
+        grid[:, y0:y1, x0:x1] = local.flip(-1) if flipped else local
+    return grid.reshape(weights.shape[0], height * width)
+
+
+def _cells(box, height, width):
+    """A region's (y0, y1, x0, x1) on the token grid, at least one token each way."""
+    top, left, bottom, right = box
+    y0, x0 = round(top * height), round(left * width)
+    return (
+        y0,
+        max(y0 + 1, min(height, round(bottom * height))),
+        x0,
+        max(x0 + 1, min(width, round(right * width))),
+    )
+
+
+def _shared_content(content, height, width, regions):
+    """The first region's content weights reused in every other region, resized to it and flipped
+    when its copy is flipped the other way. Each copy shows the same reference, so this is what its
+    content weighting would be if the vision tower read a flipped image as an exact mirror — which
+    it doesn't, and that drift is what breaks the symmetry otherwise."""
+    if len(regions) < 2:
+        return content
+    grid = content.reshape(content.shape[0], height, width).clone()
+    (first_box, first_flipped), *rest = regions
+    y0, y1, x0, x1 = _cells(first_box, height, width)
+    source = grid[:, y0:y1, x0:x1]
+    for box, flipped in rest:
+        ty0, ty1, tx0, tx1 = _cells(box, height, width)
+        block = torch.nn.functional.interpolate(
+            source[None], size=(ty1 - ty0, tx1 - tx0), mode="bilinear", align_corners=False
+        )[0]
+        grid[:, ty0:ty1, tx0:tx1] = block.flip(-1) if flipped != first_flipped else block
+    return grid.reshape(content.shape[0], height * width)
 
 
 def _compute_weights(
@@ -575,23 +695,30 @@ def _compute_weights(
     pass None to skip it (content_mode is off by default). `coverage` is the alpha field from
     `_coverage_field`, or None when no source is masked.
     """
-    weights = _fusion_weights(
-        visual_height,
-        visual_width,
-        num_sources,
-        settings.fusion_method,
-        settings.block_size,
-        settings.dither_ratio,
-        settings.feather,
-        settings.blend_strength,
-        device,
-        settings.seed,
-        settings.pattern_jitter,
-        settings.jitter_mode,
-        strengths,
-    )
+
+    def pattern(height, width):
+        return _fusion_weights(
+            height,
+            width,
+            num_sources,
+            settings.fusion_method,
+            settings.block_size,
+            settings.dither_ratio,
+            settings.feather,
+            settings.blend_strength,
+            device,
+            settings.seed,
+            settings.pattern_jitter,
+            settings.jitter_mode,
+            strengths,
+        )
+
+    regions = settings.regions if settings.region_pattern else ()
+    weights = _regional_pattern(pattern, visual_height, visual_width, regions)
     if visuals is not None and settings.content_mode != "none" and settings.content_strength > 0.0:
         content = _content_weights(visuals, settings.content_mode, settings.content_temperature)
+        if settings.shared_content:
+            content = _shared_content(content, visual_height, visual_width, settings.regions)
         weights = _combine_weights(weights, content, settings.content_strength)
     # Alpha before strength: transparency says a source is not *there*, which no amount of
     # geometry or content weighting gets to overrule. Strength then scales what is left.
@@ -670,12 +797,8 @@ def _fuse_conditionings(
         # searching this list and adding `end`. Published so per-region prompting can READ the
         # conditioning instead of having to emit its own, which is what keeps a fused conditioning
         # usable at all.
-        tail = next(iter(tokens[0].values()))[0]
-        image_at = next(
-            i
-            for i, pair in enumerate(tail)
-            if isinstance(pair[0], dict) and pair[0].get("type") == "image"
-        )
+        _, tail = token_pairs(tokens[0])
+        image_at = _image_position(tail)
         meta["nynxz_tail_ids"] = [int(pair[0]) for pair in tail[image_at + 1 :]]
         fused.append([blended, meta])
     return fused
@@ -760,21 +883,31 @@ def fit_image(source, width, height, fit="cover"):
     return out.movedim(1, -1)
 
 
-def _visual_grid(first, aspect, size):
+def _visual_grid(first, aspect, size, align=0):
     """Pixel dims for the encoder pass, as a `size`x`size`-area frame at the chosen aspect.
 
     "auto" keeps the original behavior: take the aspect from the first source.
+
+    `align` rounds both sides to a multiple of itself. Qwen Image 2.1 needs 32: it hands the SAME
+    resized pixels to the vision tower and to the VAE, and only on a 32-multiple do the two agree
+    — one visual token per 32px covering exactly the 2x2 block of 16px-stride latents underneath
+    it. Left at 0 (every other encoder) the dims come out exactly as they always have.
     """
     total = float(size * size)
     if aspect == "auto":
         samples = first.movedim(-1, 1)  # [1, C, H, W]
         source_width, source_height = samples.shape[3], samples.shape[2]
         scale_by = math.sqrt(total / (source_width * source_height))
-        return max(32, round(source_width * scale_by)), max(32, round(source_height * scale_by))
-    ratio = ASPECTS.get(aspect)
-    if ratio is None:
-        raise ValueError(f"Unsupported visual aspect: {aspect}")
-    return max(32, round(math.sqrt(total * ratio))), max(32, round(math.sqrt(total / ratio)))
+        width, height = round(source_width * scale_by), round(source_height * scale_by)
+    else:
+        ratio = ASPECTS.get(aspect)
+        if ratio is None:
+            raise ValueError(f"Unsupported visual aspect: {aspect}")
+        width, height = round(math.sqrt(total * ratio)), round(math.sqrt(total / ratio))
+    if align > 0:
+        width, height = round(width / align) * align, round(height / align) * align
+        return max(align, width), max(align, height)
+    return max(32, width), max(32, height)
 
 
 # --- encode cache --------------------------------------------------------------------
@@ -822,21 +955,55 @@ def _cache_scope(cache, owner_key, model):
         cache.clear()
 
 
-def _reference_latents(vae, sources):
+def _reference_pixels(source, profile, vae, alpha_mode):
+    """What actually goes into the VAE for one source, alpha resolved the way this VAE wants it.
+
+    Three cases, and the third is the interesting one. Under "ignore" the alpha is dropped and the
+    raw RGB rides through, exactly as before alpha existed here. Otherwise a normal 3-channel VAE
+    forces the mask to be resolved into pixels, so it is composited over the profile background —
+    leaving the original RGB under the mask would hand the removed element straight back to the
+    model through the latent path. But Qwen Image 2.1's VAE is RGBA (`output_channels >= 4`): it
+    understands transparency natively, so the alpha is passed through untouched and the model is
+    told the region is absent rather than shown a guess at what should fill it.
+    """
+    rgb, alpha = split_alpha(source)
+    if alpha_mode == "ignore" or alpha is None:
+        return rgb
+    if getattr(vae, "output_channels", 3) >= 4:
+        return source
+    return flatten_alpha(rgb, alpha, profile.alpha_background)
+
+
+def _reference_latents(vae, sources, profile=QWEN3VL, alpha_mode=DEFAULT_ALPHA_MODE):
+    """VAE-encode each source into a reference latent, at the size the profile asks for.
+
+    The older encoders have always encoded references at ~1024x1024 on an 8px stride, regardless
+    of the visual grid, and that is preserved. Qwen Image 2.1 sets `reference_area=None` instead,
+    meaning "keep the dims you were handed": its references stand in for the visual tokens
+    position for position, so they have to be the same pixels the vision tower saw, on the 32px
+    multiple both paths agree on.
+    """
     _cache_scope(_LATENT_CACHE, "vae", vae)
+    align = max(1, profile.reference_align)
     ref_latents = []
     for source in sources:
-        key = _content_key(source)
+        pixels = _reference_pixels(source, profile, vae, alpha_mode)
+        samples = pixels.movedim(-1, 1)  # [1, C, H, W]
+        width, height = samples.shape[3], samples.shape[2]
+        if profile.reference_area is not None:
+            scale_by = math.sqrt(profile.reference_area / (width * height))
+            width, height = width * scale_by, height * scale_by
+        width = max(align, round(width / align) * align)
+        height = max(align, round(height / align) * align)
+        # The target dims join the cache key. They used to be a constant 1024x1024/8, so content
+        # alone identified a latent; now the profile and the visual grid both move them, and a
+        # stale latent from a different grid would be spliced at the wrong shape.
+        key = (_content_key(pixels), width, height)
         latent = _cache_take(_LATENT_CACHE, key)
         if latent is None:
-            samples = source[:, :, :, :3].movedim(-1, 1)
-            scale_by = math.sqrt((1024 * 1024) / (samples.shape[3] * samples.shape[2]))
-            latent_width = max(8, round(samples.shape[3] * scale_by / 8.0) * 8)
-            latent_height = max(8, round(samples.shape[2] * scale_by / 8.0) * 8)
-            resized = comfy.utils.common_upscale(
-                samples, latent_width, latent_height, "area", "disabled"
-            )
-            latent = vae.encode(resized.movedim(1, -1))
+            if (width, height) != (samples.shape[3], samples.shape[2]):
+                samples = comfy.utils.common_upscale(samples, width, height, "area", "disabled")
+            latent = vae.encode(samples.movedim(1, -1))
             _cache_store(_LATENT_CACHE, key, latent)
         # Clone on use: reference_latents are attached to the conditioning and consumed by the
         # sampler, so hand out a copy and keep the cached tensor pristine for the next run.
@@ -844,23 +1011,42 @@ def _reference_latents(vae, sources):
     return ref_latents
 
 
-PROMPT_TEMPLATE = (
-    "<|im_start|>system\nDescribe the image by detailing the color, shape, size, texture, quantity, text, spatial relationships of the objects and background:<|im_end|>\n"
-    "<|im_start|>user\n<|vision_start|><|image_pad|><|vision_end|>{prompt}<|im_end|>\n"
-    "<|im_start|>assistant\n"
-)
+# PROMPT_TEMPLATE lives in `_encoders.py` now: which chat template to encode with is a property
+# of the encoder on the wire, not a constant of the engine. Read it from there
+# (`_encoders.PROMPT_TEMPLATE`, or `profile.template` for whichever encoder is loaded).
 
 
-def _prepare_sources(sources, settings, fits=None):
+@dataclass
+class Prepared:
+    """One fit of every source into the shared grid, in the forms the encode needs.
+
+    `rgb` is what the vision tower sees (alpha resolved into pixels, because the patch embedding
+    is built for three channels). `fitted` keeps every channel, so the VAE path can decide for
+    itself whether to carry the alpha through. `alphas` is kept so coverage can be re-derived on
+    a *different* grid — the latent grid is twice the visual grid's resolution on each side.
+    """
+
+    rgb: list
+    fitted: list
+    alphas: list
+    width: int
+    height: int
+    grid_height: int
+    grid_width: int
+    coverage: object
+
+
+def _prepare_sources(sources, settings, fits=None, profile=QWEN3VL, size=None):
     """Fit every source into the shared grid; report the token grid and the alpha coverage field.
 
-    Returns `(processed, coverage, grid_height, grid_width)`. `processed` is three-channel — alpha
-    is resolved into pixels here because the encoder only takes RGB — and `coverage` is what
-    carries the mask on into the blend, or None when no source is masked.
-
-    The grid comes from the encoder's own sizing rule, so callers never have to re-derive it.
+    The grid comes from the encoder's own sizing rule, so callers never have to re-derive it, and
+    the profile decides both the pixel alignment (2.1 needs 32 so the VL and VAE passes agree) and
+    what a transparent pixel composites onto. `size` pins the grid to another preparation's, so two
+    sets of images produce token streams that line up position for position.
     """
-    width, height = _visual_grid(sources[0], settings.visual_aspect, settings.visual_size)
+    width, height = size or _visual_grid(
+        sources[0], settings.visual_aspect, settings.visual_size, profile.pixel_align
+    )
 
     def fit_of(i):
         return fits[i] if fits else "cover"
@@ -871,15 +1057,26 @@ def _prepare_sources(sources, settings, fits=None):
         # Drop the alpha on the floor: no coverage field, no compositing — byte-identical to what
         # this node did before it read alpha at all.
         split = [(rgb, None) for rgb, _ in split]
-    processed = [flatten_alpha(rgb, alpha) for rgb, alpha in split]
+    processed = [flatten_alpha(rgb, alpha, profile.alpha_background) for rgb, alpha in split]
 
     # Ask the encoder's own sizing rule what grid it will produce rather than re-deriving it:
     # it also clamps to its min/max pixel budget, and a grid that disagrees with the encoder's
     # would slice the wrong span out of the conditioning.
-    grid_height, grid_width = qwen2vl_image_size(height, width, patch_size=16, merge_size=2)
-    grid_height, grid_width = grid_height // 32, grid_width // 32
-    coverage = _coverage_field([alpha for _, alpha in split], grid_height, grid_width)
-    return processed, coverage, grid_height, grid_width
+    grid_height, grid_width = qwen2vl_image_size(
+        height, width, patch_size=PATCH_SIZE, merge_size=MERGE_SIZE
+    )
+    grid_height, grid_width = grid_height // VISION_FACTOR, grid_width // VISION_FACTOR
+    alphas = [alpha for _, alpha in split]
+    return Prepared(
+        rgb=processed,
+        fitted=fitted,
+        alphas=alphas,
+        width=width,
+        height=height,
+        grid_height=grid_height,
+        grid_width=grid_width,
+        coverage=_coverage_field(alphas, grid_height, grid_width),
+    )
 
 
 def _check_sources(sources, strengths, fits):
@@ -893,8 +1090,298 @@ def _check_sources(sources, strengths, fits):
         raise ValueError("Visual fusion got a fit list that doesn't match the sources.")
 
 
-def encode_fusion(clip, prompt, sources, settings, strengths=None, fits=None, vae=None, debug=None):
-    """Encode each source through the Qwen3-VL encoder and fuse their visual tokens.
+def _resolve_mode(settings, profile, vae):
+    """Which of the two things this encoder can fuse we are actually fusing.
+
+    "auto" prefers reference latents whenever they exist and a VAE is wired, because on Qwen Image
+    2.1 that is the path the model was trained on: the encoder deletes its own visual tokens and
+    the DiT expects latents in their place. Every other encoder keeps its visual tokens, so auto
+    resolves to the token blend and the knob is inert.
+    """
+    mode = settings.reference_mode
+    if mode == DEFAULT_REFERENCE_MODE:
+        return LATENT_MODE if (profile.latent_fusion and vae is not None) else TOKEN_MODE
+    if mode == LATENT_MODE:
+        if not profile.latent_fusion:
+            raise ValueError(
+                f"'{LATENT_MODE}' fusion needs an encoder that splices VAE references at an image "
+                f"slot — Qwen Image 2.1. The wired CLIP is {profile.name}, which keeps its visual "
+                f"tokens in the conditioning, so use '{TOKEN_MODE}' (or 'auto')."
+            )
+        if vae is None:
+            raise ValueError(
+                f"'{LATENT_MODE}' fusion blends VAE latents, so it needs a VAE. Wire one into the "
+                f"node's vae input, or switch reference_mode to '{TOKEN_MODE}'."
+            )
+    return mode
+
+
+def _encode_sources(clip, tokens, images, scope):
+    """Run the text encoder once per source, with the content-keyed cache in front of it.
+
+    `scope` distinguishes encodes that share an image but not a prompt or a template — the two
+    reference modes tokenize the SAME pixels differently (keep_vision changes what comes back),
+    so they must not collide in the cache.
+    """
+    _cache_scope(_COND_CACHE, "clip", clip)
+    conditionings = []
+    for source_tokens, image in zip(tokens, images, strict=True):
+        # The clip is pinned by _cache_scope. Read-only downstream — the fuse clones before it
+        # writes — so no copy is needed here.
+        key = (*scope, _content_key(image))
+        cached = _cache_take(_COND_CACHE, key)
+        if cached is None:
+            cached = clip.encode_from_tokens_scheduled(source_tokens)
+            _cache_store(_COND_CACHE, key, cached)
+        conditionings.append(cached)
+    return conditionings
+
+
+def _tokenize_sources(clip, prompt, images, profile, keep_vision):
+    """Tokenize every source and check they agree on an encoder this engine can fuse.
+
+    Tokenizing stays every run — it is the cheap image preprocessing, and the fuse needs the token
+    layout to find each source's visual span. The transformer pass is what gets cached.
+    """
+    tokens = [profile.tokenize(clip, prompt, image, keep_vision=keep_vision) for image in images]
+    key, _ = token_pairs(tokens[0])
+    check_token_key(key, profile)
+    if any(token_pairs(other)[0] != key for other in tokens[1:]):
+        raise ValueError("Visual fusion sources produced different token streams.")
+    return tokens
+
+
+def _splice_visuals(text_conditionings, layout_conditionings, tokens, visual_tokens):
+    """Each source's prompt read from `text_conditionings`, with its visual block taken from
+    `layout_conditionings`. The visual block precedes the prompt, so under the language model's
+    causal attention it never saw the prompt either way — only the prompt changes."""
+    spliced = []
+    for text_source, layout_source, source_tokens in zip(
+        text_conditionings, layout_conditionings, tokens, strict=True
+    ):
+        schedules = []
+        for (text_cond, meta), (layout_cond, _) in zip(text_source, layout_source, strict=True):
+            if text_cond.shape != layout_cond.shape:
+                raise ValueError(
+                    "The prompt's read of the references and the layout's produced different token "
+                    "layouts, so they can't be combined."
+                )
+            start, end = _visual_token_span(source_tokens, layout_cond.shape[1], visual_tokens)
+            cond = text_cond.clone()
+            cond[:, start:end] = layout_cond[:, start:end]
+            schedules.append([cond, meta.copy()])
+        spliced.append(schedules)
+    return spliced
+
+
+def _encode_token_fusion(
+    clip, prompt, sources, prepared, settings, strengths, profile, vae, debug, text_prepared=None
+):
+    """Blend the visual tokens inside the text stream — the semantic blend.
+
+    `keep_vision=True` matters on Qwen Image 2.1 and is ignored everywhere else: without it that
+    encoder strips the visual tokens out of its own output and there is nothing left to fuse.
+    With `text_prepared`, the prompt is read against those images instead of the layout's.
+    """
+    scope = (profile.name, prompt, TOKEN_MODE)
+    tokens = _tokenize_sources(clip, prompt, prepared.rgb, profile, keep_vision=True)
+    conditionings = _encode_sources(clip, tokens, prepared.rgb, scope)
+    if text_prepared is not None:
+        text_tokens = _tokenize_sources(clip, prompt, text_prepared.rgb, profile, keep_vision=True)
+        conditionings = _splice_visuals(
+            _encode_sources(clip, text_tokens, text_prepared.rgb, scope),
+            conditionings,
+            tokens,
+            prepared.grid_height * prepared.grid_width,
+        )
+    conditioning = _fuse_conditionings(
+        conditionings,
+        tokens,
+        prepared.grid_height,
+        prepared.grid_width,
+        settings,
+        strengths,
+        debug,
+        prepared.coverage,
+    )
+
+    if vae is not None:
+        # A second, independent path from the source pixels to the sampler. These references are
+        # NOT fused — each rides in whole — so this is "fused semantics plus intact structure",
+        # which is what the pack has always done when a VAE is wired. `reference_mode` is how you
+        # ask for the fused-reference behaviour instead.
+        reference_sources = prepared.fitted if profile.reference_area is None else sources
+        conditioning = node_helpers.conditioning_set_values(
+            conditioning,
+            {
+                "reference_latents": _reference_latents(
+                    vae, reference_sources, profile, settings.alpha_mode
+                )
+            },
+            append=True,
+        )
+    return conditioning
+
+
+def _anchor_index(structure_source, strengths, count):
+    """Which source anchors the structure when the latent is NOT fused.
+
+    "strongest" reads the per-image strength sliders, so the anchor is already something set on
+    the grid rather than a new widget. Strengths arrive post-`_roll_strengths`, so `strength_roll`
+    can re-roll which image anchors, which is the behaviour you want from a variety knob.
+    """
+    if structure_source == "strongest" and strengths and len(strengths) >= count:
+        return max(range(count), key=lambda i: strengths[i])
+    return 0
+
+
+def _semantic_shares(weights, structure_source, strengths, semantic_strength):
+    """Per-source weight for blending the TEXT conditionings.
+
+    Each source's mean share of the weight field is its coverage of the reference, which is the
+    honest scalar to weight its reading of the prompt by. `semantic_strength` then interpolates
+    between the anchor source's reading alone (0.0) and that full blend (1.0) — so the structure
+    anchor and the semantic mix are independent: anchor one image's pixels, keep everyone's
+    reading, or anything between.
+
+    Both endpoints sum to 1 across sources (the field is normalised per token), so their
+    interpolation does too and the blend never gains or loses overall weight.
+    """
+    shares = weights.mean(dim=1)
+    if semantic_strength >= 1.0:
+        return shares
+    solo = torch.zeros_like(shares)
+    solo[_anchor_index(structure_source, strengths, shares.shape[0])] = 1.0
+    return torch.lerp(solo, shares, max(0.0, float(semantic_strength)))
+
+
+def _blend_latents(latents, weights, preserve_norm=True):
+    """Weighted combination of reference latents, `[1, C, h, w]` each, on the latent grid.
+
+    Routed through the same `_blend` the visual tokens use by treating each spatial cell as a
+    token and the latent channels as its feature dim — so `preserve_norm` means the same thing in
+    both modes (keep each cell's magnitude at the weighted average of its contributors' rather
+    than letting an even mix dilute it).
+    """
+    stacked = torch.stack(
+        [latent.flatten(2).transpose(1, 2) for latent in latents], dim=2
+    )  # [1, cells, sources, channels]
+    fused = _blend(stacked, weights.to(stacked.dtype), preserve_norm)  # [1, cells, channels]
+    shape = latents[0].shape
+    return fused.transpose(1, 2).reshape(shape)
+
+
+def _fuse_text_conditionings(conditionings, shares, preserve_norm=True):
+    """Blend the text conditionings by a scalar share per source.
+
+    In latent mode the visual tokens are gone, but the surviving text tokens still differ between
+    sources: the language model attended to each source's vision tokens before the encoder dropped
+    them, so every source produced its own reading of the same prompt. There is no spatial axis to
+    weight those on, so each source contributes its MEAN share of the weight field — which is
+    exactly the fraction of the reference it won.
+    """
+    schedule_count = len(conditionings[0])
+    if any(len(source) != schedule_count for source in conditionings):
+        raise ValueError("All visual fusion sources must use the same CLIP schedule.")
+
+    fused = []
+    for schedule in range(schedule_count):
+        source_conds = [source[schedule][0] for source in conditionings]
+        if any(cond.shape != source_conds[0].shape for cond in source_conds[1:]):
+            raise ValueError("Visual fusion sources produced different token layouts.")
+        stacked = torch.stack(source_conds, dim=2)  # [1, seq, sources, dim]
+        per_token = shares.to(stacked.device)[:, None].expand(len(source_conds), stacked.shape[1])
+        blended = _blend(stacked, per_token.to(stacked.dtype), preserve_norm)
+        fused.append([blended, conditionings[0][schedule][1].copy()])
+    return fused
+
+
+def _encode_latent_fusion(
+    clip, prompt, sources, prepared, settings, strengths, profile, vae, debug, text_prepared=None
+):
+    """Blend the VAE references the DiT actually receives, and splice ONE fused reference.
+
+    Qwen Image 2.1 drops its visual tokens and reports `image_slots` — the text positions where
+    the DiT splices reference latents in their place. Tokenizing each source with exactly ONE
+    image yields one slot, identical across sources because the text layout is identical, so the
+    fused reference has exactly one place to go and the model sees a single blended reference
+    instead of N competing ones.
+
+    The weight field is computed on the LATENT grid, which is finer than the visual token grid
+    (16px stride against 32px), so the blend has twice the spatial resolution per side here.
+    """
+    reading = text_prepared or prepared
+    tokens = _tokenize_sources(clip, prompt, reading.rgb, profile, keep_vision=False)
+    conditionings = _encode_sources(clip, tokens, reading.rgb, (profile.name, prompt, LATENT_MODE))
+
+    # The same fitted pixels the vision tower saw, so the reference lines up with the reading the
+    # text tokens were given.
+    latents = _reference_latents(vae, prepared.fitted, profile, settings.alpha_mode)
+    if any(latent.shape != latents[0].shape for latent in latents[1:]):
+        raise ValueError(
+            "Reference-latent fusion needs every source at the same latent size; the VAE returned "
+            "different shapes. This should not happen with a shared visual grid — check that no "
+            "source is smaller than one latent cell."
+        )
+    latent_height, latent_width = latents[0].shape[-2], latents[0].shape[-1]
+    weights = _compute_weights(
+        len(latents),
+        latent_height,
+        latent_width,
+        settings,
+        strengths,
+        latents[0].device,
+        None,  # content weighting reads visual TOKENS; there are none in this mode
+        _coverage_field(prepared.alphas, latent_height, latent_width),
+    )
+    if debug is not None:
+        debug["weights"] = weights.detach().to("cpu", torch.float32)
+        debug["grid"] = (latent_height, latent_width)
+
+    # The two channels, controlled separately: pixels from the structure source, semantics from
+    # however much of the field you let through.
+    anchor = _anchor_index(settings.structure_source, strengths, len(latents))
+    if settings.structure_source == "fused":
+        fused_latent = _blend_latents(latents, weights, settings.preserve_norm)
+    else:
+        fused_latent = latents[anchor]
+    shares = _semantic_shares(
+        weights, settings.structure_source, strengths, settings.semantic_strength
+    )
+    conditioning = _fuse_text_conditionings(conditionings, shares, settings.preserve_norm)
+    if debug is not None:
+        debug["structure_source"] = settings.structure_source
+        debug["structure_anchor"] = anchor
+        debug["semantic_shares"] = [round(float(v), 4) for v in shares]
+
+    for _, meta in conditioning:
+        # Exactly one reference against the one slot the encoder reported. `image_slots` is
+        # already in the meta — the text encoder put it there and it survived the text blend.
+        meta["reference_latents"] = [fused_latent]
+        # Published for the same reason the token mode publishes its span: nothing downstream can
+        # recover where the reference went, and a model patch that wants to treat reference cells
+        # differently from prompt tokens needs the grid it was laid out on.
+        meta["nynxz_reference_grid"] = [int(latent_height), int(latent_width)]
+        # Which source's pixels the spliced reference is, or -1 when it is a blend of all of
+        # them. A consumer that wants to treat the anchor's identity differently from the
+        # blended semantics needs to know the two came from different places.
+        meta["nynxz_structure_anchor"] = -1 if settings.structure_source == "fused" else int(anchor)
+    return conditioning
+
+
+def encode_fusion(
+    clip,
+    prompt,
+    sources,
+    settings,
+    strengths=None,
+    fits=None,
+    vae=None,
+    debug=None,
+    text_sources=None,
+    text_fits=None,
+):
+    """Encode each source through its Qwen3-VL encoder and fuse them into one conditioning.
 
     sources:   list of [1, H, W, C] IMAGE tensors (at least one). A 4-channel source carries
                alpha, and under `settings.alpha_mode == "exclude"` its transparent area is left
@@ -902,52 +1389,41 @@ def encode_fusion(clip, prompt, sources, settings, strengths=None, fits=None, va
     strengths: per-source prevalence, or None for an even blend.
     fits:      per-source fit mode into the shared grid, or None for all-"cover"
                (the old center-crop default).
+    text_sources / text_fits: what the prompt is read against, when that should differ from what
+               lays out the reference — Fusion Regions' "one copy", so a prompt counting subjects
+               isn't read against a frame that already holds one per region. None = the sources.
+
+    Which encoder is on the wire decides the template, the alpha background and the grid
+    alignment (see `_encoders.py`), and on Qwen Image 2.1 it also opens a second thing to fuse —
+    the reference latents. `settings.reference_mode` picks between them.
     """
     _check_sources(sources, strengths, fits)
-    processed, coverage, visual_height, visual_width = _prepare_sources(sources, settings, fits)
-
-    full_prompt = PROMPT_TEMPLATE.format(prompt=prompt)
-    # tokenize stays every run — it's the cheap image preprocessing + tokenizing, and the fuse
-    # needs the token layout to find each source's visual span. The expensive vision/text
-    # transformer pass below is what gets cached.
-    tokens = [clip.tokenize(full_prompt, images=[image]) for image in processed]
-    token_key = next(iter(tokens[0]), None)
-    if token_key not in ("qwen3vl_4b", "qwen3vl_8b") or any(
-        next(iter(source_tokens), None) != token_key for source_tokens in tokens
-    ):
-        raise ValueError("Visual fusion requires a Qwen3-VL or Krea2 text encoder.")
-
-    _cache_scope(_COND_CACHE, "clip", clip)
-    conditionings = []
-    for source_tokens, image in zip(tokens, processed, strict=True):
-        # keyed on (prompt, processed image); the clip is pinned by _cache_scope. Read-only
-        # downstream — _fuse_conditionings clones before it writes — so no copy needed here.
-        key = (full_prompt, _content_key(image))
-        cached = _cache_take(_COND_CACHE, key)
-        if cached is None:
-            cached = clip.encode_from_tokens_scheduled(source_tokens)
-            _cache_store(_COND_CACHE, key, cached)
-        conditionings.append(cached)
-    # Seed-driven re-weighting of the mix (off at strength_roll 0). Done once, before the
-    # per-schedule fuse, so every schedule shares one roll.
+    profile = detect_profile(clip)
+    mode = _resolve_mode(settings, profile, vae)
+    prepared = _prepare_sources(sources, settings, fits, profile)
+    text_prepared = None
+    if text_sources is not None:
+        _check_sources(text_sources, strengths, text_fits)
+        if len(text_sources) != len(sources):
+            raise ValueError(
+                "Visual fusion got a prompt-reading list that doesn't match the sources."
+            )
+        text_prepared = _prepare_sources(
+            text_sources, settings, text_fits, profile, (prepared.width, prepared.height)
+        )
+    # Seed-driven re-weighting of the mix (off at strength_roll 0). Done once, up front, so every
+    # schedule and both modes share one roll. Nothing above this point reads strengths.
     strengths = _roll_strengths(strengths, settings.strength_roll, settings.seed)
-    conditioning = _fuse_conditionings(
-        conditionings, tokens, visual_height, visual_width, settings, strengths, debug, coverage
-    )
+    if debug is not None:
+        debug["profile"] = profile.name
+        debug["reference_mode"] = mode
+        # Pixel dims of the shared grid — what a caller needs to size a matching empty latent.
+        debug["pixels"] = (prepared.width, prepared.height)
 
-    if vae is not None:
-        # The reference latents get the same alpha treatment as the visual tokens. They are a
-        # second, independent path from the source pixels to the sampler, so leaving the raw RGB
-        # under the mask here would hand the removed element straight back to the model.
-        references = (
-            sources
-            if settings.alpha_mode == "ignore"
-            else [flatten_alpha(*split_alpha(source)) for source in sources]
-        )
-        conditioning = node_helpers.conditioning_set_values(
-            conditioning, {"reference_latents": _reference_latents(vae, references)}, append=True
-        )
-    return conditioning
+    encode = _encode_latent_fusion if mode == LATENT_MODE else _encode_token_fusion
+    return encode(
+        clip, prompt, sources, prepared, settings, strengths, profile, vae, debug, text_prepared
+    )
 
 
 def style_inputs() -> list[io.Input]:
@@ -1110,6 +1586,85 @@ def alpha_input() -> io.Input:
             "channel are unaffected either way.",
         )
     )
+
+
+def reference_mode_input() -> io.Input:
+    """The what-gets-fused knob. Inert on every encoder except Qwen Image 2.1, which is the only
+    one that offers a second thing to fuse."""
+    return advanced(
+        io.Combo.Input(
+            "reference_mode",
+            options=REFERENCE_MODES,
+            default=DEFAULT_REFERENCE_MODE,
+            tooltip="WHAT gets blended. Only Qwen Image 2.1 has a real choice here; every other "
+            "encoder ignores this and blends visual tokens. On Krea 2 / Qwen-Image-Edit the "
+            "vision tower's tokens ARE the conditioning, so blending them is the whole point. "
+            "Qwen Image 2.1 is built differently: it DELETES those tokens and feeds the DiT VAE "
+            "latents instead. So on 2.1, 'reference latents' (needs a VAE) is the trained path — "
+            "one fused reference spliced where 2.1 expects it, plus the blended text readings of "
+            "each source. 'visual tokens' on 2.1 forces the tokens to survive and blends them "
+            "anyway, which is OUT OF DISTRIBUTION — it is core's no-VAE fallback, useful for "
+            "experimenting but not what the model was trained on. 'auto' picks correctly for you.",
+        )
+    )
+
+
+def structure_inputs() -> list[io.Input]:
+    """The pixels-vs-semantics split. Both only bite in reference-latent mode (Qwen Image 2.1);
+    every other encoder blends visual tokens and ignores them."""
+    return [
+        advanced(
+            io.Combo.Input(
+                "structure_source",
+                options=STRUCTURE_SOURCES,
+                default=DEFAULT_STRUCTURE_SOURCE,
+                tooltip="Reference-latent mode only (Qwen Image 2.1). Where the spliced reference "
+                "PIXELS come from. 'fused' blends every source's latent under the weight field. "
+                "'strongest' / 'first' instead hand the whole latent of one source through, so "
+                "that image anchors the structure while semantic_strength decides how much of "
+                "the other images' meaning still reaches the model — 'this one's composition, "
+                "everyone's ideas'. 'strongest' reads the per-image strength sliders.",
+            )
+        ),
+        advanced(
+            io.Float.Input(
+                "semantic_strength",
+                default=1.0,
+                min=0.0,
+                max=1.0,
+                step=0.01,
+                tooltip="Reference-latent mode only (Qwen Image 2.1). How much the per-source "
+                "TEXT readings blend. On 2.1 the vision tokens are dropped, so the text is where "
+                "the vision tower's understanding of each reference survives — this is the "
+                "semantic blend on that model. 1.0 (default) mixes every source by its share of "
+                "the field; 0.0 uses the structure source's reading alone, which with a "
+                "non-fused structure_source collapses to a plain single-reference encode.",
+            )
+        ),
+    ]
+
+
+def empty_latent(width, height, vae=None):
+    """An empty latent matching the visual grid, shaped for whatever VAE is on the wire.
+
+    Qwen Image 2.1 samples in a 64-channel, 16x-downscaled space and nothing in core builds an
+    empty latent that shape except its own text-encode node — so a fusion user on 2.1 would
+    otherwise have to wire core's encoder in just to get a correctly-sized canvas. With no VAE
+    wired there is nothing to read the shape off, so this falls back to the 16-channel/8x layout
+    the modern image models share.
+    """
+    channels, stride = 16, 8
+    if vae is not None:
+        channels = int(getattr(vae, "latent_channels", channels) or channels)
+        ratio = getattr(vae, "downscale_ratio", stride)
+        if isinstance(ratio, int):  # video VAEs carry a tuple or a callable here
+            stride = ratio
+    return {
+        "samples": torch.zeros(
+            [1, channels, max(1, height // stride), max(1, width // stride)],
+            device=comfy.model_management.intermediate_device(),
+        )
+    }
 
 
 def variation_inputs() -> list[io.Input]:

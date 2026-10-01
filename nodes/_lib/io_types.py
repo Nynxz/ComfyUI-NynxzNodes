@@ -29,7 +29,9 @@ def widget_input(socketless: bool = True):
                 id,
                 display_name=display_name,
                 optional=optional,
-                tooltip=tooltip,
+                # The frontend shows an input's tooltip on hover anywhere over its widget; for a
+                # socketless panel that is the whole node body. `tooltip` stays accepted as docs.
+                tooltip=tooltip if not socketless else None,
                 default=default,
                 socketless=socketless,
             )
@@ -74,3 +76,24 @@ def advanced(inp):
     do not forward `extra_dict`."""
     inp.extra_dict = {**(getattr(inp, "extra_dict", None) or {}), "advanced": True}
     return inp
+
+
+def inline_widget(inp, component_name: str):
+    """Draw a standard input with ``frontend/widgets/<component_name>.vue``.
+
+    The socket keeps the input's own type, so anything of that type can still be wired in; the
+    frontend only swaps which widget draws the value. Not ``io.WidgetInput(widget_type=...)``,
+    which would replace the socket type as well.
+    """
+    inp.extra_dict = {
+        **(getattr(inp, "extra_dict", None) or {}),
+        "widgetType": widget_io_type(component_name),
+    }
+    return inp
+
+
+def color_input(id: str, default: str, tooltip: str | None = None, **kwargs):
+    """A colour as a plain STRING: a picker on the node, any CSS colour string when wired."""
+    return inline_widget(
+        io.String.Input(id, default=default, tooltip=tooltip, **kwargs), "ColorField"
+    )
