@@ -29,6 +29,10 @@ You don't touch the workflow, the node or any files. You write text. The full fo
    gets an `@name` in `## References`, with a concrete visual description. Until the user adds a
    picture, H3 reads that description in place of the `@name` (a *placeholder*). So make it specific
    enough to keep the character consistent across scenes: age, build, hair, clothes, colours.
+   Write each description as **one noun phrase** ("a lean young man with messy black hair, a black
+   sleeveless shirt and a chrome right arm"), with no semicolons or full sentences: it's pasted into
+   the shot sentence in place of the `@name`, and its first comma clause ("the lean young man with
+   messy black hair") stands in for it on later mentions.
    Characters who speak also go in `## Cast`, linked to their reference.
    **Blocking.** If the user has grey-box renders (Grey Box Studio) or an animatic for a scene,
    declare each as `@name: … (video, blocking)` and put `with: @name` under that scene's heading.
