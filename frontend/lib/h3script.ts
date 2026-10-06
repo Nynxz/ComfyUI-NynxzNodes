@@ -108,7 +108,10 @@ export function toScript(project: Project): string {
     if (scene.direction.trim()) out.push(`direction: ${scene.direction.trim()}`);
     if (scene.soundscape.trim()) out.push(`ambience: ${scene.soundscape.trim()}`);
     if (scene.music.trim()) out.push(`music: ${scene.music.trim()}`);
-    const marked = project.refs.filter((r) => Array.isArray(r.scenes) && r.scenes.includes(scene.id) && !refUsedIn(project, r, scene));
+    const marked = project.refs.filter(
+      (r) =>
+        Array.isArray(r.scenes) && r.scenes.includes(scene.id) && !refUsedIn(project, r, scene),
+    );
     if (marked.length) out.push(`with: ${marked.map((r) => `@${r.name}`).join(", ")}`);
     out.push("");
     scene.shots.forEach((shot, j) => {
@@ -274,12 +277,12 @@ export function parseProjectScript(project: Project, text: string): ScriptResult
       scene.continuation.mode = opts.some((o) => /sound|music carries|audio carries/i.test(o))
         ? "sound"
         : opts.some((o) => /same place|setting|reference/i.test(o))
-        ? "reference"
-        : opts.some((o) => /last frame|first frame|picks? up/i.test(o))
-          ? "first_frame"
-          : opts.some((o) => /contin/i.test(o))
-            ? "guide"
-            : "cut";
+          ? "reference"
+          : opts.some((o) => /last frame|first frame|picks? up/i.test(o))
+            ? "first_frame"
+            : opts.some((o) => /contin/i.test(o))
+              ? "guide"
+              : "cut";
       result.scenes.push(scene);
       shot = null;
       continue;
@@ -299,7 +302,8 @@ export function parseProjectScript(project: Project, text: string): ScriptResult
       );
       continue;
     }
-    const field = /^(style|direction|canvas|ambience|soundscape|music|title|with)\s*:\s*(.*)$/i.exec(row);
+    const field =
+      /^(style|direction|canvas|ambience|soundscape|music|title|with)\s*:\s*(.*)$/i.exec(row);
     if (field && !shot) {
       const [, key, value] = field;
       const k = key!.toLowerCase();
@@ -309,7 +313,10 @@ export function parseProjectScript(project: Project, text: string): ScriptResult
         else if (k === "music") scene.music = value!;
         else if (k === "title") scene.title = value!;
         else if (k === "with")
-          result.with.push({ scene: scene.id, names: (value!.match(/@[\w-]+/g) ?? []).map((n) => n.slice(1).toLowerCase()) });
+          result.with.push({
+            scene: scene.id,
+            names: (value!.match(/@[\w-]+/g) ?? []).map((n) => n.slice(1).toLowerCase()),
+          });
       } else if (k === "style") result.style = value;
       else if (k === "direction") result.direction = value;
       else if (k === "ambience" || k === "soundscape") result.soundscape = value;
@@ -411,7 +418,14 @@ export function parseProjectScript(project: Project, text: string): ScriptResult
   const mentioned = new Set(
     result.scenes.flatMap((sc) => sc.shots.flatMap((sh) => sh.text.match(/@[\w-]+/g) ?? [])),
   );
-  for (const name of mentioned) if (!refByName.has(keyOf(name))) placeholder(name);
+  // @setting is the previous scene's last frame in a "same place" scene, made at render time —
+  // not a placeholder, unless the script declares a reference of that name itself.
+  for (const name of mentioned)
+    if (
+      !refByName.has(keyOf(name)) &&
+      !(keyOf(name) === "setting" && !result.declared.includes("setting"))
+    )
+      placeholder(name);
   if (!result.scenes.length) result.warnings.push('No "## Scene" headings were found.');
   return result;
 }
@@ -423,7 +437,9 @@ function scriptUses(project: Project, script: ScriptResult) {
     ...script.placeholders.map((p) => p.name.toLowerCase()),
     ...script.links.map((l) => l.ref),
     ...script.scenes.flatMap((sc) =>
-      sc.shots.flatMap((sh) => (sh.text.match(/@[\w-]+/g) ?? []).map((m) => m.slice(1).toLowerCase())),
+      sc.shots.flatMap((sh) =>
+        (sh.text.match(/@[\w-]+/g) ?? []).map((m) => m.slice(1).toLowerCase()),
+      ),
     ),
   ]);
   const linked = new Set(script.cast.map((v) => v.ref).filter(Boolean));
