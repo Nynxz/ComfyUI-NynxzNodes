@@ -20,7 +20,7 @@
 <script lang="ts">
 import type { WidgetOptions } from "@/framework";
 
-/** Drawn over a plain STRING input (see `color_input()` in nodes/_lib/io_types.py), so the socket
+/** Drawn over a plain STRING input (see `color_input()` in nodes/_widgets.py), so the socket
  *  still takes any string — wire a colour in from elsewhere and this steps aside. */
 export const widgetOptions: WidgetOptions = {
   minHeight: 28,

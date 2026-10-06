@@ -17,7 +17,7 @@ from typing import Any
 
 from comfy_api.latest import io
 
-from .._lib.io_types import color_input
+from .._widgets import color_input
 
 # ── Layout / geometry ────────────────────────────────────────────────────────
 LAYOUT_KEYS = [

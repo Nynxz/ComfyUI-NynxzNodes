@@ -11,7 +11,7 @@ with the component filename the frontend registers under. It resolves to the sam
 
 from __future__ import annotations
 
-from .._lib.io_types import widget_type
+from .._zenkit.io_types import widget_type
 
 #: Bound to `frontend/widgets/ImageCompare.vue`.
 ImageCompareType = widget_type(

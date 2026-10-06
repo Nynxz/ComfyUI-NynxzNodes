@@ -21,7 +21,7 @@ from __future__ import annotations
 
 from comfy_api.latest import io
 
-from .._lib.io_types import widget_type
+from .._zenkit.io_types import widget_type
 
 #: The regions wire type. A plain list of dicts; see the module docstring for the shape.
 Regions = io.Custom("NYNXZ_REGIONS")

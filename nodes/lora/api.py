@@ -12,6 +12,7 @@ from urllib.parse import quote
 
 from aiohttp import web
 
+from .._zenkit.server import request_allowed
 from . import favorites, lora_manager, meta
 
 try:
@@ -53,6 +54,18 @@ def _preview_kinds(names: list[str]) -> dict[str, str | None]:
     return out
 
 
+def _file_stats(names: list[str]) -> dict[str, tuple[int | None, int | None]]:
+    """Size (bytes) and modified time (epoch seconds) per LoRA — for the browser's list view."""
+    out: dict[str, tuple[int | None, int | None]] = {}
+    for n in names:
+        try:
+            st = os.stat(folder_paths.get_full_path("loras", n))
+            out[n] = (st.st_size, int(st.st_mtime))
+        except (OSError, TypeError):
+            out[n] = (None, None)
+    return out
+
+
 if _routes is not None:
 
     @_routes.get("/nynxz/loras")
@@ -63,12 +76,15 @@ if _routes is not None:
             names = []
         favs = set(favorites.get_favorites())
         kinds = await asyncio.to_thread(_preview_kinds, names)
+        stats = await asyncio.to_thread(_file_stats, names)
         loras = [
             {
                 "name": n.replace("\\", "/"),
                 "has_preview": kinds[n] is not None,
                 "preview": kinds[n],
                 "favorite": n.replace("\\", "/") in favs,
+                "size": stats[n][0],
+                "mtime": stats[n][1],
             }
             for n in names
         ]
@@ -125,6 +141,8 @@ if _routes is not None:
 
     @_routes.post("/nynxz/favorites")
     async def nynxz_favorites_set(request):
+        if (denied := request_allowed(request)) is not None:
+            return denied
         try:
             body = await request.json()
         except Exception:  # noqa: BLE001 - a malformed body is just an empty request

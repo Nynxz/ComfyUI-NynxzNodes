@@ -154,51 +154,19 @@
       @change="onUpload"
     />
 
-    <!-- browse dialog: multi-pick from the ComfyUI image folders. temp/ and output/ are how
-         an image generated upstream gets in — preview or save it, then pick it here. -->
-    <ZenModal v-model:open="browse" :title="`${srcType} images`" width="880px" height="78vh">
-      <template #header>
-        <span class="fg-search"><ZenInput v-model="bq" placeholder="Search images…" sm /></span>
-        <ZenToggleGroup :model-value="srcType" :options="SRC_OPTS" @update:model-value="setSrc" />
-        <ZenButton variant="ghost" sm icon="mdi mdi-upload" @click="triggerUpload"
-          >Upload</ZenButton
-        >
-      </template>
-
-      <div class="fg-bgrid">
-        <button
-          v-for="it in browseItems"
-          :key="it.type + ':' + it.name"
-          class="fg-bcard"
-          :class="{ sel: picked.has(it.name) }"
-          @click="togglePick(it.name)"
-        >
-          <div class="fg-bcard-img">
-            <img :src="thumbUrl(it.name, it.type)" loading="lazy" />
-            <span v-if="picked.has(it.name)" class="fg-bcard-tick"
-              ><i class="mdi mdi-check"
-            /></span>
-          </div>
-          <div class="fg-bcard-meta">
-            <span class="fg-bcard-name" :title="it.name">{{ shortName(it.name) }}</span>
-            <span class="fg-bcard-dir">{{ it.subfolder || "—" }}</span>
-          </div>
-        </button>
-        <p v-if="!browseItems.length" class="fg-bgrid-empty">No images in {{ srcType }}/.</p>
-      </div>
-
-      <template #footer>
-        <ZenButton variant="ghost" sm @click="browse = false">Cancel</ZenButton>
-        <ZenButton variant="primary" sm :disabled="!picked.size" @click="addPicked">
-          Add {{ picked.size || "" }} image{{ picked.size === 1 ? "" : "s" }}
-        </ZenButton>
-      </template>
-    </ZenModal>
+    <ZenMediaPicker
+      v-model:open="browse"
+      :library="mediaLibrary"
+      :kinds="['image']"
+      title="Add images"
+      :subfolder="'fusion'"
+      @pick="addPicked"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import { nodeId, type NodeDef, type WidgetOptions } from "@/framework";
+import { mediaLibrary, nodeId, type NodeDef, type WidgetOptions } from "@/framework";
 
 /**
  * fill: the body is the node's — the image grid scrolls inside it and the toolbar stays pinned to
@@ -221,10 +189,7 @@ import {
   ZenSlider,
   ZenNumber,
   ZenIconButton,
-  ZenButton,
-  ZenModal,
-  ZenInput,
-  ZenToggleGroup,
+  ZenMediaPicker,
   ZenScroll,
 } from "@nynxz/zenkit-ui";
 import {
@@ -232,7 +197,6 @@ import {
   thumbUrl,
   uploadImage,
   shortName,
-  type ImageItem,
   type SourceType,
 } from "@/lib/fusionApi";
 
@@ -262,11 +226,6 @@ interface LGNode {
 const props = defineProps<{ widget?: DOMWidget; node?: LGNode }>();
 
 const TYPES: SourceType[] = ["input", "temp", "output"];
-const SRC_OPTS = [
-  { value: "input", label: "Input" },
-  { value: "output", label: "Output" },
-  { value: "temp", label: "Temp" },
-];
 
 const rows = ref<FusionRow[]>(parseRows(props.widget?.value));
 const missing = ref<Set<string>>(new Set());
@@ -279,10 +238,6 @@ const dragIndex = ref(-1);
 const dropIndex = ref(-1);
 
 const browse = ref(false);
-const images = ref<ImageItem[]>([]);
-const srcType = ref<SourceType>("input");
-const bq = ref("");
-const picked = ref<Set<string>>(new Set());
 
 let seq = 0;
 function nextId() {
@@ -598,34 +553,16 @@ function endReorder() {
 }
 
 // --- browse dialog ------------------------------------------------------------------
-const browseItems = computed(() => {
-  const q = bq.value.trim().toLowerCase();
-  return images.value.filter((it) => !q || it.name.toLowerCase().includes(q));
-});
-async function ensureImages(force = false) {
-  images.value = await listImages(srcType.value, force);
-}
+// The picker returns media refs (`output/sub/x.png`); a row keeps the folder separately.
 function openBrowse() {
-  picked.value = new Set();
-  bq.value = "";
   browse.value = true;
-  void ensureImages();
 }
-function setSrc(v: string) {
-  srcType.value = v as SourceType;
-  picked.value = new Set();
-  void ensureImages();
-}
-function togglePick(name: string) {
-  const next = new Set(picked.value);
-  if (next.has(name)) next.delete(name);
-  else next.add(name);
-  picked.value = next;
-}
-function addPicked() {
-  for (const it of images.value) if (picked.value.has(it.name)) addRef(it.name, it.type);
+function addPicked(refs: string[]) {
+  for (const ref of refs) {
+    const [type, ...rest] = ref.split("/");
+    addRef(rest.join("/"), (TYPES.includes(type as SourceType) ? type : "input") as SourceType);
+  }
   commit();
-  browse.value = false;
 }
 </script>
 
@@ -948,99 +885,4 @@ function addPicked() {
   font-size: 28px;
 }
 
-/* browse dialog */
-.fg-search {
-  flex: 1;
-  min-width: 0;
-  max-width: 320px;
-  display: flex;
-}
-.fg-bgrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 12px;
-  align-items: start;
-}
-.fg-bcard {
-  display: flex;
-  flex-direction: column;
-  height: 170px;
-  padding: 0;
-  border: 1px solid var(--zen-border, #34343c);
-  border-radius: var(--zen-radius, 9px);
-  background: var(--zen-input, #1b1b20);
-  cursor: pointer;
-  overflow: hidden;
-  text-align: left;
-  color: inherit;
-  font: inherit;
-}
-.fg-bcard:hover {
-  border-color: var(--zen-accent, #6366f1);
-}
-.fg-bcard.sel {
-  border-color: var(--zen-accent, #6366f1);
-  box-shadow: 0 0 0 1px var(--zen-accent, #6366f1) inset;
-}
-.fg-bcard-img {
-  position: relative;
-  flex: 1 1 0;
-  min-height: 0;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--zen-surface, #202026);
-  overflow: hidden;
-}
-.fg-bcard-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-}
-.fg-bcard-tick {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: var(--zen-accent, #6366f1);
-  color: var(--zen-accent-text, #fff);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-}
-.fg-bcard-meta {
-  flex: none;
-  height: 38px;
-  box-sizing: border-box;
-  padding: 5px 8px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 1px;
-  border-top: 1px solid var(--zen-border, #34343c);
-}
-.fg-bcard-name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 12px;
-}
-.fg-bcard-dir {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 10px;
-  color: var(--zen-muted, #9aa0aa);
-}
-.fg-bgrid-empty {
-  grid-column: 1 / -1;
-  text-align: center;
-  color: var(--zen-muted, #9aa0aa);
-  padding: 30px;
-}
 </style>

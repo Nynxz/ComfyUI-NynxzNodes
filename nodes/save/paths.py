@@ -3,6 +3,12 @@
 Projects are just immediate subfolders of a base directory. The base resolves,
 in priority order, from a per-node override, an env var, the "Settings → Nynxz"
 base-directory setting, and finally the ComfyUI output directory.
+
+The per-node override comes from the workflow, which may not be the user's own (a shared
+workflow, or one embedded in a PNG), so it is confined to ComfyUI's output directory: a
+relative value is relative to output/, an absolute one must already be inside it, both
+checked by realpath (so `..` and symlinks can't step out). Saving anywhere else is the
+user's call alone, through ``$NYNXZ_OUTPUT_DIR`` or the Settings value.
 """
 
 import json
@@ -33,14 +39,43 @@ def _read_user_setting(key: str, default=None):
         return default
 
 
+def is_within(root: str, path: str) -> bool:
+    """Whether ``path`` is ``root`` or inside it, both compared by realpath."""
+    root, path = os.path.realpath(root), os.path.realpath(path)
+    try:
+        return os.path.commonpath([root, path]) == root
+    except ValueError:  # different drives (Windows)
+        return False
+
+
+def confine_to_output(value: str) -> str:
+    """The realpath of a per-node base directory, which must lie inside ComfyUI's output
+    directory. Relative values are relative to it. Raises ValueError otherwise."""
+    output = os.path.realpath(folder_paths.get_output_directory())
+    raw = os.path.expanduser(str(value).strip())
+    if "\0" in raw:
+        raise ValueError("Save Image: the base directory contains a null byte.")
+    path = os.path.realpath(os.path.join(output, raw))
+    if not is_within(output, path):
+        raise ValueError(
+            f"Save Image: base directory {value.strip()!r} is outside ComfyUI's output folder "
+            f"({output}). Use a folder inside it (relative paths are relative to it), or set "
+            f"${_ENV_BASE_DIR} or Settings → Nynxz → base directory to save elsewhere."
+        )
+    return path
+
+
 def get_base_directory(override: str = "") -> str:
     """Resolve the base output directory.
 
-    Priority: per-node ``override`` → ``$NYNXZ_OUTPUT_DIR`` → Settings → Nynxz base
-    directory → ComfyUI output directory.
+    Priority: per-node ``override`` (confined to the output directory, see
+    ``confine_to_output``; raises ValueError outside it) → ``$NYNXZ_OUTPUT_DIR`` →
+    Settings → Nynxz base directory → ComfyUI output directory.
     """
+    override = (override or "").strip()
+    if override:
+        return confine_to_output(override)
     candidates = [
-        (override or "").strip(),
         os.environ.get(_ENV_BASE_DIR, "").strip(),
         (_read_user_setting(_SETTING_BASE_DIR, "") or "").strip(),
     ]

@@ -40,7 +40,7 @@ import logging
 
 from comfy_api.latest import io
 
-from .._lib.io_types import advanced
+from .._zenkit.io_types import advanced
 from . import _mask
 from ._base import RegionNode
 from ._io_types import Regions

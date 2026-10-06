@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from comfy_api.latest import io
 
-from .._lib.io_types import widget_type
+from .._zenkit.io_types import widget_type
 
 # Grid Style -> grid nodes: the shared style dict.
 NynxzGridStyleType = io.Custom("NYNXZ_GRID_STYLE")

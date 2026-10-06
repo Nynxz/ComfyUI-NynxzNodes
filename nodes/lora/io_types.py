@@ -8,7 +8,7 @@ rows: {on, name, strength}; `strength` applies to model + CLIP, and an optional
 
 from __future__ import annotations
 
-from .._lib.io_types import widget_type
+from .._zenkit.io_types import widget_type
 
 # Bound to frontend/widgets/LoraStack.vue -> io_type NYNXZ_LORA_STACK.
 LoraStackType = widget_type(

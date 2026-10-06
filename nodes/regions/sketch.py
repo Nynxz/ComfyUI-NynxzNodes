@@ -24,7 +24,7 @@ from __future__ import annotations
 import torch
 from comfy_api.latest import io
 
-from .._lib.io_types import color_input
+from .._widgets import color_input
 from ..background.config import hex_to_rgb
 from ..fusion._fusion import FIT_MODES, _gaussian_blur2d
 from ..fusion._io_types import FusionLayout

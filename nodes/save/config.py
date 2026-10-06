@@ -25,7 +25,7 @@ DEFAULTS: dict[str, Any] = {
     "quality": 90,
     "embed_metadata": True,  # workflow/prompt in the file (PNG text / EXIF)
     "save_workflow_json": False,  # sidecar <name>.json
-    "base_directory": "",  # override; empty = Settings/env/output dir
+    "base_directory": "",  # override inside output/; empty = env/Settings/output dir
 }
 
 

@@ -7,7 +7,7 @@ jobs, so there is no second load. Useful on its own for captioning and prompt ex
 
 from comfy_api.latest import io
 
-from .._lib.io_types import advanced
+from .._zenkit.io_types import advanced
 from ._base import QwenNode
 from ._generate import run_generate
 

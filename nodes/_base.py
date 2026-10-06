@@ -4,12 +4,14 @@ from __future__ import annotations
 
 from comfy_api.latest import io
 
+from ._zenkit import CATEGORY, NAMESPACE
+
 
 class NynxzNode(io.ComfyNode):
     """Node-id namespace and menu category, so nodes never repeat them."""
 
-    NAMESPACE = "nynxz"
-    CATEGORY = "Nynxz"
+    NAMESPACE = NAMESPACE
+    CATEGORY = CATEGORY
 
     #: Compose `NAMESPACE.node_id`. Set False for a group whose ids shipped in full
     #: before this base existed — an id is a contract with saved workflows.

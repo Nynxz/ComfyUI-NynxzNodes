@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from comfy_api.latest import io
 
-from .._lib.io_types import widget_type
+from .._zenkit.io_types import widget_type
 
 # A plain socketed link type: Save Info -> Save Image carries a config dict.
 NynxzSaveInfoType = io.Custom("NYNXZ_SAVE_INFO")

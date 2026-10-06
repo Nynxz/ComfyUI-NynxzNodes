@@ -39,7 +39,7 @@ import torch
 import torch.nn.functional as F
 from comfy_api.latest import io
 
-from .._lib.io_types import advanced
+from .._zenkit.io_types import advanced
 from ._encoders import (
     MERGE_SIZE,
     PATCH_SIZE,

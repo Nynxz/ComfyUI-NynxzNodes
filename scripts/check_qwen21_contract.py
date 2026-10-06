@@ -37,14 +37,14 @@ def _bootstrap(comfyui: Path):
 
     pack = types.ModuleType("nynxz_contract")
     pack.__path__ = [str(PACK / "nodes")]
-    lib = types.ModuleType("nynxz_contract._lib")
-    lib.__path__ = [str(PACK / "nodes" / "_lib")]
+    lib = types.ModuleType("nynxz_contract._zenkit")
+    lib.__path__ = [str(PACK / "nodes" / "_zenkit")]
     group = types.ModuleType("nynxz_contract.fusion")
     group.__path__ = [str(PACK / "nodes" / "fusion")]
     sys.modules.update(
         {
             "nynxz_contract": pack,
-            "nynxz_contract._lib": lib,
+            "nynxz_contract._zenkit": lib,
             "nynxz_contract.fusion": group,
         }
     )
@@ -56,7 +56,7 @@ def _bootstrap(comfyui: Path):
         spec.loader.exec_module(module)
         return module
 
-    load("nynxz_contract._lib.io_types", PACK / "nodes" / "_lib" / "io_types.py")
+    load("nynxz_contract._zenkit.io_types", PACK / "nodes" / "_zenkit" / "io_types.py")
     encoders = load("nynxz_contract.fusion._encoders", PACK / "nodes" / "fusion" / "_encoders.py")
     fusion = load("nynxz_contract.fusion._fusion", PACK / "nodes" / "fusion" / "_fusion.py")
     return encoders, fusion

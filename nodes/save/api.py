@@ -3,7 +3,7 @@
 The panel (frontend/widgets/SaveInfoConfig.vue) calls this to populate its project combo.
 Projects are just the immediate subfolders of the resolved base directory; an optional
 ``base`` query mirrors the panel's per-node override so the list matches where files will
-actually land.
+actually land. Like the override, it must lie inside ComfyUI's output directory (400 if not).
 
 Self-contained so the group drops cleanly into other packs. Routes register on import
 (see nodes/save/__init__.py).
@@ -28,5 +28,8 @@ if _routes is not None:
     @_routes.get("/nynxz/projects")
     async def nynxz_projects(request):
         override = request.rel_url.query.get("base", "")
-        base = get_base_directory(override)
+        try:
+            base = get_base_directory(override)  # an override is confined to output/
+        except ValueError as err:
+            return web.json_response({"error": str(err), "base": "", "projects": []}, status=400)
         return web.json_response({"base": base, "projects": list_projects(base)})

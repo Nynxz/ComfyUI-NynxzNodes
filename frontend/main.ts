@@ -31,5 +31,13 @@ registerNodes([...discoverWidgets(widgets), ...discoverNodes(extraNodes)]);
 import "@/groupSwitcher/register";
 // LoRA Loader's "apply to" setting reshapes its sockets.
 import "@/lib/loraMode";
+// LoRA picker user settings (folder browsing).
+import "@/lib/loraSettings";
+// The Codex: a show's characters, places, props and looks (ZenKit's Start menu, else the sidebar).
+import { registerCodex } from "@/lib/codexOpen";
+void registerCodex();
+// Grey box: the tools agents use to read, change and look at grey box scenes.
+import { registerGreyBoxCapabilities } from "@/lib/greyboxAgent";
+registerGreyBoxCapabilities();
 
 console.log(`[${DISPLAY_NAME}] widgets: ${widgetTypes(widgets).join(", ") || "(none)"}`);

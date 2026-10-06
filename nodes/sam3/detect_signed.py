@@ -22,7 +22,7 @@ from __future__ import annotations
 
 from comfy_api.latest import io
 
-from .._lib.io_types import advanced
+from .._zenkit.io_types import advanced
 from . import _detect, _prompt
 from ._base import SAM3Node
 

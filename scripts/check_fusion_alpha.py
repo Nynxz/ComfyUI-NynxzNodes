@@ -73,17 +73,17 @@ def _load_fusion():
     """Import nodes/fusion/_fusion.py under enough package scaffolding for its relative import."""
     pack = types.ModuleType("nynxz_check")
     pack.__path__ = [str(NODES)]
-    lib = types.ModuleType("nynxz_check._lib")
-    lib.__path__ = [str(NODES / "_lib")]
-    io_types = types.ModuleType("nynxz_check._lib.io_types")
+    lib = types.ModuleType("nynxz_check._zenkit")
+    lib.__path__ = [str(NODES / "_zenkit")]
+    io_types = types.ModuleType("nynxz_check._zenkit.io_types")
     io_types.advanced = lambda widget: widget  # marks a widget advanced; irrelevant to the math
     group = types.ModuleType("nynxz_check.fusion")
     group.__path__ = [str(NODES / "fusion")]
     sys.modules.update(
         {
             "nynxz_check": pack,
-            "nynxz_check._lib": lib,
-            "nynxz_check._lib.io_types": io_types,
+            "nynxz_check._zenkit": lib,
+            "nynxz_check._zenkit.io_types": io_types,
             "nynxz_check.fusion": group,
         }
     )

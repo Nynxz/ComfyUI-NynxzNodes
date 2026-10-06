@@ -24,12 +24,16 @@ async function listLoras(): Promise<LoraItem[]> {
         has_preview?: unknown;
         preview?: unknown;
         favorite?: unknown;
+        size?: unknown;
+        mtime?: unknown;
       };
       return {
         name: String(l.name).replace(/\\/g, "/"),
         has_preview: !!l.has_preview,
         preview: l.preview === "video" || l.preview === "image" ? l.preview : null,
         favorite: !!l.favorite,
+        size: typeof l.size === "number" ? l.size : null,
+        mtime: typeof l.mtime === "number" ? l.mtime : null,
       };
     });
   } catch {

@@ -27,7 +27,7 @@ from PIL.PngImagePlugin import PngInfo
 from .._base import NynxzNode
 from .config import FORMATS, merge_info
 from .io_types import NynxzSaveInfoType, NynxzSavePreviewType
-from .paths import NEW_SENTINEL, ROOT_SENTINEL, get_base_directory
+from .paths import NEW_SENTINEL, ROOT_SENTINEL, get_base_directory, is_within
 
 # EXIF tags used when embedding metadata into a non-PNG format.
 _EXIF_MODEL = 0x0110
@@ -133,6 +133,12 @@ class NynxzSaveImage(NynxzNode):
         full_output_folder, filename, counter, sub, _ = folder_paths.get_save_image_path(
             prefix, base, images[0].shape[1], images[0].shape[0]
         )
+        # The project/subfolder names come from the workflow too: a symlinked folder under the
+        # base must not carry the files out of it.
+        if not is_within(base, full_output_folder):
+            raise ValueError(
+                f"Save Image: {full_output_folder!r} resolves outside the base directory {base!r}."
+            )
         os.makedirs(full_output_folder, exist_ok=True)
 
         embed = bool(cfg.get("embed_metadata", True)) and not args.disable_metadata

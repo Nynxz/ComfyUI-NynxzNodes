@@ -8,7 +8,7 @@ path relative to the ComfyUI input directory ("sub/photo.png"), or a compound
 
 from __future__ import annotations
 
-from .._lib.io_types import widget_type
+from .._zenkit.io_types import widget_type
 
 # Bound to frontend/widgets/ImagePick.vue -> io_type NYNXZ_IMAGE_PICK.
 NynxzImagePickType = widget_type(

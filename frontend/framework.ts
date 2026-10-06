@@ -4,7 +4,17 @@
 import {
   createNodekit,
   defineNode,
+  hasMediaDrop,
+  hasZenPanels,
+  highlightNode,
+  mediaKind,
+  mediaRefUrl,
   openZenPanel,
+  readMediaDrop,
+  registerZenCapability,
+  registerZenPanel,
+  revealNode,
+  uploadMediaFile,
   useDragSurface,
   viewUrl,
   type DOMWidget,
@@ -14,6 +24,7 @@ import {
   type NodeWidgetDef,
   type WidgetFileExports,
   type WidgetOptions,
+  type ZenPanelHandle,
 } from "@nynxz/zenkit-nodekit";
 
 import manifest from "../pack.json";
@@ -32,10 +43,28 @@ export const {
   widgetTypes,
   mountWidget,
   addNodeHeaderButton,
+  mediaLibrary,
+  thumbUrl,
+  uploadOrReuse,
 } = createNodekit(manifest);
 
 // Identity-free helpers pass straight through.
-export { defineNode, openZenPanel, useDragSurface, viewUrl };
+export {
+  defineNode,
+  hasMediaDrop,
+  hasZenPanels,
+  highlightNode,
+  mediaKind,
+  mediaRefUrl,
+  openZenPanel,
+  readMediaDrop,
+  registerZenCapability,
+  registerZenPanel,
+  revealNode,
+  uploadMediaFile,
+  useDragSurface,
+  viewUrl,
+};
 export type {
   DOMWidget,
   NodeDef,
@@ -44,4 +73,5 @@ export type {
   NodeWidgetDef,
   WidgetFileExports,
   WidgetOptions,
+  ZenPanelHandle,
 };

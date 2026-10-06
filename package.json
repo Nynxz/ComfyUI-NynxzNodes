@@ -12,6 +12,7 @@
     "@eslint/js": "^10.0.1",
     "@nynxz/zenkit-nodekit": "^0.2.0",
     "@types/node": "^26.4.1",
+    "@types/three": "0.184.1",
     "@vitejs/plugin-vue": "6.0.8",
     "eslint": "^10.9.1",
     "eslint-config-prettier": "^10.1.8",
@@ -31,9 +32,11 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"frontend/**/*.{ts,vue}\" \"*.{js,mts,json}\"",
     "format:check": "prettier --check \"frontend/**/*.{ts,vue}\" \"*.{js,mts,json}\"",
-    "check": "pnpm lint && pnpm format:check && pnpm typecheck && ruff check . && ruff format --check . && python3 scripts/check_widget_contract.py && pnpm build"
+    "sync": "zenkit-nodekit sync",
+    "check": "pnpm lint && pnpm format:check && pnpm typecheck && ruff check . && ruff format --check . && zenkit-nodekit sync --check && zenkit-nodekit check-widgets && pnpm build"
   },
   "dependencies": {
-    "@nynxz/zenkit-ui": "^0.2.0"
+    "@nynxz/zenkit-ui": "^0.2.0",
+    "three": "0.184.0"
   }
 }
