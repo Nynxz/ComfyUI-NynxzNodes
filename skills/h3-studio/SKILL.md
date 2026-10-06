@@ -69,6 +69,9 @@ H3 learned from prompts written a particular way. Follow it:
   syntax for you; never write `<d>`, `(S1)`, `[Shot 1]` or timestamps inside the text.
 - **Style once, at the top** (`style:`), in live-action / film terms for photoreal work. Don't mix
   in illustrator or anime names unless the film is meant to look illustrated.
+- **Direction once, at the top** (`direction:`): how the film is made, said after the style in every
+  scene: animation timing ("animated on twos, held poses"), camera habits ("mostly locked-off
+  framing"), lens or film-stock texture. Keep it to a sentence; a scene can set its own.
 - **Sound:**
   - `ambience:` is what's heard in the world (rain, traffic, footsteps).
   - `music:` is the score only the audience hears: instruments, tempo, dynamics, not moods.

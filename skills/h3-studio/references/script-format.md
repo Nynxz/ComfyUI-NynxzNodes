@@ -9,6 +9,7 @@ cast may come after the scenes that use them).
 ```
 # Title                         a label for you; not stored
 style: Live-action, cinematic, 35mm, soft tungsten light
+direction: animated on twos, with held poses and smear frames on fast moves    said after the style in every scene (optional)
 canvas: 1344x768                width x height in pixels, rounded to multiples of 32 (optional)
 ambience: rain on glass, distant traffic          heard under every scene unless a scene sets its own
 music: sparse piano at a slow tempo               the score for every scene unless a scene sets its own
@@ -75,7 +76,8 @@ music: a single held synth note
     over while the shot is new (another angle, a later moment). Mention `@setting` in a shot to
     anchor it.
 - Lengths snap up to H3's frame grid (6s becomes 6.58s) and are kept between 1s and 30s; write 2–15.
-- `ambience:` / `music:` lines right after the heading override the film's for this scene.
+- `direction:` / `ambience:` / `music:` lines right after the heading override the film's for this
+  scene.
 - `with: @theme, @rain` right after the heading shows those references in this scene without a
   shot mentioning them (a soundtrack, a style picture).
 

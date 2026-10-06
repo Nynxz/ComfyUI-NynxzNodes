@@ -51,6 +51,34 @@
           placeholder="Name this scene…"
           :aria-label="`Scene ${sel.sceneIndex + 1} title`"
         />
+        <!-- film settings: what every scene says unless it says its own -->
+        <section class="settings" :class="{ open: filmOpen }">
+          <button type="button" class="sechead" @click="filmOpen = !filmOpen">
+            <i class="mdi" :class="filmOpen ? 'mdi-chevron-down' : 'mdi-chevron-right'" />
+            <span>Film</span>
+            <span class="soft ellipsis">{{ film.style || "style, direction, ambience, music" }}</span>
+          </button>
+          <template v-if="filmOpen">
+            <label class="col">
+              <span class="lbl">style</span>
+              <textarea v-model="film.style" rows="2" placeholder="the look, e.g. 2D cel animation, painted backgrounds, warm amber light" />
+            </label>
+            <label class="col">
+              <span class="lbl">direction</span>
+              <textarea v-model="film.direction" rows="2" placeholder="how it's made, e.g. animated on twos, held poses, smear frames on fast moves" />
+            </label>
+            <label class="col">
+              <span class="lbl">ambience</span>
+              <textarea v-model="film.soundscape" rows="2" placeholder="e.g. rain on glass, distant traffic" />
+            </label>
+            <label class="col">
+              <span class="lbl">music</span>
+              <textarea v-model="film.music" rows="2" placeholder="leave empty for none" />
+            </label>
+            <span class="soft">Every scene opens with the style and direction; scenes can set their own direction, ambience and music.</span>
+          </template>
+        </section>
+
         <!-- scene settings -->
         <section class="settings" :class="{ open: settingsOpen }">
           <button type="button" class="sechead" @click="settingsOpen = !settingsOpen">
@@ -122,6 +150,10 @@
               </button>
               <span class="hintline">{{ keyframeHint }}</span>
             </div>
+            <label class="col">
+              <span class="lbl">direction</span>
+              <textarea v-model="scene.direction" rows="2" :placeholder="project.direction || 'the film\'s direction (Film, above)'" />
+            </label>
             <label class="col">
               <span class="lbl">ambience</span>
               <textarea v-model="scene.soundscape" rows="2" :placeholder="project.soundscape || 'e.g. rain on glass, distant traffic'" />
@@ -425,6 +457,9 @@ const scene = computed(() => props.project.scenes[props.sel.sceneIndex]);
 // Selecting a shot opens its card; selecting the scene opens its settings (and keeps whichever
 // card you last had open). Cards are opened by selecting the shot, so the timeline follows.
 const settingsOpen = ref(props.sel.kind === "scene");
+const filmOpen = ref(false);
+/** The film-wide settings: the project itself, edited in place like a scene. */
+const film = computed(() => props.project);
 const lastOpenShot = ref<string | null>(props.sel.kind === "shot" ? props.sel.id : null);
 watch(
   () => [props.sel.kind, props.sel.id] as const,
