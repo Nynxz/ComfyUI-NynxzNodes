@@ -9,7 +9,7 @@ const config = zenPluginConfig({
   outDir: "web", // matches WEB_DIRECTORY in __init__.py
 });
 
-// Code loaded on demand (the Grey Box editor and three.js) goes in chunks named .mjs: ComfyUI
+// Code loaded on demand goes in chunks named .mjs: ComfyUI
 // loads every .js under WEB_DIRECTORY at startup, which would load them up front.
 const output = config.build?.rollupOptions?.output;
 if (output && !Array.isArray(output)) output.chunkFileNames = "chunks/[name]-[hash].mjs";
