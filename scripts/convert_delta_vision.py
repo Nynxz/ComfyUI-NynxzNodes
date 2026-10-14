@@ -31,9 +31,13 @@ def _bits(tensor: torch.Tensor) -> torch.Tensor:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument("checkpoint", help="δ-Vision .pt checkpoint")
-    parser.add_argument("-o", "--out", default=None, help="default: next to the input, .safetensors")
+    parser.add_argument(
+        "-o", "--out", default=None, help="default: next to the input, .safetensors"
+    )
     args = parser.parse_args()
 
     src = Path(args.checkpoint)
@@ -45,7 +49,9 @@ def main() -> int:
     if config.get("output_mode") != "embedding_adapter":
         print(f"{src}: output_mode is {config.get('output_mode')!r}, not an embedding adapter")
         return 1
-    extra = sorted(k for k in state if not k.startswith(("visual_adapter_down.", "visual_adapter_up.")))
+    extra = sorted(
+        k for k in state if not k.startswith(("visual_adapter_down.", "visual_adapter_up."))
+    )
     if extra:
         print(f"{src}: unexpected keys {extra[:5]} — refusing to drop them silently")
         return 1
@@ -64,7 +70,9 @@ def main() -> int:
     with safe_open(str(dst), framework="pt", device="cpu") as f:
         keys = set(f.keys())
         if keys != set(state):
-            bad.append(f"key sets differ: missing {sorted(set(state) - keys)[:5]}, extra {sorted(keys - set(state))[:5]}")
+            bad.append(
+                f"key sets differ: missing {sorted(set(state) - keys)[:5]}, extra {sorted(keys - set(state))[:5]}"
+            )
         for key in sorted(keys & set(state)):
             a, b = state[key], f.get_tensor(key)
             if a.dtype != b.dtype or a.shape != b.shape or not torch.equal(_bits(a), _bits(b)):
@@ -73,7 +81,9 @@ def main() -> int:
 
     dtypes = sorted({str(v.dtype) for v in state.values()})
     print(f"{src.name} -> {dst}  ({dst.stat().st_size / 2**20:.1f} MiB)")
-    print(f"  {len(state)} tensors, {', '.join(dtypes)}; step {stored['delta_vision.global_step']}, base {stored['delta_vision.base_model']}")
+    print(
+        f"  {len(state)} tensors, {', '.join(dtypes)}; step {stored['delta_vision.global_step']}, base {stored['delta_vision.base_model']}"
+    )
     if bad:
         print("  MISMATCH:\n    " + "\n    ".join(bad))
         return 1

@@ -25,7 +25,10 @@ spec.loader.exec_module(canvas)
 
 def roughness(image):
     """Mean absolute neighbour difference — lower = smoother, larger blobs."""
-    return float((image[:, 1:] - image[:, :-1]).abs().mean() + (image[:, :, 1:] - image[:, :, :-1]).abs().mean())
+    return float(
+        (image[:, 1:] - image[:, :-1]).abs().mean()
+        + (image[:, :, 1:] - image[:, :, :-1]).abs().mean()
+    )
 
 
 class Layout(unittest.TestCase):
@@ -69,7 +72,9 @@ class Knobs(unittest.TestCase):
 
     def test_brightness_sets_mean(self):
         for level in (0.3, 0.7):
-            out = canvas.structure_canvas(256, 256, seed=4, brightness=level, contrast=0.1, color=0.05)
+            out = canvas.structure_canvas(
+                256, 256, seed=4, brightness=level, contrast=0.1, color=0.05
+            )
             self.assertAlmostEqual(float(out.mean()), level, delta=0.03)
 
 

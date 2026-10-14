@@ -51,7 +51,11 @@ class NynxzColoredNoise(NoiseNode):
             is_experimental=True,
             inputs=[
                 io.Int.Input(
-                    "noise_seed", default=0, min=0, max=0xFFFFFFFFFFFFFFFF, control_after_generate=True
+                    "noise_seed",
+                    default=0,
+                    min=0,
+                    max=0xFFFFFFFFFFFFFFFF,
+                    control_after_generate=True,
                 ),
                 io.Float.Input(
                     "color",
@@ -84,4 +88,6 @@ class NynxzColoredNoise(NoiseNode):
 
     @classmethod
     def execute(cls, noise_seed, color=1.0, strength=0.5, zero_mean=True) -> io.NodeOutput:
-        return io.NodeOutput(ColoredNoiseSource(int(noise_seed), float(color), float(strength), bool(zero_mean)))
+        return io.NodeOutput(
+            ColoredNoiseSource(int(noise_seed), float(color), float(strength), bool(zero_mean))
+        )

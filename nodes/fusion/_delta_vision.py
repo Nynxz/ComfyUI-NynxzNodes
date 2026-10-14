@@ -45,7 +45,9 @@ class DeltaVisionAdapter:
     def __init__(self, down: torch.Tensor, up: torch.Tensor, meta: dict | None = None):
         # down: [L, R, H], up: [L, H, R] — nn.Linear weight layout, as the checkpoint stores them.
         if down.ndim != 3 or up.ndim != 3 or down.shape[0] != up.shape[0]:
-            raise ValueError("δ-Vision adapter weights must be [layers, rank, hidden] / [layers, hidden, rank].")
+            raise ValueError(
+                "δ-Vision adapter weights must be [layers, rank, hidden] / [layers, hidden, rank]."
+            )
         self.down = down
         self.up = up
         self.meta = meta or {}
@@ -63,7 +65,7 @@ class DeltaVisionAdapter:
         return int(self.down.shape[1])
 
     @classmethod
-    def load(cls, path: str | Path) -> "DeltaVisionAdapter":
+    def load(cls, path: str | Path) -> DeltaVisionAdapter:
         """Load the released `.pt` or its `.safetensors` conversion (scripts/convert_delta_vision.py)."""
         if str(path).lower().endswith((".safetensors", ".sft")):
             state, config, step, base = _read_safetensors(path)
@@ -82,7 +84,9 @@ class DeltaVisionAdapter:
             )
         count = sum(1 for key in state if key.startswith("visual_adapter_down."))
         if count == 0:
-            raise ValueError(f"{path} has no visual_adapter_down.* weights — not a δ-Vision adapter.")
+            raise ValueError(
+                f"{path} has no visual_adapter_down.* weights — not a δ-Vision adapter."
+            )
         down = torch.stack([state[f"visual_adapter_down.{i}.weight"] for i in range(count)])
         up = torch.stack([state[f"visual_adapter_up.{i}.weight"] for i in range(count)])
         return cls(down, up, {"path": str(path), "step": step, "base": base})
@@ -112,7 +116,7 @@ def _read_safetensors(path):
     from safetensors import safe_open
 
     with safe_open(str(path), framework="pt", device="cpu") as f:
-        state = {key: f.get_tensor(key) for key in f.keys()}
+        state = {key: f.get_tensor(key) for key in f.keys()}  # noqa: SIM118 - a safetensors file, not a dict
         meta = f.metadata() or {}
     config = json.loads(meta.get("delta_vision.adapter_config") or "{}")
     step = meta.get("delta_vision.global_step")
@@ -122,7 +126,9 @@ def _read_safetensors(path):
 def language_transformer(clip):
     """The Qwen3-VL module inside a CLIP: the one that builds image inputs and owns the decoder."""
     for module in clip.cond_stage_model.modules():
-        if hasattr(module, "build_image_inputs") and hasattr(getattr(module, "model", None), "layers"):
+        if hasattr(module, "build_image_inputs") and hasattr(
+            getattr(module, "model", None), "layers"
+        ):
             return module
     raise ValueError("δ-Vision needs a Qwen3-VL text encoder; the wired CLIP has none.")
 
@@ -212,7 +218,9 @@ def delta_vision_pass(clip, adapter: DeltaVisionAdapter, visual=None, identity: 
                     f"δ-Vision: replacement visual block is {tuple(e.shape)}, the encode's is "
                     f"{tuple(embeds[0, span].shape)} — they must share the visual grid."
                 )
-        state.update(span=span, length=int(embeds.shape[1]), memory=adapter.memories(e, identity=identity))
+        state.update(
+            span=span, length=int(embeds.shape[1]), memory=adapter.memories(e, identity=identity)
+        )
 
     def before_encode(module, args, kwargs):
         embeds = kwargs["embeds"]
@@ -229,7 +237,9 @@ def delta_vision_pass(clip, adapter: DeltaVisionAdapter, visual=None, identity: 
 
     def generate(embeds=None, *args, visual_pos_masks=None, deepstack_embeds=None, **kwargs):
         arm(embeds, visual_pos_masks)
-        return original_generate(embeds, *args, visual_pos_masks=None, deepstack_embeds=None, **kwargs)
+        return original_generate(
+            embeds, *args, visual_pos_masks=None, deepstack_embeds=None, **kwargs
+        )
 
     def prefill(x):
         return state.get("memory") is not None and x.shape[1] == state["length"]
@@ -255,7 +265,9 @@ def delta_vision_pass(clip, adapter: DeltaVisionAdapter, visual=None, identity: 
         transformer.register_forward_pre_hook(before_encode, with_kwargs=True),
         layers[0].register_forward_pre_hook(before_first, with_kwargs=True),
     ]
-    handles += [layer.register_forward_hook(after(i), with_kwargs=True) for i, layer in enumerate(layers)]
+    handles += [
+        layer.register_forward_hook(after(i), with_kwargs=True) for i, layer in enumerate(layers)
+    ]
     transformer.generate = generate
     try:
         yield

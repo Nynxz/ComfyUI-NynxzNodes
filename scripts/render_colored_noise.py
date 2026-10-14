@@ -30,7 +30,13 @@ import torch
 from PIL import Image, ImageDraw
 
 PACK = Path(__file__).resolve().parents[1]
-SETTINGS = [("white", 0.0, 0.0), ("α1 s.5", 1.0, 0.5), ("α1 s1", 1.0, 1.0), ("α2 s.5", 2.0, 0.5), ("α2 s1", 2.0, 1.0)]
+SETTINGS = [
+    ("white", 0.0, 0.0),
+    ("α1 s.5", 1.0, 0.5),
+    ("α1 s1", 1.0, 1.0),
+    ("α2 s.5", 2.0, 0.5),
+    ("α2 s1", 2.0, 1.0),
+]
 
 
 def _load_pack(comfy: str):
@@ -48,7 +54,10 @@ def _load_pack(comfy: str):
 
 
 def _diversity(images):
-    gray = [np.asarray(im.convert("L").resize((16, 16), Image.BILINEAR), np.float32) / 255 for im in images]
+    gray = [
+        np.asarray(im.convert("L").resize((16, 16), Image.BILINEAR), np.float32) / 255
+        for im in images
+    ]
     rgb = [np.asarray(im, np.float32).reshape(-1, 3).mean(0) / 255 for im in images]
     pairs = list(itertools.combinations(range(len(images)), 2))
     layout = np.mean([np.sqrt(((gray[i] - gray[j]) ** 2).mean()) for i, j in pairs])
@@ -60,7 +69,7 @@ def _sheet(rows, labels, tile=224):
     columns = max(len(r) for r in rows)
     sheet = Image.new("RGB", (110 + columns * tile, len(rows) * tile), "white")
     draw = ImageDraw.Draw(sheet)
-    for r, (row, label) in enumerate(zip(rows, labels)):
+    for r, (row, label) in enumerate(zip(rows, labels, strict=False)):
         draw.text((4, r * tile + tile // 2 - 12), label, fill="black")
         for c, im in enumerate(row):
             sheet.paste(im.resize((tile, tile), Image.LANCZOS), (110 + c * tile, r * tile))
@@ -68,7 +77,9 @@ def _sheet(rows, labels, tile=224):
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument("--comfy", required=True)
     parser.add_argument("--te", required=True)
     parser.add_argument("--model", required=True)
@@ -94,6 +105,7 @@ def main():
     import comfy.sample
     import comfy.sd
     import comfy.utils
+
     import nodes
 
     clip = comfy.sd.load_clip([args.te], clip_type=comfy.sd.CLIPType.KREA2)
@@ -110,10 +122,20 @@ def main():
         for prompt, cond in conds.items():
             for label, color, strength in SETTINGS:
                 for seed in range(args.seeds):
-                    noise = node.ColoredNoiseSource(seed, color, strength, True).generate_noise(latent)
+                    noise = node.ColoredNoiseSource(seed, color, strength, True).generate_noise(
+                        latent
+                    )
                     samples[prompt, label, seed] = comfy.sample.sample(
-                        model, noise, args.steps, 1.0, args.sampler, args.scheduler, cond, cond,
-                        latent_image, seed=seed,
+                        model,
+                        noise,
+                        args.steps,
+                        1.0,
+                        args.sampler,
+                        args.scheduler,
+                        cond,
+                        cond,
+                        latent_image,
+                        seed=seed,
                     )
             print(f"sampled: {prompt}")
         comfy.model_management.unload_all_models()
@@ -121,7 +143,9 @@ def main():
         images = {}
         for key, s in samples.items():
             pixels = nodes.VAEDecode().decode(vae, {"samples": s})[0]
-            images[key] = Image.fromarray((pixels[0].clamp(0, 1).cpu().float().numpy() * 255).astype(np.uint8))
+            images[key] = Image.fromarray(
+                (pixels[0].clamp(0, 1).cpu().float().numpy() * 255).astype(np.uint8)
+            )
 
     report = {}
     for p_index, prompt in enumerate(args.prompts):
@@ -139,7 +163,9 @@ def main():
             for seed, im in enumerate(row):
                 im.save(out / f"p{p_index}_{label.replace(' ', '_').replace('.', '')}_s{seed}.png")
         _sheet(rows, labels).save(out / f"grid_p{p_index}.png")
-    (out / "report.json").write_text(json.dumps({"prompts": args.prompts, "settings": SETTINGS, "diversity": report}, indent=2))
+    (out / "report.json").write_text(
+        json.dumps({"prompts": args.prompts, "settings": SETTINGS, "diversity": report}, indent=2)
+    )
     print(f"\nwrote {out}")
 
 

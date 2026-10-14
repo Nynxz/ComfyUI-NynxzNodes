@@ -52,6 +52,9 @@ select = [
 # `ruff format` owns code line width; E501 only fires on comments/docstrings it
 # deliberately leaves alone, so linting it here is just noise.
 ignore = ["E501"]
+# The noise and Delta Vision docs write their maths as maths: α and σ for the spectrum's slope and
+# spread, a real minus sign, and en dashes for ranges.
+allowed-confusables = ["α", "σ", "–", "−"]
 
 [tool.ruff.format]
 docstring-code-format = true

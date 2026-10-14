@@ -101,5 +101,7 @@ except ImportError:  # outside ComfyUI (e.g. syntax/lint checks)
 # δ-Vision adapters live in models/delta_vision. extra_model_paths.yaml may have registered the
 # name first; add_model_folder_path appends to that, and the extensions are filled in either way.
 if folder_paths:
-    folder_paths.add_model_folder_path("delta_vision", os.path.join(folder_paths.models_dir, "delta_vision"))
+    folder_paths.add_model_folder_path(
+        "delta_vision", os.path.join(folder_paths.models_dir, "delta_vision")
+    )
     folder_paths.folder_names_and_paths["delta_vision"][1].update({".safetensors", ".sft", ".pt"})

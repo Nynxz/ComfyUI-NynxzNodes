@@ -38,13 +38,15 @@ def _octave(generator, channels, height, width, cell):
     grid_h = max(2, math.ceil(height / cell) + 1)
     grid_w = max(2, math.ceil(width / cell) + 1)
     grid = torch.randn((1, channels, grid_h, grid_w), generator=generator)
-    up = F.interpolate(grid, size=(grid_h * cell, grid_w * cell), mode="bicubic", align_corners=False)
+    up = F.interpolate(
+        grid, size=(grid_h * cell, grid_w * cell), mode="bicubic", align_corners=False
+    )
     return up[..., :height, :width]
 
 
 def _field(generator, channels, height, width, scale, octaves, detail):
     """Sum of octaves, normalized to zero mean / unit std per channel."""
-    cell = max(2, int(round(scale * min(height, width))))
+    cell = max(2, round(scale * min(height, width)))
     total = torch.zeros((1, channels, height, width))
     amplitude = 1.0
     for _ in range(max(1, octaves)):

@@ -84,7 +84,7 @@ def _grid(tiles, labels, size=384, columns=5):
     rows = (len(tiles) + columns - 1) // columns
     sheet = Image.new("RGB", (columns * size, rows * (size + 24)), "white")
     draw = ImageDraw.Draw(sheet)
-    for i, (tile, label) in enumerate(zip(tiles, labels)):
+    for i, (tile, label) in enumerate(zip(tiles, labels, strict=False)):
         x, y = (i % columns) * size, (i // columns) * (size + 24)
         sheet.paste(tile.resize((size, size), Image.LANCZOS), (x, y + 24))
         draw.text((x + 4, y + 5), label, fill="black")
@@ -92,7 +92,9 @@ def _grid(tiles, labels, size=384, columns=5):
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument("--comfy", required=True)
     parser.add_argument("--te", required=True)
     parser.add_argument("--model", required=True)
@@ -119,7 +121,9 @@ def main():
         help="source-caption steering: fused visual block + plain captions of each source, mixed "
         "by concatenation or by a strength-weighted prediction mix (no δ involved)",
     )
-    parser.add_argument("--weights", type=float, nargs="+", default=[0.25, 0.5, 0.75], help="--steer: A's share")
+    parser.add_argument(
+        "--weights", type=float, nargs="+", default=[0.25, 0.5, 0.75], help="--steer: A's share"
+    )
     parser.add_argument("--question", default="Describe this image in one sentence.")
     parser.add_argument("--max-tokens", type=int, default=64)
     args = parser.parse_args()
@@ -132,6 +136,7 @@ def main():
     fusion, dv = _load_pack(comfy_root)
     import comfy.sd
     import comfy.utils
+
     import nodes
 
     clip = comfy.sd.load_clip([args.te], clip_type=comfy.sd.CLIPType.KREA2)
@@ -157,7 +162,9 @@ def main():
         with dv.capture_visual(clip) as records:
             captured.append(dv.encode_capturing(clip, source_tokens, records)["E"])
     weights = fusion._compute_weights(2, gh, gw, settings, None, captured[0].device)
-    fused_e = fusion._blend(torch.stack(captured, dim=1)[None], weights.to(captured[0].dtype), settings.preserve_norm)[0]
+    fused_e = fusion._blend(
+        torch.stack(captured, dim=1)[None], weights.to(captured[0].dtype), settings.preserve_norm
+    )[0]
 
     def delta(visual):
         if adapter is None:
@@ -170,7 +177,9 @@ def main():
         van_a, van_b = _taps(conds[0][0][0])[end:], _taps(conds[1][0][0])[end:]
         da, db, df = (_taps(c)[end:] for c in (d_a, d_b, d_f))
         t = _along(df, da, db)
-        print(f"grid {gh}x{gw}, visual span {start}:{end}, prompt half {base.shape[1] - end} tokens")
+        print(
+            f"grid {gh}x{gw}, visual span {start}:{end}, prompt half {base.shape[1] - end} tokens"
+        )
         print("δ-fused t per tap: " + " ".join(f"{v:.2f}" for v in t.tolist()))
 
         def with_prompt(taps):
@@ -259,7 +268,15 @@ def main():
             for label, entry in variants.items():
                 positive = entry if isinstance(entry[0], list) else [[entry[0], entry[1].copy()]]
                 (samples,) = nodes.common_ksampler(
-                    model, seed, args.steps, 1.0, args.sampler, args.scheduler, positive, positive, latent
+                    model,
+                    seed,
+                    args.steps,
+                    1.0,
+                    args.sampler,
+                    args.scheduler,
+                    positive,
+                    positive,
+                    latent,
                 )
                 latents[seed, label] = samples
                 print(f"  seed {seed}  {label}")
@@ -268,7 +285,9 @@ def main():
         tiles = {}
         for (seed, label), samples in latents.items():
             image = nodes.VAEDecode().decode(vae, samples)[0]
-            pil = Image.fromarray((image[0].clamp(0, 1).cpu().float().numpy() * 255).astype(np.uint8))
+            pil = Image.fromarray(
+                (image[0].clamp(0, 1).cpu().float().numpy() * 255).astype(np.uint8)
+            )
             slug = label.split(" (")[0].replace(" ", "_").replace(".", "").replace("δ", "d")
             pil.save(out / f"s{seed}_{slug}.png")
             tiles.setdefault(seed, []).append(pil)
@@ -276,10 +295,23 @@ def main():
     labels = list(variants)
     sources_row = [Image.open(p).convert("RGB") for p in paths]
     for seed, row in tiles.items():
-        _grid(sources_row + row, ["source A", "source B"] + labels, columns=6 if len(labels) > 4 else len(labels) + 2).save(
-            out / f"grid_s{seed}.png"
+        _grid(
+            sources_row + row,
+            ["source A", "source B", *labels],
+            columns=6 if len(labels) > 4 else len(labels) + 2,
+        ).save(out / f"grid_s{seed}.png")
+    (out / "run.json").write_text(
+        json.dumps(
+            {
+                "images": paths,
+                "prompt": args.prompt,
+                "captions": captions,
+                "t": t.tolist(),
+                "seeds": args.seeds,
+            },
+            indent=2,
         )
-    (out / "run.json").write_text(json.dumps({"images": paths, "prompt": args.prompt, "captions": captions, "t": t.tolist(), "seeds": args.seeds}, indent=2))
+    )
     print(f"wrote {out}")
 
 

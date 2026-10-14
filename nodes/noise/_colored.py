@@ -49,7 +49,9 @@ def _unit(noise: torch.Tensor, zero_mean: bool) -> torch.Tensor:
     return noise / (noise.std(dim=dims, keepdim=True) + _EPS)
 
 
-def color_noise(white: torch.Tensor, color: float, strength: float, zero_mean: bool = True) -> torch.Tensor:
+def color_noise(
+    white: torch.Tensor, color: float, strength: float, zero_mean: bool = True
+) -> torch.Tensor:
     """Blend `white` (`[B, C, …, H, W]`) toward its own spectrally tilted version.
 
     Returns `white` itself (bit-identical) when strength or color is 0, so the node with those
@@ -58,7 +60,9 @@ def color_noise(white: torch.Tensor, color: float, strength: float, zero_mean: b
     if strength <= 0.0 or color == 0.0:
         return white
     if white.ndim < 4:
-        raise ValueError(f"Colored noise needs a [batch, channels, …, H, W] latent; got {tuple(white.shape)}.")
+        raise ValueError(
+            f"Colored noise needs a [batch, channels, …, H, W] latent; got {tuple(white.shape)}."
+        )
     dtype = white.dtype
     x = white.float()
     height, width = x.shape[-2:]

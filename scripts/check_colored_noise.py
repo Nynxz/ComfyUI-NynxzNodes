@@ -71,7 +71,10 @@ class Normalization(unittest.TestCase):
 class Spectrum(unittest.TestCase):
     def test_low_frequencies_gain_power_monotonically_in_color(self):
         w = white()
-        shares = [low_band_power(colored.color_noise(w, a, 1.0)) if a else low_band_power(w) for a in (0.0, 1.0, 2.0)]
+        shares = [
+            low_band_power(colored.color_noise(w, a, 1.0)) if a else low_band_power(w)
+            for a in (0.0, 1.0, 2.0)
+        ]
         self.assertLess(shares[0], shares[1])
         self.assertLess(shares[1], shares[2])
 
@@ -85,7 +88,9 @@ class Spectrum(unittest.TestCase):
             sim = float(torch.nn.functional.cosine_similarity(out.flatten(), full.flatten(), dim=0))
             self.assertGreater(sim, prev)
             prev = sim
-        self.assertGreater(float(torch.nn.functional.cosine_similarity(full.flatten(), w.flatten(), dim=0)), 0.0)
+        self.assertGreater(
+            float(torch.nn.functional.cosine_similarity(full.flatten(), w.flatten(), dim=0)), 0.0
+        )
 
 
 if __name__ == "__main__":

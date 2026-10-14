@@ -77,7 +77,9 @@ def _norm_ratio(a, b):
 def _along(point, a, b):
     """Projection coefficient of `point` on the a→b segment, per tap, over all tokens at once."""
     direction = (b - a).flatten(0, 0)
-    t = ((point - a) * direction).sum(dim=(0, 2)) / (direction * direction).sum(dim=(0, 2)).clamp_min(1e-9)
+    t = ((point - a) * direction).sum(dim=(0, 2)) / (direction * direction).sum(
+        dim=(0, 2)
+    ).clamp_min(1e-9)
     return t
 
 
@@ -86,21 +88,43 @@ def _row(label, values, fmt="{:6.3f}"):
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument("--comfy", required=True, help="ComfyUI root (to import comfy from)")
     parser.add_argument("--images", nargs=2, required=True, metavar=("A", "B"))
-    parser.add_argument("--te", default=None, help="text encoder; default <comfy>/models/text_encoders/qwen3vl_4b_bf16.safetensors")
-    parser.add_argument("--adapter", default=None, help="default <comfy>/models/delta_vision/qwen_embedding_adapter_step2000.safetensors")
-    parser.add_argument("--size", type=int, default=384, help="square visual grid side, multiple of 32 (fusion default 384)")
+    parser.add_argument(
+        "--te",
+        default=None,
+        help="text encoder; default <comfy>/models/text_encoders/qwen3vl_4b_bf16.safetensors",
+    )
+    parser.add_argument(
+        "--adapter",
+        default=None,
+        help="default <comfy>/models/delta_vision/qwen_embedding_adapter_step2000.safetensors",
+    )
+    parser.add_argument(
+        "--size",
+        type=int,
+        default=384,
+        help="square visual grid side, multiple of 32 (fusion default 384)",
+    )
     parser.add_argument("--prompt", default="combine these into one image")
     parser.add_argument("--json", default=None, help="also write the numbers here")
-    parser.add_argument("--describe", default="Describe this image in one sentence.", help="generation readout question ('' to skip)")
+    parser.add_argument(
+        "--describe",
+        default="Describe this image in one sentence.",
+        help="generation readout question ('' to skip)",
+    )
     parser.add_argument("--max-tokens", type=int, default=48)
     args = parser.parse_args()
 
     comfy_root = Path(args.comfy).resolve()
     te = Path(args.te or comfy_root / "models/text_encoders/qwen3vl_4b_bf16.safetensors")
-    adapter_path = Path(args.adapter or comfy_root / "models/delta_vision/qwen_embedding_adapter_step2000.safetensors")
+    adapter_path = Path(
+        args.adapter
+        or comfy_root / "models/delta_vision/qwen_embedding_adapter_step2000.safetensors"
+    )
     if args.size % 32:
         parser.error("--size must be a multiple of 32 so the grid is whole tokens")
 
@@ -114,12 +138,15 @@ def main():
     print(f"TE       {te}\nadapter  {adapter_path}")
     clip = comfy.sd.load_clip([str(te)], clip_type=comfy.sd.CLIPType.KREA2)
     adapter = dv.DeltaVisionAdapter.load(adapter_path)
-    print(f"         rank {adapter.rank}, {adapter.num_layers} layers, step {adapter.meta['step']}, base {adapter.meta['base']}")
+    print(
+        f"         rank {adapter.rank}, {adapter.num_layers} layers, step {adapter.meta['step']}, base {adapter.meta['base']}"
+    )
 
     grid = args.size // 32
-    images = {name: _image(path, args.size) for name, path in zip("AB", args.images)}
+    images = {name: _image(path, args.size) for name, path in zip("AB", args.images, strict=False)}
     tokens = {
-        name: clip.tokenize(template.format(prompt=args.prompt), images=[img]) for name, img in images.items()
+        name: clip.tokenize(template.format(prompt=args.prompt), images=[img])
+        for name, img in images.items()
     }
 
     def encode(name, **delta):
@@ -149,7 +176,9 @@ def main():
         raise SystemExit("A and B tokenized to different layouts — give them the same --size")
     vis_end = int(vis[-1]) + 1
     text = torch.arange(vis_end, seq)
-    print(f"\ngrid {grid}x{grid} = {len(vis)} visual tokens, {len(text)} prompt/tail tokens, taps {KREA2_TAPS}")
+    print(
+        f"\ngrid {grid}x{grid} = {len(vis)} visual tokens, {len(text)} prompt/tail tokens, taps {KREA2_TAPS}"
+    )
 
     header = f"  {'tap':<26}" + " ".join(f"{t:>6d}" for t in KREA2_TAPS)
     report: dict = {"taps": KREA2_TAPS, "grid": grid, "prompt": args.prompt, "images": args.images}
@@ -163,7 +192,11 @@ def main():
         print(_row(f"{name} cos(M, V)", c))
         print(_row(f"{name} cos(E, V) [identity]", ci))
         print(_row(f"{name} |M|/|V|", r))
-        report[f"visual_{name}"] = {"cos": c.tolist(), "cos_identity": ci.tolist(), "norm_ratio": r.tolist()}
+        report[f"visual_{name}"] = {
+            "cos": c.tolist(),
+            "cos_identity": ci.tolist(),
+            "norm_ratio": r.tolist(),
+        }
 
     print("\n── prompt tokens: δ pass vs vanilla, same image ──")
     print(header)
@@ -179,7 +212,9 @@ def main():
 
     # Cosine barely moves between unrelated images (a big shared component dominates), so measure
     # the error in units of what swapping the image does: 1.0 = as far off as reading the other image.
-    print("\n── prompt tokens: error ÷ |vanilla A − vanilla B|  (lower is better, 1 = wrong image) ──")
+    print(
+        "\n── prompt tokens: error ÷ |vanilla A − vanilla B|  (lower is better, 1 = wrong image) ──"
+    )
     print(header)
     signal = (vanilla["A"][text] - vanilla["B"][text]).norm(dim=-1).mean(0)
     for name in "AB":
@@ -250,7 +285,7 @@ def main():
     if args.describe:
         # The readable test: ask the LM what it sees. Greedy, so runs are comparable.
         question = clip.tokenize  # bound below per image
-        print(f"\n── describe: \"{args.describe}\" (greedy, {args.max_tokens} tokens) ──")
+        print(f'\n── describe: "{args.describe}" (greedy, {args.max_tokens} tokens) ──')
         report["describe"] = {}
 
         def describe(name, **delta_kwargs):
@@ -276,8 +311,12 @@ def main():
             report["describe"][label] = text_out
             print(f"  {label:<24} {text_out}")
 
-    print(f"\ntiming (last B): vanilla {t_vanilla*1e3:.0f} ms, δ pass {t_delta*1e3:.0f} ms, fused δ {t_fused*1e3:.0f} ms")
-    print("  hooks overwrite the visual stream but still compute it, so no speed-up is expected here")
+    print(
+        f"\ntiming (last B): vanilla {t_vanilla * 1e3:.0f} ms, δ pass {t_delta * 1e3:.0f} ms, fused δ {t_fused * 1e3:.0f} ms"
+    )
+    print(
+        "  hooks overwrite the visual stream but still compute it, so no speed-up is expected here"
+    )
 
     if args.json:
         Path(args.json).write_text(json.dumps(report, indent=2))
