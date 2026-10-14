@@ -14,6 +14,7 @@ import { DEFAULT_SETTINGS } from "./groups";
 const NODE_TYPE = nodeId("Utils.GroupSwitcher");
 const TITLE = "Group Switcher";
 const NODE_CATEGORY = `${CATEGORY}/Utils`;
+const PACK_ANCHOR = nodeId("Lora.Loader");
 
 // LiteGraph's classes, as ComfyUI exposes them to extensions on window.
 interface LGraphNodeLike {
@@ -82,7 +83,7 @@ app.registerExtension({
     if (!def) return;
     def.display_name = TITLE;
     def.category = NODE_CATEGORY;
-    const sibling = defs.find((d) => d.name.startsWith(`${NAMESPACE}.`) && d !== def);
+    const sibling = defs.find((d) => d.name === PACK_ANCHOR);
     if (sibling?.python_module) def.python_module = sibling.python_module;
   },
 });
