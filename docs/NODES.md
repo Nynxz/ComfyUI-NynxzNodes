@@ -5,8 +5,7 @@ The full reference. The [README](../README.md) has the short tour.
 ## LoRA
 
 - **LoRA Loader** — a whole LoRA stack on one node: an on/off dot, a searchable picker with
-  bookmarks and previews, and a strength per row. `MODEL` in, `MODEL` out.
-- **LoRA Loader (CLIP)** — the same, patching `CLIP` as well.
+  bookmarks and previews, and a strength per row. Set it to apply to `MODEL`, `CLIP` or both.
 
 ## Regions — LoRAs gated to part of the image
 

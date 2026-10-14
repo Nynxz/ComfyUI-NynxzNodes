@@ -10,7 +10,7 @@ every day.
 
 A whole LoRA stack on one node: turn each one on or off, set its strength, drag to reorder. The
 picker searches every LoRA you have, with previews and bookmarks; hold Shift over a thumbnail for a
-larger look. `MODEL` in, `MODEL` out, and a CLIP version for LoRAs that patch the text encoder too.
+larger look. Set it to patch the model, the text encoder (CLIP) or both.
 
 ![LoRA Loader](docs/images/lora-loader.webp)
 
