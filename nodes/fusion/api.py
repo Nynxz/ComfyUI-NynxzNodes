@@ -15,6 +15,8 @@ import os
 
 from aiohttp import web
 
+from .._zenkit.server import request_allowed
+
 try:
     import folder_paths
 except ImportError:  # outside ComfyUI (e.g. syntax/lint checks)
@@ -79,6 +81,8 @@ if _routes is not None:
 
     @_routes.get("/nynxz/fusion/images")
     async def nynxz_fusion_images(request):
+        if (denied := request_allowed(request)) is not None:
+            return denied
         folder_type = request.query.get("type", "input")
         if folder_type not in _FOLDERS:
             folder_type = "input"

@@ -7,15 +7,14 @@ per-frame RGB, alpha → mask), so animated/alpha images behave like core LoadIm
 from __future__ import annotations
 
 import json
-import os
 
-import folder_paths
 import numpy as np
 import torch
 from comfy_api.latest import io
 from PIL import Image, ImageOps, ImageSequence
 
 from .._base import NynxzNode
+from .._paths import media_file
 from .io_types import NynxzImagePickType
 
 try:
@@ -46,8 +45,8 @@ def _load_mask(mask_ref, w, h):
     if not mask_ref:
         return None
     try:
-        path = folder_paths.get_annotated_filepath(mask_ref)
-        if not path or not os.path.isfile(path):
+        path = media_file(mask_ref)
+        if not path:
             return None
         m = _pillow(Image.open, path)
         m = _pillow(ImageOps.exif_transpose, m)
@@ -88,8 +87,8 @@ class NynxzLoadImage(NynxzNode):
     @classmethod
     def execute(cls, image) -> io.NodeOutput:
         image_ref, mask_ref = _parse_value(image)
-        path = folder_paths.get_annotated_filepath(image_ref) if image_ref else None
-        if not path or not os.path.isfile(path):
+        path = media_file(image_ref) if image_ref else None
+        if not path:
             # Nothing picked / missing file — emit a small blank so the graph survives.
             blank = torch.zeros((1, 64, 64, 3), dtype=torch.float32)
             mask = torch.zeros((1, 64, 64), dtype=torch.float32)

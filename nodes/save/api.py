@@ -13,6 +13,7 @@ from __future__ import annotations
 
 from aiohttp import web
 
+from .._zenkit.server import request_allowed
 from .paths import get_base_directory, list_projects
 
 try:
@@ -27,6 +28,8 @@ if _routes is not None:
 
     @_routes.get("/nynxz/projects")
     async def nynxz_projects(request):
+        if (denied := request_allowed(request)) is not None:
+            return denied
         override = request.rel_url.query.get("base", "")
         try:
             base = get_base_directory(override)  # an override is confined to output/

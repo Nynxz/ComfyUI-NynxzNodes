@@ -42,26 +42,34 @@ export const DEFAULT_BG: BgStyle = {
 };
 
 const num = (v: unknown, d: number) => (Number.isFinite(Number(v)) ? Number(v) : d);
-const str = (v: unknown, d: string) => (typeof v === "string" && v ? v : d);
 const pick = <T extends string>(v: unknown, opts: T[], d: T): T =>
   (opts as string[]).includes(v as string) ? (v as T) : d;
+
+// A colour from a workflow goes into CSS (`background`, a gradient): only a hex, rgb()/hsl() of
+// numbers, or a colour name gets through, so a shared workflow can't slip in a url() that the
+// browser would fetch.
+const COLOR = /^(#[0-9a-f]{3,8}|(rgb|hsl)a?\([\d\s.,%/+-]*\)|[a-z]{3,24})$/i;
+const color = (v: unknown, d: string) =>
+  typeof v === "string" && COLOR.test(v.trim()) ? v.trim() : d;
+const word = (v: unknown, d: string) =>
+  typeof v === "string" && /^[a-z0-9_-]{1,40}$/i.test(v) ? v : d;
 
 export function normalizeBg(v: unknown): BgStyle {
   const o = (v && typeof v === "object" ? v : {}) as Record<string, unknown>;
   const D = DEFAULT_BG;
   return {
     bg_mode: pick(o.bg_mode, ["solid", "gradient", "pattern", "icons", "transparent"], D.bg_mode),
-    bg_color: str(o.bg_color, D.bg_color),
-    bg_color2: str(o.bg_color2, D.bg_color2),
+    bg_color: color(o.bg_color, D.bg_color),
+    bg_color2: color(o.bg_color2, D.bg_color2),
     bg_angle: num(o.bg_angle, D.bg_angle),
-    pattern: str(o.pattern, D.pattern),
-    pattern_color: str(o.pattern_color, D.pattern_color),
+    pattern: word(o.pattern, D.pattern),
+    pattern_color: color(o.pattern_color, D.pattern_color),
     pattern_scale: num(o.pattern_scale, D.pattern_scale),
     pattern_opacity: num(o.pattern_opacity, D.pattern_opacity),
     columns: num(o.columns, D.columns),
     scale: num(o.scale, D.scale),
     tint: o.tint !== false,
-    tint_color: str(o.tint_color, D.tint_color),
+    tint_color: color(o.tint_color, D.tint_color),
     invert_alpha: o.invert_alpha === true,
     rotate_jitter: num(o.rotate_jitter, D.rotate_jitter),
     scale_jitter: num(o.scale_jitter, D.scale_jitter),

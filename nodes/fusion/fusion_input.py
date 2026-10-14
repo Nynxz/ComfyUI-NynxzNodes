@@ -26,12 +26,12 @@ from __future__ import annotations
 import json
 import os
 
-import folder_paths
 import numpy as np
 import torch
 from comfy_api.latest import io
 from PIL import Image, ImageOps
 
+from .._paths import media_file
 from ._base import FusionNode
 from ._fusion import DEFAULT_FIT, FIT_MODES
 from ._io_types import FusionGridType, FusionInput
@@ -75,11 +75,7 @@ def _resolve_path(ref, folder_type="input") -> str | None:
     if not ref:
         return None
     annotated = f"{ref} [{folder_type}]" if folder_type in FOLDER_TYPES else str(ref)
-    try:
-        path = folder_paths.get_annotated_filepath(annotated)
-    except Exception:  # noqa: BLE001 - rejected/malformed ref
-        return None
-    return path if path and os.path.isfile(path) else None
+    return media_file(annotated)
 
 
 def _load_image(path) -> torch.Tensor | None:

@@ -69,7 +69,9 @@ def _file_stats(names: list[str]) -> dict[str, tuple[int | None, int | None]]:
 if _routes is not None:
 
     @_routes.get("/nynxz/loras")
-    async def nynxz_loras(_request):
+    async def nynxz_loras(request):
+        if (denied := request_allowed(request)) is not None:
+            return denied
         try:
             names = folder_paths.get_filename_list("loras") if folder_paths else []
         except Exception:  # noqa: BLE001 - folder_paths quirks shouldn't 500 the listing
@@ -94,6 +96,8 @@ if _routes is not None:
     async def nynxz_preview(request):
         """The preview as a still; `raw=1` serves a video preview as the video itself, and
         `size=<px>` a small cached thumbnail (the full image otherwise)."""
+        if (denied := request_allowed(request)) is not None:
+            return denied
         found = meta.find_preview(_lora_path(request.query.get("name", "")))
         if not found:
             return web.Response(status=404)
@@ -112,6 +116,8 @@ if _routes is not None:
 
     @_routes.get("/nynxz/lora/info")
     async def nynxz_info(request):
+        if (denied := request_allowed(request)) is not None:
+            return denied
         name = request.query.get("name", "").replace("\\", "/")
         path = _lora_path(name)
         if not path:
@@ -135,6 +141,8 @@ if _routes is not None:
     @_routes.get("/nynxz/lora/example")
     async def nynxz_example(request):
         """One of Lora Manager's downloaded example files for a LoRA."""
+        if (denied := request_allowed(request)) is not None:
+            return denied
         path = _lora_path(request.query.get("name", ""))
         sha = await asyncio.to_thread(meta.sha256_of, path) if path else None
         file = await asyncio.to_thread(lora_manager.resolve, sha, request.query.get("file", ""))
@@ -143,7 +151,9 @@ if _routes is not None:
         return web.FileResponse(file)
 
     @_routes.get("/nynxz/favorites")
-    async def nynxz_favorites_get(_request):
+    async def nynxz_favorites_get(request):
+        if (denied := request_allowed(request)) is not None:
+            return denied
         return web.json_response({"loras": favorites.get_favorites()})
 
     @_routes.post("/nynxz/favorites")
