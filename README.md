@@ -23,8 +23,9 @@ and examples beside it. Bookmark LoRAs, and pin the folders you use most to the 
 
 Two character LoRAs on one picture usually blend into one face. Region LoRAs keeps each LoRA to its
 own part of the picture: give every region its LoRAs, take the regions from masks (SAM3 can find
-them for you), and character B's LoRA never touches character A. Drag a row onto another region to
-move it. Experimental, and for Krea 2.
+them for you), and character B's LoRA never touches character A. Each region can have its own prompt
+too. Drag a row onto another region to move it, or a region onto another to swap them. Experimental,
+and for Krea 2.
 
 ![Region LoRAs](docs/images/region-loras.webp)
 
@@ -56,6 +57,16 @@ beside the picture instead of inside it.<br><br>
 - **Compare videos** (fade and wipe) and a **String Template** parser
 
 → [Every node, in detail](docs/NODES.md)
+
+## Example workflows
+
+Drag a picture onto ComfyUI to open its workflow, or find it in ComfyUI's **Templates** under this
+pack. Each one has a note listing the models it needs and where to get them.
+
+**Krea 2 Regions**: two people in a photo, each rewritten from its own region prompt, with a LoRA
+per region if you have one.
+
+<img src="example_workflows/Krea%202%20Regions.webp" alt="The Krea 2 Regions workflow">
 
 ## Install
 
