@@ -19,3 +19,4 @@ eslint.config.js
 .ruff_cache
 __pycache__
 .venv
+.pnpmfile.cjs
