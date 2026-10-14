@@ -202,12 +202,6 @@ whole and pretend the alpha isn't there.
 Fusion and the Regions group are separate things that share a word: fusion decides _which reference
 wins a token_, Regions decides _which LoRA fires on one_.
 
-## Qwen3-VL
-
-- **Qwen3-VL Describe** — the same CLIP you feed `Text Encode (Fusion)`, run as an LLM: image +
-  prompt → text, through ComfyUI's native generate path. No llama.cpp, no transformers, no second
-  model in VRAM. Captioning, prompt expansion, VQA.
-
 ## MiniMax H3
 
 The H3 nodes — H3 Reference, H3 Mood Board, H3 Reference to Video — moved to

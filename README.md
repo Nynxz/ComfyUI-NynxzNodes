@@ -49,7 +49,6 @@ beside the picture instead of inside it.<br><br>
 ## And more
 
 - **SAM3 Detect (Signed)**: segmentation with a minus sign, like `person:2, -head:2`
-- **Qwen3-VL Describe**: captions and prompt help from the text encoder you already have loaded
 - **Get from Index**: one item out of a batch of any type
 - **Conditioning Sigma Gate** and **Conditioning Variation**: shape a prompt over the denoise, or
   get neighbours of the same prompt
