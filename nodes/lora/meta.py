@@ -32,11 +32,14 @@ IMAGE_EXTS = (
 VIDEO_EXTS = (".preview.mp4", ".preview.webm", ".mp4", ".webm")
 
 POSTER_MAX = 512
-_POSTER_DIR = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
-    ".cache",
-    "lora_posters",
+_CACHE = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), ".cache"
 )
+_POSTER_DIR = os.path.join(_CACHE, "lora_posters")
+_THUMB_DIR = os.path.join(_CACHE, "lora_thumbs")
+#: The thumbnail sizes served (longest side, px); a request is rounded up to one of them, so the
+#: cache holds a few files per preview however the browser is sized.
+THUMB_SIZES = (64, 128, 256, 512)
 
 # Values Civitai's `meta` carries that are too large to ship to the browser.
 _META_DROP = {"comfy", "workflow", "hashes", "resources", "civitaiResources", "additionalResources"}
@@ -86,6 +89,38 @@ def poster(video_path: str) -> str | None:
         if os.path.exists(tmp):
             os.remove(tmp)
     return None
+
+
+def thumb(image_path: str, size: int) -> str | None:
+    """Cached JPEG of a preview image, its longest side `size` rounded up to one of THUMB_SIZES:
+    a list row or a card decodes a few KB instead of the full-size preview. None if it can't be
+    read."""
+    size = next((s for s in THUMB_SIZES if s >= size), THUMB_SIZES[-1])
+    try:
+        st = os.stat(image_path)
+    except OSError:
+        return None
+    key = hashlib.sha1(f"{image_path}|{st.st_mtime_ns}|{st.st_size}|{size}".encode()).hexdigest()
+    out = os.path.join(_THUMB_DIR, key + ".jpg")
+    if os.path.isfile(out):
+        return out
+    os.makedirs(_THUMB_DIR, exist_ok=True)
+    tmp = out + ".tmp"
+    try:
+        from PIL import Image
+
+        with Image.open(image_path) as img:
+            img.draft("RGB", (size, size))
+            img = img.convert("RGB")
+            img.thumbnail((size, size))
+            img.save(tmp, "JPEG", quality=85)
+        os.replace(tmp, out)
+        return out
+    except Exception:  # noqa: BLE001 - an unreadable preview just has no thumbnail
+        return None
+    finally:
+        if os.path.exists(tmp):
+            os.remove(tmp)
 
 
 def _poster_av(src: str, dst: str) -> bool:

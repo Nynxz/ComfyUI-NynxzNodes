@@ -92,7 +92,8 @@ if _routes is not None:
 
     @_routes.get("/nynxz/lora/preview")
     async def nynxz_preview(request):
-        """The preview as a still; `raw=1` serves a video preview as the video itself."""
+        """The preview as a still; `raw=1` serves a video preview as the video itself, and
+        `size=<px>` a small cached thumbnail (the full image otherwise)."""
         found = meta.find_preview(_lora_path(request.query.get("name", "")))
         if not found:
             return web.Response(status=404)
@@ -101,6 +102,12 @@ if _routes is not None:
             path = await asyncio.to_thread(meta.poster, path)
             if not path:
                 return web.Response(status=404)
+        try:
+            size = int(request.query.get("size", "0"))
+        except ValueError:
+            size = 0
+        if size > 0 and request.query.get("raw") != "1" and not path.lower().endswith(".gif"):
+            path = await asyncio.to_thread(meta.thumb, path, size) or path
         return web.FileResponse(path)
 
     @_routes.get("/nynxz/lora/info")
