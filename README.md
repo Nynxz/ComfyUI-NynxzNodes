@@ -2,9 +2,9 @@
 
 [![ComfyUI registry](https://img.shields.io/badge/ComfyUI-registry-blue.svg?&color=0f2ee0)](https://registry.comfy.org/publishers/nynxz/nodes/comfyui-nynxz-nodes)
 
-Nodes for ComfyUI that make the everyday parts quicker to work with: a whole LoRA stack on one
-node, LoRAs that only touch part of the picture, several reference images blended into one
-conditioning, and image pickers and comparisons that show you the pictures.
+A collection of useful ComfyUI nodes, built to look and feel good: widgets you can see and drag
+instead of text boxes, previews wherever there's a picture, and less wiring for the things you do
+every day.
 
 ## LoRA Loader
 
