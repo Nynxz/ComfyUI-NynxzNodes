@@ -6,7 +6,8 @@ uses it, and then takes the road not taken: instead of handing the result to `ad
 folds the delta into the weight, it keeps the delta available as a *side branch* so a gate can
 multiply it per token.
 
-**Only patches that factor are routed, and that limit is deliberate.**
+**Only patches that factor are routed, and that limit is deliberate.** Two shapes factor: a plain
+LoRA, and LoKr.
 
 `FactoredBranch` keeps `up` and `down` apart, so the branch is two rank-r matmuls — about 2% of
 step time at r=32. The scale convention is copied from `comfy/weight_adapter/lora.py` rather than
@@ -15,8 +16,12 @@ guessed::
     alpha = (stored_alpha / rank) if stored_alpha is not None else 1.0
     W += strength * alpha * (up @ down)          up: [out, rank]   down: [rank, in]
 
-LoHa, LoKr, OFT, BOFT, GLoRA, DoRA and the `diff` / `set` patches `load_lora` also emits do not
-factor into two small matrices. They are skipped and named, not approximated.
+`KronBranch` is LoKr: `W += strength * alpha * kron(w1, w2)`, as `comfy/weight_adapter/lokr.py`
+merges it, applied to the input as two small matmuls over its reshaped halves the way that file's
+bypass `h()` does — no `[out, in]` product is ever built.
+
+LoHa, OFT, BOFT, GLoRA, DoRA, Tucker LoKr and the `diff` / `set` patches `load_lora` also emits do
+not factor that way. They are skipped and named, not approximated.
 
 There WAS a fallback that approximated them — materialise `calculate_weight([patch], W) - W` and
 fit a rank-32 branch to it with a randomized SVD — and removing it is the point of this note, so
@@ -44,7 +49,7 @@ import comfy.lora_convert
 import comfy.utils
 import folder_paths
 import torch
-from comfy.weight_adapter import LoRAAdapter
+from comfy.weight_adapter import LoKrAdapter, LoRAAdapter
 
 #: Substrings that pick out the attention projections in Krea 2's `SingleStreamBlock`. Identity is
 #: mostly written into attention, but most character LoRAs put real weight into the MLP layers too,
@@ -106,6 +111,51 @@ class FactoredBranch:
         down, up = self.factors(x.device, x.dtype)
         return torch.nn.functional.linear(torch.nn.functional.linear(x, down), up)
 
+    def energy(self) -> float:
+        """`||scale * up @ down||²`."""
+        return delta_energy(self.down, self.up, self.scale)
+
+
+class KronBranch:
+    """A LoKr delta for one Linear, `scale * kron(w1, w2)`, applied without building it.
+
+    `w1: [out_l, in_m]`, `w2: [out_k, in_n]`. The input's last dimension splits as `[in_m, in_n]`,
+    `w2` maps the inner half, `w1` the outer, and the result flattens as `[out_l, out_k]` — the row
+    order of `torch.kron`. Cast and scaled lazily, as `FactoredBranch` is.
+    """
+
+    __slots__ = ("_cast", "_cast_key", "scale", "w1", "w2")
+
+    def __init__(self, w1: torch.Tensor, w2: torch.Tensor, scale: float):
+        self.w1 = w1
+        self.w2 = w2
+        self.scale = scale
+        self._cast_key = None
+        self._cast = None
+
+    def factors(self, device, dtype) -> tuple[torch.Tensor, torch.Tensor]:
+        key = (device, dtype)
+        if self._cast_key != key:
+            scaled = self.w1.to(dtype=torch.float32) * self.scale
+            self._cast = (
+                scaled.to(device=device, dtype=dtype),
+                self.w2.to(device=device, dtype=dtype),
+            )
+            self._cast_key = key
+        return self._cast
+
+    def delta(self, x: torch.Tensor) -> torch.Tensor:
+        w1, w2 = self.factors(x.device, x.dtype)
+        grouped = x.reshape(*x.shape[:-1], w1.shape[1], w2.shape[1])
+        inner = torch.nn.functional.linear(grouped, w2).transpose(-1, -2)
+        outer = torch.nn.functional.linear(inner, w1).transpose(-1, -2)
+        return outer.reshape(*x.shape[:-1], -1)
+
+    def energy(self) -> float:
+        """`||scale * kron(w1, w2)||²`, which is `scale² ||w1||² ||w2||²`."""
+        w1, w2 = self.w1.to(torch.float32), self.w2.to(torch.float32)
+        return float(self.scale**2 * w1.pow(2).sum() * w2.pow(2).sum())
+
 
 def module_path(weight_key: str) -> str:
     """`diffusion_model.blocks.0.attn.wq.weight` -> `diffusion_model.blocks.0.attn.wq`."""
@@ -134,6 +184,42 @@ def _factored(adapter) -> tuple[torch.Tensor, torch.Tensor, float] | None:
     rank = down.shape[0]
     alpha = (stored_alpha / rank) if stored_alpha is not None else 1.0
     return down, up, float(alpha)
+
+
+def _kron(adapter) -> KronBranch | None:
+    """A LoKr adapter as a `KronBranch` at strength 1, else None.
+
+    The low-rank halves (`w1_a @ w1_b`, `w2_a @ w2_b`) are multiplied out here: each is a fraction
+    of the layer's size. `alpha` divides by the rank of the last decomposed half, exactly as core's
+    merge does. Tucker (`t2`) and DoRA are left to a stock loader, like the formats above.
+    """
+    if not isinstance(adapter, LoKrAdapter):
+        return None
+    w1, w2, stored_alpha, w1_a, w1_b, w2_a, w2_b, t2, dora_scale = adapter.weights
+    if t2 is not None or dora_scale is not None:
+        return None
+    rank = None
+    if w1 is None:
+        if w1_a is None or w1_b is None:
+            return None
+        w1, rank = w1_a.float() @ w1_b.float(), w1_b.shape[0]
+    if w2 is None:
+        if w2_a is None or w2_b is None:
+            return None
+        w2, rank = w2_a.float() @ w2_b.float(), w2_b.shape[0]
+    if w1.ndim != 2 or w2.ndim != 2:
+        return None
+    alpha = float(stored_alpha) / rank if stored_alpha is not None and rank else 1.0
+    return KronBranch(w1, w2, alpha)
+
+
+def _branch_of(adapter):
+    """The adapter as a branch at strength 1 (`FactoredBranch` or `KronBranch`), or None."""
+    factored = _factored(adapter)
+    if factored is not None:
+        down, up, alpha = factored
+        return FactoredBranch(down, up, alpha)
+    return _kron(adapter)
 
 
 def delta_energy(down: torch.Tensor, up: torch.Tensor, alpha: float) -> float:
@@ -176,30 +262,30 @@ def load_branches(
 
     for weight_key, patch in loaded.items():
         target = module_path(weight_key)
-        factored = _factored(patch)
+        branch = _branch_of(patch)
         if _TEXT_MARKER in target:
-            if factored is not None:
-                text_energy += delta_energy(*factored)
+            if branch is not None:
+                text_energy += branch.energy()
             if not text:
                 text_side += 1
-            elif factored is None:
+            elif branch is None:
                 kind = _kind(patch)
                 unsupported[kind] = unsupported.get(kind, 0) + 1
             else:
-                down, up, alpha = factored
-                text_branches[target] = FactoredBranch(down, up, alpha * strength)
+                branch.scale *= strength
+                text_branches[target] = branch
             continue
         if not wanted(target):
             off_target += 1
             continue
 
-        if factored is None:
+        if branch is None:
             kind = _kind(patch)
             unsupported[kind] = unsupported.get(kind, 0) + 1
             continue
-        down, up, alpha = factored
-        block_energy += delta_energy(down, up, alpha)
-        branches[target] = FactoredBranch(down, up, alpha * strength)
+        block_energy += branch.energy()
+        branch.scale *= strength
+        branches[target] = branch
 
     if not branches and not text_branches:
         raise ValueError(_nothing_loaded(lora_name, loaded, off_target, text_side, unsupported))
