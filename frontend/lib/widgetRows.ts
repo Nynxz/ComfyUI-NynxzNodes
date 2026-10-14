@@ -31,6 +31,10 @@ export interface RowStoreOptions<T> {
   project: (row: T) => unknown;
   /** Optional total order for the emitted value, so display order can't change the hash. */
   sort?: (a: T, b: T) => number;
+  /** Which saved entries are rows. Others belong to the widget, which reads them itself. */
+  isRow?: (raw: Record<string, unknown>) => boolean;
+  /** Entries emitted after the rows: the widget's own, not rows. */
+  extra?: () => unknown[];
 }
 
 export interface RowStore<T> {
@@ -44,7 +48,7 @@ export interface RowStore<T> {
 }
 
 /** Coerce a saved widget value (list, or the JSON string an older graph may hold) into entries. */
-function entriesOf(value: unknown): Record<string, unknown>[] {
+export function entriesOf(value: unknown): Record<string, unknown>[] {
   let arr = value;
   if (typeof arr === "string") {
     try {
@@ -65,12 +69,14 @@ export function rowsFrom<T extends { id: number }>(
   const nextId = () => ++seq;
 
   function normalize(value: unknown): T[] {
-    return entriesOf(value).map((raw) => {
-      const saved = +(raw.id as number);
-      const id = Number.isFinite(saved) ? saved : nextId();
-      if (id > seq) seq = id; // keep nextId() above any id restored from the graph
-      return opts.make(raw, id);
-    });
+    return entriesOf(value)
+      .filter((raw) => !opts.isRow || opts.isRow(raw))
+      .map((raw) => {
+        const saved = +(raw.id as number);
+        const id = Number.isFinite(saved) ? saved : nextId();
+        if (id > seq) seq = id; // keep nextId() above any id restored from the graph
+        return opts.make(raw, id);
+      });
   }
 
   // Prefer the ordered rows in node.properties — they carry the display order and the ids. Fall
@@ -87,7 +93,7 @@ export function rowsFrom<T extends { id: number }>(
     }
     if (host.widget) {
       const ordered = opts.sort ? [...rows.value].sort(opts.sort) : rows.value;
-      const value = ordered.map(opts.project);
+      const value = [...ordered.map(opts.project), ...(opts.extra?.() ?? [])];
       // `widget` is ComfyUI's host object, not Vue state; writing its value IS how a node body
       // persists, and `serializeValue` reads it back at prompt-queue time.
       host.widget.value = value;

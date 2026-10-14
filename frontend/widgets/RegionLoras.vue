@@ -14,10 +14,24 @@
         v-for="group in groups"
         :key="group.region"
         class="rg-group"
-        :class="{ drop: dropRegion === group.region, source: dragRegion === group.region }"
+        :class="{
+          drop: dropRegion === group.region,
+          source: dragRegion === group.region,
+          lifted: dragHead === group.region,
+        }"
         :data-region="group.region"
+        :style="
+          dragHead === group.region ? { transform: `translateY(${dragOffset}px)` } : undefined
+        "
       >
         <div class="rg-head">
+          <div
+            class="rg-grip"
+            data-zen-drag
+            title="Drag onto another region to swap them, prompt and LoRAs together"
+          >
+            <i class="mdi mdi-drag-vertical" />
+          </div>
           <span class="rg-label" :title="`The ${ordinal(group.region)} mask in the regions batch`">
             <span class="rg-title">Region {{ group.region }}</span>
             <span v-if="group.entries.length" class="rg-count">{{ group.entries.length }}</span>
@@ -34,6 +48,18 @@
             @click="addRow(group.region)"
           />
         </div>
+
+        <ZenInput
+          class="rg-prompt"
+          type="textarea"
+          :rows="1"
+          autosize
+          sm
+          :model-value="prompts[group.region] ?? ''"
+          placeholder="Prompt for this region (optional)"
+          title="Replaces the main prompt in this region. Needs Regions Apply's clip wired."
+          @update:model-value="setPrompt(group.region, String($event ?? ''))"
+        />
 
         <div v-if="group.entries.length" class="rg-rows">
           <div
@@ -79,7 +105,9 @@
             <ZenIconButton icon="mdi mdi-close" title="Remove" @click="removeRow(entry.index)" />
           </div>
         </div>
-        <p v-else class="rg-slot">{{ dragging ? "drop here" : "no LoRA yet" }}</p>
+        <p v-else-if="dragging || !prompts[group.region]" class="rg-slot">
+          {{ dragging ? "drop here" : "no LoRA yet" }}
+        </p>
       </div>
 
       <!-- The footer IS the new-region drop zone, which is why it lives inside the drag surface
@@ -92,7 +120,13 @@
       <WidgetActions
         data-region="new"
         :label="dragging ? `Move to region ${regionCount + 1}` : 'Region'"
-        :title="dragging ? 'Drop to move this LoRA into a new region' : 'Show another region slot'"
+        :title="
+          dragHead > 0
+            ? 'Drop to move this region into a new slot'
+            : dragging
+              ? 'Drop to move this LoRA into a new region'
+              : 'Show another region slot'
+        "
         :active="dropRegion === regionCount + 1"
         @primary="addRegion"
       >
@@ -146,11 +180,11 @@ export const widgetOptions: WidgetOptions = {
  */
 import { computed, ref } from "vue";
 import { useDragSurface } from "@nynxz/zenkit-nodekit";
-import { ZenDot, ZenIconButton, ZenNumber, ZenWidget } from "@nynxz/zenkit-ui";
+import { ZenDot, ZenIconButton, ZenInput, ZenNumber, ZenWidget } from "@nynxz/zenkit-ui";
 
 import WidgetActions from "@/components/WidgetActions.vue";
 import { loraLibrary as lib, LoraBrowser, LoraPicker } from "@nynxz/zenkit-ui";
-import { rowsFrom } from "@/lib/widgetRows";
+import { entriesOf, rowsFrom } from "@/lib/widgetRows";
 
 interface RegionRow {
   id: number;
@@ -173,9 +207,26 @@ function int(value: unknown, fallback: number): number {
   return Number.isFinite(n) ? n : fallback;
 }
 
+// A region's own prompt rides in the same value as a `{ region, prompt }` entry with no `name`, so
+// the backend gets it with the LoRAs and older graphs, which have none, load unchanged.
+const isPrompt = (raw: Record<string, unknown>) => "prompt" in raw && !raw.name;
+const prompts = ref<Record<number, string>>(
+  Object.fromEntries(
+    entriesOf(props.widget?.value)
+      .filter(isPrompt)
+      .map((raw) => [Math.max(1, int(raw.region, 1)), String(raw.prompt ?? "")]),
+  ),
+);
+
 // The emitted value is region-major and sorted, so rearranging the table cannot change the node's
 // signature — the deltas are additive, so the order genuinely does not affect the result.
 const store = rowsFrom<RegionRow>(props, {
+  isRow: (raw) => !isPrompt(raw),
+  extra: () =>
+    Object.entries(prompts.value)
+      .filter(([, prompt]) => prompt.trim())
+      .map(([region, prompt]) => ({ region: +region, prompt }))
+      .sort((a, b) => a.region - b.region),
   orderKey: "nynxzRegionLoraOrder",
   make: (raw, id) => ({
     id,
@@ -194,7 +245,16 @@ const { rows } = store;
 // never opens with a row hidden under a group that isn't drawn.
 const SLOTS_KEY = "nynxzRegionSlots";
 const slots = ref(Math.max(1, int(props.node?.properties?.[SLOTS_KEY], 2)));
-const regionCount = computed(() => Math.max(slots.value, ...rows.value.map((r) => r.region), 1));
+const regionCount = computed(() =>
+  Math.max(
+    slots.value,
+    ...rows.value.map((r) => r.region),
+    ...Object.keys(prompts.value)
+      .filter((r) => prompts.value[+r]?.trim())
+      .map(Number),
+    1,
+  ),
+);
 
 function setSlots(n: number) {
   slots.value = Math.max(1, n);
@@ -215,8 +275,16 @@ const groups = computed(() =>
 // Only the LAST slot, and only when it is empty: removing one with rows in it would leave them
 // pointing at a region with nothing to draw them under.
 const canRemoveRegion = computed(
-  () => regionCount.value > 1 && !rows.value.some((r) => r.region === regionCount.value),
+  () =>
+    regionCount.value > 1 &&
+    !rows.value.some((r) => r.region === regionCount.value) &&
+    !prompts.value[regionCount.value]?.trim(),
 );
+
+function setPrompt(region: number, prompt: string) {
+  prompts.value = { ...prompts.value, [region]: prompt };
+  store.commit();
+}
 
 function ordinal(n: number): string {
   const suffix =
@@ -238,6 +306,7 @@ function removeRow(index: number) {
 }
 function clearAll() {
   rows.value = [];
+  prompts.value = {};
   store.commit();
 }
 function addRegion() {
@@ -275,19 +344,40 @@ let zones: Zone[] = [];
 let grabCenter = 0;
 
 const dragId = ref(-1); // row id being dragged, or -1
+const dragHead = ref(-1); // region being dragged by its header, or -1
 const dropRegion = ref(-1); // region the row would land in, or -1
 const dragOffset = ref(0); // how far the grabbed row has moved, element-space px
-const dragging = computed(() => dragId.value >= 0);
-const dragRegion = computed(() => rows.value.find((r) => r.id === dragId.value)?.region ?? -1);
+const dragging = computed(() => dragId.value >= 0 || dragHead.value > 0);
+const dragRegion = computed(() =>
+  dragHead.value > 0
+    ? dragHead.value
+    : (rows.value.find((r) => r.id === dragId.value)?.region ?? -1),
+);
+
+/** Swap two regions' contents — their LoRAs and their prompts — or move one into an empty slot. */
+function swapRegions(a: number, b: number) {
+  for (const row of rows.value) {
+    if (row.region === a) row.region = b;
+    else if (row.region === b) row.region = a;
+  }
+  const { [a]: fromA = "", [b]: fromB = "" } = prompts.value;
+  prompts.value = { ...prompts.value, [a]: fromB, [b]: fromA };
+  if (b > regionCount.value) setSlots(b);
+  store.commit();
+}
 
 const drag = useDragSurface({
   onStart(ctx) {
     const grip = (ctx.event.target as HTMLElement | null)?.closest?.(".rg-grip");
     const host = drag.el.value;
     if (!grip || !host) return false; // press wasn't on a handle — leave it to the controls
-    const rowEl = grip.closest(".rg-row") as HTMLElement | null;
+    const headEl = grip.closest(".rg-head")
+      ? (grip.closest(".rg-group") as HTMLElement | null)
+      : null;
+    const rowEl = headEl ?? (grip.closest(".rg-row") as HTMLElement | null);
     const id = Number(rowEl?.dataset.rowId);
-    if (!rowEl || !Number.isFinite(id)) return false;
+    const head = Number(headEl?.dataset.region);
+    if (!rowEl || !(headEl ? head > 0 : Number.isFinite(id))) return false;
 
     // offsetTop/offsetHeight are pre-transform, which is the space ctx.delta already lands in (the
     // helper divides the canvas zoom out), so the two add up without a second correction. They are
@@ -298,12 +388,13 @@ const drag = useDragSurface({
       bottom: el.offsetTop + el.offsetHeight,
     }));
     grabCenter = rowEl.offsetTop + rowEl.offsetHeight / 2;
-    dragId.value = id;
+    if (headEl) dragHead.value = head;
+    else dragId.value = id;
     dropRegion.value = dragRegion.value;
     dragOffset.value = 0;
   },
   onMove(ctx) {
-    if (dragId.value < 0 || !zones.length) return;
+    if (!dragging.value || !zones.length) return;
     dragOffset.value = ctx.delta.y;
     const y = grabCenter + ctx.delta.y;
     // Clamped rather than nulled outside the zones: a drag that overshoots the top or the bottom
@@ -319,12 +410,19 @@ const drag = useDragSurface({
   // Commit once, at the end: re-pointing on every move would rewrite the table hundreds of times.
   onEnd() {
     const id = dragId.value;
+    const head = dragHead.value;
     const target = dropRegion.value;
     dragId.value = -1;
+    dragHead.value = -1;
     dropRegion.value = -1;
     dragOffset.value = 0;
     zones = [];
-    if (id < 0 || target < 1) return;
+    if (target < 1) return;
+    if (head > 0) {
+      if (head !== target) swapRegions(head, target);
+      return;
+    }
+    if (id < 0) return;
     const index = rows.value.findIndex((r) => r.id === id);
     if (index < 0 || rows.value[index]!.region === target) return;
     // Dropped past the last group: keep the new slot, so dragging the row back out later leaves
@@ -369,6 +467,15 @@ const drag = useDragSurface({
   border-style: dashed;
 }
 
+.rg-prompt {
+  width: 100%;
+}
+.rg-group.lifted {
+  position: relative;
+  z-index: 1;
+  background: color-mix(in srgb, var(--zen-text, #fff) 5%, var(--zen-surface, #1f1f24));
+  box-shadow: 0 6px 18px rgb(0 0 0 / 35%);
+}
 .rg-head {
   display: flex;
   align-items: center;

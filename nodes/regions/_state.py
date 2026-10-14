@@ -26,7 +26,7 @@ class GateState:
         "anchor",
         "bias",
         "canvas_tokens",
-        "copy_regions",
+        "copies",
         "copy_tokens",
         "floor",
         "fraction",
@@ -58,9 +58,9 @@ class GateState:
         self.gates: torch.Tensor | None = None
         self.txtlen = 0
         self.canvas_tokens = 0
-        #: Regions with their own copy of the prompt, in sequence order, and the copies' total
-        #: length. The copies sit right after the canvas (see `_text`).
-        self.copy_regions: list[int] = []
+        #: This forward's copies of the prompt (`_text.Copies`) and their total length. They sit
+        #: right after the canvas (see `_text`).
+        self.copies = None
         self.copy_tokens = 0
         #: `(key, [B, 1, L, L])` — the attention bias, kept while the map and the step's scale hold.
         self.bias: tuple | None = None
@@ -82,6 +82,7 @@ class GateState:
 
     def reset(self):
         self.stepped = False
+        self.copies = None
         self.copy_tokens = 0
         self.bias = None
         self.anchor = None
@@ -156,17 +157,22 @@ class GateState:
                 claim = self.floor + (1.0 - self.floor) * claim
             weighted = claim * self.scale
             gates[:, rows, :] = weighted.unsqueeze(0)
-        for slot, region in enumerate(self.copy_regions):
+        for slot in self.copy_slots():
             rows = self.copy_rows(slot)
             if rows.stop <= seqlen:
-                gates[:, rows, region] = self.scale
+                gates[:, rows, slot[0]] = self.scale
         self.gates = gates
         return gates
 
-    def copy_rows(self, slot: int) -> slice:
-        """Where the `slot`-th region's copy of the prompt sits in the sequence."""
-        start = self.txtlen + self.canvas_tokens + slot * self.txtlen
-        return slice(start, start + self.txtlen)
+    def copy_slots(self) -> list[tuple[int, int, int]]:
+        """`(region, start, length)` per copy of the prompt, or none."""
+        return self.copies.slots if self.copies is not None and self.copy_tokens else []
+
+    def copy_rows(self, slot: tuple[int, int, int]) -> slice:
+        """Where one region's copy of the prompt sits in the sequence."""
+        _, start, length = slot
+        first = self.txtlen + self.canvas_tokens + start
+        return slice(first, first + length)
 
     def for_tokens(self, batch: int, seqlen: int, region: int, device, dtype):
         """One region's gate as `[batch, seqlen, 1]`, or None to mean "apply nothing"."""

@@ -19,6 +19,10 @@ stacking in weight space — except confined to the region instead of applied to
 a character LoRA and a clothing LoRA can sit on one person while a different character sits
 untouched beside them.
 
+A region may also have a prompt of its own, written in its group. It replaces the main prompt for
+that region (Regions Apply, with `clip` wired, encodes it), so a region needs no LoRA to be worth
+having. In the value it is a row with `prompt` and no `name`.
+
 Rows are bound in the order the widget serializes them, which is region-major. That order does not
 matter to the result — the branches are additive — and the value is sorted so that rearranging the
 table cannot change the node's signature and re-run the graph.
@@ -55,8 +59,9 @@ class NynxzRegionLoRAs(RegionNode):
             node_id="Regions.LoRAs",
             display_name="Region LoRAs",
             description=(
-                "Binds LoRAs to regions from a table on the node — one row per LoRA, grouped by "
-                "the region it lands on. Replaces a chain of Region LoRA nodes."
+                "Binds LoRAs, and optionally a prompt of its own, to each region from a table on "
+                "the node — one row per LoRA, grouped by the region it lands on. Replaces a chain "
+                "of Region LoRA nodes."
             ),
             is_experimental=True,
             inputs=[
@@ -80,6 +85,12 @@ class NynxzRegionLoRAs(RegionNode):
             )
 
         for row in normalize_rows(loras):
+            if "prompt" in row and not row.get("name"):
+                prompt = str(row.get("prompt") or "").strip()
+                if prompt:
+                    index = _bind.resolve(entries, row.get("region", 1), what="its prompt")
+                    entries = _bind.set_prompt(entries, index, prompt)
+                continue
             name = str(row.get("name") or "")
             if not name or not row.get("on", True):
                 continue

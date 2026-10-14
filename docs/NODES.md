@@ -15,8 +15,9 @@ the identities blend and no amount of prompting separates them.
 
 These nodes keep each LoRA **unmerged** and run it as a live side branch with a per-token gate, so
 character B's delta never touches character A's tokens. The gate comes from a mask, which means
-`SAM3 Detect` can find the regions and you never draw anything. Nothing here touches the
-conditioning, so it composes with an ordinary `LoraLoader` for a global style.
+`SAM3 Detect` can find the regions and you never draw anything. It composes with an ordinary
+`LoraLoader` for a global style. A region can also have a **prompt of its own**, which replaces the
+main prompt there, in the same single pass.
 
 > **Krea 2 only, and experimental.** The routing map is read out of that DiT's per-block attention
 > hooks; `Regions Apply` fails loudly on any other architecture rather than silently gating nothing.
@@ -32,6 +33,9 @@ Regions from Masks ──> Region LoRAs ──> Regions Apply ──> MODEL ─�
 - **Region LoRAs** — the whole assignment in one node: rows grouped under the region they land on,
   each with the same picker the LoRA Loader uses. **Drag a row's grip onto another region to move
   it there**, or onto "+ Region" for a new one. Several rows may share a region; their deltas add.
+  Each region has an optional **prompt** box: what that region shows, in place of the main prompt
+  (write it as a whole description, style included). A region with a prompt needs no LoRA. Wire
+  the Krea 2 text encoder into Regions Apply's `clip` to use them.
 - **Region LoRA** — the single binding, chainable. For when the name comes from a wire.
 - **Region Backdrop** — the region you'd otherwise build by hand: everything the others don't
   cover, or the whole frame. Chain it last. A LoRA on `everything` is a global one that still rides
@@ -46,7 +50,8 @@ Regions from Masks ──> Region LoRAs ──> Regions Apply ──> MODEL ─�
   with that LoRA's text side (Krea 2's `txtfusion` layers) and carrying the LoRA in the blocks, and
   the region's tokens read it. Without it a LoRA's text side isn't applied at all, which is why
   some LoRAs looked weak here; with it a whole-canvas region matches the LoRA loaded normally. It
-  costs a longer sequence and masked attention.
+  costs a longer sequence and masked attention. Region prompts need it on; the negative prompt
+  stays the same everywhere.
 
 For **NK2E edits with seams**, keep the edit LoRA loaded normally and the source image connected
 as reference conditioning. In **Region Latent**, try `background=0`, `flatten=0`,

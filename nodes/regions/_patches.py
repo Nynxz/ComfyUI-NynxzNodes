@@ -124,7 +124,13 @@ def post_input_patch(state, text=None):
 
         img = args["img"]
         state.ensure_anchor(img.device)
-        copies = text.make(args["txt"]) if text is not None else None
+        built = (
+            text.make(args["txt"], _conditional_rows(options, img.shape[0]))
+            if text is not None
+            else None
+        )
+        state.copies = built
+        copies = None if built is None else built.tokens
         state.copy_tokens = 0 if copies is None else copies.shape[1]
         if copies is not None:
             blank = img_ids.new_zeros((img_ids.shape[0], copies.shape[1], img_ids.shape[2]))
@@ -137,6 +143,16 @@ def post_input_patch(state, text=None):
         return args
 
     return patch
+
+
+def _conditional_rows(options, batch: int) -> list[bool] | None:
+    """Which batch rows are conditional, from the sampler's `cond_or_uncond` (0 = cond), each
+    entry covering an equal share of the batch. None when it doesn't say."""
+    kinds = options.get("cond_or_uncond")
+    if not kinds or batch % len(kinds):
+        return None
+    share = batch // len(kinds)
+    return [kind == 0 for kind in kinds for _ in range(share)]
 
 
 def _attention_bias(state, config: TrackConfig, q) -> torch.Tensor | None:
@@ -162,8 +178,13 @@ def _attention_bias(state, config: TrackConfig, q) -> torch.Tensor | None:
         return None
 
     key = (state.scale, batch, seqlen, q.dtype, q.device, config.isolation, state.copy_tokens)
-    if state.bias is not None and state.bias[0] is current and state.bias[1] == key:
-        return state.bias[2]
+    if (
+        state.bias is not None
+        and state.bias[0] is current
+        and state.bias[1] is state.copies
+        and state.bias[2] == key
+    ):
+        return state.bias[3]
 
     nbytes = batch * seqlen * seqlen * torch.finfo(q.dtype).bits // 8
     if nbytes > _WARN_BYTES and not _warned:
@@ -190,7 +211,7 @@ def _attention_bias(state, config: TrackConfig, q) -> torch.Tensor | None:
     if routed:
         _route_prompt(bias, state, claim)
     out = bias.unsqueeze(1)  # [B, 1, L, L] so it broadcasts over heads
-    state.bias = (current, key, out)
+    state.bias = (current, state.copies, key, out)
     return out
 
 
@@ -204,15 +225,20 @@ def _route_prompt(bias: torch.Tensor, state, claim: torch.Tensor) -> None:
     first = txtlen + canvas
     bias[:, :, first : first + state.copy_tokens] = _NEVER
     taken = torch.zeros_like(claim[:, 0])
-    for slot, region in enumerate(state.copy_regions):
+    for slot in state.copy_slots():
         copy = state.copy_rows(slot)
-        weight = claim[:, region] * state.scale
+        weight = claim[:, slot[0]] * state.scale
         taken = taken + weight
         bias[:, copy, prompt] = _NEVER
         bias[:, copy, copy] = 0.0
         bias[:, rows, copy] = weight.clamp(min=_LEAST).log().unsqueeze(-1).to(bias.dtype)
     rest = (1.0 - taken).clamp(min=_LEAST)
     bias[:, rows, prompt] = rest.log().unsqueeze(-1).to(bias.dtype)
+    valid = state.copies.valid if state.copies is not None else None
+    if valid is not None:
+        # A copy padded on some rows: nobody reads the padding.
+        pad = ~valid.to(bias.device).unsqueeze(1)
+        bias[:, :, first : first + state.copy_tokens].masked_fill_(pad, _NEVER)
 
 
 def attn1_patch(state, config: TrackConfig):

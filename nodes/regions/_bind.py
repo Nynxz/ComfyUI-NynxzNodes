@@ -25,6 +25,13 @@ def resolve(entries: list, region: int, what: str = "") -> int:
     return index
 
 
+def set_prompt(entries: list, index: int, prompt: str) -> list:
+    """Give one region a prompt of its own, returning a new list of new dicts. Empty clears it."""
+    out = list(entries)
+    out[index] = {**out[index], "prompt": prompt.strip()}
+    return out
+
+
 def add_lora(entries: list, index: int, lora_name: str, strength: float) -> list:
     """Append one LoRA to a region's list, returning a new list of new dicts.
 

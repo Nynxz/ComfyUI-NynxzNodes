@@ -53,9 +53,9 @@ class NynxzRegionsApply(RegionNode):
             display_name="Regions Apply",
             description=(
                 "Runs each region's LoRA as a live per-token branch gated to that region's tokens, "
-                "instead of merging every delta into the weights where they collide. The "
-                "conditioning is not touched, so this composes with ordinary merged LoRAs. "
-                "Krea 2 only."
+                "instead of merging every delta into the weights where they collide, and gives "
+                "each region its own prompt when it has one. Composes with ordinary merged "
+                "LoRAs. Krea 2 only."
             ),
             is_experimental=True,
             inputs=[
@@ -136,6 +136,13 @@ class NynxzRegionsApply(RegionNode):
                     "so without this it isn't applied at all and many LoRAs come out weak. Costs a "
                     "longer sequence and masked attention.",
                 ),
+                io.Clip.Input(
+                    "clip",
+                    optional=True,
+                    tooltip="The Krea 2 text encoder, for regions given a prompt of their own in "
+                    "Region LoRAs. A region's prompt replaces the main prompt there. Not needed "
+                    "otherwise.",
+                ),
                 advanced(
                     io.Float.Input(
                         "ramp",
@@ -205,6 +212,7 @@ class NynxzRegionsApply(RegionNode):
         smooth=1,
         isolation=0.0,
         region_prompt=True,
+        clip=None,
         ramp=0.2,
         refine=2,
         route_at=0.5,
@@ -215,13 +223,22 @@ class NynxzRegionsApply(RegionNode):
         entries = list(regions or [])
         if not entries:
             raise ValueError("No regions arrived on the wire — there is nothing to gate.")
-        if not any(r.get("loras") for r in entries):
+        prompted = {i: r["prompt"] for i, r in enumerate(entries) if r.get("prompt")}
+        if not any(r.get("loras") for r in entries) and not prompted:
             raise ValueError(
-                "No region has a LoRA bound, so there is nothing for this node to do — it exists "
-                "to route LoRAs, which is the one thing masked conditioning cannot. Put a Region "
-                "LoRAs node between the regions and this one. If you only want to PROMPT each "
-                "region differently, you do not need these nodes at all: core's "
-                "ConditioningSetMask is the whole job."
+                "No region has a LoRA or a prompt, so there is nothing for this node to do. Put a "
+                "Region LoRAs node between the regions and this one, and give the regions a LoRA "
+                "or a prompt."
+            )
+        if prompted and not region_prompt:
+            raise ValueError(
+                "Some regions have a prompt of their own, which needs region_prompt on — turn it "
+                "on, or clear those prompts."
+            )
+        if prompted and clip is None:
+            raise ValueError(
+                "Some regions have a prompt of their own: wire the Krea 2 text encoder (the CLIP "
+                "you encode the main prompt with) into Regions Apply's `clip`."
             )
 
         patched = model.clone()
@@ -233,8 +250,11 @@ class NynxzRegionsApply(RegionNode):
         state = _state.GateState(entries, schedule, track)
         text = None
         if region_prompt:
-            text = _text.TextCopies(sorted({index for index, _ in loaded}), text_loaded)
-            state.copy_regions = text.regions
+            text = _text.TextCopies(
+                sorted({index for index, _ in loaded} | set(prompted)),
+                text_loaded,
+                {i: _encode(clip, prompt) for i, prompt in prompted.items()},
+            )
         config = _patches.TrackConfig(
             track=track,
             refine=refine,
@@ -258,6 +278,11 @@ class NynxzRegionsApply(RegionNode):
         return io.NodeOutput(patched)
 
 
+def _encode(clip, prompt: str):
+    """`[1, seq, features]` — one region's prompt, encoded as CLIP Text Encode would."""
+    return clip.encode_from_tokens_scheduled(clip.tokenize(prompt))[0][0]
+
+
 def _load(patcher, entries, text: bool = True):
     """`([(region_index, branches)], {region_index: {path: [text branch]}}, [report line])` — every
     LoRA on every region, in region order.
@@ -275,7 +300,8 @@ def _load(patcher, entries, text: bool = True):
     for index, region in enumerate(entries):
         bound = region.get("loras") or []
         if not bound:
-            report.append(f"region {index + 1}: no LoRA — holds territory only")
+            what = "its own prompt" if region.get("prompt") else "holds territory only"
+            report.append(f"region {index + 1}: no LoRA — {what}")
             continue
         for spec in bound:
             name = spec.get("lora_name")
@@ -317,6 +343,8 @@ def _summary(report, config, schedule, total_blocks, text=None) -> str:
     if text is None:
         lines.append("region prompt: OFF — the prompt is everyone's, LoRAs' text side not applied")
     else:
-        regions = ", ".join(str(r + 1) for r in text.regions)
+        regions = ", ".join(
+            f"{r + 1}" + (" (own prompt)" if r in text.prompts else "") for r in text.regions
+        )
         lines.append(f"region prompt: a copy of the prompt each for region(s) {regions}")
     return "\n".join(lines)
