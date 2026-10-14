@@ -1,14 +1,14 @@
 """Base-directory resolution and project discovery for the Nynxz Save Image node.
 
 Projects are just immediate subfolders of a base directory. The base resolves,
-in priority order, from a per-node override, an env var, the "Settings → Nynxz"
-base-directory setting, and finally the ComfyUI output directory.
+in priority order, from a per-node override, the "Settings → Nynxz" base-directory setting,
+and finally the ComfyUI output directory.
 
 The per-node override comes from the workflow, which may not be the user's own (a shared
 workflow, or one embedded in a PNG), so it is confined to ComfyUI's output directory: a
 relative value is relative to output/, an absolute one must already be inside it, both
 checked by realpath (so `..` and symlinks can't step out). Saving anywhere else is the
-user's call alone, through ``$NYNXZ_OUTPUT_DIR`` or the Settings value.
+user's call alone, through the Settings value.
 """
 
 import json
@@ -22,7 +22,6 @@ NEW_SENTINEL = "(+ new project)"
 
 # Must match the id registered on the frontend (src/main.ts settings).
 _SETTING_BASE_DIR = "nynxz.SaveImage.BaseDirectory"
-_ENV_BASE_DIR = "NYNXZ_OUTPUT_DIR"
 
 
 def _read_user_setting(key: str, default=None):
@@ -60,7 +59,7 @@ def confine_to_output(value: str) -> str:
         raise ValueError(
             f"Save Image: base directory {value.strip()!r} is outside ComfyUI's output folder "
             f"({output}). Use a folder inside it (relative paths are relative to it), or set "
-            f"${_ENV_BASE_DIR} or Settings → Nynxz → base directory to save elsewhere."
+            f"Settings → Nynxz → base directory to save elsewhere."
         )
     return path
 
@@ -69,19 +68,15 @@ def get_base_directory(override: str = "") -> str:
     """Resolve the base output directory.
 
     Priority: per-node ``override`` (confined to the output directory, see
-    ``confine_to_output``; raises ValueError outside it) → ``$NYNXZ_OUTPUT_DIR`` →
+    ``confine_to_output``; raises ValueError outside it) →
     Settings → Nynxz base directory → ComfyUI output directory.
     """
     override = (override or "").strip()
     if override:
         return confine_to_output(override)
-    candidates = [
-        os.environ.get(_ENV_BASE_DIR, "").strip(),
-        (_read_user_setting(_SETTING_BASE_DIR, "") or "").strip(),
-    ]
-    for candidate in candidates:
-        if candidate:
-            return os.path.abspath(os.path.expanduser(candidate))
+    setting = (_read_user_setting(_SETTING_BASE_DIR, "") or "").strip()
+    if setting:
+        return os.path.abspath(os.path.expanduser(setting))
     return folder_paths.get_output_directory()
 
 

@@ -32,13 +32,13 @@ _settings_cache: tuple[str, float, dict] | None = None
 
 
 def _user_config_dir() -> str:
-    """platformdirs.user_config_dir(APP_NAME, appauthor=False), without the dependency."""
+    """platformdirs.user_config_dir(APP_NAME, appauthor=False) at its default location."""
     if sys.platform == "win32":
-        base = os.environ.get("LOCALAPPDATA") or os.path.expanduser(r"~\AppData\Local")
+        base = os.path.expanduser(r"~\AppData\Local")
     elif sys.platform == "darwin":
         base = os.path.expanduser("~/Library/Application Support")
     else:
-        base = os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config")
+        base = os.path.expanduser("~/.config")
     return os.path.join(base, APP_NAME)
 
 
@@ -64,18 +64,12 @@ def _read(path: str) -> dict | None:
 
 
 def _settings_path() -> str | None:
-    env = os.environ.get("LORA_MANAGER_SETTINGS_DIR")
-    if env:
-        return os.path.join(os.path.expanduser(env), "settings.json")
-    portable_env = os.environ.get("LORA_MANAGER_PORTABLE", "").strip().lower()
     for plugin in _plugin_dirs():
         path = os.path.join(plugin, "settings.json")
         data = _read(path)
         if data is None:
             continue
-        if portable_env in ("1", "true", "yes", "on") or (
-            portable_env not in ("0", "false", "no", "off") and data.get("use_portable_settings")
-        ):
+        if data.get("use_portable_settings"):
             return path
     path = os.path.join(_user_config_dir(), "settings.json")
     return path if os.path.isfile(path) else None
