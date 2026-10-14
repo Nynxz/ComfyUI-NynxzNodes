@@ -20,6 +20,7 @@ Documentation = "https://github.com/Nynxz/ComfyUI-NynxzNodes/wiki"
 
 [tool.comfy]
 PublisherId = "nynxz"
+Banner = "https://raw.githubusercontent.com/Nynxz/ComfyUI-NynxzNodes/main/docs/images/banner.webp"
 DisplayName = "Nynxz's Custom Nodes"
 Icon = "https://avatars.githubusercontent.com/u/60878743?v=4"
 Tags = []
