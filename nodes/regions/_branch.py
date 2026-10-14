@@ -88,9 +88,10 @@ def _by_module(loaded) -> dict[str, list[tuple[int, object]]]:
 class Injection:
     """Attaches the branch hooks when the model goes live and removes them when it comes back."""
 
-    def __init__(self, loaded, state):
+    def __init__(self, loaded, state, text=None):
         self.per_module = _by_module(loaded)
         self.state = state
+        self.text = text
         self.handles: list = []
 
     def inject(self, patcher):
@@ -104,6 +105,8 @@ class Injection:
                 missing += 1
                 continue
             self.handles.append(module.register_forward_hook(_hook(entries, self.state)))
+        if self.text is not None:
+            missing += self.text.inject(patcher.model, self.state)
         if missing:
             logging.warning(
                 "Nynxz Regions: %d LoRA target modules were not found on the loaded model and are not "
@@ -116,10 +119,13 @@ class Injection:
         for handle in self.handles:
             handle.remove()
         self.handles.clear()
+        if self.text is not None:
+            self.text.eject()
         self.state.reset()
 
 
-def attach(patcher, loaded, state) -> None:
-    """Register the branch injection on an (already cloned) ModelPatcher."""
-    injection = Injection(loaded, state)
+def attach(patcher, loaded, state, text=None) -> None:
+    """Register the branch injection on an (already cloned) ModelPatcher; `text` is the regions'
+    copies of the prompt (`_text.TextCopies`), if they get them."""
+    injection = Injection(loaded, state, text)
     patcher.set_injections(INJECTION_KEY, [PatcherInjection(injection.inject, injection.eject)])

@@ -55,10 +55,9 @@ _ATTN_MARKERS = (".attn.wq", ".attn.wk", ".attn.wv", ".attn.wo", ".attn.gate")
 _MLP_MARKER = ".mlp."
 #: Krea 2's 12-layer Qwen3-VL aggregator. Its blocks are named exactly like the DiT's — `attn.wq`,
 #: `mlp.*` — so the markers above match them, but it runs over the TEXT sequence, which has no
-#: spatial extent for a region gate to index. Applying a branch there could only mean "everywhere,
-#: for every region", which is merging, so it is excluded by name rather than left to be caught by a
-#: sequence-length mismatch further downstream. A LoRA that trains it loses those layers, and
-#: `load_branches` says so instead of quietly dropping them.
+#: spatial extent for a region gate to index. Its layers are kept apart, as text-side branches that
+#: make each region's own copy of the prompt (see `_text`); with that off they are skipped, and
+#: `load_branches` says how much of the LoRA that was.
 _TEXT_MARKER = "txtfusion."
 
 
@@ -137,8 +136,17 @@ def _factored(adapter) -> tuple[torch.Tensor, torch.Tensor, float] | None:
     return down, up, float(alpha)
 
 
-def load_branches(model, lora_name: str, strength: float = 1.0) -> dict[str, FactoredBranch]:
-    """Every routable Linear this LoRA touches, as `{module_path: branch}`.
+def delta_energy(down: torch.Tensor, up: torch.Tensor, alpha: float) -> float:
+    """`||alpha * up @ down||²`, from the rank-sized Gram matrices instead of the full product."""
+    up32, down32 = up.to(torch.float32), down.to(torch.float32)
+    return float(alpha**2 * ((up32.T @ up32) * (down32 @ down32.T)).sum())
+
+
+def load_branches(
+    model, lora_name: str, strength: float = 1.0, text: bool = True
+) -> tuple[dict[str, FactoredBranch], dict[str, FactoredBranch]]:
+    """Every routable Linear this LoRA touches, as `{module_path: branch}`: the blocks', and the
+    `txtfusion` ones for the region's copy of the prompt (empty when `text` is off).
 
     `model` is the ModelPatcher the branches will attach to; it supplies the key map, so a LoRA that
     does not match the loaded architecture fails here rather than at sample time.
@@ -155,8 +163,12 @@ def load_branches(model, lora_name: str, strength: float = 1.0) -> dict[str, Fac
     loaded = comfy.lora.load_lora(state, key_map, log_missing=False)
 
     branches: dict[str, FactoredBranch] = {}
+    text_branches: dict[str, FactoredBranch] = {}
     off_target = 0
     text_side = 0
+    #: How much of the LoRA's plain-LoRA weight sits on the text encoder vs the routed blocks.
+    text_energy = 0.0
+    block_energy = 0.0
     #: Adapter kinds that do not factor, and how many layers each covered. Reported by NAME rather
     #: than as a guessed list: "LoHa" and "a padded reshape" want different answers from you, and
     #: only the loader knows which one it saw.
@@ -164,22 +176,32 @@ def load_branches(model, lora_name: str, strength: float = 1.0) -> dict[str, Fac
 
     for weight_key, patch in loaded.items():
         target = module_path(weight_key)
+        factored = _factored(patch)
         if _TEXT_MARKER in target:
-            text_side += 1
+            if factored is not None:
+                text_energy += delta_energy(*factored)
+            if not text:
+                text_side += 1
+            elif factored is None:
+                kind = _kind(patch)
+                unsupported[kind] = unsupported.get(kind, 0) + 1
+            else:
+                down, up, alpha = factored
+                text_branches[target] = FactoredBranch(down, up, alpha * strength)
             continue
         if not wanted(target):
             off_target += 1
             continue
 
-        factored = _factored(patch)
         if factored is None:
             kind = _kind(patch)
             unsupported[kind] = unsupported.get(kind, 0) + 1
             continue
         down, up, alpha = factored
+        block_energy += delta_energy(down, up, alpha)
         branches[target] = FactoredBranch(down, up, alpha * strength)
 
-    if not branches:
+    if not branches and not text_branches:
         raise ValueError(_nothing_loaded(lora_name, loaded, off_target, text_side, unsupported))
     if unsupported:
         detail = ", ".join(f"{kind} x{count}" for kind, count in sorted(unsupported.items()))
@@ -192,15 +214,17 @@ def load_branches(model, lora_name: str, strength: float = 1.0) -> dict[str, Fac
             detail,
         )
     if text_side:
+        total = text_energy + block_energy
+        share = f"{100 * text_energy / total:.0f}%" if total > 0 else "an unknown share"
         logging.warning(
-            "Nynxz Regions: %s — skipped %d text-encoder (`txtfusion`) layers. Those run over the "
-            "text sequence, which has no spatial extent to gate against, so a region cannot be "
-            "expressed there. If this LoRA puts real weight into them its identity will be weaker "
-            "here than under a normal LoRA loader.",
+            "Nynxz Regions: %s — skipped %d text-encoder (`txtfusion`) layers, holding %s of its "
+            "weight, because the per-region prompt is off. The more weight they hold, the weaker "
+            "this LoRA is here than under a normal LoRA loader.",
             lora_name,
             text_side,
+            share,
         )
-    return branches
+    return branches, text_branches
 
 
 def _kind(patch) -> str:
@@ -227,7 +251,7 @@ def _nothing_loaded(lora_name, loaded, off_target, text_side, unsupported) -> st
     if off_target:
         parts.append(f"{off_target} on layers these nodes do not route")
     if text_side:
-        parts.append(f"{text_side} on the text encoder, which has no spatial extent to gate")
+        parts.append(f"{text_side} on the text encoder, skipped with the per-region prompt off")
     if unsupported:
         kinds = ", ".join(f"{k} x{v}" for k, v in sorted(unsupported.items()))
         parts.append(

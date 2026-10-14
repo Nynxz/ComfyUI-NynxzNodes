@@ -24,7 +24,10 @@ class GateState:
 
     __slots__ = (
         "anchor",
+        "bias",
         "canvas_tokens",
+        "copy_regions",
+        "copy_tokens",
         "floor",
         "fraction",
         "frozen",
@@ -55,6 +58,12 @@ class GateState:
         self.gates: torch.Tensor | None = None
         self.txtlen = 0
         self.canvas_tokens = 0
+        #: Regions with their own copy of the prompt, in sequence order, and the copies' total
+        #: length. The copies sit right after the canvas (see `_text`).
+        self.copy_regions: list[int] = []
+        self.copy_tokens = 0
+        #: `(key, [B, 1, L, L])` — the attention bias, kept while the map and the step's scale hold.
+        self.bias: tuple | None = None
         self.grid: tuple[int, int] = (0, 0)
         self.last_sigma: float | None = None
         self.progress = _schedule.Progress()
@@ -73,6 +82,8 @@ class GateState:
 
     def reset(self):
         self.stepped = False
+        self.copy_tokens = 0
+        self.bias = None
         self.anchor = None
         self.map = None
         self.gates = None
@@ -120,8 +131,9 @@ class GateState:
     def build_gates(self, batch: int, seqlen: int, device) -> torch.Tensor:
         """Expand the map to `[batch, seqlen, regions]` — the form a forward hook indexes directly.
 
-        Text tokens and reference-latent tokens both get zero. Text because a region is a statement
-        about the canvas and nothing else; references because in an edit they are the source image,
+        The prompt and reference-latent tokens get zero. The prompt because a region is a statement
+        about the canvas, and the prompt is everyone's; a region's own copy of it (see `_text`)
+        gets that region's LoRA in full. References because in an edit they are the source image,
         the thing being read *from*, and rewriting the model's view of that with the LoRA that is
         supposed to replace it is how an edit turns into a hall of mirrors. An overall style LoRA
         that genuinely should touch everything belongs in a stock `LoraLoader`, which merges into
@@ -144,8 +156,17 @@ class GateState:
                 claim = self.floor + (1.0 - self.floor) * claim
             weighted = claim * self.scale
             gates[:, rows, :] = weighted.unsqueeze(0)
+        for slot, region in enumerate(self.copy_regions):
+            rows = self.copy_rows(slot)
+            if rows.stop <= seqlen:
+                gates[:, rows, region] = self.scale
         self.gates = gates
         return gates
+
+    def copy_rows(self, slot: int) -> slice:
+        """Where the `slot`-th region's copy of the prompt sits in the sequence."""
+        start = self.txtlen + self.canvas_tokens + slot * self.txtlen
+        return slice(start, start + self.txtlen)
 
     def for_tokens(self, batch: int, seqlen: int, region: int, device, dtype):
         """One region's gate as `[batch, seqlen, 1]`, or None to mean "apply nothing"."""

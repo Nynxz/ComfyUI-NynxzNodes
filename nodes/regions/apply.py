@@ -13,12 +13,15 @@ against. That is deliberate — this was resolved by bisection and never by tuni
     smooth = 0       the map is used exactly as tracked, speckle and all.
     preheat = 1      no schedule. LoRAs at full strength from step 0, map free all run.
     isolation = 0    attention untouched. The default; raise it only with a specific leak in hand.
+    region_prompt    off: the prompt is everyone's, and a LoRA's text side (its `txtfusion`
+                     layers, and what it does to the prompt tokens) is not applied at all.
 
 Set them all and this is the plain, obvious implementation — which is exactly why they exist.
 
 The order things happen in one step:
 
-    post_input   grid known -> masks projected -> map in force -> gates built -> LoRAs live
+    post_input   grid known -> masks projected -> each region's prompt copy added after the canvas
+                 -> map in force -> gates built -> LoRAs live
     block 0..n   hooks add each region's gated branch to every routed Linear
     ~route_at    canvas features clustered, map allowed to move toward them (unless frozen)
 
@@ -35,7 +38,7 @@ import logging
 from comfy_api.latest import io
 
 from .._zenkit.io_types import advanced
-from . import _branch, _capture, _patches, _schedule, _state
+from . import _branch, _capture, _patches, _schedule, _state, _text
 from ._base import RegionNode
 from ._io_types import Regions
 from ._krea import check_krea2
@@ -124,6 +127,15 @@ class NynxzRegionsApply(RegionNode):
                     "B's, whose K/V were computed with B's branch live. Costs shared lighting and "
                     "contact shadows, so keep it low — past ~2 you get a collage.",
                 ),
+                io.Boolean.Input(
+                    "region_prompt",
+                    default=True,
+                    tooltip="Give each region with a LoRA its own copy of the prompt, made with that "
+                    "LoRA's text side (its txtfusion layers) and carrying the LoRA in the blocks, and "
+                    "have the region's tokens read it. A LoRA's text side has no place on the canvas, "
+                    "so without this it isn't applied at all and many LoRAs come out weak. Costs a "
+                    "longer sequence and masked attention.",
+                ),
                 advanced(
                     io.Float.Input(
                         "ramp",
@@ -192,6 +204,7 @@ class NynxzRegionsApply(RegionNode):
         release=0.15,
         smooth=1,
         isolation=0.0,
+        region_prompt=True,
         ramp=0.2,
         refine=2,
         route_at=0.5,
@@ -212,12 +225,16 @@ class NynxzRegionsApply(RegionNode):
             )
 
         patched = model.clone()
-        loaded, report = _load(patched, entries)
+        loaded, text_loaded, report = _load(patched, entries, region_prompt)
 
         schedule = _schedule.Schedule(
             commit_at=commit_at, preheat=preheat, ramp=ramp, release=release
         )
         state = _state.GateState(entries, schedule, track)
+        text = None
+        if region_prompt:
+            text = _text.TextCopies(sorted({index for index, _ in loaded}), text_loaded)
+            state.copy_regions = text.regions
         config = _patches.TrackConfig(
             track=track,
             refine=refine,
@@ -228,21 +245,22 @@ class NynxzRegionsApply(RegionNode):
             isolation=isolation,
         )
 
-        patched.set_model_patch(_patches.post_input_patch(state), "post_input")
+        patched.set_model_patch(_patches.post_input_patch(state, text), "post_input")
         patched.set_model_patch(_patches.attn1_patch(state, config), "attn1_patch")
-        _branch.attach(patched, loaded, state)
+        _branch.attach(patched, loaded, state, text)
         _capture.clear()
 
         # To the log rather than to a socket. What loaded and what will run where is worth
         # having when something is wrong and worth nothing the rest of the time, which is exactly
         # a log line and not an output every graph has to route somewhere. Region Inspect shows
         # the bindings before the run and Regions Preview shows the map after it.
-        logging.info("Nynxz Regions: %s", _summary(report, config, schedule, total_blocks))
+        logging.info("Nynxz Regions: %s", _summary(report, config, schedule, total_blocks, text))
         return io.NodeOutput(patched)
 
 
-def _load(patcher, entries):
-    """`([(region_index, branches)], [report line])` — every LoRA on every region, in region order.
+def _load(patcher, entries, text: bool = True):
+    """`([(region_index, branches)], {region_index: {path: [text branch]}}, [report line])` — every
+    LoRA on every region, in region order.
 
     Pairs and not one entry per region, because a region may carry several. Each LoRA's own
     strength is applied when it LOADS rather than to the region's gate: the gate is per REGION and
@@ -253,7 +271,7 @@ def _load(patcher, entries):
     bound specs by position, which silently skewed the moment a spec was skipped for having no
     `lora_name` — every line after it then named the wrong LoRA.
     """
-    loaded, report = [], []
+    loaded, text_loaded, report = [], {}, []
     for index, region in enumerate(entries):
         bound = region.get("loras") or []
         if not bound:
@@ -264,17 +282,20 @@ def _load(patcher, entries):
             if not name:
                 continue
             strength = float(spec.get("strength", 1.0))
-            branches = load_branches(patcher, name, strength)
+            branches, text_branches = load_branches(patcher, name, strength, text)
             loaded.append((index, branches))
+            for path, branch in text_branches.items():
+                text_loaded.setdefault(index, {}).setdefault(path, []).append(branch)
             mlp = sum(1 for path in branches if ".mlp." in path)
             report.append(
                 f"region {index + 1}: {name} @ {strength:.2f} — "
                 f"{len(branches)} layers ({len(branches) - mlp} attn, {mlp} mlp)"
+                + (f", {len(text_branches)} text" if text_branches else "")
             )
-    return loaded, report
+    return loaded, text_loaded, report
 
 
-def _summary(report, config, schedule, total_blocks) -> str:
+def _summary(report, config, schedule, total_blocks, text=None) -> str:
     """What will actually run. Deliberately states the mechanism state, not just the settings."""
     lines = list(report)
 
@@ -291,6 +312,11 @@ def _summary(report, config, schedule, total_blocks) -> str:
     lines.append(f"schedule: {schedule.describe()}")
     lines.append(
         f"isolation: {config.isolation:.2f}"
-        + (" — attention untouched" if config.isolation <= 0 else "")
+        + (" — attention untouched" if config.isolation <= 0 and text is None else "")
     )
+    if text is None:
+        lines.append("region prompt: OFF — the prompt is everyone's, LoRAs' text side not applied")
+    else:
+        regions = ", ".join(str(r + 1) for r in text.regions)
+        lines.append(f"region prompt: a copy of the prompt each for region(s) {regions}")
     return "\n".join(lines)

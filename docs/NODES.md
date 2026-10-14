@@ -42,6 +42,11 @@ Regions from Masks ──> Region LoRAs ──> Regions Apply ──> MODEL ─�
 - **Regions Apply** — patches the model. Every mechanism has an off position that recovers a
   baseline: `track=0` is a static mask, `preheat=1` is a LoRA from step 0, `refine=0` is no
   clustering. Turn them all off and this is plain regional LoRA, which is the thing to beat.
+  `region_prompt` (on by default) gives each region with a LoRA its own copy of the prompt, made
+  with that LoRA's text side (Krea 2's `txtfusion` layers) and carrying the LoRA in the blocks, and
+  the region's tokens read it. Without it a LoRA's text side isn't applied at all, which is why
+  some LoRAs looked weak here; with it a whole-canvas region matches the LoRA loaded normally. It
+  costs a longer sequence and masked attention.
 
 For **NK2E edits with seams**, keep the edit LoRA loaded normally and the source image connected
 as reference conditioning. In **Region Latent**, try `background=0`, `flatten=0`,

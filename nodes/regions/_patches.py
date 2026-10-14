@@ -5,10 +5,16 @@ the canvas grid comes from. That ordering is what removes any need for a bootstr
 known before the first block runs, so the masks can be projected and a correct map is in force from
 the very first hook of the very first step.
 
-`attn1_patch` fires per block with `q`, `k` and `v` before the softmax, and is used for two
+`post_input` is also where each region's copy of the prompt joins the sequence (see `_text`).
+
+`attn1_patch` fires per block with `q`, `k` and `v` before the softmax, and is used for three
 independent things:
 
   * **tracking** — at a few blocks near `route_at`, the canvas keys are the features `_track` needs.
+  * **prompt routing** — with copies of the prompt in the sequence, a logit bias sends each canvas
+    token to its region's copy, weighted by the region's claim on it, and to the plain prompt for
+    the rest. Mixing by `log(weight)` is what keeps it exact: copies that are identical read
+    exactly as the one prompt did.
   * **isolation** — an optional additive logit bias, the one leak per-token gating cannot close.
 
 That leak, since it decides whether `isolation` is worth reaching for. Region A's canvas tokens
@@ -35,6 +41,10 @@ from . import _capture, _track
 
 #: How far either side of `route_at` a multi-block read spreads, as a fraction of the stack.
 _SPREAD = 0.2
+#: A logit bias that is "never": far below any real logit, and still finite in fp16.
+_NEVER = -1e4
+#: The smallest weight a canvas token gives a prompt, so `log` stays finite.
+_LEAST = 1e-4
 #: Warn past this much for one bias matrix. Quadratic in sequence length, so resolution gets you
 #: here, not region count.
 _WARN_BYTES = 256 * 1024 * 1024
@@ -91,8 +101,9 @@ def route_block(route_at: float, total: int, count: int = 1) -> list[int]:
     return sorted(found)
 
 
-def post_input_patch(state):
-    """Record the sequence layout, advance the schedule, and put the map in force."""
+def post_input_patch(state, text=None):
+    """Record the sequence layout, advance the schedule, put the map in force, and add each
+    region's copy of the prompt after the canvas when `text` (a `_text.TextCopies`) is given."""
 
     def patch(args):
         options = args["transformer_options"]
@@ -113,16 +124,27 @@ def post_input_patch(state):
 
         img = args["img"]
         state.ensure_anchor(img.device)
-        state.build_gates(img.shape[0], state.txtlen + img.shape[1], img.device)
+        copies = text.make(args["txt"]) if text is not None else None
+        state.copy_tokens = 0 if copies is None else copies.shape[1]
+        if copies is not None:
+            blank = img_ids.new_zeros((img_ids.shape[0], copies.shape[1], img_ids.shape[2]))
+            args = {
+                **args,
+                "img": torch.cat((img[:, :canvas], copies.to(img.dtype), img[:, canvas:]), dim=1),
+                "img_ids": torch.cat((img_ids[:, :canvas], blank, img_ids[:, canvas:]), dim=1),
+            }
+        state.build_gates(img.shape[0], state.txtlen + args["img"].shape[1], img.device)
         return args
 
     return patch
 
 
 def _attention_bias(state, config: TrackConfig, q) -> torch.Tensor | None:
-    """`isolation`: keep each region's canvas tokens off the other regions'. Off by default."""
+    """The logit bias for this step: prompt routing when there are copies, and `isolation`."""
     global _warned
-    if config.isolation <= 0.0 or len(state.regions) < 2:
+    routed = state.copy_tokens > 0
+    isolate = config.isolation > 0.0 and len(state.regions) >= 2
+    if not routed and not isolate:
         # Decided BEFORE allocating. A `[B, L, L]` matrix is ~35 MB at 4096 tokens, and returning
         # an all-zero one would allocate that per block for nothing and push attention onto its
         # slower masked path.
@@ -136,29 +158,61 @@ def _attention_bias(state, config: TrackConfig, q) -> torch.Tensor | None:
     regions = len(state.regions)
     batch, _, seqlen, _ = q.shape
     txtlen, canvas = state.txtlen, state.canvas_tokens
-    if txtlen + canvas > seqlen or canvas > current.shape[0]:
+    if txtlen + canvas + state.copy_tokens > seqlen or canvas > current.shape[0]:
         return None
 
-    nbytes = seqlen * seqlen * torch.finfo(q.dtype).bits // 8
+    key = (state.scale, batch, seqlen, q.dtype, q.device, config.isolation, state.copy_tokens)
+    if state.bias is not None and state.bias[0] is current and state.bias[1] == key:
+        return state.bias[2]
+
+    nbytes = batch * seqlen * seqlen * torch.finfo(q.dtype).bits // 8
     if nbytes > _WARN_BYTES and not _warned:
         _warned = True
         logging.warning(
             "Nynxz Regions: a %d-token sequence needs a %.0f MB attention bias. This is quadratic "
-            "in resolution — drop the resolution, or set isolation to 0, if it OOMs.",
+            "in resolution — drop the resolution, set isolation to 0 or turn off the per-region "
+            "prompt, if it OOMs.",
             seqlen,
             nbytes / (1024 * 1024),
         )
 
-    rows = slice(txtlen, txtlen + canvas)
     claim = current[:canvas, :regions].to(q.device)
-    # Renormalized over regions only. Strengths and the schedule are about how hard a LoRA fires;
-    # the bias only wants to know which region a token belongs to. The background column goes with
-    # them, so two background tokens read as being in full agreement and are never separated.
-    share = claim / claim.sum(dim=-1, keepdim=True).clamp(min=1e-6)
-    agreement = (share @ share.transpose(0, 1)).clamp(0.0, 1.0)
     bias = torch.zeros((batch, seqlen, seqlen), device=q.device, dtype=q.dtype)
-    bias[:, rows, rows] = (-config.isolation * (1.0 - agreement)).to(q.dtype)
-    return bias.unsqueeze(1)  # [B, 1, L, L] so it broadcasts over heads
+    if isolate:
+        rows = slice(txtlen, txtlen + canvas)
+        # Renormalized over regions only. Strengths and the schedule are about how hard a LoRA
+        # fires; the bias only wants to know which region a token belongs to. The background
+        # column goes with them, so two background tokens read as being in full agreement and are
+        # never separated.
+        share = claim / claim.sum(dim=-1, keepdim=True).clamp(min=1e-6)
+        agreement = (share @ share.transpose(0, 1)).clamp(0.0, 1.0)
+        bias[:, rows, rows] = (-config.isolation * (1.0 - agreement)).to(q.dtype)
+    if routed:
+        _route_prompt(bias, state, claim)
+    out = bias.unsqueeze(1)  # [B, 1, L, L] so it broadcasts over heads
+    state.bias = (current, key, out)
+    return out
+
+
+def _route_prompt(bias: torch.Tensor, state, claim: torch.Tensor) -> None:
+    """Who reads which prompt. Canvas tokens: their regions' copies by claim (times the schedule's
+    scale, as the LoRAs themselves are) and the plain prompt for the rest. A copy: itself and the
+    image. Everything else: the plain prompt, as before."""
+    txtlen, canvas = state.txtlen, state.canvas_tokens
+    prompt = slice(0, txtlen)
+    rows = slice(txtlen, txtlen + canvas)
+    first = txtlen + canvas
+    bias[:, :, first : first + state.copy_tokens] = _NEVER
+    taken = torch.zeros_like(claim[:, 0])
+    for slot, region in enumerate(state.copy_regions):
+        copy = state.copy_rows(slot)
+        weight = claim[:, region] * state.scale
+        taken = taken + weight
+        bias[:, copy, prompt] = _NEVER
+        bias[:, copy, copy] = 0.0
+        bias[:, rows, copy] = weight.clamp(min=_LEAST).log().unsqueeze(-1).to(bias.dtype)
+    rest = (1.0 - taken).clamp(min=_LEAST)
+    bias[:, rows, prompt] = rest.log().unsqueeze(-1).to(bias.dtype)
 
 
 def attn1_patch(state, config: TrackConfig):
