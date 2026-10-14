@@ -11,9 +11,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
-import shutil
 import struct
-import subprocess
 from html.parser import HTMLParser
 
 from . import lora_manager
@@ -82,7 +80,7 @@ def poster(video_path: str) -> str | None:
     os.makedirs(_POSTER_DIR, exist_ok=True)
     tmp = out + ".tmp"
     try:
-        if _poster_av(video_path, tmp) or _poster_ffmpeg(video_path, tmp):
+        if _poster_av(video_path, tmp):
             os.replace(tmp, out)
             return out
     finally:
@@ -138,20 +136,6 @@ def _poster_av(src: str, dst: str) -> bool:
     except Exception:  # noqa: BLE001 - any decode failure just means no poster
         return False
     return False
-
-
-def _poster_ffmpeg(src: str, dst: str) -> bool:
-    exe = shutil.which("ffmpeg")
-    if not exe:
-        return False
-    scale = f"scale={POSTER_MAX}:{POSTER_MAX}:force_original_aspect_ratio=decrease"
-    cmd = [exe, "-v", "error", "-y", "-i", src, "-frames:v", "1", "-vf", scale]
-    cmd += ["-f", "image2", "-c:v", "mjpeg", dst]
-    try:
-        subprocess.run(cmd, check=True, timeout=30, capture_output=True)
-    except (OSError, subprocess.SubprocessError):
-        return False
-    return os.path.isfile(dst) and os.path.getsize(dst) > 0
 
 
 # --- info ----------------------------------------------------------------------------------
