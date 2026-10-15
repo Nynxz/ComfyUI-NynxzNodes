@@ -1,0 +1,182 @@
+"""The scene widget value -> layers and their masks. Pure tensor work, no model.
+
+Masks are built at a working size of the canvas's own shape, `WORKING` on the long side. The
+regional gates read them on the token grid (64x64 at 1024²), so this is already far more
+resolution than survives; it only has to be the right SHAPE, because the masks ride the Regions
+wire with `fit = stretch` and are stretched onto whatever the sampler's canvas turns out to be.
+
+How layers that overlap are resolved is `overlap`:
+
+  * **top** (default) — a layer covers what is under it, like paint. Each layer's mask has every
+    layer above it cut out, so a hat drawn over a head owns the hat, and the head keeps the rest.
+    Feathered edges cut softly, so the handover blends rather than steps.
+  * **share** — every layer keeps its whole mask and the regions split overlaps between them, as
+    the Regions nodes always have.
+
+The background is whatever no layer claims after that.
+"""
+
+from __future__ import annotations
+
+import base64
+import io
+import json
+import re
+
+import numpy as np
+import torch
+from PIL import Image
+
+from ..regions import _mask
+
+#: Long side of the working masks, in pixels.
+WORKING = 512
+OVERLAP = ("top", "share")
+DEFAULT_OVERLAP = "top"
+FITS = ("contain", "cover", "stretch")
+_DATA_URL = re.compile(r"^data:image/[a-z+]+;base64,(.*)$", re.DOTALL)
+
+
+def _num(value, fallback: float) -> float:
+    try:
+        out = float(value)
+    except (TypeError, ValueError):
+        return fallback
+    return out if np.isfinite(out) else fallback
+
+
+def parse(value) -> dict:
+    """The widget value (dict, or the JSON string an older graph may hold) as a clean scene."""
+    scene = value
+    if isinstance(scene, str):
+        try:
+            scene = json.loads(scene) if scene.strip() else {}
+        except json.JSONDecodeError:
+            scene = {}
+    if not isinstance(scene, dict):
+        scene = {}
+    width = max(64, int(_num(scene.get("width"), 1024)))
+    height = max(64, int(_num(scene.get("height"), 1024)))
+    layers = [
+        _layer(raw, index)
+        for index, raw in enumerate(scene.get("layers") or [])
+        if isinstance(raw, dict)
+    ]
+    background = _content(
+        scene.get("background") if isinstance(scene.get("background"), dict) else {}
+    )
+    background["name"] = "background"
+    return {
+        "width": width,
+        "height": height,
+        "prompt": str(scene.get("prompt") or ""),
+        "background": background,
+        "layers": layers,
+    }
+
+
+def _content(raw: dict) -> dict:
+    """What a layer carries, box aside: prompt, references, LoRAs, denoise, on."""
+    refs = [
+        {
+            "ref": str(r.get("ref")),
+            "type": str(r.get("type") or "input"),
+            "strength": max(0.0, _num(r.get("strength"), 1.0)),
+            "fit": r.get("fit") if r.get("fit") in FITS else "contain",
+        }
+        for r in raw.get("refs") or []
+        if isinstance(r, dict) and r.get("ref") and r.get("on", True) is not False
+    ]
+    loras = [
+        {"lora_name": str(r.get("name")), "strength": _num(r.get("strength"), 1.0)}
+        for r in raw.get("loras") or []
+        if isinstance(r, dict) and r.get("name") and r.get("on", True) is not False
+    ]
+    return {
+        "on": raw.get("on", True) is not False,
+        "prompt": str(raw.get("prompt") or "").strip(),
+        "refs": [r for r in refs if r["strength"] > 0.0],
+        "loras": loras,
+        "denoise": min(1.0, max(0.0, _num(raw.get("denoise"), 1.0))),
+    }
+
+
+def _layer(raw: dict, index: int) -> dict:
+    x = min(1.0, max(0.0, _num(raw.get("x"), 0.0)))
+    y = min(1.0, max(0.0, _num(raw.get("y"), 0.0)))
+    return {
+        **_content(raw),
+        "name": str(raw.get("name") or f"layer {index + 1}"),
+        "x": x,
+        "y": y,
+        "w": min(1.0 - x, max(0.0, _num(raw.get("w"), 0.0))),
+        "h": min(1.0 - y, max(0.0, _num(raw.get("h"), 0.0))),
+        "mask": raw.get("mask") if isinstance(raw.get("mask"), str) else None,
+        "feather": max(0, int(_num(raw.get("feather"), 0))),
+    }
+
+
+def working_size(width: int, height: int) -> tuple[int, int]:
+    """`(height, width)` of the working masks: the canvas's shape, `WORKING` on the long side."""
+    scale = WORKING / max(width, height)
+    return max(1, round(height * scale)), max(1, round(width * scale))
+
+
+def decode_mask(url: str) -> torch.Tensor | None:
+    """A box-local mask from its data URL: `[H, W]` in 0..1 from the alpha channel (or the
+    luminance, for an image without one). None if it isn't a readable image."""
+    match = _DATA_URL.match(url or "")
+    if not match:
+        return None
+    try:
+        image = Image.open(io.BytesIO(base64.b64decode(match.group(1))))
+        image.load()
+    except Exception:  # noqa: BLE001 - a broken mask means "the whole box", not a failed run
+        return None
+    channel = image.getchannel("A") if "A" in image.getbands() else image.convert("L")
+    return torch.from_numpy(np.asarray(channel, dtype=np.float32) / 255.0)
+
+
+def layer_mask(layer: dict, size: tuple[int, int], canvas: tuple[int, int]) -> torch.Tensor:
+    """One layer's mask at working `size` `(H, W)`: its box, its painted shape inside the box, and
+    its feather (given in pixels of the `canvas` `(H, W)`)."""
+    height, width = size
+    out = torch.zeros((height, width), dtype=torch.float32)
+    top, left = round(layer["y"] * height), round(layer["x"] * width)
+    bottom = max(top + 1, round((layer["y"] + layer["h"]) * height))
+    right = max(left + 1, round((layer["x"] + layer["w"]) * width))
+    bottom, right = min(bottom, height), min(right, width)
+    if bottom <= top or right <= left:
+        return out
+    shape = decode_mask(layer["mask"]) if layer.get("mask") else None
+    if shape is None:
+        out[top:bottom, left:right] = 1.0
+    else:
+        resized = torch.nn.functional.interpolate(
+            shape[None, None],
+            size=(bottom - top, right - left),
+            mode="bilinear",
+            align_corners=False,
+        )[0, 0]
+        out[top:bottom, left:right] = resized.clamp(0.0, 1.0)
+    feather = round(layer.get("feather", 0) * width / max(canvas[1], 1))
+    return _mask.shape_mask(out, grow=0, feather=feather) if feather > 0 else out
+
+
+def compose(layers: list[dict], size: tuple[int, int], canvas: tuple[int, int], overlap: str):
+    """`([mask per layer], background mask)` for the layers that are on, bottom to top.
+
+    With `overlap = top`, every layer loses whatever the layers above it cover.
+    """
+    masks = [layer_mask(layer, size, canvas) for layer in layers]
+    if overlap == "top":
+        covered = torch.zeros(size, dtype=torch.float32)
+        for index in range(len(masks) - 1, -1, -1):
+            own = masks[index]
+            masks[index] = own * (1.0 - covered)
+            covered = torch.maximum(covered, own)
+    claimed = torch.zeros(size, dtype=torch.float32)
+    for mask in masks:
+        claimed = torch.maximum(claimed, mask) if overlap != "top" else claimed + mask
+    background = (1.0 - claimed).clamp(0.0, 1.0)
+    return masks, background

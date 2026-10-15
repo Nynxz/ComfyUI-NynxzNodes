@@ -241,14 +241,23 @@ class NynxzRegionsApply(RegionNode):
         entries = list(regions or [])
         if not entries:
             raise ValueError("No regions arrived on the wire — there is nothing to gate.")
-        prompted = {i: r["prompt"] for i, r in enumerate(entries) if r.get("prompt")}
-        if not any(r.get("loras") for r in entries) and not prompted:
+        # A region may arrive with its prompt already encoded (Fresco does, with its references'
+        # vision tokens in it); only the plain prompts are left for `clip`.
+        conditioned = {
+            i: r["conditioning"] for i, r in enumerate(entries) if r.get("conditioning") is not None
+        }
+        prompted = {
+            i: r["prompt"]
+            for i, r in enumerate(entries)
+            if r.get("prompt") and i not in conditioned
+        }
+        if not any(r.get("loras") for r in entries) and not prompted and not conditioned:
             raise ValueError(
                 "No region has a LoRA or a prompt, so there is nothing for this node to do. Put a "
                 "Region LoRAs node between the regions and this one, and give the regions a LoRA "
                 "or a prompt."
             )
-        if prompted and not region_prompt:
+        if (prompted or conditioned) and not region_prompt:
             raise ValueError(
                 "Some regions have a prompt of their own, which needs region_prompt on — turn it "
                 "on, or clear those prompts."
@@ -269,9 +278,9 @@ class NynxzRegionsApply(RegionNode):
         text = None
         if region_prompt:
             text = _text.TextCopies(
-                sorted({index for index, _ in loaded} | set(prompted)),
+                sorted({index for index, _ in loaded} | set(prompted) | set(conditioned)),
                 text_loaded,
-                {i: _encode(clip, prompt) for i, prompt in prompted.items()},
+                {**{i: _encode(clip, prompt) for i, prompt in prompted.items()}, **conditioned},
             )
         config = _patches.TrackConfig(
             track=track,
