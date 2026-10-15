@@ -4,7 +4,8 @@ minimumReleaseAgeExclude:
   - '@nynxz/zenkit-ui'
   - '@nynxz/zenkit-nodekit'
 
-# The Fresco editor needs ZenBoxCanvas/ZenLayerList, which are on ZenKit's feat/box-canvas and not
-# released yet. Drop this once @nynxz/zenkit-ui ships them and the dependency is bumped.
+# The Fresco editor needs ZenBoxCanvas/ZenLayerList, useWheelClaim and readMediaDrop's URL upload,
+# which are on ZenKit's feat/box-canvas and not released yet. Drop this once @nynxz/zenkit-ui ships them and the dependency is bumped.
 overrides:
   '@nynxz/zenkit-ui': link:/home/user/git/nynxz/comfyui_nodepacks/ZenKit/packages/ui
+  '@nynxz/zenkit-nodekit': link:/home/user/git/nynxz/comfyui_nodepacks/ZenKit/packages/nodekit
