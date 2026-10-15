@@ -16,7 +16,10 @@ Drag on the canvas to draw a layer, then give it what belongs there:
 - **reference images** — dropped or browsed, each with a strength and a fit. They are read by the
   text encoder together with the layer's prompt, so their vision tokens sit in the layer's own copy
   of the prompt and only the layer's tokens read them. Several on one layer blend like Text Encode
-  (Fusion). A layer with references and no prompt reads the scene prompt against them;
+  (Fusion). A layer with references and no prompt reads the scene prompt against them. With
+  several, **blend** picks how they combine — Mix (interleaved evenly), Weighted (a stronger
+  reference covers more), Tiled (each keeps one part), Salient (each part takes from whichever
+  reference shows something there) — with a softness between them;
 - **influence** — how strongly the layer follows its own prompt and references against the rest
   of the picture. Raise it when references aren't coming through;
 - **LoRAs** — each runs only on the layer's tokens, at its own strength;

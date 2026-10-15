@@ -35,6 +35,10 @@ OVERLAP = ("top", "share")
 DEFAULT_OVERLAP = "top"
 DEFAULT_VISUAL_SIZE = 384
 FITS = ("contain", "cover", "stretch")
+#: How a layer blends several references — names for the fusion engine's patterns (see
+#: `fresco._fusion_settings`). One reference ignores it.
+BLENDS = ("mix", "weighted", "tiled", "salient")
+DEFAULT_BLEND = "mix"
 _DATA_URL = re.compile(r"^data:image/[a-z+]+;base64,(.*)$", re.DOTALL)
 
 
@@ -116,6 +120,8 @@ def _content(raw: dict, denoise: float = 1.0) -> dict:
         "loras": loras,
         "denoise": min(1.0, max(0.0, _num(raw.get("denoise"), denoise))),
         "influence": min(4.0, max(0.0, _num(raw.get("influence"), 1.0))),
+        "blend": raw.get("blend") if raw.get("blend") in BLENDS else DEFAULT_BLEND,
+        "softness": min(1.0, max(0.0, _num(raw.get("softness"), 0.5))),
     }
 
 

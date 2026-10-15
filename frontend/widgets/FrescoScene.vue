@@ -53,18 +53,33 @@
         </template>
         <template v-else>{{ tip }}</template>
       </span>
-      <label class="fs-ctl" :class="{ dim: tool === 'select' }" title="Brush size — [ and ]">
+      <label
+        class="fs-ctl"
+        :class="{ dim: tool === 'select' }"
+        title="Brush size in canvas pixels — [ and ]"
+      >
         <i class="mdi mdi-brush" />
-        <ZenSlider v-model="brushSize" :min="0.01" :max="0.3" :step="0.005" />
+        <ZenNumber
+          size="sm"
+          :model-value="Math.round(brushSize * scene.width)"
+          :min="4"
+          :max="Math.round(scene.width * 0.4)"
+          :step="2"
+          :precision="0"
+          @update:model-value="brushSize = Math.max(4, $event) / scene.width"
+        />
       </label>
-      <label class="fs-ctl" :class="{ dim: !backdropUrl }" title="Trace image opacity">
+      <label class="fs-ctl" :class="{ dim: !backdropUrl }" title="Trace image opacity, %">
         <i class="mdi mdi-image-outline" />
-        <ZenSlider
-          v-model="backdropOpacity"
-          :min="0.1"
-          :max="1"
-          :step="0.05"
+        <ZenNumber
+          size="sm"
+          :model-value="Math.round(backdropOpacity * 100)"
+          :min="10"
+          :max="100"
+          :step="5"
+          :precision="0"
           :disabled="!backdropUrl"
+          @update:model-value="backdropOpacity = $event / 100"
         />
       </label>
       <ZenPopover placement="bottom-end" role="dialog">
@@ -168,50 +183,27 @@
         </header>
 
         <ZenScroll class="fs-body" data-capture-wheel="true">
-          <div v-if="currentLayer" class="fs-form">
-            <div class="fs-label">Prompt</div>
-            <ZenInput
-              ref="promptInput"
-              type="textarea"
-              :rows="3"
-              sm
-              :model-value="currentLayer.prompt"
-              placeholder="What goes here. Empty: the scene prompt, read against the references"
-              @update:model-value="patchCurrent({ prompt: String($event ?? '') })"
-            />
-            <div class="fs-label">References</div>
-            <FrescoRefs
-              :model-value="currentLayer.refs"
-              @update:model-value="patchCurrent({ refs: $event })"
-            />
-            <label class="fs-field" :title="INFLUENCE_TIP">
-              <span>influence</span>
-              <ZenSlider
-                :model-value="currentLayer.influence"
-                :min="0"
-                :max="4"
-                :step="0.05"
-                @update:model-value="patchCurrent({ influence: $event })"
-              />
-              <span class="fs-val">{{ currentLayer.influence.toFixed(2) }}</span>
-            </label>
-            <div class="fs-label">LoRAs</div>
-            <FrescoLoras
-              :model-value="currentLayer.loras"
-              @update:model-value="patchCurrent({ loras: $event })"
-            />
+          <FrescoContentForm
+            v-if="currentLayer"
+            ref="layerForm"
+            :content="currentLayer"
+            prompt-placeholder="What goes here — write it out in full. Empty: the scene prompt, read against the references"
+            @patch="patchCurrent"
+          >
             <div class="fs-label">Shape</div>
-            <label class="fs-field" title="Soften the edge, in canvas pixels">
-              <span>feather</span>
-              <ZenSlider
+            <div class="fs-grid">
+              <span title="Soften the edge, in canvas pixels">feather</span>
+              <ZenNumber
+                size="sm"
                 :model-value="currentLayer.feather"
                 :min="0"
-                :max="128"
+                :max="256"
                 :step="1"
-                @update:model-value="patchCurrent({ feather: $event })"
+                :precision="0"
+                title="Soften the edge, in canvas pixels"
+                @update:model-value="patchCurrent({ feather: Math.round($event) })"
               />
-              <span class="fs-val">{{ currentLayer.feather }}px</span>
-            </label>
+            </div>
             <div class="fs-row">
               <span class="fs-note">
                 {{ currentLayer.mask ? "Painted shape" : "The whole box" }} · <kbd>B</kbd> paint ·
@@ -227,22 +219,7 @@
                 Box
               </ZenButton>
             </div>
-            <div class="fs-label">Edit</div>
-            <label
-              class="fs-field"
-              title="How much of a source image this layer may rewrite. Only used when Fresco Apply has an image."
-            >
-              <span>denoise</span>
-              <ZenSlider
-                :model-value="currentLayer.denoise"
-                :min="0"
-                :max="1"
-                :step="0.01"
-                @update:model-value="patchCurrent({ denoise: $event })"
-              />
-              <span class="fs-val">{{ currentLayer.denoise.toFixed(2) }}</span>
-            </label>
-          </div>
+          </FrescoContentForm>
 
           <p v-else-if="selected.length > 1" class="fs-note fs-pad">
             Drag any of them on the canvas to move them together; the frame's handles scale them.
@@ -258,50 +235,16 @@
               placeholder="The whole picture — Fresco Apply's positive"
               @update:model-value="patchScene({ prompt: String($event ?? '') })"
             />
-            <div class="fs-label">
+            <div class="fs-label fs-section">
               Background
               <span class="fs-label-note">wherever no layer is</span>
             </div>
-            <ZenInput
-              type="textarea"
-              :rows="2"
-              sm
-              :model-value="scene.background.prompt"
-              placeholder="Optional — what fills the rest of the frame"
-              @update:model-value="patchBackground({ prompt: String($event ?? '') })"
+            <FrescoContentForm
+              :content="scene.background"
+              :prompt-rows="2"
+              prompt-placeholder="Optional — what fills the rest of the frame"
+              @patch="patchBackground"
             />
-            <div class="fs-label">References</div>
-            <FrescoRefs
-              :model-value="scene.background.refs"
-              @update:model-value="patchBackground({ refs: $event })"
-            />
-            <label class="fs-field" :title="INFLUENCE_TIP">
-              <span>influence</span>
-              <ZenSlider
-                :model-value="scene.background.influence"
-                :min="0"
-                :max="4"
-                :step="0.05"
-                @update:model-value="patchBackground({ influence: $event })"
-              />
-              <span class="fs-val">{{ scene.background.influence.toFixed(2) }}</span>
-            </label>
-            <div class="fs-label">LoRAs</div>
-            <FrescoLoras
-              :model-value="scene.background.loras"
-              @update:model-value="patchBackground({ loras: $event })"
-            />
-            <label class="fs-field" title="How much of a source image the background may rewrite">
-              <span>denoise</span>
-              <ZenSlider
-                :model-value="scene.background.denoise"
-                :min="0"
-                :max="1"
-                :step="0.01"
-                @update:model-value="patchBackground({ denoise: $event })"
-              />
-              <span class="fs-val">{{ scene.background.denoise.toFixed(2) }}</span>
-            </label>
             <div class="fs-label">Settings</div>
             <label
               class="fs-field wide"
@@ -381,7 +324,6 @@ import {
   ZenPopover,
   ZenResolution,
   ZenScroll,
-  ZenSlider,
   ZenToggleGroup,
   type BoxTool,
   type LayerItem,
@@ -389,8 +331,7 @@ import {
 } from "@nynxz/zenkit-ui";
 
 import FrescoBoxFace from "@/components/fresco/FrescoBoxFace.vue";
-import FrescoLoras from "@/components/fresco/FrescoLoras.vue";
-import FrescoRefs from "@/components/fresco/FrescoRefs.vue";
+import FrescoContentForm from "@/components/fresco/FrescoContentForm.vue";
 import { thumbUrl, type SourceType } from "@/lib/fusionApi";
 import {
   BACKGROUND_ID,
@@ -422,16 +363,12 @@ const OVERLAPS = [
   { value: "top", label: "Cover", title: "A layer covers the layers under it, like paint" },
   { value: "share", label: "Share", title: "Overlapping layers split the overlap" },
 ];
-const INFLUENCE_TIP =
-  "How strongly this area follows its own prompt and references, against the rest of the " +
-  "picture. Raise it when the references aren't coming through; too high and the area stops " +
-  "fitting in. Below 1 also weakens the layer's LoRAs — their text side is in the same prompt.";
 
 const scene = ref<FrescoScene>(parseScene(props.widget?.value));
 const selected = ref<string[]>([]);
 const tool = ref<BoxTool>("select");
 const brushSize = ref(0.06);
-const promptInput = ref<{ $el?: HTMLElement } | null>(null);
+const layerForm = ref<{ focusPrompt: () => void } | null>(null);
 
 function commit() {
   const snapshot = JSON.parse(JSON.stringify(scene.value)) as FrescoScene;
@@ -526,7 +463,7 @@ function removeLayers(ids: string[]) {
 async function openLayer(id: string) {
   selected.value = [id];
   await nextTick();
-  promptInput.value?.$el?.querySelector?.("textarea")?.focus();
+  layerForm.value?.focusPrompt();
 }
 
 const tip = computed(() => {
@@ -782,7 +719,7 @@ onBeforeUnmount(() => api.removeEventListener("executed", onExecuted));
   display: flex;
   align-items: center;
   gap: 6px;
-  width: 120px;
+  width: 104px;
   transition: opacity 0.12s ease;
 }
 .fs-ctl.dim {
@@ -890,6 +827,18 @@ onBeforeUnmount(() => api.removeEventListener("executed", onExecuted));
   letter-spacing: 0;
   text-transform: none;
 }
+.fs-grid {
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr);
+  align-items: center;
+  gap: 6px;
+  color: var(--zen-muted, #9aa0aa);
+}
+.fs-section {
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid var(--zen-border, #34343c);
+}
 .fs-field {
   display: grid;
   grid-template-columns: 58px 1fr 42px;
@@ -899,11 +848,6 @@ onBeforeUnmount(() => api.removeEventListener("executed", onExecuted));
 }
 .fs-field.wide {
   grid-template-columns: 58px 1fr;
-}
-.fs-val {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-  color: var(--zen-text, #e5e5ea);
 }
 .fs-row {
   display: flex;

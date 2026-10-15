@@ -61,6 +61,27 @@ def _references(refs: list[dict], where: str) -> tuple[list, list, list]:
     return images, strengths, fits
 
 
+def _fusion_settings(layer: dict, visual_size: int) -> FusionSettings:
+    """The fusion engine's settings for a layer's blend.
+
+    mix       every reference interleaved cell by cell in equal shares
+    weighted  cells scattered by strength, so a stronger reference covers more of the reading
+    tiled     each reference one contiguous part of the grid
+    salient   interleaved, but each cell leans to whichever reference shows something there
+    """
+    softness = layer.get("softness", 0.5)
+    blend = layer.get("blend", _scene.DEFAULT_BLEND)
+    settings = FusionSettings(visual_size=visual_size, blend_strength=softness)
+    if blend == "weighted":
+        settings.fusion_method = "spatial-strength-random"
+    elif blend == "tiled":
+        settings.fusion_method = "spatial-grid"
+    elif blend == "salient":
+        settings.content_mode = "saliency"
+        settings.content_strength = 0.7
+    return settings
+
+
 def _conditioning(clip, layer: dict, scene_prompt: str, visual_size: int, where: str):
     """A layer's own conditioning, or None when it has nothing to say."""
     images, strengths, fits = _references(layer["refs"], where)
@@ -70,7 +91,7 @@ def _conditioning(clip, layer: dict, scene_prompt: str, visual_size: int, where:
             clip,
             prompt or scene_prompt,
             sources=images,
-            settings=FusionSettings(visual_size=visual_size),
+            settings=_fusion_settings(layer, visual_size),
             strengths=strengths,
             fits=fits,
         )

@@ -31,7 +31,27 @@ export interface FrescoContent {
   denoise: number;
   /** How strongly the area reads its own prompt and references. 1 = as weighted by its claim. */
   influence: number;
+  /** How several references blend (nodes/fresco/_scene.py BLENDS). */
+  blend: Blend;
+  /** 0 = hard cells, 1 = fully feathered between references. */
+  softness: number;
 }
+
+export type Blend = "mix" | "weighted" | "tiled" | "salient";
+export const BLENDS: { value: Blend; label: string; title: string }[] = [
+  { value: "mix", label: "Mix", title: "Every reference interleaved in equal shares" },
+  {
+    value: "weighted",
+    label: "Weighted",
+    title: "A stronger reference covers more — the strength numbers set each one's share",
+  },
+  { value: "tiled", label: "Tiled", title: "Each reference keeps one part to itself" },
+  {
+    value: "salient",
+    label: "Salient",
+    title: "Each part takes from whichever reference shows something there",
+  },
+];
 
 export interface FrescoLayer extends FrescoContent {
   id: string;
@@ -122,11 +142,22 @@ function parseContent(raw: Record<string, unknown>, denoise = 1): FrescoContent 
     })),
     denoise: clamp01(num(raw.denoise, denoise)),
     influence: Math.min(4, Math.max(0, num(raw.influence, 1))),
+    blend: (BLENDS.some((b) => b.value === raw.blend) ? raw.blend : "mix") as Blend,
+    softness: clamp01(num(raw.softness, 0.5)),
   };
 }
 
 export function emptyContent(denoise = 1): FrescoContent {
-  return { on: true, prompt: "", refs: [], loras: [], denoise, influence: 1 };
+  return {
+    on: true,
+    prompt: "",
+    refs: [],
+    loras: [],
+    denoise,
+    influence: 1,
+    blend: "mix",
+    softness: 0.5,
+  };
 }
 
 export function parseScene(value: unknown): FrescoScene {
