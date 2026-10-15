@@ -45,7 +45,10 @@ Load Model ── model ────────┤
   sampler its positive and latent. With an **image** and a **VAE** it edits that image: the latent
   is the image with each layer's denoise as its noise mask — sample it with the **SoftPaint
   Sampler**, or Differential Diffusion on the model. After a run the image shows under Fresco's
-  canvas, with a one-click "match canvas" when the shapes differ. Advanced: `lora_warmup`,
+  canvas, with a one-click "match canvas" when the shapes differ. `layout_isolation` keeps the
+  layers apart while the layout forms (until `commit_at`, then easing to `isolation`), so each
+  follows its own prompt instead of the picture averaging them — raise it if layers ignore their
+  prompts, lower it if the result looks like a collage. Advanced: `lora_warmup`,
   `commit_at`, `track`, `release`, `isolation` and `layout_lock`, as on Regions Apply.
 
 **Fresco Apply is Regions Apply** with Fresco's regions — don't chain another Regions Apply after

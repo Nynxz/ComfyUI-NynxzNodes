@@ -57,6 +57,7 @@ class TrackConfig:
 
     __slots__ = (
         "isolation",
+        "layout_isolation",
         "refine",
         "route_at",
         "route_blocks",
@@ -74,6 +75,7 @@ class TrackConfig:
         sharpness: float = 2.0,
         smooth: int = 1,
         isolation: float = 0.0,
+        layout_isolation: float = 0.0,
     ):
         self.track = float(track)
         self.refine = int(refine)
@@ -82,6 +84,20 @@ class TrackConfig:
         self.sharpness = float(sharpness)
         self.smooth = int(smooth)
         self.isolation = float(isolation)
+        #: Isolation while the layout forms: in force until the schedule's commit, easing down to
+        #: `isolation` over its ramp. 0 = the same isolation all run.
+        self.layout_isolation = float(layout_isolation)
+
+    def isolation_at(self, schedule, fraction: float) -> float:
+        """The isolation for this point in the run."""
+        if self.layout_isolation <= self.isolation:
+            return self.isolation
+        commit, ramp = schedule.commit_at, schedule.ramp
+        if fraction < commit:
+            return self.layout_isolation
+        t = 1.0 if ramp <= 0.0 else min(max((fraction - commit) / ramp, 0.0), 1.0)
+        eased = t * t * (3.0 - 2.0 * t)
+        return self.layout_isolation + (self.isolation - self.layout_isolation) * eased
 
     @property
     def tracking(self) -> bool:
@@ -166,7 +182,8 @@ def _attention_bias(state, config: TrackConfig, q) -> torch.Tensor | None:
     """The logit bias for this step: prompt routing when there are copies, and `isolation`."""
     global _warned
     routed = state.copy_tokens > 0
-    isolate = config.isolation > 0.0 and len(state.regions) >= 2
+    isolation = config.isolation_at(state.schedule, state.fraction)
+    isolate = isolation > 0.0 and len(state.regions) >= 2
     if not routed and not isolate:
         # Decided BEFORE allocating. A `[B, L, L]` matrix is ~35 MB at 4096 tokens, and returning
         # an all-zero one would allocate that per block for nothing and push attention onto its
@@ -184,7 +201,7 @@ def _attention_bias(state, config: TrackConfig, q) -> torch.Tensor | None:
     if txtlen + canvas + state.copy_tokens > seqlen or canvas > current.shape[0]:
         return None
 
-    key = (state.scale, batch, seqlen, q.dtype, q.device, config.isolation, state.copy_tokens)
+    key = (state.scale, batch, seqlen, q.dtype, q.device, isolation, state.copy_tokens)
     if (
         state.bias is not None
         and state.bias[0] is current
@@ -214,7 +231,7 @@ def _attention_bias(state, config: TrackConfig, q) -> torch.Tensor | None:
         # never separated.
         share = claim / claim.sum(dim=-1, keepdim=True).clamp(min=1e-6)
         agreement = (share @ share.transpose(0, 1)).clamp(0.0, 1.0)
-        bias[:, rows, rows] = (-config.isolation * (1.0 - agreement)).to(q.dtype)
+        bias[:, rows, rows] = (-isolation * (1.0 - agreement)).to(q.dtype)
     if routed:
         _route_prompt(bias, state, claim)
     out = bias.unsqueeze(1)  # [B, 1, L, L] so it broadcasts over heads

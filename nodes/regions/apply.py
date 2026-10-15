@@ -237,6 +237,7 @@ class NynxzRegionsApply(RegionNode):
         sharpness=2.0,
         layout_lock=0.0,
         prompt_follows_schedule=True,
+        layout_isolation=0.0,
     ) -> io.NodeOutput:
         total_blocks = check_krea2(model, "Regions Apply")
         entries = list(regions or [])
@@ -301,6 +302,7 @@ class NynxzRegionsApply(RegionNode):
             sharpness=sharpness,
             smooth=smooth,
             isolation=isolation,
+            layout_isolation=layout_isolation,
         )
 
         patched.set_model_patch(_patches.post_input_patch(state, text), "post_input")
@@ -393,6 +395,11 @@ def _summary(report, config, schedule, total_blocks, text=None, layout_lock=0.0)
         lines.append(
             f"layout lock: the base model's layout for the first {min(layout_lock, 1.0):.0%} of "
             "steps, each run twice"
+        )
+    if config.layout_isolation > config.isolation:
+        lines.append(
+            f"layout isolation: {config.layout_isolation:.2f} until the commit, easing to "
+            f"{config.isolation:.2f}"
         )
     lines.append(
         f"isolation: {config.isolation:.2f}"

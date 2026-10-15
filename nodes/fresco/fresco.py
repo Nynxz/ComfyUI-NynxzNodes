@@ -269,6 +269,18 @@ class NynxzFrescoApply(FrescoNode):
                         "Apply). Costs shared lighting; keep it low.",
                     )
                 ),
+                io.Float.Input(
+                    "layout_isolation",
+                    default=2.0,
+                    min=0.0,
+                    max=8.0,
+                    step=0.1,
+                    tooltip="How strongly the layers are kept apart while the layout forms, so "
+                    "each one follows its own prompt instead of the picture averaging them. In "
+                    "force until commit_at, then eases to `isolation` so lighting and edges can "
+                    "blend. 0 = off. Raise it if layers ignore their prompts; lower it if the "
+                    "result looks like a collage.",
+                ),
             ],
             outputs=[
                 io.Model.Output(display_name="model"),
@@ -294,6 +306,7 @@ class NynxzFrescoApply(FrescoNode):
         layout_lock=0.0,
         isolation=0.0,
         lora_warmup=0.35,
+        layout_isolation=2.0,
         commit_at=0.3,
         track=0.0,
         release=0.15,
@@ -312,6 +325,7 @@ class NynxzFrescoApply(FrescoNode):
                 track=track,
                 release=release,
                 prompt_follows_schedule=False,
+                layout_isolation=layout_isolation,
             ).result[0]
         else:
             logging.info(
