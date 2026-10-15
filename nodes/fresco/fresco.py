@@ -36,7 +36,7 @@ from ..fusion.fusion_input import _load_image, _resolve_path
 from ..regions._io_types import Regions
 from ..regions.apply import NynxzRegionsApply
 from ..regions.latent import NynxzRegionLatent
-from . import _scene
+from . import _layout, _scene
 from ._base import FrescoNode
 from ._io_types import Fresco, FrescoSceneType
 
@@ -82,9 +82,9 @@ def _fusion_settings(layer: dict, visual_size: int) -> FusionSettings:
     return settings
 
 
-def _conditioning(clip, layer: dict, scene_prompt: str, visual_size: int, where: str):
+def _conditioning(clip, layer: dict, scene_prompt: str, visual_size: int, where: str, images=None):
     """A layer's own conditioning, or None when it has nothing to say."""
-    images, strengths, fits = _references(layer["refs"], where)
+    images, strengths, fits = images or _references(layer["refs"], where)
     prompt = layer["prompt"]
     if images:
         encoded = encode_fusion(
@@ -101,7 +101,10 @@ def _conditioning(clip, layer: dict, scene_prompt: str, visual_size: int, where:
     return None
 
 
-def _region(clip, layer, mask, scene_prompt, visual_size, where) -> dict:
+def _region(
+    clip, layer, mask, scene_prompt, visual_size, where
+) -> tuple[dict, torch.Tensor | None]:
+    """The layer as a region, and its first reference (for the layout image)."""
     region = {
         "mask": mask,
         "fit": "stretch",
@@ -112,11 +115,12 @@ def _region(clip, layer, mask, scene_prompt, visual_size, where) -> dict:
     }
     if layer["prompt"]:
         region["prompt"] = layer["prompt"]
-    conditioning = _conditioning(clip, layer, scene_prompt, visual_size, where)
+    loaded = _references(layer["refs"], where)
+    conditioning = _conditioning(clip, layer, scene_prompt, visual_size, where, loaded)
     if conditioning is not None:
         region["conditioning"] = conditioning
         region.setdefault("prompt", scene_prompt)
-    return region
+    return region, (loaded[0][0] if loaded[0] else None)
 
 
 class NynxzFresco(FrescoNode):
@@ -153,20 +157,24 @@ class NynxzFresco(FrescoNode):
         size = _scene.working_size(width, height)
         masks, rest = _scene.compose(layers, size, (height, width), settings["overlap"])
         visual_size = settings["visual_size"]
-        regions = []
+        regions, layout = [], []
         for index, (layer, mask) in enumerate(zip(layers, masks, strict=True)):
             if float(mask.max()) <= 0.0:
                 logging.warning(
                     "Nynxz Fresco: layer '%s' is entirely covered by the layers above it.",
                     layer["name"],
                 )
-            regions.append(
-                _region(clip, layer, mask, parsed["prompt"], visual_size, f"layer {index + 1}")
+            region, first = _region(
+                clip, layer, mask, parsed["prompt"], visual_size, f"layer {index + 1}"
             )
+            regions.append(region)
+            layout.append((mask, first))
+        backdrop = None
         if background["on"] and float(rest.max()) > 0.0:
-            regions.append(
-                _region(clip, background, rest, parsed["prompt"], visual_size, "background")
+            region, backdrop = _region(
+                clip, background, rest, parsed["prompt"], visual_size, "background"
             )
+            regions.append(region)
 
         logging.info(
             "Nynxz Fresco: %d region(s) at %dx%d — %s",
@@ -189,6 +197,7 @@ class NynxzFresco(FrescoNode):
                 "height": height,
                 "background_denoise": background["denoise"] if background["on"] else 0.0,
                 "node": str(cls.hidden.unique_id or ""),
+                "layout": {"layers": layout, "background": backdrop},
             }
         )
 
@@ -302,6 +311,18 @@ class NynxzFrescoApply(FrescoNode):
                     "blend. 0 = off. Raise it if layers ignore their prompts; lower it if the "
                     "result looks like a collage.",
                 ),
+                io.Float.Input(
+                    "layout_start",
+                    default=0.0,
+                    min=0.0,
+                    max=0.6,
+                    step=0.05,
+                    tooltip="Start from a blurred picture of the layout instead of pure noise, so "
+                    "the image follows the boxes: each layer's first reference in its box (or a "
+                    "soft shape), over the background's. The share of the run that holds to it — "
+                    "0.15-0.25 steers placement, higher starts to keep its colours. Needs the VAE. "
+                    "0 = off. Ignored when editing an image.",
+                ),
             ],
             outputs=[
                 io.Model.Output(display_name="model"),
@@ -331,6 +352,7 @@ class NynxzFrescoApply(FrescoNode):
         commit_at=0.3,
         track=0.0,
         release=0.15,
+        layout_start=0.0,
     ) -> io.NodeOutput:
         regions = list(fresco.get("regions") or [])
         if _active(regions):
@@ -375,6 +397,32 @@ class NynxzFrescoApply(FrescoNode):
                 "fresco_node": [fresco.get("node", "")],
                 "fresco_size": [int(image.shape[2]), int(image.shape[1])],
             }
+        elif layout_start > 0.0 and vae is not None:
+            latent = _layout_latent(fresco, vae, width, height, layout_start)
         else:
+            if layout_start > 0.0:
+                logging.warning("Nynxz Fresco: layout_start needs the VAE wired into Fresco Apply.")
             latent = empty_latent(width, height, vae)
+        if "noise_mask" in latent:
+            patched = _with_differential_diffusion(patched)
         return io.NodeOutput(patched, fresco["positive"], latent, regions, ui=shown)
+
+
+def _layout_latent(fresco: dict, vae, width: int, height: int, start: float) -> dict:
+    """The layout image encoded, with a noise mask that holds it for the first `start` of the run."""
+    layout = fresco.get("layout") or {}
+    image = _layout.compose(width, height, layout.get("layers") or [], layout.get("background"))
+    samples = vae.encode(image)
+    mask = torch.full((1, 1, samples.shape[-2], samples.shape[-1]), 1.0 - float(start))
+    return {"samples": samples, "noise_mask": mask}
+
+
+def _with_differential_diffusion(model):
+    """`model` reading a graded noise mask as per-pixel start times (core's Differential Diffusion),
+    unless something already set a mask function. The SoftPaint Sampler ignores it and reads the
+    mask itself."""
+    if model.model_options.get("denoise_mask_function") is not None:
+        return model
+    from comfy_extras.nodes_differential_diffusion import DifferentialDiffusion
+
+    return DifferentialDiffusion.execute(model).result[0]
