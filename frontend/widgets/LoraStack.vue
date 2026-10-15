@@ -7,6 +7,7 @@
         v-if="rows.length"
         :ref="(el) => (reorder.el.value = el as HTMLElement | null)"
         class="ls-rows"
+        :class="{ settling }"
         v-bind="reorder.handlers"
       >
         <div
@@ -17,7 +18,9 @@
           :style="
             dragIndex === i
               ? { transform: `translateY(${dragOffset}px)` }
-              : shiftStyle(sortShift(i, dragIndex, dropIndex), stride)
+              : settle?.index === i
+                ? { transform: `translateY(${settle.y}px)` }
+                : shiftStyle(sortShift(i, dragIndex, dropIndex), stride)
           "
         >
           <!-- Reorder and enable stay SEPARATE controls — one grabbed, one clicked, both always
@@ -125,6 +128,7 @@ import { computed, ref } from "vue";
 import { useDragSurface } from "@nynxz/zenkit-nodekit";
 import {
   insertionIndex,
+  landingTop,
   rowStride,
   shiftStyle,
   sortShift,
@@ -232,6 +236,12 @@ function clearAll() {
 // transform — so it is exactly the row you grabbed, at any zoom, with nothing to keep in sync.
 let rowMids: number[] = []; // each row's midpoint at grab time, layout space
 const stride = ref(0); // how far the other rows move aside: the grabbed row and its gap
+let rowTops: number[] = [];
+let rowHeights: number[] = [];
+// On the drop the list takes its new order with transitions off — the rows that moved aside are
+// already where they belong — and only the dropped row glides the little way left to its slot.
+const settling = ref(false);
+const settle = ref<{ index: number; y: number } | null>(null);
 
 const reorder = useDragSurface({
   onStart(ctx) {
@@ -244,11 +254,9 @@ const reorder = useDragSurface({
     // offsetTop/offsetHeight are pre-transform, which is the space ctx.delta already lands in
     // (the helper divides the canvas zoom out), so the two add up without a second correction.
     rowMids = kids.map((k) => k.offsetTop + k.offsetHeight / 2);
-    stride.value = rowStride(
-      kids.map((k) => k.offsetTop),
-      kids.map((k) => k.offsetHeight),
-      i,
-    );
+    rowTops = kids.map((k) => k.offsetTop);
+    rowHeights = kids.map((k) => k.offsetHeight);
+    stride.value = rowStride(rowTops, rowHeights, i);
     dragIndex.value = i;
     dropIndex.value = i;
     dragOffset.value = 0;
@@ -264,12 +272,27 @@ const reorder = useDragSurface({
   onEnd() {
     const from = dragIndex.value;
     const to = dropIndex.value;
+    const offset = dragOffset.value;
     endReorder();
-    if (from < 0 || to < 0 || from === to) return;
-    const moved = rows.value.splice(from, 1)[0];
-    if (!moved) return;
-    rows.value.splice(to, 0, moved);
-    commit();
+    if (from < 0 || to < 0) return;
+    settling.value = true;
+    settle.value = {
+      index: to,
+      y: (rowTops[from] ?? 0) + offset - landingTop(rowTops, rowHeights, from, to),
+    };
+    if (from !== to) {
+      const moved = rows.value.splice(from, 1)[0];
+      if (moved) {
+        rows.value.splice(to, 0, moved);
+        commit();
+      }
+    }
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        settling.value = false;
+        settle.value = null;
+      }),
+    );
   },
 });
 function endReorder() {
@@ -335,6 +358,9 @@ function pickFromBrowse(name: string) {
 }
 /* The grabbed row is lifted, not ghosted — it's the real row, translated, so it stays exactly
    its own size at any canvas zoom. z-index carries it over its neighbours as it passes them. */
+.ls-rows.settling .ls-row {
+  transition: none;
+}
 .ls-row.dragging {
   z-index: 5;
   transition: none;

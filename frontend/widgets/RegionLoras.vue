@@ -8,6 +8,7 @@
     <div
       :ref="(el) => (drag.el.value = el as HTMLElement | null)"
       class="rg-groups"
+      :class="{ settling }"
       v-bind="drag.handlers"
     >
       <div
@@ -344,6 +345,8 @@ interface Zone {
 }
 let zones: Zone[] = [];
 let grabCenter = 0;
+// The swap lands with transitions off: the regions it previewed are already where they go.
+const settling = ref(false);
 
 /** While a region is dragged over another, that one slides into its place — the swap, shown
  *  before the drop. Below the dragged region it takes its top; above it, its bottom. */
@@ -426,6 +429,8 @@ const drag = useDragSurface({
     const id = dragId.value;
     const head = dragHead.value;
     const target = dropRegion.value;
+    settling.value = true;
+    requestAnimationFrame(() => requestAnimationFrame(() => (settling.value = false)));
     dragId.value = -1;
     dragHead.value = -1;
     dropRegion.value = -1;
@@ -484,6 +489,10 @@ const drag = useDragSurface({
 
 .rg-prompt {
   width: 100%;
+}
+.rg-groups.settling .rg-group,
+.rg-groups.settling .rg-row {
+  transition: none;
 }
 .rg-group.lifted {
   position: relative;
