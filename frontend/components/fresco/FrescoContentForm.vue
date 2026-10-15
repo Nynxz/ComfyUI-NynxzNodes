@@ -1,76 +1,107 @@
 <template>
   <div class="fcf">
-    <div class="fcf-label">Prompt</div>
-    <ZenInput
-      ref="promptInput"
-      type="textarea"
-      :rows="promptRows"
-      sm
-      :model-value="content.prompt"
-      :placeholder="promptPlaceholder"
-      @update:model-value="emit('patch', { prompt: String($event ?? '') })"
-    />
+    <FrescoSection label="Prompt">
+      <ZenInput
+        ref="promptInput"
+        type="textarea"
+        :rows="promptRows"
+        sm
+        :model-value="content.prompt"
+        :placeholder="promptPlaceholder"
+        @update:model-value="emit('patch', { prompt: String($event ?? '') })"
+      />
+    </FrescoSection>
 
-    <div class="fcf-label">References</div>
-    <FrescoRefs :model-value="content.refs" @update:model-value="emit('patch', { refs: $event })" />
-    <div class="fcf-grid">
-      <span :title="BLEND_TIP">blend</span>
-      <div class="fcf-pair">
+    <FrescoSection
+      label="References"
+      :note="content.refs.length ? String(content.refs.length) : ''"
+    >
+      <template #actions>
+        <ZenIconButton
+          size="sm"
+          icon="mdi mdi-upload-outline"
+          title="Upload images"
+          :disabled="refsPanel?.busy"
+          @click="refsPanel?.upload()"
+        />
+        <ZenIconButton
+          size="sm"
+          icon="mdi mdi-view-grid-plus-outline"
+          title="Browse images"
+          @click="refsPanel?.openBrowse()"
+        />
+      </template>
+      <FrescoRefs
+        ref="refsPanel"
+        :model-value="content.refs"
+        @update:model-value="emit('patch', { refs: $event })"
+      />
+      <div v-if="activeRefs > 1" class="fcf-row">
+        <span :title="BLEND_TIP">blend</span>
         <ZenSelect
           size="sm"
           :model-value="content.blend"
           :options="BLENDS"
-          :disabled="activeRefs < 2"
           :title="BLEND_TIP"
           @update:model-value="emit('patch', { blend: $event as Blend })"
         />
         <ZenNumber
+          class="fcf-soft"
           size="sm"
           :model-value="content.softness"
           :min="0"
           :max="1"
           :step="0.05"
           :precision="2"
-          :disabled="activeRefs < 2"
           title="Softness between references — 0 hard cells, 1 fully feathered"
           @update:model-value="emit('patch', { softness: $event })"
         />
       </div>
-      <span :title="INFLUENCE_TIP">influence</span>
-      <ZenNumber
-        size="sm"
-        :model-value="content.influence"
-        :min="0"
-        :max="4"
-        :step="0.05"
-        :precision="2"
-        :title="INFLUENCE_TIP"
-        @update:model-value="emit('patch', { influence: $event })"
-      />
-    </div>
+    </FrescoSection>
 
-    <div class="fcf-label">LoRAs</div>
-    <FrescoLoras
-      :model-value="content.loras"
-      @update:model-value="emit('patch', { loras: $event })"
-    />
+    <FrescoSection label="LoRAs" :note="content.loras.length ? String(content.loras.length) : ''">
+      <template #actions>
+        <ZenIconButton size="sm" icon="mdi mdi-plus" title="Add a LoRA" @click="addLora" />
+      </template>
+      <FrescoLoras
+        v-if="content.loras.length"
+        :model-value="content.loras"
+        @update:model-value="emit('patch', { loras: $event })"
+      />
+    </FrescoSection>
 
     <slot />
 
-    <div class="fcf-label">Edit</div>
-    <div class="fcf-grid">
-      <span :title="DENOISE_TIP">denoise</span>
-      <ZenNumber
-        size="sm"
-        :model-value="content.denoise"
-        :min="0"
-        :max="1"
-        :step="0.05"
-        :precision="2"
-        :title="DENOISE_TIP"
-        @update:model-value="emit('patch', { denoise: $event })"
-      />
-    </div>
+    <FrescoSection label="Strength">
+      <div class="fcf-pairs">
+        <label class="fcf-pair">
+          <span :title="INFLUENCE_TIP">influence</span>
+          <ZenNumber
+            size="sm"
+            :model-value="content.influence"
+            :min="0"
+            :max="4"
+            :step="0.05"
+            :precision="2"
+            :title="INFLUENCE_TIP"
+            @update:model-value="emit('patch', { influence: $event })"
+          />
+        </label>
+        <label class="fcf-pair">
+          <span :title="DENOISE_TIP">denoise</span>
+          <ZenNumber
+            size="sm"
+            :model-value="content.denoise"
+            :min="0"
+            :max="1"
+            :step="0.05"
+            :precision="2"
+            :title="DENOISE_TIP"
+            @update:model-value="emit('patch', { denoise: $event })"
+          />
+        </label>
+      </div>
+    </FrescoSection>
   </div>
 </template>
 
@@ -78,16 +109,17 @@
 /**
  * What a layer — or the background — carries: its prompt, references and how they blend, how
  * strongly the area follows them, its LoRAs, and how much of a source image it may rewrite. The
- * default slot sits between the LoRAs and the edit fields, for the layer's shape.
+ * default slot sits between the LoRAs and the strengths, for the layer's capture and shape.
  *
  * Every number is a ZenNumber: drag to scrub, the steppers, or type an exact value.
  */
 import { computed, ref } from "vue";
-import { ZenInput, ZenNumber, ZenSelect } from "@nynxz/zenkit-ui";
+import { ZenIconButton, ZenInput, ZenNumber, ZenSelect } from "@nynxz/zenkit-ui";
 
 import FrescoLoras from "@/components/fresco/FrescoLoras.vue";
 import FrescoRefs from "@/components/fresco/FrescoRefs.vue";
-import { BLENDS, type Blend, type FrescoContent } from "@/lib/frescoScene";
+import FrescoSection from "@/components/fresco/FrescoSection.vue";
+import { BLENDS, uid, type Blend, type FrescoContent } from "@/lib/frescoScene";
 
 const props = withDefaults(
   defineProps<{ content: FrescoContent; promptPlaceholder?: string; promptRows?: number }>(),
@@ -109,6 +141,12 @@ const DENOISE_TIP =
 const activeRefs = computed(() => props.content.refs.filter((r) => r.on).length);
 
 const promptInput = ref<{ $el?: HTMLElement } | null>(null);
+const refsPanel = ref<InstanceType<typeof FrescoRefs> | null>(null);
+function addLora() {
+  emit("patch", {
+    loras: [...props.content.loras, { id: uid("o"), name: "", strength: 1, on: true }],
+  });
+}
 defineExpose({
   focusPrompt: () => promptInput.value?.$el?.querySelector?.("textarea")?.focus(),
 });
@@ -118,32 +156,28 @@ defineExpose({
 .fcf {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
 }
 .fcf > * {
   flex: none;
 }
-.fcf-label {
-  margin-top: 6px;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--zen-muted, #9aa0aa);
-}
-.fcf-label:first-child {
-  margin-top: 0;
-}
-.fcf-grid {
+.fcf-row {
   display: grid;
-  grid-template-columns: 62px minmax(0, 1fr);
+  grid-template-columns: 52px minmax(0, 1fr) 92px;
   align-items: center;
   gap: 6px;
   color: var(--zen-muted, #9aa0aa);
 }
+.fcf-pairs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 6px 10px;
+}
 .fcf-pair {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 72px;
+  grid-template-columns: 52px minmax(0, 1fr);
+  align-items: center;
   gap: 6px;
+  color: var(--zen-muted, #9aa0aa);
 }
 </style>

@@ -18,7 +18,6 @@
       />
       <ZenIconButton size="sm" icon="mdi mdi-close" title="Remove" @click="remove(i)" />
     </div>
-    <ZenButton sm icon="mdi mdi-plus" @click="addRow">LoRA</ZenButton>
     <LoraBrowser v-model:open="browse" :selected="loras[target]?.name" @pick="pickFromBrowse" />
   </div>
 </template>
@@ -29,14 +28,13 @@ import { ref } from "vue";
 import {
   LoraBrowser,
   LoraPicker,
-  ZenButton,
   ZenDot,
   ZenIconButton,
   ZenNumber,
   loraLibrary,
 } from "@nynxz/zenkit-ui";
 
-import { uid, type FrescoLora } from "@/lib/frescoScene";
+import type { FrescoLora } from "@/lib/frescoScene";
 
 const loras = defineModel<FrescoLora[]>({ required: true });
 if (loras.value.some((r) => r.name)) void loraLibrary.ensure();
@@ -49,9 +47,6 @@ function patch(i: number, fields: Partial<FrescoLora>) {
 }
 function remove(i: number) {
   loras.value = loras.value.filter((_, j) => j !== i);
-}
-function addRow() {
-  loras.value = [...loras.value, { id: uid("o"), name: "", strength: 1, on: true }];
 }
 function openBrowse(i: number) {
   target.value = i;
@@ -69,9 +64,6 @@ function pickFromBrowse(name: string) {
   flex-direction: column;
   gap: 4px;
   align-items: stretch;
-}
-.fl > :last-child {
-  align-self: flex-start;
 }
 .fl-row {
   display: flex;

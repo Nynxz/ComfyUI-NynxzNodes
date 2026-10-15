@@ -44,20 +44,17 @@
       />
     </div>
 
-    <div class="fr-tile">
-      <button
-        type="button"
-        class="fr-add"
-        :disabled="busy"
-        title="Add reference images — or drop them here"
-        @click="fileInput?.click()"
-      >
-        <i class="mdi" :class="busy ? 'mdi-loading mdi-spin' : 'mdi-image-plus-outline'" />
-      </button>
-      <button type="button" class="fr-browse" title="Browse images" @click="browse = true">
-        browse
-      </button>
-    </div>
+    <button
+      v-if="!refs.length"
+      type="button"
+      class="fr-empty"
+      :disabled="busy"
+      title="Browse images — or drop them here"
+      @click="browse = true"
+    >
+      <i class="mdi" :class="busy ? 'mdi-loading mdi-spin' : 'mdi-image-plus-outline'" />
+      Drop images, or browse
+    </button>
 
     <input
       ref="fileInput"
@@ -81,9 +78,9 @@
 
 <script setup lang="ts">
 /**
- * A layer's reference images as a row of tiles, the add tile always last — so adding the first
- * image doesn't change the block's height. Each has a strength, a fit and a mute; several on one
- * layer blend into its conditioning the way Text Encode (Fusion) blends them.
+ * A layer's reference images as a row of tiles, or a slim drop strip while there are none. Each
+ * has a strength, a fit and a mute; several on one layer blend into its conditioning the way Text
+ * Encode (Fusion) blends them. The section header adds through `upload` and `openBrowse`.
  */
 import { ref } from "vue";
 import { ZenMediaPicker, ZenNumber } from "@nynxz/zenkit-ui";
@@ -173,6 +170,11 @@ async function onDrop(e: DragEvent) {
     busy.value = false;
   }
 }
+defineExpose({
+  upload: () => fileInput.value?.click(),
+  openBrowse: () => (browse.value = true),
+  busy,
+});
 function addPicked(picked: string[]) {
   add(
     picked.map((ref) => {
@@ -254,36 +256,30 @@ function addPicked(picked: string[]) {
 .fr-str {
   width: 64px;
 }
-.fr-add {
-  display: grid;
-  place-items: center;
-  width: 64px;
-  height: 64px;
+.fr-empty {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 30px;
   padding: 0;
   border: 1px dashed var(--zen-border, #34343c);
   border-radius: 6px;
   background: transparent;
   color: var(--zen-muted, #9aa0aa);
-  font-size: 22px;
+  font: inherit;
+  font-size: 11px;
   cursor: pointer;
   transition:
     border-color 0.12s ease,
     color 0.12s ease;
 }
-.fr-add:hover {
+.fr-empty:hover {
   border-color: var(--zen-accent, #6366f1);
   color: var(--zen-text, #e5e5ea);
 }
-.fr-browse {
-  height: 22px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--zen-muted, #9aa0aa);
-  font-size: 10px;
-  cursor: pointer;
-}
-.fr-browse:hover {
-  color: var(--zen-text, #e5e5ea);
+.fr-empty .mdi {
+  font-size: 15px;
 }
 </style>

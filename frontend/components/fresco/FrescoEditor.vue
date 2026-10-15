@@ -283,98 +283,86 @@
                   prompt-placeholder="What goes here — write it out in full. Empty: the scene prompt, read against the references"
                   @patch="patchCurrent"
                 >
-                  <div class="fs-label">
-                    Capture <span class="fs-label-note">SAM3, inside the box</span>
-                  </div>
-                  <ZenInput
-                    sm
-                    :model-value="currentLayer.capture"
-                    placeholder="What to capture, e.g. jacket, -hands — or click with the wand"
-                    @update:model-value="patchCurrent({ capture: String($event ?? '') })"
-                    @keydown.enter="segment"
-                  />
-                  <div class="fs-row">
-                    <span class="fs-note">
-                      {{ currentLayer.points.length }} point{{
-                        currentLayer.points.length === 1 ? "" : "s"
-                      }}
-                      <template v-if="segmenting"> · segmenting…</template>
-                    </span>
-                    <span class="fs-row-end">
-                      <ZenButton
-                        sm
-                        icon="mdi mdi-close"
-                        :disabled="!currentLayer.points.length"
+                  <FrescoSection label="Capture" :note="captureNote">
+                    <template #actions>
+                      <ZenIconButton
+                        v-if="currentLayer.points.length"
+                        size="sm"
+                        icon="mdi mdi-close-circle-outline"
                         title="Clear the click points"
                         @click="patchCurrent({ points: [] })"
-                      >
-                        Points
-                      </ZenButton>
-                      <ZenButton
-                        sm
+                      />
+                      <ZenIconButton
+                        size="sm"
                         icon="mdi mdi-auto-fix"
                         :disabled="
                           segmenting ||
                           (!currentLayer.capture.trim() && !currentLayer.points.length)
                         "
-                        title="Run SAM3 for this layer now (Fresco runs on its own)"
+                        title="Segment now with SAM3 (Fresco runs on its own)"
                         @click="segment"
-                      >
-                        Segment
-                      </ZenButton>
-                    </span>
-                  </div>
-                  <div class="fs-label">Shape</div>
-                  <div class="fs-grid">
-                    <span :title="GROW_TIP">grow</span>
-                    <ZenNumber
-                      size="sm"
-                      :model-value="currentLayer.grow"
-                      :min="-256"
-                      :max="256"
-                      :step="1"
-                      :precision="0"
-                      :title="GROW_TIP"
-                      @update:model-value="patchCurrent({ grow: Math.round($event) })"
-                    />
-                  </div>
-                  <div class="fs-grid">
-                    <span title="Soften the edge, in canvas pixels">feather</span>
-                    <ZenNumber
-                      size="sm"
-                      :model-value="currentLayer.feather"
-                      :min="0"
-                      :max="256"
-                      :step="1"
-                      :precision="0"
-                      title="Soften the edge, in canvas pixels"
-                      @update:model-value="patchCurrent({ feather: Math.round($event) })"
-                    />
-                  </div>
-                  <div class="fs-grid">
-                    <span :title="SHAPE_TIP">shape for</span>
-                    <FrescoPills
-                      :model-value="currentLayer.shapeFor"
-                      :options="SHAPE_FOR"
-                      :disabled="!currentLayer.mask"
-                      @update:model-value="patchCurrent({ shapeFor: $event as 'layer' | 'refs' })"
-                    />
-                  </div>
-                  <div class="fs-row">
-                    <span class="fs-note">
-                      {{ currentLayer.mask ? "Painted shape" : "The whole box" }} ·
-                      <kbd>B</kbd> paint · <kbd>E</kbd> erase
-                    </span>
-                    <ZenButton
+                      />
+                    </template>
+                    <ZenInput
                       sm
-                      icon="mdi mdi-crop-square"
-                      :disabled="!currentLayer.mask"
-                      title="Clear the painted shape — the layer becomes its whole box"
-                      @click="setMask(currentLayer.id, null)"
-                    >
-                      Box
-                    </ZenButton>
-                  </div>
+                      :model-value="currentLayer.capture"
+                      placeholder="e.g. jacket, -hands — or click with the wand (W)"
+                      @update:model-value="patchCurrent({ capture: String($event ?? '') })"
+                      @keydown.enter="segment"
+                    />
+                  </FrescoSection>
+                  <FrescoSection
+                    label="Shape"
+                    :note="
+                      currentLayer.mask ? 'painted · B paint, E erase' : 'whole box · B to paint'
+                    "
+                  >
+                    <template #actions>
+                      <ZenIconButton
+                        v-if="currentLayer.mask"
+                        size="sm"
+                        icon="mdi mdi-crop-square"
+                        title="Clear the shape — the layer becomes its whole box"
+                        @click="setMask(currentLayer.id, null)"
+                      />
+                    </template>
+                    <div class="fs-pairs">
+                      <label class="fs-pair">
+                        <span :title="GROW_TIP">grow</span>
+                        <ZenNumber
+                          size="sm"
+                          :model-value="currentLayer.grow"
+                          :min="-256"
+                          :max="256"
+                          :step="1"
+                          :precision="0"
+                          :title="GROW_TIP"
+                          @update:model-value="patchCurrent({ grow: Math.round($event) })"
+                        />
+                      </label>
+                      <label class="fs-pair">
+                        <span title="Soften the edge, in canvas pixels">feather</span>
+                        <ZenNumber
+                          size="sm"
+                          :model-value="currentLayer.feather"
+                          :min="0"
+                          :max="256"
+                          :step="1"
+                          :precision="0"
+                          title="Soften the edge, in canvas pixels"
+                          @update:model-value="patchCurrent({ feather: Math.round($event) })"
+                        />
+                      </label>
+                    </div>
+                    <div v-if="currentLayer.mask" class="fs-grid">
+                      <span :title="SHAPE_TIP">shape for</span>
+                      <FrescoPills
+                        :model-value="currentLayer.shapeFor"
+                        :options="SHAPE_FOR"
+                        @update:model-value="patchCurrent({ shapeFor: $event as 'layer' | 'refs' })"
+                      />
+                    </div>
+                  </FrescoSection>
                 </FrescoContentForm>
 
                 <p v-else-if="selected.length > 1" class="fs-note fs-pad">
@@ -383,18 +371,45 @@
                 </p>
 
                 <div v-else class="fs-form">
-                  <div class="fs-label">Scene prompt</div>
-                  <ZenInput
-                    type="textarea"
-                    :rows="3"
-                    sm
-                    :model-value="scene.prompt"
-                    placeholder="The whole picture — Fresco Apply's positive"
-                    @update:model-value="patchScene({ prompt: String($event ?? '') })"
-                  />
-                  <div class="fs-label fs-section">
-                    Background
-                    <span class="fs-label-note">wherever no layer is</span>
+                  <FrescoSection label="Scene prompt">
+                    <ZenInput
+                      type="textarea"
+                      :rows="3"
+                      sm
+                      :model-value="scene.prompt"
+                      placeholder="The whole picture — Fresco Apply's positive"
+                      @update:model-value="patchScene({ prompt: String($event ?? '') })"
+                    />
+                  </FrescoSection>
+                  <FrescoSection label="Settings">
+                    <div
+                      class="fs-grid"
+                      title="How overlapping layers share the pixels they both cover"
+                    >
+                      <span>overlap</span>
+                      <FrescoPills
+                        :model-value="scene.settings.overlap"
+                        :options="OVERLAPS"
+                        @update:model-value="patchSettings({ overlap: $event as Overlap })"
+                      />
+                    </div>
+                    <div
+                      class="fs-grid"
+                      title="Resolution reference images are read at. Higher reads more detail and costs more tokens in every layer's copy of the prompt."
+                    >
+                      <span>ref detail</span>
+                      <ZenNumber
+                        size="sm"
+                        :model-value="scene.settings.visual_size"
+                        :min="128"
+                        :max="1024"
+                        :step="32"
+                        @update:model-value="patchSettings({ visual_size: $event })"
+                      />
+                    </div>
+                  </FrescoSection>
+                  <div class="fs-group">
+                    Background <span class="fs-group-note">wherever no layer is</span>
                   </div>
                   <FrescoContentForm
                     :content="scene.background"
@@ -402,31 +417,6 @@
                     prompt-placeholder="Optional — what fills the rest of the frame"
                     @patch="patchBackground"
                   />
-                  <div class="fs-label">Settings</div>
-                  <label
-                    class="fs-field wide"
-                    title="How overlapping layers share the pixels they both cover"
-                  >
-                    <span>overlap</span>
-                    <FrescoPills
-                      :model-value="scene.settings.overlap"
-                      :options="OVERLAPS"
-                      @update:model-value="patchSettings({ overlap: $event as Overlap })"
-                    />
-                  </label>
-                  <label
-                    class="fs-field wide"
-                    title="Resolution reference images are read at. Higher reads more detail and costs more tokens in every layer's copy of the prompt."
-                  >
-                    <span>ref detail</span>
-                    <ZenNumber
-                      :model-value="scene.settings.visual_size"
-                      :min="128"
-                      :max="1024"
-                      :step="32"
-                      @update:model-value="patchSettings({ visual_size: $event })"
-                    />
-                  </label>
                 </div>
               </ZenScroll>
             </section>
@@ -486,6 +476,7 @@ import {
 import FrescoBoxFace from "@/components/fresco/FrescoBoxFace.vue";
 import FrescoContentForm from "@/components/fresco/FrescoContentForm.vue";
 import FrescoPills from "@/components/fresco/FrescoPills.vue";
+import FrescoSection from "@/components/fresco/FrescoSection.vue";
 import { thumbUrl, type SourceType } from "@/lib/fusionApi";
 import {
   BACKGROUND_ID,
@@ -860,6 +851,11 @@ function onPointUp(e: PointerEvent, index: number) {
 }
 
 const segmenting = ref(false);
+const captureNote = computed(() => {
+  if (segmenting.value) return "segmenting…";
+  const n = currentLayer.value?.points.length ?? 0;
+  return n ? `${n} point${n === 1 ? "" : "s"} · SAM3` : "SAM3, inside the box";
+});
 let segmentTimer: ReturnType<typeof setTimeout> | undefined;
 let segmentWatchdog: ReturnType<typeof setTimeout> | undefined;
 /** Segment shortly after the clicks stop, so a few quick clicks make one run. */
@@ -1174,10 +1170,6 @@ onBeforeUnmount(() => api.removeEventListener("executed", onExecuted));
 .fs-point.out {
   background: #ef4444;
 }
-.fs-row-end {
-  display: flex;
-  gap: 6px;
-}
 .fs-help {
   display: grid;
   grid-template-columns: auto auto;
@@ -1292,29 +1284,10 @@ onBeforeUnmount(() => api.removeEventListener("executed", onExecuted));
 .fs-form {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
 }
 .fs-form > * {
   flex: none;
-}
-.fs-label {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  margin-top: 6px;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--zen-muted, #9aa0aa);
-}
-.fs-label:first-child {
-  margin-top: 0;
-}
-.fs-label-note {
-  font-weight: 400;
-  letter-spacing: 0;
-  text-transform: none;
 }
 .fs-grid {
   display: grid;
@@ -1323,37 +1296,34 @@ onBeforeUnmount(() => api.removeEventListener("executed", onExecuted));
   gap: 6px;
   color: var(--zen-muted, #9aa0aa);
 }
-.fs-section {
-  margin-top: 12px;
-  padding-top: 8px;
-  border-top: 1px solid var(--zen-border, #34343c);
-}
-.fs-field {
+.fs-pairs {
   display: grid;
-  grid-template-columns: 58px 1fr 42px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 6px 10px;
+}
+.fs-pair {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
   align-items: center;
   gap: 6px;
   color: var(--zen-muted, #9aa0aa);
 }
-.fs-field.wide {
-  grid-template-columns: 58px 1fr;
+.fs-group {
+  margin-top: 6px;
+  padding: 6px 0 0;
+  border-top: 1px solid var(--zen-border, #34343c);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--zen-text, #e5e5ea);
 }
-.fs-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
+.fs-group-note {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--zen-muted, #9aa0aa);
 }
 .fs-note {
   font-size: 11px;
   color: var(--zen-muted, #9aa0aa);
-}
-.fs-note kbd {
-  padding: 0 4px;
-  border: 1px solid var(--zen-border, #34343c);
-  border-radius: 3px;
-  font-family: var(--zen-mono, monospace);
-  font-size: 10px;
 }
 .fs-pad {
   margin: 0;
