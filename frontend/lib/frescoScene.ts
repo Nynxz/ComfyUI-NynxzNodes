@@ -53,6 +53,13 @@ export const BLENDS: { value: Blend; label: string; title: string }[] = [
   },
 ];
 
+export interface FrescoPoint {
+  x: number;
+  y: number;
+  /** Include this spot, or exclude it. */
+  include: boolean;
+}
+
 export interface FrescoLayer extends FrescoContent {
   id: string;
   name: string;
@@ -64,6 +71,12 @@ export interface FrescoLayer extends FrescoContent {
   mask: string | null;
   /** What the painted shape limits: the whole layer, or only where its references are read. */
   shapeFor: "layer" | "refs";
+  /** SAM3: what to capture in the box, by text (signed: "jacket, -hands")… */
+  capture: string;
+  /** …and/or click points, as fractions of the canvas. */
+  points: FrescoPoint[];
+  /** The segmentation the current mask came from (set by the backend). */
+  maskSource: string;
   feather: number;
   locked: boolean;
 }
@@ -199,6 +212,13 @@ export function parseScene(value: unknown): FrescoScene {
         mask: typeof l.mask === "string" && l.mask.startsWith("data:image/") ? l.mask : null,
         feather: Math.max(0, Math.round(num(l.feather, 16))),
         shapeFor: l.shapeFor === "refs" ? "refs" : "layer",
+        capture: String(l.capture ?? ""),
+        points: list(l.points).map((pt) => ({
+          x: clamp01(num(pt.x, 0)),
+          y: clamp01(num(pt.y, 0)),
+          include: pt.include !== false,
+        })),
+        maskSource: String(l.maskSource ?? ""),
         locked: l.locked === true,
       };
     }),
@@ -223,6 +243,9 @@ export function newLayer(
     ...rect,
     mask: null,
     shapeFor: "layer",
+    capture: "",
+    points: [],
+    maskSource: "",
     feather: 16,
     locked: false,
   };

@@ -12,9 +12,16 @@
         :key="t.value"
         size="sm"
         :icon="t.icon"
-        :active="tool === t.value"
+        :active="!wand && tool === t.value"
         :title="t.title"
-        @click="tool = t.value"
+        @click="pickTool(t.value)"
+      />
+      <ZenIconButton
+        size="sm"
+        icon="mdi mdi-auto-fix"
+        :active="wand"
+        title="Select with SAM3 — click what to capture, Alt+click what to leave out (W). Needs a photo and SAM3 wired into Fresco."
+        @click="setWand(!wand)"
       />
       <span class="fs-rail-sep" />
       <ZenIconButton
@@ -182,6 +189,18 @@
                   :mask-style="maskStyle"
                 />
               </template>
+              <template #overlay>
+                <div v-if="wand" class="fs-wand" @pointerdown.stop.prevent="onWandClick" />
+                <template v-if="currentLayer">
+                  <span
+                    v-for="(pt, i) in currentLayer.points"
+                    :key="i"
+                    class="fs-point"
+                    :class="{ out: !pt.include }"
+                    :style="{ left: `${pt.x * 100}%`, top: `${pt.y * 100}%` }"
+                  />
+                </template>
+              </template>
               <template #empty>
                 <div class="fs-hint-empty">
                   <i class="mdi mdi-gesture-tap-box" />
@@ -259,6 +278,47 @@
                   prompt-placeholder="What goes here — write it out in full. Empty: the scene prompt, read against the references"
                   @patch="patchCurrent"
                 >
+                  <div class="fs-label">
+                    Capture <span class="fs-label-note">SAM3, inside the box</span>
+                  </div>
+                  <ZenInput
+                    sm
+                    :model-value="currentLayer.capture"
+                    placeholder="What to capture, e.g. jacket, -hands — or click with the wand"
+                    @update:model-value="patchCurrent({ capture: String($event ?? '') })"
+                    @keydown.enter="segment"
+                  />
+                  <div class="fs-row">
+                    <span class="fs-note">
+                      {{ currentLayer.points.length }} point{{
+                        currentLayer.points.length === 1 ? "" : "s"
+                      }}
+                      <template v-if="segmenting"> · segmenting…</template>
+                    </span>
+                    <span class="fs-row-end">
+                      <ZenButton
+                        sm
+                        icon="mdi mdi-close"
+                        :disabled="!currentLayer.points.length"
+                        title="Clear the click points"
+                        @click="patchCurrent({ points: [] })"
+                      >
+                        Points
+                      </ZenButton>
+                      <ZenButton
+                        sm
+                        icon="mdi mdi-auto-fix"
+                        :disabled="
+                          segmenting ||
+                          (!currentLayer.capture.trim() && !currentLayer.points.length)
+                        "
+                        title="Run SAM3 for this layer now (Fresco runs on its own)"
+                        @click="segment"
+                      >
+                        Segment
+                      </ZenButton>
+                    </span>
+                  </div>
                   <div class="fs-label">Shape</div>
                   <div class="fs-grid">
                     <span title="Soften the edge, in canvas pixels">feather</span>
@@ -382,6 +442,7 @@
  */
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 import { api } from "@comfy/api";
+import { app } from "@comfy/app";
 import { hasMediaDrop, hasZenPanels, mediaLibrary, readMediaDrop } from "@/framework";
 import { sharedScene } from "@/lib/frescoStore";
 import {
@@ -586,6 +647,7 @@ const HELP: [string, string][] = [
   ["Arrows", "nudge — Shift for more"],
   ["Delete", "remove the selected layers"],
   ["V · B · E", "select · paint the shape · erase it"],
+  ["W", "SAM3 wand — click what to capture, Alt+click to leave out"],
   ["[  ]  or wheel", "brush size, while painting"],
   ["Alt while dragging", "no snapping"],
 ];
@@ -646,7 +708,91 @@ const wheel = useWheelClaim({
   focusTarget: () => wheel.el.value?.querySelector<HTMLElement>(".zbc") ?? null,
 });
 
+// --- SAM3: the wand, and running Fresco alone to segment -------------------------------------------
+
+const wand = ref(false);
+function setWand(on: boolean) {
+  wand.value = on;
+  if (on) tool.value = "select";
+}
+function pickTool(t: BoxTool) {
+  wand.value = false;
+  tool.value = t;
+}
+
+/** A click with the wand: a point on the layer under it (the selected one first), or a new layer
+ *  around it on empty canvas. Alt leaves the spot out instead. */
+function onWandClick(e: PointerEvent) {
+  const stage = wheel.el.value?.querySelector<HTMLElement>(".zbc");
+  const rect = stage?.getBoundingClientRect();
+  if (!rect?.width) return;
+  const x = (e.clientX - rect.left) / rect.width;
+  const y = (e.clientY - rect.top) / rect.height;
+  const point = { x, y, include: !e.altKey };
+  const inside = (l: FrescoLayer) => x >= l.x && x <= l.x + l.w && y >= l.y && y <= l.y + l.h;
+  const selectedLayer = currentLayer.value;
+  const hit =
+    selectedLayer && selectedLayer.on && inside(selectedLayer)
+      ? selectedLayer
+      : boxAt(boxes.value, x, y)
+        ? scene.value.layers.find((l) => l.id === boxAt(boxes.value, x, y)!.id)
+        : undefined;
+  if (hit) {
+    selected.value = [hit.id];
+    updateLayers((l) => (l.id === hit.id ? { ...l, points: [...l.points, point] } : l));
+  } else {
+    if (!point.include) return;
+    const w = 0.3;
+    const h = Math.min(0.9, (w * scene.value.width) / scene.value.height);
+    createLayer({
+      x: Math.min(1 - w, Math.max(0, x - w / 2)),
+      y: Math.min(1 - h, Math.max(0, y - h / 2)),
+      w,
+      h,
+    });
+    tool.value = "select";
+    const id = selected.value[0];
+    updateLayers((l) => (l.id === id ? { ...l, points: [point] } : l));
+  }
+  scheduleSegment();
+}
+
+const segmenting = ref(false);
+let segmentTimer: ReturnType<typeof setTimeout> | undefined;
+let segmentWatchdog: ReturnType<typeof setTimeout> | undefined;
+/** Segment shortly after the clicks stop, so a few quick clicks make one run. */
+function scheduleSegment() {
+  clearTimeout(segmentTimer);
+  segmentTimer = setTimeout(() => void segment(), 700);
+}
+/** Run Fresco on its own — a queued job, as GPU work must be — and take its masks back. */
+async function segment() {
+  clearTimeout(segmentTimer);
+  if (segmenting.value || props.node?.id == null) return;
+  segmenting.value = true;
+  segmentWatchdog = setTimeout(() => (segmenting.value = false), 120_000);
+  try {
+    await app.queuePrompt(0, 1, [String(props.node.id)]);
+  } catch {
+    segmenting.value = false;
+  }
+}
+function takeMasks(masks: { id: string; mask: string; source: string }[]) {
+  const byId = new Map(masks.map((m) => [m.id, m]));
+  if (byId.size)
+    updateLayers((l) => {
+      const m = byId.get(l.id);
+      return m ? { ...l, mask: m.mask, maskSource: m.source } : l;
+    });
+}
+
 function onKey(e: KeyboardEvent) {
+  if ((e.key === "w" || e.key === "W") && !e.ctrlKey && !e.metaKey) {
+    setWand(!wand.value);
+    e.preventDefault();
+    e.stopPropagation();
+    return;
+  }
   if (tool.value === "select" || (e.key !== "[" && e.key !== "]")) return;
   const step = e.key === "]" ? 1.2 : 1 / 1.2;
   brushSize.value = Math.min(0.3, Math.max(0.01, brushSize.value * step));
@@ -789,7 +935,13 @@ function isMine(id: unknown): boolean {
 }
 function onExecuted(e: Event) {
   const output = (e as CustomEvent).detail?.output as Record<string, unknown[]> | undefined;
-  if (!output?.fresco_node?.some(isMine) || backdrop.value?.pinned) return;
+  if (!output?.fresco_node?.some(isMine)) return;
+  if (Array.isArray(output.fresco_masks)) {
+    takeMasks(output.fresco_masks as { id: string; mask: string; source: string }[]);
+    segmenting.value = false;
+    clearTimeout(segmentWatchdog);
+  }
+  if (backdrop.value?.pinned) return;
   const image = output.fresco_source?.[0] as
     { filename: string; subfolder?: string; type?: string } | undefined;
   if (!image) return;
@@ -891,6 +1043,29 @@ onBeforeUnmount(() => api.removeEventListener("executed", onExecuted));
   padding: 0 4px;
   color: var(--zen-muted, #9aa0aa);
   font-size: 11px;
+}
+.fs-wand {
+  position: absolute;
+  inset: 0;
+  cursor: crosshair;
+}
+.fs-point {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 50%);
+  pointer-events: none;
+}
+.fs-point.out {
+  background: #ef4444;
+}
+.fs-row-end {
+  display: flex;
+  gap: 6px;
 }
 .fs-help {
   display: grid;
