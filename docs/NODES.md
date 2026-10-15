@@ -42,7 +42,14 @@ Regions from Masks ──> Region LoRAs ──> Regions Apply ──> MODEL ─�
   the commit schedule, which a stock `LoraLoader` can't.
 - **Region Denoise** — how much of one region may be rewritten.
 - **Region Latent** — encodes the source image and grades the denoise per region, so the background
-  survives while the characters are rebuilt. Needs core's **Differential Diffusion** on the model.
+  survives while the characters are rebuilt. Needs core's **Differential Diffusion** on the model,
+  or the SoftPaint Sampler below.
+- **SoftPaint Sampler** _(experimental)_ — a `SAMPLER` for SamplerCustom that reads Region Latent's
+  graded mask as a soft tether to the source instead of Differential Diffusion's start times, after
+  [SoftPaint](https://arxiv.org/abs/2610.00359). Low values still edit and full ones blend in
+  without a seam. No Differential Diffusion needed. Costs `inner_steps + 1` model calls per step
+  (3× at the default). Pixels at exactly 0 (a `protect_mask`, or `background=0`) come back as the
+  source. Works with any model, with or without Regions Apply.
 - **Regions Apply** — patches the model. Every mechanism has an off position that recovers a
   baseline: `track=0` is a static mask, `preheat=1` is a LoRA from step 0, `refine=0` is no
   clustering. Turn them all off and this is plain regional LoRA, which is the thing to beat.
@@ -52,6 +59,11 @@ Regions from Masks ──> Region LoRAs ──> Regions Apply ──> MODEL ─�
   some LoRAs looked weak here; with it a whole-canvas region matches the LoRA loaded normally. It
   costs a longer sequence and masked attention. Region prompts need it on; the negative prompt
   stays the same everywhere.
+  `layout_lock` _(experimental, off at 0)_ takes the layout from the base model for that share of
+  the steps, after [QK-Edit](https://arxiv.org/abs/2610.17829): each of those steps first runs
+  without the region LoRAs, and the real pass uses that pass's image queries and keys, so the
+  LoRAs can run at full strength from step 0 without moving the composition. Try `0.25` with
+  `preheat=1`. It costs a second pass on those steps and about 1.75 GB per image at 1024².
 
 For **NK2E edits with seams**, keep the edit LoRA loaded normally and the source image connected
 as reference conditioning. In **Region Latent**, try `background=0`, `flatten=0`,
