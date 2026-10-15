@@ -196,8 +196,13 @@
                     v-for="(pt, i) in currentLayer.points"
                     :key="i"
                     class="fs-point"
-                    :class="{ out: !pt.include }"
-                    :style="{ left: `${pt.x * 100}%`, top: `${pt.y * 100}%` }"
+                    :class="{ out: !pt.include, live: wand }"
+                    :style="pointStyle(pt, i)"
+                    :title="wand ? 'Drag to move · click to remove · Alt+click to flip' : undefined"
+                    @pointerdown.stop.prevent="onPointDown($event, i)"
+                    @pointermove="onPointMove"
+                    @pointerup="onPointUp($event, i)"
+                    @pointercancel="pointDrag = null"
                   />
                 </template>
               </template>
@@ -321,6 +326,19 @@
                   </div>
                   <div class="fs-label">Shape</div>
                   <div class="fs-grid">
+                    <span :title="GROW_TIP">grow</span>
+                    <ZenNumber
+                      size="sm"
+                      :model-value="currentLayer.grow"
+                      :min="-256"
+                      :max="256"
+                      :step="1"
+                      :precision="0"
+                      :title="GROW_TIP"
+                      @update:model-value="patchCurrent({ grow: Math.round($event) })"
+                    />
+                  </div>
+                  <div class="fs-grid">
                     <span title="Soften the edge, in canvas pixels">feather</span>
                     <ZenNumber
                       size="sm"
@@ -440,11 +458,12 @@
  * image is a node property, so drawing over one never re-runs anything; Fresco Apply sends its
  * source image back after a run and it lands here.
  */
-import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watchEffect } from "vue";
 import { api } from "@comfy/api";
 import { app } from "@comfy/app";
 import { hasMediaDrop, hasZenPanels, mediaLibrary, readMediaDrop } from "@/framework";
 import { sharedScene } from "@/lib/frescoStore";
+import { growMask } from "@/lib/maskGrow";
 import {
   ZenBoxCanvas,
   ZenButton,
@@ -477,6 +496,7 @@ import {
   summarize,
   type FrescoContent,
   type FrescoLayer,
+  type FrescoPoint,
   type FrescoScene,
   type FrescoSettings,
   type Overlap,
@@ -495,6 +515,9 @@ const props = defineProps<{
 const emit = defineEmits<{ popOut: [] }>();
 const canPopOut = !props.inPanel && hasZenPanels();
 
+const GROW_TIP =
+  "Grow the shape by this many canvas pixels, or shrink it (negative) — within the box. Handy " +
+  "around a segmented shape, so an edit covers its edge.";
 const SHAPE_TIP =
   "What a painted shape limits. Whole layer: the shape is the layer. References: the layer is its " +
   "whole box — prompt and LoRAs everywhere in it — and the shape is only where its references " +
@@ -587,6 +610,7 @@ const boxes = computed<ZenBox[]>({
       hidden: !l.on,
       locked: l.locked,
       mask: l.mask,
+      maskView: tool.value === "select" ? grownView(l) : null,
       maskClips: l.shapeFor !== "refs",
     })),
   // Live while dragging; the canvas's `commit` (at the end of the gesture) persists.
@@ -603,6 +627,34 @@ const boxes = computed<ZenBox[]>({
 });
 
 const layerById = computed(() => new Map(scene.value.layers.map((l) => [l.id, l])));
+
+/** Grown shapes for the canvas to show, by `growKey`; the layer keeps its mask as painted. */
+const grown = ref<Record<string, string>>({});
+function growFractions(l: FrescoLayer): [number, number] {
+  return [
+    l.grow / Math.max(1, l.w * scene.value.width),
+    l.grow / Math.max(1, l.h * scene.value.height),
+  ];
+}
+function growKey(l: FrescoLayer): string | null {
+  if (!l.mask || !l.grow) return null;
+  const [fx, fy] = growFractions(l);
+  return `${fx.toFixed(4)},${fy.toFixed(4)},${l.mask}`;
+}
+function grownView(l: FrescoLayer): string | null {
+  const key = growKey(l);
+  return key ? (grown.value[key] ?? null) : null;
+}
+watchEffect(() => {
+  for (const l of scene.value.layers) {
+    const key = growKey(l);
+    if (!key || grown.value[key]) continue;
+    const [fx, fy] = growFractions(l);
+    void growMask(l.mask!, fx, fy).then((url) => {
+      grown.value = { ...grown.value, [key]: url };
+    });
+  }
+});
 
 /** Whether boxes show their references and prompt. A display preference, so a node property. */
 const FACES_KEY = "nynxzFrescoFaces";
@@ -648,6 +700,7 @@ const HELP: [string, string][] = [
   ["Delete", "remove the selected layers"],
   ["V · B · E", "select · paint the shape · erase it"],
   ["W", "SAM3 wand — click what to capture, Alt+click to leave out"],
+  ["Point", "With the wand: drag to move, click to remove, Alt+click to flip"],
   ["[  ]  or wheel", "brush size, while painting"],
   ["Alt while dragging", "no snapping"],
 ];
@@ -723,11 +776,9 @@ function pickTool(t: BoxTool) {
 /** A click with the wand: a point on the layer under it (the selected one first), or a new layer
  *  around it on empty canvas. Alt leaves the spot out instead. */
 function onWandClick(e: PointerEvent) {
-  const stage = wheel.el.value?.querySelector<HTMLElement>(".zbc");
-  const rect = stage?.getBoundingClientRect();
-  if (!rect?.width) return;
-  const x = (e.clientX - rect.left) / rect.width;
-  const y = (e.clientY - rect.top) / rect.height;
+  const at = stageFraction(e);
+  if (!at) return;
+  const { x, y } = at;
   const point = { x, y, include: !e.altKey };
   const inside = (l: FrescoLayer) => x >= l.x && x <= l.x + l.w && y >= l.y && y <= l.y + l.h;
   const selectedLayer = currentLayer.value;
@@ -755,6 +806,57 @@ function onWandClick(e: PointerEvent) {
     updateLayers((l) => (l.id === id ? { ...l, points: [point] } : l));
   }
   scheduleSegment();
+}
+
+function stageFraction(e: PointerEvent): { x: number; y: number } | null {
+  const rect = wheel.el.value?.querySelector<HTMLElement>(".zbc")?.getBoundingClientRect();
+  if (!rect?.width) return null;
+  const clamp = (v: number) => Math.min(1, Math.max(0, v));
+  return {
+    x: clamp((e.clientX - rect.left) / rect.width),
+    y: clamp((e.clientY - rect.top) / rect.height),
+  };
+}
+
+/** A point being dragged: where it is now, and whether it has moved far enough to be a drag. */
+const pointDrag = ref<{
+  index: number;
+  x: number;
+  y: number;
+  startX: number;
+  startY: number;
+  moved: boolean;
+} | null>(null);
+function pointStyle(pt: FrescoPoint, i: number) {
+  const at = pointDrag.value?.index === i ? pointDrag.value : pt;
+  return { left: `${at.x * 100}%`, top: `${at.y * 100}%` };
+}
+function onPointDown(e: PointerEvent, index: number) {
+  const pt = currentLayer.value?.points[index];
+  if (!wand.value || !pt) return;
+  (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+  pointDrag.value = { index, x: pt.x, y: pt.y, startX: e.clientX, startY: e.clientY, moved: false };
+}
+function onPointMove(e: PointerEvent) {
+  const drag = pointDrag.value;
+  const at = drag && stageFraction(e);
+  if (!drag || !at) return;
+  const moved = drag.moved || Math.hypot(e.clientX - drag.startX, e.clientY - drag.startY) > 3;
+  pointDrag.value = { ...drag, ...(moved ? at : {}), moved };
+}
+function onPointUp(e: PointerEvent, index: number) {
+  const drag = pointDrag.value;
+  pointDrag.value = null;
+  const layer = currentLayer.value;
+  if (!drag || drag.index !== index || !layer) return;
+  const points = layer.points.flatMap((pt, i) => {
+    if (i !== index) return [pt];
+    if (drag.moved) return [{ ...pt, x: drag.x, y: drag.y }];
+    if (e.altKey) return [{ ...pt, include: !pt.include }];
+    return [];
+  });
+  patchCurrent({ points });
+  if (points.length) scheduleSegment();
 }
 
 const segmenting = ref(false);
@@ -787,6 +889,7 @@ function takeMasks(masks: { id: string; mask: string; source: string }[]) {
 }
 
 function onKey(e: KeyboardEvent) {
+  if (!(e.target as HTMLElement | null)?.closest?.(".fs-stage")) return;
   if ((e.key === "w" || e.key === "W") && !e.ctrlKey && !e.metaKey) {
     setWand(!wand.value);
     e.preventDefault();
@@ -1059,6 +1162,14 @@ onBeforeUnmount(() => api.removeEventListener("executed", onExecuted));
   background: #22c55e;
   box-shadow: 0 0 0 1px rgb(0 0 0 / 50%);
   pointer-events: none;
+}
+.fs-point.live {
+  pointer-events: auto;
+  cursor: grab;
+  touch-action: none;
+}
+.fs-point.live:hover {
+  transform: scale(1.3);
 }
 .fs-point.out {
   background: #ef4444;

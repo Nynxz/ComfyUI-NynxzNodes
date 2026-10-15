@@ -36,30 +36,38 @@ references, LoRAs and denoise — and the settings (`overlap`: cover or share; `
 resolution references are read at).
 
 ```
-CLIP ──> Fresco ── fresco ──┐
-Load Model ── model ────────┤
-(edit) image ───────────────┤
-(edit) VAE ─────────────────┴> Fresco Apply ── model ──> KSampler / SamplerCustom
-                                            ├─ positive ─> positive
-                                            ├─ latent ───> latent
-                                            └─ regions (for Regions Preview)
+CLIP ─────────────┐
+(edit) image ─────┤
+(edit) VAE ───────┤
+(SAM3) model/clip ┴> Fresco Inputs ── inputs ──> Fresco ── fresco ──┐
+                                                  Load Model ── model ─┴> Fresco Apply ── model ──> KSampler
+                                                                                       ├─ positive ─> positive
+                                                                                       ├─ latent ───> latent
+                                                                                       └─ regions (Regions Preview)
 ```
 
-- **Fresco** — the editor. Takes the Krea 2 text encoder; outputs `fresco`. Drop images from the
-  asset browser (or the desktop) on a layer to add a reference, or on empty canvas for a new layer;
-  pop it out into a ZenKit panel from the rail. The panes resize by their gutters. With an
-  **image** and a SAM3 model (`sam3_model`, plus `sam3_clip` for text) a layer can segment its
-  shape instead of being painted: the **wand** (W) clicks a point on the image — a new layer if you
-  click outside one — and SAM3 fills the layer's box with what is there; or type what the layer
+- **Fresco Inputs** — everything Fresco works with on one wire: the text encoder, and optionally
+  the photo to trace, segment and edit, its VAE, and SAM3. Fresco also takes a plain CLIP in the
+  same socket when there's nothing else. Fresco Apply picks up the photo and VAE from the `fresco`
+  wire, so neither needs wiring twice.
+- **Fresco** — the editor; outputs `fresco`. Drop images from the asset browser (or the desktop) on
+  a layer to add a reference, or on empty canvas for a new layer; pop it out into a ZenKit panel
+  from the rail. The panes resize by their gutters. With a photo and SAM3 on Fresco Inputs
+  (`sam3_clip` only for text) a layer can segment its shape instead of being painted: the **wand**
+  (W, with the canvas focused) clicks a point on the image — a new layer if you click outside one,
+  Alt+click to leave a spot out — and SAM3 fills the layer's box with what is there. With the wand
+  on, drag a point to move it, click it to remove it, Alt+click to flip it. Or type what the layer
   should **capture** (`jacket, -hands`) and press Segment. Only Fresco runs, nothing downstream, and
   a layer is segmented again only when its box, points, capture or the image change, so paint you
-  touch up over a segmented shape stays.
+  touch up over a segmented shape stays. **grow** widens (or, negative, narrows) a layer's shape by
+  canvas pixels within its box — around a segmented shape, so an edit covers its edge.
 - **Fresco Overlay** — the render with every layer outlined, filled faintly and labelled, to check
-  it followed the boxes. It also sends the render back to the editor as its trace image, so the
-  boxes sit over the last render while you adjust them (pin a trace image to keep yours).
+  it followed the boxes. Without a photo on Fresco it also sends the render back to the editor as
+  its trace image, so the boxes sit over the last render while you adjust them (pin a trace image
+  to keep yours); with one, the photo stays, as what you mask over.
 - **Fresco Apply** — puts the scene on the model: each layer's LoRAs and prompt act only where it
   is (Regions Apply underneath, with the prompt copies at full weight all run), and hands the
-  sampler its positive and latent. With an **image** and a **VAE** it edits that image: the latent
+  sampler its positive and latent. With a photo and a VAE (on Fresco Inputs, or wired here) it edits that image: the latent
   is the image with each layer's denoise as its noise mask — sample it with the **SoftPaint
   Sampler**, or Differential Diffusion on the model. After a run the image shows under Fresco's
   canvas, with a one-click "match canvas" when the shapes differ. `layout_isolation` keeps the

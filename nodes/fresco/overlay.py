@@ -6,7 +6,7 @@ Two things, for one question: did the image follow the boxes?
     numbered name, over the render — to preview, save or compare;
   * the render itself goes back to the Fresco node it came from and becomes the trace image under
     its canvas, so the boxes sit over the last render while you adjust them (unless a trace
-    image there is pinned).
+    image there is pinned, or Fresco has a photo — then the photo stays, as what you mask over).
 """
 
 from __future__ import annotations
@@ -113,11 +113,14 @@ class NynxzFrescoOverlay(FrescoNode):
         shown = {
             "images": ui.ImageSaveHelper.save_images(
                 overlay, "nynxz.fresco.overlay", io.FolderType.temp, cls, compress_level=1
-            ),
-            "fresco_source": ui.ImageSaveHelper.save_images(
-                image[:1], "nynxz.fresco.render", io.FolderType.temp, cls, compress_level=1
-            ),
-            "fresco_node": [fresco.get("node", "")],
-            "fresco_size": [int(image.shape[2]), int(image.shape[1])],
+            )
         }
+        if fresco.get("image") is None:
+            shown |= {
+                "fresco_source": ui.ImageSaveHelper.save_images(
+                    image[:1], "nynxz.fresco.render", io.FolderType.temp, cls, compress_level=1
+                ),
+                "fresco_node": [fresco.get("node", "")],
+                "fresco_size": [int(image.shape[2]), int(image.shape[1])],
+            }
         return io.NodeOutput(overlay, ui=shown)

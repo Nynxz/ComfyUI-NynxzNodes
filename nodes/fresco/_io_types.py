@@ -44,3 +44,7 @@ FrescoSceneType = widget_type("FrescoScene", dict, doc="The Fresco scene: canvas
 #: "node"}` — `node` is the Fresco node's id, so Fresco Apply can send the source image back to
 #: the editor it came from.
 Fresco = io.Custom("NYNXZ_FRESCO")
+
+#: Fresco Inputs -> Fresco: `{"clip", "image", "vae", "sam3_model", "sam3_clip"}` — everything but
+#: the clip optional, so the Fresco node keeps one socket.
+FrescoInputs = io.Custom("NYNXZ_FRESCO_INPUTS")

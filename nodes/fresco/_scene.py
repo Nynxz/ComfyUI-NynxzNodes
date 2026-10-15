@@ -137,6 +137,7 @@ def _layer(raw: dict, index: int) -> dict:
         "h": min(1.0 - y, max(0.0, _num(raw.get("h"), 0.0))),
         "mask": raw.get("mask") if isinstance(raw.get("mask"), str) else None,
         "feather": max(0, int(_num(raw.get("feather"), 0))),
+        "grow": int(_num(raw.get("grow"), 0)),
         "id": str(raw.get("id") or f"layer{index}"),
         "color": str(raw.get("color") or ""),
         #: What a painted shape limits: "layer" — the whole layer is the shape; "refs" — the
@@ -180,8 +181,8 @@ def decode_mask(url: str) -> torch.Tensor | None:
 
 
 def layer_mask(layer: dict, size: tuple[int, int], canvas: tuple[int, int]) -> torch.Tensor:
-    """One layer's mask at working `size` `(H, W)`: its box, its painted shape inside the box, and
-    its feather (given in pixels of the `canvas` `(H, W)`)."""
+    """One layer's mask at working `size` `(H, W)`: its box, its painted shape inside the box, grown
+    (or shrunk, negative) within the box, and feathered — both in pixels of the `canvas` `(H, W)`."""
     height, width = size
     out = torch.zeros((height, width), dtype=torch.float32)
     top, left = round(layer["y"] * height), round(layer["x"] * width)
@@ -201,8 +202,18 @@ def layer_mask(layer: dict, size: tuple[int, int], canvas: tuple[int, int]) -> t
             align_corners=False,
         )[0, 0]
         out[top:bottom, left:right] = resized.clamp(0.0, 1.0)
-    feather = round(layer.get("feather", 0) * width / max(canvas[1], 1))
-    return _mask.shape_mask(out, grow=0, feather=feather) if feather > 0 else out
+    scale = width / max(canvas[1], 1)
+    grow = round(layer.get("grow", 0) * scale)
+    if grow:
+        changed = (
+            _mask.shape_mask(out, grow=grow)
+            if grow > 0
+            else 1.0 - _mask.shape_mask(1.0 - out, grow=-grow)
+        )
+        out = torch.zeros_like(out)
+        out[top:bottom, left:right] = changed[top:bottom, left:right]
+    feather = round(layer.get("feather", 0) * scale)
+    return _mask.shape_mask(out, feather=feather)
 
 
 def parts(layers: list[dict]) -> list[dict]:

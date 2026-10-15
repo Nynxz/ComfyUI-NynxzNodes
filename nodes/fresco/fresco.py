@@ -38,7 +38,7 @@ from ..regions.apply import NynxzRegionsApply
 from ..regions.latent import NynxzRegionLatent
 from . import _layout, _scene, _segment
 from ._base import FrescoNode
-from ._io_types import Fresco, FrescoSceneType
+from ._io_types import Fresco, FrescoInputs, FrescoSceneType
 
 
 def _encode_text(clip, prompt: str) -> torch.Tensor:
@@ -123,6 +123,57 @@ def _region(
     return region, (loaded[0][0] if loaded[0] else None)
 
 
+class NynxzFrescoInputs(FrescoNode):
+    @classmethod
+    def define_schema(cls) -> io.Schema:
+        return cls.make_schema(
+            node_id="Fresco.Inputs",
+            display_name="Fresco Inputs",
+            description=(
+                "Everything Fresco works with, in one wire: the text encoder, and optionally a "
+                "photo to trace, segment and edit, its VAE, and SAM3 for segmenting layers."
+            ),
+            is_experimental=True,
+            inputs=[
+                io.Clip.Input("clip", tooltip="The text encoder — Krea 2's."),
+                io.Image.Input(
+                    "image",
+                    optional=True,
+                    tooltip="A photo to work on: shown under the canvas after a run, segmented "
+                    "by SAM3 for layers that ask, and edited by Fresco Apply.",
+                ),
+                io.Vae.Input(
+                    "vae",
+                    optional=True,
+                    tooltip="Carried to Fresco Apply, to encode the photo or the layout start.",
+                ),
+                io.Model.Input(
+                    "sam3_model",
+                    optional=True,
+                    tooltip="SAM3, for layers that capture something by text or click points.",
+                ),
+                io.Clip.Input(
+                    "sam3_clip",
+                    optional=True,
+                    tooltip="SAM3's CLIP — only for capture text; click points don't need it.",
+                ),
+            ],
+            outputs=[FrescoInputs.Output(display_name="inputs", tooltip="Into Fresco.")],
+        )
+
+    @classmethod
+    def execute(cls, clip, image=None, vae=None, sam3_model=None, sam3_clip=None) -> io.NodeOutput:
+        return io.NodeOutput(
+            {
+                "clip": clip,
+                "image": image,
+                "vae": vae,
+                "sam3_model": sam3_model,
+                "sam3_clip": sam3_clip,
+            }
+        )
+
+
 class NynxzFresco(FrescoNode):
     @classmethod
     def define_schema(cls) -> io.Schema:
@@ -136,26 +187,11 @@ class NynxzFresco(FrescoNode):
             is_experimental=True,
             inputs=[
                 FrescoSceneType.Input("scene", default={}),
-                io.Clip.Input(
-                    "clip",
-                    tooltip="The text encoder — Krea 2's. Encodes the scene prompt and every "
-                    "layer's prompt and references.",
-                ),
-                io.Image.Input(
-                    "image",
-                    optional=True,
-                    tooltip="A photo to work on: shown under the canvas after a run, segmented "
-                    "by SAM3 for layers that ask, and edited by Fresco Apply.",
-                ),
-                io.Model.Input(
-                    "sam3_model",
-                    optional=True,
-                    tooltip="SAM3, for layers that capture something by text or click points.",
-                ),
-                io.Clip.Input(
-                    "sam3_clip",
-                    optional=True,
-                    tooltip="SAM3's CLIP — only for capture text; click points don't need it.",
+                io.MultiType.Input(
+                    "inputs",
+                    types=[io.Clip, FrescoInputs],
+                    tooltip="The text encoder (Krea 2's), or Fresco Inputs to bring a photo, its "
+                    "VAE and SAM3 along with it.",
                 ),
             ],
             outputs=[Fresco.Output(display_name="fresco", tooltip="Into Fresco Apply.")],
@@ -165,9 +201,10 @@ class NynxzFresco(FrescoNode):
         )
 
     @classmethod
-    def execute(
-        cls, scene=None, clip=None, image=None, sam3_model=None, sam3_clip=None
-    ) -> io.NodeOutput:
+    def execute(cls, scene=None, inputs=None) -> io.NodeOutput:
+        sources = inputs if isinstance(inputs, dict) else {"clip": inputs}
+        clip, image = sources.get("clip"), sources.get("image")
+        sam3_model, sam3_clip = sources.get("sam3_model"), sources.get("sam3_clip")
         parsed = _scene.parse(scene)
         width, height = parsed["width"], parsed["height"]
         settings = parsed["settings"]
@@ -232,6 +269,7 @@ class NynxzFresco(FrescoNode):
                 "layout": {"layers": layout, "background": backdrop},
                 "outlines": outlines,
                 "image": image,
+                "vae": sources.get("vae"),
             },
             ui=cls._report(node, image, segmented),
         )
@@ -244,7 +282,7 @@ class NynxzFresco(FrescoNode):
             if any(_segment.wants(layer) for layer in layers):
                 logging.warning(
                     "Nynxz Fresco: some layers capture something — wire the photo into `image` "
-                    "and SAM3 into `sam3_model` (and `sam3_clip` for capture text)."
+                    "and SAM3 into `sam3_model` on Fresco Inputs (and `sam3_clip` for capture text)."
                 )
             return []
         changed = []
@@ -305,7 +343,12 @@ class NynxzFrescoApply(FrescoNode):
                     "Sampler, or with Differential Diffusion on the model. Shown under Fresco's "
                     "canvas after a run.",
                 ),
-                io.Vae.Input("vae", optional=True, tooltip="Encodes the source image."),
+                io.Vae.Input(
+                    "vae",
+                    optional=True,
+                    tooltip="Encodes the source image or the layout start. Not needed when Fresco "
+                    "Inputs carries one.",
+                ),
                 advanced(
                     io.Float.Input(
                         "layout_lock",
@@ -438,6 +481,7 @@ class NynxzFrescoApply(FrescoNode):
     ) -> io.NodeOutput:
         if image is None and edit_image:
             image = fresco.get("image")
+        vae = vae if vae is not None else fresco.get("vae")
         regions = list(fresco.get("regions") or [])
         if _active(regions):
             # The layers' prompt copies at full weight all run: in Fresco the copy IS the content

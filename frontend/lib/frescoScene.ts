@@ -77,6 +77,8 @@ export interface FrescoLayer extends FrescoContent {
   points: FrescoPoint[];
   /** The segmentation the current mask came from (set by the backend). */
   maskSource: string;
+  /** Canvas pixels the shape grows by (negative shrinks), within the box. */
+  grow: number;
   feather: number;
   locked: boolean;
 }
@@ -211,6 +213,7 @@ export function parseScene(value: unknown): FrescoScene {
         h: Math.min(1 - y, clamp01(num(l.h, 0.5))),
         mask: typeof l.mask === "string" && l.mask.startsWith("data:image/") ? l.mask : null,
         feather: Math.max(0, Math.round(num(l.feather, 16))),
+        grow: Math.round(num(l.grow, 0)),
         shapeFor: l.shapeFor === "refs" ? "refs" : "layer",
         capture: String(l.capture ?? ""),
         points: list(l.points).map((pt) => ({
@@ -246,6 +249,7 @@ export function newLayer(
     capture: "",
     points: [],
     maskSource: "",
+    grow: 0,
     feather: 16,
     locked: false,
   };
