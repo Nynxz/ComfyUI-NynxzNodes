@@ -275,8 +275,7 @@
                   </div>
                   <div class="fs-grid">
                     <span :title="SHAPE_TIP">shape for</span>
-                    <ZenToggleGroup
-                      size="sm"
+                    <FrescoPills
                       :model-value="currentLayer.shapeFor"
                       :options="SHAPE_FOR"
                       :disabled="!currentLayer.mask"
@@ -331,7 +330,7 @@
                     title="How overlapping layers share the pixels they both cover"
                   >
                     <span>overlap</span>
-                    <ZenToggleGroup
+                    <FrescoPills
                       :model-value="scene.settings.overlap"
                       :options="OVERLAPS"
                       @update:model-value="patchSettings({ overlap: $event as Overlap })"
@@ -397,7 +396,6 @@ import {
   ZenResolution,
   ZenScroll,
   ZenSplit,
-  ZenToggleGroup,
   boxAt,
   useWheelClaim,
   type BoxTool,
@@ -407,6 +405,7 @@ import {
 
 import FrescoBoxFace from "@/components/fresco/FrescoBoxFace.vue";
 import FrescoContentForm from "@/components/fresco/FrescoContentForm.vue";
+import FrescoPills from "@/components/fresco/FrescoPills.vue";
 import { thumbUrl, type SourceType } from "@/lib/fusionApi";
 import {
   BACKGROUND_ID,
