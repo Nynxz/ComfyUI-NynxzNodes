@@ -385,3 +385,14 @@ clamped or wrapped index is visible rather than guessed at.
 ## String Template Parser
 
 ![String Template Parser](../.github/assets/string_template_parser.png)
+
+## Steps — watch a sampler work
+
+- **Record Steps** — patches the model so any sampler on it (KSampler, SamplerCustom, SoftPaint)
+  keeps what it predicted at every step. One frame per step: SoftPaint's inner calls add none.
+  Sampling is unchanged. One recording per model, so give each run its own.
+- **Step Film** — the recording as video frames: each step's picture over a strip with a label,
+  `step i/N` and a progress bar, ending on the sampler's result. Wire the sampler's LATENT into
+  `result` (it is the last frame and makes the node wait for that run). A second recording in
+  `steps_b` plays beside the first on the same clock, for comparing two samplers. `show` picks the
+  model's clean prediction or the noisy latent. Send `frames` to Create Video.
