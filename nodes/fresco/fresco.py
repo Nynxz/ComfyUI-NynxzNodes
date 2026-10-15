@@ -36,7 +36,7 @@ from ..fusion.fusion_input import _load_image, _resolve_path
 from ..regions._io_types import Regions
 from ..regions.apply import NynxzRegionsApply
 from ..regions.latent import NynxzRegionLatent
-from . import _layout, _scene
+from . import _layout, _scene, _segment
 from ._base import FrescoNode
 from ._io_types import Fresco, FrescoSceneType
 
@@ -141,19 +141,39 @@ class NynxzFresco(FrescoNode):
                     tooltip="The text encoder — Krea 2's. Encodes the scene prompt and every "
                     "layer's prompt and references.",
                 ),
+                io.Image.Input(
+                    "image",
+                    optional=True,
+                    tooltip="A photo to work on: shown under the canvas after a run, segmented "
+                    "by SAM3 for layers that ask, and edited by Fresco Apply.",
+                ),
+                io.Model.Input(
+                    "sam3_model",
+                    optional=True,
+                    tooltip="SAM3, for layers that capture something by text or click points.",
+                ),
+                io.Clip.Input(
+                    "sam3_clip",
+                    optional=True,
+                    tooltip="SAM3's CLIP — only for capture text; click points don't need it.",
+                ),
             ],
             outputs=[Fresco.Output(display_name="fresco", tooltip="Into Fresco Apply.")],
             hidden=[io.Hidden.unique_id],
+            # An output node, so the editor's Segment button can run Fresco on its own.
+            is_output_node=True,
         )
 
     @classmethod
-    def execute(cls, scene=None, clip=None) -> io.NodeOutput:
+    def execute(
+        cls, scene=None, clip=None, image=None, sam3_model=None, sam3_clip=None
+    ) -> io.NodeOutput:
         parsed = _scene.parse(scene)
         width, height = parsed["width"], parsed["height"]
         settings = parsed["settings"]
-        layers = _scene.parts(
-            [layer for layer in parsed["layers"] if layer["on"] and layer["w"] and layer["h"]]
-        )
+        on = [layer for layer in parsed["layers"] if layer["on"] and layer["w"] and layer["h"]]
+        segmented = cls._segment(on, image, sam3_model, sam3_clip)
+        layers = _scene.parts(on)
         background = parsed["background"]
 
         size = _scene.working_size(width, height)
@@ -200,6 +220,7 @@ class NynxzFresco(FrescoNode):
             )
             or "no layers",
         )
+        node = str(cls.hidden.unique_id or "")
         return io.NodeOutput(
             {
                 "regions": regions,
@@ -207,11 +228,53 @@ class NynxzFresco(FrescoNode):
                 "width": width,
                 "height": height,
                 "background_denoise": background["denoise"] if background["on"] else 0.0,
-                "node": str(cls.hidden.unique_id or ""),
+                "node": node,
                 "layout": {"layers": layout, "background": backdrop},
                 "outlines": outlines,
-            }
+                "image": image,
+            },
+            ui=cls._report(node, image, segmented),
         )
+
+    @staticmethod
+    def _segment(layers: list[dict], image, model, sam_clip) -> list[dict]:
+        """Segment every layer that asks and whose shape didn't already come from the same
+        request; its mask is replaced for this run. Returns what changed, for the editor."""
+        if image is None or model is None:
+            if any(_segment.wants(layer) for layer in layers):
+                logging.warning(
+                    "Nynxz Fresco: some layers capture something — wire the photo into `image` "
+                    "and SAM3 into `sam3_model` (and `sam3_clip` for capture text)."
+                )
+            return []
+        changed = []
+        for layer in layers:
+            if not _segment.wants(layer):
+                continue
+            source = _segment.signature(layer, image)
+            if source == layer.get("mask_source") and layer.get("mask"):
+                continue
+            mask = _segment.segment(model, sam_clip, image, layer)
+            if mask is None:
+                continue
+            layer["mask"] = _segment.box_local(mask, layer)
+            layer["mask_source"] = source
+            changed.append({"id": layer["id"], "mask": layer["mask"], "source": source})
+        return changed
+
+    @classmethod
+    def _report(cls, node: str, image, segmented: list[dict]) -> dict | None:
+        """What goes back to the editor: the photo, as the trace image, and new masks."""
+        if image is None:
+            return None
+        return {
+            "fresco_node": [node],
+            "fresco_source": ui.ImageSaveHelper.save_images(
+                image[:1], "nynxz.fresco.source", io.FolderType.temp, cls, compress_level=1
+            ),
+            "fresco_size": [int(image.shape[2]), int(image.shape[1])],
+            "fresco_masks": segmented,
+        }
 
 
 def _active(regions: list[dict]) -> bool:
@@ -335,6 +398,12 @@ class NynxzFrescoApply(FrescoNode):
                     "0.15-0.25 steers placement, higher starts to keep its colours. Needs the VAE. "
                     "0 = off. Ignored when editing an image.",
                 ),
+                io.Boolean.Input(
+                    "edit_image",
+                    default=True,
+                    tooltip="Edit the photo wired into Fresco (or into this node). Off: generate "
+                    "a new image, using Fresco's photo only to trace and segment over.",
+                ),
             ],
             outputs=[
                 io.Model.Output(display_name="model"),
@@ -365,7 +434,10 @@ class NynxzFrescoApply(FrescoNode):
         track=0.0,
         release=0.15,
         layout_start=0.0,
+        edit_image=True,
     ) -> io.NodeOutput:
+        if image is None and edit_image:
+            image = fresco.get("image")
         regions = list(fresco.get("regions") or [])
         if _active(regions):
             # The layers' prompt copies at full weight all run: in Fresco the copy IS the content

@@ -142,6 +142,19 @@ def _layer(raw: dict, index: int) -> dict:
         #: What a painted shape limits: "layer" — the whole layer is the shape; "refs" — the
         #: layer is its whole box, and the shape is only where its references are read.
         "shape_for": "refs" if raw.get("shapeFor") == "refs" else "layer",
+        #: SAM3: what to capture in the box, by text and/or click points (fractions of the canvas),
+        #: and the signature of the segmentation the current mask came from (see `_segment`).
+        "capture": str(raw.get("capture") or "").strip(),
+        "points": [
+            {
+                "x": min(1.0, max(0.0, _num(p.get("x"), 0.0))),
+                "y": min(1.0, max(0.0, _num(p.get("y"), 0.0))),
+                "include": p.get("include", True) is not False,
+            }
+            for p in raw.get("points") or []
+            if isinstance(p, dict)
+        ],
+        "mask_source": str(raw.get("maskSource") or ""),
     }
 
 
