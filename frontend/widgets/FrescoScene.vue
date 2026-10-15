@@ -13,6 +13,13 @@
       <span class="fs-rail-sep" />
       <ZenIconButton
         size="sm"
+        :icon="showFaces ? 'mdi mdi-card-text-outline' : 'mdi mdi-card-off-outline'"
+        :active="showFaces"
+        title="Show each layer's references and prompt on the canvas"
+        @click="setShowFaces(!showFaces)"
+      />
+      <ZenIconButton
+        size="sm"
         icon="mdi mdi-plus-box-outline"
         title="Add a layer (or drag on the canvas)"
         @click="createLayer({ x: 0.3, y: 0.3, w: 0.4, h: 0.4 })"
@@ -54,6 +61,13 @@
         @delete="removeLayers"
         @open="openLayer"
       >
+        <template v-if="showFaces" #box="{ box, maskStyle }">
+          <FrescoBoxFace
+            v-if="layerById.get(box.id)"
+            :layer="layerById.get(box.id)!"
+            :mask-style="maskStyle"
+          />
+        </template>
         <template #empty>
           <div class="fs-hint-empty">
             <i class="mdi mdi-gesture-tap-box" />
@@ -374,6 +388,7 @@ import {
   type ZenBox,
 } from "@nynxz/zenkit-ui";
 
+import FrescoBoxFace from "@/components/fresco/FrescoBoxFace.vue";
 import FrescoLoras from "@/components/fresco/FrescoLoras.vue";
 import FrescoRefs from "@/components/fresco/FrescoRefs.vue";
 import { thumbUrl, type SourceType } from "@/lib/fusionApi";
@@ -478,6 +493,19 @@ const boxes = computed<ZenBox[]>({
     };
   },
 });
+
+const layerById = computed(() => new Map(scene.value.layers.map((l) => [l.id, l])));
+
+/** Whether boxes show their references and prompt. A display preference, so a node property. */
+const FACES_KEY = "nynxzFrescoFaces";
+const showFaces = ref(props.node?.properties?.[FACES_KEY] !== false);
+function setShowFaces(on: boolean) {
+  showFaces.value = on;
+  if (props.node?.properties) {
+    // eslint-disable-next-line vue/no-mutating-props -- node.properties is ComfyUI's own store for what the backend must not see.
+    props.node.properties[FACES_KEY] = on;
+  }
+}
 
 function createLayer(rect: { x: number; y: number; w: number; h: number }) {
   const layer = newLayer(rect, scene.value.layers);
