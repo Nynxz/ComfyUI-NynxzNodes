@@ -54,6 +54,8 @@ export interface FrescoScene {
 }
 
 export const BACKGROUND_ID = "background";
+/** Mirrors nodes/fresco/_scene.py: an edit keeps the scene unless asked. */
+export const BACKGROUND_DENOISE = 0.05;
 
 /** Layer colours, in the order new layers take them. */
 export const PALETTE = [
@@ -84,7 +86,7 @@ const list = (v: unknown): Record<string, unknown>[] =>
     ? v.filter((x): x is Record<string, unknown> => !!x && typeof x === "object")
     : [];
 
-function parseContent(raw: Record<string, unknown>): FrescoContent {
+function parseContent(raw: Record<string, unknown>, denoise = 1): FrescoContent {
   return {
     on: raw.on !== false,
     prompt: String(raw.prompt ?? ""),
@@ -106,7 +108,7 @@ function parseContent(raw: Record<string, unknown>): FrescoContent {
       strength: num(r.strength, 1),
       on: r.on !== false,
     })),
-    denoise: clamp01(num(raw.denoise, 1)),
+    denoise: clamp01(num(raw.denoise, denoise)),
   };
 }
 
@@ -128,7 +130,7 @@ export function parseScene(value: unknown): FrescoScene {
     width: Math.max(64, Math.round(num(raw.width, 1024))),
     height: Math.max(64, Math.round(num(raw.height, 1024))),
     prompt: String(raw.prompt ?? ""),
-    background: parseContent(obj(raw.background)),
+    background: parseContent(obj(raw.background), BACKGROUND_DENOISE),
     layers: list(raw.layers).map((l, i) => {
       const x = clamp01(num(l.x, 0.25));
       const y = clamp01(num(l.y, 0.25));

@@ -62,8 +62,9 @@ def parse(value) -> dict:
         for index, raw in enumerate(scene.get("layers") or [])
         if isinstance(raw, dict)
     ]
+    raw_background = scene.get("background")
     background = _content(
-        scene.get("background") if isinstance(scene.get("background"), dict) else {}
+        raw_background if isinstance(raw_background, dict) else {}, BACKGROUND_DENOISE
     )
     background["name"] = "background"
     return {
@@ -75,7 +76,12 @@ def parse(value) -> dict:
     }
 
 
-def _content(raw: dict) -> dict:
+#: The background's denoise when the scene doesn't say: an edit keeps the scene unless asked, as
+#: Region Backdrop does. Layers default to 1 — they are what is being replaced.
+BACKGROUND_DENOISE = 0.05
+
+
+def _content(raw: dict, denoise: float = 1.0) -> dict:
     """What a layer carries, box aside: prompt, references, LoRAs, denoise, on."""
     refs = [
         {
@@ -97,7 +103,7 @@ def _content(raw: dict) -> dict:
         "prompt": str(raw.get("prompt") or "").strip(),
         "refs": [r for r in refs if r["strength"] > 0.0],
         "loras": loras,
-        "denoise": min(1.0, max(0.0, _num(raw.get("denoise"), 1.0))),
+        "denoise": min(1.0, max(0.0, _num(raw.get("denoise"), denoise))),
     }
 
 
