@@ -37,7 +37,7 @@ import logging
 
 import torch
 
-from . import _capture, _track
+from . import _capture, _lock, _state, _track
 
 #: How far either side of `route_at` a multi-block read spreads, as a fraction of the stack.
 _SPREAD = 0.2
@@ -107,6 +107,7 @@ def post_input_patch(state, text=None):
 
     def patch(args):
         options = args["transformer_options"]
+        base = state.lock_pass == _state.BASE_PASS
         sigmas = options.get("sigmas")
         if sigmas is not None:
             state.note_sigma(float(sigmas.flatten()[0].item()))
@@ -119,11 +120,16 @@ def post_input_patch(state, text=None):
         state.canvas_tokens = canvas
         state.grid = (int(ids[:, 1].max().item()) + 1, int(ids[:, 2].max().item()) + 1)
 
-        if sigmas is not None:
+        if sigmas is not None and not base:
             state.note_step(float(sigmas.flatten()[0].item()), options.get("sample_sigmas"))
 
         img = args["img"]
         state.ensure_anchor(img.device)
+        if base:
+            # The layout lock's base pass (see `_lock`): the plain sequence, no copies.
+            state.copies = None
+            state.copy_tokens = 0
+            return args
         built = (
             text.make(args["txt"], _conditional_rows(options, img.shape[0]))
             if text is not None
@@ -250,6 +256,17 @@ def attn1_patch(state, config: TrackConfig):
         total = options.get("total_blocks")
         anchor = state.anchor
         canvas = state.canvas_tokens
+        swapped = {}
+
+        if state.lock_pass == _state.BASE_PASS:
+            if block is not None and canvas > 0:
+                _lock.record(state, block, q, k)
+            return {}
+        if state.lock_pass == _state.LOCKED_PASS and block is not None:
+            held = _lock.swap(state, block, q, k)
+            if held is not None:
+                q, k = held
+                swapped = {"q": q, "k": k}
 
         if (
             config.tracking
@@ -281,11 +298,11 @@ def attn1_patch(state, config: TrackConfig):
 
         bias = _attention_bias(state, config, q)
         if bias is None:
-            return {}
+            return swapped
         # Additive rather than replacing: logit biases compose, so this stacks with any other pack
         # biasing the same attention instead of silently overwriting it.
         if attn_mask is not None and attn_mask.dtype != torch.bool:
             bias = bias + attn_mask.to(dtype=bias.dtype, device=bias.device)
-        return {"attn_mask": bias}
+        return {**swapped, "attn_mask": bias}
 
     return patch

@@ -18,6 +18,11 @@ import torch
 
 from . import _mask, _schedule
 
+#: `GateState.lock_pass` during a layout-locked step (see `_lock`): the base model's pass, which
+#: records the canvas Q/K, then the real pass, which uses them.
+BASE_PASS = "base"
+LOCKED_PASS = "locked"
+
 
 class GateState:
     """Per-token region gates, the layout they index, and the schedule's view of the run."""
@@ -34,6 +39,8 @@ class GateState:
         "gates",
         "grid",
         "last_sigma",
+        "lock_pass",
+        "locked_qk",
         "map",
         "progress",
         "regions",
@@ -79,6 +86,10 @@ class GateState:
         #: `[(step_fraction, scale, frozen)]` for the preview, so the schedule that RAN can be
         #: shown rather than the one that was configured.
         self.trace: list[tuple[float, float, bool]] = []
+        #: None outside a layout-locked step, else `BASE_PASS` or `LOCKED_PASS` (see `_lock`).
+        self.lock_pass: str | None = None
+        #: `{block: (q, k)}` — the base pass's canvas rows, for the locked pass to use.
+        self.locked_qk: dict[int, tuple[torch.Tensor, torch.Tensor]] = {}
 
     def reset(self):
         self.stepped = False
@@ -92,6 +103,8 @@ class GateState:
         self.last_sigma = None
         self.progress.reset()
         self.trace = []
+        self.lock_pass = None
+        self.locked_qk = {}
 
     def note_sigma(self, sigma: float) -> None:
         """Drop a stale run when time runs backwards.
@@ -176,6 +189,8 @@ class GateState:
 
     def for_tokens(self, batch: int, seqlen: int, region: int, device, dtype):
         """One region's gate as `[batch, seqlen, 1]`, or None to mean "apply nothing"."""
+        if self.lock_pass == BASE_PASS:
+            return None  # the base model's pass: no region branch anywhere
         gates = self.gates
         if gates is None or gates.shape[0] != batch or gates.shape[1] != seqlen:
             # The sequence changed under us — a resolution switch on a cached model, or a forward

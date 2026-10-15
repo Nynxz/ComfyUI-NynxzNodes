@@ -15,6 +15,8 @@ against. That is deliberate — this was resolved by bisection and never by tuni
     isolation = 0    attention untouched. The default; raise it only with a specific leak in hand.
     region_prompt    off: the prompt is everyone's, and a LoRA's text side (its `txtfusion`
                      layers, and what it does to the prompt tokens) is not applied at all.
+    layout_lock = 0  no second pass. The default. Above 0, the first steps take their layout from
+                     the base model (see `_lock`) — try it with preheat 1.
 
 Set them all and this is the plain, obvious implementation — which is exactly why they exist.
 
@@ -35,10 +37,11 @@ from __future__ import annotations
 
 import logging
 
+import comfy.patcher_extension
 from comfy_api.latest import io
 
 from .._zenkit.io_types import advanced
-from . import _branch, _capture, _patches, _schedule, _state, _text
+from . import _branch, _capture, _lock, _patches, _schedule, _state, _text
 from ._base import RegionNode
 from ._io_types import Regions
 from ._krea import check_krea2
@@ -196,6 +199,20 @@ class NynxzRegionsApply(RegionNode):
                         "standard deviations, so it is scale-free.",
                     )
                 ),
+                io.Float.Input(
+                    "layout_lock",
+                    default=0.0,
+                    min=0.0,
+                    max=1.0,
+                    step=0.05,
+                    optional=True,
+                    tooltip="Experimental. Fraction of the steps that take their layout from the "
+                    "base model: each of those steps first runs without the region LoRAs, and the "
+                    "real pass uses that pass's image queries and keys (QK-Edit). The LoRAs can "
+                    "then run at full strength from step 0 without moving the composition — try "
+                    "0.25 with preheat 1. Costs a second pass on those steps and about 1.75 GB "
+                    "per image at 1024². 0 is off.",
+                ),
             ],
             outputs=[io.Model.Output(display_name="model")],
         )
@@ -218,6 +235,7 @@ class NynxzRegionsApply(RegionNode):
         route_at=0.5,
         route_blocks=3,
         sharpness=2.0,
+        layout_lock=0.0,
     ) -> io.NodeOutput:
         total_blocks = check_krea2(model, "Regions Apply")
         entries = list(regions or [])
@@ -268,13 +286,22 @@ class NynxzRegionsApply(RegionNode):
         patched.set_model_patch(_patches.post_input_patch(state, text), "post_input")
         patched.set_model_patch(_patches.attn1_patch(state, config), "attn1_patch")
         _branch.attach(patched, loaded, state, text)
+        if layout_lock > 0.0:
+            patched.add_wrapper_with_key(
+                comfy.patcher_extension.WrappersMP.DIFFUSION_MODEL,
+                _lock.WRAPPER_KEY,
+                _lock.LayoutLock(state, layout_lock),
+            )
         _capture.clear()
 
         # To the log rather than to a socket. What loaded and what will run where is worth
         # having when something is wrong and worth nothing the rest of the time, which is exactly
         # a log line and not an output every graph has to route somewhere. Region Inspect shows
         # the bindings before the run and Regions Preview shows the map after it.
-        logging.info("Nynxz Regions: %s", _summary(report, config, schedule, total_blocks, text))
+        logging.info(
+            "Nynxz Regions: %s",
+            _summary(report, config, schedule, total_blocks, text, layout_lock),
+        )
         return io.NodeOutput(patched)
 
 
@@ -321,7 +348,7 @@ def _load(patcher, entries, text: bool = True):
     return loaded, text_loaded, report
 
 
-def _summary(report, config, schedule, total_blocks, text=None) -> str:
+def _summary(report, config, schedule, total_blocks, text=None, layout_lock=0.0) -> str:
     """What will actually run. Deliberately states the mechanism state, not just the settings."""
     lines = list(report)
 
@@ -336,6 +363,11 @@ def _summary(report, config, schedule, total_blocks, text=None) -> str:
         reason = "track = 0" if config.track <= 0 else "refine = 0"
         lines.append(f"tracking: OFF ({reason}) — the masks are used exactly as given")
     lines.append(f"schedule: {schedule.describe()}")
+    if layout_lock > 0.0:
+        lines.append(
+            f"layout lock: the base model's layout for the first {min(layout_lock, 1.0):.0%} of "
+            "steps, each run twice"
+        )
     lines.append(
         f"isolation: {config.isolation:.2f}"
         + (" — attention untouched" if config.isolation <= 0 and text is None else "")
