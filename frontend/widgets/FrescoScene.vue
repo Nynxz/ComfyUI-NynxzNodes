@@ -425,7 +425,7 @@ const OVERLAPS = [
 const INFLUENCE_TIP =
   "How strongly this area follows its own prompt and references, against the rest of the " +
   "picture. Raise it when the references aren't coming through; too high and the area stops " +
-  "fitting in.";
+  "fitting in. Below 1 also weakens the layer's LoRAs — their text side is in the same prompt.";
 
 const scene = ref<FrescoScene>(parseScene(props.widget?.value));
 const selected = ref<string[]>([]);

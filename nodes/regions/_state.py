@@ -22,6 +22,9 @@ from . import _mask, _schedule
 #: records the canvas Q/K, then the real pass, which uses them.
 BASE_PASS = "base"
 LOCKED_PASS = "locked"
+#: How far `release` carries a LoRA past its region's edge, in canvas tokens (16 px each on
+#: Krea 2). Release softens a subject's own edge; past this it would be bleed.
+RELEASE_REACH = 4
 
 
 class GateState:
@@ -174,10 +177,21 @@ class GateState:
             rows = slice(self.txtlen, self.txtlen + canvas)
             claim = current[:canvas, :regions]  # drop the background column; it gates nothing
             if self.floor > 0.0:
-                # Lift the whole map off zero so a LoRA never stops dead at the mask's edge.
-                # Applied to the claim and not to the strength, so `strength` keeps meaning "what
-                # this LoRA does where it fully owns a token" at every setting.
-                claim = self.floor + (1.0 - self.floor) * claim
+                # Lift the map off zero so a LoRA never stops dead at the mask's edge — but only
+                # into space no OTHER LoRA region claims. Lifting it everywhere put every
+                # character's LoRA into every other character at `floor`, which with several
+                # characters is their identities averaged. A region with no LoRA (a backdrop
+                # holding territory) doesn't block it — the scene is exactly where the edge should
+                # soften. Applied to the claim and not to the strength, so `strength` keeps
+                # meaning "what this LoRA does where it fully owns a token".
+                runs = torch.tensor(
+                    [1.0 if r.get("loras") else 0.0 for r in self.regions],
+                    device=claim.device,
+                    dtype=claim.dtype,
+                )
+                others = (claim * runs).sum(dim=-1, keepdim=True) - claim * runs
+                free = (1.0 - others).clamp(0.0, 1.0)
+                claim = claim + self.floor * (1.0 - claim) * free * self._near(claim)
             weighted = claim * self.scale
             gates[:, rows, :] = weighted.unsqueeze(0)
         for slot in self.copy_slots():
@@ -186,6 +200,21 @@ class GateState:
                 gates[:, rows, slot[0]] = self.scale
         self.gates = gates
         return gates
+
+    def _near(self, claim: torch.Tensor) -> torch.Tensor:
+        """`[canvas, regions]`, 1 in and right around each region, fading to 0 by `RELEASE_REACH`
+        tokens out — how far `release` may carry a LoRA past its edge. Everywhere (1) when the
+        canvas isn't a whole grid, which is how release behaved before it had a reach."""
+        height, width = self.grid
+        tokens, regions = claim.shape
+        if height * width != tokens or regions == 0:
+            return torch.ones_like(claim)
+        reach = RELEASE_REACH
+        field = claim.T.reshape(1, regions, height, width)
+        blurred = torch.nn.functional.avg_pool2d(
+            field, 2 * reach + 1, stride=1, padding=reach, count_include_pad=False
+        )
+        return (blurred * 2.0).clamp(0.0, 1.0).reshape(regions, tokens).T
 
     def copy_slots(self) -> list[tuple[int, int, int]]:
         """`(region, start, length)` per copy of the prompt, or none."""

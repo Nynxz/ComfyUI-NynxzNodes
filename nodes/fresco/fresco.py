@@ -238,12 +238,13 @@ class NynxzFrescoApply(FrescoNode):
                 advanced(
                     io.Float.Input(
                         "track",
-                        default=0.4,
+                        default=0.0,
                         min=0.0,
                         max=1.0,
                         step=0.05,
                         tooltip="How far a layer may follow its subject off the drawn shape. 0 "
-                        "keeps it exactly where you drew it.",
+                        "(default) keeps it exactly where you drew it — in Fresco the boxes are the "
+                        "layout. Raise it for an edit whose subjects don't sit exactly in the boxes.",
                     )
                 ),
                 advanced(
@@ -294,7 +295,7 @@ class NynxzFrescoApply(FrescoNode):
         isolation=0.0,
         lora_warmup=0.35,
         commit_at=0.3,
-        track=0.4,
+        track=0.0,
         release=0.15,
     ) -> io.NodeOutput:
         regions = list(fresco.get("regions") or [])
