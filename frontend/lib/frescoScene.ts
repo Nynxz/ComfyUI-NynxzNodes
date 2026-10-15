@@ -234,3 +234,21 @@ export function summarize(content: FrescoContent): string {
   if (loras) parts.push(`${loras} LoRA${loras > 1 ? "s" : ""}`);
   return parts.join(" · ") || "empty";
 }
+
+/** A media ref as nodekit's drop helpers give it (`input/sub/file.png`) as a reference's file. */
+export function refFromMedia(media: string): { ref: string; type: SourceType } {
+  const [head, ...rest] = media.split("/");
+  return ["input", "temp", "output"].includes(head!)
+    ? { ref: rest.join("/"), type: head as SourceType }
+    : { ref: media, type: "input" };
+}
+
+/** A new reference row for a file. */
+export function newRef(file: { ref: string; type: SourceType }): FrescoRef {
+  return { id: uid("r"), ...file, strength: 1, fit: "contain", on: true };
+}
+
+/** Whether a media ref is an image a reference can use. */
+export function isImage(media: string): boolean {
+  return /\.(png|jpe?g|webp|gif|bmp|avif)$/i.test(media);
+}

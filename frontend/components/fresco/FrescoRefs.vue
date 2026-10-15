@@ -2,9 +2,9 @@
   <div
     class="fr"
     :class="{ dropping: dragOver }"
-    @dragover.prevent="dragOver = true"
+    @dragover="onDragOver"
     @dragleave="dragOver = false"
-    @drop.prevent="onDrop"
+    @drop="onDrop"
   >
     <div v-for="(r, i) in refs" :key="r.id" class="fr-tile" :class="{ off: !r.on }">
       <div class="fr-thumb" :title="r.ref">
@@ -88,9 +88,16 @@
 import { ref } from "vue";
 import { ZenMediaPicker, ZenNumber } from "@nynxz/zenkit-ui";
 
-import { mediaLibrary } from "@/framework";
+import { hasMediaDrop, mediaLibrary, readMediaDrop } from "@/framework";
 import { thumbUrl, uploadImage, type SourceType } from "@/lib/fusionApi";
-import { REF_FITS, uid, type FrescoRef, type RefFit } from "@/lib/frescoScene";
+import {
+  REF_FITS,
+  isImage,
+  newRef,
+  refFromMedia,
+  type FrescoRef,
+  type RefFit,
+} from "@/lib/frescoScene";
 
 const refs = defineModel<FrescoRef[]>({ required: true });
 
@@ -122,16 +129,7 @@ function cycleFit(i: number) {
 }
 function add(entries: { ref: string; type: SourceType }[]) {
   if (!entries.length) return;
-  refs.value = [
-    ...refs.value,
-    ...entries.map((e) => ({
-      id: uid("r"),
-      ...e,
-      strength: 1,
-      fit: "contain" as RefFit,
-      on: true,
-    })),
-  ];
+  refs.value = [...refs.value, ...entries.map(newRef)];
 }
 
 async function addFiles(files: File[]) {
@@ -154,9 +152,26 @@ async function onUpload(e: Event) {
   await addFiles([...(input.files ?? [])]);
   input.value = "";
 }
+function onDragOver(e: DragEvent) {
+  if (!hasMediaDrop(e)) return;
+  e.preventDefault();
+  e.stopPropagation();
+  dragOver.value = true;
+}
+/** Anything nodekit knows how to read: the asset browser, the Media Viewer, ZenKit media, a URL,
+ *  or files from the desktop (uploaded into input/fresco). */
 async function onDrop(e: DragEvent) {
+  if (!hasMediaDrop(e)) return;
+  e.preventDefault();
+  e.stopPropagation();
   dragOver.value = false;
-  await addFiles([...(e.dataTransfer?.files ?? [])]);
+  busy.value = true;
+  try {
+    const media = await readMediaDrop(e, "fresco");
+    add(media.filter(isImage).map(refFromMedia));
+  } finally {
+    busy.value = false;
+  }
 }
 function addPicked(picked: string[]) {
   add(

@@ -121,7 +121,14 @@
       </ZenPopover>
     </header>
 
-    <div class="fs-stage" @wheel="onStageWheel">
+    <div
+      class="fs-stage"
+      :class="{ dropping: dropOver }"
+      @wheel="onStageWheel"
+      @dragover="onStageDragOver"
+      @dragleave="dropOver = false"
+      @drop="onStageDrop"
+    >
       <ZenBoxCanvas
         v-model:boxes="boxes"
         v-model:selected="selected"
@@ -306,7 +313,14 @@
 </template>
 
 <script lang="ts">
-import { mediaLibrary, nodeId, type NodeDef, type WidgetOptions } from "@/framework";
+import {
+  hasMediaDrop,
+  mediaLibrary,
+  nodeId,
+  readMediaDrop,
+  type NodeDef,
+  type WidgetOptions,
+} from "@/framework";
 
 /** The body is the node's, and nothing in it changes size as you work — see the layout below. */
 export const widgetOptions: WidgetOptions = { minHeight: 520, fill: true, default: {} };
@@ -345,6 +359,7 @@ import {
   ZenResolution,
   ZenScroll,
   ZenToggleGroup,
+  boxAt,
   useWheelClaim,
   type BoxTool,
   type LayerItem,
@@ -356,7 +371,10 @@ import FrescoContentForm from "@/components/fresco/FrescoContentForm.vue";
 import { thumbUrl, type SourceType } from "@/lib/fusionApi";
 import {
   BACKGROUND_ID,
+  isImage,
   newLayer,
+  newRef,
+  refFromMedia,
   parseScene,
   summarize,
   type FrescoContent,
@@ -500,6 +518,47 @@ const HELP: [string, string][] = [
   ["[  ]  or wheel", "brush size, while painting"],
   ["Alt while dragging", "no snapping"],
 ];
+
+// --- dropping media on the canvas ----------------------------------------------------------------
+
+const dropOver = ref(false);
+function onStageDragOver(e: DragEvent) {
+  if (!hasMediaDrop(e)) return;
+  e.preventDefault();
+  dropOver.value = true;
+}
+/** Media dropped on a layer becomes its reference; dropped on empty canvas, a new layer around
+ *  the drop with it as the reference. */
+async function onStageDrop(e: DragEvent) {
+  dropOver.value = false;
+  if (!hasMediaDrop(e)) return;
+  e.preventDefault();
+  e.stopPropagation();
+  const stage = wheel.el.value?.querySelector<HTMLElement>(".zbc");
+  const rect = stage?.getBoundingClientRect();
+  if (!rect || !rect.width) return;
+  const x = (e.clientX - rect.left) / rect.width;
+  const y = (e.clientY - rect.top) / rect.height;
+  const media = (await readMediaDrop(e, "fresco")).filter(isImage);
+  if (!media.length) return;
+  const refs = media.map((m) => newRef(refFromMedia(m)));
+  const hit = boxAt(boxes.value, x, y);
+  if (hit) {
+    updateLayers((l) => (l.id === hit.id ? { ...l, refs: [...l.refs, ...refs] } : l));
+    selected.value = [hit.id];
+    return;
+  }
+  const w = 0.3;
+  const h = Math.min(0.9, (w * scene.value.width) / scene.value.height);
+  createLayer({
+    x: Math.min(1 - w, Math.max(0, x - w / 2)),
+    y: Math.min(1 - h, Math.max(0, y - h / 2)),
+    w,
+    h,
+  });
+  const id = selected.value[0];
+  updateLayers((l) => (l.id === id ? { ...l, refs } : l));
+}
 
 /** Over the canvas while painting, the wheel sizes the brush; anywhere else it scrolls a panel
  *  or goes to the graph (see `wheel`). */
@@ -710,6 +769,11 @@ onBeforeUnmount(() => api.removeEventListener("executed", onExecuted));
   padding: 8px;
 }
 
+.fs-stage.dropping {
+  outline: 2px dashed var(--zen-accent, #6366f1);
+  outline-offset: -2px;
+  border-radius: var(--zen-radius, 7px);
+}
 .fs-stage {
   grid-column: 2;
   grid-row: 2;
