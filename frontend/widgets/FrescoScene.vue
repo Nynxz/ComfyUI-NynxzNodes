@@ -45,6 +45,47 @@
       </ZenPopover>
     </nav>
 
+    <header class="fs-status">
+      <span class="fs-tip">
+        <template v-if="mismatch">
+          Source is {{ sourceSize![0] }}×{{ sourceSize![1] }}
+          <button type="button" class="fs-link" @click="matchSource">match canvas</button>
+        </template>
+        <template v-else>{{ tip }}</template>
+      </span>
+      <label class="fs-ctl" :class="{ dim: tool === 'select' }" title="Brush size — [ and ]">
+        <i class="mdi mdi-brush" />
+        <ZenSlider v-model="brushSize" :min="0.01" :max="0.3" :step="0.005" />
+      </label>
+      <label class="fs-ctl" :class="{ dim: !backdropUrl }" title="Trace image opacity">
+        <i class="mdi mdi-image-outline" />
+        <ZenSlider
+          v-model="backdropOpacity"
+          :min="0.1"
+          :max="1"
+          :step="0.05"
+          :disabled="!backdropUrl"
+        />
+      </label>
+      <ZenPopover placement="bottom-end" role="dialog">
+        <template #trigger="{ toggle }">
+          <button type="button" class="fs-chip" title="Canvas size" @click="toggle">
+            {{ scene.width }}×{{ scene.height }}
+          </button>
+        </template>
+        <ZenResolution
+          :width="scene.width"
+          :height="scene.height"
+          :snap="32"
+          :presets="[0.5, 1, 1.5, 2]"
+          :max-side="2048"
+          :max-mp="4"
+          @update:width="setSize($event, scene.height)"
+          @update:height="setSize(scene.width, $event)"
+        />
+      </ZenPopover>
+    </header>
+
     <div class="fs-stage">
       <ZenBoxCanvas
         v-model:boxes="boxes"
@@ -76,47 +117,6 @@
         </template>
       </ZenBoxCanvas>
     </div>
-
-    <footer class="fs-status">
-      <span class="fs-tip">
-        <template v-if="mismatch">
-          Source is {{ sourceSize![0] }}×{{ sourceSize![1] }}
-          <button type="button" class="fs-link" @click="matchSource">match canvas</button>
-        </template>
-        <template v-else>{{ tip }}</template>
-      </span>
-      <label class="fs-ctl" :class="{ dim: tool === 'select' }" title="Brush size — [ and ]">
-        <i class="mdi mdi-brush" />
-        <ZenSlider v-model="brushSize" :min="0.01" :max="0.3" :step="0.005" />
-      </label>
-      <label class="fs-ctl" :class="{ dim: !backdropUrl }" title="Trace image opacity">
-        <i class="mdi mdi-image-outline" />
-        <ZenSlider
-          v-model="backdropOpacity"
-          :min="0.1"
-          :max="1"
-          :step="0.05"
-          :disabled="!backdropUrl"
-        />
-      </label>
-      <ZenPopover placement="top-end" role="dialog">
-        <template #trigger="{ toggle }">
-          <button type="button" class="fs-chip" title="Canvas size" @click="toggle">
-            {{ scene.width }}×{{ scene.height }}
-          </button>
-        </template>
-        <ZenResolution
-          :width="scene.width"
-          :height="scene.height"
-          :snap="32"
-          :presets="[0.5, 1, 1.5, 2]"
-          :max-side="2048"
-          :max-mp="4"
-          @update:width="setSize($event, scene.height)"
-          @update:height="setSize(scene.width, $event)"
-        />
-      </ZenPopover>
-    </footer>
 
     <aside class="fs-side">
       <section class="fs-pane fs-layers">
@@ -696,12 +696,12 @@ onBeforeUnmount(() => api.removeEventListener("executed", onExecuted));
 </script>
 
 <style scoped>
-/* rail | canvas | side, with the status bar under the canvas. Every track is a fixed size or a
+/* rail | canvas | side, with the status bar over the canvas so all three end on one line. Every track is a fixed size or a
    share of the node, never its content, so selecting or typing can't move anything. */
 .fs {
   display: grid;
   grid-template-columns: 34px minmax(0, 1fr) 300px;
-  grid-template-rows: minmax(0, 1fr) 30px;
+  grid-template-rows: 30px minmax(0, 1fr);
   gap: 6px 8px;
   width: 100%;
   height: 100%;
@@ -735,6 +735,8 @@ onBeforeUnmount(() => api.removeEventListener("executed", onExecuted));
 }
 
 .fs-stage {
+  grid-column: 2;
+  grid-row: 2;
   min-width: 0;
   min-height: 0;
 }
@@ -750,6 +752,8 @@ onBeforeUnmount(() => api.removeEventListener("executed", onExecuted));
 }
 
 .fs-status {
+  grid-column: 2;
+  grid-row: 1;
   display: flex;
   align-items: center;
   gap: 12px;
