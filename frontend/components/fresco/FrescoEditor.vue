@@ -30,13 +30,6 @@
         title="Add a layer (or drag on the canvas)"
         @click="createLayer({ x: 0.3, y: 0.3, w: 0.4, h: 0.4 })"
       />
-      <ZenIconButton
-        v-if="canPopOut"
-        size="sm"
-        icon="mdi mdi-open-in-new"
-        title="Open in a ZenKit panel — bigger, dockable, and the node keeps a summary"
-        @click="emit('popOut')"
-      />
       <ZenPopover placement="right-start" role="dialog">
         <template #trigger="{ toggle }">
           <ZenIconButton
@@ -69,6 +62,14 @@
           </ZenButton>
         </div>
       </ZenPopover>
+      <span class="fs-rail-grow" />
+      <ZenIconButton
+        v-if="canPopOut"
+        size="sm"
+        icon="mdi mdi-open-in-new"
+        title="Open in a ZenKit panel — bigger, dockable, and the node keeps a summary"
+        @click="emit('popOut')"
+      />
     </nav>
 
     <ZenSplit
@@ -846,6 +847,9 @@ onBeforeUnmount(() => api.removeEventListener("executed", onExecuted));
   border: 1px solid var(--zen-border, #34343c);
   border-radius: var(--zen-radius, 7px);
   background: color-mix(in srgb, var(--zen-text, #fff) 2%, transparent);
+}
+.fs-rail-grow {
+  flex: 1;
 }
 .fs-rail-sep {
   width: 18px;
