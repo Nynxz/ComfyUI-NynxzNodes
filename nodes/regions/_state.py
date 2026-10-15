@@ -27,6 +27,18 @@ LOCKED_PASS = "locked"
 RELEASE_REACH = 4
 
 
+def _groups(regions) -> torch.Tensor:
+    """`[regions, groups]` one-hot from each region's `group` key (its index when it has none)."""
+    keys = [
+        r.get("group", f"#{i}") if isinstance(r, dict) else f"#{i}" for i, r in enumerate(regions)
+    ]
+    order = list(dict.fromkeys(keys))
+    out = torch.zeros((len(keys), max(len(order), 1)))
+    for i, key in enumerate(keys):
+        out[i, order.index(key)] = 1.0
+    return out
+
+
 class GateState:
     """Per-token region gates, the layout they index, and the schedule's view of the run."""
 
@@ -42,6 +54,7 @@ class GateState:
         "frozen",
         "gates",
         "grid",
+        "groups",
         "influences",
         "last_sigma",
         "lock_pass",
@@ -82,6 +95,9 @@ class GateState:
             min(4.0, max(1e-4, float(r.get("influence", 1.0)))) if isinstance(r, dict) else 1.0
             for r in regions
         ]
+        #: `[regions, groups]` one-hot: regions sharing a `group` key count as one subject for
+        #: isolation. Each region is its own group unless it says otherwise.
+        self.groups = _groups(regions)
         #: `(key, [B, 1, L, L])` — the attention bias, kept while the map and the step's scale hold.
         self.bias: tuple | None = None
         self.grid: tuple[int, int] = (0, 0)

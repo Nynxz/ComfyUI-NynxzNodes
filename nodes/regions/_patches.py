@@ -230,6 +230,9 @@ def _attention_bias(state, config: TrackConfig, q) -> torch.Tensor | None:
         # column goes with them, so two background tokens read as being in full agreement and are
         # never separated.
         share = claim / claim.sum(dim=-1, keepdim=True).clamp(min=1e-6)
+        # Regions in one group are one subject (Fresco's layer split into its box and its
+        # reference shape), so they agree with each other and are never pushed apart.
+        share = share @ state.groups.to(share.device, share.dtype)
         agreement = (share @ share.transpose(0, 1)).clamp(0.0, 1.0)
         bias[:, rows, rows] = (-isolation * (1.0 - agreement)).to(q.dtype)
     if routed:

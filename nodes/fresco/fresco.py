@@ -151,13 +151,15 @@ class NynxzFresco(FrescoNode):
         parsed = _scene.parse(scene)
         width, height = parsed["width"], parsed["height"]
         settings = parsed["settings"]
-        layers = [layer for layer in parsed["layers"] if layer["on"] and layer["w"] and layer["h"]]
+        layers = _scene.parts(
+            [layer for layer in parsed["layers"] if layer["on"] and layer["w"] and layer["h"]]
+        )
         background = parsed["background"]
 
         size = _scene.working_size(width, height)
         masks, rest = _scene.compose(layers, size, (height, width), settings["overlap"])
         visual_size = settings["visual_size"]
-        regions, layout = [], []
+        regions, layout, outlines = [], [], []
         for index, (layer, mask) in enumerate(zip(layers, masks, strict=True)):
             if float(mask.max()) <= 0.0:
                 logging.warning(
@@ -167,8 +169,17 @@ class NynxzFresco(FrescoNode):
             region, first = _region(
                 clip, layer, mask, parsed["prompt"], visual_size, f"layer {index + 1}"
             )
+            region["group"] = layer["group"]
             regions.append(region)
             layout.append((mask, first))
+            outlines.append(
+                {
+                    "label": layer["name"],
+                    "color": layer.get("color", ""),
+                    "mask": _scene.layer_mask(layer, size, (height, width)),
+                    "part": layer["part"],
+                }
+            )
         backdrop = None
         if background["on"] and float(rest.max()) > 0.0:
             region, backdrop = _region(
@@ -198,6 +209,7 @@ class NynxzFresco(FrescoNode):
                 "background_denoise": background["denoise"] if background["on"] else 0.0,
                 "node": str(cls.hidden.unique_id or ""),
                 "layout": {"layers": layout, "background": backdrop},
+                "outlines": outlines,
             }
         )
 

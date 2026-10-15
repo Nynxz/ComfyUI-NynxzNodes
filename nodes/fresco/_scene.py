@@ -137,6 +137,11 @@ def _layer(raw: dict, index: int) -> dict:
         "h": min(1.0 - y, max(0.0, _num(raw.get("h"), 0.0))),
         "mask": raw.get("mask") if isinstance(raw.get("mask"), str) else None,
         "feather": max(0, int(_num(raw.get("feather"), 0))),
+        "id": str(raw.get("id") or f"layer{index}"),
+        "color": str(raw.get("color") or ""),
+        #: What a painted shape limits: "layer" — the whole layer is the shape; "refs" — the
+        #: layer is its whole box, and the shape is only where its references are read.
+        "shape_for": "refs" if raw.get("shapeFor") == "refs" else "layer",
     }
 
 
@@ -185,6 +190,25 @@ def layer_mask(layer: dict, size: tuple[int, int], canvas: tuple[int, int]) -> t
         out[top:bottom, left:right] = resized.clamp(0.0, 1.0)
     feather = round(layer.get("feather", 0) * width / max(canvas[1], 1))
     return _mask.shape_mask(out, grow=0, feather=feather) if feather > 0 else out
+
+
+def parts(layers: list[dict]) -> list[dict]:
+    """The layers as the regions they become, bottom to top.
+
+    A layer whose shape is for its references only (`shape_for = refs`, with a painted shape and
+    references) becomes two parts in one group: its whole box with the plain prompt, and its
+    painted shape above it with the prompt read against the references. Both carry the layer's
+    LoRAs, so the LoRAs cover the whole box. Any other layer is one part.
+    """
+    out = []
+    for layer in layers:
+        group = layer.get("id", layer["name"])
+        if layer.get("shape_for") == "refs" and layer.get("mask") and layer["refs"]:
+            out.append({**layer, "mask": None, "refs": [], "group": group, "part": "box"})
+            out.append({**layer, "name": f"{layer['name']} · refs", "group": group, "part": "refs"})
+        else:
+            out.append({**layer, "group": group, "part": "layer"})
+    return out
 
 
 def compose(layers: list[dict], size: tuple[int, int], canvas: tuple[int, int], overlap: str):
