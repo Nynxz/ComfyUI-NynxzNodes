@@ -45,8 +45,13 @@ Load Model ── model ────────┤
   sampler its positive and latent. With an **image** and a **VAE** it edits that image: the latent
   is the image with each layer's denoise as its noise mask — sample it with the **SoftPaint
   Sampler**, or Differential Diffusion on the model. After a run the image shows under Fresco's
-  canvas, with a one-click "match canvas" when the shapes differ. Advanced: `layout_lock` and
-  `isolation`, as on Regions Apply.
+  canvas, with a one-click "match canvas" when the shapes differ. Advanced: `lora_warmup`,
+  `commit_at`, `track`, `release`, `isolation` and `layout_lock`, as on Regions Apply.
+
+**Fresco Apply is Regions Apply** with Fresco's regions — don't chain another Regions Apply after
+it; regions applied twice break each other, and Regions Apply now refuses a model that already
+has them. For every Regions Apply setting, give a separate Regions Apply the _plain_ model and
+Fresco Apply's `regions`, and take only `positive` and `latent` from Fresco Apply.
 
 Reference images on Krea 2 carry **meaning** more than exact looks — "a red floral summer dress",
 not that dress stitch for stitch. Per-layer reference latents, for exact appearance, are next.

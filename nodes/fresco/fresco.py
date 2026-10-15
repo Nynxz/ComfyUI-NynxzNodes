@@ -214,6 +214,51 @@ class NynxzFrescoApply(FrescoNode):
                 ),
                 advanced(
                     io.Float.Input(
+                        "lora_warmup",
+                        default=0.35,
+                        min=0.0,
+                        max=1.0,
+                        step=0.05,
+                        tooltip="LoRA strength before `commit_at` (Regions Apply's preheat). 1 = "
+                        "full strength from the first step; lower keeps the LoRAs from pushing "
+                        "the composition around while it forms.",
+                    )
+                ),
+                advanced(
+                    io.Float.Input(
+                        "commit_at",
+                        default=0.3,
+                        min=0.0,
+                        max=1.0,
+                        step=0.05,
+                        tooltip="Fraction of the steps after which the LoRAs ramp to full and the "
+                        "layer map stops moving.",
+                    )
+                ),
+                advanced(
+                    io.Float.Input(
+                        "track",
+                        default=0.4,
+                        min=0.0,
+                        max=1.0,
+                        step=0.05,
+                        tooltip="How far a layer may follow its subject off the drawn shape. 0 "
+                        "keeps it exactly where you drew it.",
+                    )
+                ),
+                advanced(
+                    io.Float.Input(
+                        "release",
+                        default=0.15,
+                        min=0.0,
+                        max=1.0,
+                        step=0.05,
+                        tooltip="How far a layer's LoRAs reach past its edge after the commit, so "
+                        "subjects don't look cut out. 0 keeps the edge hard.",
+                    )
+                ),
+                advanced(
+                    io.Float.Input(
                         "isolation",
                         default=0.0,
                         min=0.0,
@@ -240,7 +285,17 @@ class NynxzFrescoApply(FrescoNode):
 
     @classmethod
     def execute(
-        cls, model, fresco, image=None, vae=None, layout_lock=0.0, isolation=0.0
+        cls,
+        model,
+        fresco,
+        image=None,
+        vae=None,
+        layout_lock=0.0,
+        isolation=0.0,
+        lora_warmup=0.35,
+        commit_at=0.3,
+        track=0.4,
+        release=0.15,
     ) -> io.NodeOutput:
         regions = list(fresco.get("regions") or [])
         if _active(regions):
@@ -251,6 +306,10 @@ class NynxzFrescoApply(FrescoNode):
                 regions,
                 isolation=isolation,
                 layout_lock=layout_lock,
+                preheat=lora_warmup,
+                commit_at=commit_at,
+                track=track,
+                release=release,
                 prompt_follows_schedule=False,
             ).result[0]
         else:

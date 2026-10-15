@@ -269,6 +269,13 @@ class NynxzRegionsApply(RegionNode):
                 "you encode the main prompt with) into Regions Apply's `clip`."
             )
 
+        if _already_regioned(model):
+            raise ValueError(
+                "This model already has regions on it — from Fresco Apply or another Regions "
+                "Apply upstream. Applying them twice breaks both (each inserts its own prompt "
+                "copies, and the other's gates stop lining up), so use one. Fresco Apply has the "
+                "schedule and tracking settings too."
+            )
         patched = model.clone()
         loaded, text_loaded, report = _load(patched, entries, region_prompt)
 
@@ -316,6 +323,12 @@ class NynxzRegionsApply(RegionNode):
             _summary(report, config, schedule, total_blocks, text, layout_lock),
         )
         return io.NodeOutput(patched)
+
+
+def _already_regioned(model) -> bool:
+    """Whether `model` already carries this pack's region patches."""
+    get = getattr(model, "get_injections", None)
+    return bool(get and get(_branch.INJECTION_KEY))
 
 
 def _encode(clip, prompt: str):
