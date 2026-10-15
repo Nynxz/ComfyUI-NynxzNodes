@@ -37,6 +37,34 @@ export interface FrescoContent {
   softness: number;
 }
 
+/** What travels when two layers swap: what goes in the place, not the place (box, shape,
+ *  capture) or the colour that marks it. The name describes the content, so it goes with it. */
+const CONTENT_KEYS = [
+  "name",
+  "prompt",
+  "refs",
+  "loras",
+  "denoise",
+  "influence",
+  "blend",
+  "softness",
+] as const;
+
+/** `layers` with the content of layers `a` and `b` exchanged; each keeps its own box and shape. */
+export function swapContent(layers: FrescoLayer[], a: string, b: string): FrescoLayer[] {
+  const first = layers.find((l) => l.id === a);
+  const second = layers.find((l) => l.id === b);
+  if (!first || !second || a === b) return layers;
+  const take = (from: FrescoLayer) =>
+    Object.fromEntries(CONTENT_KEYS.map((k) => [k, from[k]])) as Pick<
+      FrescoLayer,
+      (typeof CONTENT_KEYS)[number]
+    >;
+  return layers.map((l) =>
+    l.id === a ? { ...l, ...take(second) } : l.id === b ? { ...l, ...take(first) } : l,
+  );
+}
+
 export type Blend = "mix" | "weighted" | "tiled" | "salient";
 export const BLENDS: { value: Blend; label: string; title: string }[] = [
   { value: "mix", label: "Mix", title: "Every reference interleaved in equal shares" },

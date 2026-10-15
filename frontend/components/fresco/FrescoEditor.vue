@@ -254,6 +254,30 @@
                     :model-value="currentLayer.name"
                     @update:model-value="patchCurrent({ name: String($event ?? '') })"
                   />
+                  <ZenPopover v-if="scene.layers.length > 1" placement="bottom-end" role="dialog">
+                    <template #trigger="{ toggle }">
+                      <ZenIconButton
+                        size="sm"
+                        icon="mdi mdi-swap-horizontal"
+                        title="Swap content with another layer — prompt, references and LoRAs trade places; each keeps its own box and shape"
+                        @click="toggle"
+                      />
+                    </template>
+                    <template #default="{ close }">
+                      <div class="fs-menu">
+                        <span class="fs-menu-title">Swap content with</span>
+                        <ZenButton
+                          v-for="other in scene.layers.filter((l) => l.id !== currentLayer!.id)"
+                          :key="other.id"
+                          sm
+                          @click="swapWith(other.id, close)"
+                        >
+                          <span class="fs-swatch" :style="{ background: other.color }" />
+                          {{ other.name }}
+                        </ZenButton>
+                      </div>
+                    </template>
+                  </ZenPopover>
                   <ZenIconButton
                     size="sm"
                     danger
@@ -485,6 +509,7 @@ import {
   newRef,
   refFromMedia,
   summarize,
+  swapContent,
   type FrescoContent,
   type FrescoLayer,
   type FrescoPoint,
@@ -663,6 +688,13 @@ function createLayer(rect: { x: number; y: number; w: number; h: number }) {
   scene.value = { ...scene.value, layers: [...scene.value.layers, layer] };
   selected.value = [layer.id];
   tool.value = "select";
+  commit();
+}
+function swapWith(other: string, close: () => void) {
+  close();
+  const id = currentLayer.value?.id;
+  if (!id) return;
+  scene.value = { ...scene.value, layers: swapContent(scene.value.layers, id, other) };
   commit();
 }
 function setMask(id: string, mask: string | null) {
@@ -1112,6 +1144,16 @@ onBeforeUnmount(() => api.removeEventListener("executed", onExecuted));
   flex-direction: column;
   gap: 6px;
   padding: 8px;
+}
+.fs-menu-title {
+  color: var(--zen-muted, #9aa0aa);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.fs-menu .zen-btn {
+  justify-content: flex-start;
 }
 
 .fs-stage.dropping {
