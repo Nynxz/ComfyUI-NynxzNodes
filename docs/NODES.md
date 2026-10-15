@@ -49,7 +49,11 @@ Regions from Masks ──> Region LoRAs ──> Regions Apply ──> MODEL ─�
   [SoftPaint](https://arxiv.org/abs/2610.00359). Low values still edit and full ones blend in
   without a seam. No Differential Diffusion needed. Costs `inner_steps + 1` model calls per step
   (3× at the default). Pixels at exactly 0 (a `protect_mask`, or `background=0`) come back as the
-  source. Works with any model, with or without Regions Apply.
+  source. Works with any model, with or without Regions Apply. `mask_means` picks how a mask value
+  reads: `edit strength` (the paper's, edits rise evenly with the value, so mid values rebuild
+  most of a region and a 0.05 background still gets redrawn) or `denoise` (Differential
+  Diffusion's: held to the source until DD would start the pixel, then handed over gradually).
+  Use `denoise` for region swaps on busy scenes; Region Latent's values then mean what they did.
 - **Regions Apply** — patches the model. Every mechanism has an off position that recovers a
   baseline: `track=0` is a static mask, `preheat=1` is a LoRA from step 0, `refine=0` is no
   clustering. Turn them all off and this is plain regional LoRA, which is the thing to beat.
