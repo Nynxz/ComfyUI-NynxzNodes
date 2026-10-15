@@ -3,7 +3,7 @@
     <div v-if="main" class="fbf-pic" :style="maskStyle">
       <img class="fbf-img" :src="thumbUrl(main.ref, main.type)" alt="" draggable="false" />
     </div>
-    <div v-if="more.length" class="fbf-more">
+    <div v-if="more.length" class="fbf-more" :class="{ big: !main }">
       <img
         v-for="r in more.slice(0, 3)"
         :key="r.id"
@@ -22,8 +22,9 @@
 
 <script setup lang="ts">
 /**
- * What a layer carries, drawn inside its box on the canvas: its first reference filling the box,
- * the rest as small thumbs, a LoRA count, and its prompt along the bottom. Detail drops away as
+ * What a layer carries, drawn inside its box on the canvas: its first reference filling the box
+ * (or, for a layer shaped around part of the photo, every reference as a thumbnail), the rest as
+ * small thumbs, a LoRA count, and its prompt along the bottom. Detail drops away as
  * the box gets small (container queries on the canvas's box slot).
  */
 import { computed } from "vue";
@@ -38,8 +39,12 @@ const props = defineProps<{
 }>();
 
 const refs = computed(() => props.layer.refs.filter((r) => r.on));
-const main = computed(() => refs.value[0]);
-const more = computed(() => refs.value.slice(1));
+/** A layer whose shape is its own — segmented or painted around something in the photo — keeps the
+ *  photo visible through it, so its references sit as thumbnails instead of filling the shape.
+ *  A shape for the references alone is where they go, so there the first one fills it. */
+const outlined = computed(() => !!props.layer.mask && props.layer.shapeFor !== "refs");
+const main = computed(() => (outlined.value ? undefined : refs.value[0]));
+const more = computed(() => (outlined.value ? refs.value : refs.value.slice(1)));
 const loras = computed(() => props.layer.loras.filter((r) => r.on && r.name).length);
 </script>
 
@@ -76,6 +81,11 @@ const loras = computed(() => props.layer.loras.filter((r) => r.on && r.name).len
   border-radius: 4px;
   object-fit: cover;
   box-shadow: 0 0 0 1px rgb(0 0 0 / 50%);
+}
+.fbf-more.big img,
+.fbf-more.big .fbf-plus {
+  width: 34px;
+  height: 34px;
 }
 .fbf-plus {
   display: grid;
