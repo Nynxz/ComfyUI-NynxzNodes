@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@nynxz/zenkit-ui': link:/home/user/git/nynxz/comfyui_nodepacks/ZenKit/packages/ui
+
 pnpmfileChecksum: sha256-dHtGFvpTktEMLObRLsXItlGBl5mqW791dIVR6rgJ5yI=
 
 importers:
@@ -11,8 +14,8 @@ importers:
   .:
     dependencies:
       '@nynxz/zenkit-ui':
-        specifier: ^0.3.2
-        version: 0.3.2(vue@3.5.42(typescript@5.9.3))
+        specifier: link:/home/user/git/nynxz/comfyui_nodepacks/ZenKit/packages/ui
+        version: link:../ZenKit/packages/ui
       primevue:
         specifier: 5.0.1
         version: 5.0.1(vue@3.5.42(typescript@5.9.3))
@@ -185,11 +188,6 @@ packages:
         optional: true
       vite:
         optional: true
-
-  '@nynxz/zenkit-ui@0.3.2':
-    resolution: {integrity: sha512-3/UzmL0hl0lkWJgdsXyRAxDy19hmwRDv9ZeQBazKXwmWpE5V4cNS/ccFS7J2bepYa1DwuvKg/2qBZcAD40v74g==}
-    peerDependencies:
-      vue: ^3.5.0
 
   '@oxc-project/types@0.148.0':
     resolution: {integrity: sha512-Nm4s/jB+4FpFsPhWGEC4h7rzksesmtnMXomo6rCMcg/b8zLQuOziRgkCS1fxDCXOlJB/6Q8oABOZ/OP6RIPj9A==}
@@ -1077,10 +1075,6 @@ snapshots:
     optionalDependencies:
       '@vitejs/plugin-vue': 6.0.8(vite@8.2.2(@types/node@26.4.1))(vue@3.5.42(typescript@5.9.3))
       vite: 8.2.2(@types/node@26.4.1)
-
-  '@nynxz/zenkit-ui@0.3.2(vue@3.5.42(typescript@5.9.3))':
-    dependencies:
-      vue: 3.5.42(typescript@5.9.3)
 
   '@oxc-project/types@0.148.0': {}
 
