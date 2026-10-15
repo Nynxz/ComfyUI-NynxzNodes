@@ -80,6 +80,10 @@ def parse(value) -> dict:
         "visual_size": min(
             1024, max(128, int(_num(raw_settings.get("visual_size"), DEFAULT_VISUAL_SIZE)))
         ),
+        #: How the photo being edited is read: "plain" — only as the latent it edits; "look" —
+        #: also the in-context edit recipe for the whole picture: the scene prompt read with the
+        #: photo, and the photo as source tokens (see `_look`). For an edit LoRA.
+        "photo": "look" if raw_settings.get("photo") == "look" else "plain",
     }
     return {
         "settings": settings,

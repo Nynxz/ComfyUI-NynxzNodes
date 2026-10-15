@@ -431,6 +431,14 @@
                         @update:model-value="patchSettings({ visual_size: $event })"
                       />
                     </div>
+                    <div class="fs-grid" :title="PHOTO_TIP">
+                      <span>photo</span>
+                      <FrescoPills
+                        :model-value="scene.settings.photo"
+                        :options="PHOTO_READS"
+                        @update:model-value="patchSettings({ photo: $event as 'plain' | 'look' })"
+                      />
+                    </div>
                   </FrescoSection>
                   <div class="fs-group">
                     Background <span class="fs-group-note">wherever no layer is</span>
@@ -550,6 +558,15 @@ const TOOLS: { value: BoxTool; icon: string; title: string }[] = [
   { value: "select", icon: "mdi mdi-cursor-default-outline", title: "Select, move, draw — V" },
   { value: "brush", icon: "mdi mdi-brush", title: "Paint the layer's shape — B" },
   { value: "erase", icon: "mdi mdi-eraser", title: "Erase from the layer's shape — E" },
+];
+const PHOTO_TIP =
+  "How the photo being edited is read. Plain: it is only the picture being edited. Look: also " +
+  "the in-context edit recipe for the whole picture — the scene prompt is read with the photo in " +
+  'view, as an instruction ("make it night"), and the photo joins as source tokens. For an ' +
+  "edit LoRA like Krea 2 Identity Edit; base Krea 2 wasn't trained on it. Needs the VAE.";
+const PHOTO_READS = [
+  { value: "plain", label: "Plain", title: "Only the picture being edited" },
+  { value: "look", label: "Look", title: "The edit recipe — for an edit LoRA" },
 ];
 const OVERLAPS = [
   { value: "top", label: "Cover", title: "A layer covers the layers under it, like paint" },

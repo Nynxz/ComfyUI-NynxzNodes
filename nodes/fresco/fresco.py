@@ -263,10 +263,19 @@ class NynxzFresco(FrescoNode):
             or "no layers",
         )
         node = str(cls.hidden.unique_id or "")
+        look_photo = settings["photo"] == "look" and image is not None
+        if look_photo:
+            positive = _look.encode(clip, parsed["prompt"], [image])
+            negative = _look.encode(clip, "", [image])
+        else:
+            positive = clip.encode_from_tokens_scheduled(clip.tokenize(parsed["prompt"]))
+            negative = clip.encode_from_tokens_scheduled(clip.tokenize(""))
         return io.NodeOutput(
             {
                 "regions": regions,
-                "positive": clip.encode_from_tokens_scheduled(clip.tokenize(parsed["prompt"])),
+                "positive": positive,
+                "negative": negative,
+                "look_photo": look_photo,
                 "width": width,
                 "height": height,
                 "background_denoise": background["denoise"] if background["on"] else 0.0,
@@ -474,6 +483,12 @@ class NynxzFrescoApply(FrescoNode):
                     display_name="regions",
                     tooltip="The layers as regions, for Regions Preview or Region Latent.",
                 ),
+                io.Conditioning.Output(
+                    display_name="negative",
+                    tooltip="The empty prompt — read with the photo, carrying the same reference "
+                    "tokens, when the photo is read by look (the edit recipe's unconditional). "
+                    "For CFG above 1.",
+                ),
             ],
         )
 
@@ -551,22 +566,24 @@ class NynxzFrescoApply(FrescoNode):
             latent = empty_latent(width, height, vae)
         if "noise_mask" in latent:
             patched = _with_differential_diffusion(patched)
-        positive = _refs.attach(fresco["positive"], _refs.latents(regions, sources))
-        return io.NodeOutput(patched, positive, latent, regions, ui=shown)
+        refs = _refs.latents(regions, sources)
+        positive = _refs.attach(fresco["positive"], refs)
+        negative = _refs.attach(fresco.get("negative") or [], refs)
+        return io.NodeOutput(patched, positive, latent, regions, negative, ui=shown)
 
 
 def _look_latents(regions: list[dict], vae, image, fresco: dict, with_source: bool) -> list:
     """Encode the references of layers read by look onto the output's grid, as `ref_latents` on
-    their regions; returns the source latents (the photo being edited) to go before them."""
+    their regions; returns the source latents (the photo being edited) to go before them — when
+    the scene reads the photo by look, or layers read by look and `with_source` is on."""
     looking = [r for r in regions if r.get("look")]
-    if not looking:
+    whole = bool(fresco.get("look_photo")) and image is not None
+    if not looking and not whole:
         return []
     if vae is None:
         logging.warning(
-            "Nynxz Fresco: %d layer(s) read their references by look, which needs the VAE "
-            "(on Fresco Inputs or Fresco Apply) — without it only their prompt, read with the "
-            "images, reaches the model.",
-            len(looking),
+            "Nynxz Fresco: reading by look needs the VAE (on Fresco Inputs or Fresco Apply) — "
+            "without it only the prompts, read with the images, reach the model.",
         )
         return []
     if image is not None:
@@ -575,17 +592,17 @@ def _look_latents(regions: list[dict], vae, image, fresco: dict, with_source: bo
         width, height = int(fresco["width"]), int(fresco["height"])
     sources = (
         [_look.encode_latent(vae, image, width, height)]
-        if with_source and image is not None
+        if image is not None and (whole or with_source)
         else []
     )
     for region in looking:
         region["ref_latents"] = [_look.encode_latent(vae, i, width, height) for i in region["look"]]
         region["ref_frame"] = len(sources) + 1
     logging.info(
-        "Nynxz Fresco: %d layer(s) read by look, %d reference latent(s)%s.",
+        "Nynxz Fresco: by look — %sreferences of %d layer(s) (%d latent(s)).",
+        "the photo as source tokens, " if sources else "",
         len(looking),
         sum(len(r["ref_latents"]) for r in looking),
-        " after the source photo" if sources else "",
     )
     return sources
 

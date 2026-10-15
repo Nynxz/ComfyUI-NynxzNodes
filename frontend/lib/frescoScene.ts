@@ -124,6 +124,8 @@ export interface FrescoSettings {
   overlap: Overlap;
   /** Resolution references are read at. */
   visual_size: number;
+  /** How the photo being edited is read: plainly, or by look — the whole-picture edit recipe. */
+  photo: "plain" | "look";
 }
 
 export interface FrescoScene {
@@ -234,6 +236,7 @@ export function parseScene(value: unknown): FrescoScene {
         1024,
         Math.max(128, Math.round(num(obj(raw.settings).visual_size, 384))),
       ),
+      photo: obj(raw.settings).photo === "look" ? "look" : "plain",
     },
     layers: list(raw.layers).map((l, i) => {
       const x = clamp01(num(l.x, 0.25));

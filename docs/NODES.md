@@ -101,8 +101,16 @@ A layer reads its references one of two ways (**read as**, under References):
   default) also adds the photo itself as source tokens everyone reads, and the layer's references
   move to frame 2 — the two-reference "person into scene" recipe. Needs the VAE.
 
-Don't use Krea2Edit's model patch with Fresco or Regions: it replaces Krea 2's forward and skips
-the input patches the regions run on. Fresco's Look is that recipe, per layer.
+For a whole-picture edit ("make it night"), set the Scene's **photo** to **Look**: the scene
+prompt is read with the photo in view as the instruction, and the photo joins as source tokens —
+no Look layer needed. Fresco Apply's **negative** output is then the empty prompt read with the
+photo, carrying the same reference tokens (the recipe's unconditional), for CFG above 1; wire it
+into the sampler's negative. Base Krea 2 wasn't trained on reference tokens, so both Looks are for
+an edit LoRA.
+
+You don't need Krea2Edit's nodes with Fresco, and its model patch doesn't work alongside Fresco or
+Regions: it replaces Krea 2's forward and skips the input patches the regions run on. Fresco reads
+by look the same way, through ComfyUI's own reference latents.
 
 ## Regions — LoRAs gated to part of the image
 

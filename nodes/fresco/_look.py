@@ -81,9 +81,14 @@ def _grounding(image: torch.Tensor) -> torch.Tensor:
     return img.movedim(1, -1)
 
 
-def encode_prompt(clip, prompt: str, images: list[torch.Tensor]) -> torch.Tensor:
-    """`[1, seq, features]` — `prompt` read through Qwen3-VL with `images` in view, in the
-    edit LoRA's training template."""
+def encode(clip, prompt: str, images: list[torch.Tensor]) -> list:
+    """A conditioning: `prompt` read through Qwen3-VL with `images` in view, in the edit LoRA's
+    training template."""
     shown = [_grounding(i) for i in images]
     tokens = clip.tokenize(prompt, images=shown, llama_template=_template(len(shown)))
-    return clip.encode_from_tokens_scheduled(tokens)[0][0]
+    return clip.encode_from_tokens_scheduled(tokens)
+
+
+def encode_prompt(clip, prompt: str, images: list[torch.Tensor]) -> torch.Tensor:
+    """`[1, seq, features]` — `encode`'s tensor alone, for a region's copy of the prompt."""
+    return encode(clip, prompt, images)[0][0]
