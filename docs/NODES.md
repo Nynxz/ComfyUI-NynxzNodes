@@ -47,7 +47,13 @@ Load Model ── model ────────┤
 
 - **Fresco** — the editor. Takes the Krea 2 text encoder; outputs `fresco`. Drop images from the
   asset browser (or the desktop) on a layer to add a reference, or on empty canvas for a new layer;
-  pop it out into a ZenKit panel from the rail. The panes resize by their gutters.
+  pop it out into a ZenKit panel from the rail. The panes resize by their gutters. With an
+  **image** and a SAM3 model (`sam3_model`, plus `sam3_clip` for text) a layer can segment its
+  shape instead of being painted: the **wand** (W) clicks a point on the image — a new layer if you
+  click outside one — and SAM3 fills the layer's box with what is there; or type what the layer
+  should **capture** (`jacket, -hands`) and press Segment. Only Fresco runs, nothing downstream, and
+  a layer is segmented again only when its box, points, capture or the image change, so paint you
+  touch up over a segmented shape stays.
 - **Fresco Overlay** — the render with every layer outlined, filled faintly and labelled, to check
   it followed the boxes. It also sends the render back to the editor as its trace image, so the
   boxes sit over the last render while you adjust them (pin a trace image to keep yours).
