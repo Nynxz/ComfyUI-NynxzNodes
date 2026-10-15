@@ -13,12 +13,12 @@
           v-for="(row, i) in rows"
           :key="row.id"
           class="ls-row"
-          :class="{
-            off: !row.on,
-            dragging: dragIndex === i,
-            over: dropIndex === i && dragIndex !== i,
-          }"
-          :style="dragIndex === i ? { transform: `translateY(${dragOffset}px)` } : undefined"
+          :class="{ off: !row.on, dragging: dragIndex === i }"
+          :style="
+            dragIndex === i
+              ? { transform: `translateY(${dragOffset}px)` }
+              : shiftStyle(sortShift(i, dragIndex, dropIndex), stride)
+          "
         >
           <!-- Reorder and enable stay SEPARATE controls — one grabbed, one clicked, both always
                visible. They're paired into a tight gutter instead: the grip is 12px (the glyph
@@ -124,6 +124,10 @@ export const widgetOptions: WidgetOptions = {
 import { computed, ref } from "vue";
 import { useDragSurface } from "@nynxz/zenkit-nodekit";
 import {
+  insertionIndex,
+  rowStride,
+  shiftStyle,
+  sortShift,
   ZenDot,
   ZenIconButton,
   ZenMenuItem,
@@ -227,6 +231,7 @@ function clearAll() {
 // the row nor the canvas zoom. Here the ROW ITSELF moves — the same element, inside the same
 // transform — so it is exactly the row you grabbed, at any zoom, with nothing to keep in sync.
 let rowMids: number[] = []; // each row's midpoint at grab time, layout space
+const stride = ref(0); // how far the other rows move aside: the grabbed row and its gap
 
 const reorder = useDragSurface({
   onStart(ctx) {
@@ -239,6 +244,11 @@ const reorder = useDragSurface({
     // offsetTop/offsetHeight are pre-transform, which is the space ctx.delta already lands in
     // (the helper divides the canvas zoom out), so the two add up without a second correction.
     rowMids = kids.map((k) => k.offsetTop + k.offsetHeight / 2);
+    stride.value = rowStride(
+      kids.map((k) => k.offsetTop),
+      kids.map((k) => k.offsetHeight),
+      i,
+    );
     dragIndex.value = i;
     dropIndex.value = i;
     dragOffset.value = 0;
@@ -247,9 +257,8 @@ const reorder = useDragSurface({
     if (dragIndex.value < 0) return;
     dragOffset.value = ctx.delta.y;
     const center = (rowMids[dragIndex.value] ?? 0) + ctx.delta.y;
-    // Insertion index = how many OTHER rows the grabbed one has been dragged past. Counting
-    // midpoints reads the same in both directions and needs no case for the row being dragged.
-    dropIndex.value = rowMids.filter((m, k) => k !== dragIndex.value && m < center).length;
+    // The rows it has passed move aside as it goes, so where it lands shows before the drop.
+    dropIndex.value = insertionIndex(rowMids, dragIndex.value, center);
   },
   // Commit once, at the end: reordering on every move would rewrite the stack hundreds of times.
   onEnd() {
@@ -315,10 +324,11 @@ function pickFromBrowse(name: string) {
   font-size: 11px;
 }
 .ls-row {
-  position: relative; /* anchors the drop ring */
+  position: relative;
   display: flex;
   align-items: center;
   gap: 6px;
+  transition: transform 0.15s ease;
 }
 .ls-row.off {
   opacity: 0.5;
@@ -327,26 +337,11 @@ function pickFromBrowse(name: string) {
    its own size at any canvas zoom. z-index carries it over its neighbours as it passes them. */
 .ls-row.dragging {
   z-index: 5;
+  transition: none;
   box-shadow: 0 6px 16px rgb(0 0 0 / 45%);
   border-radius: var(--zen-radius, 6px);
   cursor: grabbing;
 }
-/* The drop-target ring is an overlay, not an `outline`. Descendants paint ABOVE their parent's
-   outline, so the combo, the strength field and the remove button were each punching a hole in
-   it wherever they overlapped — the ring only survived in the gaps. A positioned ::after with a
-   z-index paints above every child instead, and sits just outside the row box so it rings the
-   row rather than crowding its controls. pointer-events:none is load-bearing: a ring that ate
-   dragover would block the drop it's advertising. */
-.ls-row.over::after {
-  content: "";
-  position: absolute;
-  inset: -2px;
-  z-index: 3;
-  border: 2px solid var(--zen-accent, #6366f1);
-  border-radius: var(--zen-radius, 6px);
-  pointer-events: none;
-}
-
 /* grip + dot travel together, so they pair at 2px instead of the row's 6px */
 .ls-gutter {
   flex: none;

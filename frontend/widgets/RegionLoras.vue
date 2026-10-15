@@ -21,7 +21,9 @@
         }"
         :data-region="group.region"
         :style="
-          dragHead === group.region ? { transform: `translateY(${dragOffset}px)` } : undefined
+          dragHead === group.region
+            ? { transform: `translateY(${dragOffset}px)` }
+            : swapStyle(group.region)
         "
       >
         <div class="rg-head">
@@ -343,6 +345,18 @@ interface Zone {
 let zones: Zone[] = [];
 let grabCenter = 0;
 
+/** While a region is dragged over another, that one slides into its place — the swap, shown
+ *  before the drop. Below the dragged region it takes its top; above it, its bottom. */
+function swapStyle(region: number) {
+  if (dragHead.value <= 0 || region !== dropRegion.value || region === dragHead.value)
+    return undefined;
+  const from = zones.find((z) => z.region === dragHead.value);
+  const to = zones.find((z) => z.region === region);
+  if (!from || !to) return undefined;
+  const top = to.top > from.top ? from.top : from.bottom - (to.bottom - to.top);
+  return { transform: `translateY(${top - to.top}px)` };
+}
+
 const dragId = ref(-1); // row id being dragged, or -1
 const dragHead = ref(-1); // region being dragged by its header, or -1
 const dropRegion = ref(-1); // region the row would land in, or -1
@@ -453,7 +467,8 @@ const drag = useDragSurface({
   background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);
   transition:
     border-color 0.12s ease,
-    background 0.12s ease;
+    background 0.12s ease,
+    transform 0.15s ease;
 }
 .rg-group:hover {
   background: color-mix(in srgb, var(--zen-text, #fff) 5%, transparent);
@@ -473,6 +488,7 @@ const drag = useDragSurface({
 .rg-group.lifted {
   position: relative;
   z-index: 1;
+  transition: none;
   background: color-mix(in srgb, var(--zen-text, #fff) 5%, var(--zen-surface, #1f1f24));
   box-shadow: 0 6px 18px rgb(0 0 0 / 35%);
 }
