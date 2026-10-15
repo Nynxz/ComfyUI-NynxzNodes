@@ -2,6 +2,7 @@
   <div
     :ref="(el) => (wheel.el.value = el as HTMLElement | null)"
     class="fs"
+    :class="{ 'in-panel': inPanel }"
     v-bind="wheel.attrs"
     @keydown="onKey"
   >
@@ -818,6 +819,12 @@ onBeforeUnmount(() => api.removeEventListener("executed", onExecuted));
   font-size: 12px;
 }
 
+/* In a ZenKit panel the window draws its own frame; inset so the rail and the panes don't sit on
+   it and double its border. On the node, the node body already pads. */
+.fs.in-panel {
+  box-sizing: border-box;
+  padding: 8px;
+}
 .fs-main {
   min-width: 0;
   min-height: 0;
