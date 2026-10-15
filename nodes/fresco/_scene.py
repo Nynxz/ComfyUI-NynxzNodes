@@ -122,6 +122,10 @@ def _content(raw: dict, denoise: float = 1.0) -> dict:
         "influence": min(4.0, max(0.0, _num(raw.get("influence"), 1.0))),
         "blend": raw.get("blend") if raw.get("blend") in BLENDS else DEFAULT_BLEND,
         "softness": min(1.0, max(0.0, _num(raw.get("softness"), 0.5))),
+        #: How its references are read: "meaning" — their vision tokens inside its prompt copy
+        #: (Fusion); "look" — clean latent tokens of the images themselves plus a prompt encoded
+        #: with them, the in-context edit recipe (see `_look`).
+        "read": "look" if raw.get("read") == "look" else "meaning",
     }
 
 

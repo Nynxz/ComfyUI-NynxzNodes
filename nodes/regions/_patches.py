@@ -5,7 +5,8 @@ the canvas grid comes from. That ordering is what removes any need for a bootstr
 known before the first block runs, so the masks can be projected and a correct map is in force from
 the very first hook of the very first step.
 
-`post_input` is also where each region's copy of the prompt joins the sequence (see `_text`).
+`post_input` is also where each region's copy of the prompt joins the sequence (see `_text`), and
+where each region's own reference images are found and placed (see `_refs`).
 
 `attn1_patch` fires per block with `q`, `k` and `v` before the softmax, and is used for three
 independent things:
@@ -38,7 +39,7 @@ import math
 
 import torch
 
-from . import _capture, _lock, _state, _track
+from . import _capture, _lock, _refs, _state, _track
 
 #: How far either side of `route_at` a multi-block read spreads, as a fraction of the stack.
 _SPREAD = 0.2
@@ -130,7 +131,8 @@ def post_input_patch(state, text=None):
             state.note_sigma(float(sigmas.flatten()[0].item()))
 
         img_ids = args["img_ids"]
-        refs = sum(options.get("reference_image_num_tokens", []) or [])
+        entries = list(options.get("reference_image_num_tokens", []) or [])
+        refs = sum(entries)
         canvas = img_ids.shape[1] - refs
         ids = img_ids[0, :canvas]
         state.txtlen = args["txt_ids"].shape[1]
@@ -146,7 +148,11 @@ def post_input_patch(state, text=None):
             # The layout lock's base pass (see `_lock`): the plain sequence, no copies.
             state.copies = None
             state.copy_tokens = 0
-            return args
+            state.ref_spans = _refs.spans(state.refs, entries, state.txtlen, canvas, 0)
+            return {
+                **args,
+                "img_ids": _refs.place(img_ids, state.ref_spans, state.txtlen, state.grid),
+            }
         built = (
             text.make(args["txt"], _conditional_rows(options, img.shape[0]))
             if text is not None
@@ -155,6 +161,7 @@ def post_input_patch(state, text=None):
         state.copies = built
         copies = None if built is None else built.tokens
         state.copy_tokens = 0 if copies is None else copies.shape[1]
+        state.ref_spans = _refs.spans(state.refs, entries, state.txtlen, canvas, state.copy_tokens)
         if copies is not None:
             blank = img_ids.new_zeros((img_ids.shape[0], copies.shape[1], img_ids.shape[2]))
             args = {
@@ -162,6 +169,10 @@ def post_input_patch(state, text=None):
                 "img": torch.cat((img[:, :canvas], copies.to(img.dtype), img[:, canvas:]), dim=1),
                 "img_ids": torch.cat((img_ids[:, :canvas], blank, img_ids[:, canvas:]), dim=1),
             }
+        args = {
+            **args,
+            "img_ids": _refs.place(args["img_ids"], state.ref_spans, state.txtlen, state.grid),
+        }
         state.build_gates(img.shape[0], state.txtlen + args["img"].shape[1], img.device)
         return args
 
@@ -182,9 +193,10 @@ def _attention_bias(state, config: TrackConfig, q) -> torch.Tensor | None:
     """The logit bias for this step: prompt routing when there are copies, and `isolation`."""
     global _warned
     routed = state.copy_tokens > 0
+    owned = [s for s in state.ref_spans if s.slot.region is not None]
     isolation = config.isolation_at(state.schedule, state.fraction)
     isolate = isolation > 0.0 and len(state.regions) >= 2
-    if not routed and not isolate:
+    if not routed and not isolate and not owned:
         # Decided BEFORE allocating. A `[B, L, L]` matrix is ~35 MB at 4096 tokens, and returning
         # an all-zero one would allocate that per block for nothing and push attention onto its
         # slower masked path.
@@ -201,7 +213,16 @@ def _attention_bias(state, config: TrackConfig, q) -> torch.Tensor | None:
     if txtlen + canvas + state.copy_tokens > seqlen or canvas > current.shape[0]:
         return None
 
-    key = (state.scale, batch, seqlen, q.dtype, q.device, isolation, state.copy_tokens)
+    key = (
+        state.scale,
+        batch,
+        seqlen,
+        q.dtype,
+        q.device,
+        isolation,
+        state.copy_tokens,
+        tuple(state.ref_spans),
+    )
     if (
         state.bias is not None
         and state.bias[0] is current
@@ -237,6 +258,18 @@ def _attention_bias(state, config: TrackConfig, q) -> torch.Tensor | None:
         bias[:, rows, rows] = (-isolation * (1.0 - agreement)).to(q.dtype)
     if routed:
         _route_prompt(bias, state, claim)
+    if owned:
+        rows = slice(txtlen, txtlen + canvas)
+        _refs.route(
+            bias,
+            owned,
+            claim,
+            rows,
+            _NEVER,
+            _LEAST,
+            state.influences,
+            lambda region: _region_copy(state, region),
+        )
     out = bias.unsqueeze(1)  # [B, 1, L, L] so it broadcasts over heads
     state.bias = (current, state.copies, key, out)
     return out
@@ -275,6 +308,32 @@ def _route_prompt(bias: torch.Tensor, state, claim: torch.Tensor) -> None:
         bias[:, :, first : first + state.copy_tokens].masked_fill_(pad, _NEVER)
 
 
+def _region_copy(state, region: int) -> slice | None:
+    for slot in state.copy_slots():
+        if slot[0] == region:
+            return state.copy_rows(slot)
+    return None
+
+
+def _base_bias(state, q) -> torch.Tensor | None:
+    """The layout lock's base pass sees no region's references: each is read only by itself."""
+    owned = [s for s in state.ref_spans if s.slot.region is not None]
+    if not owned:
+        return None
+    batch, _, seqlen, _ = q.shape
+    key = ("base", batch, seqlen, q.dtype, q.device, tuple(owned))
+    if state.bias is not None and state.bias[2] == key:
+        return state.bias[3]
+    bias = torch.zeros((batch, seqlen, seqlen), device=q.device, dtype=q.dtype)
+    for span in owned:
+        cols = slice(span.start, span.start + span.length)
+        bias[:, :, cols] = _NEVER
+        bias[:, cols, cols] = 0.0
+    out = bias.unsqueeze(1)
+    state.bias = (None, None, key, out)
+    return out
+
+
 def attn1_patch(state, config: TrackConfig):
     """Track the map at a few blocks, and bias every block with what was last tracked."""
 
@@ -289,7 +348,8 @@ def attn1_patch(state, config: TrackConfig):
         if state.lock_pass == _state.BASE_PASS:
             if block is not None and canvas > 0:
                 _lock.record(state, block, q, k)
-            return {}
+            hidden = _base_bias(state, q)
+            return {} if hidden is None else {"attn_mask": hidden}
         if state.lock_pass == _state.LOCKED_PASS and block is not None:
             held = _lock.swap(state, block, q, k)
             if held is not None:

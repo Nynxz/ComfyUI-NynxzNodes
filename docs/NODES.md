@@ -87,8 +87,22 @@ it; regions applied twice break each other, and Regions Apply now refuses a mode
 has them. For every Regions Apply setting, give a separate Regions Apply the _plain_ model and
 Fresco Apply's `regions`, and take only `positive` and `latent` from Fresco Apply.
 
-Reference images on Krea 2 carry **meaning** more than exact looks — "a red floral summer dress",
-not that dress stitch for stitch. Per-layer reference latents, for exact appearance, are next.
+A layer reads its references one of two ways (**read as**, under References):
+
+- **Meaning** (default) — their vision tokens inside the layer's copy of the prompt. Krea 2 takes
+  what they are — "a red floral summer dress" — more than the exact look.
+- **Look** — the in-context edit recipe Krea 2's edit LoRAs are trained on (the Krea 2 Identity
+  Edit LoRA; it matches comfyui-krea2edit's training geometry and template). Each reference is
+  fitted onto the output's grid in pixel space, VAE-encoded and added as clean reference tokens
+  that **only that layer's area** reads — no other layer, the background or the plain prompt
+  sees them — and the layer's prompt is encoded through Qwen3-VL with the images in view (the
+  photo being edited first). Put the edit LoRA in the layer's LoRAs: they run on its reference
+  tokens too, as in training. When editing a photo, Fresco Apply's `look_source` (on by
+  default) also adds the photo itself as source tokens everyone reads, and the layer's references
+  move to frame 2 — the two-reference "person into scene" recipe. Needs the VAE.
+
+Don't use Krea2Edit's model patch with Fresco or Regions: it replaces Krea 2's forward and skips
+the input patches the regions run on. Fresco's Look is that recipe, per layer.
 
 ## Regions — LoRAs gated to part of the image
 

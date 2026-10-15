@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import torch
 
-from . import _mask, _schedule
+from . import _mask, _refs, _schedule
 
 #: `GateState.lock_pass` during a layout-locked step (see `_lock`): the base model's pass, which
 #: records the canvas Q/K, then the real pass, which uses them.
@@ -61,6 +61,8 @@ class GateState:
         "locked_qk",
         "map",
         "progress",
+        "ref_spans",
+        "refs",
         "regions",
         "scale",
         "schedule",
@@ -70,8 +72,12 @@ class GateState:
         "txtlen",
     )
 
-    def __init__(self, regions, schedule: _schedule.Schedule, track: float):
+    def __init__(self, regions, schedule: _schedule.Schedule, track: float, sources=()):
         self.regions = regions
+        #: The reference images these regions add, in conditioning order (see `_refs`), and where
+        #: this forward put them — empty when it didn't carry them.
+        self.refs = _refs.layout(regions, sources)
+        self.ref_spans: list[_refs.RefSpan] = []
         self.schedule = schedule
         self.track = float(track)
         #: `[canvas, regions + 1]` — the projected masks plus their background column. Rebuilt only
@@ -122,6 +128,7 @@ class GateState:
 
     def reset(self):
         self.stepped = False
+        self.ref_spans = []
         self.copies = None
         self.copy_tokens = 0
         self.bias = None
@@ -176,7 +183,9 @@ class GateState:
 
         The prompt and reference-latent tokens get zero. The prompt because a region is a statement
         about the canvas, and the prompt is everyone's; a region's own copy of it (see `_text`)
-        gets that region's LoRA in full. References because in an edit they are the source image,
+        gets that region's LoRA in full, and so do its own references (see `_refs`), as an
+        in-context edit LoRA was trained to run on them. Everyone's references because in an edit
+        they are the source image,
         the thing being read *from*, and rewriting the model's view of that with the LoRA that is
         supposed to replace it is how an edit turns into a hall of mirrors. An overall style LoRA
         that genuinely should touch everything belongs in a stock `LoraLoader`, which merges into
@@ -214,6 +223,9 @@ class GateState:
             rows = self.copy_rows(slot)
             if rows.stop <= seqlen:
                 gates[:, rows, slot[0]] = self.scale
+        for span in self.ref_spans:
+            if span.slot.region is not None and span.start + span.length <= seqlen:
+                gates[:, span.start : span.start + span.length, span.slot.region] = self.scale
         self.gates = gates
         return gates
 

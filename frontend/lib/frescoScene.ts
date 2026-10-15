@@ -35,7 +35,12 @@ export interface FrescoContent {
   blend: Blend;
   /** 0 = hard cells, 1 = fully feathered between references. */
   softness: number;
+  /** How the references are read: their meaning in the prompt, or the images themselves (the
+   *  in-context edit recipe — see nodes/fresco/_look.py). */
+  read: RefRead;
 }
+
+export type RefRead = "meaning" | "look";
 
 /** What travels when two layers swap: what goes in the place, not the place (box, shape,
  *  capture) or the colour that marks it. The name describes the content, so it goes with it. */
@@ -48,6 +53,7 @@ const CONTENT_KEYS = [
   "influence",
   "blend",
   "softness",
+  "read",
 ] as const;
 
 /** `layers` with the content of layers `a` and `b` exchanged; each keeps its own box and shape. */
@@ -189,6 +195,7 @@ function parseContent(raw: Record<string, unknown>, denoise = 1): FrescoContent 
     influence: Math.min(4, Math.max(0, num(raw.influence, 1))),
     blend: (BLENDS.some((b) => b.value === raw.blend) ? raw.blend : "mix") as Blend,
     softness: clamp01(num(raw.softness, 0.5)),
+    read: raw.read === "look" ? "look" : "meaning",
   };
 }
 
@@ -202,6 +209,7 @@ export function emptyContent(denoise = 1): FrescoContent {
     influence: 1,
     blend: "mix",
     softness: 0.5,
+    read: "meaning",
   };
 }
 

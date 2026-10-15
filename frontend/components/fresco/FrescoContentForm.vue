@@ -36,7 +36,15 @@
         :model-value="content.refs"
         @update:model-value="emit('patch', { refs: $event })"
       />
-      <div v-if="activeRefs > 1" class="fcf-row">
+      <div v-if="activeRefs" class="fcf-read">
+        <span :title="READ_TIP">read as</span>
+        <FrescoPills
+          :model-value="content.read"
+          :options="READS"
+          @update:model-value="emit('patch', { read: $event as RefRead })"
+        />
+      </div>
+      <div v-if="activeRefs > 1 && content.read === 'meaning'" class="fcf-row">
         <span :title="BLEND_TIP">blend</span>
         <ZenSelect
           size="sm"
@@ -117,9 +125,10 @@ import { computed, ref } from "vue";
 import { ZenIconButton, ZenInput, ZenNumber, ZenSelect } from "@nynxz/zenkit-ui";
 
 import FrescoLoras from "@/components/fresco/FrescoLoras.vue";
+import FrescoPills from "@/components/fresco/FrescoPills.vue";
 import FrescoRefs from "@/components/fresco/FrescoRefs.vue";
 import FrescoSection from "@/components/fresco/FrescoSection.vue";
-import { BLENDS, uid, type Blend, type FrescoContent } from "@/lib/frescoScene";
+import { BLENDS, uid, type Blend, type FrescoContent, type RefRead } from "@/lib/frescoScene";
 
 const props = withDefaults(
   defineProps<{ content: FrescoContent; promptPlaceholder?: string; promptRows?: number }>(),
@@ -135,6 +144,15 @@ const INFLUENCE_TIP =
   "How strongly this area follows its own prompt and references against the rest of the " +
   "picture. Raise it when they aren't coming through; too high and the area stops fitting in. " +
   "Below 1 also weakens the LoRAs — their text side reads the same prompt.";
+const READ_TIP =
+  "Meaning: the references' vision tokens inside this area's prompt — what they are, not their " +
+  "exact look. Look: the images themselves as clean tokens only this area sees, plus the prompt " +
+  "read with them — the in-context edit recipe, for an edit LoRA like Krea 2 Identity Edit " +
+  "(add it to this layer's LoRAs). Needs the VAE.";
+const READS = [
+  { value: "meaning", label: "Meaning", title: "What the references are, in the prompt" },
+  { value: "look", label: "Look", title: "The images themselves — for an edit LoRA" },
+];
 const DENOISE_TIP =
   "How much of a source image this may rewrite. Only used when Fresco Apply has an image.";
 
@@ -164,6 +182,13 @@ defineExpose({
 .fcf-row {
   display: grid;
   grid-template-columns: 52px minmax(0, 1fr) 92px;
+  align-items: center;
+  gap: 6px;
+  color: var(--zen-muted, #9aa0aa);
+}
+.fcf-read {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
   align-items: center;
   gap: 6px;
   color: var(--zen-muted, #9aa0aa);

@@ -33,10 +33,11 @@ from comfy_api.latest import io, ui
 from .._zenkit.io_types import advanced
 from ..fusion._fusion import FusionSettings, empty_latent, encode_fusion
 from ..fusion.fusion_input import _load_image, _resolve_path
+from ..regions import _refs
 from ..regions._io_types import Regions
 from ..regions.apply import NynxzRegionsApply
 from ..regions.latent import NynxzRegionLatent
-from . import _layout, _scene, _segment
+from . import _layout, _look, _scene, _segment
 from ._base import FrescoNode
 from ._io_types import Fresco, FrescoInputs, FrescoSceneType
 
@@ -102,9 +103,12 @@ def _conditioning(clip, layer: dict, scene_prompt: str, visual_size: int, where:
 
 
 def _region(
-    clip, layer, mask, scene_prompt, visual_size, where
+    clip, layer, mask, scene_prompt, visual_size, where, photo=None
 ) -> tuple[dict, torch.Tensor | None]:
-    """The layer as a region, and its first reference (for the layout image)."""
+    """The layer as a region, and its first reference (for the layout image).
+
+    A layer read by look carries its loaded references as `look` for Fresco Apply to encode, and
+    its prompt read with them (and the photo being edited, first) in the edit template."""
     region = {
         "mask": mask,
         "fit": "stretch",
@@ -116,7 +120,12 @@ def _region(
     if layer["prompt"]:
         region["prompt"] = layer["prompt"]
     loaded = _references(layer["refs"], where)
-    conditioning = _conditioning(clip, layer, scene_prompt, visual_size, where, loaded)
+    if layer.get("read") == "look" and loaded[0]:
+        region["look"] = loaded[0]
+        shown = ([photo] if photo is not None else []) + loaded[0]
+        conditioning = _look.encode_prompt(clip, layer["prompt"] or scene_prompt, shown)
+    else:
+        conditioning = _conditioning(clip, layer, scene_prompt, visual_size, where, loaded)
     if conditioning is not None:
         region["conditioning"] = conditioning
         region.setdefault("prompt", scene_prompt)
@@ -220,7 +229,7 @@ class NynxzFresco(FrescoNode):
                     layer["name"],
                 )
             region, first = _region(
-                clip, layer, mask, parsed["prompt"], visual_size, f"layer {index + 1}"
+                clip, layer, mask, parsed["prompt"], visual_size, f"layer {index + 1}", image
             )
             region["group"] = layer["group"]
             regions.append(region)
@@ -236,7 +245,7 @@ class NynxzFresco(FrescoNode):
         backdrop = None
         if background["on"] and float(rest.max()) > 0.0:
             region, backdrop = _region(
-                clip, background, rest, parsed["prompt"], visual_size, "background"
+                clip, background, rest, parsed["prompt"], visual_size, "background", image
             )
             regions.append(region)
 
@@ -445,6 +454,14 @@ class NynxzFrescoApply(FrescoNode):
                     tooltip="Edit the photo wired into Fresco (or into this node). Off: generate "
                     "a new image, using Fresco's photo only to trace and segment over.",
                 ),
+                io.Boolean.Input(
+                    "look_source",
+                    default=True,
+                    tooltip="With layers that read their references by look, also show the model "
+                    "the photo being edited as clean tokens everyone reads — the source half of "
+                    "the in-context edit recipe (e.g. the Krea 2 Identity Edit LoRA). Only when "
+                    "editing a photo.",
+                ),
             ],
             outputs=[
                 io.Model.Output(display_name="model"),
@@ -476,11 +493,13 @@ class NynxzFrescoApply(FrescoNode):
         release=0.15,
         layout_start=0.0,
         edit_image=True,
+        look_source=True,
     ) -> io.NodeOutput:
         if image is None and edit_image:
             image = fresco.get("image")
         vae = vae if vae is not None else fresco.get("vae")
-        regions = list(fresco.get("regions") or [])
+        regions = [dict(r) for r in fresco.get("regions") or []]
+        sources = _look_latents(regions, vae, image, fresco, look_source)
         if _active(regions):
             # The layers' prompt copies at full weight all run: in Fresco the copy IS the content
             # (prompt and references), and the early steps are where it lands.
@@ -495,6 +514,7 @@ class NynxzFrescoApply(FrescoNode):
                 release=release,
                 prompt_follows_schedule=False,
                 layout_isolation=layout_isolation,
+                sources=sources,
             ).result[0]
         else:
             logging.info(
@@ -531,7 +551,43 @@ class NynxzFrescoApply(FrescoNode):
             latent = empty_latent(width, height, vae)
         if "noise_mask" in latent:
             patched = _with_differential_diffusion(patched)
-        return io.NodeOutput(patched, fresco["positive"], latent, regions, ui=shown)
+        positive = _refs.attach(fresco["positive"], _refs.latents(regions, sources))
+        return io.NodeOutput(patched, positive, latent, regions, ui=shown)
+
+
+def _look_latents(regions: list[dict], vae, image, fresco: dict, with_source: bool) -> list:
+    """Encode the references of layers read by look onto the output's grid, as `ref_latents` on
+    their regions; returns the source latents (the photo being edited) to go before them."""
+    looking = [r for r in regions if r.get("look")]
+    if not looking:
+        return []
+    if vae is None:
+        logging.warning(
+            "Nynxz Fresco: %d layer(s) read their references by look, which needs the VAE "
+            "(on Fresco Inputs or Fresco Apply) — without it only their prompt, read with the "
+            "images, reaches the model.",
+            len(looking),
+        )
+        return []
+    if image is not None:
+        width, height = int(image.shape[2]), int(image.shape[1])
+    else:
+        width, height = int(fresco["width"]), int(fresco["height"])
+    sources = (
+        [_look.encode_latent(vae, image, width, height)]
+        if with_source and image is not None
+        else []
+    )
+    for region in looking:
+        region["ref_latents"] = [_look.encode_latent(vae, i, width, height) for i in region["look"]]
+        region["ref_frame"] = len(sources) + 1
+    logging.info(
+        "Nynxz Fresco: %d layer(s) read by look, %d reference latent(s)%s.",
+        len(looking),
+        sum(len(r["ref_latents"]) for r in looking),
+        " after the source photo" if sources else "",
+    )
+    return sources
 
 
 def _layout_latent(fresco: dict, vae, width: int, height: int, start: float) -> dict:
