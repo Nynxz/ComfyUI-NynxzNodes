@@ -131,7 +131,8 @@ class NynxzFrescoInputs(FrescoNode):
             display_name="Fresco Inputs",
             description=(
                 "Everything Fresco works with, in one wire: the text encoder, and optionally a "
-                "photo to trace, segment and edit, its VAE, and SAM3 for segmenting layers."
+                "photo to trace, segment and edit, its VAE, and the SAM3 checkpoint for "
+                "segmenting layers."
             ),
             is_experimental=True,
             inputs=[
@@ -147,29 +148,25 @@ class NynxzFrescoInputs(FrescoNode):
                     optional=True,
                     tooltip="Carried to Fresco Apply, to encode the photo or the layout start.",
                 ),
-                io.Model.Input(
-                    "sam3_model",
-                    optional=True,
-                    tooltip="SAM3, for layers that capture something by text or click points.",
-                ),
-                io.Clip.Input(
-                    "sam3_clip",
-                    optional=True,
-                    tooltip="SAM3's CLIP — only for capture text; click points don't need it.",
+                io.Combo.Input(
+                    "sam3",
+                    options=_segment.checkpoints(),
+                    default=_segment.NONE,
+                    tooltip="The SAM3 checkpoint, for layers that capture something by text or "
+                    "click points. Loaded only when a layer has something new to segment.",
                 ),
             ],
             outputs=[FrescoInputs.Output(display_name="inputs", tooltip="Into Fresco.")],
         )
 
     @classmethod
-    def execute(cls, clip, image=None, vae=None, sam3_model=None, sam3_clip=None) -> io.NodeOutput:
+    def execute(cls, clip, image=None, vae=None, sam3=_segment.NONE) -> io.NodeOutput:
         return io.NodeOutput(
             {
                 "clip": clip,
                 "image": image,
                 "vae": vae,
-                "sam3_model": sam3_model,
-                "sam3_clip": sam3_clip,
+                "sam3": None if sam3 == _segment.NONE else sam3,
             }
         )
 
@@ -204,12 +201,11 @@ class NynxzFresco(FrescoNode):
     def execute(cls, scene=None, inputs=None) -> io.NodeOutput:
         sources = inputs if isinstance(inputs, dict) else {"clip": inputs}
         clip, image = sources.get("clip"), sources.get("image")
-        sam3_model, sam3_clip = sources.get("sam3_model"), sources.get("sam3_clip")
         parsed = _scene.parse(scene)
         width, height = parsed["width"], parsed["height"]
         settings = parsed["settings"]
         on = [layer for layer in parsed["layers"] if layer["on"] and layer["w"] and layer["h"]]
-        segmented = cls._segment(on, image, sam3_model, sam3_clip)
+        segmented = cls._segment(on, image, sources.get("sam3"))
         layers = _scene.parts(on)
         background = parsed["background"]
 
@@ -275,23 +271,25 @@ class NynxzFresco(FrescoNode):
         )
 
     @staticmethod
-    def _segment(layers: list[dict], image, model, sam_clip) -> list[dict]:
+    def _segment(layers: list[dict], image, checkpoint: str | None) -> list[dict]:
         """Segment every layer that asks and whose shape didn't already come from the same
-        request; its mask is replaced for this run. Returns what changed, for the editor."""
-        if image is None or model is None:
-            if any(_segment.wants(layer) for layer in layers):
-                logging.warning(
-                    "Nynxz Fresco: some layers capture something — wire the photo into `image` "
-                    "and SAM3 into `sam3_model` on Fresco Inputs (and `sam3_clip` for capture text)."
-                )
+        request; its mask is replaced for this run. SAM3 is loaded only if one does. Returns what
+        changed, for the editor."""
+        if image is None:
+            stale = []
+        else:
+            stale = [(layer, src) for layer in layers if (src := _segment.stale(layer, image))]
+        if not stale:
             return []
+        if checkpoint is None:
+            logging.warning(
+                "Nynxz Fresco: some layers capture something — pick the SAM3 checkpoint on "
+                "Fresco Inputs."
+            )
+            return []
+        model, sam_clip = _segment.load(checkpoint)
         changed = []
-        for layer in layers:
-            if not _segment.wants(layer):
-                continue
-            source = _segment.signature(layer, image)
-            if source == layer.get("mask_source") and layer.get("mask"):
-                continue
+        for layer, source in stale:
             mask = _segment.segment(model, sam_clip, image, layer)
             if mask is None:
                 continue

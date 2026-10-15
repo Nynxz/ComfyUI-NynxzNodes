@@ -11,7 +11,8 @@ signature hasn't changed is not segmented again — so touch-ups painted over a 
 survive later runs.
 
 This runs in the queue, as part of Fresco's execution: GPU work from a route or a thread breaks
-under dynamic VRAM.
+under dynamic VRAM. The checkpoint is loaded here, on the first layer with something new to
+segment, rather than by a loader node — a loader upstream would load it on every run.
 """
 
 from __future__ import annotations
@@ -20,6 +21,7 @@ import base64
 import hashlib
 import io as pyio
 import json
+import logging
 
 import numpy as np
 import torch
@@ -28,6 +30,39 @@ from PIL import Image
 
 #: The side of a stored mask, as the editor stores a painting.
 STORE = 256
+
+#: Fresco Inputs' choice for no SAM3.
+NONE = "none"
+
+_loaded: dict[str, tuple] = {}
+
+
+def checkpoints() -> list[str]:
+    """The choices for the SAM3 checkpoint: those named for SAM3, or every checkpoint if none is."""
+    import folder_paths
+
+    names = folder_paths.get_filename_list("checkpoints")
+    return [NONE] + ([n for n in names if "sam3" in n.lower()] or names)
+
+
+def load(name: str) -> tuple:
+    """`(model, clip)` of a SAM3 checkpoint, as Load Checkpoint gives them. The last one loaded
+    stays, so repeated segmenting doesn't reload it."""
+    if name not in _loaded:
+        import comfy.sd
+        import folder_paths
+
+        logging.info("Nynxz Fresco: loading SAM3 (%s) to segment", name)
+        path = folder_paths.get_full_path_or_raise("checkpoints", name)
+        model, clip, _vae, _vision = comfy.sd.load_checkpoint_guess_config(
+            path,
+            output_vae=False,
+            output_clip=True,
+            embedding_directory=folder_paths.get_folder_paths("embeddings"),
+        )
+        _loaded.clear()
+        _loaded[name] = (model, clip)
+    return _loaded[name]
 
 
 def wants(layer: dict) -> bool:
@@ -44,6 +79,15 @@ def signature(layer: dict, image: torch.Tensor) -> str:
         + sample.float().cpu().numpy().round(3).tobytes()
     ).hexdigest()
     return digest[:16]
+
+
+def stale(layer: dict, image: torch.Tensor) -> str | None:
+    """The signature to segment `layer` under, when it asks for segmentation and its mask didn't
+    already come from the same request; None when there is nothing to do."""
+    if not wants(layer):
+        return None
+    source = signature(layer, image)
+    return None if source == layer.get("mask_source") and layer.get("mask") else source
 
 
 def _pixels(layer: dict, height: int, width: int) -> tuple[int, int, int, int]:

@@ -38,8 +38,7 @@ resolution references are read at).
 ```
 CLIP ─────────────┐
 (edit) image ─────┤
-(edit) VAE ───────┤
-(SAM3) model/clip ┴> Fresco Inputs ── inputs ──> Fresco ── fresco ──┐
+(edit) VAE ───────┴> Fresco Inputs [sam3 ▾] ── inputs ──> Fresco ── fresco ──┐
                                                   Load Model ── model ─┴> Fresco Apply ── model ──> KSampler
                                                                                        ├─ positive ─> positive
                                                                                        ├─ latent ───> latent
@@ -47,13 +46,15 @@ CLIP ─────────────┐
 ```
 
 - **Fresco Inputs** — everything Fresco works with on one wire: the text encoder, and optionally
-  the photo to trace, segment and edit, its VAE, and SAM3. Fresco also takes a plain CLIP in the
+  the photo to trace, segment and edit, its VAE, and the SAM3 checkpoint (a dropdown, not a
+  loader: Fresco loads it only when a layer has something new to segment, and keeps it for the
+  next). Fresco also takes a plain CLIP in the
   same socket when there's nothing else. Fresco Apply picks up the photo and VAE from the `fresco`
   wire, so neither needs wiring twice.
 - **Fresco** — the editor; outputs `fresco`. Drop images from the asset browser (or the desktop) on
   a layer to add a reference, or on empty canvas for a new layer; pop it out into a ZenKit panel
-  from the rail. The panes resize by their gutters. With a photo and SAM3 on Fresco Inputs
-  (`sam3_clip` only for text) a layer can segment its shape instead of being painted: the **wand**
+  from the rail. The panes resize by their gutters. With a photo and SAM3 picked on Fresco
+  Inputs a layer can segment its shape instead of being painted: the **wand**
   (W, with the canvas focused) clicks a point on the image — a new layer if you click outside one,
   Alt+click to leave a spot out — and SAM3 fills the layer's box with what is there. With the wand
   on, drag a point to move it, click it to remove it, Alt+click to flip it. Or type what the layer
