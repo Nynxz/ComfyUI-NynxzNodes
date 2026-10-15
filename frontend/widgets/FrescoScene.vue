@@ -1,5 +1,10 @@
 <template>
-  <div class="fs" @keydown="onKey">
+  <div
+    :ref="(el) => (wheel.el.value = el as HTMLElement | null)"
+    class="fs"
+    v-bind="wheel.attrs"
+    @keydown="onKey"
+  >
     <nav class="fs-rail" aria-label="Tools">
       <ZenIconButton
         v-for="t in TOOLS"
@@ -46,12 +51,27 @@
     </nav>
 
     <header class="fs-status">
+      <ZenPopover placement="bottom-start" role="dialog">
+        <template #trigger="{ toggle }">
+          <ZenIconButton
+            size="sm"
+            icon="mdi mdi-help-circle-outline"
+            title="Controls"
+            @click="toggle"
+          />
+        </template>
+        <dl class="fs-help">
+          <template v-for="row in HELP" :key="row[0]">
+            <dt>{{ row[0] }}</dt>
+            <dd>{{ row[1] }}</dd>
+          </template>
+        </dl>
+      </ZenPopover>
       <span class="fs-tip">
         <template v-if="mismatch">
           Source is {{ sourceSize![0] }}×{{ sourceSize![1] }}
           <button type="button" class="fs-link" @click="matchSource">match canvas</button>
         </template>
-        <template v-else>{{ tip }}</template>
       </span>
       <label
         class="fs-ctl"
@@ -101,7 +121,7 @@
       </ZenPopover>
     </header>
 
-    <div class="fs-stage">
+    <div class="fs-stage" @wheel="onStageWheel">
       <ZenBoxCanvas
         v-model:boxes="boxes"
         v-model:selected="selected"
@@ -139,7 +159,7 @@
           <span class="fs-title">Layers</span>
           <span class="fs-count">{{ scene.layers.length }}</span>
         </header>
-        <ZenScroll class="fs-body" data-capture-wheel="true">
+        <ZenScroll class="fs-body">
           <ZenLayerList
             :selected="listSelection"
             :items="layerItems"
@@ -182,7 +202,7 @@
           <span v-else class="fs-title">Scene</span>
         </header>
 
-        <ZenScroll class="fs-body" data-capture-wheel="true">
+        <ZenScroll class="fs-body">
           <FrescoContentForm
             v-if="currentLayer"
             ref="layerForm"
@@ -325,6 +345,7 @@ import {
   ZenResolution,
   ZenScroll,
   ZenToggleGroup,
+  useWheelClaim,
   type BoxTool,
   type LayerItem,
   type ZenBox,
@@ -466,15 +487,33 @@ async function openLayer(id: string) {
   layerForm.value?.focusPrompt();
 }
 
-const tip = computed(() => {
-  const one = selected.value.length === 1 ? currentLayer.value : null;
-  if (tool.value !== "select")
-    return one
-      ? `Painting ${one.name}'s shape — [ ] brush size, V when done`
-      : "Pick a layer to paint into";
-  if (!scene.value.layers.length) return "Drag on the canvas to draw a layer";
-  if (one) return "Drag to move · handles resize · Shift keeps the shape · double-click to name";
-  return "Drag on empty canvas for a new layer · Shift-drag to select several";
+const HELP: [string, string][] = [
+  ["Drag on empty canvas", "draw a layer"],
+  ["Drag a layer", "move it — Shift keeps it on one axis"],
+  ["Drag a handle", "resize — Shift keeps the shape"],
+  ["Shift / Ctrl + click", "add to the selection"],
+  ["Shift + drag on empty", "select several"],
+  ["Double-click a layer", "edit its prompt"],
+  ["Arrows", "nudge — Shift for more"],
+  ["Delete", "remove the selected layers"],
+  ["V · B · E", "select · paint the shape · erase it"],
+  ["[  ]  or wheel", "brush size, while painting"],
+  ["Alt while dragging", "no snapping"],
+];
+
+/** Over the canvas while painting, the wheel sizes the brush; anywhere else it scrolls a panel
+ *  or goes to the graph (see `wheel`). */
+function onStageWheel(e: WheelEvent) {
+  if (tool.value === "select") return;
+  e.preventDefault();
+  e.stopPropagation();
+  const step = e.deltaY < 0 ? 1.12 : 1 / 1.12;
+  brushSize.value = Math.min(0.3, Math.max(0.01, brushSize.value * step));
+}
+
+const wheel = useWheelClaim({
+  ours: (_e, target) => tool.value !== "select" && !!target.closest(".fs-stage"),
+  focusTarget: () => wheel.el.value?.querySelector<HTMLElement>(".zbc") ?? null,
 });
 
 function onKey(e: KeyboardEvent) {
@@ -698,6 +737,22 @@ onBeforeUnmount(() => api.removeEventListener("executed", onExecuted));
   padding: 0 4px;
   color: var(--zen-muted, #9aa0aa);
   font-size: 11px;
+}
+.fs-help {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 4px 14px;
+  margin: 0;
+  padding: 10px 12px;
+  font-size: 11px;
+}
+.fs-help dt {
+  color: var(--zen-text, #e5e5ea);
+  white-space: nowrap;
+}
+.fs-help dd {
+  margin: 0;
+  color: var(--zen-muted, #9aa0aa);
 }
 .fs-tip {
   flex: 1;
