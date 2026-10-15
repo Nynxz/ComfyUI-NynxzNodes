@@ -50,6 +50,19 @@
           <ZenButton sm icon="mdi mdi-view-grid-outline" @click="backdropBrowse = true">
             Pick an image…
           </ZenButton>
+          <ZenButton
+            v-if="backdropUrl"
+            sm
+            :icon="backdrop?.pinned ? 'mdi mdi-pin' : 'mdi mdi-pin-outline'"
+            :title="
+              backdrop?.pinned
+                ? 'Pinned — runs won\'t replace it'
+                : 'Pin it, so the next run doesn\'t replace it'
+            "
+            @click="setBackdrop({ ...backdrop!, pinned: !backdrop!.pinned })"
+          >
+            {{ backdrop?.pinned ? "Unpin" : "Pin" }}
+          </ZenButton>
           <ZenButton v-if="backdropUrl" sm icon="mdi mdi-close" @click="setBackdrop(null)">
             Remove
           </ZenButton>
@@ -57,257 +70,291 @@
       </ZenPopover>
     </nav>
 
-    <header class="fs-status">
-      <ZenPopover placement="bottom-start" role="dialog">
-        <template #trigger="{ toggle }">
-          <ZenIconButton
-            size="sm"
-            icon="mdi mdi-help-circle-outline"
-            title="Controls"
-            @click="toggle"
-          />
-        </template>
-        <dl class="fs-help">
-          <template v-for="row in HELP" :key="row[0]">
-            <dt>{{ row[0] }}</dt>
-            <dd>{{ row[1] }}</dd>
-          </template>
-        </dl>
-      </ZenPopover>
-      <span class="fs-tip">
-        <template v-if="mismatch">
-          Source is {{ sourceSize![0] }}×{{ sourceSize![1] }}
-          <button type="button" class="fs-link" @click="matchSource">match canvas</button>
-        </template>
-      </span>
-      <label
-        class="fs-ctl"
-        :class="{ dim: tool === 'select' }"
-        title="Brush size in canvas pixels — [ and ]"
-      >
-        <i class="mdi mdi-brush" />
-        <ZenNumber
-          size="sm"
-          :model-value="Math.round(brushSize * scene.width)"
-          :min="4"
-          :max="Math.round(scene.width * 0.4)"
-          :step="2"
-          :precision="0"
-          @update:model-value="brushSize = Math.max(4, $event) / scene.width"
-        />
-      </label>
-      <label class="fs-ctl" :class="{ dim: !backdropUrl }" title="Trace image opacity, %">
-        <i class="mdi mdi-image-outline" />
-        <ZenNumber
-          size="sm"
-          :model-value="Math.round(backdropOpacity * 100)"
-          :min="10"
-          :max="100"
-          :step="5"
-          :precision="0"
-          :disabled="!backdropUrl"
-          @update:model-value="backdropOpacity = $event / 100"
-        />
-      </label>
-      <ZenPopover placement="bottom-end" role="dialog">
-        <template #trigger="{ toggle }">
-          <button type="button" class="fs-chip" title="Canvas size" @click="toggle">
-            {{ scene.width }}×{{ scene.height }}
-          </button>
-        </template>
-        <ZenResolution
-          :width="scene.width"
-          :height="scene.height"
-          :snap="32"
-          :presets="[0.5, 1, 1.5, 2]"
-          :max-side="2048"
-          :max-mp="4"
-          @update:width="setSize($event, scene.height)"
-          @update:height="setSize(scene.width, $event)"
-        />
-      </ZenPopover>
-    </header>
-
-    <div
-      class="fs-stage"
-      :class="{ dropping: dropOver }"
-      @wheel="onStageWheel"
-      @dragover="onStageDragOver"
-      @dragleave="dropOver = false"
-      @drop="onStageDrop"
+    <ZenSplit
+      class="fs-main"
+      :panes="COLUMNS"
+      :sizes="splits.columns"
+      gutter="gap"
+      @update:sizes="saveSplit('columns', $event)"
     >
-      <ZenBoxCanvas
-        v-model:boxes="boxes"
-        v-model:selected="selected"
-        v-model:tool="tool"
-        :aspect="scene.width / scene.height"
-        :backdrop="backdropUrl"
-        :backdrop-opacity="backdropOpacity"
-        :brush-size="brushSize"
-        :snap="1 / 64"
-        @create="createLayer"
-        @commit="commit"
-        @update:mask="setMask"
-        @delete="removeLayers"
-        @open="openLayer"
-      >
-        <template v-if="showFaces" #box="{ box, maskStyle }">
-          <FrescoBoxFace
-            v-if="layerById.get(box.id)"
-            :layer="layerById.get(box.id)!"
-            :mask-style="maskStyle"
-          />
-        </template>
-        <template #empty>
-          <div class="fs-hint-empty">
-            <i class="mdi mdi-gesture-tap-box" />
-            <span>Drag to draw a layer</span>
-          </div>
-        </template>
-      </ZenBoxCanvas>
-    </div>
-
-    <aside class="fs-side">
-      <section class="fs-pane fs-layers">
-        <header class="fs-head">
-          <span class="fs-title">Layers</span>
-          <span class="fs-count">{{ scene.layers.length }}</span>
-        </header>
-        <ZenScroll class="fs-body">
-          <ZenLayerList
-            :selected="listSelection"
-            :items="layerItems"
-            @update:selected="selectFromList"
-            @reorder="reorder"
-            @toggle-hidden="toggleOn"
-            @toggle-locked="toggleLock"
-          />
-        </ZenScroll>
-      </section>
-
-      <section class="fs-pane fs-inspect">
-        <header class="fs-head">
-          <template v-if="currentLayer">
-            <span class="fs-swatch" :style="{ background: currentLayer.color }" />
-            <ZenInput
-              class="fs-name"
-              sm
-              :model-value="currentLayer.name"
-              @update:model-value="patchCurrent({ name: String($event ?? '') })"
-            />
-            <ZenIconButton
-              size="sm"
-              danger
-              icon="mdi mdi-delete-outline"
-              title="Delete this layer"
-              @click="removeLayers([currentLayer.id])"
-            />
-          </template>
-          <template v-else-if="selected.length > 1">
-            <span class="fs-title">{{ selected.length }} layers</span>
-            <ZenIconButton
-              size="sm"
-              danger
-              icon="mdi mdi-delete-outline"
-              title="Delete these layers"
-              @click="removeLayers([...selected])"
-            />
-          </template>
-          <span v-else class="fs-title">Scene</span>
-        </header>
-
-        <ZenScroll class="fs-body">
-          <FrescoContentForm
-            v-if="currentLayer"
-            ref="layerForm"
-            :content="currentLayer"
-            prompt-placeholder="What goes here — write it out in full. Empty: the scene prompt, read against the references"
-            @patch="patchCurrent"
-          >
-            <div class="fs-label">Shape</div>
-            <div class="fs-grid">
-              <span title="Soften the edge, in canvas pixels">feather</span>
+      <template #pane-0>
+        <div class="fs-canvascol">
+          <header class="fs-status">
+            <ZenPopover placement="bottom-start" role="dialog">
+              <template #trigger="{ toggle }">
+                <ZenIconButton
+                  size="sm"
+                  icon="mdi mdi-help-circle-outline"
+                  title="Controls"
+                  @click="toggle"
+                />
+              </template>
+              <dl class="fs-help">
+                <template v-for="row in HELP" :key="row[0]">
+                  <dt>{{ row[0] }}</dt>
+                  <dd>{{ row[1] }}</dd>
+                </template>
+              </dl>
+            </ZenPopover>
+            <span class="fs-tip">
+              <template v-if="mismatch">
+                Source is {{ sourceSize![0] }}×{{ sourceSize![1] }}
+                <button type="button" class="fs-link" @click="matchSource">match canvas</button>
+              </template>
+            </span>
+            <label
+              class="fs-ctl"
+              :class="{ dim: tool === 'select' }"
+              title="Brush size in canvas pixels — [ and ]"
+            >
+              <i class="mdi mdi-brush" />
               <ZenNumber
                 size="sm"
-                :model-value="currentLayer.feather"
-                :min="0"
-                :max="256"
-                :step="1"
+                :model-value="Math.round(brushSize * scene.width)"
+                :min="4"
+                :max="Math.round(scene.width * 0.4)"
+                :step="2"
                 :precision="0"
-                title="Soften the edge, in canvas pixels"
-                @update:model-value="patchCurrent({ feather: Math.round($event) })"
-              />
-            </div>
-            <div class="fs-row">
-              <span class="fs-note">
-                {{ currentLayer.mask ? "Painted shape" : "The whole box" }} · <kbd>B</kbd> paint ·
-                <kbd>E</kbd> erase
-              </span>
-              <ZenButton
-                sm
-                icon="mdi mdi-crop-square"
-                :disabled="!currentLayer.mask"
-                title="Clear the painted shape — the layer becomes its whole box"
-                @click="setMask(currentLayer.id, null)"
-              >
-                Box
-              </ZenButton>
-            </div>
-          </FrescoContentForm>
-
-          <p v-else-if="selected.length > 1" class="fs-note fs-pad">
-            Drag any of them on the canvas to move them together; the frame's handles scale them.
-          </p>
-
-          <div v-else class="fs-form">
-            <div class="fs-label">Scene prompt</div>
-            <ZenInput
-              type="textarea"
-              :rows="3"
-              sm
-              :model-value="scene.prompt"
-              placeholder="The whole picture — Fresco Apply's positive"
-              @update:model-value="patchScene({ prompt: String($event ?? '') })"
-            />
-            <div class="fs-label fs-section">
-              Background
-              <span class="fs-label-note">wherever no layer is</span>
-            </div>
-            <FrescoContentForm
-              :content="scene.background"
-              :prompt-rows="2"
-              prompt-placeholder="Optional — what fills the rest of the frame"
-              @patch="patchBackground"
-            />
-            <div class="fs-label">Settings</div>
-            <label
-              class="fs-field wide"
-              title="How overlapping layers share the pixels they both cover"
-            >
-              <span>overlap</span>
-              <ZenToggleGroup
-                :model-value="scene.settings.overlap"
-                :options="OVERLAPS"
-                @update:model-value="patchSettings({ overlap: $event as Overlap })"
+                @update:model-value="brushSize = Math.max(4, $event) / scene.width"
               />
             </label>
-            <label
-              class="fs-field wide"
-              title="Resolution reference images are read at. Higher reads more detail and costs more tokens in every layer's copy of the prompt."
-            >
-              <span>ref detail</span>
+            <label class="fs-ctl" :class="{ dim: !backdropUrl }" title="Trace image opacity, %">
+              <i class="mdi mdi-image-outline" />
               <ZenNumber
-                :model-value="scene.settings.visual_size"
-                :min="128"
-                :max="1024"
-                :step="32"
-                @update:model-value="patchSettings({ visual_size: $event })"
+                size="sm"
+                :model-value="Math.round(backdropOpacity * 100)"
+                :min="10"
+                :max="100"
+                :step="5"
+                :precision="0"
+                :disabled="!backdropUrl"
+                @update:model-value="backdropOpacity = $event / 100"
               />
             </label>
+            <ZenPopover placement="bottom-end" role="dialog">
+              <template #trigger="{ toggle }">
+                <button type="button" class="fs-chip" title="Canvas size" @click="toggle">
+                  {{ scene.width }}×{{ scene.height }}
+                </button>
+              </template>
+              <ZenResolution
+                :width="scene.width"
+                :height="scene.height"
+                :snap="32"
+                :presets="[0.5, 1, 1.5, 2]"
+                :max-side="2048"
+                :max-mp="4"
+                @update:width="setSize($event, scene.height)"
+                @update:height="setSize(scene.width, $event)"
+              />
+            </ZenPopover>
+          </header>
+
+          <div
+            class="fs-stage"
+            :class="{ dropping: dropOver }"
+            @wheel="onStageWheel"
+            @dragover="onStageDragOver"
+            @dragleave="dropOver = false"
+            @drop="onStageDrop"
+          >
+            <ZenBoxCanvas
+              v-model:boxes="boxes"
+              v-model:selected="selected"
+              v-model:tool="tool"
+              :aspect="scene.width / scene.height"
+              :backdrop="backdropUrl"
+              :backdrop-opacity="backdropOpacity"
+              :brush-size="brushSize"
+              :snap="1 / 64"
+              @create="createLayer"
+              @commit="commit"
+              @update:mask="setMask"
+              @delete="removeLayers"
+              @open="openLayer"
+            >
+              <template v-if="showFaces" #box="{ box, maskStyle }">
+                <FrescoBoxFace
+                  v-if="layerById.get(box.id)"
+                  :layer="layerById.get(box.id)!"
+                  :mask-style="maskStyle"
+                />
+              </template>
+              <template #empty>
+                <div class="fs-hint-empty">
+                  <i class="mdi mdi-gesture-tap-box" />
+                  <span>Drag to draw a layer</span>
+                </div>
+              </template>
+            </ZenBoxCanvas>
           </div>
-        </ZenScroll>
-      </section>
-    </aside>
+        </div>
+      </template>
+      <template #pane-1>
+        <ZenSplit
+          class="fs-side"
+          direction="vertical"
+          :panes="ROWS"
+          :sizes="splits.rows"
+          gutter="gap"
+          @update:sizes="saveSplit('rows', $event)"
+        >
+          <template #pane-0>
+            <section class="fs-pane fs-layers">
+              <header class="fs-head">
+                <span class="fs-title">Layers</span>
+                <span class="fs-count">{{ scene.layers.length }}</span>
+              </header>
+              <ZenScroll class="fs-body">
+                <ZenLayerList
+                  :selected="listSelection"
+                  :items="layerItems"
+                  @update:selected="selectFromList"
+                  @reorder="reorder"
+                  @toggle-hidden="toggleOn"
+                  @toggle-locked="toggleLock"
+                />
+              </ZenScroll>
+            </section>
+          </template>
+          <template #pane-1>
+            <section class="fs-pane fs-inspect">
+              <header class="fs-head">
+                <template v-if="currentLayer">
+                  <span class="fs-swatch" :style="{ background: currentLayer.color }" />
+                  <ZenInput
+                    class="fs-name"
+                    sm
+                    :model-value="currentLayer.name"
+                    @update:model-value="patchCurrent({ name: String($event ?? '') })"
+                  />
+                  <ZenIconButton
+                    size="sm"
+                    danger
+                    icon="mdi mdi-delete-outline"
+                    title="Delete this layer"
+                    @click="removeLayers([currentLayer.id])"
+                  />
+                </template>
+                <template v-else-if="selected.length > 1">
+                  <span class="fs-title">{{ selected.length }} layers</span>
+                  <ZenIconButton
+                    size="sm"
+                    danger
+                    icon="mdi mdi-delete-outline"
+                    title="Delete these layers"
+                    @click="removeLayers([...selected])"
+                  />
+                </template>
+                <span v-else class="fs-title">Scene</span>
+              </header>
+
+              <ZenScroll class="fs-body">
+                <FrescoContentForm
+                  v-if="currentLayer"
+                  ref="layerForm"
+                  :content="currentLayer"
+                  prompt-placeholder="What goes here — write it out in full. Empty: the scene prompt, read against the references"
+                  @patch="patchCurrent"
+                >
+                  <div class="fs-label">Shape</div>
+                  <div class="fs-grid">
+                    <span title="Soften the edge, in canvas pixels">feather</span>
+                    <ZenNumber
+                      size="sm"
+                      :model-value="currentLayer.feather"
+                      :min="0"
+                      :max="256"
+                      :step="1"
+                      :precision="0"
+                      title="Soften the edge, in canvas pixels"
+                      @update:model-value="patchCurrent({ feather: Math.round($event) })"
+                    />
+                  </div>
+                  <div class="fs-grid">
+                    <span :title="SHAPE_TIP">shape for</span>
+                    <ZenToggleGroup
+                      size="sm"
+                      :model-value="currentLayer.shapeFor"
+                      :options="SHAPE_FOR"
+                      :disabled="!currentLayer.mask"
+                      @update:model-value="patchCurrent({ shapeFor: $event as 'layer' | 'refs' })"
+                    />
+                  </div>
+                  <div class="fs-row">
+                    <span class="fs-note">
+                      {{ currentLayer.mask ? "Painted shape" : "The whole box" }} ·
+                      <kbd>B</kbd> paint · <kbd>E</kbd> erase
+                    </span>
+                    <ZenButton
+                      sm
+                      icon="mdi mdi-crop-square"
+                      :disabled="!currentLayer.mask"
+                      title="Clear the painted shape — the layer becomes its whole box"
+                      @click="setMask(currentLayer.id, null)"
+                    >
+                      Box
+                    </ZenButton>
+                  </div>
+                </FrescoContentForm>
+
+                <p v-else-if="selected.length > 1" class="fs-note fs-pad">
+                  Drag any of them on the canvas to move them together; the frame's handles scale
+                  them.
+                </p>
+
+                <div v-else class="fs-form">
+                  <div class="fs-label">Scene prompt</div>
+                  <ZenInput
+                    type="textarea"
+                    :rows="3"
+                    sm
+                    :model-value="scene.prompt"
+                    placeholder="The whole picture — Fresco Apply's positive"
+                    @update:model-value="patchScene({ prompt: String($event ?? '') })"
+                  />
+                  <div class="fs-label fs-section">
+                    Background
+                    <span class="fs-label-note">wherever no layer is</span>
+                  </div>
+                  <FrescoContentForm
+                    :content="scene.background"
+                    :prompt-rows="2"
+                    prompt-placeholder="Optional — what fills the rest of the frame"
+                    @patch="patchBackground"
+                  />
+                  <div class="fs-label">Settings</div>
+                  <label
+                    class="fs-field wide"
+                    title="How overlapping layers share the pixels they both cover"
+                  >
+                    <span>overlap</span>
+                    <ZenToggleGroup
+                      :model-value="scene.settings.overlap"
+                      :options="OVERLAPS"
+                      @update:model-value="patchSettings({ overlap: $event as Overlap })"
+                    />
+                  </label>
+                  <label
+                    class="fs-field wide"
+                    title="Resolution reference images are read at. Higher reads more detail and costs more tokens in every layer's copy of the prompt."
+                  >
+                    <span>ref detail</span>
+                    <ZenNumber
+                      :model-value="scene.settings.visual_size"
+                      :min="128"
+                      :max="1024"
+                      :step="32"
+                      @update:model-value="patchSettings({ visual_size: $event })"
+                    />
+                  </label>
+                </div>
+              </ZenScroll>
+            </section>
+          </template>
+        </ZenSplit>
+      </template>
+    </ZenSplit>
 
     <ZenMediaPicker
       v-model:open="backdropBrowse"
@@ -347,6 +394,7 @@ import {
   ZenPopover,
   ZenResolution,
   ZenScroll,
+  ZenSplit,
   ZenToggleGroup,
   boxAt,
   useWheelClaim,
@@ -385,6 +433,18 @@ const props = defineProps<{
 const emit = defineEmits<{ popOut: [] }>();
 const canPopOut = !props.inPanel && hasZenPanels();
 
+const SHAPE_TIP =
+  "What a painted shape limits. Whole layer: the shape is the layer. References: the layer is its " +
+  "whole box — prompt and LoRAs everywhere in it — and the shape is only where its references " +
+  "are read, e.g. a dress on the torso of a character. Paint a shape first.";
+const SHAPE_FOR = [
+  { value: "layer", label: "Whole layer", title: "The painted shape is the layer" },
+  {
+    value: "refs",
+    label: "References",
+    title: "The layer is its whole box; the shape is only where its references are read",
+  },
+];
 const TOOLS: { value: BoxTool; icon: string; title: string }[] = [
   { value: "select", icon: "mdi mdi-cursor-default-outline", title: "Select, move, draw — V" },
   { value: "brush", icon: "mdi mdi-brush", title: "Paint the layer's shape — B" },
@@ -396,6 +456,23 @@ const OVERLAPS = [
 ];
 
 const scene = sharedScene(props.widget);
+
+// --- the panes: canvas | side, and layers over the inspector, sized by dragging the gutters ----
+// Remembered per node as a property, so it never re-runs the graph.
+const COLUMNS = [{ min: 320 }, { size: 300, min: 240, max: 640 }];
+const ROWS = [{ size: 0.34, min: 90 }, { min: 160 }];
+const SPLIT_KEY = "nynxzFrescoSplit";
+const splits = ref<{ columns?: number[]; rows?: number[] }>(
+  (props.node?.properties?.[SPLIT_KEY] as { columns?: number[]; rows?: number[] }) ?? {},
+);
+function saveSplit(which: "columns" | "rows", sizes: number[] | undefined) {
+  if (!sizes) return;
+  splits.value = { ...splits.value, [which]: sizes };
+  if (props.node?.properties) {
+    // eslint-disable-next-line vue/no-mutating-props -- node.properties is ComfyUI's own store for what the backend must not see.
+    props.node.properties[SPLIT_KEY] = splits.value;
+  }
+}
 const selected = ref<string[]>([]);
 const tool = ref<BoxTool>("select");
 const brushSize = ref(0.06);
@@ -448,6 +525,7 @@ const boxes = computed<ZenBox[]>({
       hidden: !l.on,
       locked: l.locked,
       mask: l.mask,
+      maskClips: l.shapeFor !== "refs",
     })),
   // Live while dragging; the canvas's `commit` (at the end of the gesture) persists.
   set: (next) => {
@@ -645,6 +723,8 @@ interface Backdrop {
   opacity: number;
   /** Width and height of a source image Fresco Apply sent back. */
   size?: [number, number];
+  /** Kept when a run sends its image back. */
+  pinned?: boolean;
 }
 function readBackdrop(): Backdrop | null {
   const raw = props.node?.properties?.[BACKDROP_KEY] as Partial<Backdrop> | undefined;
@@ -654,6 +734,7 @@ function readBackdrop(): Backdrop | null {
         type: (raw.type ?? "input") as SourceType,
         opacity: raw.opacity ?? 0.6,
         size: raw.size,
+        pinned: raw.pinned === true,
       }
     : null;
 }
@@ -684,6 +765,7 @@ function pickBackdrop(refs: string[]) {
     ref: rest.join("/"),
     type: (["input", "temp", "output"].includes(type!) ? type : "input") as SourceType,
     opacity: backdrop.value?.opacity ?? 0.6,
+    pinned: true,
   });
 }
 
@@ -706,7 +788,7 @@ function isMine(id: unknown): boolean {
 }
 function onExecuted(e: Event) {
   const output = (e as CustomEvent).detail?.output as Record<string, unknown[]> | undefined;
-  if (!output?.fresco_node?.some(isMine)) return;
+  if (!output?.fresco_node?.some(isMine) || backdrop.value?.pinned) return;
   const image = output.fresco_source?.[0] as
     { filename: string; subfolder?: string; type?: string } | undefined;
   if (!image) return;
@@ -727,9 +809,8 @@ onBeforeUnmount(() => api.removeEventListener("executed", onExecuted));
    share of the node, never its content, so selecting or typing can't move anything. */
 .fs {
   display: grid;
-  grid-template-columns: 34px minmax(0, 1fr) 300px;
-  grid-template-rows: 30px minmax(0, 1fr);
-  gap: 6px 8px;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 8px;
   width: 100%;
   height: 100%;
   min-height: 0;
@@ -737,8 +818,19 @@ onBeforeUnmount(() => api.removeEventListener("executed", onExecuted));
   font-size: 12px;
 }
 
+.fs-main {
+  min-width: 0;
+  min-height: 0;
+}
+.fs-canvascol {
+  display: grid;
+  grid-template-rows: 30px minmax(0, 1fr);
+  gap: 6px;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
 .fs-rail {
-  grid-row: 1 / 3;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -767,8 +859,6 @@ onBeforeUnmount(() => api.removeEventListener("executed", onExecuted));
   border-radius: var(--zen-radius, 7px);
 }
 .fs-stage {
-  grid-column: 2;
-  grid-row: 2;
   min-width: 0;
   min-height: 0;
 }
@@ -784,8 +874,6 @@ onBeforeUnmount(() => api.removeEventListener("executed", onExecuted));
 }
 
 .fs-status {
-  grid-column: 2;
-  grid-row: 1;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -850,11 +938,7 @@ onBeforeUnmount(() => api.removeEventListener("executed", onExecuted));
 }
 
 .fs-side {
-  grid-column: 3;
-  grid-row: 1 / 3;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  height: 100%;
   min-height: 0;
 }
 .fs-pane {
@@ -866,11 +950,9 @@ onBeforeUnmount(() => api.removeEventListener("executed", onExecuted));
   background: color-mix(in srgb, var(--zen-text, #fff) 2%, transparent);
   overflow: hidden;
 }
-.fs-layers {
-  flex: 0 0 34%;
-}
+.fs-layers,
 .fs-inspect {
-  flex: 1 1 0;
+  height: 100%;
 }
 .fs-head {
   flex: none;

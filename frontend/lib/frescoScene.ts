@@ -62,6 +62,8 @@ export interface FrescoLayer extends FrescoContent {
   w: number;
   h: number;
   mask: string | null;
+  /** What the painted shape limits: the whole layer, or only where its references are read. */
+  shapeFor: "layer" | "refs";
   feather: number;
   locked: boolean;
 }
@@ -196,6 +198,7 @@ export function parseScene(value: unknown): FrescoScene {
         h: Math.min(1 - y, clamp01(num(l.h, 0.5))),
         mask: typeof l.mask === "string" && l.mask.startsWith("data:image/") ? l.mask : null,
         feather: Math.max(0, Math.round(num(l.feather, 16))),
+        shapeFor: l.shapeFor === "refs" ? "refs" : "layer",
         locked: l.locked === true,
       };
     }),
@@ -219,6 +222,7 @@ export function newLayer(
     color,
     ...rect,
     mask: null,
+    shapeFor: "layer",
     feather: 16,
     locked: false,
   };

@@ -24,7 +24,10 @@ Drag on the canvas to draw a layer, then give it what belongs there:
   of the picture. Raise it when references aren't coming through;
 - **LoRAs** — each runs only on the layer's tokens, at its own strength;
 - a **shape** — the whole box, or paint inside it (`B` brush, `E` erase, `V` back to select,
-  `[` `]` brush size); the shape moves and scales with the box. `feather` softens the edge;
+  `[` `]` or the wheel for brush size); the shape moves and scales with the box. `feather` softens
+  the edge. **Shape for** picks what the painting limits: the **whole layer**, or only its
+  **references** — the layer is then its whole box (prompt and LoRAs everywhere in it) and the
+  references are read only in the painted part, e.g. a dress on the torso of a character;
 - a **denoise** — for edits: how much of the source image this layer may rewrite.
 
 Upper layers cover lower ones, like paint. The **Scene** row, pinned under the layers, holds the
@@ -42,7 +45,12 @@ Load Model ── model ────────┤
                                             └─ regions (for Regions Preview)
 ```
 
-- **Fresco** — the editor. Takes the Krea 2 text encoder; outputs `fresco`.
+- **Fresco** — the editor. Takes the Krea 2 text encoder; outputs `fresco`. Drop images from the
+  asset browser (or the desktop) on a layer to add a reference, or on empty canvas for a new layer;
+  pop it out into a ZenKit panel from the rail. The panes resize by their gutters.
+- **Fresco Overlay** — the render with every layer outlined, filled faintly and labelled, to check
+  it followed the boxes. It also sends the render back to the editor as its trace image, so the
+  boxes sit over the last render while you adjust them (pin a trace image to keep yours).
 - **Fresco Apply** — puts the scene on the model: each layer's LoRAs and prompt act only where it
   is (Regions Apply underneath, with the prompt copies at full weight all run), and hands the
   sampler its positive and latent. With an **image** and a **VAE** it edits that image: the latent
