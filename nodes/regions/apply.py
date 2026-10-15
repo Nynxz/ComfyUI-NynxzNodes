@@ -236,6 +236,7 @@ class NynxzRegionsApply(RegionNode):
         route_blocks=3,
         sharpness=2.0,
         layout_lock=0.0,
+        prompt_follows_schedule=True,
     ) -> io.NodeOutput:
         total_blocks = check_krea2(model, "Regions Apply")
         entries = list(regions or [])
@@ -275,6 +276,9 @@ class NynxzRegionsApply(RegionNode):
             commit_at=commit_at, preheat=preheat, ramp=ramp, release=release
         )
         state = _state.GateState(entries, schedule, track)
+        # Not a widget: callers that build regions themselves (Fresco Apply) can read the prompt
+        # copies at full weight while the LoRAs still follow the schedule.
+        state.copy_full = not prompt_follows_schedule
         text = None
         if region_prompt:
             text = _text.TextCopies(

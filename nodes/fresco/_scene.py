@@ -33,6 +33,7 @@ from ..regions import _mask
 WORKING = 512
 OVERLAP = ("top", "share")
 DEFAULT_OVERLAP = "top"
+DEFAULT_VISUAL_SIZE = 384
 FITS = ("contain", "cover", "stretch")
 _DATA_URL = re.compile(r"^data:image/[a-z+]+;base64,(.*)$", re.DOTALL)
 
@@ -67,7 +68,17 @@ def parse(value) -> dict:
         raw_background if isinstance(raw_background, dict) else {}, BACKGROUND_DENOISE
     )
     background["name"] = "background"
+    raw_settings = scene.get("settings") if isinstance(scene.get("settings"), dict) else {}
+    settings = {
+        "overlap": raw_settings.get("overlap")
+        if raw_settings.get("overlap") in OVERLAP
+        else DEFAULT_OVERLAP,
+        "visual_size": min(
+            1024, max(128, int(_num(raw_settings.get("visual_size"), DEFAULT_VISUAL_SIZE)))
+        ),
+    }
     return {
+        "settings": settings,
         "width": width,
         "height": height,
         "prompt": str(scene.get("prompt") or ""),
@@ -104,6 +115,7 @@ def _content(raw: dict, denoise: float = 1.0) -> dict:
         "refs": [r for r in refs if r["strength"] > 0.0],
         "loras": loras,
         "denoise": min(1.0, max(0.0, _num(raw.get("denoise"), denoise))),
+        "influence": min(4.0, max(0.0, _num(raw.get("influence"), 1.0))),
     }
 
 

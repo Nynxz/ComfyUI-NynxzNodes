@@ -32,12 +32,14 @@ class GateState:
         "bias",
         "canvas_tokens",
         "copies",
+        "copy_full",
         "copy_tokens",
         "floor",
         "fraction",
         "frozen",
         "gates",
         "grid",
+        "influences",
         "last_sigma",
         "lock_pass",
         "locked_qk",
@@ -69,6 +71,14 @@ class GateState:
         #: right after the canvas (see `_text`).
         self.copies = None
         self.copy_tokens = 0
+        #: Read the prompt copies at full weight instead of the schedule's scale (Fresco).
+        self.copy_full = False
+        #: Per region: how strongly its tokens read their copy, as a multiplier on attention to
+        #: it. 1 everywhere unless a region says otherwise (Fresco's `influence`).
+        self.influences = [
+            min(4.0, max(1e-4, float(r.get("influence", 1.0)))) if isinstance(r, dict) else 1.0
+            for r in regions
+        ]
         #: `(key, [B, 1, L, L])` — the attention bias, kept while the map and the step's scale hold.
         self.bias: tuple | None = None
         self.grid: tuple[int, int] = (0, 0)

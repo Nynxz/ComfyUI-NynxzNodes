@@ -33,7 +33,14 @@ they are small (box-local, alpha only, PNG).
 
 from __future__ import annotations
 
+from comfy_api.latest import io
+
 from .._zenkit.io_types import widget_type
 
 #: Bound to frontend/widgets/FrescoScene.vue -> io_type NYNXZ_FRESCO_SCENE.
 FrescoSceneType = widget_type("FrescoScene", dict, doc="The Fresco scene: canvas, prompt, layers.")
+
+#: Fresco -> Fresco Apply: `{"regions", "positive", "width", "height", "background_denoise",
+#: "node"}` — `node` is the Fresco node's id, so Fresco Apply can send the source image back to
+#: the editor it came from.
+Fresco = io.Custom("NYNXZ_FRESCO")

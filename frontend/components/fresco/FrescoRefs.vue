@@ -6,59 +6,59 @@
     @dragleave="dragOver = false"
     @drop.prevent="onDrop"
   >
-    <div v-if="refs.length" class="fr-list">
-      <div v-for="(r, i) in refs" :key="r.id" class="fr-card" :class="{ off: !r.on }">
-        <div class="fr-thumb" :title="r.ref">
-          <img
-            :src="thumbUrl(r.ref, r.type)"
-            :style="{ objectFit: r.fit === 'stretch' ? 'fill' : r.fit }"
-            data-peek
-            loading="lazy"
-            draggable="false"
-          />
-          <div class="fr-acts">
-            <button class="fr-act" :title="FIT_LABEL[r.fit]" @click="cycleFit(i)">
-              <i class="mdi" :class="FIT_ICON[r.fit]" />
-            </button>
-            <button
-              class="fr-act"
-              :title="r.on ? 'Mute' : 'Unmute'"
-              @click="patch(i, { on: !r.on })"
-            >
-              <i class="mdi" :class="r.on ? 'mdi-eye-outline' : 'mdi-eye-off-outline'" />
-            </button>
-            <button class="fr-act danger" title="Remove" @click="remove(i)">
-              <i class="mdi mdi-close" />
-            </button>
-          </div>
-        </div>
-        <ZenNumber
-          class="fr-str"
-          bare
-          :model-value="r.strength"
-          :min="0"
-          :max="4"
-          :step="0.05"
-          title="Strength — its share of the blend when there are several"
-          @update:model-value="patch(i, { strength: Math.max(0, $event) })"
+    <div v-for="(r, i) in refs" :key="r.id" class="fr-tile" :class="{ off: !r.on }">
+      <div class="fr-thumb" :title="r.ref">
+        <img
+          :src="thumbUrl(r.ref, r.type)"
+          :style="{ objectFit: r.fit === 'stretch' ? 'fill' : r.fit }"
+          data-peek
+          loading="lazy"
+          draggable="false"
         />
+        <div class="fr-acts">
+          <button type="button" class="fr-act" :title="FIT_LABEL[r.fit]" @click="cycleFit(i)">
+            <i class="mdi" :class="FIT_ICON[r.fit]" />
+          </button>
+          <button
+            type="button"
+            class="fr-act"
+            :title="r.on ? 'Mute' : 'Unmute'"
+            @click="patch(i, { on: !r.on })"
+          >
+            <i class="mdi" :class="r.on ? 'mdi-eye-outline' : 'mdi-eye-off-outline'" />
+          </button>
+          <button type="button" class="fr-act danger" title="Remove" @click="remove(i)">
+            <i class="mdi mdi-close" />
+          </button>
+        </div>
       </div>
-    </div>
-    <div v-else class="fr-empty">
-      <i class="mdi mdi-image-plus-outline" />
-      <span>Drop reference images — a dress, a face, a style</span>
-    </div>
-    <div class="fr-bar">
-      <ZenButton sm icon="mdi mdi-upload" :disabled="busy" @click="fileInput?.click()">
-        {{ busy ? "Uploading…" : "Add" }}
-      </ZenButton>
-      <ZenIconButton
-        size="sm"
-        icon="mdi mdi-view-grid-outline"
-        title="Browse images"
-        @click="browse = true"
+      <ZenNumber
+        class="fr-str"
+        bare
+        :model-value="r.strength"
+        :min="0"
+        :max="4"
+        :step="0.05"
+        title="Strength — this image's share when there are several"
+        @update:model-value="patch(i, { strength: Math.max(0, $event) })"
       />
     </div>
+
+    <div class="fr-tile">
+      <button
+        type="button"
+        class="fr-add"
+        :disabled="busy"
+        title="Add reference images — or drop them here"
+        @click="fileInput?.click()"
+      >
+        <i class="mdi" :class="busy ? 'mdi-loading mdi-spin' : 'mdi-image-plus-outline'" />
+      </button>
+      <button type="button" class="fr-browse" title="Browse images" @click="browse = true">
+        browse
+      </button>
+    </div>
+
     <input
       ref="fileInput"
       type="file"
@@ -81,11 +81,12 @@
 
 <script setup lang="ts">
 /**
- * A layer's reference images: drop or browse, each with a strength, a fit and a mute. Several on
- * one layer blend into its conditioning the way Text Encode (Fusion) blends them.
+ * A layer's reference images as a row of tiles, the add tile always last — so adding the first
+ * image doesn't change the block's height. Each has a strength, a fit and a mute; several on one
+ * layer blend into its conditioning the way Text Encode (Fusion) blends them.
  */
 import { ref } from "vue";
-import { ZenButton, ZenIconButton, ZenMediaPicker, ZenNumber } from "@nynxz/zenkit-ui";
+import { ZenMediaPicker, ZenNumber } from "@nynxz/zenkit-ui";
 
 import { mediaLibrary } from "@/framework";
 import { thumbUrl, uploadImage, type SourceType } from "@/lib/fusionApi";
@@ -109,14 +110,11 @@ const busy = ref(false);
 const browse = ref(false);
 const dragOver = ref(false);
 
-function set(next: FrescoRef[]) {
-  refs.value = next;
-}
 function patch(i: number, fields: Partial<FrescoRef>) {
-  set(refs.value.map((r, j) => (j === i ? { ...r, ...fields } : r)));
+  refs.value = refs.value.map((r, j) => (j === i ? { ...r, ...fields } : r));
 }
 function remove(i: number) {
-  set(refs.value.filter((_, j) => j !== i));
+  refs.value = refs.value.filter((_, j) => j !== i);
 }
 function cycleFit(i: number) {
   const r = refs.value[i];
@@ -124,7 +122,7 @@ function cycleFit(i: number) {
 }
 function add(entries: { ref: string; type: SourceType }[]) {
   if (!entries.length) return;
-  set([
+  refs.value = [
     ...refs.value,
     ...entries.map((e) => ({
       id: uid("r"),
@@ -133,7 +131,7 @@ function add(entries: { ref: string; type: SourceType }[]) {
       fit: "contain" as RefFit,
       on: true,
     })),
-  ]);
+  ];
 }
 
 async function addFiles(files: File[]) {
@@ -175,37 +173,35 @@ function addPicked(picked: string[]) {
 
 <style scoped>
 .fr {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 6px;
-  border: 1px dashed var(--zen-border, #34343c);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 64px);
+  gap: 8px;
+  padding: 2px;
   border-radius: var(--zen-radius, 7px);
-  transition: border-color 0.12s ease;
+  outline: 1px dashed transparent;
+  transition: outline-color 0.12s ease;
 }
 .fr.dropping {
-  border-color: var(--zen-accent, #6366f1);
+  outline-color: var(--zen-accent, #6366f1);
   background: color-mix(in srgb, var(--zen-accent, #6366f1) 8%, transparent);
 }
-.fr-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
-  gap: 6px;
-}
-.fr-card {
+.fr-tile {
   display: flex;
   flex-direction: column;
   gap: 3px;
+  width: 64px;
 }
-.fr-card.off {
-  opacity: 0.45;
+.fr-tile.off .fr-thumb {
+  opacity: 0.4;
 }
 .fr-thumb {
   position: relative;
-  aspect-ratio: 1;
+  width: 64px;
+  height: 64px;
   border-radius: 6px;
   overflow: hidden;
   background: #000;
+  box-shadow: inset 0 0 0 1px var(--zen-border, #34343c);
 }
 .fr-thumb img {
   width: 100%;
@@ -214,8 +210,9 @@ function addPicked(picked: string[]) {
 }
 .fr-acts {
   position: absolute;
-  inset: auto 2px 2px auto;
+  inset: auto 2px 2px 2px;
   display: flex;
+  justify-content: flex-end;
   gap: 2px;
   opacity: 0;
   transition: opacity 0.12s ease;
@@ -226,33 +223,52 @@ function addPicked(picked: string[]) {
 .fr-act {
   display: grid;
   place-items: center;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   padding: 0;
   border: 0;
   border-radius: 4px;
-  background: rgb(0 0 0 / 65%);
+  background: rgb(0 0 0 / 70%);
   color: #fff;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 11px;
 }
 .fr-act.danger:hover {
   background: var(--zen-danger, #dc2626);
 }
 .fr-str {
-  width: 100%;
+  width: 64px;
 }
-.fr-empty {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 2px;
-  font-size: 11px;
+.fr-add {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  border: 1px dashed var(--zen-border, #34343c);
+  border-radius: 6px;
+  background: transparent;
   color: var(--zen-muted, #9aa0aa);
+  font-size: 22px;
+  cursor: pointer;
+  transition:
+    border-color 0.12s ease,
+    color 0.12s ease;
 }
-.fr-bar {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+.fr-add:hover {
+  border-color: var(--zen-accent, #6366f1);
+  color: var(--zen-text, #e5e5ea);
+}
+.fr-browse {
+  height: 22px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--zen-muted, #9aa0aa);
+  font-size: 10px;
+  cursor: pointer;
+}
+.fr-browse:hover {
+  color: var(--zen-text, #e5e5ea);
 }
 </style>

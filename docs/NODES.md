@@ -9,38 +9,47 @@ The full reference. The [README](../README.md) has the short tour.
 
 ## Fresco — paint ideas into places
 
-_Experimental._ Compose a scene as layers on a canvas instead of wiring regions together. Drag on
-the canvas to draw a layer, then give it what belongs there:
+_Experimental, Krea 2._ Compose a scene as layers on a canvas instead of wiring regions together.
+Drag on the canvas to draw a layer, then give it what belongs there:
 
 - a **prompt** — what this part of the picture is;
 - **reference images** — dropped or browsed, each with a strength and a fit. They are read by the
   text encoder together with the layer's prompt, so their vision tokens sit in the layer's own copy
   of the prompt and only the layer's tokens read them. Several on one layer blend like Text Encode
   (Fusion). A layer with references and no prompt reads the scene prompt against them;
+- **influence** — how strongly the layer follows its own prompt and references against the rest
+  of the picture. Raise it when references aren't coming through;
 - **LoRAs** — each runs only on the layer's tokens, at its own strength;
-- a **shape** — the whole box, or paint inside it (`B` brush, `E` erase, `V` back to select); the
-  shape moves and scales with the box. `feather` softens the edge;
-- a **denoise** — for edits: how much of a source image this layer may rewrite.
+- a **shape** — the whole box, or paint inside it (`B` brush, `E` erase, `V` back to select,
+  `[` `]` brush size); the shape moves and scales with the box. `feather` softens the edge;
+- a **denoise** — for edits: how much of the source image this layer may rewrite.
 
-Upper layers cover lower ones, like paint, with feathered edges blending. The **background** is
-pinned under everything and covers what no layer claims, with the same prompt, references, LoRAs
-and denoise. The scene prompt at the top is the `conditioning` output, for the sampler's positive.
+Upper layers cover lower ones, like paint. The **Scene** row, pinned under the layers, holds the
+scene prompt (the positive), the **background** — whatever no layer covers, with its own prompt,
+references, LoRAs and denoise — and the settings (`overlap`: cover or share; `ref detail`: the
+resolution references are read at).
 
 ```
-Fresco ── regions ──────> Regions Apply ──> MODEL ──> KSampler / SamplerCustom
-   ├───── conditioning ──────────────────────────────> positive
-   └───── latent ────────────────────────────────────> latent_image
+CLIP ──> Fresco ── fresco ──┐
+Load Model ── model ────────┤
+(edit) image ───────────────┤
+(edit) VAE ─────────────────┴> Fresco Apply ── model ──> KSampler / SamplerCustom
+                                            ├─ positive ─> positive
+                                            ├─ latent ───> latent
+                                            └─ regions (for Regions Preview)
 ```
 
-Wire the Krea 2 text encoder into Fresco's `clip`; Regions Apply then needs no `clip` of its own
-for Fresco's layers (it uses the conditioning Fresco made). For an **edit**, put the source image
-through **Region Latent** with Fresco's `regions` and sample with the **SoftPaint Sampler** or
-Differential Diffusion. The trace-image button puts a picture under the canvas to draw over; it is
-display-only and never re-runs the graph.
+- **Fresco** — the editor. Takes the Krea 2 text encoder; outputs `fresco`.
+- **Fresco Apply** — puts the scene on the model: each layer's LoRAs and prompt act only where it
+  is (Regions Apply underneath, with the prompt copies at full weight all run), and hands the
+  sampler its positive and latent. With an **image** and a **VAE** it edits that image: the latent
+  is the image with each layer's denoise as its noise mask — sample it with the **SoftPaint
+  Sampler**, or Differential Diffusion on the model. After a run the image shows under Fresco's
+  canvas, with a one-click "match canvas" when the shapes differ. Advanced: `layout_lock` and
+  `isolation`, as on Regions Apply.
 
-Advanced: `overlap` (`top` covers, `share` splits overlaps as the Regions nodes do) and
-`visual_size` (the resolution references are read at; higher reads more detail and costs more
-tokens in every layer's copy of the prompt).
+Reference images on Krea 2 carry **meaning** more than exact looks — "a red floral summer dress",
+not that dress stitch for stitch. Per-layer reference latents, for exact appearance, are next.
 
 ## Regions — LoRAs gated to part of the image
 

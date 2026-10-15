@@ -29,6 +29,8 @@ export interface FrescoContent {
   refs: FrescoRef[];
   loras: FrescoLora[];
   denoise: number;
+  /** How strongly the area reads its own prompt and references. 1 = as weighted by its claim. */
+  influence: number;
 }
 
 export interface FrescoLayer extends FrescoContent {
@@ -44,6 +46,15 @@ export interface FrescoLayer extends FrescoContent {
   locked: boolean;
 }
 
+export type Overlap = "top" | "share";
+
+export interface FrescoSettings {
+  /** top: a layer covers what is under it. share: overlaps are split. */
+  overlap: Overlap;
+  /** Resolution references are read at. */
+  visual_size: number;
+}
+
 export interface FrescoScene {
   width: number;
   height: number;
@@ -51,6 +62,7 @@ export interface FrescoScene {
   background: FrescoContent;
   /** Bottom to top. */
   layers: FrescoLayer[];
+  settings: FrescoSettings;
 }
 
 export const BACKGROUND_ID = "background";
@@ -109,11 +121,12 @@ function parseContent(raw: Record<string, unknown>, denoise = 1): FrescoContent 
       on: r.on !== false,
     })),
     denoise: clamp01(num(raw.denoise, denoise)),
+    influence: Math.min(4, Math.max(0, num(raw.influence, 1))),
   };
 }
 
 export function emptyContent(denoise = 1): FrescoContent {
-  return { on: true, prompt: "", refs: [], loras: [], denoise };
+  return { on: true, prompt: "", refs: [], loras: [], denoise, influence: 1 };
 }
 
 export function parseScene(value: unknown): FrescoScene {
@@ -131,6 +144,13 @@ export function parseScene(value: unknown): FrescoScene {
     height: Math.max(64, Math.round(num(raw.height, 1024))),
     prompt: String(raw.prompt ?? ""),
     background: parseContent(obj(raw.background), BACKGROUND_DENOISE),
+    settings: {
+      overlap: obj(raw.settings).overlap === "share" ? "share" : "top",
+      visual_size: Math.min(
+        1024,
+        Math.max(128, Math.round(num(obj(raw.settings).visual_size, 384))),
+      ),
+    },
     layers: list(raw.layers).map((l, i) => {
       const x = clamp01(num(l.x, 0.25));
       const y = clamp01(num(l.y, 0.25));

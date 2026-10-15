@@ -34,6 +34,7 @@ attention it rides along with, and removes most of the sensitivity to guessing `
 from __future__ import annotations
 
 import logging
+import math
 
 import torch
 
@@ -231,13 +232,20 @@ def _route_prompt(bias: torch.Tensor, state, claim: torch.Tensor) -> None:
     first = txtlen + canvas
     bias[:, :, first : first + state.copy_tokens] = _NEVER
     taken = torch.zeros_like(claim[:, 0])
+    scale = 1.0 if state.copy_full else state.scale
     for slot in state.copy_slots():
         copy = state.copy_rows(slot)
-        weight = claim[:, slot[0]] * state.scale
+        weight = claim[:, slot[0]] * scale
         taken = taken + weight
         bias[:, copy, prompt] = _NEVER
         bias[:, copy, copy] = 0.0
-        bias[:, rows, copy] = weight.clamp(min=_LEAST).log().unsqueeze(-1).to(bias.dtype)
+        logits = weight.clamp(min=_LEAST).log()
+        influence = state.influences[slot[0]] if slot[0] < len(state.influences) else 1.0
+        if influence != 1.0:
+            # Multiplies the attention its tokens give the copy — against the image and every
+            # other key, not just the plain prompt — by `influence`, only where the region holds.
+            logits = logits + torch.where(weight > _LEAST, math.log(influence), 0.0)
+        bias[:, rows, copy] = logits.unsqueeze(-1).to(bias.dtype)
     rest = (1.0 - taken).clamp(min=_LEAST)
     bias[:, rows, prompt] = rest.log().unsqueeze(-1).to(bias.dtype)
     valid = state.copies.valid if state.copies is not None else None
