@@ -108,9 +108,9 @@ class ZGateState(_state.GateState):
 class Layout:
     """Where everything sits in this forward's sequence."""
 
-    __slots__ = ("canvas", "main", "slots", "text", "valid")
+    __slots__ = ("canvas", "image", "main", "slots", "text", "valid")
 
-    def __init__(self, main, slots, text, canvas, valid):
+    def __init__(self, main, slots, text, canvas, image, valid):
         #: Main prompt tokens, from 0.
         self.main = main
         #: `(region, start, length)` per copy, `start` counted from 0.
@@ -118,8 +118,16 @@ class Layout:
         #: The whole text block, padding included: where the canvas starts.
         self.text = text
         self.canvas = canvas
+        #: The image block, padding included: NextDiT pads the canvas tokens to a whole number of
+        #: `pad_tokens_multiple` too, after the last one.
+        self.image = image
         #: `[batch, copy tokens]` bool, False on a copy's padding; None when there is none.
         self.valid = valid
+
+    @property
+    def joint(self) -> int:
+        """The sequence length the joint layers see."""
+        return self.text + self.image
 
     @property
     def copies_end(self) -> int:
@@ -143,6 +151,7 @@ class ZImageRegions:
         self.previous = previous
         self.layout: Layout | None = None
         self.bias_cache: tuple | None = None
+        self.warned = False
 
     # -- the wrapper ---------------------------------------------------------------------------
 
@@ -198,7 +207,8 @@ class ZImageRegions:
 
         multiple = getattr(diffusion_model, "pad_tokens_multiple", None) or 1
         text = -(-extended.shape[1] // multiple) * multiple
-        self.layout = Layout(main, slots, text, state.canvas_tokens, valid)
+        image = -(-state.canvas_tokens // multiple) * multiple
+        self.layout = Layout(main, slots, text, state.canvas_tokens, image, valid)
         state.txtlen = text
         self._build_gates(batch, x.device)
         return executor(x, timesteps, extended, extended.shape[1], None, **kwargs)
@@ -206,9 +216,8 @@ class ZImageRegions:
     def _build_gates(self, batch: int, device) -> None:
         """The LoRA gates for each sequence length this forward's Linears will see."""
         state, layout = self.state, self.layout
-        canvas, text = layout.canvas, layout.text
-        joint = text + canvas
-        gates = state.build_gates(batch, joint, device)  # canvas rows, by claim
+        image, text, joint = layout.image, layout.text, layout.joint
+        gates = state.build_gates(batch, joint, device)  # canvas rows, by claim; padding zero
         prompt = torch.zeros((batch, text, gates.shape[-1]), device=device, dtype=gates.dtype)
         for region, start, length in layout.slots:
             weight = torch.full((batch, length), state.scale, device=device, dtype=gates.dtype)
@@ -220,10 +229,10 @@ class ZImageRegions:
         by_len = {joint: gates}
         # A refiner's length that collides with another's can't be told apart, so it is left out
         # rather than gated against the wrong layout.
-        if text not in (joint, canvas):
+        if text not in (joint, image):
             by_len[text] = prompt
-        if canvas not in (joint, text):
-            by_len[canvas] = gates[:, text:joint]
+        if image not in (joint, text):
+            by_len[image] = gates[:, text:joint]
         state.by_len = by_len
 
     # -- the attention override ----------------------------------------------------------------
@@ -235,8 +244,16 @@ class ZImageRegions:
         if layout is not None and q.ndim == 4:
             seqlen = q.shape[2]
             joint = options.get("block_type") == "double" and options.get("block_index") is not None
-            if joint and seqlen == layout.text + layout.canvas:
+            if joint and seqlen == layout.joint:
                 bias = self._joint_bias(q)
+            elif joint and not self.warned:
+                self.warned = True
+                logging.warning(
+                    "Nynxz Regions: Z-Image's joint layers see %d tokens where the region layout "
+                    "expects %d — regions are NOT being routed this run. Please report this.",
+                    seqlen,
+                    layout.joint,
+                )
             elif not joint and seqlen == layout.text and layout.slots:
                 bias = self._text_bias(q)
         if bias is not None:
