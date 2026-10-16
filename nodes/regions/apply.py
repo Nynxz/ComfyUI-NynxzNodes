@@ -41,7 +41,7 @@ import comfy.patcher_extension
 from comfy_api.latest import io
 
 from .._zenkit.io_types import advanced
-from . import _branch, _capture, _lock, _patches, _schedule, _state, _text
+from . import _branch, _capture, _lock, _patches, _schedule, _state, _text, _zimage
 from ._base import RegionNode
 from ._io_types import Regions
 from ._krea import check_krea2
@@ -58,11 +58,12 @@ class NynxzRegionsApply(RegionNode):
                 "Runs each region's LoRA as a live per-token branch gated to that region's tokens, "
                 "instead of merging every delta into the weights where they collide, and gives "
                 "each region its own prompt when it has one. Composes with ordinary merged "
-                "LoRAs. Krea 2 only."
+                "LoRAs. Krea 2; on Z-Image, each region's own prompt only (no region LoRAs, "
+                "tracking or layout lock there yet)."
             ),
             is_experimental=True,
             inputs=[
-                io.Model.Input("model", tooltip="A Krea 2 model. Returned patched."),
+                io.Model.Input("model", tooltip="A Krea 2 or Z-Image model. Returned patched."),
                 Regions.Input(
                     "regions",
                     tooltip="Regions with LoRAs bound. Regions without one still hold territory.",
@@ -142,7 +143,7 @@ class NynxzRegionsApply(RegionNode):
                 io.Clip.Input(
                     "clip",
                     optional=True,
-                    tooltip="The Krea 2 text encoder, for regions given a prompt of their own in "
+                    tooltip="The text encoder, for regions given a prompt of their own in "
                     "Region LoRAs. A region's prompt replaces the main prompt there. Not needed "
                     "otherwise.",
                 ),
@@ -240,7 +241,8 @@ class NynxzRegionsApply(RegionNode):
         layout_isolation=0.0,
         sources=(),
     ) -> io.NodeOutput:
-        total_blocks = check_krea2(model, "Regions Apply")
+        zimage = _zimage.is_zimage(model)
+        total_blocks = _zimage.block_count(model) if zimage else check_krea2(model, "Regions Apply")
         entries = list(regions or [])
         if not entries:
             raise ValueError("No regions arrived on the wire — there is nothing to gate.")
@@ -267,8 +269,34 @@ class NynxzRegionsApply(RegionNode):
             )
         if prompted and clip is None:
             raise ValueError(
-                "Some regions have a prompt of their own: wire the Krea 2 text encoder (the CLIP "
+                "Some regions have a prompt of their own: wire the text encoder (the CLIP "
                 "you encode the main prompt with) into Regions Apply's `clip`."
+            )
+
+        if zimage:
+            return _apply_zimage(
+                model,
+                entries,
+                prompted,
+                conditioned,
+                clip,
+                _schedule.Schedule(
+                    commit_at=commit_at, preheat=preheat, ramp=ramp, release=release
+                ),
+                _patches.TrackConfig(
+                    track=0.0,
+                    refine=refine,
+                    route_at=route_at,
+                    route_blocks=route_blocks,
+                    sharpness=sharpness,
+                    smooth=smooth,
+                    isolation=isolation,
+                    layout_isolation=layout_isolation,
+                ),
+                copy_full=True,
+                track=track,
+                layout_lock=layout_lock,
+                sources=sources,
             )
 
         if _already_regioned(model):
@@ -328,6 +356,63 @@ class NynxzRegionsApply(RegionNode):
             _summary(report, config, schedule, total_blocks, text, layout_lock),
         )
         return io.NodeOutput(patched)
+
+
+def _apply_zimage(
+    model,
+    entries,
+    prompted,
+    conditioned,
+    clip,
+    schedule,
+    config,
+    copy_full,
+    track,
+    layout_lock,
+    sources,
+):
+    """Regions Apply on Z-Image: each region's own prompt, routed by attention (see `_zimage`)."""
+    if any(r.get("loras") for r in entries):
+        raise ValueError(
+            "Region LoRAs don't run on Z-Image yet — only each region's own prompt does. Clear "
+            "the regions' LoRAs (a stock LoraLoader still merges one over the whole image), or "
+            "use a Krea 2 model."
+        )
+    if not prompted and not conditioned:
+        raise ValueError(
+            "On Z-Image, Regions Apply routes each region's own prompt, and no region has one. "
+            "Give the regions a prompt."
+        )
+    if _zimage.already_regioned(model):
+        raise ValueError(
+            "This model already has regions on it from another Regions Apply upstream. Use one."
+        )
+    patched = model.clone()
+    state = _state.GateState(entries, schedule, 0.0, sources)
+    # The schedule ramps LoRAs in; with no LoRAs to ramp, it would only weaken the prompts at the
+    # steps that decide the layout. Prompts read at full weight unless a caller asks otherwise.
+    state.copy_full = copy_full
+    prompts = dict(conditioned)
+    for index, prompt in prompted.items():
+        encoded, extra = clip.encode_from_tokens_scheduled(clip.tokenize(prompt))[0]
+        prompts[index] = _zimage.trim(encoded, extra)
+    _zimage.install(patched, state, prompts, config)
+    _capture.clear()
+
+    lines = [
+        f"region {i + 1}: " + ("own prompt" if i in prompts else "holds territory only")
+        for i in range(len(entries))
+    ]
+    lines.append("")
+    lines.append(f"Z-Image: {len(prompts)} region prompt(s) routed by attention")
+    lines.append(f"schedule: {schedule.describe()}")
+    lines.append(f"isolation: {config.isolation:.2f}")
+    if track > 0.0:
+        lines.append("tracking: not on Z-Image yet — the masks are used exactly as given")
+    if layout_lock > 0.0:
+        lines.append("layout lock: not on Z-Image yet — ignored")
+    logging.info("Nynxz Regions: %s", "\n".join(lines))
+    return io.NodeOutput(patched)
 
 
 def _already_regioned(model) -> bool:
