@@ -396,3 +396,18 @@ clamped or wrapped index is visible rather than guessed at.
   `result` (it is the last frame and makes the node wait for that run). A second recording in
   `steps_b` plays beside the first on the same clock, for comparing two samplers. `show` picks the
   model's clean prediction or the noisy latent. Send `frames` to Create Video.
+
+## Layers — switch blocks off
+
+**Skip Layers** (`nynxz.Layers.Skip`) switches some of a model's main blocks off. It works on any
+model with a list of residual blocks — Flux 3, Krea 2, Flux, Wan — including the ones core's Skip
+Layer Guidance can't reach because their code ignores `patches_replace`.
+
+- `guidance`: skip-layer guidance. One more model call per step with the blocks skipped, and the
+  result steered away from it by `scale`. Often firms up anatomy and structure. Start with blocks
+  `7, 8, 9`, scale 3, from 1% to 15% of sampling.
+- `remove`: the blocks are skipped in every call between `start_percent` and `end_percent`, to see
+  what they contribute.
+
+On Flux 3 the numbers are the 28 single blocks; skipping the first two or last three tends to break
+the image rather than guide it.
