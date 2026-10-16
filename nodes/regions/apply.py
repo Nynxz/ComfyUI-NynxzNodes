@@ -58,8 +58,7 @@ class NynxzRegionsApply(RegionNode):
                 "Runs each region's LoRA as a live per-token branch gated to that region's tokens, "
                 "instead of merging every delta into the weights where they collide, and gives "
                 "each region its own prompt when it has one. Composes with ordinary merged "
-                "LoRAs. Krea 2; on Z-Image, each region's own prompt only (no region LoRAs, "
-                "tracking or layout lock there yet)."
+                "LoRAs. Krea 2 and Z-Image; tracking and layout lock are Krea 2 only for now."
             ),
             is_experimental=True,
             inputs=[
@@ -372,39 +371,49 @@ def _apply_zimage(
     sources,
 ):
     """Regions Apply on Z-Image: each region's own prompt, routed by attention (see `_zimage`)."""
-    if any(r.get("loras") for r in entries):
+    has_lora = any(r.get("loras") for r in entries)
+    if not prompted and not conditioned and not has_lora:
         raise ValueError(
-            "Region LoRAs don't run on Z-Image yet — only each region's own prompt does. Clear "
-            "the regions' LoRAs (a stock LoraLoader still merges one over the whole image), or "
-            "use a Krea 2 model."
-        )
-    if not prompted and not conditioned:
-        raise ValueError(
-            "On Z-Image, Regions Apply routes each region's own prompt, and no region has one. "
-            "Give the regions a prompt."
+            "On Z-Image, Regions Apply routes each region's own prompt and its LoRAs, and no "
+            "region has either. Give the regions a prompt or a LoRA."
         )
     if _zimage.already_regioned(model):
         raise ValueError(
             "This model already has regions on it from another Regions Apply upstream. Use one."
         )
     patched = model.clone()
-    state = _state.GateState(entries, schedule, 0.0, sources)
-    # The schedule ramps LoRAs in; with no LoRAs to ramp, it would only weaken the prompts at the
-    # steps that decide the layout. Prompts read at full weight unless a caller asks otherwise.
+    state = _zimage.ZGateState(entries, schedule, 0.0, sources)
+    # The prompts read at full weight (the schedule is for ramping LoRAs in, and a prompt is not a
+    # LoRA); the LoRA branches follow the schedule through the gate. `copy_full` carries this.
     state.copy_full = copy_full
     prompts = dict(conditioned)
     for index, prompt in prompted.items():
         encoded, extra = clip.encode_from_tokens_scheduled(clip.tokenize(prompt))[0]
         prompts[index] = _zimage.trim(encoded, extra)
-    _zimage.install(patched, state, prompts, config)
+    loaded = _zimage.load_region_loras(patched, entries)
+    # Every region with a LoRA or a prompt of its own gets a copy of the prompt, so a LoRA's trigger
+    # word is read through the LoRA there (see `_zimage`).
+    copied = sorted(set(prompts) | {region for region, _ in loaded})
+    _zimage.install(patched, state, copied, prompts, config)
+    if loaded:
+        _branch.attach(patched, loaded, state)
     _capture.clear()
 
-    lines = [
-        f"region {i + 1}: " + ("own prompt" if i in prompts else "holds territory only")
-        for i in range(len(entries))
-    ]
+    def _line(i: int) -> str:
+        parts = []
+        if i in prompts:
+            parts.append("own prompt")
+        layers = sum(len(b) for region, b in loaded if region == i)
+        if layers:
+            parts.append(f"{layers} LoRA layers")
+        return f"region {i + 1}: " + (", ".join(parts) or "holds territory only")
+
+    lines = [_line(i) for i in range(len(entries))]
     lines.append("")
-    lines.append(f"Z-Image: {len(prompts)} region prompt(s) routed by attention")
+    lines.append(
+        f"Z-Image: {len(copied)} region copy(ies) of the prompt routed by attention"
+        + (f", {sum(len(b) for _, b in loaded)} LoRA branch(es)" if loaded else "")
+    )
     lines.append(f"schedule: {schedule.describe()}")
     lines.append(f"isolation: {config.isolation:.2f}")
     if track > 0.0:

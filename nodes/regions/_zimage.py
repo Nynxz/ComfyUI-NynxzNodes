@@ -1,33 +1,41 @@
-"""Regions on Z-Image (Lumina 2's NextDiT): each region's own prompt, routed by attention.
+"""Regions on Z-Image (Lumina 2's NextDiT): each region's LoRAs and its own prompt.
 
 Krea 2 is patched through `post_input` and `attn1_patch`; NextDiT has neither. What it does have
-is enough for the same routing:
+is enough for the same design:
 
-  * a `DIFFUSION_MODEL` wrapper sees `context` before the model does. Each region's prompt is added
-    to it there, after the main prompt, so the model's own `context_refiner` turns them into text
-    tokens exactly as it turns the main prompt. The latent's size gives the canvas grid.
+  * a `DIFFUSION_MODEL` wrapper sees `context` before the model does. Each region with a LoRA or a
+    prompt of its own gets a copy of the prompt added to it there — its own prompt, else the main
+    one — so the model's own `context_refiner` turns the copies into text tokens exactly as it
+    turns the main prompt. The latent's size gives the canvas grid.
   * every attention call goes through `optimized_attention_override`, with `block_index` set for
     the joint layers. The routing is an additive mask there.
+  * the region LoRAs are forward hooks on the Linears (see `_branch`), gated per token: a region's
+    LoRA runs on its canvas tokens, by the region's claim on them, and on its own copy of the
+    prompt — which is how a character LoRA's trigger word gets read through the LoRA, as it would
+    be under a normal LoRA loader.
 
 The sequence is text first: `[main prompt | region copies | padding | canvas]`. The model pads the
-text block to a whole number of `pad_tokens_multiple` at its end, after the copies.
+text block to a whole number of `pad_tokens_multiple` at its end, after the copies. The
+`context_refiner` sees only the text block, the `noise_refiner` only the canvas, the joint layers
+both — so the gates are kept per sequence length.
 
 Who reads what, in the joint layers:
 
   * a canvas token reads its region's copy by the region's claim on it, and the main prompt (and
-    the padding) for whatever no region with a prompt claims — `log(weight)`, as on Krea 2, so a
-    token wholly inside one region reads only that region's prompt;
+    the padding) for whatever no region with a copy claims — `log(weight)`, as on Krea 2, so a
+    token wholly inside one region reads only that region's copy;
   * a copy reads itself, the padding and the canvas, never the main prompt or another copy;
   * the main prompt and the padding never read a copy.
 
-In `context_refiner`, which sees only the text, each copy reads itself and the padding, and the
-main prompt reads itself and the padding: each prompt is refined as though it were alone.
+In `context_refiner` each copy reads itself and the padding, and the main prompt reads itself and
+the padding: each prompt is refined as though it were alone.
 
-Unconditional rows get blank copies that nothing reads, so the negative prompt stays as it was.
+On an unconditional row a copy is that row's own (negative) prompt, LoRA live, as on Krea 2. A copy
+can be longer on some rows than others (a region's own prompt on the conditional rows, the negative
+on the rest); the shortfall is padding nothing reads.
 
-Not here yet: region LoRAs (Z-Image fuses q/k/v into one Linear, which the branch code does not
-split), tracking, the layout lock and region references. `track` is ignored; the masks are used as
-drawn.
+Not here yet: tracking, the layout lock and region references. `track` is ignored; the masks are
+used as drawn.
 """
 
 from __future__ import annotations
@@ -36,9 +44,10 @@ import logging
 import math
 
 import comfy.patcher_extension
+import comfy.utils
 import torch
 
-from . import _patches
+from . import _lora, _patches, _state
 
 WRAPPER_KEY = "nynxz_regions_zimage"
 
@@ -72,12 +81,36 @@ def trim(conditioning: torch.Tensor, extra: dict | None) -> torch.Tensor:
     return conditioning[:, keep.to(conditioning.device)]
 
 
+class ZGateState(_state.GateState):
+    """`GateState` with one gate per sequence length: the joint layers, the `context_refiner` (text
+    block only) and the `noise_refiner` (canvas only) each see a different one."""
+
+    __slots__ = ("by_len",)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        #: `seqlen -> [batch, seqlen, regions]`.
+        self.by_len: dict[int, torch.Tensor] = {}
+
+    def reset(self):
+        super().reset()
+        self.by_len = {}
+
+    def for_tokens(self, batch: int, seqlen: int, region: int, device, dtype):
+        if self.lock_pass == _state.BASE_PASS:
+            return None
+        gates = self.by_len.get(seqlen)
+        if gates is None or gates.shape[0] != batch:
+            return None
+        return gates[..., region : region + 1].to(device=device, dtype=dtype)
+
+
 class Layout:
     """Where everything sits in this forward's sequence."""
 
-    __slots__ = ("canvas", "cond", "main", "slots", "text")
+    __slots__ = ("canvas", "main", "slots", "text", "valid")
 
-    def __init__(self, main: int, slots: list[tuple[int, int, int]], text: int, canvas: int, cond):
+    def __init__(self, main, slots, text, canvas, valid):
         #: Main prompt tokens, from 0.
         self.main = main
         #: `(region, start, length)` per copy, `start` counted from 0.
@@ -85,8 +118,8 @@ class Layout:
         #: The whole text block, padding included: where the canvas starts.
         self.text = text
         self.canvas = canvas
-        #: `[batch]` bool, True on conditional rows.
-        self.cond = cond
+        #: `[batch, copy tokens]` bool, False on a copy's padding; None when there is none.
+        self.valid = valid
 
     @property
     def copies_end(self) -> int:
@@ -96,10 +129,14 @@ class Layout:
 class ZImageRegions:
     """The wrapper and the attention override, sharing the region state."""
 
-    def __init__(self, state, prompts: dict[int, torch.Tensor], config, previous=None):
+    def __init__(
+        self, state, regions: list[int], prompts: dict[int, torch.Tensor], config, previous=None
+    ):
         self.state = state
-        #: `region -> [1, seq, features]`, regions in sequence order.
-        self.prompts = dict(sorted(prompts.items()))
+        #: Regions with a copy of the prompt, in sequence order.
+        self.regions = sorted(regions)
+        #: `region -> [1, seq, features]` for regions with a prompt of their own.
+        self.prompts = prompts
         self.config = config
         #: An attention override that was on the model before this one, called in place of the
         #: attention itself so both apply.
@@ -111,13 +148,14 @@ class ZImageRegions:
 
     def wrapper(self, executor, x, timesteps, context, num_tokens, attention_mask=None, **kwargs):
         options = kwargs.get("transformer_options", {})
+        state = self.state
         if kwargs.get("ref_latents"):
             # Region references aren't routed on Z-Image yet, and with references in the sequence
             # the canvas is not where this layout says it is. Run the plain model.
             self.layout = None
+            state.by_len = {}
             return executor(x, timesteps, context, num_tokens, attention_mask, **kwargs)
 
-        state = self.state
         sigmas = options.get("sigmas")
         if sigmas is not None:
             sigma = float(sigmas.flatten()[0].item())
@@ -132,25 +170,61 @@ class ZImageRegions:
         state.canvas_tokens = height * width
         state.ensure_anchor(x.device)
 
-        batch = context.shape[0]
+        batch, main, features = context.shape
         cond = _patches._conditional_rows(options, batch) or [True] * batch
-        parts, slots, start = [context], [], context.shape[1]
-        for region, prompt in self.prompts.items():
-            tokens = prompt.to(device=context.device, dtype=context.dtype)
-            rows = tokens.expand(batch, -1, -1).clone()
-            for row, conditional in enumerate(cond):
-                if not conditional:
-                    rows[row].zero_()
-            parts.append(rows)
-            slots.append((region, start, tokens.shape[1]))
-            start += tokens.shape[1]
+        parts, valids, slots, start = [context], [], [], main
+        for region in self.regions:
+            own = self.prompts.get(region)
+            rows = [
+                own[0].to(device=context.device, dtype=context.dtype)
+                if own is not None and cond[row]
+                else context[row]
+                for row in range(batch)
+            ]
+            length = max(tokens.shape[0] for tokens in rows)
+            block = context.new_zeros((batch, length, features))
+            valid = torch.zeros((batch, length), dtype=torch.bool, device=context.device)
+            for row, tokens in enumerate(rows):
+                block[row, : tokens.shape[0]] = tokens
+                valid[row, : tokens.shape[0]] = True
+            parts.append(block)
+            valids.append(valid)
+            slots.append((region, start, length))
+            start += length
         extended = torch.cat(parts, dim=1)
+        valid = torch.cat(valids, dim=1) if valids else None
+        if valid is not None and bool(valid.all()):
+            valid = None
 
         multiple = getattr(diffusion_model, "pad_tokens_multiple", None) or 1
         text = -(-extended.shape[1] // multiple) * multiple
-        self.layout = Layout(context.shape[1], slots, text, state.canvas_tokens, cond)
+        self.layout = Layout(main, slots, text, state.canvas_tokens, valid)
         state.txtlen = text
+        self._build_gates(batch, x.device)
         return executor(x, timesteps, extended, extended.shape[1], None, **kwargs)
+
+    def _build_gates(self, batch: int, device) -> None:
+        """The LoRA gates for each sequence length this forward's Linears will see."""
+        state, layout = self.state, self.layout
+        canvas, text = layout.canvas, layout.text
+        joint = text + canvas
+        gates = state.build_gates(batch, joint, device)  # canvas rows, by claim
+        prompt = torch.zeros((batch, text, gates.shape[-1]), device=device, dtype=gates.dtype)
+        for region, start, length in layout.slots:
+            weight = torch.full((batch, length), state.scale, device=device, dtype=gates.dtype)
+            if layout.valid is not None:
+                first = start - layout.main
+                weight = weight * layout.valid[:, first : first + length].to(gates.dtype)
+            gates[:, start : start + length, region] = weight
+            prompt[:, start : start + length, region] = weight
+        by_len = {joint: gates}
+        # A refiner's length that collides with another's can't be told apart, so it is left out
+        # rather than gated against the wrong layout.
+        if text not in (joint, canvas):
+            by_len[text] = prompt
+        if canvas not in (joint, text):
+            by_len[canvas] = gates[:, text:joint]
+        state.by_len = by_len
 
     # -- the attention override ----------------------------------------------------------------
 
@@ -178,14 +252,25 @@ class ZImageRegions:
         self.bias_cache = (key, value)
         return value
 
+    def _valid_key(self):
+        valid = self.layout.valid
+        return None if valid is None else (valid.shape, int(valid.sum()), id(valid))
+
+    def _hide_padding(self, bias: torch.Tensor) -> None:
+        """Nobody reads a copy's padding."""
+        layout = self.layout
+        if layout.valid is not None:
+            copies = bias[:, :, layout.main : layout.copies_end]
+            copies.masked_fill_(~layout.valid.to(bias.device).unsqueeze(1), _patches._NEVER)
+
     def _text_bias(self, q):
         """`context_refiner`: each prompt refined alone, with the shared padding."""
         layout = self.layout
         batch, _, seqlen, _ = q.shape
-        key = ("text", batch, seqlen, q.dtype, q.device, tuple(layout.slots), tuple(layout.cond))
+        key = ("text", batch, seqlen, q.dtype, q.device, tuple(layout.slots), self._valid_key())
 
         def build():
-            bias = torch.zeros((batch, seqlen, seqlen), device=q.device, dtype=q.dtype)
+            bias = torch.zeros((batch, seqlen, seqlen), device=q.device, dtype=torch.float32)
             main = slice(0, layout.main)
             for _, start, length in layout.slots:
                 copy = slice(start, start + length)
@@ -194,7 +279,8 @@ class ZImageRegions:
                 bias[:, copy, copy] = 0.0
                 bias[:, copy, layout.copies_end :] = 0.0
             bias[:, layout.copies_end :, layout.main : layout.copies_end] = _patches._NEVER
-            return bias.unsqueeze(1)
+            self._hide_padding(bias)
+            return bias.to(q.dtype).unsqueeze(1)
 
         return self._cached(key, build)
 
@@ -217,7 +303,7 @@ class ZImageRegions:
             q.dtype,
             q.device,
             tuple(layout.slots),
-            tuple(layout.cond),
+            self._valid_key(),
             round(scale, 4),
             round(isolation, 4),
             id(current),
@@ -230,7 +316,6 @@ class ZImageRegions:
             rows = slice(layout.text, layout.text + layout.canvas)
             copies = slice(layout.main, layout.copies_end)
             shared = [slice(0, layout.main), slice(layout.copies_end, layout.text)]
-            cond = torch.tensor(layout.cond, device=q.device)
 
             if isolate:
                 share = claim / claim.sum(dim=-1, keepdim=True).clamp(min=1e-6)
@@ -255,11 +340,11 @@ class ZImageRegions:
                         logits = logits + torch.where(
                             weight > _patches._LEAST, math.log(influence), 0.0
                         )
-                    # Only conditional rows route; an unconditional row's copies are blank.
-                    bias[cond, rows, copy] = logits.unsqueeze(-1)
+                    bias[:, rows, copy] = logits.unsqueeze(-1)
                 rest = (1.0 - taken).clamp(min=_patches._LEAST).log().unsqueeze(-1)
                 for span in shared:
-                    bias[cond, rows, span] = rest
+                    bias[:, rows, span] = rest
+            self._hide_padding(bias)
             return bias.to(q.dtype).unsqueeze(1)
 
         return self._cached(key, build)
@@ -274,13 +359,147 @@ def _with_mask(args, kwargs, bias):
     return args, {**kwargs, "mask": bias if mask is None else mask + bias}
 
 
-def install(patched, state, prompts: dict[int, torch.Tensor], config) -> ZImageRegions:
+#: The routable Linears: attention and MLP, in the joint layers and both refiners.
+_STACKS = (".layers.", ".context_refiner.", ".noise_refiner.")
+_MARKERS = (".attention.qkv", ".attention.out", ".feed_forward.")
+
+
+def _wanted(path: str) -> bool:
+    return any(stack in path for stack in _STACKS) and any(marker in path for marker in _MARKERS)
+
+
+class FusedBranch:
+    """Several branches writing into disjoint slices of one fused output (Z-Image's `attention.qkv`).
+
+    Lumina fuses q, k and v into one Linear; a LoRA's `to_q`/`to_k`/`to_v` each target one
+    `(offset)` slice of it, so three branches land on the same module. They are kept together here:
+    `delta` assembles a full-width `[batch, seq, out]` output with each inner branch in its slice,
+    zero elsewhere, so the gate — one per token for the whole projection — multiplies it exactly as
+    for an unfused Linear. Strength is already folded into each inner branch, so this has no scale.
+    """
+
+    __slots__ = ("out", "parts")
+
+    def __init__(self, out: int):
+        self.out = out
+        #: `(inner, start, length)` per slice.
+        self.parts: list[tuple[object, int, int]] = []
+
+    def add(self, inner, offset: tuple[int, int, int]) -> None:
+        _, start, length = offset
+        self.parts.append((inner, start, length))
+
+    def delta(self, x: torch.Tensor) -> torch.Tensor:
+        out = None
+        for inner, start, length in self.parts:
+            piece = inner.delta(x)
+            if out is None:
+                out = piece.new_zeros(*piece.shape[:-1], self.out)
+            out[..., start : start + length] = piece
+        return out
+
+    def energy(self) -> float:
+        return sum(inner.energy() for inner, _, _ in self.parts)
+
+
+def _out_features(model, path: str) -> int | None:
+    try:
+        return comfy.utils.get_attr(model.model, path).weight.shape[0]
+    except (AttributeError, IndexError):
+        return None
+
+
+def load_region_loras(model, entries) -> list[tuple[int, dict]]:
+    """`[(region_index, {module_path: branch})]` for every region's LoRAs."""
+    loaded: list[tuple[int, dict]] = []
+    for index, region in enumerate(entries):
+        for spec in region.get("loras") or []:
+            name = spec.get("lora_name")
+            if not name:
+                continue
+            branches = _branches_for(model, name, float(spec.get("strength", 1.0)))
+            loaded.append((index, branches))
+    return loaded
+
+
+def _branches_for(model, lora_name: str, strength: float) -> dict:
+    import comfy.lora
+    import comfy.lora_convert
+    import folder_paths
+
+    path = folder_paths.get_full_path_or_raise("loras", lora_name)
+    state = comfy.utils.load_torch_file(path, safe_load=True)
+    state = comfy.lora_convert.convert_lora(state)
+    key_map = comfy.lora.model_lora_keys_unet(model.model, {})
+    loaded = comfy.lora.load_lora(state, key_map, log_missing=False)
+
+    branches: dict = {}
+    unsupported: dict[str, int] = {}
+    off_target = 0
+    for weight_key, patch in loaded.items():
+        offset = None
+        if isinstance(weight_key, tuple):
+            weight_key, offset = weight_key[0], weight_key[1]
+        target = _lora.module_path(weight_key)
+        if not _wanted(target):
+            off_target += 1
+            continue
+        branch = _lora._branch_of(patch)
+        if branch is None:
+            kind = _lora._kind(patch)
+            unsupported[kind] = unsupported.get(kind, 0) + 1
+            continue
+        branch.scale *= strength
+        if offset is not None:
+            out = _out_features(model, target)
+            if out is None:
+                continue
+            fused = branches.get(target)
+            if not isinstance(fused, FusedBranch):
+                fused = FusedBranch(out)
+                branches[target] = fused
+            fused.add(branch, offset)
+        else:
+            branches[target] = branch
+
+    if not branches:
+        raise ValueError(
+            f"`{lora_name}` became no region branch on this Z-Image model — it matched "
+            f"{len(loaded)} weight(s) but none on a routable layer"
+            + (f" ({_fmt(unsupported)})" if unsupported else "")
+            + ". Load it with a stock LoraLoader for an overall effect, or check it is a Z-Image "
+            "LoRA."
+        )
+    if unsupported:
+        logging.warning(
+            "Nynxz Regions: %s — %d layer(s) not applied (%s): those formats do not factor into a "
+            "gated branch.",
+            lora_name,
+            sum(unsupported.values()),
+            _fmt(unsupported),
+        )
+    if off_target:
+        logging.info(
+            "Nynxz Regions: %s — %d layer(s) outside the attention/MLP Linears (modulation, "
+            "embedders) are not applied per region.",
+            lora_name,
+            off_target,
+        )
+    return branches
+
+
+def _fmt(unsupported: dict[str, int]) -> str:
+    return ", ".join(f"{kind} x{count}" for kind, count in sorted(unsupported.items()))
+
+
+def install(patched, state, regions: list[int], prompts: dict[int, torch.Tensor], config):
     """Put the wrapper and the attention override on `patched` (a clone)."""
     options = patched.model_options.setdefault("transformer_options", {})
-    regions = ZImageRegions(state, prompts, config, options.get("optimized_attention_override"))
-    patched.add_wrapper_with_key(
-        comfy.patcher_extension.WrappersMP.DIFFUSION_MODEL, WRAPPER_KEY, regions.wrapper
+    routed = ZImageRegions(
+        state, regions, prompts, config, options.get("optimized_attention_override")
     )
-    options["optimized_attention_override"] = regions.attention
-    logging.debug("Nynxz Regions: Z-Image routing installed for %d prompt(s)", len(prompts))
-    return regions
+    patched.add_wrapper_with_key(
+        comfy.patcher_extension.WrappersMP.DIFFUSION_MODEL, WRAPPER_KEY, routed.wrapper
+    )
+    options["optimized_attention_override"] = routed.attention
+    return routed
