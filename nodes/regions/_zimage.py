@@ -4,8 +4,8 @@ Krea 2 is patched through `post_input` and `attn1_patch`; NextDiT has neither. W
 is enough for the same design:
 
   * a `DIFFUSION_MODEL` wrapper sees `context` before the model does. Each region with a LoRA or a
-    prompt of its own gets a copy of the prompt added to it there — its own prompt, else the main
-    one — so the model's own `context_refiner` turns the copies into text tokens exactly as it
+    prompt of its own gets a copy of the prompt added to it there — the main prompt followed by its
+    own, else the main one alone — so the model's own `context_refiner` turns the copies into text tokens exactly as it
     turns the main prompt. The latent's size gives the canvas grid.
   * every attention call goes through `optimized_attention_override`, with `block_index` set for
     the joint layers. The routing is an additive mask there.
@@ -184,8 +184,10 @@ class ZImageRegions:
         parts, valids, slots, start = [context], [], [], main
         for region in self.regions:
             own = self.prompts.get(region)
+            # The scene prompt, then the region's own: a region drawn from its own few words
+            # alone loses the scene's style and setting, and Z-Image follows the prompt closely.
             rows = [
-                own[0].to(device=context.device, dtype=context.dtype)
+                torch.cat((context[row], own[0].to(device=context.device, dtype=context.dtype)))
                 if own is not None and cond[row]
                 else context[row]
                 for row in range(batch)
@@ -338,7 +340,12 @@ class ZImageRegions:
                 share = claim / claim.sum(dim=-1, keepdim=True).clamp(min=1e-6)
                 share = share @ state.groups.to(share.device, share.dtype)
                 agreement = (share @ share.transpose(0, 1)).clamp(0.0, 1.0)
-                bias[:, rows, rows] = -isolation * (1.0 - agreement)
+                # Only region against region. A background token belongs to no region, so by
+                # agreement alone it would be pushed away from every token, itself included —
+                # which takes the scene's coherence (lighting, contact, perspective) with it.
+                claimed = claim.sum(dim=-1).clamp(0.0, 1.0)
+                both = claimed.unsqueeze(1) * claimed.unsqueeze(0)
+                bias[:, rows, rows] = -isolation * (1.0 - agreement) * both
 
             # Nobody but a copy's own tokens and the canvas reads a copy.
             bias[:, :, copies] = _patches._NEVER
