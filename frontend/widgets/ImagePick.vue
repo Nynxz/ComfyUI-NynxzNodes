@@ -19,6 +19,7 @@
         class="li-pick"
         :grid="viewMode === 'grid'"
         :sorted="false"
+        :menu-min-width="340"
         :grid-min="zoom"
         :model-value="selected"
         :items="items"
