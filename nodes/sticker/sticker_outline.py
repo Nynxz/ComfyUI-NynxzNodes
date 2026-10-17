@@ -4,12 +4,13 @@ from __future__ import annotations
 
 from comfy_api.latest import io
 
+from .. import _categories
 from .._base import NynxzNode
 from ._outline import EDGE_MODES, OutlineSettings, outline_batch, parse_fill_color, parse_hex_color
 
 
 class NynxzStickerOutline(NynxzNode):
-    CATEGORY = f"{NynxzNode.CATEGORY}/Image"
+    CATEGORY = _categories.IMAGE
 
     @classmethod
     def define_schema(cls):

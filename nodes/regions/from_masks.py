@@ -51,7 +51,7 @@ class NynxzRegionsFromMasks(RegionNode):
     def define_schema(cls) -> io.Schema:
         return cls.make_schema(
             node_id="Regions.FromMasks",
-            display_name="Regions from Masks",
+            display_name="Regions From Masks",
             description=(
                 "Turns a MASK batch — SAM3 Detect with individual_masks on, or any other segmenter "
                 "— into regions that LoRAs can be gated to. One region per mask in the batch."

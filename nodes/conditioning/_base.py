@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+from .. import _categories
 from .._base import NynxzNode
 
 
 class ConditioningNode(NynxzNode):
     """Conditioning transforms."""
 
-    CATEGORY = f"{NynxzNode.CATEGORY}/Conditioning"
+    CATEGORY = _categories.CONDITIONING

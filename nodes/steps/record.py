@@ -5,6 +5,7 @@ from __future__ import annotations
 import comfy.patcher_extension
 from comfy_api.latest import io
 
+from .. import _categories
 from .._base import NynxzNode
 from ._record import Recording, Steps, wrapper
 
@@ -12,7 +13,7 @@ WRAPPER_KEY = "nynxz_record_steps"
 
 
 class NynxzRecordSteps(NynxzNode):
-    CATEGORY = f"{NynxzNode.CATEGORY}/Diagnostics"
+    CATEGORY = _categories.DIAGNOSTICS
 
     @classmethod
     def define_schema(cls) -> io.Schema:

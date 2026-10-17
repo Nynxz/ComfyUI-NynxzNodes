@@ -24,6 +24,7 @@ from comfy_api.latest import io
 from PIL import Image
 from PIL.PngImagePlugin import PngInfo
 
+from .. import _categories
 from .._base import NynxzNode
 from .config import FORMATS, merge_info
 from .io_types import NynxzSaveInfoType, NynxzSavePreviewType
@@ -60,7 +61,7 @@ def _project_dir(cfg: dict) -> str:
 class NynxzSaveImage(NynxzNode):
     """Save images; folder/format/metadata come from an optional Save Info node."""
 
-    CATEGORY = "Nynxz/IO"
+    CATEGORY = _categories.OUTPUT
     # This id shipped before the namespace was composed automatically, and an id is a
     # contract with saved workflows — pass it through verbatim.
     PREFIX_NODE_IDS = False

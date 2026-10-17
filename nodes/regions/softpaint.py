@@ -38,6 +38,7 @@ import torch
 from comfy_api.latest import io
 from tqdm.auto import trange
 
+from .. import _categories
 from . import _softpaint
 from ._base import RegionNode
 
@@ -137,6 +138,8 @@ class SoftPaint(comfy.samplers.Sampler):
 
 
 class NynxzSoftPaintSampler(RegionNode):
+    CATEGORY = _categories.SAMPLING
+
     @classmethod
     def define_schema(cls) -> io.Schema:
         return cls.make_schema(

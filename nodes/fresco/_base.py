@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+from .. import _categories
 from .._base import NynxzNode
 
 
 class FrescoNode(NynxzNode):
     """Scene composition."""
 
-    CATEGORY = f"{NynxzNode.CATEGORY}/Fresco"
+    CATEGORY = _categories.FRESCO

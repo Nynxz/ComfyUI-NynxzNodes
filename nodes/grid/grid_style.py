@@ -25,6 +25,7 @@ import json
 
 from comfy_api.latest import io
 
+from .. import _categories
 from .._base import NynxzNode
 from . import _style_fields as F
 from .config import merge_style
@@ -34,7 +35,7 @@ from .io_types import NynxzGridStyleConfigType, NynxzGridStyleType
 class NynxzGridStyle(NynxzNode):
     """Shared grid look for one or many grid nodes."""
 
-    CATEGORY = "Nynxz/Grid"
+    CATEGORY = _categories.GRID
     # This id shipped before the namespace was composed automatically, and an id is a
     # contract with saved workflows — pass it through verbatim.
     PREFIX_NODE_IDS = False

@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+from .. import _categories
 from .._base import NynxzNode
 
 
 class LoraNode(NynxzNode):
     """The on-node lora stack loaders."""
 
-    CATEGORY = f"{NynxzNode.CATEGORY}/LoRA"
+    CATEGORY = _categories.LOADERS

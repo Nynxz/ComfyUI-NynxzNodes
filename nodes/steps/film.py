@@ -7,6 +7,7 @@ import logging
 import torch
 from comfy_api.latest import io
 
+from .. import _categories
 from .._base import NynxzNode
 from . import _film
 from ._record import PREDICTION, SHOWS, Recording, Steps
@@ -53,7 +54,7 @@ class _Run:
 
 
 class NynxzStepFilm(NynxzNode):
-    CATEGORY = f"{NynxzNode.CATEGORY}/Diagnostics"
+    CATEGORY = _categories.DIAGNOSTICS
 
     @classmethod
     def define_schema(cls) -> io.Schema:

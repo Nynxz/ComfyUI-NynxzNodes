@@ -4,12 +4,13 @@ from __future__ import annotations
 
 from comfy_api.latest import io
 
+from .. import _categories
 from .._base import NynxzNode
 from ._skip import GUIDANCE, MODES, install, parse_blocks
 
 
 class NynxzSkipLayers(NynxzNode):
-    CATEGORY = f"{NynxzNode.CATEGORY}/Layers"
+    CATEGORY = _categories.SAMPLING
 
     @classmethod
     def define_schema(cls) -> io.Schema:

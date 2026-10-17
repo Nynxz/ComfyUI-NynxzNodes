@@ -11,12 +11,13 @@ from typing import Any
 
 from comfy_api.latest import io, ui
 
+from .. import _categories
 from .._base import NynxzNode
 from .io_types import ImageCompareType
 
 
 class NynxzImageCompare(NynxzNode):
-    CATEGORY = f"{NynxzNode.CATEGORY}/Image"
+    CATEGORY = _categories.IMAGE
 
     @classmethod
     def define_schema(cls) -> io.Schema:

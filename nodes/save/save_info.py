@@ -16,6 +16,7 @@ import json
 
 from comfy_api.latest import io
 
+from .. import _categories
 from .._base import NynxzNode
 from .config import merge_info
 from .io_types import NynxzSaveInfoConfigType, NynxzSaveInfoType
@@ -24,7 +25,7 @@ from .io_types import NynxzSaveInfoConfigType, NynxzSaveInfoType
 class NynxzSaveInfo(NynxzNode):
     """Shared save settings for one or many Save Image nodes."""
 
-    CATEGORY = "Nynxz/IO"
+    CATEGORY = _categories.OUTPUT
     # This id shipped before the namespace was composed automatically, and an id is a
     # contract with saved workflows — pass it through verbatim.
     PREFIX_NODE_IDS = False

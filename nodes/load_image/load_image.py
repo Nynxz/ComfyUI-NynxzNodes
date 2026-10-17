@@ -13,6 +13,7 @@ import torch
 from comfy_api.latest import io
 from PIL import Image, ImageOps, ImageSequence
 
+from .. import _categories
 from .._base import NynxzNode
 from .._paths import media_file
 from .io_types import NynxzImagePickType
@@ -62,7 +63,7 @@ def _load_mask(mask_ref, w, h):
 class NynxzLoadImage(NynxzNode):
     """Load an input image (and its optional sidecar mask) chosen from the on-node picker."""
 
-    CATEGORY = "Nynxz/IO"
+    CATEGORY = _categories.LOADERS
     # This id shipped before the namespace was composed automatically, and an id is a
     # contract with saved workflows — pass it through verbatim.
     PREFIX_NODE_IDS = False

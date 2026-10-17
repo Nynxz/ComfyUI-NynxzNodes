@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+from .. import _categories
 from .._base import NynxzNode
 
 
 class ParseNode(NynxzNode):
     """Text and template parsing."""
 
-    CATEGORY = f"{NynxzNode.CATEGORY}/Parse"
+    CATEGORY = _categories.UTILS

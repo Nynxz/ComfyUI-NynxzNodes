@@ -10,6 +10,7 @@ from __future__ import annotations
 import torch
 from comfy_api.latest import io, ui
 
+from .. import _categories
 from .._base import NynxzNode
 from ..save.io_types import NynxzSavePreviewType
 
@@ -31,7 +32,7 @@ def _flatten(images) -> list[torch.Tensor]:
 class NynxzPreviewImage(NynxzNode):
     """Preview a batch/list of images on the node (custom widget, no default preview)."""
 
-    CATEGORY = "Nynxz/IO"
+    CATEGORY = _categories.OUTPUT
     # This id shipped before the namespace was composed automatically, and an id is a
     # contract with saved workflows — pass it through verbatim.
     PREFIX_NODE_IDS = False

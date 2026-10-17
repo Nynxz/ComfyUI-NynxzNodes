@@ -14,7 +14,7 @@ class CreateFadeCompareVideoNode(CompareNode):
     def define_schema(cls) -> io.Schema:
         return cls.make_schema(
             node_id="Compare.VideoFade",
-            display_name="Create Fade Compare Video",
+            display_name="Compare Video (Fade)",
             inputs=[*CompareVideo.node_inputs()],
             outputs=[
                 io.Image.Output(display_name="images", id="frames"),

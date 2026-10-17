@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+from .. import _categories
 from .._base import NynxzNode
 
 
 class FusionNode(NynxzNode):
     """Multi-image fusion conditioning."""
 
-    CATEGORY = f"{NynxzNode.CATEGORY}/Fusion"
+    CATEGORY = _categories.FUSION

@@ -14,7 +14,7 @@ class CreateWipeCompareVideoNode(CompareNode):
     def define_schema(cls) -> io.Schema:
         return cls.make_schema(
             node_id="Compare.VideoWipe",
-            display_name="Create Wipe Compare Video",
+            display_name="Compare Video (Wipe)",
             inputs=[
                 *CompareVideo.node_inputs(),
                 io.Combo.Input(

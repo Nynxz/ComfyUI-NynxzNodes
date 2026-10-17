@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+from .. import _categories
 from .._base import NynxzNode
 
 
 class RegionNode(NynxzNode):
     """Regional conditioning and per-region lora."""
 
-    CATEGORY = f"{NynxzNode.CATEGORY}/Regions"
+    CATEGORY = _categories.REGIONS

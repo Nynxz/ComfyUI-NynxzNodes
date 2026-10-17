@@ -13,6 +13,7 @@ import numpy as np
 from comfy_api.latest import io
 from PIL import Image
 
+from .. import _categories
 from .._base import NynxzNode
 from .config import merge_bg
 from .io_types import NynxzBackgroundType, NynxzBgConfigType
@@ -56,7 +57,7 @@ def _mask_frames(masks) -> list[Image.Image]:
 class NynxzBackgroundMaker(NynxzNode):
     """Package colours / pattern / icons into a resolution-independent background spec."""
 
-    CATEGORY = "Nynxz/Grid"
+    CATEGORY = _categories.GRID
     # This id shipped before the namespace was composed automatically, and an id is a
     # contract with saved workflows — pass it through verbatim.
     PREFIX_NODE_IDS = False

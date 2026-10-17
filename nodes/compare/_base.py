@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+from .. import _categories
 from .._base import NynxzNode
 
 
 class CompareNode(NynxzNode):
     """Nodes that build side-by-side comparison videos."""
 
-    CATEGORY = f"{NynxzNode.CATEGORY}/Compare"
+    CATEGORY = _categories.VIDEO

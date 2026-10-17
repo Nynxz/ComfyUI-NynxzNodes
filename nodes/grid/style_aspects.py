@@ -18,6 +18,7 @@ from __future__ import annotations
 
 from comfy_api.latest import io
 
+from .. import _categories
 from .._base import NynxzNode
 from . import _style_fields as F
 from .io_types import NynxzGridStyleType
@@ -42,7 +43,7 @@ def _style_out() -> io.Output:
 class NynxzGridStyleLayout(NynxzNode):
     """Add layout/geometry to a chained grid style."""
 
-    CATEGORY = "Nynxz/Grid"
+    CATEGORY = _categories.GRID
     # This id shipped before the namespace was composed automatically, and an id is a
     # contract with saved workflows — pass it through verbatim.
     PREFIX_NODE_IDS = False
@@ -68,7 +69,7 @@ class NynxzGridStyleLayout(NynxzNode):
 class NynxzGridStyleBorder(NynxzNode):
     """Add a per-cell border to a chained grid style."""
 
-    CATEGORY = "Nynxz/Grid"
+    CATEGORY = _categories.GRID
     # This id shipped before the namespace was composed automatically, and an id is a
     # contract with saved workflows — pass it through verbatim.
     PREFIX_NODE_IDS = False
@@ -94,7 +95,7 @@ class NynxzGridStyleBorder(NynxzNode):
 class NynxzGridStyleShadow(NynxzNode):
     """Add a per-cell drop shadow / glow to a chained grid style."""
 
-    CATEGORY = "Nynxz/Grid"
+    CATEGORY = _categories.GRID
     # This id shipped before the namespace was composed automatically, and an id is a
     # contract with saved workflows — pass it through verbatim.
     PREFIX_NODE_IDS = False

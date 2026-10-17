@@ -11,6 +11,7 @@ from __future__ import annotations
 import torch
 from comfy_api.latest import io, ui
 
+from .. import _categories
 from .._base import NynxzNode
 from ..background.io_types import NynxzBackgroundType
 from ..save.io_types import NynxzSavePreviewType
@@ -45,7 +46,7 @@ def _flatten_frames(images) -> list[torch.Tensor]:
 class NynxzGridFromImages(NynxzNode):
     """Compose an image batch/list into a single grid image."""
 
-    CATEGORY = "Nynxz/Grid"
+    CATEGORY = _categories.GRID
     # This id shipped before the namespace was composed automatically, and an id is a
     # contract with saved workflows — pass it through verbatim.
     PREFIX_NODE_IDS = False
