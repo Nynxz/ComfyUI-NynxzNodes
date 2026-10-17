@@ -1,6 +1,11 @@
 <template>
   <ZenWidget fill :gap="0" pad="4px 2px" class="sp">
-    <div v-if="current" class="sp-preview" :class="{ 'sp-none': isBroken }">
+    <div
+      v-if="current"
+      ref="previewEl"
+      class="sp-preview"
+      :class="{ 'sp-none': isBroken, 'sp-hot': pointerOver }"
+    >
       <img
         v-if="!isBroken"
         :key="currentUrl"
@@ -89,7 +94,7 @@ export const nodeDef: Omit<NodeDef, "widgets"> = {
 </script>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import { ZenIconButton, ZenLightbox, ZenWidget, type LightboxItem } from "@nynxz/zenkit-ui";
 
 interface SavedItem {
@@ -109,6 +114,23 @@ const index = ref(0);
 const broken = ref<Set<string>>(new Set());
 const bust = ref(0);
 const lightbox = ref(false);
+
+// The body is drag-through (pointer-events: none), so CSS :hover never fires on it. Track the
+// pointer against the preview's box instead, on both renderers.
+const previewEl = ref<HTMLElement | null>(null);
+const pointerOver = ref(false);
+function trackPointer(e: PointerEvent) {
+  const r = previewEl.value?.getBoundingClientRect();
+  pointerOver.value =
+    !!r &&
+    e.clientX >= r.left &&
+    e.clientX <= r.right &&
+    e.clientY >= r.top &&
+    e.clientY <= r.bottom;
+}
+function dropPointer() {
+  pointerOver.value = false;
+}
 
 function sig(list: SavedItem[]): string {
   return list.map((it) => `${it.type}/${it.subfolder}/${it.filename}`).join("|");
@@ -166,6 +188,8 @@ function download() {
 }
 
 onMounted(() => {
+  document.addEventListener("pointermove", trackPointer, { passive: true });
+  document.documentElement.addEventListener("pointerleave", dropPointer);
   applyValue(props.widget?.value);
   const prev = props.widget?.callback;
   if (props.widget) {
@@ -181,6 +205,10 @@ onMounted(() => {
       applyValue(v);
     };
   }
+});
+onUnmounted(() => {
+  document.removeEventListener("pointermove", trackPointer);
+  document.documentElement.removeEventListener("pointerleave", dropPointer);
 });
 </script>
 <style scoped>
@@ -259,7 +287,7 @@ onMounted(() => {
   pointer-events: none;
   transition: opacity 0.12s ease;
 }
-.sp-preview:hover .sp-actions {
+.sp-preview.sp-hot .sp-actions {
   opacity: 1;
   pointer-events: auto;
 }
