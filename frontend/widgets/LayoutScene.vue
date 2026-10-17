@@ -12,6 +12,7 @@
       :layout="layout"
       :node="node"
       :in-panel="panel"
+      :choose-mode="fresh"
       @pop-out="popOut(true)"
     />
   </div>
@@ -42,6 +43,10 @@ import { PROMPT_MODES } from "@/layout/modes";
 import { promptLayout } from "@/layout/promptStore";
 import { isPanelOpen, setPanelOpen } from "@/layout/store";
 
+function hasMode(value: unknown): boolean {
+  return !!value && typeof value === "object" && "mode" in value;
+}
+
 interface LayoutNode {
   id?: number | string;
   graph?: { id?: string; change?: () => void; setDirtyCanvas?: (a: boolean, b: boolean) => void };
@@ -54,6 +59,7 @@ const props = defineProps<{
   panel?: boolean;
 }>();
 
+const fresh = !hasMode(props.widget?.value);
 const layout = promptLayout(props.widget);
 const id = String(props.node?.id ?? "");
 const panelKey = `layout:${id}`;

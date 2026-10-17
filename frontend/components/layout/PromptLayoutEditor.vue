@@ -1,120 +1,98 @@
 <template>
-  <LayoutEditor
-    ref="editor"
-    v-model:selected="selected"
-    :mode="mode"
-    :modes="PROMPT_MODES"
-    :layout="layout"
-    :node="node"
-    :in-panel="inPanel"
-    property-prefix="nynxzLayout"
-    :help="HELP"
-    @pop-out="emit('popOut')"
-  >
-    <template #rail>
-      <ZenPopover v-model:open="modeOpen" placement="right-start" role="menu">
-        <template #trigger="{ toggle }">
-          <ZenIconButton
-            size="sm"
-            :icon="mode.icon"
-            :active="modeOpen"
-            :title="`Mode: ${mode.label} — the model the prompt is written for`"
-            @click="toggle"
-          />
-        </template>
-        <div class="pl-menu">
-          <span class="pl-menu-title">Write the prompt for</span>
-          <ZenMenuItem
-            v-for="m in PROMPT_MODES"
-            :key="m.id"
-            :icon="m.icon"
-            @select="switchMode(m.id as PromptModeId)"
-          >
-            {{ m.label }}
-            <template #hint>{{
-              m.id === scene.mode ? "on" : MODE_NOTES[m.id as PromptModeId]
-            }}</template>
-          </ZenMenuItem>
-        </div>
-      </ZenPopover>
-    </template>
+  <div class="pl-host">
+    <LayoutEditor
+      ref="editor"
+      v-model:selected="selected"
+      :mode="mode"
+      :modes="PROMPT_MODES"
+      :layout="layout"
+      :node="node"
+      :in-panel="inPanel"
+      property-prefix="nynxzLayout"
+      :help="HELP"
+      @pop-out="emit('popOut')"
+    >
+      <template #rail>
+        <ZenIconButton
+          size="sm"
+          icon="mdi mdi-cog-outline"
+          :active="settingsOpen"
+          :title="`${mode.label} layout — settings: mode${SETTINGS_NOTE[scene.mode]}`"
+          @click="settingsOpen = true"
+        />
+      </template>
 
-    <template #element>
-      <div v-if="box" class="pl-form">
-        <FrescoSection label="Kind">
-          <ZenToggleGroup
-            size="sm"
-            :model-value="box.kind"
-            :options="kindOptions"
-            @update:model-value="patchBox({ kind: $event as BoxKind })"
-          />
-        </FrescoSection>
-        <FrescoSection v-if="box.kind === 'text'" label="Text" note="rendered exactly">
-          <ZenInput
-            sm
-            :model-value="box.text"
-            placeholder="The words to render"
-            @update:model-value="patchBox({ text: String($event ?? '') })"
-          />
-        </FrescoSection>
-        <FrescoSection label="Description" :note="citeNote">
-          <template v-if="citeId" #actions>
-            <ZenIconButton
+      <template #element>
+        <div v-if="box" class="pl-form">
+          <FrescoSection label="Kind">
+            <ZenToggleGroup
               size="sm"
-              icon="mdi mdi-at"
-              :title="`Add <${citeId}> to the end of the prompt`"
-              @click="cite(citeId)"
+              :model-value="box.kind"
+              :options="kindOptions"
+              @update:model-value="patchBox({ kind: $event as BoxKind })"
             />
-          </template>
-          <ZenInput
-            type="textarea"
-            :rows="5"
-            sm
-            :model-value="box.desc"
-            :placeholder="descPlaceholder"
-            @update:model-value="patchBox({ desc: String($event ?? '') })"
-          />
-        </FrescoSection>
-        <FrescoSection v-if="scene.mode !== 'klein'" label="Colours" note="up to 5">
-          <PaletteEdit
-            :model-value="box.palette"
-            @update:model-value="patchBox({ palette: $event })"
-          />
-        </FrescoSection>
-        <FrescoSection v-if="scene.mode === 'moss'" label="Tags" note="comma separated">
-          <ZenInput
-            sm
-            :model-value="box.tags.join(', ')"
-            placeholder="e.g. 1girl, red scarf"
-            @update:model-value="patchBox({ tags: splitList($event) })"
-          />
-        </FrescoSection>
-      </div>
-    </template>
+          </FrescoSection>
+          <FrescoSection v-if="box.kind === 'text'" label="Text" note="rendered exactly">
+            <ZenInput
+              sm
+              :model-value="box.text"
+              placeholder="The words to render"
+              @update:model-value="patchBox({ text: String($event ?? '') })"
+            />
+          </FrescoSection>
+          <FrescoSection label="Description" :note="citeNote">
+            <template v-if="citeId" #actions>
+              <ZenIconButton
+                size="sm"
+                icon="mdi mdi-at"
+                :title="`Add <${citeId}> to the end of the prompt`"
+                @click="cite(citeId)"
+              />
+            </template>
+            <ZenInput
+              type="textarea"
+              :rows="5"
+              sm
+              :model-value="box.desc"
+              :placeholder="descPlaceholder"
+              @update:model-value="patchBox({ desc: String($event ?? '') })"
+            />
+          </FrescoSection>
+          <FrescoSection v-if="scene.mode !== 'klein'" label="Colours" note="up to 5">
+            <PaletteEdit
+              :model-value="box.palette"
+              @update:model-value="patchBox({ palette: $event })"
+            />
+          </FrescoSection>
+          <FrescoSection v-if="scene.mode === 'moss'" label="Tags" note="comma separated">
+            <ZenInput
+              sm
+              :model-value="box.tags.join(', ')"
+              placeholder="e.g. 1girl, red scarf"
+              @update:model-value="patchBox({ tags: splitList($event) })"
+            />
+          </FrescoSection>
+        </div>
+      </template>
 
-    <template #scene>
-      <div class="pl-form">
-        <FrescoSection label="Mode">
-          <ZenToggleGroup
-            size="sm"
-            :model-value="scene.mode"
-            :options="PROMPT_MODES.map((m) => ({ value: m.id, label: m.label, icon: m.icon }))"
-            @update:model-value="switchMode($event as PromptModeId)"
-          />
-        </FrescoSection>
-        <FrescoSection :label="PROMPT_LABEL[scene.mode]" :note="PROMPT_NOTE[scene.mode]">
-          <ZenInput
-            type="textarea"
-            :rows="5"
-            sm
-            :model-value="scene.prompt"
-            placeholder="The whole picture"
-            @update:model-value="patchScene({ prompt: String($event ?? '') })"
-          />
-        </FrescoSection>
+      <template #scene>
+        <div class="pl-form">
+          <FrescoSection :label="PROMPT_LABEL[scene.mode]" :note="PROMPT_NOTE[scene.mode]">
+            <ZenInput
+              type="textarea"
+              :rows="5"
+              sm
+              :model-value="scene.prompt"
+              placeholder="The whole picture"
+              @update:model-value="patchScene({ prompt: String($event ?? '') })"
+            />
+          </FrescoSection>
 
-        <template v-if="scene.mode === 'ideogram'">
-          <FrescoSection label="Background">
+          <FrescoSection
+            v-if="scene.mode === 'ideogram'"
+            label="Background"
+            note="behind every box"
+          >
             <ZenInput
               type="textarea"
               :rows="2"
@@ -124,115 +102,61 @@
               @update:model-value="patchScene({ background: String($event ?? '') })"
             />
           </FrescoSection>
-          <FrescoSection label="Style">
+
+          <FrescoSection
+            label="Prompt out"
+            :note="compiling ? 'writing…' : `${output.length} chars`"
+          >
             <template #actions>
-              <ZenSwitch
-                :model-value="scene.style.on"
-                @update:model-value="patchStyle({ on: $event })"
-              />
-            </template>
-            <template v-if="scene.style.on">
-              <ZenToggleGroup
+              <ZenIconButton
                 size="sm"
-                :model-value="scene.style.kind"
-                :options="[
-                  { value: 'photo', label: 'Photo' },
-                  { value: 'art', label: 'Art' },
-                ]"
-                @update:model-value="patchStyle({ kind: $event as 'photo' | 'art' })"
-              />
-              <ZenInput
-                v-for="f in styleFields"
-                :key="f.key"
-                sm
-                :model-value="scene.style[f.key]"
-                :placeholder="f.label"
-                :title="f.label"
-                @update:model-value="patchStyle({ [f.key]: String($event ?? '') })"
-              />
-              <PaletteEdit
-                :model-value="scene.style.palette"
-                :max="16"
-                @update:model-value="patchStyle({ palette: $event })"
+                icon="mdi mdi-content-copy"
+                title="Copy the prompt"
+                :disabled="!output"
+                @click="copyOutput"
               />
             </template>
+            <pre class="pl-out">{{ output || "—" }}</pre>
+            <ul v-if="warnings.length" class="pl-warn">
+              <li v-for="w in warnings" :key="w">{{ w }}</li>
+            </ul>
           </FrescoSection>
-        </template>
-
-        <template v-if="scene.mode === 'moss'">
-          <FrescoSection label="Summary">
-            <ZenInput
-              sm
-              :model-value="scene.meta.join(', ')"
-              placeholder="Meta, e.g. poster, illustration"
-              title="Meta — what kind of image it is"
-              @update:model-value="patchScene({ meta: splitList($event) })"
-            />
-            <ZenSelect
-              size="sm"
-              :model-value="scene.canvas"
-              :options="CANVAS_OPTIONS"
-              @update:model-value="patchScene({ canvas: $event as MossCanvas })"
-            />
-            <PaletteEdit
-              :model-value="scene.palette"
-              :max="16"
-              @update:model-value="patchScene({ palette: $event })"
-            />
-          </FrescoSection>
-        </template>
-
-        <FrescoSection label="Prompt out" :note="compiling ? 'writing…' : `${output.length} chars`">
-          <template #actions>
-            <ZenIconButton
-              size="sm"
-              icon="mdi mdi-content-copy"
-              title="Copy the prompt"
-              :disabled="!output"
-              @click="copyOutput"
-            />
-          </template>
-          <pre class="pl-out">{{ output || "—" }}</pre>
-          <ul v-if="warnings.length" class="pl-warn">
-            <li v-for="w in warnings" :key="w">{{ w }}</li>
-          </ul>
-        </FrescoSection>
+        </div>
+      </template>
+    </LayoutEditor>
+    <LayoutSettings v-model:open="settingsOpen" :scene="scene" @patch="patchScene" />
+    <div v-if="choosing" class="pl-choose">
+      <div class="pl-choose-card">
+        <span class="pl-choose-title">What is this layout for?</span>
+        <span class="pl-choose-note">
+          Pick the model the prompt is written for. The cog on the left changes it later; the boxes
+          stay.
+        </span>
+        <ModeCards :model-value="null" @update:model-value="pickMode" />
       </div>
-    </template>
-  </LayoutEditor>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 /**
- * The Layout node's editor: the shared layout editor in one of the prompt modes, with a mode
- * switch on the rail, an inspector for what each model reads, and the prompt as the node will
- * output it (written by the backend, so the preview can't drift from the output).
+ * The Layout node's editor: the shared layout editor in the layout's prompt mode. The mode is
+ * picked when the node is made and changed in the settings (the cog), along with whatever applies
+ * to the whole layout; the sidebar holds only what the mode reads per box and for the scene, and
+ * the prompt as the node will output it (written by the backend, so it can't drift).
  */
-import {
-  ZenIconButton,
-  ZenInput,
-  ZenMenuItem,
-  ZenPopover,
-  ZenSelect,
-  ZenSwitch,
-  ZenToggleGroup,
-} from "@nynxz/zenkit-ui";
+import { ZenIconButton, ZenInput, ZenToggleGroup } from "@nynxz/zenkit-ui";
 import { computed, onBeforeUnmount, ref, watch } from "vue";
 
 import FrescoSection from "@/components/fresco/FrescoSection.vue";
 import LayoutEditor from "@/components/layout/LayoutEditor.vue";
+import LayoutSettings from "@/components/layout/LayoutSettings.vue";
+import ModeCards from "@/components/layout/ModeCards.vue";
 import PaletteEdit from "@/components/layout/PaletteEdit.vue";
 import { compileLayout } from "@/layout/library";
 import { PROMPT_MODES } from "@/layout/modes";
 import { kleinId } from "@/layout/promptScene";
-import type {
-  BoxKind,
-  IdeogramStyle,
-  MossCanvas,
-  PromptBox,
-  PromptModeId,
-  PromptScene,
-} from "@/layout/promptScene";
+import type { BoxKind, PromptBox, PromptModeId, PromptScene } from "@/layout/promptScene";
 import type { SharedLayout } from "@/layout/store";
 
 const props = defineProps<{
@@ -243,6 +167,8 @@ const props = defineProps<{
     properties?: Record<string, unknown>;
   };
   inPanel?: boolean;
+  /** A new layout: ask which model it's for before anything else. */
+  chooseMode?: boolean;
 }>();
 const emit = defineEmits<{ popOut: [] }>();
 
@@ -250,10 +176,10 @@ const HELP: [string, string][] = [
   ["Order", "bottom to top is the order the prompt lists boxes — background first"],
   ["Hidden boxes", "left out of the prompt"],
 ];
-const MODE_NOTES: Record<PromptModeId, string> = {
-  ideogram: "caption JSON",
-  klein: "FLUX 3 Klein",
-  moss: "MOSS-Image",
+const SETTINGS_NOTE: Record<PromptModeId, string> = {
+  ideogram: ", style",
+  klein: "",
+  moss: ", meta, canvas, palette",
 };
 const PROMPT_LABEL: Record<PromptModeId, string> = {
   ideogram: "High-level description",
@@ -265,25 +191,10 @@ const PROMPT_NOTE: Record<PromptModeId, string> = {
   klein: "cite each box as <obj_N>",
   moss: "the scene and its style",
 };
-const CANVAS_OPTIONS = [
-  { value: "", label: "Canvas: not said" },
-  { value: "single", label: "Single image" },
-  { value: "multi_panel", label: "Multi-panel" },
-  { value: "collage", label: "Collage" },
-];
-type StyleText = "aesthetics" | "lighting" | "medium" | "photo" | "art_style";
-const styleFields = computed<{ key: StyleText; label: string }[]>(() => [
-  { key: "aesthetics", label: "Aesthetics" },
-  { key: "lighting", label: "Lighting" },
-  { key: "medium", label: "Medium" },
-  scene.value.style.kind === "photo"
-    ? { key: "photo", label: "Photo — camera, lens, film" }
-    : { key: "art_style", label: "Art style" },
-]);
-
 const editor = ref<{ update: (next: unknown) => void } | null>(null);
 const selected = ref<string[]>([]);
-const modeOpen = ref(false);
+const settingsOpen = ref(false);
+const choosing = ref(!!props.chooseMode);
 const scene = props.layout.scene;
 const mode = computed(
   () => PROMPT_MODES.find((m) => m.id === scene.value.mode) ?? PROMPT_MODES[0]!,
@@ -295,12 +206,9 @@ function update(next: PromptScene) {
 function patchScene(patch: Partial<PromptScene>) {
   update({ ...scene.value, ...patch });
 }
-function patchStyle(patch: Partial<IdeogramStyle>) {
-  patchScene({ style: { ...scene.value.style, ...patch } });
-}
-function switchMode(id: PromptModeId) {
-  modeOpen.value = false;
-  if (id !== scene.value.mode) patchScene({ mode: id });
+function pickMode(id: PromptModeId) {
+  choosing.value = false;
+  patchScene({ mode: id });
 }
 const splitList = (v: unknown) =>
   String(v ?? "")
@@ -381,27 +289,43 @@ async function copyOutput() {
 </script>
 
 <style scoped>
+.pl-host {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+.pl-choose {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  border-radius: var(--zen-radius, 7px);
+  background: color-mix(in srgb, var(--zen-bg, #141418) 88%, transparent);
+  backdrop-filter: blur(2px);
+}
+.pl-choose-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 720px;
+  color: var(--zen-text, #e5e5ea);
+}
+.pl-choose-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+.pl-choose-note {
+  font-size: 12px;
+  color: var(--zen-muted, #9aa0aa);
+}
 .pl-form {
   display: flex;
   flex-direction: column;
   gap: 10px;
-}
-.pl-menu {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  min-width: 200px;
-  padding: 4px;
-  font-size: 12px;
-  color: var(--zen-text, #e5e5ea);
-}
-.pl-menu-title {
-  padding: 4px 9px;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--zen-muted, #9aa0aa);
 }
 .pl-out {
   margin: 0;
