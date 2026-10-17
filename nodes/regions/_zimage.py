@@ -47,7 +47,7 @@ import comfy.patcher_extension
 import comfy.utils
 import torch
 
-from . import _lora, _patches, _state
+from . import _capture, _lora, _patches, _state
 
 WRAPPER_KEY = "nynxz_regions_zimage"
 
@@ -178,6 +178,7 @@ class ZImageRegions:
         state.grid = (height, width)
         state.canvas_tokens = height * width
         state.ensure_anchor(x.device)
+        _capture.remember(state)
 
         batch, main, features = context.shape
         cond = _patches._conditional_rows(options, batch) or [True] * batch
