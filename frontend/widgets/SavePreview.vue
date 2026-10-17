@@ -255,6 +255,12 @@ onMounted(() => {
   z-index: 3;
   display: flex;
   gap: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s ease;
+}
+.sp-preview:hover .sp-actions {
+  opacity: 1;
   pointer-events: auto;
 }
 .sp-act {
