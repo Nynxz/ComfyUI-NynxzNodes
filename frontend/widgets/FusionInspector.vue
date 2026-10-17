@@ -371,7 +371,7 @@ const cellBreakdown = computed(() => {
   return rows.map((r) => ({ ...r, pct: (r.w / max) * 100 })).sort((a, b) => b.w - a.w);
 });
 
-// --- colour mapping (mirrors _weightmap.py so the inspector and weight_map agree) ---
+// --- colour mapping (source colours come from _inspect.py's PALETTE) ---
 function hexRgb(hex: string): [number, number, number] {
   const s = hex.replace("#", "");
   return [parseInt(s.slice(0, 2), 16), parseInt(s.slice(2, 4), 16), parseInt(s.slice(4, 6), 16)];

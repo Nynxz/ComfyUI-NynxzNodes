@@ -10,16 +10,6 @@ def hex_to_rgb(hex_color: str) -> tuple:
     return tuple(int(hex_color[i : i + lv // 3], 16) for i in range(0, lv, lv // 3))
 
 
-def get_larger_and_smaller_images(img1, img2):
-    """Return (larger_image, smaller_image) tuple based on pixel area."""
-    area1 = img1.width * img1.height
-    area2 = img2.width * img2.height
-    if area1 >= area2:
-        return (img1, img2)
-    else:
-        return (img2, img1)
-
-
 def enforce_target(img, target, color=(0, 0, 0)):
     if img.size == target:
         return img

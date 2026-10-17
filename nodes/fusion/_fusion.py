@@ -50,30 +50,25 @@ from ._encoders import (
     token_pairs,
 )
 
-try:
-    # Newer cores expose the sizing rule; older ones keep it inline in
-    # `process_qwen2vl_images`, so fall back to a copy of it. Preferring the core function
-    # means this pack tracks the encoder automatically once the core has it.
-    from comfy.text_encoders.qwen_vl import qwen2vl_image_size
-except ImportError:
 
-    def qwen2vl_image_size(
-        height, width, min_pixels=3136, max_pixels=12845056, patch_size=14, merge_size=2
-    ):
-        factor = patch_size * merge_size
-        resized_height = round(height / factor) * factor
-        resized_width = round(width / factor) * factor
+def qwen2vl_image_size(
+    height, width, min_pixels=3136, max_pixels=12845056, patch_size=14, merge_size=2
+):
+    """Qwen2-VL's resize rule, as core applies it inline in `process_qwen2vl_images`."""
+    factor = patch_size * merge_size
+    resized_height = round(height / factor) * factor
+    resized_width = round(width / factor) * factor
 
-        if resized_height * resized_width > max_pixels:
-            beta = math.sqrt((height * width) / max_pixels)
-            resized_height = max(factor, math.floor(height / beta / factor) * factor)
-            resized_width = max(factor, math.floor(width / beta / factor) * factor)
-        elif resized_height * resized_width < min_pixels:
-            beta = math.sqrt(min_pixels / (height * width))
-            resized_height = math.ceil(height * beta / factor) * factor
-            resized_width = math.ceil(width * beta / factor) * factor
+    if resized_height * resized_width > max_pixels:
+        beta = math.sqrt((height * width) / max_pixels)
+        resized_height = max(factor, math.floor(height / beta / factor) * factor)
+        resized_width = max(factor, math.floor(width / beta / factor) * factor)
+    elif resized_height * resized_width < min_pixels:
+        beta = math.sqrt(min_pixels / (height * width))
+        resized_height = math.ceil(height * beta / factor) * factor
+        resized_width = math.ceil(width * beta / factor) * factor
 
-        return resized_height, resized_width
+    return resized_height, resized_width
 
 
 FUSION_METHODS = [
@@ -802,25 +797,6 @@ def _fuse_conditionings(
         meta["nynxz_tail_ids"] = [int(pair[0]) for pair in tail[image_at + 1 :]]
         fused.append([blended, meta])
     return fused
-
-
-def group_images(images):
-    """Autogrow IMAGE dict -> one list of single-frame [1, H, W, C] sources per connected socket.
-
-    Socket grouping is kept rather than flattened because Fusion Images' strength widget carries
-    one row per *socket*, not per frame — so a batched IMAGE spends its socket's strength and fit
-    across every frame it contributes. Unconnected sockets are dropped, which is what makes the
-    surviving order line up with the widget rows (the frontend counts connected inputs too).
-    """
-    groups = []
-    for name in sorted(images, key=lambda value: int(value.rsplit("_", 1)[-1])):
-        image = images[name]
-        if image is None:
-            continue
-        if image.ndim == 3:
-            image = image.unsqueeze(0)
-        groups.append([image[i : i + 1].clone() for i in range(image.shape[0])])
-    return groups
 
 
 def split_alpha(source):

@@ -6,15 +6,22 @@ overall share) and the fusion settings, into a JSON-safe dict the Fusion Inspect
 to its Vue widget (via the `ui` channel). The frontend recolours the grid and reads per-token
 breakdowns from the raw weights — nothing is re-encoded.
 
-Pure numpy, no torch/comfy, so it's offline-testable by path. Colours reuse the weight-map
-palette so the inspector and the weight_map image agree.
+Pure numpy, no torch/comfy, so it's offline-testable by path. Each source gets a colour from
+`PALETTE`, the same order the Fusion Regions Preview uses.
 """
 
 from __future__ import annotations
 
 import numpy as np
 
-from ._weightmap import PALETTE
+PALETTE = [
+    (1.00, 0.35, 0.35),
+    (0.35, 0.78, 1.00),
+    (0.55, 1.00, 0.47),
+    (1.00, 0.82, 0.31),
+    (0.86, 0.51, 1.00),
+    (1.00, 0.59, 0.78),
+]
 
 
 def palette_hex(i: int) -> str:
