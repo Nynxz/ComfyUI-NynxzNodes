@@ -191,7 +191,7 @@ export const nodeDef: Omit<NodeDef, "widgets"> = {
 </script>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { ComfyApp } from "@comfy/app";
 import {
   ZenButton,
@@ -234,6 +234,8 @@ interface NynxzNode {
   widgets?: DOMWidget[];
   widgets_values?: unknown[];
   graph?: { setDirtyCanvas?: (a: boolean, b?: boolean) => void };
+  onDragOver?: (e: DragEvent) => boolean;
+  onDragDrop?: (e: DragEvent) => Promise<boolean>;
 }
 const props = defineProps<{
   widget?: DOMWidget;
@@ -599,9 +601,55 @@ async function onUpload(e: Event) {
 }
 async function onDrop(e: DragEvent) {
   dragOver.value = false;
-  const file = e.dataTransfer?.files?.[0];
-  if (file) await uploadAndSelect(file);
+  await takeDrop(e);
 }
+
+const isImageFile = (item: DataTransferItem) =>
+  item.kind === "file" && item.type.startsWith("image/");
+/** An image ComfyUI itself serves (`/view?filename=…`), dragged from the queue or assets. */
+function servedImage(e: DragEvent): string | null {
+  const uri = e.dataTransfer?.getData("text/uri-list");
+  const url = uri ? URL.parse(uri.split("\n")[0]!.trim(), location.href) : null;
+  if (!url || url.origin !== location.origin || !url.pathname.endsWith("/view")) return null;
+  const filename = url.searchParams.get("filename");
+  const type = url.searchParams.get("type") ?? "input";
+  if (!filename || (type !== "input" && type !== "output" && type !== "temp")) return null;
+  const subfolder = url.searchParams.get("subfolder") ?? "";
+  return annot({ type, name: subfolder ? `${subfolder}/${filename}` : filename });
+}
+function canTake(e: DragEvent) {
+  const data = e.dataTransfer;
+  if (!data) return false;
+  return [...data.items].some(isImageFile) || data.types.includes("text/uri-list");
+}
+async function takeDrop(e: DragEvent): Promise<boolean> {
+  const file = [...(e.dataTransfer?.files ?? [])].find((f) => f.type.startsWith("image/"));
+  if (file) {
+    await uploadAndSelect(file);
+    return true;
+  }
+  const served = servedImage(e);
+  if (!served) return false;
+  pick(served);
+  await loadSelectedImageDetails();
+  return true;
+}
+
+// Both renderers ask the NODE whether it takes a dropped file (onDragOver) and to take it
+// (onDragDrop); without these, a drop anywhere but the widget itself adds a new Load Image node.
+async function dropOnNode(e: DragEvent) {
+  dragOver.value = false;
+  return takeDrop(e);
+}
+const dropTarget = props.node;
+if (dropTarget) {
+  dropTarget.onDragOver = canTake;
+  dropTarget.onDragDrop = dropOnNode;
+}
+onBeforeUnmount(() => {
+  if (dropTarget?.onDragOver === canTake) dropTarget.onDragOver = undefined;
+  if (dropTarget?.onDragDrop === dropOnNode) dropTarget.onDragDrop = undefined;
+});
 </script>
 
 <style scoped>
