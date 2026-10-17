@@ -12,80 +12,17 @@
     <div v-if="dragOver" class="li-dropmask">
       <i class="mdi mdi-tray-arrow-down" /><span>Drop image to load</span>
     </div>
-    <!-- picker row (above the image): searchable grid combo + upload -->
     <div class="li-row">
-      <ZenCombo
+      <button
+        type="button"
         class="li-pick"
-        :grid="viewMode === 'grid'"
-        :grid-min="zoom"
-        :model-value="selected"
-        :items="items"
-        :menu-width="340"
-        placeholder="Select an image…"
-        :empty-text="`No images in ${srcType}/`"
-        @update:model-value="pick(String($event))"
-        @open="ensureImages"
+        :title="selected || 'Select an image…'"
+        @click="pickerOpen = true"
       >
-        <template #search>
-          <ZenToggleGroup
-            class="li-src"
-            :model-value="srcType"
-            :options="SRC_OPTS"
-            @update:model-value="setSrc"
-          />
-        </template>
-        <template #selected>
-          <span class="li-sel">
-            <i class="mdi mdi-image-outline li-sel-ic" />
-            <span class="li-sel-name">{{ selected ? short(selected) : "Select an image…" }}</span>
-          </span>
-        </template>
-        <template #option="{ item }">
-          <template v-if="viewMode === 'grid'">
-            <span class="li-gthumb"
-              ><img :src="thumbByName(String(item.value))" loading="lazy"
-            /></span>
-            <span class="li-gname" :title="String(item.value)">{{
-              short(String(item.value))
-            }}</span>
-          </template>
-          <template v-else>
-            <img class="li-thumb" :src="thumbByName(String(item.value))" loading="lazy" />
-            <span class="li-lname" :title="String(item.value)">{{
-              short(String(item.value))
-            }}</span>
-          </template>
-        </template>
-        <template #footer="{ close }">
-          <div class="li-foot">
-            <ZenToggleGroup
-              :model-value="viewMode"
-              :options="VIEW_OPTS"
-              @update:model-value="setView"
-            />
-            <template v-if="viewMode === 'grid'">
-              <ZenIconButton
-                icon="mdi mdi-magnify-minus-outline"
-                title="Smaller"
-                @click="zoomBy(-20)"
-              />
-              <ZenIconButton
-                icon="mdi mdi-magnify-plus-outline"
-                title="Larger"
-                @click="zoomBy(20)"
-              />
-            </template>
-            <ZenButton
-              class="li-foot-browse"
-              variant="ghost"
-              sm
-              icon="mdi mdi-view-grid-outline"
-              @click="openBrowse(close)"
-              >Browse</ZenButton
-            >
-          </div>
-        </template>
-      </ZenCombo>
+        <i class="mdi mdi-image-outline li-sel-ic" />
+        <span class="li-sel-name">{{ selected ? short(selected) : "Select an image…" }}</span>
+        <i class="mdi mdi-chevron-down li-pick-caret" />
+      </button>
       <ZenIconButton icon="mdi mdi-upload" title="Upload an image" @click="triggerUpload" />
     </div>
 
@@ -140,63 +77,16 @@
     <input ref="fileInput" type="file" accept="image/*" style="display: none" @change="onUpload" />
 
     <!-- browse dialog -->
-    <ZenModal v-model:open="browse" :title="`${srcType} images`" width="880px" height="78vh">
-      <template #header>
-        <span class="li-search"><ZenInput v-model="bq" placeholder="Search images…" sm /></span>
-        <ZenToggleGroup :model-value="srcType" :options="SRC_OPTS" @update:model-value="setSrc" />
-        <ZenToggleGroup v-model="bmode" :options="BMODES" />
-        <ZenButton variant="ghost" sm icon="mdi mdi-upload" @click="triggerUpload"
-          >Upload</ZenButton
-        >
-      </template>
-
-      <div v-if="folderActive" class="li-crumbs">
-        <button class="li-crumb" :class="{ on: !bpath }" @click="bpath = ''">all</button>
-        <template v-for="(seg, i) in crumbSegs" :key="i">
-          <i class="mdi mdi-chevron-right" />
-          <button
-            class="li-crumb"
-            :class="{ on: i === crumbSegs.length - 1 }"
-            @click="bpath = crumbSegs.slice(0, i + 1).join('/')"
-          >
-            {{ seg }}
-          </button>
-        </template>
-      </div>
-
-      <div class="li-grid">
-        <button
-          v-for="f in gridFolders"
-          :key="'d:' + f"
-          class="li-card li-folder"
-          @click="enterFolder(f)"
-        >
-          <div class="li-card-img"><i class="mdi mdi-folder" /></div>
-          <div class="li-card-meta">
-            <span class="li-card-name" :title="f">{{ f }}</span
-            ><span class="li-card-dir">folder</span>
-          </div>
-        </button>
-        <button
-          v-for="it in gridFiles"
-          :key="it.name"
-          class="li-card"
-          :class="{ sel: selected === annot(it) }"
-          @click="pickFromBrowse(it)"
-        >
-          <div class="li-card-img">
-            <img :src="thumb(it)" loading="lazy" />
-          </div>
-          <div class="li-card-meta">
-            <span class="li-card-name" :title="it.name">{{ short(it.name) }}</span>
-            <span class="li-card-dir">{{ folderActive ? "—" : folder(it.name) || "—" }}</span>
-          </div>
-        </button>
-        <p v-if="!gridFolders.length && !gridFiles.length" class="li-grid-empty">
-          {{ folderActive ? "Empty folder." : "No images." }}
-        </p>
-      </div>
-    </ZenModal>
+    <ZenMediaPicker
+      :open="pickerOpen"
+      :library="mediaLibrary"
+      :kinds="['image']"
+      title="Load image"
+      confirm-label="Load"
+      :selected="selected ? [mediaRef(selected)] : []"
+      @update:open="pickerOpen = $event"
+      @pick="onPicked"
+    />
   </ZenWidget>
 </template>
 
@@ -223,16 +113,7 @@ export const nodeDef: Omit<NodeDef, "widgets"> = {
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { ComfyApp } from "@comfy/app";
-import {
-  ZenButton,
-  ZenCombo,
-  ZenIconButton,
-  ZenInput,
-  ZenModal,
-  ZenToggleGroup,
-  ZenWidget,
-  type ComboItem,
-} from "@nynxz/zenkit-ui";
+import { ZenIconButton, ZenMediaPicker, ZenWidget } from "@nynxz/zenkit-ui";
 import {
   listImages,
   thumbUrl,
@@ -242,6 +123,7 @@ import {
   type SourceType,
 } from "@/lib/imagePickApi";
 import { annotatedValue, uploadSidecarAsClipspaceImage } from "@/lib/maskUpload";
+import { mediaLibrary } from "@/framework";
 
 interface DOMWidget {
   name?: string;
@@ -274,18 +156,12 @@ const images = ref<ImageItem[]>([]);
 const selected = ref<string>("");
 // Legacy Nynxz sidecar mask reference. New saves use ComfyUI's native clipspace alpha image model.
 const maskRef = ref<string>("");
-const srcType = ref<SourceType>("input");
-const SRC_OPTS = [
-  { value: "input", label: "input" },
-  { value: "temp", label: "temp" },
-  { value: "output", label: "output" },
-];
 const dragOver = ref(false);
 
 // Value model: input images store a plain relative name (stock LoadImage behaviour);
 // temp/output images store ComfyUI's annotated form `name [type]`, which the Python
 // node's get_annotated_filepath() loads from the right dir.
-function annot(it: ImageItem) {
+function annot(it: Pick<ImageItem, "type" | "name">) {
   return it.type === "input" ? it.name : `${it.name} [${it.type}]`;
 }
 function parseVal(v: string): { name: string; type: SourceType } {
@@ -301,7 +177,6 @@ function applyValue(v: unknown) {
       const o = JSON.parse(v);
       selected.value = String(o.image ?? "");
       maskRef.value = String(o.mask ?? "");
-      if (selected.value) srcType.value = parseVal(selected.value).type;
       suppressDefaultPreviewSoon();
       return;
     } catch {
@@ -310,32 +185,11 @@ function applyValue(v: unknown) {
   }
   selected.value = v;
   maskRef.value = "";
-  if (selected.value) srcType.value = parseVal(selected.value).type;
   suppressDefaultPreviewSoon();
 }
 if (typeof props.widget?.value === "string" && props.widget.value) applyValue(props.widget.value);
 const fileInput = ref<HTMLInputElement | null>(null);
-const viewMode = ref<"grid" | "list">("grid");
-const zoom = ref(92); // grid cell min-width (px)
-const VIEW_OPTS = [
-  { value: "grid", icon: "mdi mdi-view-grid-outline", title: "Grid view" },
-  { value: "list", icon: "mdi mdi-view-list", title: "List view" },
-];
-function setView(v: unknown) {
-  viewMode.value = String(v) === "list" ? "list" : "grid";
-}
-function zoomBy(d: number) {
-  zoom.value = Math.max(56, Math.min(220, zoom.value + d));
-}
-
-const browse = ref(false);
-const bq = ref("");
-const bmode = ref<"flat" | "folder">("flat");
-const bpath = ref("");
-const BMODES = [
-  { value: "flat", label: "Flat" },
-  { value: "folder", label: "Folders" },
-];
+const pickerOpen = ref(false);
 
 onMounted(async () => {
   // The host restores widget.value on graph load (often after setup) — pick it up and
@@ -358,58 +212,20 @@ onMounted(async () => {
   }
 });
 
-// Lazy: fetch the image list on first picker open (not on mount) — a Load-Image node the
-// user never opens won't hit /nynxz/images on graph load. listImages() is cached + shared.
-async function ensureImages() {
-  images.value = await listImages(srcType.value);
-}
-async function setSrc(v: unknown) {
-  const t = String(v) as SourceType;
-  if (t !== "input" && t !== "temp" && t !== "output") return;
-  srcType.value = t;
-  bpath.value = "";
-  images.value = await listImages(t);
-}
 async function loadSelectedImageDetails() {
   if (!selected.value) return;
   const { type } = parseVal(selected.value);
-  srcType.value = type;
   images.value = await listImages(type);
 }
 
-function isClipspaceItem(it: ImageItem) {
-  const name = it.name.replace(/\\/g, "/").toLowerCase();
-  const subfolder = it.subfolder.replace(/\\/g, "/").toLowerCase();
-  return (
-    name === "clipspace" ||
-    name.startsWith("clipspace/") ||
-    subfolder === "clipspace" ||
-    subfolder.startsWith("clipspace/")
-  );
-}
-const pickerImages = computed(() => images.value.filter((it) => !isClipspaceItem(it)));
 const byName = computed(() => {
   const m = new Map<string, ImageItem>();
   for (const it of images.value) m.set(annot(it), it);
   return m;
 });
-const items = computed<ComboItem[]>(() =>
-  pickerImages.value.map((it) => ({
-    value: annot(it),
-    label: short(it.name),
-    keywords: it.name,
-  })),
-);
 
 function short(name: string) {
   return (parseVal(name).name.split("/").pop() || name).replace(/\.(png|jpe?g|webp|gif|bmp)$/i, "");
-}
-function folder(name: string) {
-  const p = name.split("/");
-  return p.length > 1 ? p.slice(0, -1).join("/") : "";
-}
-function thumb(it: ImageItem) {
-  return thumbUrl(it);
 }
 function thumbByName(value: string) {
   if (!value) return "";
@@ -577,39 +393,19 @@ function pick(name: string) {
   commit();
 } // new image → no mask
 
-// --- browse-dialog folder navigation ---
-const folderActive = computed(() => bmode.value === "folder" && !bq.value.trim());
-const crumbSegs = computed(() => (bpath.value ? bpath.value.split("/") : []));
-const browseItems = computed(() => {
-  const q = bq.value.trim().toLowerCase();
-  return pickerImages.value.filter((it) => !q || it.name.toLowerCase().includes(q));
-});
-const folderView = computed(() => {
-  const prefix = bpath.value ? bpath.value + "/" : "";
-  const folders = new Set<string>();
-  const files: ImageItem[] = [];
-  for (const it of pickerImages.value) {
-    if (prefix && !it.name.startsWith(prefix)) continue;
-    const rest = it.name.slice(prefix.length);
-    const slash = rest.indexOf("/");
-    if (slash === -1) files.push(it);
-    else folders.add(rest.slice(0, slash));
-  }
-  return { folders: [...folders].sort(), files };
-});
-const gridFolders = computed(() => (folderActive.value ? folderView.value.folders : []));
-const gridFiles = computed(() => (folderActive.value ? folderView.value.files : browseItems.value));
-function enterFolder(name: string) {
-  bpath.value = bpath.value ? bpath.value + "/" + name : name;
+// --- the shared media picker speaks refs ("output/sub/a.png"); the widget stores ComfyUI's
+// annotated value ("sub/a.png [output]") ---
+function mediaRef(value: string) {
+  const { name, type } = parseVal(value);
+  return `${type}/${name}`;
 }
-function openBrowse(close?: () => void) {
-  close?.();
-  bpath.value = "";
-  browse.value = true;
-}
-function pickFromBrowse(it: ImageItem) {
-  pick(annot(it));
-  browse.value = false;
+async function onPicked(refs: string[]) {
+  const ref = refs[0];
+  if (!ref) return;
+  const slash = ref.indexOf("/");
+  const type = ref.slice(0, slash) as SourceType;
+  pick(annot({ type, name: ref.slice(slash + 1) }));
+  await loadSelectedImageDetails();
 }
 
 // --- upload ---
@@ -620,7 +416,6 @@ async function uploadAndSelect(file: File) {
   if (!file || !file.type.startsWith("image/")) return;
   const it = await uploadImage(file);
   if (!it) return;
-  srcType.value = "input"; // uploads always land in the input dir
   images.value = await listImages("input", true);
   pick(it.name);
 }
@@ -712,13 +507,36 @@ async function onDrop(e: DragEvent) {
 .li-pick {
   flex: 1;
   min-width: 0;
-}
-
-.li-sel {
   display: flex;
   align-items: center;
   gap: 7px;
-  min-width: 0;
+  box-sizing: border-box;
+  min-height: var(--zen-control-h, 28px);
+  background: var(--zen-control-bg, var(--zen-input, #1b1b20));
+  color: var(--zen-text, #e5e5ea);
+  border: 1px solid var(--zen-control-border, var(--zen-border, #34343c));
+  border-radius: var(--zen-radius, 7px);
+  padding: 4px 8px;
+  font: inherit;
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--zen-dur-fast, 0.12s) ease;
+}
+.li-pick:hover {
+  border-color: var(--zen-control-hover-border, var(--zen-accent, #6366f1));
+}
+.li-pick:focus-visible {
+  outline: 2px solid
+    var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));
+  outline-offset: 1px;
+}
+.li-pick .li-sel-name {
+  flex: 1;
+}
+.li-pick-caret {
+  flex: none;
+  color: var(--zen-muted, #9aa0aa);
 }
 .li-sel-ic {
   flex: none;
@@ -816,190 +634,5 @@ async function onDrop(e: DragEvent) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-.li-thumb {
-  flex: none;
-  box-sizing: border-box;
-  width: 40px;
-  height: 40px;
-  object-fit: cover;
-  border-radius: var(--zen-radius, 6px);
-  background: var(--zen-input, #1b1b20);
-  border: 1px solid var(--zen-border, #34343c);
-}
-.li-thumb.sm {
-  width: 18px;
-  height: 18px;
-  border-radius: var(--zen-radius, 5px);
-}
-.li-thumb.ph {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--zen-muted, #9aa0aa);
-}
-/* grid-combo cell (contain square + name) */
-.li-gthumb {
-  width: 100%;
-  aspect-ratio: 1;
-  border-radius: var(--zen-radius, 6px);
-  overflow: hidden;
-  background: var(--zen-surface, #202026);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.li-gthumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-}
-.li-gname {
-  font-size: 10px;
-  color: var(--zen-text, #e5e5ea);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-align: center;
-}
-.li-lname {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.li-foot {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  width: 100%;
-}
-.li-foot-browse {
-  margin-left: auto;
-}
-/* compact source switcher inside the combo search row */
-.li-src :deep(.zen-tg-b) {
-  padding: 2px 7px;
-  font-size: 10px;
-}
-
-/* browse dialog */
-.li-search {
-  flex: 1;
-  min-width: 0;
-  max-width: 320px;
-  display: flex;
-}
-.li-crumbs {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 2px;
-  padding-bottom: 10px;
-}
-.li-crumb {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font: inherit;
-  font-size: 12px;
-  padding: 2px 6px;
-  border-radius: var(--zen-radius, 5px);
-  color: var(--zen-muted, #9aa0aa);
-}
-.li-crumb:hover {
-  color: var(--zen-text, #e5e5ea);
-  background: color-mix(in srgb, var(--zen-text, #fff) 6%, transparent);
-}
-.li-crumb.on {
-  color: var(--zen-text, #e5e5ea);
-  font-weight: 600;
-}
-.li-crumbs .mdi {
-  color: var(--zen-muted, #9aa0aa);
-  font-size: 14px;
-}
-.li-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 12px;
-  align-items: start;
-}
-.li-card {
-  display: flex;
-  flex-direction: column;
-  height: 170px;
-  padding: 0;
-  border: 1px solid var(--zen-border, #34343c);
-  border-radius: var(--zen-radius, 9px);
-  background: var(--zen-input, #1b1b20);
-  cursor: pointer;
-  overflow: hidden;
-  text-align: left;
-  color: inherit;
-  font: inherit;
-}
-.li-card:hover {
-  border-color: var(--zen-accent, #6366f1);
-}
-.li-card.sel {
-  border-color: var(--zen-accent, #6366f1);
-  box-shadow: 0 0 0 1px var(--zen-accent, #6366f1) inset;
-}
-.li-card-img {
-  position: relative;
-  flex: 1 1 0;
-  min-height: 0;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--zen-surface, #202026);
-  overflow: hidden;
-}
-.li-card-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-}
-.li-card-img > .mdi {
-  font-size: 40px;
-  color: var(--zen-accent, #6366f1);
-}
-.li-folder .li-card-img {
-  background: color-mix(in srgb, var(--zen-accent, #6366f1) 8%, var(--zen-surface, #202026));
-}
-.li-card-meta {
-  flex: none;
-  height: 38px;
-  box-sizing: border-box;
-  padding: 5px 8px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 1px;
-  border-top: 1px solid var(--zen-border, #34343c);
-}
-.li-card-name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 12px;
-}
-.li-card-dir {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 10px;
-  color: var(--zen-muted, #9aa0aa);
-}
-.li-grid-empty {
-  grid-column: 1 / -1;
-  text-align: center;
-  color: var(--zen-muted, #9aa0aa);
-  padding: 30px;
 }
 </style>
