@@ -3,6 +3,7 @@
     ref="editor"
     v-model:selected="selected"
     :mode="mode"
+    :modes="PROMPT_MODES"
     :layout="layout"
     :node="node"
     :in-panel="inPanel"

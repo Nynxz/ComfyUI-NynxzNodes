@@ -72,76 +72,13 @@
         @click="redo"
       />
       <span class="le-rail-grow" />
-      <ZenPopover v-model:open="libraryOpen" placement="right-start" role="dialog">
-        <template #trigger="{ toggle }">
-          <ZenIconButton
-            size="sm"
-            icon="mdi mdi-bookshelf"
-            title="Saved layouts"
-            :active="libraryOpen"
-            @click="toggle"
-          />
-        </template>
-        <div class="le-library">
-          <span class="le-menu-title">{{ mode.label }} layouts</span>
-          <div class="le-row">
-            <ZenInput
-              v-model="saveName"
-              sm
-              placeholder="Name"
-              class="le-grow"
-              @keydown.enter="saveCurrent"
-            />
-            <ZenButton
-              sm
-              icon="mdi mdi-content-save-outline"
-              :disabled="!saveName.trim()"
-              @click="saveCurrent"
-            >
-              Save
-            </ZenButton>
-          </div>
-          <p v-if="libraryNote" class="le-note">{{ libraryNote }}</p>
-          <ZenScroll class="le-saved">
-            <p v-if="!saved.length" class="le-note">Nothing saved yet.</p>
-            <div v-for="s in saved" :key="s.name" class="le-saved-row">
-              <button
-                type="button"
-                class="le-saved-pick"
-                :title="`Load ${s.name}`"
-                @click="loadSaved(s.name)"
-              >
-                <svg
-                  class="le-thumb"
-                  :viewBox="`0 0 ${thumbSize(s).w} ${thumbSize(s).h}`"
-                  :width="thumbSize(s).w"
-                  :height="thumbSize(s).h"
-                >
-                  <rect
-                    v-for="(b, i) in s.preview?.boxes ?? []"
-                    :key="i"
-                    :x="b.x * thumbSize(s).w"
-                    :y="b.y * thumbSize(s).h"
-                    :width="b.w * thumbSize(s).w"
-                    :height="b.h * thumbSize(s).h"
-                    :fill="b.color"
-                    fill-opacity="0.35"
-                    :stroke="b.color"
-                  />
-                </svg>
-                <span class="le-saved-name">{{ s.name }}</span>
-              </button>
-              <ZenIconButton
-                size="sm"
-                :danger="confirmDelete === s.name"
-                :icon="confirmDelete === s.name ? 'mdi mdi-check' : 'mdi mdi-delete-outline'"
-                :title="confirmDelete === s.name ? 'Click again to delete' : 'Delete'"
-                @click="removeSaved(s.name)"
-              />
-            </div>
-          </ZenScroll>
-        </div>
-      </ZenPopover>
+      <ZenIconButton
+        size="sm"
+        icon="mdi mdi-bookshelf"
+        title="Layouts — save this one, or load a saved one"
+        :active="libraryOpen"
+        @click="libraryOpen = true"
+      />
       <ZenPopover v-model:open="jsonOpen" placement="right-start" role="dialog">
         <template #trigger="{ toggle }">
           <ZenIconButton
@@ -395,6 +332,13 @@
     </ZenSplit>
 
     <ZenContextMenu ref="menu" :items="menuItems" />
+    <LayoutBrowser
+      v-model:open="libraryOpen"
+      :mode="mode"
+      :scene="scene"
+      :modes="hostModes"
+      @load="loadSaved"
+    />
     <ZenMediaPicker
       v-model:open="backdropBrowse"
       :library="mediaLibrary"
@@ -443,14 +387,8 @@ import { hasMediaDrop, hasZenPanels, mediaLibrary } from "@/framework";
 import { thumbUrl, type SourceType } from "@/lib/fusionApi";
 import { copiedFor, copyBoxes } from "@/layout/clipboard";
 import { exportLayout, importLayout } from "@/layout/jsonIo";
-import {
-  deleteLayout,
-  listLayouts,
-  loadLayout,
-  saveLayout,
-  type SavedLayout,
-} from "@/layout/library";
-import { previewOf, type AnyLayoutMode, type LayoutBox } from "@/layout/mode";
+import LayoutBrowser from "@/components/layout/LayoutBrowser.vue";
+import { layoutMode, type AnyLayoutMode, type LayoutBox } from "@/layout/mode";
 import type { SharedLayout } from "@/layout/store";
 
 interface Backdrop {
@@ -466,6 +404,8 @@ interface Backdrop {
 const props = withDefaults(
   defineProps<{
     mode: AnyLayoutMode;
+    /** Every mode this node can be in; a saved layout of any of them loads as it is. */
+    modes?: AnyLayoutMode[];
     layout: SharedLayout<unknown>;
     node?: {
       id?: string | number;
@@ -492,6 +432,7 @@ const props = withDefaults(
   }>(),
   {
     node: undefined,
+    modes: undefined,
     inPanel: false,
     propertyPrefix: "nynxzLayout",
     help: () => [],
@@ -517,6 +458,7 @@ const selected = defineModel<string[]>("selected", { default: () => [] });
 const tool = defineModel<BoxTool>("tool", { default: "select" });
 
 const canPopOut = !props.inPanel && hasZenPanels();
+const hostModes = computed(() => props.modes ?? [props.mode]);
 const scene = props.layout.scene;
 const size = computed(() => props.mode.size(scene.value));
 const layoutBoxes = computed<LayoutBox[]>(() => props.mode.boxes(scene.value));
@@ -822,61 +764,23 @@ const menuItems = computed<ContextMenuItem[]>(() => {
   ];
 });
 
-// --- saved layouts ------------------------------------------------------------------------------
+// --- saved layouts ---------------------------------------------------------------------------
 
 const libraryOpen = ref(false);
-const saved = ref<SavedLayout[]>([]);
-const saveName = ref("");
-const libraryNote = ref("");
-const confirmDelete = ref<string | null>(null);
-async function refreshSaved() {
-  saved.value = await listLayouts(props.mode.id);
-}
-watch(libraryOpen, (open) => {
-  confirmDelete.value = null;
-  libraryNote.value = "";
-  if (open) void refreshSaved();
-});
-async function saveCurrent() {
-  if (!saveName.value.trim()) return;
-  try {
-    const name = await saveLayout(
-      props.mode.id,
-      saveName.value,
-      JSON.parse(JSON.stringify(scene.value)),
-      previewOf(props.mode, scene.value),
-    );
-    libraryNote.value = `Saved as ${name}.`;
-    saveName.value = "";
-    await refreshSaved();
-  } catch (e) {
-    libraryNote.value = `Couldn't save: ${(e as Error).message}`;
-  }
-}
-async function loadSaved(name: string) {
-  try {
-    props.layout.replace(props.mode.read(await loadLayout(props.mode.id, name)));
-    selected.value = [];
-    props.node?.graph?.setDirtyCanvas?.(true, true);
-    libraryOpen.value = false;
-  } catch (e) {
-    libraryNote.value = `Couldn't load: ${(e as Error).message}`;
-  }
-}
-async function removeSaved(name: string) {
-  if (confirmDelete.value !== name) {
-    confirmDelete.value = name;
-    return;
-  }
-  confirmDelete.value = null;
-  await deleteLayout(props.mode.id, name).catch(() => undefined);
-  await refreshSaved();
-}
-function thumbSize(s: SavedLayout) {
-  const aspect = s.preview?.aspect || 1;
-  return aspect >= 1
-    ? { w: 44, h: Math.round(44 / aspect) }
-    : { w: Math.round(44 * aspect), h: 44 };
+/** A saved layout, as the node can show it: as saved when one of `modes` is its own, else
+ *  carried over through the common layout. */
+function loadSaved(modeId: string, saved: unknown) {
+  const native = hostModes.value.find((m) => m.id === modeId);
+  const from = layoutMode(modeId);
+  const next = native
+    ? native.read(saved)
+    : from
+      ? props.mode.fromCommon(from.toCommon(from.read(saved)))
+      : null;
+  if (next == null) return;
+  props.layout.replace(next);
+  selected.value = [];
+  props.node?.graph?.setDirtyCanvas?.(true, true);
 }
 
 // --- JSON ---------------------------------------------------------------------------------------
@@ -1151,7 +1055,6 @@ defineExpose({ addBox, update, patchBoxes, stagePoint, offerBackdrop });
 .le-menu .zen-btn {
   justify-content: flex-start;
 }
-.le-library,
 .le-json {
   color: var(--zen-text, #e5e5ea);
   font-size: 12px;
@@ -1169,43 +1072,6 @@ defineExpose({ addBox, update, patchBoxes, stagePoint, offerBackdrop });
 .le-grow {
   flex: 1;
   min-width: 0;
-}
-.le-saved {
-  max-height: 280px;
-}
-.le-saved-row {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.le-saved-pick {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 4px;
-  border: 0;
-  border-radius: var(--zen-radius, 7px);
-  background: none;
-  color: var(--zen-text, #e5e5ea);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-.le-saved-pick:hover {
-  background: color-mix(in srgb, var(--zen-text, #e5e5ea) 10%, transparent);
-}
-.le-thumb {
-  flex: none;
-  border-radius: 3px;
-  background: var(--zen-input, #1b1b20);
-  outline: 1px solid var(--zen-border, #34343c);
-}
-.le-saved-name {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 .le-stage.dropping {
   outline: 2px dashed var(--zen-accent, #6366f1);

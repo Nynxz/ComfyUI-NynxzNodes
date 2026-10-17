@@ -4,10 +4,14 @@ import { route } from "@/framework";
 
 export interface SavedLayoutPreview {
   aspect: number;
-  boxes: { x: number; y: number; w: number; h: number; color: string }[];
+  boxes: { x: number; y: number; w: number; h: number; color: string; name?: string }[];
+  width?: number;
+  height?: number;
+  prompt?: string;
 }
 export interface SavedLayout {
   name: string;
+  mode: string;
   saved: number;
   preview: SavedLayoutPreview | null;
 }
@@ -25,6 +29,7 @@ const post = (path: string, body: unknown) =>
     body: JSON.stringify(body),
   });
 
+/** Mode "all" lists every mode's. */
 export async function listLayouts(mode: string): Promise<SavedLayout[]> {
   try {
     const body = (await call(`layouts?mode=${encodeURIComponent(mode)}`)) as {
@@ -49,6 +54,11 @@ export async function saveLayout(
   preview: SavedLayoutPreview,
 ): Promise<string> {
   return ((await post("layouts", { mode, name, layout, preview })) as { name: string }).name;
+}
+
+/** Rename and return the new name. */
+export async function renameLayout(mode: string, name: string, to: string): Promise<string> {
+  return ((await post("layouts/rename", { mode, name, to })) as { name: string }).name;
 }
 
 export async function deleteLayout(mode: string, name: string): Promise<void> {

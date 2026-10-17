@@ -84,9 +84,12 @@ export function previewOf(mode: AnyLayoutMode, scene: unknown) {
   const { width, height } = mode.size(scene);
   return {
     aspect: width / height,
+    width,
+    height,
+    prompt: mode.toCommon(scene).prompt.slice(0, 400),
     boxes: mode
       .boxes(scene)
       .filter((b) => !b.hidden)
-      .map((b) => ({ x: b.x, y: b.y, w: b.w, h: b.h, color: b.color })),
+      .map((b) => ({ x: b.x, y: b.y, w: b.w, h: b.h, color: b.color, name: b.name })),
   };
 }

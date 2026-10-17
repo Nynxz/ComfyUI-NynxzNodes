@@ -63,5 +63,33 @@ class Library(unittest.TestCase):
         self.assertIsNone(library.save_layout(self.root, "regions", "big", huge, None))
 
 
+class Browsing(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = self.tmp.name
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_all_lists_every_mode_with_its_mode(self):
+        library.save_layout(self.root, "regions", "One", {}, None)
+        library.save_layout(self.root, "moss", "Two", {}, None)
+        listed = {(item["mode"], item["name"]) for item in library.list_all(self.root)}
+        self.assertEqual(listed, {("regions", "One"), ("moss", "Two")})
+
+    def test_rename_moves_the_file_and_keeps_the_layout(self):
+        library.save_layout(self.root, "moss", "Old", {"k": 1}, None)
+        self.assertEqual(library.rename_layout(self.root, "moss", "Old", " New  name "), "New name")
+        self.assertIsNone(library.load_layout(self.root, "moss", "Old"))
+        self.assertEqual(library.load_layout(self.root, "moss", "New name")["layout"], {"k": 1})
+
+    def test_rename_never_overwrites_another(self):
+        library.save_layout(self.root, "moss", "A", {"a": 1}, None)
+        library.save_layout(self.root, "moss", "B", {"b": 1}, None)
+        self.assertIsNone(library.rename_layout(self.root, "moss", "A", "B"))
+        self.assertIsNone(library.rename_layout(self.root, "moss", "A", "../x"))
+        self.assertEqual(library.load_layout(self.root, "moss", "B")["layout"], {"b": 1})
+
+
 if __name__ == "__main__":
     unittest.main()

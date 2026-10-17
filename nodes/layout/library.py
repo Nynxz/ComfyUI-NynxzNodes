@@ -46,8 +46,24 @@ def _file(root: str, mode: str, name: str) -> str | None:
     return os.path.join(_folder(root, mode), f"{stem}.json")
 
 
+def modes_saved(root: str) -> list[str]:
+    """Every mode that has a folder of saved layouts."""
+    base = os.path.join(root, FOLDER)
+    if not os.path.isdir(base):
+        return []
+    return sorted(e.name for e in os.scandir(base) if e.is_dir() and valid_mode(e.name))
+
+
+def list_all(root: str) -> list[dict]:
+    """Every saved layout of every mode, newest first."""
+    found = [item for mode in modes_saved(root) for item in list_layouts(root, mode)]
+    found.sort(key=lambda item: item["saved"], reverse=True)
+    return found
+
+
 def list_layouts(root: str, mode: str) -> list[dict]:
-    """Every layout saved for `mode`, newest first: name, saved time and preview, no layout."""
+    """Every layout saved for `mode`, newest first: name, mode, saved time and preview, no
+    layout."""
     if not valid_mode(mode):
         return []
     folder = _folder(root, mode)
@@ -67,6 +83,7 @@ def list_layouts(root: str, mode: str) -> list[dict]:
         found.append(
             {
                 "name": entry.name[: -len(".json")],
+                "mode": mode,
                 "saved": data.get("saved") or entry.stat().st_mtime,
                 "preview": data.get("preview"),
             }
@@ -113,3 +130,24 @@ def delete_layout(root: str, mode: str, name: str) -> bool:
         return False
     os.remove(path)
     return True
+
+
+def rename_layout(root: str, mode: str, name: str, new_name: str) -> str | None:
+    """Rename a saved layout and return its new name; None when it's missing, the new name
+    can't be a file name, or another layout already has it."""
+    old = _file(root, mode, name)
+    new = _file(root, mode, new_name)
+    if old is None or new is None or not os.path.isfile(old):
+        return None
+    stem = os.path.basename(new)[: -len(".json")]
+    if os.path.exists(new) and os.path.normcase(new) != os.path.normcase(old):
+        return None
+    data = load_layout(root, mode, name) or {}
+    data["name"] = stem
+    temp = f"{new}.tmp"
+    with open(temp, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False)
+    os.replace(temp, new)
+    if os.path.normcase(new) != os.path.normcase(old):
+        os.remove(old)
+    return stem

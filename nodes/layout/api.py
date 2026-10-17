@@ -38,6 +38,8 @@ if _routes is not None and folder_paths is not None:
     @_routes.get("/nynxz/layouts")
     async def nynxz_layouts_list(request):
         mode = request.query.get("mode", "")
+        if mode == "all":
+            return web.json_response({"layouts": library.list_all(_root())})
         if not library.valid_mode(mode):
             return web.json_response({"error": "bad mode"}, status=400)
         return web.json_response({"layouts": library.list_layouts(_root(), mode)})
@@ -66,6 +68,18 @@ if _routes is not None and folder_paths is not None:
         if saved is None:
             return web.json_response({"error": "can't save under that name"}, status=400)
         return web.json_response({"name": saved})
+
+    @_routes.post("/nynxz/layouts/rename")
+    async def nynxz_layouts_rename(request):
+        if (denied := request_allowed(request)) is not None:
+            return denied
+        body = await _body(request)
+        renamed = library.rename_layout(
+            _root(), body.get("mode", ""), body.get("name", ""), body.get("to", "")
+        )
+        if renamed is None:
+            return web.json_response({"error": "can't rename to that"}, status=400)
+        return web.json_response({"name": renamed})
 
     @_routes.post("/nynxz/layouts/delete")
     async def nynxz_layouts_delete(request):
