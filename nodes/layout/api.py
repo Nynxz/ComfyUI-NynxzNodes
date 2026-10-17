@@ -6,7 +6,7 @@ from __future__ import annotations
 from aiohttp import web
 
 from .._zenkit.server import request_allowed
-from . import _prompt, library
+from . import _agent, _prompt, library
 
 try:
     import folder_paths
@@ -96,3 +96,25 @@ if _routes is not None and folder_paths is not None:
         return web.json_response(
             {"prompt": _prompt.compile_prompt(layout), "warnings": _prompt.warnings(layout)}
         )
+
+    @_routes.post("/nynxz/layouts/agent-prompt")
+    async def nynxz_layouts_agent_prompt(request):
+        body = await _body(request)
+        layout = _prompt.parse(body.get("layout"))
+        current = _agent.current_layout(body.get("layout")) if body.get("revise") else None
+        text = _agent.build_request(
+            str(body.get("request") or ""),
+            layout["mode"],
+            layout["width"],
+            layout["height"],
+            bool(body.get("has_image")),
+            current,
+        )
+        return web.json_response({"text": text})
+
+    @_routes.post("/nynxz/layouts/agent-read")
+    async def nynxz_layouts_agent_read(request):
+        read = _agent.read_reply(str((await _body(request)).get("text") or ""))
+        if read is None:
+            return web.json_response({"error": "no boxes in the answer"}, status=422)
+        return web.json_response(read)

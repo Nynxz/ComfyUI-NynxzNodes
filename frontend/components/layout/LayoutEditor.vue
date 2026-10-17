@@ -987,7 +987,7 @@ function matchSource() {
   if (s) setSize(s[0], s[1]);
 }
 
-defineExpose({ addBox, update, patchBoxes, stagePoint, offerBackdrop });
+defineExpose({ addBox, update, patchBoxes, stagePoint, offerBackdrop, backdrop });
 </script>
 
 <style scoped>

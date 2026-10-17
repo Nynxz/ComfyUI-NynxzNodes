@@ -20,6 +20,13 @@
           :title="`${mode.label} layout — settings: mode${SETTINGS_NOTE[scene.mode]}`"
           @click="settingsOpen = true"
         />
+        <ZenIconButton
+          size="sm"
+          icon="mdi mdi-creation-outline"
+          :active="agentOpen"
+          title="Layout agent — a model draws the boxes from the trace image or your words (needs Layout Inputs)"
+          @click="agentOpen = true"
+        />
       </template>
 
       <template #element>
@@ -124,6 +131,13 @@
         </div>
       </template>
     </LayoutEditor>
+    <LayoutAgent
+      v-model:open="agentOpen"
+      :scene="scene"
+      :node-id="String(node?.id ?? '')"
+      :image="editor?.backdrop ?? null"
+      @apply="applyAgent"
+    />
     <LayoutSettings v-model:open="settingsOpen" :scene="scene" @patch="patchScene" />
     <div v-if="choosing" class="pl-choose">
       <div class="pl-choose-card">
@@ -146,9 +160,11 @@
  * the prompt as the node will output it (written by the backend, so it can't drift).
  */
 import { ZenIconButton, ZenInput, ZenToggleGroup } from "@nynxz/zenkit-ui";
-import { computed, onBeforeUnmount, ref, watch } from "vue";
+import { api } from "@comfy/api";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
 import FrescoSection from "@/components/fresco/FrescoSection.vue";
+import LayoutAgent from "@/components/layout/LayoutAgent.vue";
 import LayoutEditor from "@/components/layout/LayoutEditor.vue";
 import LayoutSettings from "@/components/layout/LayoutSettings.vue";
 import ModeCards from "@/components/layout/ModeCards.vue";
@@ -156,7 +172,9 @@ import PaletteEdit from "@/components/layout/PaletteEdit.vue";
 import { compileLayout } from "@/layout/library";
 import { keepContextMenu } from "@/lib/ownContextMenu";
 import { PROMPT_MODES } from "@/layout/modes";
-import { kleinId } from "@/layout/promptScene";
+import type { AgentImage, AgentLayout } from "@/layout/agent";
+import { boxId, kleinId, nextColor, readBox } from "@/layout/promptScene";
+import type { SourceType } from "@/lib/fusionApi";
 import type { BoxKind, PromptBox, PromptModeId, PromptScene } from "@/layout/promptScene";
 import type { SharedLayout } from "@/layout/store";
 
@@ -192,7 +210,12 @@ const PROMPT_NOTE: Record<PromptModeId, string> = {
   klein: "cite each box as <obj_N>",
   moss: "the scene and its style",
 };
-const editor = ref<{ update: (next: unknown) => void } | null>(null);
+const editor = ref<{
+  update: (next: unknown) => void;
+  offerBackdrop: (image: { ref: string; type: SourceType; size?: [number, number] }) => void;
+  backdrop: AgentImage | null;
+} | null>(null);
+const agentOpen = ref(false);
 const selected = ref<string[]>([]);
 const settingsOpen = ref(false);
 const choosing = ref(!!props.chooseMode);
@@ -253,6 +276,54 @@ function cite(id: string) {
   const prompt = scene.value.prompt.trimEnd();
   patchScene({ prompt: `${prompt}${prompt ? " " : ""}<${id}>` });
 }
+
+// --- the agent, and the photo a run sends back -------------------------------------------------
+
+function applyAgent(result: AgentLayout, how: "replace" | "add") {
+  const kept = how === "add" ? scene.value.boxes : [];
+  const boxes = [...kept];
+  for (const b of result.boxes) {
+    boxes.push(
+      readBox(
+        { ...b, id: boxId(), name: b.name || `Box ${boxes.length + 1}`, color: nextColor(boxes) },
+        boxes.length,
+      ),
+    );
+  }
+  patchScene({
+    boxes,
+    ...(how === "replace" || !scene.value.prompt.trim() ? { prompt: result.prompt } : {}),
+    ...(result.background && (how === "replace" || !scene.value.background.trim())
+      ? { background: result.background }
+      : {}),
+  });
+  selected.value = [];
+}
+
+interface ExecutedOutput {
+  layout_node?: string[];
+  layout_source?: { filename: string; subfolder?: string; type?: string }[];
+  layout_size?: number[];
+}
+function onExecuted(e: Event) {
+  const output = (e as CustomEvent<{ output?: ExecutedOutput }>).detail?.output;
+  const mine = String(props.node?.id ?? "");
+  if (!mine || !output?.layout_node?.some((id) => id === mine || id.endsWith(`:${mine}`))) return;
+  const image = output.layout_source?.[0];
+  if (!image) return;
+  const size = output.layout_size;
+  editor.value?.offerBackdrop({
+    ref: image.subfolder ? `${image.subfolder}/${image.filename}` : image.filename,
+    type: (image.type ?? "temp") as SourceType,
+    size: size?.length === 2 ? [Number(size[0]), Number(size[1])] : undefined,
+  });
+}
+const events = api as unknown as {
+  addEventListener(t: string, f: (e: Event) => void): void;
+  removeEventListener(t: string, f: (e: Event) => void): void;
+};
+onMounted(() => events.addEventListener("executed", onExecuted));
+onBeforeUnmount(() => events.removeEventListener("executed", onExecuted));
 
 // --- the prompt out -----------------------------------------------------------------------------
 
