@@ -12,7 +12,7 @@ WRAPPER_KEY = "nynxz_record_steps"
 
 
 class NynxzRecordSteps(NynxzNode):
-    CATEGORY = f"{NynxzNode.CATEGORY}/Steps"
+    CATEGORY = f"{NynxzNode.CATEGORY}/Diagnostics"
 
     @classmethod
     def define_schema(cls) -> io.Schema:

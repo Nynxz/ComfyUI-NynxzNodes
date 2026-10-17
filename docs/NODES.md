@@ -386,7 +386,7 @@ clamped or wrapped index is visible rather than guessed at.
 
 ![String Template Parser](../.github/assets/string_template_parser.png)
 
-## Steps — watch a sampler work
+## Diagnostics — watch a model work
 
 - **Record Steps** — patches the model so any sampler on it (KSampler, SamplerCustom, SoftPaint)
   keeps what it predicted at every step. One frame per step: SoftPaint's inner calls add none.
