@@ -7,6 +7,10 @@ import { nodeId, settingId } from "@/framework";
 
 app.registerExtension({
   name: `${nodeId("Lora")}.Settings`,
+  /** ComfyUI's Refresh (R) re-reads the model folders; the pickers' shared list follows it. */
+  async refreshComboInNodes() {
+    if (loraLibrary.listLoaded.value) await loraLibrary.ensure(true);
+  },
   settings: [
     {
       id: settingId("Lora.FolderNav"),
