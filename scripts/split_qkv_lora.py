@@ -55,7 +55,8 @@ def main() -> int:
         print("No fused qkv keys in this LoRA; nothing to do.")
         return 0
     temp = out_path.with_suffix(out_path.suffix + ".tmp")
-    save_file(converted, temp, metadata=dict(source.metadata() or {}))
+    owned = {k: v.clone() for k, v in converted.items()}
+    save_file(owned, temp, metadata=dict(source.metadata() or {}))
     os.replace(temp, out_path)
     print(f"Split {count} fused qkv weights into q, k and v → {out_path}")
     return 0
