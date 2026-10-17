@@ -643,17 +643,24 @@ const notePointer = (e: PointerEvent) => {
 };
 const check = (on: boolean) =>
   on ? "mdi mdi-checkbox-marked-outline" : "mdi mdi-checkbox-blank-outline";
-function openOutputsMenu() {
+function outputsMenuItems(): ContextMenuItem[] {
   const shown = shownOutputs(props.node);
-  outputsItems.value = [
+  return [
     { heading: "Outputs" },
     { label: "image", icon: check(true), disabled: true, run: () => {} },
     ...OPTIONAL_OUTPUTS.map((o) => ({
       label: o.name,
       icon: check(shown.includes(o.name)),
-      run: () => toggleOutput(props.node, o.name),
+      keepOpen: true,
+      run: () => {
+        toggleOutput(props.node, o.name);
+        outputsItems.value = outputsMenuItems();
+      },
     })),
   ];
+}
+function openOutputsMenu() {
+  outputsItems.value = outputsMenuItems();
   outputsMenu.value?.show(
     new MouseEvent("contextmenu", { clientX: pointer.x, clientY: pointer.y + 8 }),
   );
