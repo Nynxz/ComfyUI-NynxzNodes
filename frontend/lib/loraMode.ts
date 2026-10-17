@@ -203,11 +203,11 @@ app.registerExtension({
     widget.hidden = true;
     // A new node lays out its default mode now; a loaded one gets its saved socket names back
     // once configure has restored the mode and the links.
-    syncSlots(node, loraMode(node) ?? "model");
+    syncSlots(node, loraMode(node) ?? "both");
     const prev = node.onConfigure;
     node.onConfigure = function (this: unknown, ...args: unknown[]) {
       prev?.apply(this, args);
-      const mode = loraMode(node) ?? "model";
+      const mode = loraMode(node) ?? "both";
       relabelSlots(node, SLOTS[mode]);
       syncSlots(node, mode);
     };

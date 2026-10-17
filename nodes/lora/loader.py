@@ -44,7 +44,7 @@ class NynxzLoraLoader(LoraNode):
                     tooltip="LoRA stack — add rows, pick + bookmark on the node",
                 ),
                 # Set from the stack widget's settings menu; the frontend hides this widget.
-                io.Combo.Input("apply_to", options=MODES, default="model", socketless=True),
+                io.Combo.Input("apply_to", options=MODES, default="both", socketless=True),
             ],
             outputs=[
                 ModelOrClip.Output("out_0", display_name="model"),
@@ -53,12 +53,15 @@ class NynxzLoraLoader(LoraNode):
         )
 
     @classmethod
-    def execute(cls, stack=None, apply_to="model", model=None, clip=None) -> io.NodeOutput:
-        slots = SLOTS.get(apply_to, SLOTS["model"])
+    def execute(cls, stack=None, apply_to="both", model=None, clip=None) -> io.NodeOutput:
+        slots = SLOTS.get(apply_to, SLOTS["both"])
         given = {"model": model, "clip": clip}
-        for name in slots:
-            if given[name] is None:
-                raise ValueError(f"LoRA Loader applies to {apply_to}: connect the {name} input.")
+        # "both" is the default so a CLIP wire has a socket to land on; either input may be left
+        # unconnected there, as on a model whose LoRAs never touch the text encoder.
+        needed = [name for name in slots if given[name] is None]
+        if needed and (apply_to != "both" or len(needed) == len(slots)):
+            missing = " or ".join(needed)
+            raise ValueError(f"LoRA Loader applies to {apply_to}: connect the {missing} input.")
         model, clip = apply_lora_stack(
             model if "model" in slots else None, clip if "clip" in slots else None, stack
         )
