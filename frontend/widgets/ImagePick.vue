@@ -1,5 +1,6 @@
 <template>
   <ZenWidget
+    ref="rootEl"
     fill
     :gap="6"
     pad="4px 2px"
@@ -157,6 +158,7 @@
     <input ref="fileInput" type="file" accept="image/*" style="display: none" @change="onUpload" />
 
     <!-- browse dialog -->
+    <ZenContextMenu ref="outputsMenu" :items="outputsItems" />
     <ZenMediaPicker
       :open="pickerOpen"
       :library="mediaLibrary"
@@ -197,10 +199,12 @@ import {
   ZenButton,
   ZenCombo,
   ZenIconButton,
+  ZenContextMenu,
   ZenMediaPicker,
   ZenToggleGroup,
   ZenWidget,
   type ComboItem,
+  type ContextMenuItem,
 } from "@nynxz/zenkit-ui";
 import {
   listImages,
@@ -211,7 +215,16 @@ import {
   type SourceType,
 } from "@/lib/imagePickApi";
 import { annotatedValue, uploadSidecarAsClipspaceImage } from "@/lib/maskUpload";
-import { hasMediaDrop, mediaKind, mediaLibrary, readMediaDrop, uploadOrReuse } from "@/framework";
+import {
+  addNodeHeaderButton,
+  hasMediaDrop,
+  mediaKind,
+  mediaLibrary,
+  readMediaDrop,
+  uploadOrReuse,
+  type NodeHeaderButtonHandle,
+} from "@/framework";
+import { OPTIONAL_OUTPUTS, shownOutputs, toggleOutput } from "@/lib/loadImageOutputs";
 
 interface DOMWidget {
   name?: string;
@@ -618,6 +631,47 @@ async function takeDrop(e: DragEvent): Promise<boolean> {
   await selectRef(ref);
   return true;
 }
+
+// --- the header cog: which outputs the node shows ---
+const rootEl = ref<{ el: HTMLElement | null } | null>(null);
+const outputsMenu = ref<InstanceType<typeof ZenContextMenu> | null>(null);
+const outputsItems = ref<ContextMenuItem[]>([]);
+const pointer = { x: 0, y: 0 };
+const notePointer = (e: PointerEvent) => {
+  pointer.x = e.clientX;
+  pointer.y = e.clientY;
+};
+const check = (on: boolean) =>
+  on ? "mdi mdi-checkbox-marked-outline" : "mdi mdi-checkbox-blank-outline";
+function openOutputsMenu() {
+  const shown = shownOutputs(props.node);
+  outputsItems.value = [
+    { heading: "Outputs" },
+    { label: "image", icon: check(true), disabled: true, run: () => {} },
+    ...OPTIONAL_OUTPUTS.map((o) => ({
+      label: o.name,
+      icon: check(shown.includes(o.name)),
+      run: () => toggleOutput(props.node, o.name),
+    })),
+  ];
+  outputsMenu.value?.show(
+    new MouseEvent("contextmenu", { clientX: pointer.x, clientY: pointer.y + 8 }),
+  );
+}
+let outputsCog: NodeHeaderButtonHandle | null = null;
+onMounted(() => {
+  document.addEventListener("pointerdown", notePointer, true);
+  outputsCog = addNodeHeaderButton(props.node, rootEl.value?.el ?? null, {
+    icon: "mdi mdi-cog",
+    text: "⚙",
+    title: "Outputs",
+    onClick: openOutputsMenu,
+  });
+});
+onBeforeUnmount(() => {
+  document.removeEventListener("pointerdown", notePointer, true);
+  outputsCog?.destroy();
+});
 
 // Both renderers ask the NODE whether it takes a dropped file (onDragOver) and to take it
 // (onDragDrop); without these, a drop anywhere but the widget itself adds a new Load Image node.

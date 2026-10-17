@@ -30,6 +30,7 @@ registerNodes([...discoverWidgets(widgets), ...discoverNodes(extraNodes)]);
 // Frontend-only nodes (no Python class) register themselves.
 import "@/groupSwitcher/register";
 // LoRA Loader's "apply to" setting reshapes its sockets.
+import "@/lib/loadImageOutputs";
 import "@/lib/loraMode";
 // LoRA picker user settings (folder browsing).
 import "@/lib/loraSettings";

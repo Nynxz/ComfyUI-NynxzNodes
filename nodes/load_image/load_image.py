@@ -7,6 +7,8 @@ per-frame RGB, alpha → mask), so animated/alpha images behave like core LoadIm
 from __future__ import annotations
 
 import json
+import os
+import re
 
 import numpy as np
 import torch
@@ -60,6 +62,27 @@ def _load_mask(mask_ref, w, h):
         return None
 
 
+#: The outputs after `image` that can be switched on, in the order they appear — mirrored by
+#: frontend/lib/loadImageOutputs.ts. Each is declared with the union of their types, because which
+#: one sits in a slot depends on what is switched on; the frontend gives each slot its real type.
+OPTIONAL_OUTPUTS = ("mask", "width", "height", "filename")
+DEFAULT_OUTPUTS = "mask"
+OptionalOutput = io.Custom("MASK,INT,STRING")
+
+
+def shown_outputs(setting: str) -> list[str]:
+    """The optional outputs `setting` switches on ("mask,width"), in slot order."""
+    wanted = {name.strip() for name in setting.split(",")}
+    return [name for name in OPTIONAL_OUTPUTS if name in wanted]
+
+
+def _filename(value) -> str:
+    """The picked file's name without folder, annotation or extension ("cat" for "a/cat.png [output]")."""
+    image_ref, _ = _parse_value(value)
+    name = os.path.basename(re.sub(r"\s*\[(input|output|temp)\]$", "", image_ref or ""))
+    return os.path.splitext(name)[0]
+
+
 class NynxzLoadImage(NynxzNode):
     """Load an input image (and its optional sidecar mask) chosen from the on-node picker."""
 
@@ -78,22 +101,42 @@ class NynxzLoadImage(NynxzNode):
             ),
             inputs=[
                 NynxzImagePickType.Input("image", default=""),
+                io.String.Input("outputs", default=DEFAULT_OUTPUTS, socketless=True),
             ],
             outputs=[
                 io.Image.Output(display_name="image"),
-                io.Mask.Output(display_name="mask"),
+                *[
+                    OptionalOutput.Output(f"out_{i}", display_name=name)
+                    for i, name in enumerate(OPTIONAL_OUTPUTS)
+                ],
             ],
         )
 
     @classmethod
-    def execute(cls, image) -> io.NodeOutput:
+    def execute(cls, image, outputs=DEFAULT_OUTPUTS) -> io.NodeOutput:
+        out_image, out_mask = cls._load(image)
+        values = {
+            "mask": out_mask,
+            "width": int(out_image.shape[2]),
+            "height": int(out_image.shape[1]),
+            "filename": _filename(image),
+        }
+        shown = shown_outputs(outputs)
+        return io.NodeOutput(
+            out_image,
+            *[values[name] for name in shown],
+            *[None] * (len(OPTIONAL_OUTPUTS) - len(shown)),
+        )
+
+    @staticmethod
+    def _load(image) -> tuple[torch.Tensor, torch.Tensor]:
         image_ref, mask_ref = _parse_value(image)
         path = media_file(image_ref) if image_ref else None
         if not path:
             # Nothing picked / missing file — emit a small blank so the graph survives.
             blank = torch.zeros((1, 64, 64, 3), dtype=torch.float32)
             mask = torch.zeros((1, 64, 64), dtype=torch.float32)
-            return io.NodeOutput(blank, mask)
+            return blank, mask
 
         img = _pillow(Image.open, path)
         images: list[torch.Tensor] = []
@@ -128,4 +171,4 @@ class NynxzLoadImage(NynxzNode):
             out_mask = torch.cat([m if m is not None else zero for m in alpha_masks], dim=0)
         else:
             out_mask = torch.zeros((n, h, w), dtype=torch.float32)
-        return io.NodeOutput(out_image, out_mask)
+        return out_image, out_mask
