@@ -17,6 +17,7 @@
       <ZenCombo
         class="li-pick"
         :grid="viewMode === 'grid'"
+        :sorted="false"
         :grid-min="zoom"
         :model-value="selected"
         :items="items"
@@ -72,6 +73,11 @@
               :model-value="viewMode"
               :options="VIEW_OPTS"
               @update:model-value="setView"
+            />
+            <ZenToggleGroup
+              :model-value="sortBy"
+              :options="SORT_OPTS"
+              @update:model-value="setSort"
             />
             <template v-if="viewMode === 'grid'">
               <ZenIconButton
@@ -349,8 +355,36 @@ const byName = computed(() => {
   for (const it of images.value) m.set(annot(it), it);
   return m;
 });
+const SORT_KEY = "nynxz.loadImage.sort";
+const SORT_OPTS = [
+  { value: "newest", icon: "mdi mdi-sort-clock-descending-outline", title: "Newest first" },
+  { value: "name", icon: "mdi mdi-sort-alphabetical-ascending", title: "By name" },
+];
+type SortBy = "newest" | "name";
+function savedSort(): SortBy {
+  try {
+    return localStorage.getItem(SORT_KEY) === "name" ? "name" : "newest";
+  } catch {
+    return "newest";
+  }
+}
+const sortBy = ref<SortBy>(savedSort());
+function setSort(v: unknown) {
+  sortBy.value = String(v) === "name" ? "name" : "newest";
+  try {
+    localStorage.setItem(SORT_KEY, sortBy.value);
+  } catch {
+    /* storage unavailable: the choice lasts for this session */
+  }
+}
+const newestFirst = (a: ImageItem, b: ImageItem) => (b.mtime ?? 0) - (a.mtime ?? 0);
+const nameOrder = (a: ImageItem, b: ImageItem) =>
+  short(a.name).localeCompare(short(b.name), undefined, { numeric: true });
+const sortedImages = computed(() =>
+  [...pickerImages.value].sort(sortBy.value === "name" ? nameOrder : newestFirst),
+);
 const items = computed<ComboItem[]>(() =>
-  pickerImages.value.map((it) => ({
+  sortedImages.value.map((it) => ({
     value: annot(it),
     label: short(it.name),
     keywords: it.name,
