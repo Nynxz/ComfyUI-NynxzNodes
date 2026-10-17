@@ -63,10 +63,21 @@ class Depth(unittest.TestCase):
         self.assertEqual(shares[20], 1.0)
         self.assertEqual(shares[21], 0.0)
 
-    def test_weights_outside_the_stack_go_with_their_end(self):
-        args = (42, 0.8, 0.2, 21, 8)
-        self.assertEqual(depth.ratio_for("text_embedder.proj.weight", *args), 0.8)
-        self.assertEqual(depth.ratio_for("final_layer.linear.weight", *args), 0.2)
+    def test_weights_outside_the_stack_go_with_what_they_feed(self):
+        args = (42, 1.0, 0.0, 21, 8)
+        for head in (
+            "final_linear_video.weight",
+            "final_norm_video.weight",
+            "video_head_modulation.weight",
+        ):
+            self.assertEqual(depth.ratio_for(head, *args), 0.0, head)
+        self.assertEqual(depth.ratio_for("video_embedder.weight", *args), 1.0)
+        for shared in (
+            "shared_block_modulation.weight",
+            "time_embedding.2.weight",
+            "text_embedder.blocks.0.qkv.weight",
+        ):
+            self.assertAlmostEqual(depth.ratio_for(shared, *args), 0.5, delta=0.02, msg=shared)
 
 
 @unittest.skipIf(torch is None, "needs torch")

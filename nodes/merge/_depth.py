@@ -42,14 +42,24 @@ def ratio_at(
     return early + (late - early) * t
 
 
+_HEAD = re.compile(r"(final|head|norm_out|proj_out|out_layer)")
+_INPUT = re.compile(r"^(video_embedder|x_embedder|img_in|patch_embed|pos_embed)")
+
+
 def ratio_for(key: str, blocks: int, early: float, late: float, crossover: float, softness: float):
-    """Model A's share of weight `key`. Weights outside the stack go with the end they feed:
-    final/output layers with the last block, everything else (embedders, inputs) with the first."""
+    """Model A's share of weight `key`, where weights outside the stack go with what they feed:
+    the output head (its norm, projection and modulation together) with the last block, the
+    input embedder with the first, and what every block reads — a shared modulation, the time
+    and text embedders — at the stack's average share, so no block gets the other model's."""
     block = block_of(key)
     if block is not None:
         return ratio_at(block, blocks, early, late, crossover, softness)
-    tail = re.search(r"(final|norm_out|proj_out|out_layer|last)", key)
-    return late if tail else early
+    if _HEAD.search(key):
+        return late
+    if _INPUT.match(key):
+        return early
+    shares = curve(blocks, early, late, crossover, softness)
+    return sum(shares) / len(shares) if shares else early
 
 
 def curve(blocks: int, early: float, late: float, crossover: float, softness: float) -> list[float]:
