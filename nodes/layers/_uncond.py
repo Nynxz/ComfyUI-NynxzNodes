@@ -37,14 +37,16 @@ def row_weights(cond_or_uncond, batch: int, strength: float, like):
 def scaled(forward, weights):
     """`forward` with its residual — what the block adds to its input — scaled per batch row.
 
-    The input is copied first: MOSS's blocks add their residual in place at inference, so the
-    tensor they return is the one they were given."""
+    Written back into the block's own output, never a new tensor: MOSS's blocks run inside the
+    memory compiler region and update the token stream in place, and a tensor allocated inside a
+    block is recycled once it ends. The input is copied first because, added to in place, it is
+    the very tensor the block returns."""
 
     def run(x, *args, **kwargs):
         before = x.clone()
         out = forward(x, *args, **kwargs)
-        w = weights.view(-1, *([1] * (out.dim() - 1)))
-        return before + (out - before) * w
+        w = weights.to(out.dtype).view(-1, *([1] * (out.dim() - 1)))
+        return out.sub_(before).mul_(w).add_(before)
 
     return run
 

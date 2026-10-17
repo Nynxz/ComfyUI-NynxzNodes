@@ -107,6 +107,15 @@ class UncondDial(unittest.TestCase):
         self.assertEqual(rows, [30.0, 20.0])
         self.assertEqual(after, 30.0)
 
+    def test_the_stream_is_updated_in_place_never_replaced(self):
+        block = self.InPlaceBlock()
+        x = torch.zeros(2, 3, 1, dtype=torch.bfloat16)
+        weights = uncond.row_weights([0, 1], 2, 1.0, torch.zeros(2, dtype=torch.float32))
+        out = uncond.scaled(block.forward, weights)(x, None, None)
+        self.assertIs(out, x)
+        self.assertEqual(out.dtype, torch.bfloat16)
+        self.assertEqual(out[:, 0, 0].tolist(), [10.0, 0.0])
+
     def test_blocks_that_add_in_place_are_weakened_too(self):
         rows, _ = self.run_stack([0, 1], 1.0, self.InPlaceBlock)
         self.assertEqual(rows, [30.0, 20.0])
