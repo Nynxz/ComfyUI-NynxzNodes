@@ -79,7 +79,7 @@
         @select="pickMode(m.value)"
       >
         {{ m.label }}
-        <template #hint><ZenDot :model-value="m.value === mode" /></template>
+        <template #lead><ZenDot :model-value="m.value === mode" /></template>
       </ZenMenuItem>
     </ZenPopover>
 

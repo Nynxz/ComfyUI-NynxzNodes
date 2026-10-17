@@ -173,7 +173,7 @@
         @select="toggleShown(o.name)"
       >
         {{ o.name }}
-        <template #hint><ZenDot :model-value="shown.includes(o.name)" /></template>
+        <template #lead><ZenDot :model-value="shown.includes(o.name)" /></template>
       </ZenMenuItem>
     </ZenPopover>
     <ZenMediaPicker

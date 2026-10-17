@@ -68,7 +68,7 @@
       <div class="ic-pop-head">Compare</div>
       <ZenMenuItem icon="mdi mdi-swap-horizontal" @select="toggleSwap">
         Swap A / B
-        <template #hint><ZenDot :model-value="swapped" /></template>
+        <template #lead><ZenDot :model-value="swapped" /></template>
       </ZenMenuItem>
       <div class="ic-pop-row">
         <span>Reveal</span>
