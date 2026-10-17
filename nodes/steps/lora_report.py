@@ -14,6 +14,7 @@ from __future__ import annotations
 import logging
 
 import comfy.lora
+import comfy.lora_convert
 import comfy.model_management
 import comfy.utils
 import folder_paths
@@ -22,6 +23,7 @@ from comfy_api.latest import io, ui
 
 from .. import _categories
 from .._base import NynxzNode
+from ..lora import _qkv
 from . import _lora_report as report
 
 NONE = "(none)"
@@ -106,19 +108,50 @@ class _Collect(logging.Handler):
             self.missing.append(message.split(":", 1)[1].strip())
 
 
-def _unplaced(model, lora_name: str) -> list[str]:
-    """The LoRA file's keys this model has no place for."""
-    path = folder_paths.get_full_path_or_raise("loras", lora_name)
-    lora = comfy.utils.load_torch_file(path, safe_load=True)
-    key_map = comfy.lora.model_lora_keys_unet(model.model, {})
+def _dropped(lora: dict, key_map: dict) -> list[str]:
+    """The LoRA's keys `load_lora` reports as not loaded — collected whatever the log level is."""
     handler = _Collect()
     root = logging.getLogger()
+    level = root.level
     root.addHandler(handler)
+    root.setLevel(min(level or logging.WARNING, logging.WARNING))
     try:
         comfy.lora.load_lora(lora, key_map, log_missing=True)
     finally:
+        root.setLevel(level)
         root.removeHandler(handler)
     return handler.missing
+
+
+def _placement(model, lora_name: str) -> list[str]:
+    """What core's loader and the Nynxz loaders each do with the LoRA file on this model."""
+    path = folder_paths.get_full_path_or_raise("loras", lora_name)
+    lora = comfy.lora_convert.convert_lora(comfy.utils.load_torch_file(path, safe_load=True))
+    key_map = comfy.lora.model_lora_keys_unet(model.model, {})
+    core = _dropped(lora, key_map)
+    lines = [
+        f"{lora_name} with core's Load LoRA: "
+        + (
+            "every key has a place on this model."
+            if not core
+            else f"{len(core)} keys have no place here (dropped):"
+        )
+    ]
+    lines.extend(f"  {k}" for k in core[:20])
+    if len(core) > 20:
+        lines.append(f"  … and {len(core) - 20} more")
+    try:
+        fitted, split = _qkv.for_model(lora, key_map)
+    except _qkv.CannotSplit as e:
+        lines.append(f"With the Nynxz LoRA loaders: fused q/k/v can't be split exactly ({e}).")
+        return lines
+    if split:
+        left = _dropped(fitted, key_map)
+        lines.append(
+            f"With the Nynxz LoRA loaders: {split} fused qkv weights are split into q, k, v, and "
+            + ("then every key has a place." if not left else f"{len(left)} keys still have none.")
+        )
+    return lines
 
 
 class NynxzLoraReport(NynxzNode):
@@ -186,18 +219,7 @@ class NynxzLoraReport(NynxzNode):
             lines.append("q/k/v change relative to the weight (same LoRA → same numbers):")
             lines.extend(_samples(model, wanted))
         if lora_name != NONE:
-            missing = _unplaced(model, lora_name)
-            lines.append(
-                f"{lora_name}: "
-                + (
-                    "every key has a place on this model."
-                    if not missing
-                    else f"{len(missing)} keys have no place here (dropped by the loader):"
-                )
-            )
-            lines.extend(f"  {k}" for k in missing[:40])
-            if len(missing) > 40:
-                lines.append(f"  … and {len(missing) - 40} more")
+            lines.extend(_placement(model, lora_name))
         text = "\n".join(lines)
         logging.info("Nynxz LoRA Report\n%s", text)
         return io.NodeOutput(model, text, ui=ui.PreviewText(text))
