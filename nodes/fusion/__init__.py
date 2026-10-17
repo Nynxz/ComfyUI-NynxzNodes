@@ -72,7 +72,6 @@ What is here:
     _io_types.py    the two wire types and the two widget types
     _encoders.py    which text encoder is on the wire, and what differs about it
     _fusion.py      the engine: weight field, blend, style release, token-span surgery
-    _weightmap.py   the debug picture of a weight field
     _inspect.py     the payload the inspector renders
     api.py          the route the grid's browse dialog lists images with
 
@@ -89,19 +88,4 @@ things that happen to share a word: fusion decides *which reference wins a token
 group decides *which LoRA fires on one*.
 """
 
-import os
-
 from . import api  # noqa: F401  (registers the /nynxz/fusion/* route on import)
-
-try:
-    import folder_paths
-except ImportError:  # outside ComfyUI (e.g. syntax/lint checks)
-    folder_paths = None
-
-# δ-Vision adapters live in models/delta_vision. extra_model_paths.yaml may have registered the
-# name first; add_model_folder_path appends to that, and the extensions are filled in either way.
-if folder_paths:
-    folder_paths.add_model_folder_path(
-        "delta_vision", os.path.join(folder_paths.models_dir, "delta_vision")
-    )
-    folder_paths.folder_names_and_paths["delta_vision"][1].update({".safetensors", ".sft", ".pt"})
