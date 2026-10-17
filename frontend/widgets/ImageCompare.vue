@@ -70,30 +70,15 @@
         Swap A / B
         <template #lead><ZenDot :model-value="swapped" /></template>
       </ZenMenuItem>
-      <div class="ic-pop-row">
-        <span>Reveal</span>
-        <ZenToggleGroup
-          :model-value="interaction"
-          :options="INTERACTION"
-          @update:model-value="setOpt('interaction', String($event))"
-        />
-      </div>
-      <div class="ic-pop-row">
-        <span>Split</span>
-        <ZenToggleGroup
-          :model-value="orientation"
-          :options="ORIENTATION"
-          @update:model-value="setOpt('orientation', String($event))"
-        />
-      </div>
-      <div class="ic-pop-row">
-        <span>Mode</span>
-        <ZenToggleGroup
-          :model-value="mode"
-          :options="MODE"
-          @update:model-value="setOpt('mode', String($event))"
-        />
-      </div>
+      <ZenMenuItem
+        v-for="t in TOGGLES"
+        :key="t.key"
+        :icon="t.icon"
+        @select="setOpt(t.key, isOn(t) ? t.off : t.on)"
+      >
+        {{ t.label }}
+        <template #lead><ZenDot :model-value="isOn(t)" /></template>
+      </ZenMenuItem>
     </ZenPopover>
   </ZenWidget>
 </template>
@@ -128,14 +113,7 @@ export const nodeDef: Omit<NodeDef, "widgets"> = {
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
-import {
-  ZenDot,
-  ZenIconButton,
-  ZenMenuItem,
-  ZenPopover,
-  ZenToggleGroup,
-  ZenWidget,
-} from "@nynxz/zenkit-ui";
+import { ZenDot, ZenIconButton, ZenMenuItem, ZenPopover, ZenWidget } from "@nynxz/zenkit-ui";
 import {
   addNodeHeaderButton,
   type HeaderButtonAnchor,
@@ -163,18 +141,30 @@ const props = defineProps<{
 
 // Reveal options live on the node (persisted in node.properties) — no separate input.
 const OPTS_KEY = "nynxz.compareOpts";
-const INTERACTION = [
-  { value: "hover", icon: "mdi mdi-cursor-default-outline", title: "Hover to reveal" },
-  { value: "drag", icon: "mdi mdi-drag-variant", title: "Drag to reveal" },
-];
-const ORIENTATION = [
-  { value: "horizontal", icon: "mdi mdi-arrow-left-right", title: "Horizontal split" },
-  { value: "vertical", icon: "mdi mdi-arrow-up-down", title: "Vertical split" },
-];
-const MODE = [
-  { value: "slider", icon: "mdi mdi-arrow-split-vertical", title: "Slider wipe" },
-  { value: "fade", icon: "mdi mdi-gradient-horizontal", title: "Cross-fade" },
-];
+/** Each setting has two values, so each is one toggle row: on is the value it isn't by default. */
+const TOGGLES = [
+  {
+    key: "interaction",
+    label: "Drag to reveal",
+    icon: "mdi mdi-drag-variant",
+    on: "drag",
+    off: "hover",
+  },
+  {
+    key: "orientation",
+    label: "Vertical split",
+    icon: "mdi mdi-arrow-up-down",
+    on: "vertical",
+    off: "horizontal",
+  },
+  {
+    key: "mode",
+    label: "Cross-fade",
+    icon: "mdi mdi-gradient-horizontal",
+    on: "fade",
+    off: "slider",
+  },
+] as const;
 
 // ZenWidget is a component, so this ref holds its instance; `.el` is the DOM node.
 const rootEl = ref<{ el: HTMLElement | null } | null>(null);
@@ -299,6 +289,9 @@ function persist() {
       swapped: swapped.value,
     };
   props.node?.graph?.setDirtyCanvas?.(true, true);
+}
+function isOn(t: (typeof TOGGLES)[number]) {
+  return { interaction, orientation, mode }[t.key].value === t.on;
 }
 function setOpt(key: "interaction" | "orientation" | "mode", value: string) {
   applyOpts({ [key]: value });
@@ -434,13 +427,5 @@ onBeforeUnmount(() => headerCog?.destroy());
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--zen-muted, #9aa0aa);
-}
-.ic-pop-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 4px 8px;
-  font-size: 12px;
 }
 </style>
