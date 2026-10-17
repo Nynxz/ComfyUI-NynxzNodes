@@ -293,9 +293,24 @@ const box = computed<PromptBox | null>(() =>
     ? (scene.value.boxes.find((b) => b.id === selected.value[0]) ?? null)
     : null,
 );
+const DEFAULT_NAME = /^Box \d+$/;
+/** A name from what a box says it is: its first few words. */
+function nameFrom(words: string): string {
+  const name = words.replace(/["<>]/g, "").trim().split(/\s+/).slice(0, 3).join(" ");
+  return name.charAt(0).toUpperCase() + name.slice(1, 32);
+}
 function patchBox(patch: Partial<PromptBox>) {
   const id = box.value?.id;
   if (!id) return;
+  const current = box.value;
+  if (current) {
+    const source = (b: { kind: string; text: string; desc: string }) =>
+      (b.kind === "text" && b.text.trim()) || b.desc.trim();
+    const was = source(current);
+    const auto = DEFAULT_NAME.test(current.name) || (!!was && current.name === nameFrom(was));
+    const now = source({ ...current, ...patch });
+    if (auto && now && now !== was) patch = { ...patch, name: nameFrom(now) };
+  }
   patchScene({ boxes: scene.value.boxes.map((b) => (b.id === id ? { ...b, ...patch } : b)) });
 }
 const kindOptions = computed(() => [

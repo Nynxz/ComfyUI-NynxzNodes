@@ -46,11 +46,11 @@
           />
           <div class="ls-grid">
             <ZenField v-for="f in styleFields" :key="f.key" :label="f.label" stack>
-              <ZenInput
-                sm
+              <PresetInput
                 :model-value="scene.style[f.key]"
                 :placeholder="f.hint"
-                @update:model-value="patchStyle({ [f.key]: String($event ?? '') })"
+                :presets="STYLE_PRESETS[f.key]"
+                @update:model-value="patchStyle({ [f.key]: $event })"
               />
             </ZenField>
           </div>
@@ -126,6 +126,8 @@ import { computed } from "vue";
 import FrescoSection from "@/components/fresco/FrescoSection.vue";
 import ModeCards from "@/components/layout/ModeCards.vue";
 import PaletteEdit from "@/components/layout/PaletteEdit.vue";
+import PresetInput from "@/components/layout/PresetInput.vue";
+import { STYLE_PRESETS } from "@/layout/stylePresets";
 import type { IdeogramStyle, MossCanvas, PromptScene } from "@/layout/promptScene";
 
 const props = defineProps<{ open: boolean; scene: PromptScene }>();
