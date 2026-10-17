@@ -1,5 +1,5 @@
 <template>
-  <ZenWidget :gap="6" pad="2px" class="ls">
+  <ZenWidget ref="rootEl" :gap="6" pad="2px" class="ls">
     <div class="ls-mid">
       <!-- The rows container is the drag surface: pointer capture has to live on an element that
            survives the whole gesture, and the grips are just the part of it you may grab. -->
@@ -64,6 +64,25 @@
       </div>
     </div>
 
+    <ZenPopover
+      v-if="mode"
+      v-model:open="modeOpen"
+      :anchor="modeAnchor"
+      placement="bottom-end"
+      role="dialog"
+    >
+      <div class="ls-pop-head">Applies to</div>
+      <ZenMenuItem
+        v-for="m in LORA_MODES"
+        :key="m.value"
+        :icon="m.icon"
+        @select="pickMode(m.value)"
+      >
+        {{ m.label }}
+        <template #hint><ZenDot :model-value="m.value === mode" /></template>
+      </ZenMenuItem>
+    </ZenPopover>
+
     <template #footer>
       <WidgetActions label="Add LoRA" :count="rows.length" @primary="addRow()">
         <ZenIconButton
@@ -71,26 +90,6 @@
           title="Browse library"
           @click="openBrowse(-1)"
         />
-        <ZenPopover v-if="mode" placement="top-end">
-          <template #trigger="{ toggle }">
-            <ZenIconButton
-              :icon="modeInfo.icon"
-              :title="`Applies to: ${modeInfo.label}`"
-              @click="toggle"
-            />
-          </template>
-          <template #default="{ close }">
-            <ZenMenuItem
-              v-for="m in LORA_MODES"
-              :key="m.value"
-              :icon="m.icon"
-              @select="pickMode(m.value, close)"
-            >
-              {{ m.label }}
-              <template v-if="m.value === mode" #hint><i class="mdi mdi-check" /></template>
-            </ZenMenuItem>
-          </template>
-        </ZenPopover>
         <ZenIconButton
           v-if="rows.length"
           icon="mdi mdi-broom"
@@ -124,7 +123,7 @@ export const widgetOptions: WidgetOptions = {
 </script>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useDragSurface } from "@nynxz/zenkit-nodekit";
 import {
   insertionIndex,
@@ -143,6 +142,11 @@ import {
 import WidgetActions from "@/components/WidgetActions.vue";
 import { loraLibrary as lib, LoraBrowser, LoraPicker } from "@nynxz/zenkit-ui";
 import { rowsFrom } from "@/lib/widgetRows";
+import {
+  addNodeHeaderButton,
+  type HeaderButtonAnchor,
+  type NodeHeaderButtonHandle,
+} from "@/framework";
 import {
   LORA_MODES,
   loraMode,
@@ -187,13 +191,30 @@ const { rows, commit } = store;
 // Only LoRA Loader has an "apply to" setting; the deprecated CLIP loader shares this widget.
 const loraNode = props.node as LoraNodeLike | undefined;
 const mode = ref<LoraMode | null>(loraNode ? loraMode(loraNode) : null);
-const modeInfo = computed(() => LORA_MODES.find((m) => m.value === mode.value) ?? LORA_MODES[0]!);
-function pickMode(next: LoraMode, close: () => void) {
-  close();
+const modeOpen = ref(false);
+const modeAnchor = ref<HeaderButtonAnchor | null>(null);
+function pickMode(next: LoraMode) {
+  modeOpen.value = false;
   if (!loraNode) return;
   setLoraMode(loraNode, next);
   mode.value = next;
 }
+const rootEl = ref<{ el: HTMLElement | null } | null>(null);
+let modeCog: NodeHeaderButtonHandle | null = null;
+onMounted(() => {
+  if (mode.value === null) return;
+  modeCog = addNodeHeaderButton(props.node, rootEl.value?.el ?? null, {
+    icon: "mdi mdi-cog",
+    text: "⚙",
+    title: "Applies to",
+    onClick: (anchor) => {
+      modeAnchor.value = anchor;
+      modeOpen.value = !modeOpen.value;
+    },
+  });
+});
+watch(modeOpen, (open) => modeCog?.setActive(open));
+onBeforeUnmount(() => modeCog?.destroy());
 
 const dragIndex = ref(-1); // row being dragged, or -1
 const dropIndex = ref(-1); // index the dragged row would land at, or -1
@@ -411,5 +432,13 @@ function pickFromBrowse(name: string) {
    hardcode was two pixels short of "-10.00". */
 .ls-str {
   flex: none;
+}
+.ls-pop-head {
+  padding: 4px 8px 6px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--zen-muted, #9aa0aa);
 }
 </style>

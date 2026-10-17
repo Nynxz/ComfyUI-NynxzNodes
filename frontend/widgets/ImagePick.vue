@@ -159,7 +159,23 @@
     <input ref="fileInput" type="file" accept="image/*" style="display: none" @change="onUpload" />
 
     <!-- browse dialog -->
-    <ZenContextMenu ref="outputsMenu" :items="outputsItems" />
+    <ZenPopover
+      v-model:open="outputsOpen"
+      :anchor="outputsAnchor"
+      placement="bottom-end"
+      role="dialog"
+    >
+      <div class="li-pop-head">Outputs</div>
+      <ZenMenuItem
+        v-for="o in OPTIONAL_OUTPUTS"
+        :key="o.name"
+        :icon="o.icon"
+        @select="toggleShown(o.name)"
+      >
+        {{ o.name }}
+        <template #hint><ZenDot :model-value="shown.includes(o.name)" /></template>
+      </ZenMenuItem>
+    </ZenPopover>
     <ZenMediaPicker
       :open="pickerOpen"
       :library="mediaLibrary"
@@ -194,18 +210,19 @@ export const nodeDef: Omit<NodeDef, "widgets"> = {
 </script>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { ComfyApp } from "@comfy/app";
 import {
   ZenButton,
   ZenCombo,
   ZenIconButton,
-  ZenContextMenu,
+  ZenDot,
   ZenMediaPicker,
+  ZenMenuItem,
+  ZenPopover,
   ZenToggleGroup,
   ZenWidget,
   type ComboItem,
-  type ContextMenuItem,
 } from "@nynxz/zenkit-ui";
 import {
   listImages,
@@ -223,9 +240,15 @@ import {
   mediaLibrary,
   readMediaDrop,
   uploadOrReuse,
+  type HeaderButtonAnchor,
   type NodeHeaderButtonHandle,
 } from "@/framework";
-import { OPTIONAL_OUTPUTS, shownOutputs, toggleOutput } from "@/lib/loadImageOutputs";
+import {
+  OPTIONAL_OUTPUTS,
+  shownOutputs,
+  toggleOutput,
+  type OptionalOutput,
+} from "@/lib/loadImageOutputs";
 
 interface DOMWidget {
   name?: string;
@@ -635,51 +658,29 @@ async function takeDrop(e: DragEvent): Promise<boolean> {
 
 // --- the header cog: which outputs the node shows ---
 const rootEl = ref<{ el: HTMLElement | null } | null>(null);
-const outputsMenu = ref<InstanceType<typeof ZenContextMenu> | null>(null);
-const outputsItems = ref<ContextMenuItem[]>([]);
-const pointer = { x: 0, y: 0 };
-const notePointer = (e: PointerEvent) => {
-  pointer.x = e.clientX;
-  pointer.y = e.clientY;
-};
-const check = (on: boolean) =>
-  on ? "mdi mdi-checkbox-marked-outline" : "mdi mdi-checkbox-blank-outline";
-function outputsMenuItems(): ContextMenuItem[] {
-  const shown = shownOutputs(props.node);
-  return [
-    { heading: "Outputs" },
-    { label: "image", icon: check(true), disabled: true, run: () => {} },
-    ...OPTIONAL_OUTPUTS.map((o) => ({
-      label: o.name,
-      icon: check(shown.includes(o.name)),
-      keepOpen: true,
-      run: () => {
-        toggleOutput(props.node, o.name);
-        outputsItems.value = outputsMenuItems();
-      },
-    })),
-  ];
+const outputsOpen = ref(false);
+const outputsAnchor = ref<HeaderButtonAnchor | null>(null);
+const shown = ref<OptionalOutput[]>([]);
+function openOutputs(anchor: HeaderButtonAnchor) {
+  shown.value = shownOutputs(props.node);
+  outputsAnchor.value = anchor;
+  outputsOpen.value = !outputsOpen.value;
 }
-function openOutputsMenu() {
-  outputsItems.value = outputsMenuItems();
-  outputsMenu.value?.show(
-    new MouseEvent("contextmenu", { clientX: pointer.x, clientY: pointer.y + 8 }),
-  );
+function toggleShown(output: OptionalOutput) {
+  toggleOutput(props.node, output);
+  shown.value = shownOutputs(props.node);
 }
 let outputsCog: NodeHeaderButtonHandle | null = null;
 onMounted(() => {
-  document.addEventListener("pointerdown", notePointer, true);
   outputsCog = addNodeHeaderButton(props.node, rootEl.value?.el ?? null, {
     icon: "mdi mdi-cog",
     text: "⚙",
     title: "Outputs",
-    onClick: openOutputsMenu,
+    onClick: openOutputs,
   });
 });
-onBeforeUnmount(() => {
-  document.removeEventListener("pointerdown", notePointer, true);
-  outputsCog?.destroy();
-});
+watch(outputsOpen, (open) => outputsCog?.setActive(open));
+onBeforeUnmount(() => outputsCog?.destroy());
 
 // Both renderers ask the NODE whether it takes a dropped file (onDragOver) and to take it
 // (onDragDrop); without these, a drop anywhere but the widget itself adds a new Load Image node.
@@ -942,5 +943,13 @@ onBeforeUnmount(() => {
 .li-src :deep(.zen-tg-b) {
   padding: 2px 7px;
   font-size: 10px;
+}
+.li-pop-head {
+  padding: 4px 8px 6px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--zen-muted, #9aa0aa);
 }
 </style>

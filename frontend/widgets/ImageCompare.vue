@@ -64,29 +64,37 @@
 
     <!-- controls appear/disappear at the BOTTOM (below the image) so toggling never
          shifts the image — revealed by the node-header cog. -->
-    <div v-if="showOpts" class="ic-ctrls">
-      <ZenIconButton
-        icon="mdi mdi-swap-horizontal"
-        :active="swapped"
-        title="Swap A / B"
-        @click="toggleSwap"
-      />
-      <ZenToggleGroup
-        :model-value="interaction"
-        :options="INTERACTION"
-        @update:model-value="setOpt('interaction', String($event))"
-      />
-      <ZenToggleGroup
-        :model-value="orientation"
-        :options="ORIENTATION"
-        @update:model-value="setOpt('orientation', String($event))"
-      />
-      <ZenToggleGroup
-        :model-value="mode"
-        :options="MODE"
-        @update:model-value="setOpt('mode', String($event))"
-      />
-    </div>
+    <ZenPopover v-model:open="optsOpen" :anchor="optsAnchor" placement="bottom-end" role="dialog">
+      <div class="ic-pop-head">Compare</div>
+      <ZenMenuItem icon="mdi mdi-swap-horizontal" @select="toggleSwap">
+        Swap A / B
+        <template #hint><ZenDot :model-value="swapped" /></template>
+      </ZenMenuItem>
+      <div class="ic-pop-row">
+        <span>Reveal</span>
+        <ZenToggleGroup
+          :model-value="interaction"
+          :options="INTERACTION"
+          @update:model-value="setOpt('interaction', String($event))"
+        />
+      </div>
+      <div class="ic-pop-row">
+        <span>Split</span>
+        <ZenToggleGroup
+          :model-value="orientation"
+          :options="ORIENTATION"
+          @update:model-value="setOpt('orientation', String($event))"
+        />
+      </div>
+      <div class="ic-pop-row">
+        <span>Mode</span>
+        <ZenToggleGroup
+          :model-value="mode"
+          :options="MODE"
+          @update:model-value="setOpt('mode', String($event))"
+        />
+      </div>
+    </ZenPopover>
   </ZenWidget>
 </template>
 
@@ -120,8 +128,19 @@ export const nodeDef: Omit<NodeDef, "widgets"> = {
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
-import { ZenIconButton, ZenToggleGroup, ZenWidget } from "@nynxz/zenkit-ui";
-import { addNodeHeaderButton, type NodeHeaderButtonHandle } from "@/framework";
+import {
+  ZenDot,
+  ZenIconButton,
+  ZenMenuItem,
+  ZenPopover,
+  ZenToggleGroup,
+  ZenWidget,
+} from "@nynxz/zenkit-ui";
+import {
+  addNodeHeaderButton,
+  type HeaderButtonAnchor,
+  type NodeHeaderButtonHandle,
+} from "@/framework";
 
 interface DOMWidget {
   name: string;
@@ -175,7 +194,8 @@ const interaction = ref<"hover" | "drag">("hover");
 const orientation = ref<"horizontal" | "vertical">("horizontal");
 const mode = ref<"slider" | "fade">("slider");
 const swapped = ref(false);
-const showOpts = ref(false);
+const optsOpen = ref(false);
+const optsAnchor = ref<HeaderButtonAnchor | null>(null);
 
 function isCompare(v: unknown): v is CompareValue {
   return (
@@ -268,7 +288,6 @@ function applyOpts(v: unknown) {
     orientation.value = o.orientation;
   if (o.mode === "slider" || o.mode === "fade") mode.value = o.mode;
   if (typeof o.swapped === "boolean") swapped.value = o.swapped;
-  if (typeof o.showOpts === "boolean") showOpts.value = o.showOpts;
 }
 function persist() {
   const props_ = props.node?.properties;
@@ -278,7 +297,6 @@ function persist() {
       orientation: orientation.value,
       mode: mode.value,
       swapped: swapped.value,
-      showOpts: showOpts.value,
     };
   props.node?.graph?.setDirtyCanvas?.(true, true);
 }
@@ -290,9 +308,9 @@ function toggleSwap() {
   swapped.value = !swapped.value;
   persist();
 }
-function toggleOpts() {
-  showOpts.value = !showOpts.value;
-  persist();
+function toggleOpts(anchor: HeaderButtonAnchor) {
+  optsAnchor.value = anchor;
+  optsOpen.value = !optsOpen.value;
 }
 
 onMounted(() => {
@@ -326,9 +344,8 @@ onMounted(() => {
     title: "Compare controls",
     onClick: toggleOpts,
   });
-  headerCog.setActive(showOpts.value);
 });
-watch(showOpts, (v) => headerCog?.setActive(v));
+watch(optsOpen, (v) => headerCog?.setActive(v));
 onBeforeUnmount(() => headerCog?.destroy());
 </script>
 
@@ -346,13 +363,6 @@ onBeforeUnmount(() => headerCog?.destroy());
   display: flex;
   align-items: center;
   gap: 2px;
-}
-.ic-ctrls {
-  flex: none;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
 }
 .ic-nav-lbl {
   font-size: 11px;
@@ -416,5 +426,21 @@ onBeforeUnmount(() => headerCog?.destroy());
 .ic-empty .mdi {
   font-size: 30px;
   opacity: 0.5;
+}
+.ic-pop-head {
+  padding: 4px 8px 6px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--zen-muted, #9aa0aa);
+}
+.ic-pop-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 8px;
+  font-size: 12px;
 }
 </style>
