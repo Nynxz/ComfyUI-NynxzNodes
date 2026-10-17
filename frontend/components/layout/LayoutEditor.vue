@@ -7,128 +7,6 @@
     @keydown="onKey"
     @contextmenu="keepContextMenu"
   >
-    <nav class="le-rail" aria-label="Tools">
-      <ZenIconButton
-        v-for="t in tools"
-        :key="t.value"
-        size="sm"
-        :icon="t.icon"
-        :active="!railActive && tool === t.value"
-        :title="t.title"
-        @click="pickTool(t.value)"
-      />
-      <slot name="rail" />
-      <span class="le-rail-sep" />
-      <ZenIconButton
-        size="sm"
-        icon="mdi mdi-plus-box-outline"
-        title="Add a box (or drag on the canvas)"
-        @click="addBox({ x: 0.3, y: 0.3, w: 0.4, h: 0.4 })"
-      />
-      <ZenPopover placement="right-start" role="dialog">
-        <template #trigger="{ toggle }">
-          <ZenIconButton
-            size="sm"
-            icon="mdi mdi-image-outline"
-            :active="!!backdropUrl"
-            :title="backdropTitle"
-            @click="toggle"
-          />
-        </template>
-        <div class="le-menu">
-          <ZenButton sm icon="mdi mdi-view-grid-outline" @click="backdropBrowse = true">
-            Pick an image…
-          </ZenButton>
-          <ZenButton
-            v-if="backdropUrl"
-            sm
-            :icon="backdrop?.pinned ? 'mdi mdi-pin' : 'mdi mdi-pin-outline'"
-            :title="
-              backdrop?.pinned
-                ? 'Pinned — runs won\'t replace it'
-                : 'Pin it, so the next run doesn\'t replace it'
-            "
-            @click="setBackdrop({ ...backdrop!, pinned: !backdrop!.pinned })"
-          >
-            {{ backdrop?.pinned ? "Unpin" : "Pin" }}
-          </ZenButton>
-          <ZenButton v-if="backdropUrl" sm icon="mdi mdi-close" @click="setBackdrop(null)">
-            Remove
-          </ZenButton>
-        </div>
-      </ZenPopover>
-      <span class="le-rail-sep" />
-      <ZenIconButton
-        size="sm"
-        icon="mdi mdi-undo"
-        :disabled="!layout.history.canUndo.value"
-        title="Undo — Ctrl+Z"
-        @click="undo"
-      />
-      <ZenIconButton
-        size="sm"
-        icon="mdi mdi-redo"
-        :disabled="!layout.history.canRedo.value"
-        title="Redo — Ctrl+Shift+Z"
-        @click="redo"
-      />
-      <span class="le-rail-grow" />
-      <ZenIconButton
-        size="sm"
-        icon="mdi mdi-bookshelf"
-        title="Layouts — save this one, or load a saved one"
-        :active="libraryOpen"
-        @click="libraryOpen = true"
-      />
-      <ZenPopover v-model:open="jsonOpen" placement="right-start" role="dialog">
-        <template #trigger="{ toggle }">
-          <ZenIconButton
-            size="sm"
-            icon="mdi mdi-code-json"
-            title="JSON — copy the layout out, or paste one in"
-            :active="jsonOpen"
-            @click="toggle"
-          />
-        </template>
-        <div class="le-json">
-          <span class="le-menu-title">JSON</span>
-          <div class="le-row">
-            <ZenButton sm icon="mdi mdi-content-copy" @click="copyText(exportLayout(mode, scene))">
-              Copy layout
-            </ZenButton>
-            <ZenButton
-              v-if="mode.exportText"
-              sm
-              icon="mdi mdi-text-box-outline"
-              @click="copyPrompt"
-            >
-              Copy prompt
-            </ZenButton>
-          </div>
-          <ZenInput
-            v-model="jsonText"
-            type="textarea"
-            :rows="7"
-            sm
-            :placeholder="`Paste a layout${mode.importText ? ' or the model\'s own JSON' : ''} here`"
-          />
-          <div class="le-row">
-            <span class="le-note le-grow">{{ jsonNote }}</span>
-            <ZenButton sm icon="mdi mdi-import" :disabled="!jsonText.trim()" @click="importText">
-              Import
-            </ZenButton>
-          </div>
-        </div>
-      </ZenPopover>
-      <ZenIconButton
-        v-if="canPopOut"
-        size="sm"
-        icon="mdi mdi-open-in-new"
-        title="Open in a ZenKit panel — bigger, dockable, and the node keeps a summary"
-        @click="emit('popOut')"
-      />
-    </nav>
-
     <ZenSplit
       class="le-main"
       :panes="COLUMNS"
@@ -138,33 +16,77 @@
     >
       <template #pane-0>
         <div class="le-canvascol">
-          <header class="le-status">
+          <header class="le-toolbar" aria-label="Canvas tools">
+            <template v-if="tools.length > 1">
+              <ZenIconButton
+                v-for="t in tools"
+                :key="t.value"
+                size="sm"
+                :icon="t.icon"
+                :active="!railActive && tool === t.value"
+                :title="t.title"
+                @click="pickTool(t.value)"
+              />
+              <span class="le-sep" />
+            </template>
+            <ZenButton
+              sm
+              variant="ghost"
+              icon="mdi mdi-plus-box-outline"
+              title="Add a box — or drag on the canvas"
+              @click="addBox({ x: 0.3, y: 0.3, w: 0.4, h: 0.4 })"
+            >
+              Box
+            </ZenButton>
+            <slot name="add" />
+            <span class="le-sep" />
             <ZenPopover placement="bottom-start" role="dialog">
               <template #trigger="{ toggle }">
                 <ZenIconButton
                   size="sm"
-                  icon="mdi mdi-help-circle-outline"
-                  title="Controls"
+                  icon="mdi mdi-image-outline"
+                  :active="!!backdropUrl"
+                  :title="backdropTitle"
                   @click="toggle"
                 />
               </template>
-              <dl class="le-help">
-                <template v-for="row in helpRows" :key="row[0]">
-                  <dt>{{ row[0] }}</dt>
-                  <dd>{{ row[1] }}</dd>
+              <div class="le-menu">
+                <span class="le-menu-title">Trace image</span>
+                <ZenButton sm icon="mdi mdi-view-grid-outline" @click="backdropBrowse = true">
+                  {{ backdropUrl ? "Pick another…" : "Pick an image…" }}
+                </ZenButton>
+                <template v-if="backdropUrl">
+                  <label class="le-opacity">
+                    Opacity
+                    <ZenSlider
+                      :model-value="Math.round(backdropOpacity * 100)"
+                      :min="10"
+                      :max="100"
+                      :step="5"
+                      @update:model-value="backdropOpacity = $event / 100"
+                    />
+                    <span>{{ Math.round(backdropOpacity * 100) }}%</span>
+                  </label>
+                  <ZenButton
+                    sm
+                    :icon="backdrop?.pinned ? 'mdi mdi-pin' : 'mdi mdi-pin-outline'"
+                    :title="
+                      backdrop?.pinned
+                        ? 'Pinned — runs won\'t replace it'
+                        : 'Pin it, so the next run doesn\'t replace it'
+                    "
+                    @click="setBackdrop({ ...backdrop!, pinned: !backdrop!.pinned })"
+                  >
+                    {{ backdrop?.pinned ? "Unpin" : "Pin" }}
+                  </ZenButton>
+                  <ZenButton sm icon="mdi mdi-close" @click="setBackdrop(null)">Remove</ZenButton>
                 </template>
-              </dl>
+              </div>
             </ZenPopover>
-            <span class="le-tip">
-              <template v-if="mismatch">
-                Source is {{ sourceSize![0] }}×{{ sourceSize![1] }}
-                <button type="button" class="le-link" @click="matchSource">match canvas</button>
-              </template>
-            </span>
+            <slot name="rail" />
             <label
-              v-if="mode.paints"
+              v-if="mode.paints && tool !== 'select'"
               class="le-ctl"
-              :class="{ dim: tool === 'select' }"
               title="Brush size in canvas pixels — [ and ]"
             >
               <i class="mdi mdi-brush" />
@@ -178,23 +100,17 @@
                 @update:model-value="brushSize = Math.max(4, $event) / size.width"
               />
             </label>
-            <label class="le-ctl" :class="{ dim: !backdropUrl }" title="Trace image opacity, %">
-              <i class="mdi mdi-image-outline" />
-              <ZenNumber
-                size="sm"
-                :model-value="Math.round(backdropOpacity * 100)"
-                :min="10"
-                :max="100"
-                :step="5"
-                :precision="0"
-                :disabled="!backdropUrl"
-                @update:model-value="backdropOpacity = $event / 100"
-              />
-            </label>
+            <span class="le-grow" />
+            <span v-if="mismatch" class="le-tip">
+              Source is {{ sourceSize![0] }}×{{ sourceSize![1] }}
+              <button type="button" class="le-link" @click="matchSource">match</button>
+            </span>
             <ZenPopover placement="bottom-end" role="dialog">
               <template #trigger="{ toggle }">
                 <button type="button" class="le-chip" title="Canvas size" @click="toggle">
+                  <i class="mdi mdi-aspect-ratio" />
                   {{ size.width }}×{{ size.height }}
+                  <i class="mdi mdi-chevron-down" />
                 </button>
               </template>
               <ZenResolution
@@ -332,6 +248,101 @@
       </template>
     </ZenSplit>
 
+    <footer class="le-foot">
+      <ZenIconButton
+        size="sm"
+        icon="mdi mdi-undo"
+        :disabled="!layout.history.canUndo.value"
+        title="Undo — Ctrl+Z"
+        @click="undo"
+      />
+      <ZenIconButton
+        size="sm"
+        icon="mdi mdi-redo"
+        :disabled="!layout.history.canRedo.value"
+        title="Redo — Ctrl+Shift+Z"
+        @click="redo"
+      />
+      <span class="le-sep" />
+      <slot name="foot" />
+      <ZenPopover placement="top-start" role="dialog">
+        <template #trigger="{ toggle }">
+          <ZenIconButton
+            size="sm"
+            icon="mdi mdi-help-circle-outline"
+            title="Controls and shortcuts"
+            @click="toggle"
+          />
+        </template>
+        <dl class="le-help">
+          <template v-for="row in helpRows" :key="row[0]">
+            <dt>{{ row[0] }}</dt>
+            <dd>{{ row[1] }}</dd>
+          </template>
+        </dl>
+      </ZenPopover>
+      <span class="le-grow" />
+      <slot name="status" />
+      <ZenButton
+        sm
+        variant="ghost"
+        icon="mdi mdi-bookshelf"
+        title="Save this layout, or load a saved one"
+        @click="libraryOpen = true"
+      >
+        Layouts
+      </ZenButton>
+      <ZenPopover v-model:open="jsonOpen" placement="top-end" role="dialog">
+        <template #trigger="{ toggle }">
+          <ZenButton
+            sm
+            variant="ghost"
+            icon="mdi mdi-code-json"
+            title="Copy the layout or its prompt out, or paste one in"
+            @click="toggle"
+          >
+            JSON
+          </ZenButton>
+        </template>
+        <div class="le-json">
+          <span class="le-menu-title">JSON</span>
+          <div class="le-row">
+            <ZenButton sm icon="mdi mdi-content-copy" @click="copyText(exportLayout(mode, scene))">
+              Copy layout
+            </ZenButton>
+            <ZenButton
+              v-if="mode.exportText"
+              sm
+              icon="mdi mdi-text-box-outline"
+              @click="copyPrompt"
+            >
+              Copy prompt
+            </ZenButton>
+          </div>
+          <ZenInput
+            v-model="jsonText"
+            type="textarea"
+            :rows="7"
+            sm
+            :placeholder="`Paste a layout${mode.importText ? ' or the model\'s own JSON' : ''} here`"
+          />
+          <div class="le-row">
+            <span class="le-note le-grow">{{ jsonNote }}</span>
+            <ZenButton sm icon="mdi mdi-import" :disabled="!jsonText.trim()" @click="importText">
+              Import
+            </ZenButton>
+          </div>
+        </div>
+      </ZenPopover>
+      <ZenIconButton
+        v-if="canPopOut"
+        size="sm"
+        icon="mdi mdi-open-in-new"
+        title="Open in a ZenKit panel — bigger, dockable, and the node keeps a summary"
+        @click="emit('popOut')"
+      />
+    </footer>
+
     <ZenContextMenu ref="menu" :items="menuItems" />
     <LayoutBrowser
       v-model:open="libraryOpen"
@@ -373,6 +384,7 @@ import {
   ZenPopover,
   ZenResolution,
   ZenScroll,
+  ZenSlider,
   ZenSplit,
   boxAt,
   placeRects,
@@ -996,8 +1008,8 @@ defineExpose({ addBox, update, patchBoxes, stagePoint, offerBackdrop, backdrop }
    move anything. */
 .le {
   display: grid;
-  grid-template-columns: 34px minmax(0, 1fr);
-  gap: 8px;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 6px;
   width: 100%;
   height: 100%;
   min-height: 0;
@@ -1016,30 +1028,38 @@ defineExpose({ addBox, update, patchBoxes, stagePoint, offerBackdrop, backdrop }
 }
 .le-canvascol {
   display: grid;
-  grid-template-rows: 30px minmax(0, 1fr);
+  grid-template-rows: 28px minmax(0, 1fr);
   gap: 6px;
   height: 100%;
   min-width: 0;
   min-height: 0;
 }
-.le-rail {
+.le-toolbar,
+.le-foot {
   display: flex;
-  flex-direction: column;
   align-items: center;
   gap: 4px;
-  padding: 4px 0;
+  min-width: 0;
+}
+.le-foot {
+  padding: 4px 6px;
   border: 1px solid var(--zen-border, #34343c);
   border-radius: var(--zen-radius, 7px);
   background: color-mix(in srgb, var(--zen-text, #fff) 2%, transparent);
 }
-.le-rail-grow {
-  flex: 1;
-}
-.le-rail-sep {
-  width: 18px;
-  height: 1px;
-  margin: 2px 0;
+.le-sep {
+  width: 1px;
+  height: 16px;
+  margin: 0 4px;
   background: var(--zen-border, #34343c);
+}
+.le-opacity {
+  display: grid;
+  grid-template-columns: auto 1fr 34px;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--zen-muted, #9aa0aa);
 }
 .le-menu {
   display: flex;
@@ -1094,15 +1114,6 @@ defineExpose({ addBox, update, patchBoxes, stagePoint, offerBackdrop, backdrop }
   font-size: 28px;
   opacity: 0.6;
 }
-.le-status {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 0;
-  padding: 0 4px;
-  color: var(--zen-muted, #9aa0aa);
-  font-size: 11px;
-}
 .le-help {
   display: grid;
   grid-template-columns: auto auto;
@@ -1120,8 +1131,10 @@ defineExpose({ addBox, update, patchBoxes, stagePoint, offerBackdrop, backdrop }
   color: var(--zen-muted, #9aa0aa);
 }
 .le-tip {
-  flex: 1;
+  flex: 0 1 auto;
   min-width: 0;
+  font-size: 11px;
+  color: var(--zen-muted, #9aa0aa);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -1147,6 +1160,9 @@ defineExpose({ addBox, update, patchBoxes, stagePoint, offerBackdrop, backdrop }
 }
 .le-chip {
   flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   height: 22px;
   padding: 0 8px;
   border: 1px solid var(--zen-border, #34343c);

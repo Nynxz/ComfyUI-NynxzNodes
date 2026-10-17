@@ -12,21 +12,80 @@
       :help="HELP"
       @pop-out="emit('popOut')"
     >
+      <template #add>
+        <ZenButton
+          sm
+          variant="ghost"
+          icon="mdi mdi-format-text"
+          title="Add a text box — words the picture renders"
+          @click="addText"
+        >
+          Text
+        </ZenButton>
+      </template>
       <template #rail>
-        <ZenIconButton
-          size="sm"
-          icon="mdi mdi-cog-outline"
-          :active="settingsOpen"
-          :title="`${mode.label} layout — settings: mode${SETTINGS_NOTE[scene.mode]}`"
-          @click="settingsOpen = true"
-        />
-        <ZenIconButton
-          size="sm"
+        <ZenButton
+          sm
+          variant="ghost"
           icon="mdi mdi-creation-outline"
-          :active="agentOpen"
           title="Layout agent — a model draws the boxes from the trace image or your words (needs Layout Inputs)"
           @click="agentOpen = true"
-        />
+        >
+          Agent
+        </ZenButton>
+      </template>
+      <template #status>
+        <ZenPopover placement="top-end" role="dialog">
+          <template #trigger="{ toggle }">
+            <button
+              type="button"
+              class="pl-status"
+              :class="{ warn: warnings.length }"
+              :title="
+                warnings.length
+                  ? warnings.join('\n')
+                  : 'The prompt the node outputs — click to see and copy it'
+              "
+              @click="toggle"
+            >
+              <i
+                :class="
+                  compiling
+                    ? 'mdi mdi-loading mdi-spin'
+                    : warnings.length
+                      ? 'mdi mdi-alert-outline'
+                      : 'mdi mdi-check'
+                "
+              />
+              {{ warnings.length ? `${warnings.length} to check` : "Prompt" }}
+              <span class="pl-count">{{ output.length }} chars</span>
+            </button>
+          </template>
+          <div class="pl-pop">
+            <div class="pl-pop-head">
+              <span class="pl-pop-title">{{ mode.label }} prompt</span>
+              <ZenButton sm icon="mdi mdi-content-copy" :disabled="!output" @click="copyOutput">
+                {{ copied ? "Copied" : "Copy" }}
+              </ZenButton>
+            </div>
+            <pre class="pl-out">{{ output || "—" }}</pre>
+            <ul v-if="warnings.length" class="pl-warn">
+              <li v-for="w in warnings" :key="w">{{ w }}</li>
+            </ul>
+          </div>
+        </ZenPopover>
+      </template>
+      <template #foot>
+        <ZenButton
+          sm
+          variant="ghost"
+          :icon="mode.icon"
+          :title="`Layout settings — mode${SETTINGS_NOTE[scene.mode]}`"
+          @click="settingsOpen = true"
+        >
+          {{ mode.label }}
+          <i class="mdi mdi-cog-outline pl-cog" />
+        </ZenButton>
       </template>
 
       <template #element>
@@ -109,25 +168,6 @@
               @update:model-value="patchScene({ background: String($event ?? '') })"
             />
           </FrescoSection>
-
-          <FrescoSection
-            label="Prompt out"
-            :note="compiling ? 'writing…' : `${output.length} chars`"
-          >
-            <template #actions>
-              <ZenIconButton
-                size="sm"
-                icon="mdi mdi-content-copy"
-                title="Copy the prompt"
-                :disabled="!output"
-                @click="copyOutput"
-              />
-            </template>
-            <pre class="pl-out">{{ output || "—" }}</pre>
-            <ul v-if="warnings.length" class="pl-warn">
-              <li v-for="w in warnings" :key="w">{{ w }}</li>
-            </ul>
-          </FrescoSection>
         </div>
       </template>
     </LayoutEditor>
@@ -159,7 +199,7 @@
  * to the whole layout; the sidebar holds only what the mode reads per box and for the scene, and
  * the prompt as the node will output it (written by the backend, so it can't drift).
  */
-import { ZenIconButton, ZenInput, ZenToggleGroup } from "@nynxz/zenkit-ui";
+import { ZenButton, ZenIconButton, ZenInput, ZenPopover, ZenToggleGroup } from "@nynxz/zenkit-ui";
 import { api } from "@comfy/api";
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
@@ -211,6 +251,7 @@ const PROMPT_NOTE: Record<PromptModeId, string> = {
   moss: "the scene and its style",
 };
 const editor = ref<{
+  addBox: (rect: { x: number; y: number; w: number; h: number }) => string;
   update: (next: unknown) => void;
   offerBackdrop: (image: { ref: string; type: SourceType; size?: [number, number] }) => void;
   backdrop: AgentImage | null;
@@ -229,6 +270,11 @@ function update(next: PromptScene) {
 }
 function patchScene(patch: Partial<PromptScene>) {
   update({ ...scene.value, ...patch });
+}
+function addText() {
+  const id = editor.value?.addBox({ x: 0.2, y: 0.08, w: 0.6, h: 0.14 });
+  if (id)
+    patchScene({ boxes: scene.value.boxes.map((b) => (b.id === id ? { ...b, kind: "text" } : b)) });
 }
 function pickMode(id: PromptModeId) {
   choosing.value = false;
@@ -355,12 +401,24 @@ watch(
   { deep: true, immediate: true },
 );
 onBeforeUnmount(() => clearTimeout(timer));
+const copied = ref(false);
 async function copyOutput() {
-  await navigator.clipboard.writeText(output.value).catch(() => undefined);
+  try {
+    await navigator.clipboard.writeText(output.value);
+    copied.value = true;
+    setTimeout(() => (copied.value = false), 1500);
+  } catch {
+    copied.value = false;
+  }
 }
 </script>
 
 <style scoped>
+.pl-cog {
+  margin-left: 2px;
+  font-size: 13px;
+  opacity: 0.7;
+}
 .pl-host {
   position: relative;
   width: 100%;
@@ -399,9 +457,55 @@ async function copyOutput() {
   flex-direction: column;
   gap: 10px;
 }
+.pl-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 24px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: var(--zen-radius, 7px);
+  background: none;
+  color: var(--zen-success, #4ade80);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+.pl-status:hover {
+  background: color-mix(in srgb, var(--zen-text, #e5e5ea) 8%, transparent);
+}
+.pl-status.warn {
+  color: var(--zen-warning, #f5b041);
+}
+.pl-count {
+  color: var(--zen-muted, #9aa0aa);
+  font-variant-numeric: tabular-nums;
+}
+.pl-pop {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: min(340px, 88vw);
+  box-sizing: border-box;
+  padding: 10px;
+  font-size: 12px;
+  color: var(--zen-text, #e5e5ea);
+}
+.pl-pop-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.pl-pop-title {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--zen-muted, #9aa0aa);
+}
 .pl-out {
   margin: 0;
-  max-height: 160px;
+  max-height: 320px;
   overflow: auto;
   padding: 6px 8px;
   border-radius: var(--zen-radius, 7px);
