@@ -160,6 +160,7 @@
       :kinds="['image']"
       title="Add images"
       :subfolder="'fusion'"
+      multiple
       @pick="addPicked"
     />
   </div>

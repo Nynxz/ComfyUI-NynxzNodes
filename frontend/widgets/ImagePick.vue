@@ -12,17 +12,91 @@
     <div v-if="dragOver" class="li-dropmask">
       <i class="mdi mdi-tray-arrow-down" /><span>Drop image to load</span>
     </div>
+    <!-- picker row (above the image): searchable grid combo + upload -->
     <div class="li-row">
-      <button
-        type="button"
+      <ZenCombo
         class="li-pick"
-        :title="selected || 'Select an image…'"
-        @click="pickerOpen = true"
+        :grid="viewMode === 'grid'"
+        :grid-min="zoom"
+        :model-value="selected"
+        :items="items"
+        :menu-width="340"
+        placeholder="Select an image…"
+        :empty-text="`No images in ${srcType}/`"
+        @update:model-value="pick(String($event))"
+        @open="ensureImages"
       >
-        <i class="mdi mdi-image-outline li-sel-ic" />
-        <span class="li-sel-name">{{ selected ? short(selected) : "Select an image…" }}</span>
-        <i class="mdi mdi-chevron-down li-pick-caret" />
-      </button>
+        <template #search>
+          <ZenToggleGroup
+            class="li-src"
+            :model-value="srcType"
+            :options="SRC_OPTS"
+            @update:model-value="setSrc"
+          />
+        </template>
+        <template #selected>
+          <span class="li-sel">
+            <i class="mdi mdi-image-outline li-sel-ic" />
+            <span class="li-sel-name">{{ selected ? short(selected) : "Select an image…" }}</span>
+          </span>
+        </template>
+        <template #option="{ item }">
+          <template v-if="viewMode === 'grid'">
+            <span
+              class="li-gthumb"
+              :data-peek="thumbByName(String(item.value))"
+              data-peek-kind="image"
+              :data-peek-label="short(String(item.value))"
+              ><img :src="thumbByName(String(item.value))" loading="lazy"
+            /></span>
+            <span class="li-gname" :title="String(item.value)">{{
+              short(String(item.value))
+            }}</span>
+          </template>
+          <template v-else>
+            <img
+              class="li-thumb"
+              :src="thumbByName(String(item.value))"
+              :data-peek="thumbByName(String(item.value))"
+              data-peek-kind="image"
+              :data-peek-label="short(String(item.value))"
+              loading="lazy"
+            />
+            <span class="li-lname" :title="String(item.value)">{{
+              short(String(item.value))
+            }}</span>
+          </template>
+        </template>
+        <template #footer="{ close }">
+          <div class="li-foot">
+            <ZenToggleGroup
+              :model-value="viewMode"
+              :options="VIEW_OPTS"
+              @update:model-value="setView"
+            />
+            <template v-if="viewMode === 'grid'">
+              <ZenIconButton
+                icon="mdi mdi-magnify-minus-outline"
+                title="Smaller"
+                @click="zoomBy(-20)"
+              />
+              <ZenIconButton
+                icon="mdi mdi-magnify-plus-outline"
+                title="Larger"
+                @click="zoomBy(20)"
+              />
+            </template>
+            <ZenButton
+              class="li-foot-browse"
+              variant="ghost"
+              sm
+              icon="mdi mdi-view-grid-outline"
+              @click="openBrowse(close)"
+              >Browse</ZenButton
+            >
+          </div>
+        </template>
+      </ZenCombo>
       <ZenIconButton icon="mdi mdi-upload" title="Upload an image" @click="triggerUpload" />
     </div>
 
@@ -113,7 +187,15 @@ export const nodeDef: Omit<NodeDef, "widgets"> = {
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { ComfyApp } from "@comfy/app";
-import { ZenIconButton, ZenMediaPicker, ZenWidget } from "@nynxz/zenkit-ui";
+import {
+  ZenButton,
+  ZenCombo,
+  ZenIconButton,
+  ZenMediaPicker,
+  ZenToggleGroup,
+  ZenWidget,
+  type ComboItem,
+} from "@nynxz/zenkit-ui";
 import {
   listImages,
   thumbUrl,
@@ -156,6 +238,12 @@ const images = ref<ImageItem[]>([]);
 const selected = ref<string>("");
 // Legacy Nynxz sidecar mask reference. New saves use ComfyUI's native clipspace alpha image model.
 const maskRef = ref<string>("");
+const srcType = ref<SourceType>("input");
+const SRC_OPTS = [
+  { value: "input", label: "input" },
+  { value: "temp", label: "temp" },
+  { value: "output", label: "output" },
+];
 const dragOver = ref(false);
 
 // Value model: input images store a plain relative name (stock LoadImage behaviour);
@@ -177,6 +265,7 @@ function applyValue(v: unknown) {
       const o = JSON.parse(v);
       selected.value = String(o.image ?? "");
       maskRef.value = String(o.mask ?? "");
+      if (selected.value) srcType.value = parseVal(selected.value).type;
       suppressDefaultPreviewSoon();
       return;
     } catch {
@@ -185,10 +274,24 @@ function applyValue(v: unknown) {
   }
   selected.value = v;
   maskRef.value = "";
+  if (selected.value) srcType.value = parseVal(selected.value).type;
   suppressDefaultPreviewSoon();
 }
 if (typeof props.widget?.value === "string" && props.widget.value) applyValue(props.widget.value);
 const fileInput = ref<HTMLInputElement | null>(null);
+const viewMode = ref<"grid" | "list">("grid");
+const zoom = ref(92); // grid cell min-width (px)
+const VIEW_OPTS = [
+  { value: "grid", icon: "mdi mdi-view-grid-outline", title: "Grid view" },
+  { value: "list", icon: "mdi mdi-view-list", title: "List view" },
+];
+function setView(v: unknown) {
+  viewMode.value = String(v) === "list" ? "list" : "grid";
+}
+function zoomBy(d: number) {
+  zoom.value = Math.max(56, Math.min(220, zoom.value + d));
+}
+
 const pickerOpen = ref(false);
 
 onMounted(async () => {
@@ -212,17 +315,47 @@ onMounted(async () => {
   }
 });
 
+// Lazy: fetch the image list on first picker open (not on mount) — a Load-Image node the
+// user never opens won't hit /nynxz/images on graph load. listImages() is cached + shared.
+async function ensureImages() {
+  images.value = await listImages(srcType.value);
+}
+async function setSrc(v: unknown) {
+  const t = String(v) as SourceType;
+  if (t !== "input" && t !== "temp" && t !== "output") return;
+  srcType.value = t;
+  images.value = await listImages(t);
+}
 async function loadSelectedImageDetails() {
   if (!selected.value) return;
   const { type } = parseVal(selected.value);
+  srcType.value = type;
   images.value = await listImages(type);
 }
 
+function isClipspaceItem(it: ImageItem) {
+  const name = it.name.replace(/\\/g, "/").toLowerCase();
+  const subfolder = it.subfolder.replace(/\\/g, "/").toLowerCase();
+  return (
+    name === "clipspace" ||
+    name.startsWith("clipspace/") ||
+    subfolder === "clipspace" ||
+    subfolder.startsWith("clipspace/")
+  );
+}
+const pickerImages = computed(() => images.value.filter((it) => !isClipspaceItem(it)));
 const byName = computed(() => {
   const m = new Map<string, ImageItem>();
   for (const it of images.value) m.set(annot(it), it);
   return m;
 });
+const items = computed<ComboItem[]>(() =>
+  pickerImages.value.map((it) => ({
+    value: annot(it),
+    label: short(it.name),
+    keywords: it.name,
+  })),
+);
 
 function short(name: string) {
   return (parseVal(name).name.split("/").pop() || name).replace(/\.(png|jpe?g|webp|gif|bmp)$/i, "");
@@ -393,8 +526,12 @@ function pick(name: string) {
   commit();
 } // new image → no mask
 
-// --- the shared media picker speaks refs ("output/sub/a.png"); the widget stores ComfyUI's
-// annotated value ("sub/a.png [output]") ---
+function openBrowse(close?: () => void) {
+  close?.();
+  pickerOpen.value = true;
+}
+// The shared media picker speaks refs ("output/sub/a.png"); the widget stores ComfyUI's
+// annotated value ("sub/a.png [output]").
 function mediaRef(value: string) {
   const { name, type } = parseVal(value);
   return `${type}/${name}`;
@@ -416,6 +553,7 @@ async function uploadAndSelect(file: File) {
   if (!file || !file.type.startsWith("image/")) return;
   const it = await uploadImage(file);
   if (!it) return;
+  srcType.value = "input"; // uploads always land in the input dir
   images.value = await listImages("input", true);
   pick(it.name);
 }
@@ -507,36 +645,13 @@ async function onDrop(e: DragEvent) {
 .li-pick {
   flex: 1;
   min-width: 0;
+}
+
+.li-sel {
   display: flex;
   align-items: center;
   gap: 7px;
-  box-sizing: border-box;
-  min-height: var(--zen-control-h, 28px);
-  background: var(--zen-control-bg, var(--zen-input, #1b1b20));
-  color: var(--zen-text, #e5e5ea);
-  border: 1px solid var(--zen-control-border, var(--zen-border, #34343c));
-  border-radius: var(--zen-radius, 7px);
-  padding: 4px 8px;
-  font: inherit;
-  font-size: 12px;
-  text-align: left;
-  cursor: pointer;
-  transition: border-color var(--zen-dur-fast, 0.12s) ease;
-}
-.li-pick:hover {
-  border-color: var(--zen-control-hover-border, var(--zen-accent, #6366f1));
-}
-.li-pick:focus-visible {
-  outline: 2px solid
-    var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));
-  outline-offset: 1px;
-}
-.li-pick .li-sel-name {
-  flex: 1;
-}
-.li-pick-caret {
-  flex: none;
-  color: var(--zen-muted, #9aa0aa);
+  min-width: 0;
 }
 .li-sel-ic {
   flex: none;
@@ -634,5 +749,72 @@ async function onDrop(e: DragEvent) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.li-thumb {
+  flex: none;
+  box-sizing: border-box;
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: var(--zen-radius, 6px);
+  background: var(--zen-input, #1b1b20);
+  border: 1px solid var(--zen-border, #34343c);
+}
+.li-thumb.sm {
+  width: 18px;
+  height: 18px;
+  border-radius: var(--zen-radius, 5px);
+}
+.li-thumb.ph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--zen-muted, #9aa0aa);
+}
+/* grid-combo cell (contain square + name) */
+.li-gthumb {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--zen-radius, 6px);
+  overflow: hidden;
+  background: var(--zen-surface, #202026);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.li-gthumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.li-gname {
+  font-size: 10px;
+  color: var(--zen-text, #e5e5ea);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+}
+.li-lname {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.li-foot {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+.li-foot-browse {
+  margin-left: auto;
+}
+/* compact source switcher inside the combo search row */
+.li-src :deep(.zen-tg-b) {
+  padding: 2px 7px;
+  font-size: 10px;
 }
 </style>
