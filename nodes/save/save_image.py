@@ -26,6 +26,7 @@ from PIL.PngImagePlugin import PngInfo
 
 from .. import _categories
 from .._base import NynxzNode
+from .._zenkit.io_types import advanced
 from .config import FORMATS, merge_info
 from .io_types import NynxzSaveInfoType, NynxzSavePreviewType
 from .paths import NEW_SENTINEL, ROOT_SENTINEL, get_base_directory, is_within
@@ -78,13 +79,15 @@ class NynxzSaveImage(NynxzNode):
             ),
             inputs=[
                 io.Image.Input("images", tooltip="Images to save."),
-                io.String.Input(
-                    "name",
-                    default="image",
-                    tooltip=(
-                        "This save's filename label (e.g. raw / upscaled / final). Combined "
-                        "with Save Info's filename prefix; a counter keeps files unique."
-                    ),
+                advanced(
+                    io.String.Input(
+                        "name",
+                        default="image",
+                        tooltip=(
+                            "This save's filename label (e.g. raw / upscaled / final). Combined "
+                            "with Save Info's filename prefix; a counter keeps files unique."
+                        ),
+                    )
                 ),
                 NynxzSaveInfoType.Input(
                     "save_info",
