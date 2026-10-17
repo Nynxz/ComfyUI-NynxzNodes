@@ -211,7 +211,7 @@ import {
   type SourceType,
 } from "@/lib/imagePickApi";
 import { annotatedValue, uploadSidecarAsClipspaceImage } from "@/lib/maskUpload";
-import { mediaLibrary } from "@/framework";
+import { hasMediaDrop, mediaKind, mediaLibrary, readMediaDrop, uploadOrReuse } from "@/framework";
 
 interface DOMWidget {
   name?: string;
@@ -574,7 +574,9 @@ function mediaRef(value: string) {
 }
 async function onPicked(refs: string[]) {
   const ref = refs[0];
-  if (!ref) return;
+  if (ref) await selectRef(ref);
+}
+async function selectRef(ref: string) {
   const slash = ref.indexOf("/");
   const type = ref.slice(0, slash) as SourceType;
   pick(annot({ type, name: ref.slice(slash + 1) }));
@@ -604,34 +606,16 @@ async function onDrop(e: DragEvent) {
   await takeDrop(e);
 }
 
-const isImageFile = (item: DataTransferItem) =>
-  item.kind === "file" && item.type.startsWith("image/");
-/** An image ComfyUI itself serves (`/view?filename=…`), dragged from the queue or assets. */
-function servedImage(e: DragEvent): string | null {
-  const uri = e.dataTransfer?.getData("text/uri-list");
-  const url = uri ? URL.parse(uri.split("\n")[0]!.trim(), location.href) : null;
-  if (!url || url.origin !== location.origin || !url.pathname.endsWith("/view")) return null;
-  const filename = url.searchParams.get("filename");
-  const type = url.searchParams.get("type") ?? "input";
-  if (!filename || (type !== "input" && type !== "output" && type !== "temp")) return null;
-  const subfolder = url.searchParams.get("subfolder") ?? "";
-  return annot({ type, name: subfolder ? `${subfolder}/${filename}` : filename });
-}
 function canTake(e: DragEvent) {
-  const data = e.dataTransfer;
-  if (!data) return false;
-  return [...data.items].some(isImageFile) || data.types.includes("text/uri-list");
+  return hasMediaDrop(e);
 }
+/** Whatever the drop carries — a desktop file, a ComfyUI asset or output, a ZenKit or Stash card,
+ *  an image from a web page — as the selected image. Reads the drop before awaiting anything. */
 async function takeDrop(e: DragEvent): Promise<boolean> {
-  const file = [...(e.dataTransfer?.files ?? [])].find((f) => f.type.startsWith("image/"));
-  if (file) {
-    await uploadAndSelect(file);
-    return true;
-  }
-  const served = servedImage(e);
-  if (!served) return false;
-  pick(served);
-  await loadSelectedImageDetails();
+  const refs = await readMediaDrop(e, "", uploadOrReuse);
+  const ref = refs.find((r) => mediaKind(r) === "image");
+  if (!ref) return false;
+  await selectRef(ref);
   return true;
 }
 
