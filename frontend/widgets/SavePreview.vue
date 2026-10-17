@@ -196,12 +196,10 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   border-radius: var(--zen-radius, 8px);
-  overflow: hidden;
-  background: var(--zen-input, #1b1b20);
-  border: 1px solid var(--zen-border, #34343c);
 }
 .sp-preview img {
   display: block;
+  border-radius: var(--zen-radius, 8px);
   max-width: 100%;
   max-height: 100%;
   width: auto;
@@ -215,7 +213,7 @@ onMounted(() => {
   flex-direction: column;
   gap: 6px;
   color: var(--zen-muted, #9aa0aa);
-  border-style: dashed;
+  border: 1px dashed var(--zen-border, #34343c);
   text-align: center;
   padding: 8px;
 }
