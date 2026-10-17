@@ -5,6 +5,7 @@
     :class="{ 'in-panel': inPanel }"
     v-bind="wheel.attrs"
     @keydown="onKey"
+    @contextmenu="keepContextMenu"
   >
     <nav class="le-rail" aria-label="Tools">
       <ZenIconButton
@@ -384,6 +385,7 @@ import {
 } from "@nynxz/zenkit-ui";
 
 import { hasMediaDrop, hasZenPanels, mediaLibrary } from "@/framework";
+import { keepContextMenu } from "@/lib/ownContextMenu";
 import { thumbUrl, type SourceType } from "@/lib/fusionApi";
 import { copiedFor, copyBoxes } from "@/layout/clipboard";
 import { exportLayout, importLayout } from "@/layout/jsonIo";

@@ -155,6 +155,13 @@ class Elements(unittest.TestCase):
             ],
         )
 
+    def test_bounding_boxes_are_core_pixel_frames(self):
+        parsed = prompt.parse(layout("moss", [box(), box(id="b", hidden=True)]))
+        self.assertEqual(
+            prompt.bounding_boxes(parsed), [[{"x": 102, "y": 154, "width": 307, "height": 307}]]
+        )
+        self.assertEqual(prompt.bounding_boxes(prompt.parse(layout("moss", []))), [])
+
     def test_anything_stored_parses(self):
         for raw in (None, [], "x", {"boxes": "no"}, {"boxes": [1, {"x": "nan"}]}):
             parsed = prompt.parse(raw)

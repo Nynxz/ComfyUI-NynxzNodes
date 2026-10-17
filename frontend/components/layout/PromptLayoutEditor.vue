@@ -1,5 +1,5 @@
 <template>
-  <div class="pl-host">
+  <div class="pl-host" @contextmenu="keepContextMenu">
     <LayoutEditor
       ref="editor"
       v-model:selected="selected"
@@ -154,6 +154,7 @@ import LayoutSettings from "@/components/layout/LayoutSettings.vue";
 import ModeCards from "@/components/layout/ModeCards.vue";
 import PaletteEdit from "@/components/layout/PaletteEdit.vue";
 import { compileLayout } from "@/layout/library";
+import { keepContextMenu } from "@/lib/ownContextMenu";
 import { PROMPT_MODES } from "@/layout/modes";
 import { kleinId } from "@/layout/promptScene";
 import type { BoxKind, PromptBox, PromptModeId, PromptScene } from "@/layout/promptScene";

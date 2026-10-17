@@ -26,6 +26,7 @@ export const widgetOptions: WidgetOptions = { minHeight: 480, fill: true, defaul
 export const nodeDef: Omit<NodeDef, "widgets"> = {
   is: nodeType("Layout"),
   minSize: [900, 560],
+  slotLinks: [{ output: "layout", spawn: nodeType("Layout.Extras") }],
 };
 </script>
 

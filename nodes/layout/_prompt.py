@@ -180,6 +180,21 @@ def elements(layout: dict) -> list[dict]:
     return out
 
 
+def bounding_boxes(layout: dict) -> list[list[dict]]:
+    """The boxes in pixels, as core's BOUNDING_BOX: one frame of `{x, y, width, height}`."""
+    width, height = layout["width"], layout["height"]
+    frame = [
+        {
+            "x": round(box["x"] * width),
+            "y": round(box["y"] * height),
+            "width": round(box["w"] * width),
+            "height": round(box["h"] * height),
+        }
+        for box in shown(layout)
+    ]
+    return [frame] if frame else []
+
+
 def _json(value) -> str:
     return json.dumps(value, ensure_ascii=False, separators=(",", ":"))
 
