@@ -4,9 +4,13 @@ from __future__ import annotations
 
 import json
 
+import comfy.lora
+import comfy.lora_convert
 import comfy.sd
 import comfy.utils
 import folder_paths
+
+from . import _qkv
 
 LOG_PREFIX = "[NynxzNodes]"
 
@@ -20,6 +24,23 @@ def normalize_stack(stack) -> list:
         except json.JSONDecodeError:
             items = []
     return items if isinstance(items, list) else []
+
+
+def fit_to_model(model, weights: dict, name: str) -> dict:
+    """`weights` with fused q/k/v entries split when `model` has q, k and v separate (see
+    _qkv.py); anything else is returned as it came."""
+    if model is None:
+        return weights
+    weights = comfy.lora_convert.convert_lora(weights)
+    key_map = comfy.lora.model_lora_keys_unet(model.model, {})
+    try:
+        fitted, count = _qkv.for_model(weights, key_map)
+    except _qkv.CannotSplit as e:
+        print(f"{LOG_PREFIX} {name}: fused q/k/v left as is, can't split exactly ({e})")
+        return weights
+    if count:
+        print(f"{LOG_PREFIX} {name}: split {count} fused qkv weights into q, k, v for this model")
+    return fitted
 
 
 def apply_lora_stack(model, clip, stack):
@@ -41,7 +62,7 @@ def apply_lora_stack(model, clip, stack):
             print(f"{LOG_PREFIX} LoRA not found, skipping: {it['name']}")
             continue
 
-        weights = comfy.utils.load_torch_file(path, safe_load=True)
+        weights = fit_to_model(model, comfy.utils.load_torch_file(path, safe_load=True), it["name"])
         model, clip = comfy.sd.load_lora_for_models(
             model, clip, weights, strength_model, strength_clip
         )

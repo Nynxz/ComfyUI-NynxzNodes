@@ -51,6 +51,8 @@ import folder_paths
 import torch
 from comfy.weight_adapter import LoKrAdapter, LoRAAdapter
 
+from ..lora import _qkv
+
 #: Substrings that pick out the attention projections in Krea 2's `SingleStreamBlock`. Identity is
 #: mostly written into attention, but most character LoRAs put real weight into the MLP layers too,
 #: so both are routed. Attention-only was a knob once and is not one now: with the MLP layers
@@ -246,6 +248,15 @@ def load_branches(
     state = comfy.lora_convert.convert_lora(state)
 
     key_map = comfy.lora.model_lora_keys_unet(model.model, {})
+    try:
+        state, split = _qkv.for_model(state, key_map)
+    except _qkv.CannotSplit as e:
+        split = 0
+        logging.warning("Nynxz region LoRA %s: fused q/k/v left as is (%s)", lora_name, e)
+    if split:
+        logging.info(
+            "Nynxz region LoRA %s: split %d fused qkv weights into q, k, v", lora_name, split
+        )
     loaded = comfy.lora.load_lora(state, key_map, log_missing=False)
 
     branches: dict[str, FactoredBranch] = {}
