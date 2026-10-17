@@ -30,7 +30,7 @@ export function digJson(text: string): unknown {
 }
 
 /** `text` read as a layout for `mode`, or null when nothing in it is one. */
-export function importLayout(mode: AnyLayoutMode, text: string): unknown | null {
+export function importLayout(mode: AnyLayoutMode, text: string, current: unknown): unknown | null {
   const value = digJson(text);
   if (value && typeof value === "object" && ENVELOPE in value) {
     const env = value as { mode?: string; layout?: unknown };
@@ -38,7 +38,7 @@ export function importLayout(mode: AnyLayoutMode, text: string): unknown | null 
     const from = env.mode ? layoutMode(env.mode) : undefined;
     return from ? mode.fromCommon(from.toCommon(from.read(env.layout))) : null;
   }
-  const native = mode.importText?.(text);
+  const native = mode.importText?.(text, current);
   if (native) return native;
   return null;
 }

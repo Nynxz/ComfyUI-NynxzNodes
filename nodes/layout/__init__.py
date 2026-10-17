@@ -5,7 +5,9 @@ menu, copy and paste, and JSON in and out, whatever the boxes mean. A mode says 
 Fresco's regions, or a model's own layout prompt.
 
     library.py   saved layouts on disk, one JSON file each (pure, no server)
-    api.py       the /nynxz/layouts routes over it
+    _prompt.py   a layout as the prompt each model reads (pure)
+    layout.py    the Layout node
+    api.py       the /nynxz/layouts routes: saved layouts, and compiling one
 
 Importing `api` here is what registers the routes.
 """

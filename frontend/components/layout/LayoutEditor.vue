@@ -162,7 +162,7 @@
               v-if="mode.exportText"
               sm
               icon="mdi mdi-text-box-outline"
-              @click="copyText(mode.exportText!(scene))"
+              @click="copyPrompt"
             >
               Copy prompt
             </ZenButton>
@@ -885,6 +885,13 @@ const jsonOpen = ref(false);
 const jsonText = ref("");
 const jsonNote = ref("");
 watch(jsonOpen, () => (jsonNote.value = ""));
+async function copyPrompt() {
+  try {
+    await copyText(await props.mode.exportText!(scene.value));
+  } catch (e) {
+    jsonNote.value = `Couldn't write the prompt: ${(e as Error).message}`;
+  }
+}
 async function copyText(text: string) {
   try {
     await navigator.clipboard.writeText(text);
@@ -895,7 +902,7 @@ async function copyText(text: string) {
   }
 }
 function importText() {
-  const next = importLayout(props.mode, jsonText.value);
+  const next = importLayout(props.mode, jsonText.value, scene.value);
   if (next == null) {
     jsonNote.value = `Not a layout this ${props.mode.label} editor can read.`;
     return;

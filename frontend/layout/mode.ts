@@ -57,10 +57,11 @@ export interface LayoutMode<S> {
   toggleScene?(scene: S): S;
   toCommon(scene: S): CommonLayout;
   fromCommon(common: CommonLayout): S;
-  /** The model's own format, for "Copy as …" — e.g. Ideogram's caption JSON. */
-  exportText?(scene: S): string;
-  /** Read the model's own format back, or null when `text` isn't it. */
-  importText?(text: string): S | null;
+  /** The model's own format, for "Copy prompt" — e.g. Ideogram's caption JSON. */
+  exportText?(scene: S): string | Promise<string>;
+  /** Read the model's own format back, or null when `text` isn't it. `current` lends what the
+   *  format leaves out, such as the canvas size. */
+  importText?(text: string, current: S): S | null;
 }
 
 /** A mode whose value the caller doesn't know — what the shared editor holds. */

@@ -6,7 +6,7 @@ from __future__ import annotations
 from aiohttp import web
 
 from .._zenkit.server import request_allowed
-from . import library
+from . import _prompt, library
 
 try:
     import folder_paths
@@ -75,3 +75,10 @@ if _routes is not None and folder_paths is not None:
         if not library.delete_layout(_root(), body.get("mode", ""), body.get("name", "")):
             return web.json_response({"error": "not found"}, status=404)
         return web.json_response({"ok": True})
+
+    @_routes.post("/nynxz/layouts/compile")
+    async def nynxz_layouts_compile(request):
+        layout = (await _body(request)).get("layout")
+        return web.json_response(
+            {"prompt": _prompt.compile_prompt(layout), "warnings": _prompt.warnings(layout)}
+        )

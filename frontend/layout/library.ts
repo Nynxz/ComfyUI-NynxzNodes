@@ -54,3 +54,15 @@ export async function saveLayout(
 export async function deleteLayout(mode: string, name: string): Promise<void> {
   await post("layouts/delete", { mode, name });
 }
+
+export interface CompiledPrompt {
+  prompt: string;
+  warnings: string[];
+}
+
+/** The prompt the Layout node outputs for `layout` — written by the backend, the one place
+ *  that writes it. */
+export async function compileLayout(layout: unknown): Promise<CompiledPrompt> {
+  const body = (await post("layouts/compile", { layout })) as Partial<CompiledPrompt>;
+  return { prompt: body.prompt ?? "", warnings: body.warnings ?? [] };
+}
