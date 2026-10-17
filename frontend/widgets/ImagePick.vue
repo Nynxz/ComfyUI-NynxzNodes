@@ -96,7 +96,7 @@
           </div>
         </template>
       </ZenCombo>
-      <ZenIconButton icon="mdi mdi-folder-image" title="Browse images" @click="openBrowse()" />
+      <ZenIconButton icon="mdi mdi-view-grid-outline" title="Browse images" @click="openBrowse()" />
       <ZenIconButton icon="mdi mdi-upload" title="Upload an image" @click="triggerUpload" />
     </div>
 
