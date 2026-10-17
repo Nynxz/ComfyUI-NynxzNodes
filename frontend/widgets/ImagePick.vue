@@ -20,7 +20,6 @@
         :grid-min="zoom"
         :model-value="selected"
         :items="items"
-        :menu-width="340"
         placeholder="Select an image…"
         :empty-text="`No images in ${srcType}/`"
         @update:model-value="pick(String($event))"
