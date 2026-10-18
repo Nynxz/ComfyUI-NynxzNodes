@@ -12,7 +12,7 @@
       :layout="layout"
       :node="node"
       :in-panel="panel"
-      :choose-mode="fresh"
+      :choose-mode="!hasMode(widget?.value)"
       @pop-out="popOut(true)"
     />
   </div>
@@ -60,7 +60,6 @@ const props = defineProps<{
   panel?: boolean;
 }>();
 
-const fresh = !hasMode(props.widget?.value);
 const layout = promptLayout(props.widget);
 const id = String(props.node?.id ?? "");
 const panelKey = `layout:${id}`;

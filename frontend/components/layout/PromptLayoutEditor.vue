@@ -80,11 +80,11 @@
           sm
           variant="ghost"
           :icon="mode.icon"
-          :title="`Layout settings — mode${SETTINGS_NOTE[scene.mode]}`"
+          title="The model this layout is for — click to change it"
           @click="settingsOpen = true"
         >
           {{ mode.label }}
-          <i class="mdi mdi-cog-outline pl-cog" />
+          <i class="mdi mdi-chevron-up pl-cog" />
         </ZenButton>
       </template>
 
@@ -168,6 +168,63 @@
               @update:model-value="patchScene({ background: String($event ?? '') })"
             />
           </FrescoSection>
+
+          <FrescoSection v-if="scene.mode === 'ideogram'" label="Style" note="style_description">
+            <ZenToggleGroup
+              size="sm"
+              :model-value="scene.style.on ? scene.style.kind : 'off'"
+              :options="STYLE_KINDS"
+              @update:model-value="setStyleKind(String($event))"
+            />
+            <template v-if="scene.style.on">
+              <ZenField v-for="f in styleFields" :key="f.key" :label="f.label" stack>
+                <PresetInput
+                  :model-value="scene.style[f.key]"
+                  :placeholder="f.hint"
+                  :presets="STYLE_PRESETS[f.key]"
+                  @update:model-value="patchStyle({ [f.key]: $event })"
+                />
+              </ZenField>
+              <ZenField label="Palette" stack hint="Up to 16. Right-click a colour to drop it.">
+                <PaletteEdit
+                  :model-value="scene.style.palette"
+                  :max="16"
+                  @update:model-value="patchStyle({ palette: $event })"
+                />
+              </ZenField>
+            </template>
+          </FrescoSection>
+
+          <template v-if="scene.mode === 'moss'">
+            <FrescoSection label="Meta" note="what kind of image">
+              <ZenInput
+                sm
+                :model-value="scene.meta.join(', ')"
+                placeholder="poster, illustration"
+                @update:model-value="patchScene({ meta: splitList($event) })"
+              />
+            </FrescoSection>
+            <FrescoSection label="Layout" note="one picture, panels or a collage">
+              <ZenSelect
+                size="sm"
+                :model-value="scene.canvas"
+                :options="CANVAS_OPTIONS"
+                @update:model-value="patchScene({ canvas: $event as MossCanvas })"
+              />
+            </FrescoSection>
+            <FrescoSection label="Palette" note="up to 16">
+              <PaletteEdit
+                :model-value="scene.palette"
+                :max="16"
+                @update:model-value="patchScene({ palette: $event })"
+              />
+            </FrescoSection>
+          </template>
+
+          <p v-if="scene.mode === 'klein'" class="pl-note">
+            Klein reads only the caption and each box's description, so colours go in the words.
+            Cite every box in the caption as &lt;obj_N&gt;.
+          </p>
         </div>
       </template>
     </LayoutEditor>
@@ -178,13 +235,17 @@
       :image="editor?.backdrop ?? null"
       @apply="applyAgent"
     />
-    <LayoutSettings v-model:open="settingsOpen" :scene="scene" @patch="patchScene" />
+    <LayoutSettings
+      v-model:open="settingsOpen"
+      :mode="scene.mode"
+      @pick="patchScene({ mode: $event })"
+    />
     <div v-if="choosing" class="pl-choose">
       <div class="pl-choose-card">
         <span class="pl-choose-title">What is this layout for?</span>
         <span class="pl-choose-note">
-          Pick the model the prompt is written for. The cog on the left changes it later; the boxes
-          stay.
+          Pick the model the prompt is written for. The mode button at the bottom left changes it
+          later; the boxes stay.
         </span>
         <ModeCards :model-value="null" @update:model-value="pickMode" />
       </div>
@@ -195,11 +256,19 @@
 <script setup lang="ts">
 /**
  * The Layout node's editor: the shared layout editor in the layout's prompt mode. The mode is
- * picked when the node is made and changed in the settings (the cog), along with whatever applies
- * to the whole layout; the sidebar holds only what the mode reads per box and for the scene, and
- * the prompt as the node will output it (written by the backend, so it can't drift).
+ * picked when the node is made and changed from the mode button; everything the mode reads, per
+ * box and for the whole scene, is in the sidebar. The prompt as the node will output it is written
+ * by the backend, so it can't drift.
  */
-import { ZenButton, ZenIconButton, ZenInput, ZenPopover, ZenToggleGroup } from "@nynxz/zenkit-ui";
+import {
+  ZenButton,
+  ZenField,
+  ZenIconButton,
+  ZenInput,
+  ZenPopover,
+  ZenSelect,
+  ZenToggleGroup,
+} from "@nynxz/zenkit-ui";
 import { api } from "@comfy/api";
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
@@ -209,13 +278,22 @@ import LayoutEditor from "@/components/layout/LayoutEditor.vue";
 import LayoutSettings from "@/components/layout/LayoutSettings.vue";
 import ModeCards from "@/components/layout/ModeCards.vue";
 import PaletteEdit from "@/components/layout/PaletteEdit.vue";
+import PresetInput from "@/components/layout/PresetInput.vue";
+import { STYLE_PRESETS } from "@/layout/stylePresets";
 import { compileLayout } from "@/layout/library";
 import { keepContextMenu } from "@/lib/ownContextMenu";
 import { PROMPT_MODES } from "@/layout/modes";
 import type { AgentImage, AgentLayout } from "@/layout/agent";
 import { boxId, kleinId, nextColor, readBox } from "@/layout/promptScene";
 import type { SourceType } from "@/lib/fusionApi";
-import type { BoxKind, PromptBox, PromptModeId, PromptScene } from "@/layout/promptScene";
+import type {
+  BoxKind,
+  IdeogramStyle,
+  MossCanvas,
+  PromptBox,
+  PromptModeId,
+  PromptScene,
+} from "@/layout/promptScene";
 import type { SharedLayout } from "@/layout/store";
 
 const props = defineProps<{
@@ -235,11 +313,6 @@ const HELP: [string, string][] = [
   ["Order", "bottom to top is the order the prompt lists boxes — background first"],
   ["Hidden boxes", "left out of the prompt"],
 ];
-const SETTINGS_NOTE: Record<PromptModeId, string> = {
-  ideogram: ", style",
-  klein: "",
-  moss: ", meta, canvas, palette",
-};
 const PROMPT_LABEL: Record<PromptModeId, string> = {
   ideogram: "High-level description",
   klein: "Caption",
@@ -285,6 +358,35 @@ const splitList = (v: unknown) =>
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
+
+// --- what the whole scene reads, per mode ------------------------------------------------------
+
+const STYLE_KINDS = [
+  { value: "off", label: "Off" },
+  { value: "photo", label: "Photo", icon: "mdi mdi-camera-outline" },
+  { value: "art", label: "Art", icon: "mdi mdi-palette-outline" },
+];
+const CANVAS_OPTIONS = [
+  { value: "", label: "Not said" },
+  { value: "single", label: "Single image" },
+  { value: "multi_panel", label: "Multi-panel" },
+  { value: "collage", label: "Collage" },
+];
+type StyleText = "aesthetics" | "lighting" | "medium" | "photo" | "art_style";
+const styleFields = computed<{ key: StyleText; label: string; hint: string }[]>(() => [
+  { key: "aesthetics", label: "Aesthetics", hint: "moody, minimal, cinematic" },
+  { key: "lighting", label: "Lighting", hint: "soft window light, neon" },
+  { key: "medium", label: "Medium", hint: "photograph, oil painting" },
+  scene.value.style.kind === "photo"
+    ? { key: "photo", label: "Photo", hint: "35mm, shallow depth of field" }
+    : { key: "art_style", label: "Art style", hint: "flat vector, ukiyo-e" },
+]);
+function patchStyle(patch: Partial<IdeogramStyle>) {
+  patchScene({ style: { ...scene.value.style, ...patch } });
+}
+function setStyleKind(value: string) {
+  patchStyle(value === "off" ? { on: false } : { on: true, kind: value as "photo" | "art" });
+}
 
 // --- the selected box ---------------------------------------------------------------------------
 
@@ -465,6 +567,14 @@ async function copyOutput() {
 }
 .pl-choose-note {
   font-size: 12px;
+  color: var(--zen-muted, #9aa0aa);
+}
+.pl-note {
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 60%, transparent);
+  font-size: 11px;
+  line-height: 1.45;
   color: var(--zen-muted, #9aa0aa);
 }
 .pl-form {
