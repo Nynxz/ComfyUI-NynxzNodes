@@ -101,20 +101,29 @@
               />
             </label>
             <span class="le-grow" />
-            <button
-              type="button"
-              class="le-chip"
-              :class="{ warn: mismatch }"
-              :title="
-                mismatch
-                  ? `The trace image is ${sourceSize![0]}×${sourceSize![1]} — change the canvas in the Scene panel`
-                  : 'Canvas size — set in the Scene panel'
-              "
-              @click="selected = []"
-            >
-              <i :class="mismatch ? 'mdi mdi-alert-outline' : 'mdi mdi-aspect-ratio'" />
-              {{ size.width }}×{{ size.height }}
-            </button>
+            <span v-if="mismatch" class="le-tip">
+              Source is {{ sourceSize![0] }}×{{ sourceSize![1] }}
+              <button type="button" class="le-link" @click="matchSource">match</button>
+            </span>
+            <ZenPopover placement="bottom-end" role="dialog">
+              <template #trigger="{ toggle }">
+                <button type="button" class="le-chip" title="Canvas size" @click="toggle">
+                  <i class="mdi mdi-aspect-ratio" />
+                  {{ size.width }}×{{ size.height }}
+                  <i class="mdi mdi-chevron-down" />
+                </button>
+              </template>
+              <ZenResolution
+                :width="size.width"
+                :height="size.height"
+                :snap="sizeSnap"
+                :presets="[0.5, 1, 1.5, 2]"
+                :max-side="maxSide"
+                :max-mp="4"
+                @update:width="setSize($event, size.height)"
+                @update:height="setSize(size.width, $event)"
+              />
+            </ZenPopover>
           </header>
 
           <div
@@ -231,25 +240,7 @@
                     them.
                   </p>
                 </slot>
-                <div v-else class="le-scene">
-                  <slot name="scene" />
-                  <FrescoSection label="Canvas" :note="`${size.width}×${size.height}`">
-                    <ZenResolution
-                      :width="size.width"
-                      :height="size.height"
-                      :snap="sizeSnap"
-                      :presets="[0.5, 1, 1.5, 2]"
-                      :max-side="maxSide"
-                      :max-mp="4"
-                      @update:width="setSize($event, size.height)"
-                      @update:height="setSize(size.width, $event)"
-                    />
-                    <p v-if="mismatch" class="le-note">
-                      The trace image is {{ sourceSize![0] }}×{{ sourceSize![1] }}.
-                      <button type="button" class="le-link" @click="matchSource">Match it</button>
-                    </p>
-                  </FrescoSection>
-                </div>
+                <slot v-else name="scene" />
               </ZenScroll>
             </section>
           </template>
@@ -410,7 +401,6 @@ import { keepContextMenu } from "@/lib/ownContextMenu";
 import { thumbUrl, type SourceType } from "@/lib/fusionApi";
 import { copiedFor, copyBoxes } from "@/layout/clipboard";
 import { exportLayout, importLayout } from "@/layout/jsonIo";
-import FrescoSection from "@/components/fresco/FrescoSection.vue";
 import LayoutBrowser from "@/components/layout/LayoutBrowser.vue";
 import { layoutMode, type AnyLayoutMode, type LayoutBox } from "@/layout/mode";
 import type { SharedLayout } from "@/layout/store";
@@ -1182,15 +1172,6 @@ defineExpose({ addBox, update, patchBoxes, stagePoint, offerBackdrop, backdrop }
   font-size: 11px;
   font-variant-numeric: tabular-nums;
   cursor: pointer;
-}
-.le-chip.warn {
-  border-color: color-mix(in srgb, var(--zen-warning, #f5b041) 60%, transparent);
-  color: var(--zen-warning, #f5b041);
-}
-.le-scene {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
 }
 .le-side {
   height: 100%;
