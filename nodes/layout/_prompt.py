@@ -13,7 +13,7 @@ The Layout node's value, as the editor stores it (frontend/layout/promptScene.ts
         "boxes": [Box, ...],                   # bottom to top: background first, foreground last
     }
 
-    Mixin = {"id", "name", "trigger": str,
+    Mixin = {"id", "name", "desc": str, "trigger": str,
               "refs": [{"ref", "type", "strength", "fit", "on"}],   # images, as Fresco's
               "loras": [{"name", "strength", "on"}]}
 
@@ -147,6 +147,8 @@ def _mixin(raw: dict, index: int) -> dict:
     return {
         "id": _str(raw.get("id")) or f"c{index + 1}",
         "name": _str(raw.get("name")).strip(),
+        #: Who or what it is, in words: added to the description of every box that uses it.
+        "desc": _str(raw.get("desc")).strip(),
         "trigger": _str(raw.get("trigger")).strip(),
         "refs": [r for r in refs if r["strength"] > 0.0],
         "loras": loras,
@@ -157,6 +159,15 @@ def mixins_of(layout: dict, box: dict) -> list[dict]:
     """The mixins `box` names, in the box's order; unknown ids are skipped."""
     by_id = {mixin["id"]: mixin for mixin in layout["mixins"]}
     return [by_id[i] for i in dict.fromkeys(box["mixins"]) if i in by_id]
+
+
+def box_desc(layout: dict, box: dict) -> str:
+    """What a box describes, as every prompt writes it: the descriptions of the mixins it uses, then
+    its own words. Exactly its own words when it uses no described mixin."""
+    said = [m["desc"] for m in mixins_of(layout, box) if m["desc"]]
+    if not said:
+        return box["desc"]
+    return " ".join(_sentence(part) for part in (*said, box["desc"]) if part)
 
 
 def parse(raw) -> dict:
@@ -222,7 +233,7 @@ def elements(layout: dict) -> list[dict]:
         element = {"type": "text" if box["kind"] == "text" else "obj", "bbox": grid_bbox(box)}
         if box["kind"] == "text":
             element["text"] = box["text"]
-        element["desc"] = box["desc"]
+        element["desc"] = box_desc(layout, box)
         if box["palette"]:
             element["color_palette"] = box["palette"]
         out.append(element)
@@ -269,7 +280,7 @@ def ideogram(layout: dict) -> str:
         item: dict = {"type": "text" if box["kind"] == "text" else "obj", "bbox": grid_bbox(box)}
         if box["kind"] == "text":
             item["text"] = box["text"]
-        item["desc"] = box["desc"]
+        item["desc"] = box_desc(layout, box)
         if box["palette"]:
             item["color_palette"] = box["palette"]
         items.append(item)
@@ -290,7 +301,7 @@ def klein(layout: dict) -> str:
     Cite box N in the caption as <obj_N>. Klein reads no palettes: colours go in the description."""
     rows = []
     for index, box in enumerate(shown(layout)):
-        desc = box["desc"]
+        desc = box_desc(layout, box)
         if box["kind"] == "text" and box["text"]:
             desc = f'{desc} "{box["text"]}"'.strip()
         rows.append({"id": klein_id(index), "bbox": grid_bbox(box), "desc": desc})
@@ -304,7 +315,7 @@ def moss(layout: dict) -> str:
     width, height = layout["width"], layout["height"]
     items = []
     for box in shown(layout):
-        item: dict = {"label": box["kind"], "caption": box["desc"]}
+        item: dict = {"label": box["kind"], "caption": box_desc(layout, box)}
         if box["kind"] == "text":
             item["text"] = box["text"]
         if box["tags"]:
@@ -345,7 +356,7 @@ def region_prompt(layout: dict, box: dict) -> str:
     mixins it names, then what the box holds, so the region keeps the scene's style and setting and
     a mixin's LoRA hears its trigger there. Empty for a box that says nothing of its own."""
     triggers = ", ".join(m["trigger"] for m in mixins_of(layout, box) if m["trigger"])
-    own = [triggers, box["desc"]]
+    own = [triggers, box_desc(layout, box)]
     if box["kind"] == "text" and box["text"]:
         own.append('The text "' + box["text"] + '".')
     if not any(own):
@@ -367,7 +378,7 @@ def warnings(raw) -> list[str]:
         out.append("The prompt is empty.")
     for index, box in enumerate(shown(layout)):
         label = box["name"] or f"Box {index + 1}"
-        if not box["desc"]:
+        if not box_desc(layout, box):
             out.append(f"{label} has no description.")
         if box["kind"] == "text" and not box["text"]:
             out.append(f"{label} is a text box with no text.")

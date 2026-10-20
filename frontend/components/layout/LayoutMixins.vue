@@ -58,12 +58,28 @@
         />
         <ZenIconButton
           size="sm"
+          icon="mdi mdi-account-box-multiple-outline"
+          :title="`Make a reference sheet for ${current.name}: a new Layout node with front, side and back views and expressions, all using ${current.name}. Generate it, then add the image to its Look.`"
+          @click="emit('sheet', current.id)"
+        />
+        <ZenIconButton
+          size="sm"
           danger
           icon="mdi mdi-delete-outline"
           :title="`Delete ${current.name} (and take it out of every box)`"
           @click="remove(current.id)"
         />
       </div>
+      <FrescoSection label="Description" note="who or what it is — in every box that uses it">
+        <ZenInput
+          type="textarea"
+          :rows="3"
+          sm
+          :model-value="current.desc"
+          placeholder="e.g. Amber, a teenage girl with a short copper-red bob, green eyes and freckles"
+          @update:model-value="patch({ desc: String($event ?? '') })"
+        />
+      </FrescoSection>
       <FrescoSection label="Trigger words" note="added to each box's prompt">
         <ZenInput
           sm
@@ -138,7 +154,7 @@ const { boxes } = defineProps<{ boxes: PromptBox[] }>();
 const mixins = defineModel<Mixin[]>({ required: true });
 /** The mixin whose editor is open. */
 const openId = defineModel<string | null>("open", { default: null });
-const emit = defineEmits<{ create: []; selectBoxes: [id: string] }>();
+const emit = defineEmits<{ create: []; selectBoxes: [id: string]; sheet: [id: string] }>();
 
 const refsPanel = ref<{ upload: () => void; openBrowse: () => void; busy: boolean } | null>(null);
 const current = computed(

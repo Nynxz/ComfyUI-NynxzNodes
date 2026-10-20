@@ -239,6 +239,32 @@ class Mixins(unittest.TestCase):
         scene = self.scene(box(mixins=["amber"], desc=""))
         self.assertEqual(prompt.region_prompt(scene, scene["boxes"][0]), "Anime style. amb3r.")
 
+    def test_a_mixin_s_description_leads_every_box_that_uses_it(self):
+        described = {**AMBER, "desc": "Amber, a girl with a copper bob"}
+        raw = {
+            **layout("moss", [box(mixins=["amber"], desc="she waves"), box(id="b", desc="a tree")]),
+            "prompt": "Anime style",
+            "mixins": [described],
+        }
+        items = json.loads(prompt.compile_prompt(raw))["items"]
+        self.assertEqual(items[0]["caption"], "Amber, a girl with a copper bob. she waves.")
+        self.assertEqual(items[1]["caption"], "a tree")
+        klein = prompt.compile_prompt({**raw, "mode": "klein"})
+        self.assertIn('"desc": "Amber, a girl with a copper bob. she waves."', klein)
+        scene = prompt.parse(raw)
+        self.assertEqual(
+            prompt.region_prompt(scene, scene["boxes"][0]),
+            "Anime style. amb3r. Amber, a girl with a copper bob. she waves.",
+        )
+        self.assertEqual(prompt.region_prompt(scene, scene["boxes"][1]), "Anime style. a tree.")
+
+    def test_a_box_with_only_a_described_mixin_is_not_empty(self):
+        raw = {
+            **layout("moss", [box(mixins=["amber"], desc="")]),
+            "mixins": [{**AMBER, "desc": "Amber"}],
+        }
+        self.assertNotIn("Lamp has no description.", prompt.warnings(raw))
+
     def test_old_layouts_have_no_mixins(self):
         scene = prompt.parse(layout("moss", [box()]))
         self.assertEqual((scene["mixins"], scene["boxes"][0]["mixins"]), ([], []))

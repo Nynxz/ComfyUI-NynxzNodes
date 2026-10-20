@@ -40,6 +40,8 @@ export interface Mixin {
   name: string;
   /** Its avatar's colour where it has no image, and its badge on the canvas. */
   color: string;
+  /** Who or what it is, in words: added to the description of every box that uses it. */
+  desc: string;
   /** Words added to the prompt of every box that names them — a LoRA's trigger. */
   trigger: string;
   refs: FrescoRef[];
@@ -155,6 +157,7 @@ export function readMixin(raw: unknown, index = 0): Mixin {
     id: str(m.id) || uid("c"),
     name: str(m.name) || `Mixin ${index + 1}`,
     color: str(m.color) || BOX_COLORS[(index + 3) % BOX_COLORS.length]!,
+    desc: str(m.desc),
     trigger: str(m.trigger),
     refs: readRefs(m.refs),
     loras: readLoras(m.loras),
