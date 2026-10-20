@@ -1,5 +1,5 @@
 """A layout's boxes as regions for Regions Apply: each box's mask, its own prompt, and what the
-cast members it names bring — their LoRAs, and their reference images read into its prompt."""
+mixins it names bring — their LoRAs, and their reference images read into its prompt."""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ def regions(layout: dict, clip=None, reference_size: int = 384) -> list[dict]:
     """The shown boxes as regions, bottom to top. Where boxes overlap the upper one owns the area,
     as it is drawn in front.
 
-    A box naming cast members with reference images gets its prompt encoded with those images
+    A box naming mixins with reference images gets its prompt encoded with those images
     (Fusion, as a Fresco layer's references), which needs `clip` to be a text encoder that sees
     images. Their LoRAs ride on the region either way."""
     boxes = _prompt.shown(layout)
@@ -23,21 +23,21 @@ def regions(layout: dict, clip=None, reference_size: int = 384) -> list[dict]:
     masks, _ = _scene.compose(boxes, _scene.working_size(width, height), (height, width), "top")
     out = []
     for box, mask in zip(boxes, masks, strict=True):
-        cast = _prompt.members(layout, box)
+        mixins = _prompt.mixins_of(layout, box)
         label = box["name"] or box["desc"][:40] or box["id"]
         region = {
             "mask": mask,
             "fit": "stretch",
-            "loras": [dict(lora) for member in cast for lora in member["loras"]],
+            "loras": [dict(lora) for mixin in mixins for lora in mixin["loras"]],
             "strength": 1.0,
             "denoise": 1.0,
             "label": label,
         }
         own = _prompt.region_prompt(layout, box)
-        refs = [ref for member in cast for ref in member["refs"]]
+        refs = [ref for mixin in mixins for ref in mixin["refs"]]
         if refs:
             if clip is None:
-                names = ", ".join(m["name"] or m["id"] for m in cast if m["refs"])
+                names = ", ".join(m["name"] or m["id"] for m in mixins if m["refs"])
                 raise ValueError(
                     f'Box "{label}" names {names}, whose reference images are read into its '
                     "prompt by the text encoder. Wire the CLIP (one that can see images, such as "
@@ -84,7 +84,7 @@ def _encode_with_refs(clip, prompt: str, refs: list[dict], size: int, label: str
         )
     except ValueError as error:
         raise ValueError(
-            f'Box "{label}" has cast members with reference images, and the wired text encoder '
+            f'Box "{label}" has mixins with reference images, and the wired text encoder '
             f"can't read them: {error}"
         ) from error
     return encoded[0][0]

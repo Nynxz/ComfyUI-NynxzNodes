@@ -210,38 +210,38 @@ AMBER = {
 KAI = {"id": "kai", "name": "Kai", "trigger": "", "refs": [], "loras": []}
 
 
-class Cast(unittest.TestCase):
+class Mixins(unittest.TestCase):
     def scene(self, *boxes):
         return prompt.parse(
-            {**layout("moss", list(boxes), prompt="Anime style"), "cast": [AMBER, KAI, "junk"]}
+            {**layout("moss", list(boxes), prompt="Anime style"), "mixins": [AMBER, KAI, "junk"]}
         )
 
-    def test_members_parse_as_fresco_reads_a_layer(self):
-        cast = self.scene()["cast"]
-        self.assertEqual([m["id"] for m in cast], ["amber", "kai"])
-        amber = cast[0]
+    def test_mixins_parse_as_fresco_reads_a_layer(self):
+        mixins = self.scene()["mixins"]
+        self.assertEqual([m["id"] for m in mixins], ["amber", "kai"])
+        amber = mixins[0]
         self.assertEqual([r["ref"] for r in amber["refs"]], ["amber.png"])
         self.assertEqual(amber["refs"][0]["fit"], "cover")
         self.assertEqual(amber["loras"], [{"lora_name": "amber.safetensors", "strength": 0.8}])
 
-    def test_a_box_names_members_in_its_own_order_and_unknown_ids_drop(self):
-        scene = self.scene(box(cast=["kai", "ghost", "amber", "kai"]))
-        names = [m["name"] for m in prompt.members(scene, scene["boxes"][0])]
+    def test_a_box_names_mixins_in_its_own_order_and_unknown_ids_drop(self):
+        scene = self.scene(box(mixins=["kai", "ghost", "amber", "kai"]))
+        names = [m["name"] for m in prompt.mixins_of(scene, scene["boxes"][0])]
         self.assertEqual(names, ["Kai", "Amber"])
 
     def test_trigger_words_lead_the_box_prompt(self):
-        scene = self.scene(box(cast=["amber", "kai"], desc="she waves"))
+        scene = self.scene(box(mixins=["amber", "kai"], desc="she waves"))
         self.assertEqual(
             prompt.region_prompt(scene, scene["boxes"][0]), "Anime style. amb3r. she waves."
         )
 
     def test_a_trigger_alone_is_enough_for_a_prompt(self):
-        scene = self.scene(box(cast=["amber"], desc=""))
+        scene = self.scene(box(mixins=["amber"], desc=""))
         self.assertEqual(prompt.region_prompt(scene, scene["boxes"][0]), "Anime style. amb3r.")
 
-    def test_old_layouts_have_no_cast(self):
+    def test_old_layouts_have_no_mixins(self):
         scene = prompt.parse(layout("moss", [box()]))
-        self.assertEqual((scene["cast"], scene["boxes"][0]["cast"]), ([], []))
+        self.assertEqual((scene["mixins"], scene["boxes"][0]["mixins"]), ([], []))
 
 
 try:
@@ -303,7 +303,7 @@ class LayoutRegions(unittest.TestCase):
 
 
 @unittest.skipIf(torch is None, "needs torch")
-class CastRegions(unittest.TestCase):
+class MixinRegions(unittest.TestCase):
     def setUp(self):
         self.encoded = []
         fusion_pkg = types.ModuleType("nynxz_pack.fusion")
@@ -347,13 +347,13 @@ class CastRegions(unittest.TestCase):
             else:
                 sys.modules[name] = module
 
-    def regions(self, boxes, cast, clip=None):
-        scene = prompt.parse({**layout("moss", boxes, prompt="Anime style"), "cast": cast})
+    def regions(self, boxes, mixins, clip=None):
+        scene = prompt.parse({**layout("moss", boxes, prompt="Anime style"), "mixins": mixins})
         return layout_regions.regions(scene, clip, 512)
 
-    def test_cast_loras_ride_on_every_box_naming_them(self):
+    def test_mixin_loras_ride_on_every_box_naming_them(self):
         one, two, plain = self.regions(
-            [box(id="a", cast=["amber"]), box(id="b", cast=["amber"]), box(id="c")],
+            [box(id="a", mixins=["amber"]), box(id="b", mixins=["amber"]), box(id="c")],
             [{**AMBER, "refs": []}],
         )
         lora = [{"lora_name": "amber.safetensors", "strength": 0.8}]
@@ -361,7 +361,7 @@ class CastRegions(unittest.TestCase):
         self.assertNotIn("conditioning", one)
 
     def test_references_are_read_into_the_box_prompt(self):
-        (region,) = self.regions([box(cast=["amber"], desc="she waves")], [AMBER], clip="vl")
+        (region,) = self.regions([box(mixins=["amber"], desc="she waves")], [AMBER], clip="vl")
         self.assertEqual(region["conditioning"].shape, (1, 4, 8))
         self.assertEqual(region["prompt"], "Anime style. amb3r. she waves.")
         self.assertEqual(
@@ -370,15 +370,15 @@ class CastRegions(unittest.TestCase):
 
     def test_references_without_a_clip_say_to_wire_one(self):
         with self.assertRaisesRegex(ValueError, "Wire the CLIP"):
-            self.regions([box(cast=["amber"])], [AMBER])
+            self.regions([box(mixins=["amber"])], [AMBER])
 
     def test_an_encoder_that_cannot_see_images_names_the_box(self):
         with self.assertRaisesRegex(ValueError, 'Box "Lamp".*can\'t read them'):
-            self.regions([box(cast=["amber"])], [AMBER], clip="text-only")
+            self.regions([box(mixins=["amber"])], [AMBER], clip="text-only")
 
     def test_missing_reference_files_are_skipped(self):
         gone = {**AMBER, "refs": [{"ref": "gone.png"}]}
-        (region,) = self.regions([box(cast=["amber"])], [gone], clip="vl")
+        (region,) = self.regions([box(mixins=["amber"])], [gone], clip="vl")
         self.assertNotIn("conditioning", region)
         self.assertEqual(self.encoded, [])
 

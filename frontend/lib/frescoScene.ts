@@ -171,7 +171,7 @@ const list = (v: unknown): Record<string, unknown>[] =>
     ? v.filter((x): x is Record<string, unknown> => !!x && typeof x === "object")
     : [];
 
-/** Stored references, as a layer (or a layout's cast member) keeps them. */
+/** Stored references, as a layer (or a layout's mixin) keeps them. */
 export function readRefs(raw: unknown): FrescoRef[] {
   return list(raw)
     .filter((r) => r.ref)
@@ -187,7 +187,7 @@ export function readRefs(raw: unknown): FrescoRef[] {
     }));
 }
 
-/** Stored LoRAs, as a layer (or a layout's cast member) keeps them. */
+/** Stored LoRAs, as a layer (or a layout's mixin) keeps them. */
 export function readLoras(raw: unknown): FrescoLora[] {
   return list(raw).map((r) => ({
     id: String(r.id ?? uid("o")),

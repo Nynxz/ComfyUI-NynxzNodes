@@ -63,8 +63,8 @@ class NynxzLayoutExtras(NynxzNode):
                 io.Clip.Input(
                     "clip",
                     optional=True,
-                    tooltip="Only for cast members with reference images: the text encoder reads "
-                    "each such box's prompt with its cast's images. It must see images (Qwen3-VL, "
+                    tooltip="Only for mixins with reference images: the text encoder reads "
+                    "each such box's prompt with its mixins's images. It must see images (Qwen3-VL, "
                     "or Qwen3.5 for MOSS-Image) — the same CLIP as the main prompt.",
                 ),
                 io.Int.Input(
@@ -74,7 +74,7 @@ class NynxzLayoutExtras(NynxzNode):
                     max=1024,
                     step=32,
                     advanced=True,
-                    tooltip="How finely the cast's reference images are read (the side of the "
+                    tooltip="How finely the mixins's reference images are read (the side of the "
                     "visual grid, as Text Encode (Fusion)'s visual_size).",
                 ),
             ],
@@ -93,7 +93,7 @@ class NynxzLayoutExtras(NynxzNode):
                     display_name="regions",
                     tooltip="Each box as a region for Regions Apply (wire its clip too): the box's "
                     "mask, the upper box owning any overlap, and its own prompt, the scene's "
-                    "caption, its cast's trigger words, then the box's description. Its cast's "
+                    "caption, its mixins's trigger words, then the box's description. Its mixins's "
                     "LoRAs ride on it, and their reference images are read into its prompt (wire "
                     "the clip here for that). Keep the prompt above as the positive: Regions Apply "
                     "then makes each part of the picture read its own box.",

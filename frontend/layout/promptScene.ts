@@ -28,13 +28,14 @@ export interface PromptBox extends BoxRect {
   text: string;
   palette: string[];
   tags: string[];
-  /** Ids of the cast members in this box. */
-  cast: string[];
+  /** Ids of the mixins in this box. */
+  mixins: string[];
 }
 
-/** Someone (or something) several boxes show: their look and their LoRAs, given once. In each box
- *  that names them, the LoRAs run on that box only and the images are read into its prompt. */
-export interface CastMember {
+/** Something several boxes share — a character, an object, a style: reference images, LoRAs and
+ *  trigger words given once. In each box that names it, the LoRAs run on that box only and the
+ *  images are read into its prompt. */
+export interface Mixin {
   id: string;
   name: string;
   /** Words added to the prompt of every box that names them — a LoRA's trigger. */
@@ -64,7 +65,7 @@ export interface PromptScene {
   meta: string[];
   canvas: MossCanvas;
   palette: string[];
-  cast: CastMember[];
+  mixins: Mixin[];
   /** Bottom to top: background first, foreground last — the order the prompt lists them. */
   boxes: PromptBox[];
 }
@@ -142,15 +143,15 @@ export function readBox(raw: unknown, index = 0): PromptBox {
     text: str(b.text),
     palette: strings(b.palette),
     tags: strings(b.tags),
-    cast: strings(b.cast),
+    mixins: strings(b.mixins),
   };
 }
 
-export function readCastMember(raw: unknown, index = 0): CastMember {
+export function readMixin(raw: unknown, index = 0): Mixin {
   const m = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
   return {
     id: str(m.id) || uid("c"),
-    name: str(m.name) || `Cast ${index + 1}`,
+    name: str(m.name) || `Mixin ${index + 1}`,
     trigger: str(m.trigger),
     refs: readRefs(m.refs),
     loras: readLoras(m.loras),
@@ -180,7 +181,7 @@ export function readPromptScene(raw: unknown): PromptScene {
     meta: strings(s.meta),
     canvas: CANVASES.includes(s.canvas as MossCanvas) ? (s.canvas as MossCanvas) : "",
     palette: strings(s.palette),
-    cast: Array.isArray(s.cast) ? s.cast.map((m, i) => readCastMember(m, i)) : [],
+    mixins: Array.isArray(s.mixins) ? s.mixins.map((m, i) => readMixin(m, i)) : [],
     boxes: Array.isArray(s.boxes) ? s.boxes.map((b, i) => readBox(b, i)) : [],
   };
 }

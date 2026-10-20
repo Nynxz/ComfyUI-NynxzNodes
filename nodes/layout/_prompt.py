@@ -9,11 +9,11 @@ The Layout node's value, as the editor stores it (frontend/layout/promptScene.ts
         "background": str,                     # Ideogram
         "style": Style,                        # Ideogram
         "meta": [str], "canvas": str, "palette": [str],   # MOSS's summary
-        "cast": [Member, ...],                 # characters (or anything) boxes can name
+        "mixins": [Mixin, ...],                  # anything several boxes share: a character, a style
         "boxes": [Box, ...],                   # bottom to top: background first, foreground last
     }
 
-    Member = {"id", "name", "trigger": str,
+    Mixin = {"id", "name", "trigger": str,
               "refs": [{"ref", "type", "strength", "fit", "on"}],   # images, as Fresco's
               "loras": [{"name", "strength", "on"}]}
 
@@ -21,7 +21,7 @@ The Layout node's value, as the editor stores it (frontend/layout/promptScene.ts
            "hidden", "locked",
            "kind": "object" | "character" | "text",
            "desc", "text", "palette": [str], "tags": [str],
-           "cast": [member id, ...]}
+           "mixins": [mixin id, ...]}
 
 The modes share every field, so switching between them loses nothing; each reads what its model
 knows and ignores the rest. This module is pure (no ComfyUI), so the checks run anywhere.
@@ -102,7 +102,7 @@ def _box(raw: dict, index: int) -> dict:
         "text": _str(raw.get("text")).strip(),
         "palette": _palette(raw.get("palette"), 5),
         "tags": _strings(raw.get("tags")),
-        "cast": _strings(raw.get("cast")),
+        "mixins": _strings(raw.get("mixins")),
     }
 
 
@@ -127,8 +127,8 @@ def _dicts(value) -> list[dict]:
     return [v for v in value if isinstance(v, dict)] if isinstance(value, list) else []
 
 
-def _member(raw: dict, index: int) -> dict:
-    """A cast member as Fresco reads a layer's references and LoRAs: muted ones dropped."""
+def _mixin(raw: dict, index: int) -> dict:
+    """A mixin, read as Fresco reads a layer's references and LoRAs: muted ones dropped."""
     refs = [
         {
             "ref": _str(r.get("ref")),
@@ -153,10 +153,10 @@ def _member(raw: dict, index: int) -> dict:
     }
 
 
-def members(layout: dict, box: dict) -> list[dict]:
-    """The cast members `box` names, in the box's order; unknown ids are skipped."""
-    by_id = {member["id"]: member for member in layout["cast"]}
-    return [by_id[i] for i in dict.fromkeys(box["cast"]) if i in by_id]
+def mixins_of(layout: dict, box: dict) -> list[dict]:
+    """The mixins `box` names, in the box's order; unknown ids are skipped."""
+    by_id = {mixin["id"]: mixin for mixin in layout["mixins"]}
+    return [by_id[i] for i in dict.fromkeys(box["mixins"]) if i in by_id]
 
 
 def parse(raw) -> dict:
@@ -165,7 +165,7 @@ def parse(raw) -> dict:
     mode = raw.get("mode")
     canvas = raw.get("canvas")
     boxes = raw.get("boxes") if isinstance(raw.get("boxes"), list) else []
-    cast = raw.get("cast") if isinstance(raw.get("cast"), list) else []
+    mixins = raw.get("mixins") if isinstance(raw.get("mixins"), list) else []
     return {
         "mode": mode if mode in MODES else "ideogram",
         "width": _side(raw.get("width")),
@@ -176,7 +176,7 @@ def parse(raw) -> dict:
         "meta": _strings(raw.get("meta")),
         "canvas": canvas if canvas in CANVASES else "",
         "palette": _palette(raw.get("palette"), 16),
-        "cast": [_member(m, i) for i, m in enumerate(cast) if isinstance(m, dict)],
+        "mixins": [_mixin(m, i) for i, m in enumerate(mixins) if isinstance(m, dict)],
         "boxes": [_box(b, i) for i, b in enumerate(boxes) if isinstance(b, dict)],
     }
 
@@ -342,9 +342,9 @@ def _sentence(text: str) -> str:
 
 def region_prompt(layout: dict, box: dict) -> str:
     """A box's own prompt for Regions Apply: the scene's caption, then the trigger words of the
-    cast it names, then what the box holds, so the region keeps the scene's style and setting and
-    a cast member's LoRA hears its trigger there. Empty for a box that says nothing of its own."""
-    triggers = ", ".join(m["trigger"] for m in members(layout, box) if m["trigger"])
+    mixins it names, then what the box holds, so the region keeps the scene's style and setting and
+    a mixin's LoRA hears its trigger there. Empty for a box that says nothing of its own."""
+    triggers = ", ".join(m["trigger"] for m in mixins_of(layout, box) if m["trigger"])
     own = [triggers, box["desc"]]
     if box["kind"] == "text" and box["text"]:
         own.append('The text "' + box["text"] + '".')
