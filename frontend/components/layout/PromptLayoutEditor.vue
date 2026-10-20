@@ -32,7 +32,6 @@
           @update:model-value="setMixins"
           @create="addMixin()"
           @select-boxes="selectMixinBoxes"
-          @sheet="makeSheet"
         />
       </template>
       <template #add>
@@ -346,7 +345,6 @@ import { keepContextMenu } from "@/lib/ownContextMenu";
 import { PROMPT_MODES } from "@/layout/modes";
 import type { AgentImage, AgentLayout } from "@/layout/agent";
 import { boxId, kleinId, nextColor, readBox, readMixin } from "@/layout/promptScene";
-import { addLayoutNode, referenceSheet } from "@/layout/referenceSheet";
 import type { SourceType } from "@/lib/fusionApi";
 import type {
   BoxKind,
@@ -365,8 +363,6 @@ const props = defineProps<{
     id?: string | number;
     graph?: { setDirtyCanvas?: (a: boolean, b: boolean) => void };
     properties?: Record<string, unknown>;
-    pos?: [number, number];
-    size?: [number, number];
   };
   inPanel?: boolean;
   /** A new layout: ask which model it's for before anything else. */
@@ -519,13 +515,6 @@ function addMixin(fromBox?: string) {
 function editMixin(id?: string) {
   openMixin.value = id ?? scene.value.mixins[0]?.id ?? null;
   editor.value?.showTab("mixins");
-}
-/** A reference sheet for a mixin, as a new Layout node beside this one. */
-function makeSheet(id: string) {
-  const mixin = scene.value.mixins.find((m) => m.id === id);
-  if (!mixin || !props.node) return;
-  if (!addLayoutNode(referenceSheet(scene.value, mixin), props.node))
-    console.warn("[Nynxz Layout] couldn't add the reference sheet's Layout node");
 }
 function selectMixinBoxes(id: string) {
   selected.value = scene.value.boxes.filter((b) => b.mixins.includes(id)).map((b) => b.id);
