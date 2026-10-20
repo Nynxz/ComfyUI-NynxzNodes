@@ -242,9 +242,9 @@ visual block to prompt against. So the blend happens inside the conditioning: ea
 encoded independently through the Qwen3-VL vision tower, and their visual tokens are mixed token by
 token under a weight field you control — by spatial pattern or by content.
 
-> Needs a **Qwen3-VL text encoder** (`qwen3vl_4b` / `qwen3vl_8b`) — hence `Text Encode (Fusion)`
-> rather than any one model's name. Krea 2 and Mage-Flow at 4B; **Qwen Image 2.1** and Ideogram 4
-> at 8B. The node detects which is wired and adapts the chat template, alpha handling and
+> Needs a **Qwen3-VL or Qwen3.5 text encoder** (`qwen3vl_4b` / `qwen3vl_8b` / `qwen35_*`) — hence
+> `Text Encode (Fusion)` rather than any one model's name. Krea 2 and Mage-Flow at 4B; **Qwen Image
+> 2.1** and Ideogram 4 at 8B; MOSS Image on Qwen3.5 9B. The node detects which is wired and adapts the chat template, alpha handling and
 > reference sizing to it.
 
 **Qwen Image 2.1 is built differently, and it changes what you fuse.** Krea 2 and

@@ -1,6 +1,6 @@
 """Which text encoder is on the wire, and what the fusion has to do differently for it.
 
-Every encoder the fusion supports is a Qwen3-VL derivative, so they agree on the parts that matter
+Every encoder the fusion supports is a Qwen3-VL derivative or Qwen3.5, so they agree on the parts that matter
 most: patch 16 / spatial merge 2, `<|vision_start|><|image_pad|><|vision_end|>` markers, and a
 `{key: [[(id, weight), ...]]}` tokenizer dict. They disagree on everything around that — which chat
 template they were trained on, what a transparent pixel should become, how a reference latent is
@@ -35,6 +35,14 @@ PROMPT_TEMPLATE = (
 # Mage-Flow load, 8B is what Qwen Image 2.1 and Ideogram 4 load. The hidden size differs (2560 vs
 # 4096) but nothing in the blend is dimension-bound, and the vision tower geometry is identical.
 QWEN3VL_KEYS = ("qwen3vl_4b", "qwen3vl_8b")
+
+# Qwen3.5 is natively multimodal with the same vision geometry and image preprocessing as Qwen3-VL
+# (QWEN35_VISION_DEFAULTS in comfy/text_encoders/qwen35.py), at every size. MOSS Image loads the
+# 9B. Its `<|image_pad|>` id differs, but the tokenizer swaps it for the image embed before the
+# engine looks, and the engine finds the image by that embed, never by id.
+QWEN35_KEYS = ("qwen35_08b", "qwen35_2b", "qwen35_4b", "qwen35_9b", "qwen35_27b")
+
+FUSION_KEYS = QWEN3VL_KEYS + QWEN35_KEYS
 
 # Vision tower geometry, shared by every Qwen3-VL size (QWEN3VL_VISION_COMMON in
 # comfy/text_encoders/qwen3vl.py). One merged visual token per patch_size * merge_size pixels.
@@ -129,6 +137,24 @@ QWEN_IMAGE21 = EncoderProfile(
 #: applies. Byte-for-byte the behaviour this pack shipped before profiles existed.
 QWEN3VL = EncoderProfile(name="Qwen3-VL")
 
+#: Qwen3.5 (comfy/text_encoders/qwen35.py) at any size. It keeps its visual tokens like Qwen3-VL,
+#: so the same profile applies.
+QWEN35 = EncoderProfile(name="Qwen3.5")
+
+# MOSS Image's conditioning turn (MOSSImageTokenizer in comfy/text_encoders/moss_image.py): no
+# system turn, the user turn, then an open think block. MOSS is text-to-image and was never shown
+# an image, so the visual block can't be in distribution either way; it goes at the head of the
+# user turn, where every other profile puts it, and the rest is the turn MOSS was trained on.
+# Starting with `<|im_start|>` makes the tokenizer take it as-is.
+MOSS_IMAGE_TEMPLATE = (
+    "<|im_start|>user\n<|vision_start|><|image_pad|><|vision_end|>{prompt}<|im_end|>\n"
+    "<|im_start|>assistant\n<think>\n"
+)
+
+#: MOSS Image (Qwen3.5 9B). Qwen3.5 in every respect but the chat template. Its DiT reads the whole
+#: conditioning, untrimmed, as text tokens beside the image tokens.
+MOSS_IMAGE = EncoderProfile(name="MOSS Image", template=MOSS_IMAGE_TEMPLATE)
+
 
 def _class_names(obj) -> set[str]:
     return {cls.__name__ for cls in type(obj).__mro__}
@@ -159,12 +185,17 @@ def detect_profile(clip) -> EncoderProfile:
     tokenizer = getattr(clip, "tokenizer", None)
     if tokenizer is None:
         raise ValueError(
-            "Visual fusion needs a Qwen3-VL text encoder (Qwen Image 2.1, Krea 2, Mage-Flow, "
-            "Ideogram 4 or a plain Qwen3-VL 4B/8B). The wired CLIP has no tokenizer."
+            "Visual fusion needs a Qwen3-VL or Qwen3.5 text encoder (Qwen Image 2.1, Krea 2, "
+            "Mage-Flow, Ideogram 4, MOSS Image, or a plain Qwen3-VL / Qwen3.5). The wired CLIP "
+            "has no tokenizer."
         )
     names = _class_names(tokenizer)
     if "QwenImage21Tokenizer" in names or _takes_keep_vision(tokenizer):
         return QWEN_IMAGE21
+    if "MOSSImageTokenizer" in names:
+        return MOSS_IMAGE
+    if "Qwen35ImageTokenizer" in names:
+        return QWEN35
     return QWEN3VL
 
 
@@ -194,9 +225,9 @@ def token_pairs(tokens):
 
 
 def check_token_key(key, profile):
-    if key not in QWEN3VL_KEYS:
+    if key not in FUSION_KEYS:
         raise ValueError(
-            f"Visual fusion requires a Qwen3-VL text encoder (detected: {profile.name}); got a "
-            f"'{key}' tokenizer. Krea 2 and Mage-Flow report 'qwen3vl_4b'; Qwen Image 2.1 and "
-            "Ideogram 4 report 'qwen3vl_8b'."
+            f"Visual fusion requires a Qwen3-VL or Qwen3.5 text encoder (detected: {profile.name}); "
+            f"got a '{key}' tokenizer. Krea 2 and Mage-Flow report 'qwen3vl_4b'; Qwen Image 2.1 "
+            "and Ideogram 4 report 'qwen3vl_8b'; MOSS Image reports 'qwen35_9b'."
         )

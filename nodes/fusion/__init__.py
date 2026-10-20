@@ -7,8 +7,9 @@ conditioning: each source is encoded independently through the Qwen3-VL vision t
 visual tokens are mixed token by token under a weight field you control — by spatial pattern or by content.
 
 **Qwen3-VL text encoder, not Qwen Image Edit.** The only hard requirement is a `qwen3vl_4b` /
-`qwen3vl_8b` tokenizer — hence `Text Encode (Fusion)` rather than any model's name. That covers
-Krea 2 and Mage-Flow (4B), and Qwen Image 2.1 and Ideogram 4 (8B). The differences between them
+`qwen3vl_8b` tokenizer, or a Qwen3.5 one (`qwen35_*`, which shares the vision tower geometry) —
+hence `Text Encode (Fusion)` rather than any model's name. That covers Krea 2 and Mage-Flow (4B),
+Qwen Image 2.1 and Ideogram 4 (8B), and MOSS Image (Qwen3.5 9B). The differences between them
 — chat template, what a transparent pixel composites onto, how a reference latent is sized — are
 described once in `_encoders.py` and the engine asks the profile, so adding the next Qwen3-VL
 derivative is a row in that file rather than a patch to the fusion math.
