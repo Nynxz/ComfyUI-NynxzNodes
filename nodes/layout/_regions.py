@@ -8,8 +8,18 @@ import logging
 from ..fresco import _scene
 from . import _prompt
 
+#: How a box's prompt is read next to its mixins' references (Text Encode (Fusion)'s prompt_mode):
+#: a reading with no image mixed in, so the box's own words aren't drowned out by the picture.
+DEFAULT_PROMPT_MODE = "blend clean"
 
-def regions(layout: dict, clip=None, reference_size: int = 384) -> list[dict]:
+
+def regions(
+    layout: dict,
+    clip=None,
+    reference_size: int = 384,
+    prompt_mode: str = DEFAULT_PROMPT_MODE,
+    prompt_blend: float = 0.5,
+) -> list[dict]:
     """The shown boxes as regions, bottom to top. Where boxes overlap the upper one owns the area,
     as it is drawn in front.
 
@@ -44,7 +54,15 @@ def regions(layout: dict, clip=None, reference_size: int = 384) -> list[dict]:
                     "Qwen3-VL or Qwen3.5) into Layout Extras."
                 )
             conditioning = _encode_with_refs(
-                clip, own or layout["prompt"], refs, reference_size, label
+                clip,
+                own or layout["prompt"],
+                refs,
+                label,
+                {
+                    "visual_size": reference_size,
+                    "prompt_mode": prompt_mode,
+                    "prompt_blend": prompt_blend,
+                },
             )
             if conditioning is not None:
                 region["conditioning"] = conditioning
@@ -56,7 +74,7 @@ def regions(layout: dict, clip=None, reference_size: int = 384) -> list[dict]:
     return out
 
 
-def _encode_with_refs(clip, prompt: str, refs: list[dict], size: int, label: str):
+def _encode_with_refs(clip, prompt: str, refs: list[dict], label: str, settings: dict):
     """`prompt` encoded with the reference images, `[1, seq, features]`; None when none load."""
     from ..fusion._fusion import FusionSettings, encode_fusion
     from ..fusion.fusion_input import _load_image, _resolve_path
@@ -78,7 +96,7 @@ def _encode_with_refs(clip, prompt: str, refs: list[dict], size: int, label: str
             clip,
             prompt,
             sources=images,
-            settings=FusionSettings(visual_size=size),
+            settings=FusionSettings(**settings),
             strengths=strengths,
             fits=fits,
         )

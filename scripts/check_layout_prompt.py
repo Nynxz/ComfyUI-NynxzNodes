@@ -312,13 +312,16 @@ class MixinRegions(unittest.TestCase):
         loader = types.ModuleType("nynxz_pack.fusion.fusion_input")
 
         class Settings:
-            def __init__(self, visual_size):
+            def __init__(self, visual_size, prompt_mode, prompt_blend):
                 self.visual_size = visual_size
+                self.prompt = (prompt_mode, prompt_blend)
 
         def encode_fusion(clip, text, sources, settings, strengths, fits):
             if clip == "text-only":
                 raise ValueError("Visual fusion requires a Qwen3-VL text encoder")
-            self.encoded.append((text, len(sources), strengths, fits, settings.visual_size))
+            self.encoded.append(
+                (text, len(sources), strengths, fits, settings.visual_size, settings.prompt)
+            )
             return [[torch.ones((1, 4, 8)), {}]]
 
         engine.FusionSettings, engine.encode_fusion = Settings, encode_fusion
@@ -347,9 +350,9 @@ class MixinRegions(unittest.TestCase):
             else:
                 sys.modules[name] = module
 
-    def regions(self, boxes, mixins, clip=None):
+    def regions(self, boxes, mixins, clip=None, **prompt_mode):
         scene = prompt.parse({**layout("moss", boxes, prompt="Anime style"), "mixins": mixins})
-        return layout_regions.regions(scene, clip, 512)
+        return layout_regions.regions(scene, clip, 512, **prompt_mode)
 
     def test_mixin_loras_ride_on_every_box_naming_them(self):
         one, two, plain = self.regions(
@@ -365,8 +368,19 @@ class MixinRegions(unittest.TestCase):
         self.assertEqual(region["conditioning"].shape, (1, 4, 8))
         self.assertEqual(region["prompt"], "Anime style. amb3r. she waves.")
         self.assertEqual(
-            self.encoded, [("Anime style. amb3r. she waves.", 1, [1.0], ["cover"], 512)]
+            self.encoded,
+            [("Anime style. amb3r. she waves.", 1, [1.0], ["cover"], 512, ("blend clean", 0.5))],
         )
+
+    def test_the_box_prompt_can_be_read_how_the_node_says(self):
+        self.regions(
+            [box(mixins=["amber"])],
+            [AMBER],
+            clip="vl",
+            prompt_mode="append clean",
+            prompt_blend=0.2,
+        )
+        self.assertEqual(self.encoded[0][-1], ("append clean", 0.2))
 
     def test_references_without_a_clip_say_to_wire_one(self):
         with self.assertRaisesRegex(ValueError, "Wire the CLIP"):

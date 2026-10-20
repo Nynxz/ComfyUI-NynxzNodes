@@ -13,6 +13,7 @@ from PIL import Image
 
 from .. import _categories
 from .._base import NynxzNode
+from ..fusion._fusion import PROMPT_MODES
 from ..regions._io_types import Regions
 from . import _overlay, _prompt, _regions
 from .layout import Layout
@@ -74,8 +75,27 @@ class NynxzLayoutExtras(NynxzNode):
                     max=1024,
                     step=32,
                     advanced=True,
-                    tooltip="How finely the mixins's reference images are read (the side of the "
+                    tooltip="How finely the mixins' reference images are read (the side of the "
                     "visual grid, as Text Encode (Fusion)'s visual_size).",
+                ),
+                io.Combo.Input(
+                    "reference_prompt",
+                    options=PROMPT_MODES,
+                    default=_regions.DEFAULT_PROMPT_MODE,
+                    tooltip="How a box's words hold up next to its mixins' reference images, which "
+                    "can drown them out. 'blend clean' mixes in a reading of the box's prompt that "
+                    "never saw the images, by reference_blend; 'append clean' adds that reading "
+                    "after, the strongest push; 'with reference' is the images' reading alone.",
+                ),
+                io.Float.Input(
+                    "reference_blend",
+                    default=0.5,
+                    min=0.0,
+                    max=1.0,
+                    step=0.05,
+                    tooltip="For 'blend clean': 0 is the prompt as read with the images, 1 the "
+                    "prompt read on its own (the images then only reach the box through attention "
+                    "to their tokens).",
                 ),
             ],
             outputs=[
@@ -113,6 +133,8 @@ class NynxzLayoutExtras(NynxzNode):
         show_text=True,
         clip=None,
         reference_size=384,
+        reference_prompt=_regions.DEFAULT_PROMPT_MODE,
+        reference_blend=0.5,
     ) -> io.NodeOutput:
         parsed = _prompt.parse(layout)
         for warning in _prompt.warnings(parsed):
@@ -139,7 +161,7 @@ class NynxzLayoutExtras(NynxzNode):
             height,
             overlay,
             alpha,
-            _regions.regions(parsed, clip, reference_size),
+            _regions.regions(parsed, clip, reference_size, reference_prompt, reference_blend),
         )
 
 
