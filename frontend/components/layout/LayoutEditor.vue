@@ -1055,7 +1055,7 @@ function matchSource() {
   if (s) setSize(s[0], s[1]);
 }
 
-defineExpose({ addBox, update, patchBoxes, stagePoint, offerBackdrop, backdrop, showTab });
+defineExpose({ addBox, update, offerBackdrop, backdrop, showTab });
 </script>
 
 <style scoped>
@@ -1210,9 +1210,6 @@ defineExpose({ addBox, update, patchBoxes, stagePoint, offerBackdrop, backdrop, 
   gap: 6px;
   width: 104px;
   transition: opacity 0.12s ease;
-}
-.le-ctl.dim {
-  opacity: 0.4;
 }
 .le-chip {
   flex: none;

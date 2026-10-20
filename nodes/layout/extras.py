@@ -79,7 +79,7 @@ class NynxzLayoutExtras(NynxzNode):
                     "clip",
                     optional=True,
                     tooltip="Only for mixins with reference images: the text encoder reads "
-                    "each such box's prompt with its mixins's images. It must see images (Qwen3-VL, "
+                    "each such box's prompt with its mixins' images. It must see images (Qwen3-VL, "
                     "or Qwen3.5 for MOSS-Image) — the same CLIP as the main prompt.",
                 ),
                 io.Int.Input(
@@ -127,7 +127,7 @@ class NynxzLayoutExtras(NynxzNode):
                     display_name="regions",
                     tooltip="Each box as a region for Regions Apply (wire its clip too): the box's "
                     "mask, the upper box owning any overlap, and its own prompt, the scene's "
-                    "caption, its mixins's trigger words, then the box's description. Its mixins's "
+                    "caption, its mixins' trigger words, then the box's description. Its mixins' "
                     "LoRAs ride on it, and their reference images are read into its prompt (wire "
                     "the clip here for that). Keep the prompt above as the positive: Regions Apply "
                     "then makes each part of the picture read its own box.",
@@ -156,7 +156,7 @@ class NynxzLayoutExtras(NynxzNode):
         reference_blend=0.5,
     ) -> io.NodeOutput:
         parsed = _prompt.parse(layout)
-        for warning in _prompt.warnings(parsed):
+        for warning in _prompt.warnings(layout):
             logging.info("Nynxz Layout (%s): %s", parsed["mode"], warning)
         width, height = parsed["width"], parsed["height"]
         size = (width, height) if image is None else (image.shape[2], image.shape[1])

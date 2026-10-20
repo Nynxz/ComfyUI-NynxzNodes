@@ -703,12 +703,4 @@ onBeforeUnmount(() => api.removeEventListener("executed", onExecuted));
   font-weight: 400;
   color: var(--zen-muted, #9aa0aa);
 }
-.fs-note {
-  font-size: 11px;
-  color: var(--zen-muted, #9aa0aa);
-}
-.fs-pad {
-  margin: 0;
-  padding: 4px 2px;
-}
 </style>

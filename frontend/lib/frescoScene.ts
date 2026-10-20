@@ -138,7 +138,6 @@ export interface FrescoScene {
   settings: FrescoSettings;
 }
 
-export const BACKGROUND_ID = "background";
 /** Mirrors nodes/fresco/_scene.py: an edit keeps the scene unless asked. */
 export const BACKGROUND_DENOISE = 0.05;
 
