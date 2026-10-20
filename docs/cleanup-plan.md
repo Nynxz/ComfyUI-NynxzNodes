@@ -78,6 +78,17 @@ the two summary components, `refFromMedia`/`readRefs` living in `frescoScene.ts`
 7. **Tests:** a tiny Z-Image (NextDiT) CPU harness like the MOSS one (Z-Image has **no** tests today);
    Krea attention routing; `_mask`, `_lora` numerics against ComfyUI's merged weights.
 
+**Phase 3 done** (0bea104…a746589): `_families` registry and `apply_regions` (`_apply`) with
+`RegionSettings`; Fresco Apply calls it; `_copies` + `_bias` shared by Z-Image, MOSS-Image and
+Krea 2's patch; one loader (`_lora.load_region_loras`); Krea 2's install and markers in `_krea`.
+Tests: `check_region_families` (all three families end to end, tiny ComfyUI models, real LoRA
+files), `check_region_lora` (branches against ComfyUI's merge), `check_krea_attention`;
+`run_checks.py /path/to/ComfyUI` runs every check. Item 6 kept one module per family rather than
+splitting MOSS's `ffn_down` and profiling out. Found on the way, and fixed:
+- every region LoRA crashed on its first step (a stray `@property` from Phase 1, never released);
+- Z-Image regions moved the image on the rope, changed the padding, and gave the image refiner the
+  text mask when the lengths matched — output change on Z-Image with regions.
+
 ## Phase 4 — fusion engine
 
 - Split `_fusion.py` (1,792 lines): `_inputs.py` (widget builders — the only part needing
