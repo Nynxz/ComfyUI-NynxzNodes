@@ -6,22 +6,11 @@ Run: python scripts/check_layout_agent.py
 
 from __future__ import annotations
 
-import importlib.util
-import sys
-import types
 import unittest
-from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1] / "nodes" / "layout"
-package = types.ModuleType("layout_pkg")
-package.__path__ = [str(ROOT)]
-sys.modules["layout_pkg"] = package
-for name in ("_prompt", "_agent"):
-    spec = importlib.util.spec_from_file_location(f"layout_pkg.{name}", ROOT / f"{name}.py")
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[f"layout_pkg.{name}"] = module
-    spec.loader.exec_module(module)
-agent = sys.modules["layout_pkg._agent"]
+from _harness import load
+
+agent = load("layout._agent")
 
 REPLY = """Sure! Here is the layout:
 ```json

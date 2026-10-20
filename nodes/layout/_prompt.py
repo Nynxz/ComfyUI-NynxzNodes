@@ -37,6 +37,8 @@ import json
 import math
 import re
 
+from .._content import num, read_loras, read_refs
+
 MODES = ("ideogram", "klein", "moss")
 KINDS = ("object", "character", "text")
 CANVASES = ("", "single", "multi_panel", "collage")
@@ -51,14 +53,6 @@ def _str(value) -> str:
     return value if isinstance(value, str) else ""
 
 
-def _num(value, default: float) -> float:
-    try:
-        number = float(value)
-    except (TypeError, ValueError):
-        return default
-    return number if math.isfinite(number) else default
-
-
 def _strings(value) -> list[str]:
     if not isinstance(value, list):
         return []
@@ -66,7 +60,7 @@ def _strings(value) -> list[str]:
 
 
 def _side(value) -> int:
-    snapped = round(_num(value, 1024) / SNAP) * SNAP
+    snapped = round(num(value, 1024) / SNAP) * SNAP
     return int(max(SNAP, min(MAX_SIDE, snapped)))
 
 
@@ -86,16 +80,16 @@ def _palette(value, limit: int) -> list[str]:
 
 
 def _box(raw: dict, index: int) -> dict:
-    x = min(1.0, max(0.0, _num(raw.get("x"), 0.0)))
-    y = min(1.0, max(0.0, _num(raw.get("y"), 0.0)))
+    x = min(1.0, max(0.0, num(raw.get("x"), 0.0)))
+    y = min(1.0, max(0.0, num(raw.get("y"), 0.0)))
     kind = raw.get("kind")
     return {
         "id": _str(raw.get("id")) or f"b{index + 1}",
         "name": _str(raw.get("name")),
         "x": x,
         "y": y,
-        "w": min(1.0 - x, max(0.0, _num(raw.get("w"), 0.0))),
-        "h": min(1.0 - y, max(0.0, _num(raw.get("h"), 0.0))),
+        "w": min(1.0 - x, max(0.0, num(raw.get("w"), 0.0))),
+        "h": min(1.0 - y, max(0.0, num(raw.get("h"), 0.0))),
         "hidden": bool(raw.get("hidden", False)),
         "kind": kind if kind in KINDS else "object",
         "desc": _str(raw.get("desc")).strip(),
@@ -133,31 +127,10 @@ MIXIN_COLORS = (
     "#84CC16",
     "#06B6D4",
 )
-REF_TYPES = ("input", "output", "temp")
-FITS = ("contain", "cover", "stretch")
-
-
-def _dicts(value) -> list[dict]:
-    return [v for v in value if isinstance(v, dict)] if isinstance(value, list) else []
 
 
 def _mixin(raw: dict, index: int) -> dict:
-    """A mixin, read as Fresco reads a layer's references and LoRAs: muted ones dropped."""
-    refs = [
-        {
-            "ref": _str(r.get("ref")),
-            "type": r.get("type") if r.get("type") in REF_TYPES else "input",
-            "strength": max(0.0, _num(r.get("strength"), 1.0)),
-            "fit": r.get("fit") if r.get("fit") in FITS else "contain",
-        }
-        for r in _dicts(raw.get("refs"))
-        if _str(r.get("ref")) and r.get("on", True) is not False
-    ]
-    loras = [
-        {"lora_name": _str(r.get("name")), "strength": _num(r.get("strength"), 1.0)}
-        for r in _dicts(raw.get("loras"))
-        if _str(r.get("name")) and r.get("on", True) is not False
-    ]
+    """A mixin; its muted references and LoRAs are dropped."""
     return {
         "id": _str(raw.get("id")) or f"c{index + 1}",
         "name": _str(raw.get("name")).strip(),
@@ -165,8 +138,8 @@ def _mixin(raw: dict, index: int) -> dict:
         #: Who or what it is, in words: added to the description of every box that uses it.
         "desc": _str(raw.get("desc")).strip(),
         "trigger": _str(raw.get("trigger")).strip(),
-        "refs": [r for r in refs if r["strength"] > 0.0],
-        "loras": loras,
+        "refs": read_refs(raw.get("refs")),
+        "loras": read_loras(raw.get("loras")),
     }
 
 
