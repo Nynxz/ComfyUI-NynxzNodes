@@ -247,15 +247,18 @@ def _attention_bias(state, config: TrackConfig, q) -> torch.Tensor | None:
     if isolate:
         rows = slice(txtlen, txtlen + canvas)
         # Renormalized over regions only. Strengths and the schedule are about how hard a LoRA
-        # fires; the bias only wants to know which region a token belongs to. The background
-        # column goes with them, so two background tokens read as being in full agreement and are
-        # never separated.
+        # fires; the bias only wants to know which region a token belongs to.
         share = claim / claim.sum(dim=-1, keepdim=True).clamp(min=1e-6)
         # Regions in one group are one subject (Fresco's layer split into its box and its
         # reference shape), so they agree with each other and are never pushed apart.
         share = share @ state.groups.to(share.device, share.dtype)
         agreement = (share @ share.transpose(0, 1)).clamp(0.0, 1.0)
-        bias[:, rows, rows] = (-isolation * (1.0 - agreement)).to(q.dtype)
+        # Only region against region. A background token belongs to no region, so by agreement
+        # alone it would be pushed away from every token, itself included — which takes the
+        # scene's coherence (lighting, contact, perspective) with it.
+        claimed = claim.sum(dim=-1).clamp(0.0, 1.0)
+        both = claimed.unsqueeze(1) * claimed.unsqueeze(0)
+        bias[:, rows, rows] = (-isolation * (1.0 - agreement) * both).to(q.dtype)
     if routed:
         _route_prompt(bias, state, claim)
     if owned:
