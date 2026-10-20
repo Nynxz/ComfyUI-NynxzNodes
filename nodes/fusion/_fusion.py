@@ -124,6 +124,12 @@ REFERENCE_MODES = ["auto", "visual tokens", "reference latents"]
 DEFAULT_REFERENCE_MODE = "auto"
 TOKEN_MODE, LATENT_MODE = "visual tokens", "reference latents"
 
+# How the prompt reaches the conditioning. The prompt tokens sit after the visual block, so the
+# language model reads the prompt as a description of the reference; these let a reading that never
+# saw the reference in alongside it.
+PROMPT_WITH_REFERENCE, PROMPT_BLEND, PROMPT_APPEND = "with reference", "blend clean", "append clean"
+PROMPT_MODES = [PROMPT_WITH_REFERENCE, PROMPT_BLEND, PROMPT_APPEND]
+
 # Reference-latent mode splits into two channels, because on Qwen Image 2.1 they carry different
 # things: the spliced latent is the reference's PIXELS, and the text conditioning is the vision
 # tower's READING of it (the LM attended to the image before 2.1 dropped the vision tokens). They
@@ -189,6 +195,9 @@ class FusionSettings:
     reference_mode: str = DEFAULT_REFERENCE_MODE
     structure_source: str = DEFAULT_STRUCTURE_SOURCE
     semantic_strength: float = 1.0
+    prompt_mode: str = PROMPT_WITH_REFERENCE
+    #: How far "blend clean" moves the prompt tokens toward the reading without the reference.
+    prompt_blend: float = 0.5
     #: Fusion Regions' layout: `((top, left, bottom, right), flipped)` per region, the box as
     #: fractions of the frame. Empty = the sources weren't laid out over regions.
     regions: tuple = ()
@@ -1407,9 +1416,71 @@ def encode_fusion(
         debug["pixels"] = (prepared.width, prepared.height)
 
     encode = _encode_latent_fusion if mode == LATENT_MODE else _encode_token_fusion
-    return encode(
+    conditioning = encode(
         clip, prompt, sources, prepared, settings, strengths, profile, vae, debug, text_prepared
     )
+    if settings.prompt_mode == PROMPT_WITH_REFERENCE:
+        return conditioning
+    reading = text_prepared or prepared
+    tail = _prompt_tokens(
+        profile.tokenize(clip, prompt, reading.rgb[0], keep_vision=mode == TOKEN_MODE)
+    )
+    clean_tokens, clean = _encode_clean_prompt(clip, prompt, profile)
+    return _apply_prompt_mode(
+        conditioning, tail, clean_tokens, clean, settings.prompt_mode, settings.prompt_blend
+    )
+
+
+def _prompt_tokens(tokens):
+    """The token ids after the image's closing `<|vision_end|>`: the prompt and the turn's close,
+    which is what a reading with no image ends in too."""
+    _, pairs = token_pairs(tokens)
+    return [pair[0] for pair in pairs[_image_position(pairs) + 2 :]]
+
+
+def _encode_clean_prompt(clip, prompt, profile):
+    """The prompt read with no image, cached like the source encodes."""
+    tokens = profile.tokenize_text(clip, prompt)
+    _cache_scope(_COND_CACHE, "clip", clip)
+    key = (profile.name, prompt, "clean prompt")
+    conditioning = _cache_take(_COND_CACHE, key)
+    if conditioning is None:
+        conditioning = clip.encode_from_tokens_scheduled(tokens)
+        _cache_store(_COND_CACHE, key, conditioning)
+    return tokens, conditioning
+
+
+def _apply_prompt_mode(conditioning, tail, clean_tokens, clean, mode, blend):
+    """Bring the reading of the prompt that never saw a reference into the fused conditioning.
+
+    The prompt tokens are the last `len(tail)` positions of both conditionings, whatever each
+    encoder trimmed from the front, so "blend clean" mixes them position for position. "append
+    clean" adds the clean reading after the fused one and publishes where it went.
+    """
+    if mode not in (PROMPT_BLEND, PROMPT_APPEND):
+        raise ValueError(f"Unsupported prompt mode: {mode}")
+    _, clean_pairs = token_pairs(clean_tokens)
+    count = len(tail)
+    if [pair[0] for pair in clean_pairs[-count:]] != tail:
+        raise ValueError(
+            "The prompt read without an image doesn't end in the same tokens as the prompt read "
+            "with one, so the two readings can't be lined up. Use prompt_mode 'with reference'."
+        )
+    if len(clean) != len(conditioning):
+        raise ValueError("The clean prompt and the fused conditioning use different schedules.")
+    out = []
+    for (cond, meta), (clean_cond, _) in zip(conditioning, clean, strict=True):
+        clean_cond = clean_cond.to(cond.device, cond.dtype)
+        meta = meta.copy()
+        if mode == PROMPT_BLEND:
+            cond = cond.clone()
+            cond[:, -count:] = torch.lerp(cond[:, -count:], clean_cond[:, -count:], float(blend))
+        else:
+            length = cond.shape[1]
+            meta["nynxz_clean_prompt_span"] = [length, length + clean_cond.shape[1]]
+            cond = torch.cat([cond, clean_cond], dim=1)
+        out.append([cond, meta])
+    return out
 
 
 def style_inputs() -> list[io.Input]:
@@ -1593,6 +1664,31 @@ def reference_mode_input() -> io.Input:
             "experimenting but not what the model was trained on. 'auto' picks correctly for you.",
         )
     )
+
+
+def prompt_inputs() -> list[io.Input]:
+    """How strongly the prompt itself comes through, next to the references."""
+    return [
+        io.Combo.Input(
+            "prompt_mode",
+            options=PROMPT_MODES,
+            default=PROMPT_WITH_REFERENCE,
+            tooltip="The prompt is read after the references, so the model takes it as a "
+            "description of them and it can get lost. 'with reference' is that reading alone "
+            "(what this node always did). 'blend clean' mixes in a reading of the prompt with "
+            "no image, by prompt_blend. 'append clean' adds that reading after the fused one, "
+            "so the model sees the prompt twice: the strongest push, on a longer conditioning.",
+        ),
+        io.Float.Input(
+            "prompt_blend",
+            default=0.5,
+            min=0.0,
+            max=1.0,
+            step=0.05,
+            tooltip="For 'blend clean': 0 is the prompt as read with the references, 1 is the "
+            "prompt read on its own.",
+        ),
+    ]
 
 
 def structure_inputs() -> list[io.Input]:

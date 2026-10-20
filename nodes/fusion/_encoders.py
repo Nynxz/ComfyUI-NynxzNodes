@@ -31,6 +31,9 @@ PROMPT_TEMPLATE = (
     "<|im_start|>assistant\n"
 )
 
+# Where the image goes in a template. Taken out, the same turn reads the prompt with no image.
+VISION_BLOCK = "<|vision_start|><|image_pad|><|vision_end|>"
+
 # The tokenizer keys a Qwen3-VL text encoder reports. Both are first-class: 4B is what Krea 2 and
 # Mage-Flow load, 8B is what Qwen Image 2.1 and Ideogram 4 load. The hidden size differs (2560 vs
 # 4096) but nothing in the blend is dimension-bound, and the vision tower geometry is identical.
@@ -101,6 +104,13 @@ class EncoderProfile:
                 prompt, images=[image], keep_vision=keep_vision, prevent_empty_text=True
             )
         return clip.tokenize(self.template.format(prompt=prompt), images=[image])
+
+    def tokenize_text(self, clip, prompt):
+        """Tokenize the prompt with no image: the same turn, minus the vision block, so the tokens
+        after it match the ones after the image in `tokenize`."""
+        if self.template is None:
+            return clip.tokenize(prompt, images=[], prevent_empty_text=True)
+        return clip.tokenize(self.template.replace(VISION_BLOCK, "").format(prompt=prompt))
 
 
 #: Qwen-Image 2.1 (comfy/text_encoders/qwen_image21.py). A full Qwen3-VL-8B whose text encoder

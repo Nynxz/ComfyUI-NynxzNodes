@@ -260,6 +260,7 @@ const settingGroups = computed(() => {
   const method = str("fusion_method", "spatial-checkerboard");
   const cMode = str("content_mode", "none");
   const yMode = str("style_mode", "none");
+  const pMode = str("prompt_mode", "with reference");
   const f2 = (k: string) => num(k).toFixed(2);
   return [
     {
@@ -318,6 +319,13 @@ const settingGroups = computed(() => {
           v: `${num("alpha_sources")}/${p.num_sources}`,
           dim: num("alpha_sources") <= 0,
         },
+      ],
+    },
+    {
+      title: "Prompt",
+      rows: [
+        { k: "mode", v: str("prompt_mode", "with reference"), dim: pMode === "with reference" },
+        { k: "blend", v: f2("prompt_blend"), dim: pMode !== "blend clean" },
       ],
     },
     {

@@ -27,11 +27,13 @@ from ._fusion import (
     DEFAULT_STRUCTURE_SOURCE,
     FIT_OVERRIDE,
     FIT_OVERRIDE_OPTIONS,
+    PROMPT_WITH_REFERENCE,
     FusionSettings,
     alpha_input,
     empty_latent,
     encode_fusion,
     flatten_alpha,
+    prompt_inputs,
     reference_mode_input,
     seed_input,
     split_alpha,
@@ -149,6 +151,7 @@ class NynxzFusionEncode(FusionNode):
                 alpha_input(),
                 reference_mode_input(),
                 *structure_inputs(),
+                *prompt_inputs(),
                 io.Vae.Input("vae", optional=True),
                 io.Latent.Input(
                     "latent",
@@ -207,6 +210,8 @@ class NynxzFusionEncode(FusionNode):
         reference_mode=DEFAULT_REFERENCE_MODE,
         structure_source=DEFAULT_STRUCTURE_SOURCE,
         semantic_strength=1.0,
+        prompt_mode=PROMPT_WITH_REFERENCE,
+        prompt_blend=0.5,
         latent=None,
     ) -> io.NodeOutput:
         # One image is fine: the blend is a passthrough, which is what you want when this node
@@ -241,6 +246,8 @@ class NynxzFusionEncode(FusionNode):
             reference_mode=reference_mode,
             structure_source=structure_source,
             semantic_strength=semantic_strength,
+            prompt_mode=prompt_mode,
+            prompt_blend=prompt_blend,
             **_region_settings(entries),
         )
         # "per image" keeps each source's own fit; any other value forces all of them.
@@ -314,6 +321,8 @@ class NynxzFusionEncode(FusionNode):
                     "structure_source": debug.get("structure_source", ""),
                     "structure_anchor": debug.get("structure_anchor", -1),
                     "semantic_strength": settings.semantic_strength,
+                    "prompt_mode": settings.prompt_mode,
+                    "prompt_blend": settings.prompt_blend,
                     # How many sources actually carry a mask — the inspector dims the alpha row
                     # when it's none, so the knob reads as inert rather than ignored.
                     "alpha_sources": sum(1 for entry in entries if entry["image"].shape[-1] >= 4),
