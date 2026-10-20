@@ -156,7 +156,7 @@ class FfnDownBranches:
     """
 
     def __init__(self, loaded, state):
-        self.per_module = _branch._by_module(loaded)
+        self.per_module = _branch.by_module(loaded)
         self.state = state
         self.handles: list = []
         self.acts: dict[str, torch.Tensor] = {}
@@ -320,7 +320,7 @@ class MossRegions:
         _capture.remember(state)
 
         batch, main, features = context.shape
-        cond = _patches._conditional_rows(options, batch) or [True] * batch
+        cond = _patches.conditional_rows(options, batch) or [True] * batch
         parts, valids, slots, start = [context], [], [], main
         for region in self.regions:
             own = self.prompts.get(region)
@@ -605,7 +605,7 @@ class MossRegions:
         layout = self.layout
         if layout.valid is not None:
             copies = bias[:, :, offset + layout.main : offset + layout.text]
-            copies.masked_fill_(~layout.valid.to(bias.device).unsqueeze(1), _patches._NEVER)
+            copies.masked_fill_(~layout.valid.to(bias.device).unsqueeze(1), _patches.NEVER)
 
     def _text_bias(self, batch, device, dtype):
         """The `text_embedder`: each prompt refined alone."""
@@ -615,10 +615,10 @@ class MossRegions:
 
         def build():
             bias = torch.zeros((batch, size, size), device=device, dtype=torch.float32)
-            bias[:, : layout.main, layout.main :] = _patches._NEVER
+            bias[:, : layout.main, layout.main :] = _patches.NEVER
             for _, start, length in layout.slots:
                 copy = slice(start, start + length)
-                bias[:, copy, :] = _patches._NEVER
+                bias[:, copy, :] = _patches.NEVER
                 bias[:, copy, copy] = 0.0
             self._hide_padding(bias, 0)
             return bias.to(dtype).unsqueeze(1)
@@ -665,23 +665,23 @@ class MossRegions:
                 both = claimed.unsqueeze(1) * claimed.unsqueeze(0)
                 bias[:, canvas, canvas] = -isolation * (1.0 - agreement) * both
 
-            bias[:, :, copies] = _patches._NEVER
+            bias[:, :, copies] = _patches.NEVER
             if layout.slots:
                 taken = torch.zeros_like(claim[:, 0])
                 for region, start, length in layout.slots:
                     copy = slice(layout.canvas + start, layout.canvas + start + length)
-                    bias[:, copy, text] = _patches._NEVER
+                    bias[:, copy, text] = _patches.NEVER
                     bias[:, copy, copy] = 0.0
                     weight = claim[:, region]
                     taken = taken + weight
-                    logits = weight.clamp(min=_patches._LEAST).log()
+                    logits = weight.clamp(min=_patches.LEAST).log()
                     influence = state.influences[region] if region < len(state.influences) else 1.0
                     if influence != 1.0:
                         logits = logits + torch.where(
-                            weight > _patches._LEAST, math.log(influence), 0.0
+                            weight > _patches.LEAST, math.log(influence), 0.0
                         )
                     bias[:, canvas, copy] = logits.unsqueeze(-1)
-                rest = (1.0 - taken).clamp(min=_patches._LEAST).log().unsqueeze(-1)
+                rest = (1.0 - taken).clamp(min=_patches.LEAST).log().unsqueeze(-1)
                 bias[:, canvas, main] = rest
             self._hide_padding(bias, layout.canvas)
             return bias.to(dtype).unsqueeze(1)

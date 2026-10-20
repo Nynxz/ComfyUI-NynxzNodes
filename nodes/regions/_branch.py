@@ -119,7 +119,7 @@ def profiled(label: str):
     return torch.profiler.record_function(label) if PROFILE else contextlib.nullcontext()
 
 
-def _by_module(loaded) -> dict[str, list[tuple[tuple[int, ...], object]]]:
+def by_module(loaded) -> dict[str, list[tuple[tuple[int, ...], object]]]:
     """Invert `[(region, {module: Branch})]` into `module -> [(regions, Branch)]`.
 
     A branch several regions share (the same LoRA at the same strength, loaded once) is one entry
@@ -150,7 +150,7 @@ class Injection:
     """Attaches the branch hooks when the model goes live and removes them when it comes back."""
 
     def __init__(self, loaded, state, text=None):
-        self.per_module = _by_module(loaded)
+        self.per_module = by_module(loaded)
         self.state = state
         self.text = text
         self.handles: list = []

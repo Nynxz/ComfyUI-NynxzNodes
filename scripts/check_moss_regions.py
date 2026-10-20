@@ -245,9 +245,9 @@ class Masks(Harness):
         self.assertLess(float(bias[token_left, main].max()), -5.0)
         self.assertEqual(float(bias[token_right, b].max()), 0.0)
         self.assertLess(float(bias[token_right, a].max()), -5.0)
-        self.assertEqual(float(bias[main, a].max()), patches._NEVER)
-        self.assertEqual(float(bias[a, main].max()), patches._NEVER)
-        self.assertEqual(float(bias[a, b].max()), patches._NEVER)
+        self.assertEqual(float(bias[main, a].max()), patches.NEVER)
+        self.assertEqual(float(bias[a, main].max()), patches.NEVER)
+        self.assertEqual(float(bias[a, b].max()), patches.NEVER)
         self.assertEqual(float(bias[a, : layout.canvas].min()), 0.0)
 
     def test_in_the_text_refiner_each_prompt_reads_only_itself(self):
@@ -260,8 +260,8 @@ class Masks(Harness):
         copy = slice(start, start + length)
         self.assertEqual(float(bias[main, main].abs().max()), 0.0)
         self.assertEqual(float(bias[copy, copy].abs().max()), 0.0)
-        self.assertEqual(float(bias[main, copy].max()), patches._NEVER)
-        self.assertEqual(float(bias[copy, main].max()), patches._NEVER)
+        self.assertEqual(float(bias[main, copy].max()), patches.NEVER)
+        self.assertEqual(float(bias[copy, main].max()), patches.NEVER)
 
     def test_isolation_keeps_regions_apart_but_spares_the_background(self):
         narrow = torch.zeros((GRID, GRID))
@@ -475,7 +475,7 @@ class RegionLoras(Harness):
         self.assertEqual(once * 2, len(calls))
         torch.testing.assert_close(together, apart)
         self.assertEqual(
-            branch_mod._by_module([(0, {path: shared}), (1, {path: shared})]),
+            branch_mod.by_module([(0, {path: shared}), (1, {path: shared})]),
             {path: [((0, 1), shared)]},
         )
 

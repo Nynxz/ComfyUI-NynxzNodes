@@ -44,9 +44,9 @@ from . import _capture, _lock, _refs, _state, _track
 #: How far either side of `route_at` a multi-block read spreads, as a fraction of the stack.
 _SPREAD = 0.2
 #: A logit bias that is "never": far below any real logit, and still finite in fp16.
-_NEVER = -1e4
+NEVER = -1e4
 #: The smallest weight a canvas token gives a prompt, so `log` stays finite.
-_LEAST = 1e-4
+LEAST = 1e-4
 #: Warn past this much for one bias matrix. Quadratic in sequence length, so resolution gets you
 #: here, not region count.
 _WARN_BYTES = 256 * 1024 * 1024
@@ -154,7 +154,7 @@ def post_input_patch(state, text=None):
                 "img_ids": _refs.place(img_ids, state.ref_spans, state.txtlen, state.grid),
             }
         built = (
-            text.make(args["txt"], _conditional_rows(options, img.shape[0]))
+            text.make(args["txt"], conditional_rows(options, img.shape[0]))
             if text is not None
             else None
         )
@@ -179,7 +179,7 @@ def post_input_patch(state, text=None):
     return patch
 
 
-def _conditional_rows(options, batch: int) -> list[bool] | None:
+def conditional_rows(options, batch: int) -> list[bool] | None:
     """Which batch rows are conditional, from the sampler's `cond_or_uncond` (0 = cond), each
     entry covering an equal share of the batch. None when it doesn't say."""
     kinds = options.get("cond_or_uncond")
@@ -265,8 +265,8 @@ def _attention_bias(state, config: TrackConfig, q) -> torch.Tensor | None:
             owned,
             claim,
             rows,
-            _NEVER,
-            _LEAST,
+            NEVER,
+            LEAST,
             state.influences,
             lambda region: _region_copy(state, region),
         )
@@ -283,29 +283,29 @@ def _route_prompt(bias: torch.Tensor, state, claim: torch.Tensor) -> None:
     prompt = slice(0, txtlen)
     rows = slice(txtlen, txtlen + canvas)
     first = txtlen + canvas
-    bias[:, :, first : first + state.copy_tokens] = _NEVER
+    bias[:, :, first : first + state.copy_tokens] = NEVER
     taken = torch.zeros_like(claim[:, 0])
     scale = 1.0 if state.copy_full else state.scale
     for slot in state.copy_slots():
         copy = state.copy_rows(slot)
         weight = claim[:, slot[0]] * scale
         taken = taken + weight
-        bias[:, copy, prompt] = _NEVER
+        bias[:, copy, prompt] = NEVER
         bias[:, copy, copy] = 0.0
-        logits = weight.clamp(min=_LEAST).log()
+        logits = weight.clamp(min=LEAST).log()
         influence = state.influences[slot[0]] if slot[0] < len(state.influences) else 1.0
         if influence != 1.0:
             # Multiplies the attention its tokens give the copy — against the image and every
             # other key, not just the plain prompt — by `influence`, only where the region holds.
-            logits = logits + torch.where(weight > _LEAST, math.log(influence), 0.0)
+            logits = logits + torch.where(weight > LEAST, math.log(influence), 0.0)
         bias[:, rows, copy] = logits.unsqueeze(-1).to(bias.dtype)
-    rest = (1.0 - taken).clamp(min=_LEAST)
+    rest = (1.0 - taken).clamp(min=LEAST)
     bias[:, rows, prompt] = rest.log().unsqueeze(-1).to(bias.dtype)
     valid = state.copies.valid if state.copies is not None else None
     if valid is not None:
         # A copy padded on some rows: nobody reads the padding.
         pad = ~valid.to(bias.device).unsqueeze(1)
-        bias[:, :, first : first + state.copy_tokens].masked_fill_(pad, _NEVER)
+        bias[:, :, first : first + state.copy_tokens].masked_fill_(pad, NEVER)
 
 
 def _region_copy(state, region: int) -> slice | None:
@@ -327,7 +327,7 @@ def _base_bias(state, q) -> torch.Tensor | None:
     bias = torch.zeros((batch, seqlen, seqlen), device=q.device, dtype=q.dtype)
     for span in owned:
         cols = slice(span.start, span.start + span.length)
-        bias[:, :, cols] = _NEVER
+        bias[:, :, cols] = NEVER
         bias[:, cols, cols] = 0.0
     out = bias.unsqueeze(1)
     state.bias = (None, None, key, out)

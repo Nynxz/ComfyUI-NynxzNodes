@@ -536,7 +536,7 @@ def _load(patcher, entries, text: bool = True):
     """
     loaded, text_loaded, report = [], {}, []
     # A LoRA several regions carry at the same strength loads once and its branches are shared, so
-    # the hooks compute it once per layer for all of them (see `_branch._by_module`).
+    # the hooks compute it once per layer for all of them (see `_branch.by_module`).
     cache: dict[tuple[str, float, bool], tuple[dict, dict]] = {}
     for index, region in enumerate(entries):
         bound = region.get("loras") or []

@@ -179,7 +179,7 @@ class ZImageRegions:
         _capture.remember(state)
 
         batch, main, features = context.shape
-        cond = _patches._conditional_rows(options, batch) or [True] * batch
+        cond = _patches.conditional_rows(options, batch) or [True] * batch
         parts, valids, slots, start = [context], [], [], main
         for region in self.regions:
             own = self.prompts.get(region)
@@ -279,7 +279,7 @@ class ZImageRegions:
         layout = self.layout
         if layout.valid is not None:
             copies = bias[:, :, layout.main : layout.copies_end]
-            copies.masked_fill_(~layout.valid.to(bias.device).unsqueeze(1), _patches._NEVER)
+            copies.masked_fill_(~layout.valid.to(bias.device).unsqueeze(1), _patches.NEVER)
 
     def _text_bias(self, q):
         """`context_refiner`: each prompt refined alone, with the shared padding."""
@@ -292,11 +292,11 @@ class ZImageRegions:
             main = slice(0, layout.main)
             for _, start, length in layout.slots:
                 copy = slice(start, start + length)
-                bias[:, main, copy] = _patches._NEVER
-                bias[:, copy, :] = _patches._NEVER
+                bias[:, main, copy] = _patches.NEVER
+                bias[:, copy, :] = _patches.NEVER
                 bias[:, copy, copy] = 0.0
                 bias[:, copy, layout.copies_end :] = 0.0
-            bias[:, layout.copies_end :, layout.main : layout.copies_end] = _patches._NEVER
+            bias[:, layout.copies_end :, layout.main : layout.copies_end] = _patches.NEVER
             self._hide_padding(bias)
             return bias.to(q.dtype).unsqueeze(1)
 
@@ -345,24 +345,24 @@ class ZImageRegions:
                 bias[:, rows, rows] = -isolation * (1.0 - agreement) * both
 
             # Nobody but a copy's own tokens and the canvas reads a copy.
-            bias[:, :, copies] = _patches._NEVER
+            bias[:, :, copies] = _patches.NEVER
             if layout.slots:
                 taken = torch.zeros_like(claim[:, 0])
                 for region, start, length in layout.slots:
                     copy = slice(start, start + length)
-                    bias[:, copy, text] = _patches._NEVER
+                    bias[:, copy, text] = _patches.NEVER
                     bias[:, copy, copy] = 0.0
                     bias[:, copy, layout.copies_end : layout.text] = 0.0
                     weight = claim[:, region]
                     taken = taken + weight
-                    logits = weight.clamp(min=_patches._LEAST).log()
+                    logits = weight.clamp(min=_patches.LEAST).log()
                     influence = state.influences[region] if region < len(state.influences) else 1.0
                     if influence != 1.0:
                         logits = logits + torch.where(
-                            weight > _patches._LEAST, math.log(influence), 0.0
+                            weight > _patches.LEAST, math.log(influence), 0.0
                         )
                     bias[:, rows, copy] = logits.unsqueeze(-1)
-                rest = (1.0 - taken).clamp(min=_patches._LEAST).log().unsqueeze(-1)
+                rest = (1.0 - taken).clamp(min=_patches.LEAST).log().unsqueeze(-1)
                 for span in shared:
                     bias[:, rows, span] = rest
             self._hide_padding(bias)
@@ -434,7 +434,7 @@ def load_region_loras(
     `wanted(path)` accepts."""
     loaded: list[tuple[int, dict]] = []
     # A LoRA several regions carry at the same strength loads once and its branches are shared, so
-    # the hooks compute it once per layer for all of them (see `_branch._by_module`).
+    # the hooks compute it once per layer for all of them (see `_branch.by_module`).
     cache: dict[tuple[str, float], dict] = {}
     for index, region in enumerate(entries):
         for spec in region.get("loras") or []:
@@ -472,9 +472,9 @@ def _branches_for(
         if not wanted(target):
             off_target += 1
             continue
-        branch = _lora._branch_of(patch)
+        branch = _lora.branch_of(patch)
         if branch is None:
-            kind = _lora._kind(patch)
+            kind = _lora.patch_kind(patch)
             unsupported[kind] = unsupported.get(kind, 0) + 1
             continue
         branch.scale *= strength

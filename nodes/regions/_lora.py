@@ -212,7 +212,7 @@ def _kron(adapter) -> KronBranch | None:
     return KronBranch(w1, w2, alpha)
 
 
-def _branch_of(adapter):
+def branch_of(adapter):
     """The adapter as a branch at strength 1 (`FactoredBranch` or `KronBranch`), or None."""
     factored = _factored(adapter)
     if factored is not None:
@@ -270,14 +270,14 @@ def load_branches(
 
     for weight_key, patch in loaded.items():
         target = module_path(weight_key)
-        branch = _branch_of(patch)
+        branch = branch_of(patch)
         if _TEXT_MARKER in target:
             if branch is not None:
                 text_energy += branch.energy()
             if not text:
                 text_side += 1
             elif branch is None:
-                kind = _kind(patch)
+                kind = patch_kind(patch)
                 unsupported[kind] = unsupported.get(kind, 0) + 1
             else:
                 branch.scale *= strength
@@ -288,7 +288,7 @@ def load_branches(
             continue
 
         if branch is None:
-            kind = _kind(patch)
+            kind = patch_kind(patch)
             unsupported[kind] = unsupported.get(kind, 0) + 1
             continue
         block_energy += branch.energy()
@@ -321,7 +321,7 @@ def load_branches(
     return branches, text_branches
 
 
-def _kind(patch) -> str:
+def patch_kind(patch) -> str:
     """What `load_lora` handed back, by name — `LoRAAdapter`, `LoHaAdapter`, `diff`, ..."""
     if isinstance(patch, tuple):
         return str(patch[0]) if len(patch) == 2 and isinstance(patch[0], str) else "diff"

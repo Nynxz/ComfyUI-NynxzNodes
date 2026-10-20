@@ -321,7 +321,7 @@ def _shuffle_mask(mask, num_sources, amount, seed):
     return out.reshape(mask.shape)
 
 
-def _gaussian_blur2d(x, sigma, radius):
+def gaussian_blur2d(x, sigma, radius):
     """Separable gaussian blur over the spatial grid. x: [sources, 1, H, W]."""
     coords = torch.arange(-radius, radius + 1, device=x.device, dtype=x.dtype)
     kernel = torch.exp(-(coords**2) / (2.0 * sigma * sigma))
@@ -374,7 +374,7 @@ def _fusion_weights(
     if blend_strength <= 0.0 or feather <= 0.0 or radius < 1:
         return onehot
 
-    soft = _gaussian_blur2d(onehot.view(num_sources, 1, height, width), feather, radius).view(
+    soft = gaussian_blur2d(onehot.view(num_sources, 1, height, width), feather, radius).view(
         num_sources, tokens
     )
     soft = soft / soft.sum(dim=0, keepdim=True).clamp_min(1e-6)
