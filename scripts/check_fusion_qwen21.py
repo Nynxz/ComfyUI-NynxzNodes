@@ -12,22 +12,15 @@ counted forwards, so the checks here stub a text encoder that trims *exactly* th
 The token ids below are not invented — they were read off a real `QwenImage21Tokenizer` for the
 prompt "a red fox" with one image, so the layout this pins is the layout core produces.
 
-`_fusion.py` reaches for `comfy.utils`, `comfy.model_management`, `node_helpers` and `comfy_api`
-at import time; those are stubbed the same way `check_fusion_alpha.py` stubs them.
+ComfyUI is stubbed by `_harness.stub_comfy`, as for every fusion check.
 """
 
 from __future__ import annotations
 
-import importlib.util
-import sys
-import types
 import unittest
-from pathlib import Path
 
 import torch
-import torch.nn.functional as F
-
-NODES = Path(__file__).resolve().parents[1] / "nodes"
+from _harness import load, stub_comfy
 
 # --- the real layout, measured ---------------------------------------------------------------
 # QwenImage21Tokenizer("a red fox", images=[img]) -> 32 pairs, the image embed at index 22.
@@ -42,93 +35,9 @@ TAIL_IDS = [151653, 64, 2518, 38835, 151645, 198, 151644, 77091, 198]
 TRIM_AT = 14
 
 
-def _stub_comfy():
-    def common_upscale(samples, width, height, upscale_method, crop):
-        if crop == "center":
-            old_width, old_height = samples.shape[-1], samples.shape[-2]
-            old_aspect, new_aspect = old_width / old_height, width / height
-            x = y = 0
-            if old_aspect > new_aspect:
-                x = round((old_width - old_width * (new_aspect / old_aspect)) / 2)
-            elif old_aspect < new_aspect:
-                y = round((old_height - old_height * (old_aspect / new_aspect)) / 2)
-            samples = samples.narrow(-2, y, old_height - y * 2).narrow(-1, x, old_width - x * 2)
-        return F.interpolate(samples, size=(height, width), mode=upscale_method)
-
-    def conditioning_set_values(conditioning, values, append=False):
-        out = []
-        for cond, meta in conditioning:
-            meta = meta.copy()
-            for key, value in values.items():
-                if append and key in meta:
-                    meta[key] = list(meta[key]) + list(value)
-                else:
-                    meta[key] = value
-            out.append([cond, meta])
-        return out
-
-    utils = types.ModuleType("comfy.utils")
-    utils.common_upscale = common_upscale
-    management = types.ModuleType("comfy.model_management")
-    management.intermediate_device = lambda: torch.device("cpu")
-    comfy = types.ModuleType("comfy")
-    comfy.__path__ = []
-    comfy.utils = utils
-    comfy.model_management = management
-    helpers = types.ModuleType("node_helpers")
-    helpers.conditioning_set_values = conditioning_set_values
-    sys.modules.setdefault("comfy", comfy)
-    sys.modules.setdefault("comfy.utils", utils)
-    sys.modules.setdefault("comfy.model_management", management)
-    sys.modules.setdefault("node_helpers", helpers)
-
-    class _Any:
-        def __getattr__(self, name):
-            return _Any()
-
-        def __call__(self, *args, **kwargs):
-            return _Any()
-
-    latest = types.ModuleType("comfy_api.latest")
-    latest.io = _Any()
-    api = types.ModuleType("comfy_api")
-    api.latest = latest
-    sys.modules.setdefault("comfy_api", api)
-    sys.modules.setdefault("comfy_api.latest", latest)
-
-
-def _load(name):
-    """Import nodes/fusion/<name>.py under enough package scaffolding for its relative imports."""
-    if "nynxz_check" not in sys.modules:
-        pack = types.ModuleType("nynxz_check")
-        pack.__path__ = [str(NODES)]
-        lib = types.ModuleType("nynxz_check._zenkit")
-        lib.__path__ = [str(NODES / "_zenkit")]
-        io_types = types.ModuleType("nynxz_check._zenkit.io_types")
-        io_types.advanced = lambda widget: widget
-        group = types.ModuleType("nynxz_check.fusion")
-        group.__path__ = [str(NODES / "fusion")]
-        sys.modules.update(
-            {
-                "nynxz_check": pack,
-                "nynxz_check._zenkit": lib,
-                "nynxz_check._zenkit.io_types": io_types,
-                "nynxz_check.fusion": group,
-            }
-        )
-    full = f"nynxz_check.fusion.{name}"
-    if full in sys.modules:
-        return sys.modules[full]
-    spec = importlib.util.spec_from_file_location(full, NODES / "fusion" / f"{name}.py")
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[full] = module
-    spec.loader.exec_module(module)
-    return module
-
-
-_stub_comfy()
-encoders = _load("_encoders")
-fusion = _load("_fusion")
+stub_comfy()
+encoders = load("fusion._encoders")
+fusion = load("fusion._fusion")
 
 
 # --- stubs standing in for the real encoders ---------------------------------------------------

@@ -9,13 +9,10 @@ checked through the same attention calls, rope and text refiner a real run goes 
 
 from __future__ import annotations
 
-import importlib
 import sys
 import types
 import unittest
 from pathlib import Path
-
-NODES = Path(__file__).resolve().parents[1] / "nodes"
 
 torch = moss = state_mod = schedule_mod = patches = extension = MOSSImage = ops = None
 branch_mod = zimage = None
@@ -35,19 +32,16 @@ def _setup(comfy_path: str) -> None:
     import comfy.ops as comfy_ops
     import comfy.patcher_extension as comfy_extension
     import torch as torch_mod
+    from _harness import load
     from comfy.ldm.moss_image.model import MOSSImage as model_class
 
-    for name, folder in (("nynxz_pack", NODES), ("nynxz_pack.regions", NODES / "regions")):
-        package = types.ModuleType(name)
-        package.__path__ = [str(folder)]
-        sys.modules[name] = package
     torch, ops, extension, MOSSImage = torch_mod, comfy_ops, comfy_extension, model_class
-    moss = importlib.import_module("nynxz_pack.regions._moss")
-    state_mod = importlib.import_module("nynxz_pack.regions._state")
-    schedule_mod = importlib.import_module("nynxz_pack.regions._schedule")
-    patches = importlib.import_module("nynxz_pack.regions._patches")
-    branch_mod = importlib.import_module("nynxz_pack.regions._branch")
-    zimage = importlib.import_module("nynxz_pack.regions._zimage")
+    moss = load("regions._moss")
+    state_mod = load("regions._state")
+    schedule_mod = load("regions._schedule")
+    patches = load("regions._patches")
+    branch_mod = load("regions._branch")
+    zimage = load("regions._zimage")
 
 
 GRID = 4

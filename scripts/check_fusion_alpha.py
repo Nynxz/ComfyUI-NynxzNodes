@@ -3,101 +3,20 @@
 
 Run: python scripts/check_fusion_alpha.py
 
-`_fusion.py` reaches for `comfy.utils`, `node_helpers` and `comfy_api` at import time, so those are
-stubbed here. Only one stub does real work — `common_upscale`, transcribed from `comfy/utils.py`
-for the 4-dim case these checks use — because the whole question for `fit_image` is whether a 4th
-channel survives the resample the same way the first three do.
+ComfyUI is stubbed by `_harness.stub_comfy`; its `common_upscale` is comfy's own 4-dim path, which
+matters here: the question for `fit_image` is whether a 4th channel survives the resample the same
+way the first three do.
 """
 
 from __future__ import annotations
 
-import importlib.util
-import sys
-import types
 import unittest
-from pathlib import Path
 
 import torch
-import torch.nn.functional as F
+from _harness import load, stub_comfy
 
-NODES = Path(__file__).resolve().parents[1] / "nodes"
-
-
-def _stub_comfy():
-    def common_upscale(samples, width, height, upscale_method, crop):
-        # Transcribed from comfy/utils.py (4-dim path): center-crop to the target aspect, then
-        # interpolate. Channel-agnostic, which is exactly the property fit_image relies on.
-        if crop == "center":
-            old_width, old_height = samples.shape[-1], samples.shape[-2]
-            old_aspect, new_aspect = old_width / old_height, width / height
-            x = y = 0
-            if old_aspect > new_aspect:
-                x = round((old_width - old_width * (new_aspect / old_aspect)) / 2)
-            elif old_aspect < new_aspect:
-                y = round((old_height - old_height * (old_aspect / new_aspect)) / 2)
-            samples = samples.narrow(-2, y, old_height - y * 2).narrow(-1, x, old_width - x * 2)
-        return F.interpolate(samples, size=(height, width), mode=upscale_method)
-
-    utils = types.ModuleType("comfy.utils")
-    utils.common_upscale = common_upscale
-    management = types.ModuleType("comfy.model_management")
-    management.intermediate_device = lambda: torch.device("cpu")
-    comfy = types.ModuleType("comfy")
-    comfy.__path__ = []  # a package, so `import comfy.model_management` resolves
-    comfy.utils = utils
-    comfy.model_management = management
-    sys.modules.setdefault("comfy", comfy)
-    sys.modules.setdefault("comfy.utils", utils)
-    sys.modules.setdefault("comfy.model_management", management)
-    sys.modules.setdefault("node_helpers", types.ModuleType("node_helpers"))
-
-    class _Any:
-        """Stands in for anything `_fusion` only names (io.Input in an annotation, io.Combo in a
-        widget builder). Never exercised — these checks call the math, not the schema."""
-
-        def __getattr__(self, name):
-            return _Any()
-
-        def __call__(self, *args, **kwargs):
-            return _Any()
-
-    latest = types.ModuleType("comfy_api.latest")
-    latest.io = _Any()
-    api = types.ModuleType("comfy_api")
-    api.latest = latest
-    sys.modules.setdefault("comfy_api", api)
-    sys.modules.setdefault("comfy_api.latest", latest)
-
-
-def _load_fusion():
-    """Import nodes/fusion/_fusion.py under enough package scaffolding for its relative import."""
-    pack = types.ModuleType("nynxz_check")
-    pack.__path__ = [str(NODES)]
-    lib = types.ModuleType("nynxz_check._zenkit")
-    lib.__path__ = [str(NODES / "_zenkit")]
-    io_types = types.ModuleType("nynxz_check._zenkit.io_types")
-    io_types.advanced = lambda widget: widget  # marks a widget advanced; irrelevant to the math
-    group = types.ModuleType("nynxz_check.fusion")
-    group.__path__ = [str(NODES / "fusion")]
-    sys.modules.update(
-        {
-            "nynxz_check": pack,
-            "nynxz_check._zenkit": lib,
-            "nynxz_check._zenkit.io_types": io_types,
-            "nynxz_check.fusion": group,
-        }
-    )
-    spec = importlib.util.spec_from_file_location(
-        "nynxz_check.fusion._fusion", NODES / "fusion" / "_fusion.py"
-    )
-    module = importlib.util.module_from_spec(spec)
-    sys.modules["nynxz_check.fusion._fusion"] = module
-    spec.loader.exec_module(module)
-    return module
-
-
-_stub_comfy()
-fusion = _load_fusion()
+stub_comfy()
+fusion = load("fusion._fusion")
 
 
 def rgba(height, width, rgb=0.25, alpha=1.0):

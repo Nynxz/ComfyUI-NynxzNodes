@@ -12,18 +12,13 @@ fallback fires LATER, and a note in the preview used to say the opposite.
 
 from __future__ import annotations
 
-import importlib.util
 import sys
-import types
 import unittest
-from pathlib import Path
 
 import torch
+from _harness import load
 
-NODES = Path(__file__).resolve().parents[1] / "nodes"
-spec = importlib.util.spec_from_file_location("schedule", NODES / "regions" / "_schedule.py")
-schedule = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(schedule)
+schedule = load("regions._schedule")
 
 #: 8 steps of a flow schedule at shift 1 (even) and shift 3 (front-loaded), from
 #: `comfy.samplers.simple_scheduler`. A schedule of N steps is N+1 sigmas.
@@ -176,20 +171,8 @@ class ScaleAndFloor(unittest.TestCase):
 
 
 def _load_state():
-    """The real GateState + post_input patch, with only their siblings stubbed in."""
-    package = types.ModuleType("rg")
-    package.__path__ = [str(NODES / "regions")]
-    sys.modules["rg"] = package
-    loaded = {}
-    for name in ("_mask", "_schedule", "_track", "_state", "_patches"):
-        found = importlib.util.spec_from_file_location(
-            f"rg.{name}", NODES / "regions" / f"{name}.py"
-        )
-        module = importlib.util.module_from_spec(found)
-        sys.modules[f"rg.{name}"] = module
-        found.loader.exec_module(module)
-        loaded[name] = module
-    return loaded["_state"], loaded["_patches"]
+    """The real GateState + post_input patch."""
+    return load("regions._state"), load("regions._patches")
 
 
 class TheGateActuallyMoves(unittest.TestCase):

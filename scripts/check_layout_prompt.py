@@ -6,15 +6,14 @@ Run: python scripts/check_layout_prompt.py
 
 from __future__ import annotations
 
-import importlib.util
 import json
+import sys
+import types
 import unittest
-from pathlib import Path
 
-NODES = Path(__file__).resolve().parents[1] / "nodes"
-spec = importlib.util.spec_from_file_location("layout_prompt", NODES / "layout" / "_prompt.py")
-prompt = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(prompt)
+from _harness import load
+
+prompt = load("layout._prompt")
 
 
 def box(**over):
@@ -271,27 +270,9 @@ class Mixins(unittest.TestCase):
 
 
 try:
-    import sys
-    import types
-
     import torch
 
-    for name, folder in (
-        ("nynxz_pack", ""),
-        ("nynxz_pack.layout", "layout"),
-        ("nynxz_pack.fresco", "fresco"),
-        ("nynxz_pack.regions", "regions"),
-    ):
-        package = types.ModuleType(name)
-        package.__path__ = [str(NODES / folder)]
-        sys.modules[name] = package
-    sys.modules["nynxz_pack.layout._prompt"] = prompt
-    regions_spec = importlib.util.spec_from_file_location(
-        "nynxz_pack.layout._regions", NODES / "layout" / "_regions.py"
-    )
-    layout_regions = importlib.util.module_from_spec(regions_spec)
-    sys.modules["nynxz_pack.layout._regions"] = layout_regions
-    regions_spec.loader.exec_module(layout_regions)
+    layout_regions = load("layout._regions")
 except ImportError:
     torch = None
 
@@ -430,19 +411,7 @@ class MixinRegions(unittest.TestCase):
 try:
     from PIL import Image as PILImage
 
-    for name, folder in (("nynxz_sheet", ""), ("nynxz_sheet.layout", "layout")):
-        package = types.ModuleType(name)
-        package.__path__ = [str(NODES / folder)]
-        sys.modules[name] = package
-    sys.modules["nynxz_sheet.layout._prompt"] = prompt
-    for module in ("_overlay", "_sheet"):
-        spec_ = importlib.util.spec_from_file_location(
-            f"nynxz_sheet.layout.{module}", NODES / "layout" / f"{module}.py"
-        )
-        loaded = importlib.util.module_from_spec(spec_)
-        sys.modules[f"nynxz_sheet.layout.{module}"] = loaded
-        spec_.loader.exec_module(loaded)
-    sheet = sys.modules["nynxz_sheet.layout._sheet"]
+    sheet = load("layout._sheet")
 except ImportError:
     PILImage = None
 
