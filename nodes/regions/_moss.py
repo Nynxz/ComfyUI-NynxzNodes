@@ -52,7 +52,6 @@ Not here yet: tracking, the layout lock and region references.
 from __future__ import annotations
 
 import logging
-import math
 import re
 import time
 
@@ -61,7 +60,8 @@ import comfy.patcher_extension
 import comfy.utils
 import torch
 
-from . import _branch, _capture, _patches, _zimage
+from . import _bias, _branch, _copies, _zimage
+from ._bias import NEVER
 from ._branch import PROFILE, PROFILE_AT, profiled
 
 WRAPPER_KEY = "nynxz_regions_moss"
@@ -267,7 +267,7 @@ class Layout:
         return self.canvas + self.text
 
 
-class MossRegions:
+class MossRegions(_copies.Routing):
     """The wrapper, the attention override and the rope patch, sharing the region state."""
 
     def __init__(
@@ -279,19 +279,12 @@ class MossRegions:
         previous=None,
         lora_regions=(),
     ):
-        self.state = state
-        #: `region -> [1, seq, features]`, the regions with a prompt of their own.
-        self.prompts = prompts
+        super().__init__(state, prompts, settings, previous)
         #: Regions with a LoRA: they get a copy too, and gates for their branches.
         self.lora_regions = set(lora_regions)
         self.regions = sorted(set(prompts) | self.lora_regions)
-        self.settings = settings
         #: The model's own `rope`, to build each part's positions from.
         self.base_rope = rope
-        #: An attention override that was on the model before this one, called in place of the
-        #: attention itself so both apply.
-        self.previous = previous
-        self.layout: Layout | None = None
         #: `seqlen -> [batch, 1, seqlen, seqlen]`, this forward's masks.
         self.masks: dict[int, torch.Tensor] = {}
         #: `seqlen -> [(rows, queries, keys)]`: the routing as separate unmasked attention calls,
@@ -299,50 +292,18 @@ class MossRegions:
         self.plans: dict[int, list] | None = None
         #: Route hard regions by separate attention calls rather than masks (off only to compare).
         self.partition = True
-        self.cache: dict[str, tuple] = {}
-        self.warned = False
 
     # -- the wrapper ---------------------------------------------------------------------------
 
     def wrapper(self, executor, x, timestep, context, transformer_options=None, **kwargs):
         options = transformer_options if transformer_options is not None else {}
         state = self.state
-        sigmas = options.get("sigmas")
-        if sigmas is not None:
-            sigma = float(sigmas.flatten()[0].item())
-            state.note_sigma(sigma)
-            state.note_step(sigma, options.get("sample_sigmas"))
-
-        height, width = x.shape[-2], x.shape[-1]
-        state.grid = (height, width)
-        state.canvas_tokens = height * width
-        state.ensure_anchor(x.device)
-        _capture.remember(state)
-
-        batch, main, features = context.shape
-        cond = _patches.conditional_rows(options, batch) or [True] * batch
-        parts, valids, slots, start = [context], [], [], main
-        for region in self.regions:
-            own = self.prompts.get(region)
-            if own is not None:
-                own = own[0].to(device=context.device, dtype=context.dtype)
-            rows = [own if own is not None and cond[row] else context[row] for row in range(batch)]
-            length = max(tokens.shape[0] for tokens in rows)
-            block = context.new_zeros((batch, length, features))
-            valid = torch.zeros((batch, length), dtype=torch.bool, device=context.device)
-            for row, tokens in enumerate(rows):
-                block[row, : tokens.shape[0]] = tokens
-                valid[row, : tokens.shape[0]] = True
-            parts.append(block)
-            valids.append(valid)
-            slots.append((region, start, length))
-            start += length
-        extended = torch.cat(parts, dim=1)
-        valid = torch.cat(valids, dim=1) if valids else None
-        if valid is not None and bool(valid.all()):
-            valid = None
-
-        self.layout = Layout(state.canvas_tokens, main, slots, valid)
+        _copies.begin_forward(state, options, (x.shape[-2], x.shape[-1]), x.device)
+        extended, slots, valid = _copies.append_copies(
+            context, self.regions, self.prompts, options, with_main=False
+        )
+        self.layout = Layout(state.canvas_tokens, context.shape[1], slots, valid)
+        batch = x.shape[0]
         self._build_masks(batch, x.device, x.dtype)
         if self.lora_regions:
             self._build_gates(batch, x.device)
@@ -406,10 +367,9 @@ class MossRegions:
         for region, start, length in layout.slots:
             if region not in self.lora_regions:
                 continue
-            weight = torch.full((batch, length), state.scale, device=device, dtype=joint.dtype)
-            if layout.valid is not None:
-                first = start - layout.main
-                weight = weight * layout.valid[:, first : first + length].to(joint.dtype)
+            weight = _copies.copy_gate(
+                state, layout.valid, start - layout.main, length, batch, device, joint.dtype
+            )
             at = layout.canvas + start
             joint[:, at : at + length, region] = weight
             text[:, start : start + length, region] = weight
@@ -478,20 +438,15 @@ class MossRegions:
                 mask = mask.to(device=q.device, dtype=q.dtype)
             previous = kwargs.get("mask")
             kwargs = {**kwargs, "mask": mask if previous is None else previous + mask}
-        if self.previous is not None:
-            return self.previous(func, q, k, v, heads, *args, **kwargs)
-        return func(q, k, v, heads, *args, **kwargs)
+        return self.call(func, q, k, v, heads, *args, **kwargs)
 
     def _partitioned(self, plan, func, q, k, v, heads, args, kwargs):
         """The routing as one unmasked attention call per group of queries that read the same keys
         — so the fast kernels (flash, sage) run, and nothing `[seq, seq]` is ever built."""
-
-        def call(*a, **kw):
-            return self.previous(func, *a, **kw) if self.previous is not None else func(*a, **kw)
-
         out = q.new_empty((*q.shape[:2], v.shape[-1]))
         for rows, queries, keys in plan:
-            out[rows, queries] = call(
+            out[rows, queries] = self.call(
+                func,
                 q[rows][:, queries],
                 k[rows][:, keys],
                 v[rows][:, keys],
@@ -518,11 +473,8 @@ class MossRegions:
         state, layout = self.state, self.layout
         if not layout.slots:
             return None
-        current = state.map if state.map is not None else state.anchor
-        if current is None or current.shape[0] < layout.canvas:
-            return None
-        isolation = self.settings.isolation_at(state.fraction)
-        if isolation > 0.0 and len(state.regions) >= 2:
+        current = self.current()
+        if current is None or self.isolation() > 0.0:
             return None
         copied = [region for region, _, _ in layout.slots]
         if any(state.influences[r] != 1.0 for r in copied if r < len(state.influences)):
@@ -536,7 +488,7 @@ class MossRegions:
         if int(soft.sum()) > SOFT_SHARE * max(int(claimed.sum()), 1):
             return None
 
-        key = (batch, device, tuple(layout.slots), self._valid_key(), id(current))
+        key = (batch, device, tuple(layout.slots), self.valid_key(), id(current))
         hit = self.cache.get("plans")
         if hit is not None and hit[0] == key:
             return hit[1]
@@ -588,52 +540,31 @@ class MossRegions:
 
     # -- the masks -----------------------------------------------------------------------------
 
-    def _cached(self, name, key, build):
-        hit = self.cache.get(name)
-        if hit is not None and hit[0] == key:
-            return hit[1]
-        value = build()
-        self.cache[name] = (key, value)
-        return value
-
-    def _valid_key(self):
-        valid = self.layout.valid
-        return None if valid is None else (valid.shape, int(valid.sum()), id(valid))
-
-    def _hide_padding(self, bias: torch.Tensor, offset: int) -> None:
-        """Nobody reads a copy's padding. `offset` is where the text starts in `bias`."""
-        layout = self.layout
-        if layout.valid is not None:
-            copies = bias[:, :, offset + layout.main : offset + layout.text]
-            copies.masked_fill_(~layout.valid.to(bias.device).unsqueeze(1), _patches.NEVER)
-
     def _text_bias(self, batch, device, dtype):
         """The `text_embedder`: each prompt refined alone."""
         layout = self.layout
         size = layout.text
-        key = (batch, size, dtype, device, tuple(layout.slots), self._valid_key())
+        key = (batch, size, dtype, device, tuple(layout.slots), self.valid_key())
 
         def build():
             bias = torch.zeros((batch, size, size), device=device, dtype=torch.float32)
-            bias[:, : layout.main, layout.main :] = _patches.NEVER
+            bias[:, : layout.main, layout.main :] = NEVER
             for _, start, length in layout.slots:
                 copy = slice(start, start + length)
-                bias[:, copy, :] = _patches.NEVER
+                bias[:, copy, :] = NEVER
                 bias[:, copy, copy] = 0.0
-            self._hide_padding(bias, 0)
+            _bias.hide_padding(bias, layout.valid, layout.main)
             return bias.to(dtype).unsqueeze(1)
 
-        return self._cached("text", key, build)
+        return self.cached("text", key, build)
 
     def _joint_bias(self, batch, device, dtype):
         state, layout = self.state, self.layout
-        current = state.map if state.map is not None else state.anchor
-        if current is None or current.shape[0] < layout.canvas:
+        current = self.current()
+        if current is None:
             return None
-        regions = len(state.regions)
-        isolation = self.settings.isolation_at(state.fraction)
-        isolate = isolation > 0.0 and regions >= 2
-        if not layout.slots and not isolate:
+        isolation = self.isolation()
+        if not layout.slots and isolation <= 0.0:
             return None
         size = layout.joint
         key = (
@@ -642,51 +573,38 @@ class MossRegions:
             dtype,
             device,
             tuple(layout.slots),
-            self._valid_key(),
+            self.valid_key(),
             round(isolation, 4),
             id(current),
         )
 
         def build():
+            regions = len(state.regions)
             claim = current[: layout.canvas, :regions].to(device=device, dtype=torch.float32)
             bias = torch.zeros((batch, size, size), device=device, dtype=torch.float32)
             canvas = slice(0, layout.canvas)
-            text = slice(layout.canvas, size)
-            main = slice(layout.canvas, layout.canvas + layout.main)
-            copies = slice(layout.canvas + layout.main, size)
-
-            if isolate:
-                share = claim / claim.sum(dim=-1, keepdim=True).clamp(min=1e-6)
-                share = share @ state.groups.to(share.device, share.dtype)
-                agreement = (share @ share.transpose(0, 1)).clamp(0.0, 1.0)
-                # Region against region only: a background token belongs to no region, and pushing
-                # it away from every token would take the scene's coherence with it.
-                claimed = claim.sum(dim=-1).clamp(0.0, 1.0)
-                both = claimed.unsqueeze(1) * claimed.unsqueeze(0)
-                bias[:, canvas, canvas] = -isolation * (1.0 - agreement) * both
-
-            bias[:, :, copies] = _patches.NEVER
+            if isolation > 0.0:
+                bias[:, canvas, canvas] = _bias.isolation(claim, state.groups, isolation)
+            # Nobody but a copy's own tokens and the canvas reads a copy.
+            bias[:, :, layout.canvas + layout.main : size] = NEVER
             if layout.slots:
-                taken = torch.zeros_like(claim[:, 0])
-                for region, start, length in layout.slots:
-                    copy = slice(layout.canvas + start, layout.canvas + start + length)
-                    bias[:, copy, text] = _patches.NEVER
-                    bias[:, copy, copy] = 0.0
-                    weight = claim[:, region]
-                    taken = taken + weight
-                    logits = weight.clamp(min=_patches.LEAST).log()
-                    influence = state.influences[region] if region < len(state.influences) else 1.0
-                    if influence != 1.0:
-                        logits = logits + torch.where(
-                            weight > _patches.LEAST, math.log(influence), 0.0
-                        )
-                    bias[:, canvas, copy] = logits.unsqueeze(-1)
-                rest = (1.0 - taken).clamp(min=_patches.LEAST).log().unsqueeze(-1)
-                bias[:, canvas, main] = rest
-            self._hide_padding(bias, layout.canvas)
+                at = layout.canvas
+                _bias.route_copies(
+                    bias,
+                    claim,
+                    canvas,
+                    [
+                        (r, slice(at + start, at + start + length))
+                        for r, start, length in layout.slots
+                    ],
+                    hidden=slice(layout.canvas, size),
+                    shared=[slice(layout.canvas, layout.canvas + layout.main)],
+                    influences=state.influences,
+                )
+            _bias.hide_padding(bias, layout.valid, layout.canvas + layout.main)
             return bias.to(dtype).unsqueeze(1)
 
-        return self._cached("joint", key, build)
+        return self.cached("joint", key, build)
 
 
 def install(patched, state, prompts: dict[int, torch.Tensor], settings, loaded=()):
@@ -712,7 +630,7 @@ def install(patched, state, prompts: dict[int, torch.Tensor], settings, loaded=(
 def install_regions(patched, entries, prompts, settings, sources) -> list[str]:
     """Regions on `patched` (a clone): each region's own prompt, routed by attention, and its
     LoRAs, gated per token. Returns the log lines."""
-    state = _zimage.ZGateState(entries, settings.schedule, 0.0, sources)
+    state = _copies.LengthGateState(entries, settings.schedule, 0.0, sources)
     loaded = load_region_loras(patched, entries)
     install(patched, state, prompts, settings, loaded)
     if loaded:

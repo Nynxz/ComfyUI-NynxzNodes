@@ -15,12 +15,12 @@ import unittest
 from pathlib import Path
 
 torch = moss = state_mod = schedule_mod = patches = extension = MOSSImage = ops = None
-branch_mod = zimage = settings_mod = None
+branch_mod = settings_mod = copies = None
 
 
 def _setup(comfy_path: str) -> None:
     global torch, moss, state_mod, schedule_mod, patches, extension, MOSSImage, ops
-    global branch_mod, zimage, settings_mod
+    global branch_mod, settings_mod, copies
     sys.path.insert(0, comfy_path)
     argv, sys.argv = sys.argv, [sys.argv[0], "--cpu"]
     import comfy.options
@@ -41,8 +41,8 @@ def _setup(comfy_path: str) -> None:
     schedule_mod = load("regions._schedule")
     patches = load("regions._patches")
     branch_mod = load("regions._branch")
-    zimage = load("regions._zimage")
     settings_mod = load("regions._settings")
+    copies = load("regions._copies")
 
 
 GRID = 4
@@ -376,7 +376,7 @@ class RegionLoras(Harness):
         patched = comfy.model_patcher.ModelPatcher(
             holder, torch.device("cpu"), torch.device("cpu")
         ).clone()
-        state = zimage.ZGateState([region(m) for m in masks], schedule_mod.Schedule(), 0.0)
+        state = copies.LengthGateState([region(m) for m in masks], schedule_mod.Schedule(), 0.0)
         routed = moss.install(
             patched, state, prompts or {}, settings_mod.RegionSettings(track=0.0), loaded
         )

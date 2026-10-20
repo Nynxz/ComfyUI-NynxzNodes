@@ -35,18 +35,14 @@ attention it rides along with, and removes most of the sensitivity to guessing `
 from __future__ import annotations
 
 import logging
-import math
 
 import torch
 
-from . import _capture, _lock, _refs, _state, _track
+from . import _bias, _capture, _lock, _refs, _state, _track
+from ._bias import LEAST, NEVER
 
 #: How far either side of `route_at` a multi-block read spreads, as a fraction of the stack.
 _SPREAD = 0.2
-#: A logit bias that is "never": far below any real logit, and still finite in fp16.
-NEVER = -1e4
-#: The smallest weight a canvas token gives a prompt, so `log` stays finite.
-LEAST = 1e-4
 #: Warn past this much for one bias matrix. Quadratic in sequence length, so resolution gets you
 #: here, not region count.
 _WARN_BYTES = 256 * 1024 * 1024
@@ -194,19 +190,7 @@ def _attention_bias(state, settings, q) -> torch.Tensor | None:
     bias = torch.zeros((batch, seqlen, seqlen), device=q.device, dtype=q.dtype)
     if isolate:
         rows = slice(txtlen, txtlen + canvas)
-        # Renormalized over regions only. Strengths and the schedule are about how hard a LoRA
-        # fires; the bias only wants to know which region a token belongs to.
-        share = claim / claim.sum(dim=-1, keepdim=True).clamp(min=1e-6)
-        # Regions in one group are one subject (Fresco's layer split into its box and its
-        # reference shape), so they agree with each other and are never pushed apart.
-        share = share @ state.groups.to(share.device, share.dtype)
-        agreement = (share @ share.transpose(0, 1)).clamp(0.0, 1.0)
-        # Only region against region. A background token belongs to no region, so by agreement
-        # alone it would be pushed away from every token, itself included — which takes the
-        # scene's coherence (lighting, contact, perspective) with it.
-        claimed = claim.sum(dim=-1).clamp(0.0, 1.0)
-        both = claimed.unsqueeze(1) * claimed.unsqueeze(0)
-        bias[:, rows, rows] = (-isolation * (1.0 - agreement) * both).to(q.dtype)
+        bias[:, rows, rows] = _bias.isolation(claim, state.groups, isolation).to(q.dtype)
     if routed:
         _route_prompt(bias, state, claim)
     if owned:
@@ -232,31 +216,20 @@ def _route_prompt(bias: torch.Tensor, state, claim: torch.Tensor) -> None:
     image. Everything else: the plain prompt, as before."""
     txtlen, canvas = state.txtlen, state.canvas_tokens
     prompt = slice(0, txtlen)
-    rows = slice(txtlen, txtlen + canvas)
     first = txtlen + canvas
     bias[:, :, first : first + state.copy_tokens] = NEVER
-    taken = torch.zeros_like(claim[:, 0])
-    scale = 1.0 if state.copy_full else state.scale
-    for slot in state.copy_slots():
-        copy = state.copy_rows(slot)
-        weight = claim[:, slot[0]] * scale
-        taken = taken + weight
-        bias[:, copy, prompt] = NEVER
-        bias[:, copy, copy] = 0.0
-        logits = weight.clamp(min=LEAST).log()
-        influence = state.influences[slot[0]] if slot[0] < len(state.influences) else 1.0
-        if influence != 1.0:
-            # Multiplies the attention its tokens give the copy — against the image and every
-            # other key, not just the plain prompt — by `influence`, only where the region holds.
-            logits = logits + torch.where(weight > LEAST, math.log(influence), 0.0)
-        bias[:, rows, copy] = logits.unsqueeze(-1).to(bias.dtype)
-    rest = (1.0 - taken).clamp(min=LEAST)
-    bias[:, rows, prompt] = rest.log().unsqueeze(-1).to(bias.dtype)
+    _bias.route_copies(
+        bias,
+        claim,
+        slice(txtlen, txtlen + canvas),
+        [(slot[0], state.copy_rows(slot)) for slot in state.copy_slots()],
+        hidden=prompt,
+        shared=[prompt],
+        influences=state.influences,
+        scale=1.0 if state.copy_full else state.scale,
+    )
     valid = state.copies.valid if state.copies is not None else None
-    if valid is not None:
-        # A copy padded on some rows: nobody reads the padding.
-        pad = ~valid.to(bias.device).unsqueeze(1)
-        bias[:, :, first : first + state.copy_tokens].masked_fill_(pad, NEVER)
+    _bias.hide_padding(bias, valid, first)
 
 
 def _region_copy(state, region: int) -> slice | None:

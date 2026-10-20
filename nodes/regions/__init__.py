@@ -38,13 +38,15 @@ What is here:
     _krea.py       Krea 2: its install, LoRA loading and summary
     _zimage.py     Z-Image: the wrapper, the attention routing and its install
     _moss.py       MOSS-Image: the same, with its rope patch and split attention
+    _copies.py     what Z-Image and MOSS share: prompt copies in a wrapper, gates per length
+    _bias.py       the attention-bias pieces every family routes with: copies, isolation
     _mask.py       a mask -> canvas-token gates: shaping, projection, the overlap rule
     _lora.py       unpacking a LoRA into per-Linear (down, up, scale) factors, unmerged
     _branch.py     the forward hooks that run those factors gated, and their lifecycle
     _track.py      the tracker — soft k-means over canvas features, anchored on the mask
     _schedule.py   step fraction from the schedule that is running, and the commit ramp
     _state.py      the one mutable object the patches share
-    _patches.py    the post_input / attn1 model patches
+    _patches.py    Krea 2's post_input / attn1 model patches
     _bind.py       attaching something to a numbered region, and the errors for a bad number
     _capture.py    the last map that ran, kept so the preview can draw it after the fact
     _render.py     the shared palette, so a region is the same colour before and after the run
