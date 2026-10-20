@@ -30,6 +30,9 @@ def _packages() -> None:
         package = types.ModuleType(name)
         package.__path__ = [str(folder)]
         sys.modules[name] = package
+    identity = importlib.import_module(f"{ROOT}._zenkit.identity")
+    zenkit = sys.modules[f"{ROOT}._zenkit"]
+    zenkit.CATEGORY, zenkit.NAMESPACE = identity.CATEGORY, identity.NAMESPACE
 
 
 def load(module: str):
@@ -115,9 +118,6 @@ def stub_comfy() -> None:
         }
     )
     _packages()
-    identity = load("_zenkit.identity")
-    zenkit = sys.modules[f"{ROOT}._zenkit"]
-    zenkit.CATEGORY, zenkit.NAMESPACE = identity.CATEGORY, identity.NAMESPACE
     io_types = types.ModuleType(f"{ROOT}._zenkit.io_types")
     io_types.advanced = lambda widget: widget
     io_types.widget_type = lambda *args, **kwargs: _Any()
