@@ -50,7 +50,9 @@ class NynxzLayoutInputs(NynxzNode):
 
     @classmethod
     def check_lazy_status(cls, clip=None, image=None) -> list[str]:
-        return ["image"] if image is None else []
+        """Nothing to ask for: the CLIP stays unloaded, and `image` isn't lazy, so it already
+        arrives when it is wired and is simply absent when it isn't."""
+        return []
 
     @classmethod
     def execute(cls, clip=None, image=None) -> io.NodeOutput:
