@@ -53,9 +53,14 @@ disagree with; nothing below is done yet except where it says so.
 | ids, colours, palettes, auto-naming, small utils | 2–3 copies each | shared util |
 | Private names imported across packages | `_load_image`, `_gaussian_blur2d`, `_grown`, `_conditional_rows`, `_NEVER`… | public names in the right module |
 
+**Phase 2 done** (e4915c5…375dd81): one image route + `lib/mediaRefs.ts`; `fusion/_sources.py`;
+`nodes/_content.py`; `_mask.bbox`/`grown_box`; `lib/popOut.ts`; `_sent_back.py` + `lib/sentBack.ts`;
+`lib/sceneUtil.ts`; public names. Left for Phase 5 (the Fresco side goes): the Qwen edit template,
+the two summary components, `refFromMedia`/`readRefs` living in `frescoScene.ts`.
+
 ## Phase 3 — regions engine
 
-1. **Verify a likely Krea bug first:** Krea's `isolation` pushes *background* tokens apart; Z-Image
+1. **Done (6a4778b), confirmed by check_krea_attention:** Krea's `isolation` pushes *background* tokens apart; Z-Image
    and MOSS deliberately spare them (9215c36). Decide: fix Krea to match (output change on Krea with
    isolation > 0) or keep as is.
 2. **Family registry** replacing the if/else dispatch and three near-copy `_apply_*` paths:
