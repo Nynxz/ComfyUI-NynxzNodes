@@ -1,7 +1,7 @@
 """Fusion Inspector — an interactive look at how a fusion blend actually composed.
 
-Wire the Qwen Fusion Encode node's `fusion_inspect` output into this node. It's an output node
-(like Preview Image): it pushes the blend payload to its Vue widget (src/fusion/FusionInspector.vue)
+Wire Text Encode (Fusion)'s `fusion_inspect` output into this node. It's an output node
+(like Preview Image): it pushes the blend payload to its Vue widget (frontend/widgets/FusionInspector.vue)
 over the `ui` channel each run, and the widget renders it — hover the token grid to see which image
 wins each cell, the per-source shares, and the settings that produced the blend.
 

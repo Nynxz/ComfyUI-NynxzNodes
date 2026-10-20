@@ -731,8 +731,6 @@ onBeforeUnmount(() => {
   box-sizing: border-box;
   font-size: 12px;
   color: var(--zen-text, #e5e5ea);
-  /* same radius hierarchy as Fusion Studio (panels vs controls). */
-  --fs-r: var(--zen-radius, 8px);
   --fs-rs: var(--radius-sm, 5px);
 }
 .fi-empty {

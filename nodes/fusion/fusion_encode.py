@@ -1,14 +1,10 @@
-"""Text Encode Qwen Image Edit (Fusion) — the Fusion Input consumer.
+"""Text Encode (Fusion) — encode a prompt with several images blended into one conditioning.
 
-Same engine as the original visual-fusion node (`_fusion.encode_fusion`), but it takes its
-sources from a Fusion Input node instead of its own autogrow sockets. That moves per-image
-concerns (strength, fit, mute, order) onto the grid where you can see them, and leaves this
-node holding only the prompt and the fusion tuning. Chain Fusion Input nodes together to
-group more sources into the one input.
-
-Beyond the original: sources carry a per-image strength (relative prevalence in the blend)
-and fit mode, and the visual grid's size/aspect is explicit rather than inherited from
-whichever image happened to be first.
+Runs the fusion engine (`_fusion.encode_fusion`) on the sources a Fusion Input (or Fusion Images,
+or Fusion Regions) node collects: per-image concerns (strength, fit, mute, order) live on that
+grid where you can see them, and this node holds the prompt and the fusion tuning. Sources carry
+a per-image strength (relative prevalence in the blend) and fit mode; the visual grid's size and
+aspect are explicit (or follow a wired latent).
 """
 
 import base64

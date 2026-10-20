@@ -1,16 +1,14 @@
 """Spatial visual-token fusion for Qwen3-VL image editing — the shared engine.
 
 Encodes several source images independently through a Qwen3-VL text encoder and
-combines their *visual* conditioning tokens on a shared spatial grid. The legacy
-approach hard-picked one source per grid cell (a checkerboard/block mosaic). This
-version generalizes that into a soft weight field so cell boundaries can feather
-and multiple sources can contribute to the same token.
+combines their *visual* conditioning tokens on a shared spatial grid: a soft weight
+field over the grid decides how much each source contributes to each token, from a
+hard mosaic (one source per cell) to feathered boundaries.
 
 Every fusion node in this pack drives `encode_fusion` — there is exactly one copy of
 the math. The pipeline is split into reusable pieces so we can grow it later:
   * `_fusion_weights(...) -> [sources, tokens]`  — where the blend weights come
-    from. Today: geometric patterns, optionally feathered. Future: content
-    saliency / cross-source attention plug in here.
+    from: geometric patterns, optionally feathered.
   * `_content_weights(...)`                      — data-driven weights from the tokens.
   * `_coverage_weights(...)`                     — alpha as coverage: a transparent area stops
     contributing and its share goes to whoever is still opaque there.
@@ -82,7 +80,7 @@ CONTENT_MODES = ["none", "saliency", "energy", "cross-attention"]
 STYLE_MODES = ["none", "gist", "whiten"]
 FIT_MODES = ["cover", "contain", "stretch"]
 # The encode node's fit override. "per image" honours each source's own fit; the rest force
-# every source to one mode (e.g. "cover" to reproduce the legacy node in one dropdown).
+# every source to one mode.
 FIT_OVERRIDE = "per image"
 FIT_OVERRIDE_OPTIONS = [FIT_OVERRIDE, *FIT_MODES]
 
@@ -351,10 +349,9 @@ def _fusion_weights(
 ):
     """Per-source blend weights over the visual grid: [num_sources, tokens], columns sum to 1.
 
-    `blend_strength` interpolates between the hard mosaic (0.0 == legacy behavior)
-    and the feathered field (1.0). `feather` is the gaussian sigma, in grid cells,
-    used to soften each source's territory. This is the seam where content-aware or
-    cross-source-attention weighting will slot in later.
+    `blend_strength` interpolates between the hard mosaic (0.0) and the feathered field
+    (1.0). `feather` is the gaussian sigma, in grid cells, used to soften each source's
+    territory. Content weighting (`_content_weights`) is mixed in afterwards.
     """
     tokens = height * width
     assignment = _spatial_fusion_mask(
@@ -772,7 +769,7 @@ def _fuse_conditionings(
             coverage,
         )
         if debug is not None:
-            # Hand the exact field back for the Fusion Weight Map (last schedule wins; normally one).
+            # Hand the exact field back for the Fusion Inspector (last schedule wins; normally one).
             debug["weights"] = weights.detach().to("cpu", torch.float32)
             debug["grid"] = (visual_height, visual_width)
         blended_visual = _blend(visuals, weights.to(visuals.dtype), settings.preserve_norm)
@@ -1000,11 +997,6 @@ def _reference_latents(vae, sources, profile=QWEN3VL, alpha_mode=DEFAULT_ALPHA_M
         # sampler, so hand out a copy and keep the cached tensor pristine for the next run.
         ref_latents.append(latent.clone() if hasattr(latent, "clone") else latent)
     return ref_latents
-
-
-# PROMPT_TEMPLATE lives in `_encoders.py` now: which chat template to encode with is a property
-# of the encoder on the wire, not a constant of the engine. Read it from there
-# (`_encoders.PROMPT_TEMPLATE`, or `profile.template` for whichever encoder is loaded).
 
 
 @dataclass
@@ -1484,8 +1476,7 @@ def _apply_prompt_mode(conditioning, tail, clean_tokens, clean, mode, blend):
 
 
 def style_inputs() -> list[io.Input]:
-    """Style-release knobs. Separate from `tuning_inputs` so the original autogrow node keeps
-    the widget layout its docstring promises — only the newer nodes opt in."""
+    """Style-release knobs."""
     return [
         advanced(
             io.Combo.Input(
@@ -1517,7 +1508,8 @@ def style_inputs() -> list[io.Input]:
 def tuning_inputs() -> list[io.Input]:
     """The fusion encode node's core tuning knobs (geometry + content).
 
-    style_inputs / variation_inputs are kept separate so each stays a self-contained group.
+    Text Encode (Fusion) lays its widgets out from these builders in a fixed order; saved
+    workflows store widget values by position, so the order of every builder's inputs must stay.
     """
     inputs = {
         "fusion_method": advanced(
@@ -1627,8 +1619,7 @@ def seed_input() -> io.Input:
 
 
 def alpha_input() -> io.Input:
-    """The alpha knob. Its own function rather than part of `tuning_inputs` so the legacy autogrow
-    node's widget layout stays frozen, same as style_inputs / variation_inputs."""
+    """The alpha knob."""
     return advanced(
         io.Combo.Input(
             "alpha_mode",
@@ -1750,8 +1741,7 @@ def empty_latent(width, height, vae=None):
 
 
 def variation_inputs() -> list[io.Input]:
-    """The 'more variety from the same inputs' knobs. Both seed-driven and off at 0. Kept off
-    tuning_inputs so the legacy autogrow node's widget layout stays frozen."""
+    """The 'more variety from the same inputs' knobs. Both seed-driven and off at 0."""
     return [
         advanced(
             io.Float.Input(

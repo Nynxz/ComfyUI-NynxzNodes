@@ -1,6 +1,6 @@
 """Fusion Input — collect images for a fusion pass and weight them, from one node.
 
-The node body is a Vue grid (src/fusion/FusionGrid.vue) you drop images onto: each image
+The node body is a Vue grid (frontend/widgets/FusionGrid.vue) you drop images onto: each image
 carries its own strength, fit and mute, and they reorder by dragging (order matters — the
 spatial patterns assign grid cells by source index).
 

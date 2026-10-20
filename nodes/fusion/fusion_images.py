@@ -94,9 +94,7 @@ class NynxzFusionImages(FusionNode):
             strength = 1.0
 
         # One source per frame, in socket order. A batched IMAGE spends the shared strength/fit
-        # across each of its frames. Flattened inline (rather than via a helper) so this node
-        # stays decoupled from the fusion weight-math module — with strength and fit shared, the
-        # per-socket grouping the grid needs buys nothing here.
+        # across each of its frames.
         for name in sorted(images or {}, key=lambda value: int(value.rsplit("_", 1)[-1])):
             image = images[name]
             if image is None:

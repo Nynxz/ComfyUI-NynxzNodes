@@ -68,25 +68,27 @@ chainable into the other:
     Fusion Images ┘              ├───────────> latent ────────> KSampler
                                  └───────────> fusion_inspect ──> Fusion Inspector
 
+Fusion Regions lays copies of the references out over regions of the frame (from masks or a
+Region Grid/Split layout) before the encode, so each region reads its own copy; the blend pattern
+can then run per region.
+
 What is here:
 
-    _io_types.py    the two wire types and the two widget types
+    _io_types.py    the wire types (fusion input, inspect payload, fusion layout) and widget types
     _encoders.py    which text encoder is on the wire, and what differs about it
-    _fusion.py      the engine: weight field, blend, style release, token-span surgery
+    _fusion.py      the engine: weight field, blend, style release, token-span surgery, prompt mode
     _inspect.py     the payload the inspector renders
-    api.py          the route the grid's browse dialog lists images with
+    api.py          the route the grid lists input images with (to skip re-uploading a file)
 
     fusion_input.py     Fusion Input                — the on-node image grid
     fusion_images.py    Fusion Images               — the wire-side collector
+    fusion_regions.py   Fusion Regions              — references laid out over regions
     fusion_encode.py    Text Encode (Fusion)        — the node that does the work
     fusion_inspector.py Fusion Inspector            — which source won which token, after a run
 
-**No spatial regions here, and that is deliberate.** An earlier version let each source carry a
-region so it would win a chosen area of the canvas; it did not work well enough to keep, and the
-knob that drove it could only ever be a no-op once the nodes that attached regions were gone. The
-weight field is geometric and content-driven only. This group and `Nynxz/Regions` are separate
-things that happen to share a word: fusion decides *which reference wins a token*, the regions
-group decides *which LoRA fires on one*.
+Fusion decides *which reference wins a visual token*; the `regions` group decides which prompt and
+LoRA each part of the canvas reads in the model. They meet in Fresco and Layout, where a region's
+prompt can be encoded with its references.
 """
 
 from . import api  # noqa: F401  (registers the /nynxz/fusion/* route on import)
