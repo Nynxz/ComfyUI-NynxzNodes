@@ -197,7 +197,8 @@ class FfnDownBranches:
     def _keep(self, key):
         def hook(module, args, output):
             if output.ndim == 3:
-                self.acts[key] = _situ(output)
+                with _branch.outside_compiled_memory():
+                    self.acts[key] = _situ(output)
             return output
 
         return hook
@@ -206,7 +207,7 @@ class FfnDownBranches:
         state = self.state
 
         def hook(module, args, output):
-            with profiled("nynxz/lora ffn_down"):
+            with _branch.outside_compiled_memory(), profiled("nynxz/lora ffn_down"):
                 return add(module, args, output)
 
         def add(module, args, output):
@@ -458,7 +459,9 @@ class MossRegions:
     # -- the attention override ----------------------------------------------------------------
 
     def attention(self, func, q, k, v, heads, *args, **kwargs):
-        with profiled("nynxz/attention"):
+        if self.layout is None:
+            return self._attention(func, q, k, v, heads, *args, **kwargs)
+        with _branch.outside_compiled_memory(), profiled("nynxz/attention"):
             return self._attention(func, q, k, v, heads, *args, **kwargs)
 
     def _attention(self, func, q, k, v, heads, *args, **kwargs):

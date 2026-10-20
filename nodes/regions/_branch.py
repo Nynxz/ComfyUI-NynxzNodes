@@ -25,6 +25,7 @@ the patched model does.
 
 from __future__ import annotations
 
+import contextlib
 import logging
 
 import comfy.utils
@@ -50,7 +51,7 @@ def _hook(entries, state):
     """
 
     def hook(module, args, output):
-        with _moss_profiled("nynxz/lora"):
+        with outside_compiled_memory(), _moss_profiled("nynxz/lora"):
             return add(module, args, output)
 
     def add(module, args, output):
@@ -74,6 +75,22 @@ def _hook(entries, state):
         return output if out is None else out
 
     return hook
+
+
+def outside_compiled_memory():
+    """Allocate outside ComfyUI's memory compiler while in here.
+
+    With dynamic VRAM, a model's blocks run inside a recorded allocation plan that is replayed every
+    step. An allocation the plan doesn't have — any of a hook's — breaks it, and the whole forward
+    then allocates the slow way, thousands of driver calls a step. Core's own extra kernels step out
+    of the plan for their scratch memory the same way. Nothing on a ComfyUI without the compiler.
+    """
+    try:
+        import comfy.model_prefetch
+    except ImportError:
+        return contextlib.nullcontext()
+    pause = getattr(comfy.model_prefetch, "pause_malloc_graph", None)
+    return pause() if pause is not None else contextlib.nullcontext()
 
 
 def _moss_profiled(label: str):
