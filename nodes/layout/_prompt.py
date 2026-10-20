@@ -9,13 +9,19 @@ The Layout node's value, as the editor stores it (frontend/layout/promptScene.ts
         "background": str,                     # Ideogram
         "style": Style,                        # Ideogram
         "meta": [str], "canvas": str, "palette": [str],   # MOSS's summary
+        "cast": [Member, ...],                 # characters (or anything) boxes can name
         "boxes": [Box, ...],                   # bottom to top: background first, foreground last
     }
+
+    Member = {"id", "name", "trigger": str,
+              "refs": [{"ref", "type", "strength", "fit", "on"}],   # images, as Fresco's
+              "loras": [{"name", "strength", "on"}]}
 
     Box = {"id", "name", "color", "x", "y", "w", "h",   # 0..1 of the canvas
            "hidden", "locked",
            "kind": "object" | "character" | "text",
-           "desc", "text", "palette": [str], "tags": [str]}
+           "desc", "text", "palette": [str], "tags": [str],
+           "cast": [member id, ...]}
 
 The modes share every field, so switching between them loses nothing; each reads what its model
 knows and ignores the rest. This module is pure (no ComfyUI), so the checks run anywhere.
@@ -96,6 +102,7 @@ def _box(raw: dict, index: int) -> dict:
         "text": _str(raw.get("text")).strip(),
         "palette": _palette(raw.get("palette"), 5),
         "tags": _strings(raw.get("tags")),
+        "cast": _strings(raw.get("cast")),
     }
 
 
@@ -112,12 +119,53 @@ def _style(raw) -> dict:
     }
 
 
+REF_TYPES = ("input", "output", "temp")
+FITS = ("contain", "cover", "stretch")
+
+
+def _dicts(value) -> list[dict]:
+    return [v for v in value if isinstance(v, dict)] if isinstance(value, list) else []
+
+
+def _member(raw: dict, index: int) -> dict:
+    """A cast member as Fresco reads a layer's references and LoRAs: muted ones dropped."""
+    refs = [
+        {
+            "ref": _str(r.get("ref")),
+            "type": r.get("type") if r.get("type") in REF_TYPES else "input",
+            "strength": max(0.0, _num(r.get("strength"), 1.0)),
+            "fit": r.get("fit") if r.get("fit") in FITS else "contain",
+        }
+        for r in _dicts(raw.get("refs"))
+        if _str(r.get("ref")) and r.get("on", True) is not False
+    ]
+    loras = [
+        {"lora_name": _str(r.get("name")), "strength": _num(r.get("strength"), 1.0)}
+        for r in _dicts(raw.get("loras"))
+        if _str(r.get("name")) and r.get("on", True) is not False
+    ]
+    return {
+        "id": _str(raw.get("id")) or f"c{index + 1}",
+        "name": _str(raw.get("name")).strip(),
+        "trigger": _str(raw.get("trigger")).strip(),
+        "refs": [r for r in refs if r["strength"] > 0.0],
+        "loras": loras,
+    }
+
+
+def members(layout: dict, box: dict) -> list[dict]:
+    """The cast members `box` names, in the box's order; unknown ids are skipped."""
+    by_id = {member["id"]: member for member in layout["cast"]}
+    return [by_id[i] for i in dict.fromkeys(box["cast"]) if i in by_id]
+
+
 def parse(raw) -> dict:
     """Whatever is stored, as a layout every compiler can read."""
     raw = raw if isinstance(raw, dict) else {}
     mode = raw.get("mode")
     canvas = raw.get("canvas")
     boxes = raw.get("boxes") if isinstance(raw.get("boxes"), list) else []
+    cast = raw.get("cast") if isinstance(raw.get("cast"), list) else []
     return {
         "mode": mode if mode in MODES else "ideogram",
         "width": _side(raw.get("width")),
@@ -128,6 +176,7 @@ def parse(raw) -> dict:
         "meta": _strings(raw.get("meta")),
         "canvas": canvas if canvas in CANVASES else "",
         "palette": _palette(raw.get("palette"), 16),
+        "cast": [_member(m, i) for i, m in enumerate(cast) if isinstance(m, dict)],
         "boxes": [_box(b, i) for i, b in enumerate(boxes) if isinstance(b, dict)],
     }
 
@@ -292,9 +341,11 @@ def _sentence(text: str) -> str:
 
 
 def region_prompt(layout: dict, box: dict) -> str:
-    """A box's own prompt for Regions Apply: the scene's caption, then what the box holds, so the
-    region keeps the scene's style and setting. Empty for a box that says nothing of its own."""
-    own = [box["desc"]]
+    """A box's own prompt for Regions Apply: the scene's caption, then the trigger words of the
+    cast it names, then what the box holds, so the region keeps the scene's style and setting and
+    a cast member's LoRA hears its trigger there. Empty for a box that says nothing of its own."""
+    triggers = ", ".join(m["trigger"] for m in members(layout, box) if m["trigger"])
+    own = [triggers, box["desc"]]
     if box["kind"] == "text" and box["text"]:
         own.append('The text "' + box["text"] + '".')
     if not any(own):

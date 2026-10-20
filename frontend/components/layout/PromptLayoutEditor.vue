@@ -124,6 +124,25 @@
               @update:model-value="patchBox({ desc: String($event ?? '') })"
             />
           </FrescoSection>
+          <FrescoSection label="Cast" :note="castNote">
+            <div v-if="scene.cast.length" class="pl-chips">
+              <button
+                v-for="member in scene.cast"
+                :key="member.id"
+                type="button"
+                :class="['pl-chip', { on: box.cast.includes(member.id) }]"
+                :title="
+                  box.cast.includes(member.id)
+                    ? `Take ${member.name} out of this box`
+                    : `${member.name} is in this box: their look and LoRAs apply here`
+                "
+                @click="toggleCast(member.id)"
+              >
+                {{ member.name }}
+              </button>
+            </div>
+            <p v-else class="pl-hint">Add the cast in the scene settings (click the canvas).</p>
+          </FrescoSection>
           <FrescoSection v-if="scene.mode !== 'klein'" label="Colours" note="up to 5">
             <PaletteEdit
               :model-value="box.palette"
@@ -221,6 +240,22 @@
             </FrescoSection>
           </template>
 
+          <FrescoSection label="Cast" :note="scene.cast.length ? String(scene.cast.length) : ''">
+            <template #actions>
+              <ZenIconButton
+                size="sm"
+                icon="mdi mdi-account-plus-outline"
+                title="Add someone several boxes show"
+                @click="addCastMember"
+              />
+            </template>
+            <LayoutCast
+              :boxes="scene.boxes"
+              :model-value="scene.cast"
+              @update:model-value="setCast"
+            />
+          </FrescoSection>
+
           <p v-if="scene.mode === 'klein'" class="pl-note">
             Klein reads only the caption and each box's description, so colours go in the words.
             Cite every box in the caption as &lt;obj_N&gt;.
@@ -274,6 +309,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
 import FrescoSection from "@/components/fresco/FrescoSection.vue";
 import LayoutAgent from "@/components/layout/LayoutAgent.vue";
+import LayoutCast from "@/components/layout/LayoutCast.vue";
 import LayoutEditor from "@/components/layout/LayoutEditor.vue";
 import LayoutSettings from "@/components/layout/LayoutSettings.vue";
 import ModeCards from "@/components/layout/ModeCards.vue";
@@ -281,6 +317,7 @@ import PaletteEdit from "@/components/layout/PaletteEdit.vue";
 import PresetInput from "@/components/layout/PresetInput.vue";
 import { STYLE_PRESETS } from "@/layout/stylePresets";
 import { compileLayout } from "@/layout/library";
+import { uid } from "@/lib/frescoScene";
 import { keepContextMenu } from "@/lib/ownContextMenu";
 import { PROMPT_MODES } from "@/layout/modes";
 import type { AgentImage, AgentLayout } from "@/layout/agent";
@@ -288,6 +325,7 @@ import { boxId, kleinId, nextColor, readBox } from "@/layout/promptScene";
 import type { SourceType } from "@/lib/fusionApi";
 import type {
   BoxKind,
+  CastMember,
   IdeogramStyle,
   MossCanvas,
   PromptBox,
@@ -415,6 +453,37 @@ function patchBox(patch: Partial<PromptBox>) {
   }
   patchScene({ boxes: scene.value.boxes.map((b) => (b.id === id ? { ...b, ...patch } : b)) });
 }
+// --- the cast -----------------------------------------------------------------------------------
+
+/** The cast as edited, with any removed member taken out of the boxes that named them. */
+function setCast(cast: CastMember[]) {
+  const ids = new Set(cast.map((m) => m.id));
+  patchScene({
+    cast,
+    boxes: scene.value.boxes.map((b) =>
+      b.cast.every((id) => ids.has(id)) ? b : { ...b, cast: b.cast.filter((id) => ids.has(id)) },
+    ),
+  });
+}
+function addCastMember() {
+  const member: CastMember = {
+    id: uid("c"),
+    name: `Cast ${scene.value.cast.length + 1}`,
+    trigger: "",
+    refs: [],
+    loras: [],
+  };
+  patchScene({ cast: [...scene.value.cast, member] });
+}
+function toggleCast(id: string) {
+  const current = box.value?.cast ?? [];
+  patchBox({ cast: current.includes(id) ? current.filter((c) => c !== id) : [...current, id] });
+}
+const castNote = computed(() => {
+  const named = box.value?.cast.length ?? 0;
+  return named ? `${named} here` : "";
+});
+
 const kindOptions = computed(() => [
   { value: "object", label: "Object", icon: "mdi mdi-cube-outline" },
   ...(scene.value.mode === "moss"
@@ -581,6 +650,34 @@ async function copyOutput() {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+.pl-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.pl-chip {
+  height: 22px;
+  padding: 0 9px;
+  border: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 80%, transparent);
+  border-radius: 11px;
+  background: transparent;
+  color: var(--zen-muted, #9aa0aa);
+  font-size: 11px;
+  cursor: pointer;
+}
+.pl-chip:hover {
+  color: var(--zen-text, #e5e5ea);
+}
+.pl-chip.on {
+  border-color: var(--zen-accent, #3b82f6);
+  background: color-mix(in srgb, var(--zen-accent, #3b82f6) 22%, transparent);
+  color: var(--zen-text, #e5e5ea);
+}
+.pl-hint {
+  margin: 0;
+  font-size: 11px;
+  color: var(--zen-muted, #9aa0aa);
 }
 .pl-status {
   display: inline-flex;

@@ -8,6 +8,9 @@
 
 import type { BoxRect } from "@nynxz/zenkit-ui";
 
+import type { FrescoLora, FrescoRef } from "@/lib/frescoScene";
+import { readLoras, readRefs, uid } from "@/lib/frescoScene";
+
 import { digJson } from "./jsonIo";
 
 export type PromptModeId = "ideogram" | "klein" | "moss";
@@ -25,6 +28,19 @@ export interface PromptBox extends BoxRect {
   text: string;
   palette: string[];
   tags: string[];
+  /** Ids of the cast members in this box. */
+  cast: string[];
+}
+
+/** Someone (or something) several boxes show: their look and their LoRAs, given once. In each box
+ *  that names them, the LoRAs run on that box only and the images are read into its prompt. */
+export interface CastMember {
+  id: string;
+  name: string;
+  /** Words added to the prompt of every box that names them — a LoRA's trigger. */
+  trigger: string;
+  refs: FrescoRef[];
+  loras: FrescoLora[];
 }
 
 export interface IdeogramStyle {
@@ -48,6 +64,7 @@ export interface PromptScene {
   meta: string[];
   canvas: MossCanvas;
   palette: string[];
+  cast: CastMember[];
   /** Bottom to top: background first, foreground last — the order the prompt lists them. */
   boxes: PromptBox[];
 }
@@ -125,6 +142,18 @@ export function readBox(raw: unknown, index = 0): PromptBox {
     text: str(b.text),
     palette: strings(b.palette),
     tags: strings(b.tags),
+    cast: strings(b.cast),
+  };
+}
+
+export function readCastMember(raw: unknown, index = 0): CastMember {
+  const m = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
+  return {
+    id: str(m.id) || uid("c"),
+    name: str(m.name) || `Cast ${index + 1}`,
+    trigger: str(m.trigger),
+    refs: readRefs(m.refs),
+    loras: readLoras(m.loras),
   };
 }
 
@@ -151,6 +180,7 @@ export function readPromptScene(raw: unknown): PromptScene {
     meta: strings(s.meta),
     canvas: CANVASES.includes(s.canvas as MossCanvas) ? (s.canvas as MossCanvas) : "",
     palette: strings(s.palette),
+    cast: Array.isArray(s.cast) ? s.cast.map((m, i) => readCastMember(m, i)) : [],
     boxes: Array.isArray(s.boxes) ? s.boxes.map((b, i) => readBox(b, i)) : [],
   };
 }

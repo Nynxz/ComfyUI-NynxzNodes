@@ -171,28 +171,38 @@ const list = (v: unknown): Record<string, unknown>[] =>
     ? v.filter((x): x is Record<string, unknown> => !!x && typeof x === "object")
     : [];
 
+/** Stored references, as a layer (or a layout's cast member) keeps them. */
+export function readRefs(raw: unknown): FrescoRef[] {
+  return list(raw)
+    .filter((r) => r.ref)
+    .map((r) => ({
+      id: String(r.id ?? uid("r")),
+      ref: String(r.ref),
+      type: (["input", "temp", "output"].includes(r.type as string)
+        ? r.type
+        : "input") as SourceType,
+      strength: Math.max(0, num(r.strength, 1)),
+      fit: (REF_FITS.includes(r.fit as RefFit) ? r.fit : "contain") as RefFit,
+      on: r.on !== false,
+    }));
+}
+
+/** Stored LoRAs, as a layer (or a layout's cast member) keeps them. */
+export function readLoras(raw: unknown): FrescoLora[] {
+  return list(raw).map((r) => ({
+    id: String(r.id ?? uid("o")),
+    name: String(r.name ?? ""),
+    strength: num(r.strength, 1),
+    on: r.on !== false,
+  }));
+}
+
 function parseContent(raw: Record<string, unknown>, denoise = 1): FrescoContent {
   return {
     on: raw.on !== false,
     prompt: String(raw.prompt ?? ""),
-    refs: list(raw.refs)
-      .filter((r) => r.ref)
-      .map((r) => ({
-        id: String(r.id ?? uid("r")),
-        ref: String(r.ref),
-        type: (["input", "temp", "output"].includes(r.type as string)
-          ? r.type
-          : "input") as SourceType,
-        strength: Math.max(0, num(r.strength, 1)),
-        fit: (REF_FITS.includes(r.fit as RefFit) ? r.fit : "contain") as RefFit,
-        on: r.on !== false,
-      })),
-    loras: list(raw.loras).map((r) => ({
-      id: String(r.id ?? uid("o")),
-      name: String(r.name ?? ""),
-      strength: num(r.strength, 1),
-      on: r.on !== false,
-    })),
+    refs: readRefs(raw.refs),
+    loras: readLoras(raw.loras),
     denoise: clamp01(num(raw.denoise, denoise)),
     influence: Math.min(4, Math.max(0, num(raw.influence, 1))),
     blend: (BLENDS.some((b) => b.value === raw.blend) ? raw.blend : "mix") as Blend,

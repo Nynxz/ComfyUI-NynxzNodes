@@ -133,6 +133,13 @@ main prompt there, in the same single pass.
 > description). Keep Layout Extras' `prompt` as the positive and wire `regions` and the CLIP into
 > Regions Apply: on MOSS-Image the layout JSON says where things go, and the routing makes each
 > part of the picture read its own box.
+>
+> **The cast:** someone who appears in several boxes (a character across comic panels) is added
+> once in the layout's scene settings, with reference images, LoRAs and trigger words, and picked
+> in each box that shows them. Each such box's region then carries their LoRAs, its prompt gets
+> their trigger words, and with the CLIP wired into Layout Extras their images are read into the
+> box's prompt (as Text Encode (Fusion) does; the encoder must see images: Qwen3-VL, or Qwen3.5 for
+> MOSS-Image). Region LoRAs don't run on MOSS-Image yet.
 
 ```
 Regions from Masks ──> Region LoRAs ──> Regions Apply ──> MODEL ──> KSampler

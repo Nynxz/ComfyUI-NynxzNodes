@@ -196,6 +196,54 @@ class RegionPrompt(unittest.TestCase):
         self.assertEqual(prompt.region_prompt(scene, scene["boxes"][0]), "Dusk. a cat!")
 
 
+AMBER = {
+    "id": "amber",
+    "name": "Amber",
+    "trigger": "amb3r",
+    "refs": [
+        {"ref": "amber.png", "type": "input", "strength": 1.0, "fit": "cover"},
+        {"ref": "muted.png", "on": False},
+        {"ref": "zero.png", "strength": 0},
+    ],
+    "loras": [{"name": "amber.safetensors", "strength": 0.8}, {"name": "off", "on": False}],
+}
+KAI = {"id": "kai", "name": "Kai", "trigger": "", "refs": [], "loras": []}
+
+
+class Cast(unittest.TestCase):
+    def scene(self, *boxes):
+        return prompt.parse(
+            {**layout("moss", list(boxes), prompt="Anime style"), "cast": [AMBER, KAI, "junk"]}
+        )
+
+    def test_members_parse_as_fresco_reads_a_layer(self):
+        cast = self.scene()["cast"]
+        self.assertEqual([m["id"] for m in cast], ["amber", "kai"])
+        amber = cast[0]
+        self.assertEqual([r["ref"] for r in amber["refs"]], ["amber.png"])
+        self.assertEqual(amber["refs"][0]["fit"], "cover")
+        self.assertEqual(amber["loras"], [{"lora_name": "amber.safetensors", "strength": 0.8}])
+
+    def test_a_box_names_members_in_its_own_order_and_unknown_ids_drop(self):
+        scene = self.scene(box(cast=["kai", "ghost", "amber", "kai"]))
+        names = [m["name"] for m in prompt.members(scene, scene["boxes"][0])]
+        self.assertEqual(names, ["Kai", "Amber"])
+
+    def test_trigger_words_lead_the_box_prompt(self):
+        scene = self.scene(box(cast=["amber", "kai"], desc="she waves"))
+        self.assertEqual(
+            prompt.region_prompt(scene, scene["boxes"][0]), "Anime style. amb3r. she waves."
+        )
+
+    def test_a_trigger_alone_is_enough_for_a_prompt(self):
+        scene = self.scene(box(cast=["amber"], desc=""))
+        self.assertEqual(prompt.region_prompt(scene, scene["boxes"][0]), "Anime style. amb3r.")
+
+    def test_old_layouts_have_no_cast(self):
+        scene = prompt.parse(layout("moss", [box()]))
+        self.assertEqual((scene["cast"], scene["boxes"][0]["cast"]), ([], []))
+
+
 try:
     import sys
     import types
@@ -252,6 +300,87 @@ class LayoutRegions(unittest.TestCase):
         regions = self.regions(box(id="a", hidden=True), box(id="b", desc=""))
         self.assertEqual(len(regions), 1)
         self.assertNotIn("prompt", regions[0])
+
+
+@unittest.skipIf(torch is None, "needs torch")
+class CastRegions(unittest.TestCase):
+    def setUp(self):
+        self.encoded = []
+        fusion_pkg = types.ModuleType("nynxz_pack.fusion")
+        fusion_pkg.__path__ = []
+        engine = types.ModuleType("nynxz_pack.fusion._fusion")
+        loader = types.ModuleType("nynxz_pack.fusion.fusion_input")
+
+        class Settings:
+            def __init__(self, visual_size):
+                self.visual_size = visual_size
+
+        def encode_fusion(clip, text, sources, settings, strengths, fits):
+            if clip == "text-only":
+                raise ValueError("Visual fusion requires a Qwen3-VL text encoder")
+            self.encoded.append((text, len(sources), strengths, fits, settings.visual_size))
+            return [[torch.ones((1, 4, 8)), {}]]
+
+        engine.FusionSettings, engine.encode_fusion = Settings, encode_fusion
+        loader._resolve_path = lambda ref, kind: None if ref == "gone.png" else f"{kind}/{ref}"
+        loader._load_image = lambda path: torch.zeros((1, 8, 8, 3))
+        self.saved = {
+            name: sys.modules.get(name)
+            for name in (
+                "nynxz_pack.fusion",
+                "nynxz_pack.fusion._fusion",
+                "nynxz_pack.fusion.fusion_input",
+            )
+        }
+        sys.modules.update(
+            {
+                "nynxz_pack.fusion": fusion_pkg,
+                "nynxz_pack.fusion._fusion": engine,
+                "nynxz_pack.fusion.fusion_input": loader,
+            }
+        )
+
+    def tearDown(self):
+        for name, module in self.saved.items():
+            if module is None:
+                sys.modules.pop(name, None)
+            else:
+                sys.modules[name] = module
+
+    def regions(self, boxes, cast, clip=None):
+        scene = prompt.parse({**layout("moss", boxes, prompt="Anime style"), "cast": cast})
+        return layout_regions.regions(scene, clip, 512)
+
+    def test_cast_loras_ride_on_every_box_naming_them(self):
+        one, two, plain = self.regions(
+            [box(id="a", cast=["amber"]), box(id="b", cast=["amber"]), box(id="c")],
+            [{**AMBER, "refs": []}],
+        )
+        lora = [{"lora_name": "amber.safetensors", "strength": 0.8}]
+        self.assertEqual((one["loras"], two["loras"], plain["loras"]), (lora, lora, []))
+        self.assertNotIn("conditioning", one)
+
+    def test_references_are_read_into_the_box_prompt(self):
+        (region,) = self.regions([box(cast=["amber"], desc="she waves")], [AMBER], clip="vl")
+        self.assertEqual(region["conditioning"].shape, (1, 4, 8))
+        self.assertEqual(region["prompt"], "Anime style. amb3r. she waves.")
+        self.assertEqual(
+            self.encoded, [("Anime style. amb3r. she waves.", 1, [1.0], ["cover"], 512)]
+        )
+
+    def test_references_without_a_clip_say_to_wire_one(self):
+        with self.assertRaisesRegex(ValueError, "Wire the CLIP"):
+            self.regions([box(cast=["amber"])], [AMBER])
+
+    def test_an_encoder_that_cannot_see_images_names_the_box(self):
+        with self.assertRaisesRegex(ValueError, 'Box "Lamp".*can\'t read them'):
+            self.regions([box(cast=["amber"])], [AMBER], clip="text-only")
+
+    def test_missing_reference_files_are_skipped(self):
+        gone = {**AMBER, "refs": [{"ref": "gone.png"}]}
+        (region,) = self.regions([box(cast=["amber"])], [gone], clip="vl")
+        self.assertNotIn("conditioning", region)
+        self.assertEqual(self.encoded, [])
 
 
 if __name__ == "__main__":

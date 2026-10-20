@@ -60,6 +60,23 @@ class NynxzLayoutExtras(NynxzNode):
                 io.Int.Input("label_size", default=16, min=6, max=96, advanced=True),
                 io.Boolean.Input("show_index", default=True, advanced=True),
                 io.Boolean.Input("show_text", default=True, advanced=True),
+                io.Clip.Input(
+                    "clip",
+                    optional=True,
+                    tooltip="Only for cast members with reference images: the text encoder reads "
+                    "each such box's prompt with its cast's images. It must see images (Qwen3-VL, "
+                    "or Qwen3.5 for MOSS-Image) — the same CLIP as the main prompt.",
+                ),
+                io.Int.Input(
+                    "reference_size",
+                    default=384,
+                    min=128,
+                    max=1024,
+                    step=32,
+                    advanced=True,
+                    tooltip="How finely the cast's reference images are read (the side of the "
+                    "visual grid, as Text Encode (Fusion)'s visual_size).",
+                ),
             ],
             outputs=[
                 io.String.Output(display_name="prompt", tooltip="Into your text encoder."),
@@ -76,8 +93,10 @@ class NynxzLayoutExtras(NynxzNode):
                     display_name="regions",
                     tooltip="Each box as a region for Regions Apply (wire its clip too): the box's "
                     "mask, the upper box owning any overlap, and its own prompt, the scene's "
-                    "caption followed by the box's description. Keep the prompt above as the "
-                    "positive: Regions Apply then makes each part of the picture read its own box.",
+                    "caption, its cast's trigger words, then the box's description. Its cast's "
+                    "LoRAs ride on it, and their reference images are read into its prompt (wire "
+                    "the clip here for that). Keep the prompt above as the positive: Regions Apply "
+                    "then makes each part of the picture read its own box.",
                 ),
             ],
         )
@@ -92,6 +111,8 @@ class NynxzLayoutExtras(NynxzNode):
         label_size=16,
         show_index=True,
         show_text=True,
+        clip=None,
+        reference_size=384,
     ) -> io.NodeOutput:
         parsed = _prompt.parse(layout)
         for warning in _prompt.warnings(parsed):
@@ -118,7 +139,7 @@ class NynxzLayoutExtras(NynxzNode):
             height,
             overlay,
             alpha,
-            _regions.regions(parsed),
+            _regions.regions(parsed, clip, reference_size),
         )
 
 
