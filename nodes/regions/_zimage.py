@@ -440,13 +440,18 @@ def load_region_loras(
     """`[(region_index, {module_path: branch})]` for every region's LoRAs, on the Linears
     `wanted(path)` accepts."""
     loaded: list[tuple[int, dict]] = []
+    # A LoRA several regions carry at the same strength loads once and its branches are shared, so
+    # the hooks compute it once per layer for all of them (see `_branch._by_module`).
+    cache: dict[tuple[str, float], dict] = {}
     for index, region in enumerate(entries):
         for spec in region.get("loras") or []:
             name = spec.get("lora_name")
             if not name:
                 continue
-            branches = _branches_for(model, name, float(spec.get("strength", 1.0)), wanted, family)
-            loaded.append((index, branches))
+            key = (name, float(spec.get("strength", 1.0)))
+            if key not in cache:
+                cache[key] = _branches_for(model, name, key[1], wanted, family)
+            loaded.append((index, cache[key]))
     return loaded
 
 

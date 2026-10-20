@@ -543,6 +543,9 @@ def _load(patcher, entries, text: bool = True):
     `lora_name` — every line after it then named the wrong LoRA.
     """
     loaded, text_loaded, report = [], {}, []
+    # A LoRA several regions carry at the same strength loads once and its branches are shared, so
+    # the hooks compute it once per layer for all of them (see `_branch._by_module`).
+    cache: dict[tuple[str, float, bool], tuple[dict, dict]] = {}
     for index, region in enumerate(entries):
         bound = region.get("loras") or []
         if not bound:
@@ -554,7 +557,10 @@ def _load(patcher, entries, text: bool = True):
             if not name:
                 continue
             strength = float(spec.get("strength", 1.0))
-            branches, text_branches = load_branches(patcher, name, strength, text)
+            key = (name, strength, text)
+            if key not in cache:
+                cache[key] = load_branches(patcher, name, strength, text)
+            branches, text_branches = cache[key]
             loaded.append((index, branches))
             for path, branch in text_branches.items():
                 text_loaded.setdefault(index, {}).setdefault(path, []).append(branch)

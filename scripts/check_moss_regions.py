@@ -306,6 +306,9 @@ class Bump:
 
 class RegionLoras(Harness):
     def patched_run(self, mask, loaded, prompts=None, context=None):
+        return self.patched_runs([mask], loaded, prompts, context)
+
+    def patched_runs(self, masks, loaded, prompts=None, context=None):
         import comfy.model_patcher
 
         holder = torch.nn.Module()
@@ -314,7 +317,7 @@ class RegionLoras(Harness):
         patched = comfy.model_patcher.ModelPatcher(
             holder, torch.device("cpu"), torch.device("cpu")
         ).clone()
-        state = zimage.ZGateState([region(mask)], schedule_mod.Schedule(), 0.0)
+        state = zimage.ZGateState([region(m) for m in masks], schedule_mod.Schedule(), 0.0)
         state.copy_full = True
         routed = moss.install(patched, state, prompts or {}, patches.TrackConfig(track=0.0), loaded)
         branch_mod.attach(patched, loaded, state)
@@ -387,6 +390,29 @@ class RegionLoras(Harness):
         self.assertNotIn("comfy_force_forward", module.__dict__)
         self.assertEqual(
             moss.forced_paths(loaded + self.bumps()), ["diffusion_model.layers.0.proj.ffn_down"]
+        )
+
+    def test_a_lora_shared_by_regions_runs_once_and_matches_separate_copies(self):
+        calls = []
+        path = "diffusion_model.layers.0.proj.o"
+        shared = Bump(64, 2.0, lambda x: calls.append(x.shape[1]))
+        together, _, _ = self.patched_runs(
+            [left(), left().flip(-1)], [(0, {path: shared}), (1, {path: shared})]
+        )
+        once = len(calls)
+        calls.clear()
+        apart, _, _ = self.patched_runs(
+            [left(), left().flip(-1)],
+            [
+                (0, {path: Bump(64, 2.0, lambda x: calls.append(x.shape[1]))}),
+                (1, {path: Bump(64, 2.0, lambda x: calls.append(x.shape[1]))}),
+            ],
+        )
+        self.assertEqual(once * 2, len(calls))
+        torch.testing.assert_close(together, apart)
+        self.assertEqual(
+            branch_mod._by_module([(0, {path: shared}), (1, {path: shared})]),
+            {path: [((0, 1), shared)]},
         )
 
     def test_only_attention_and_mlp_linears_are_routable(self):
