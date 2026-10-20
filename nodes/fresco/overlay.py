@@ -17,6 +17,7 @@ import torch.nn.functional as F
 from comfy_api.latest import io, ui
 from PIL import Image, ImageDraw, ImageFont
 
+from ..regions._mask import bbox
 from ._base import FrescoNode
 from ._io_types import Fresco
 
@@ -65,9 +66,8 @@ def draw(image: torch.Tensor, outlines: list[dict]) -> torch.Tensor:
         color = torch.tensor(_rgb(outline.get("color", ""), index), dtype=out.dtype) / 255.0
         out[shape] = out[shape] * (1.0 - FILL) + color * FILL
         out[_edge(shape, thickness)] = color
-        rows = torch.nonzero(shape.any(dim=1)).flatten()
-        cols = torch.nonzero(shape.any(dim=0)).flatten()
-        tags.append((int(cols[0]), int(rows[0]), f"{index + 1} {outline.get('label', '')}", color))
+        top, left, _, _ = bbox(shape)
+        tags.append((left, top, f"{index + 1} {outline.get('label', '')}", color))
 
     picture = Image.fromarray((out.clamp(0, 1).cpu().numpy() * 255).astype(np.uint8))
     pen = ImageDraw.Draw(picture)

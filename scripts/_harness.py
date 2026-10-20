@@ -49,11 +49,19 @@ class _Any:
         return _Any()
 
 
+class _Io(_Any):
+    """`comfy_api.latest.io` with a real `ComfyNode`, so node modules' classes can be defined."""
+
+    class ComfyNode:
+        pass
+
+
 def stub_comfy() -> None:
     """Just enough of ComfyUI for the fusion and regions engines to import and run on CPU: `comfy.utils`
     (a working `common_upscale`), `comfy.model_management`, `node_helpers` (a working
-    `conditioning_set_values`) and `comfy_api.latest.io`; and the pack's `_zenkit.io_types` with
-    `advanced` as a no-op, since the real one builds ComfyUI widgets."""
+    `conditioning_set_values`) and `comfy_api.latest.io`; the pack's `_zenkit` identity, and its
+    `io_types` with `advanced` as a no-op, since the real one builds ComfyUI widgets. Node modules
+    import too, so their helpers can be tested; their schemas can't be built."""
     if "comfy" in sys.modules:
         return
     import torch
@@ -92,7 +100,7 @@ def stub_comfy() -> None:
     helpers = types.ModuleType("node_helpers")
     helpers.conditioning_set_values = conditioning_set_values
     latest = types.ModuleType("comfy_api.latest")
-    latest.io = _Any()
+    latest.io = _Io()
     api = types.ModuleType("comfy_api")
     api.latest = latest
     sys.modules.update(
@@ -106,6 +114,9 @@ def stub_comfy() -> None:
         }
     )
     _packages()
+    identity = load("_zenkit.identity")
+    zenkit = sys.modules[f"{ROOT}._zenkit"]
+    zenkit.CATEGORY, zenkit.NAMESPACE = identity.CATEGORY, identity.NAMESPACE
     io_types = types.ModuleType(f"{ROOT}._zenkit.io_types")
     io_types.advanced = lambda widget: widget
     io_types.widget_type = lambda *args, **kwargs: _Any()

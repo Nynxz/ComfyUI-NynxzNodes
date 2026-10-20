@@ -36,6 +36,28 @@ import torch
 #: Fit modes for mapping a source frame onto the canvas grid.
 FITS = ("stretch", "contain", "cover")
 DEFAULT_FIT = "stretch"
+#: At or above this a mask value counts as inside its region.
+THRESHOLD = 0.5
+
+Box = tuple[int, int, int, int]
+
+
+def bbox(mask: torch.Tensor, threshold: float = THRESHOLD) -> Box | None:
+    """(top, left, bottom, right), exclusive, of where an `[H, W]` mask reaches `threshold` (a bool
+    mask: where it is True), or None when it never does."""
+    solid = mask if mask.dtype == torch.bool else mask >= threshold
+    rows = torch.nonzero(solid.any(dim=1)).flatten()
+    cols = torch.nonzero(solid.any(dim=0)).flatten()
+    if rows.numel() == 0 or cols.numel() == 0:
+        return None
+    return int(rows[0]), int(cols[0]), int(rows[-1]) + 1, int(cols[-1]) + 1
+
+
+def grown_box(box, pad: float, height: int, width: int) -> Box:
+    """`box` padded by `pad` of its own size, clamped to the frame."""
+    top, left, bottom, right = (int(v) for v in box)
+    dy, dx = round((bottom - top) * pad), round((right - left) * pad)
+    return (max(0, top - dy), max(0, left - dx), min(height, bottom + dy), min(width, right + dx))
 
 
 def _as_hw(mask: torch.Tensor) -> torch.Tensor:

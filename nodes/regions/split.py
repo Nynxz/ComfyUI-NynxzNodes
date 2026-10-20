@@ -28,21 +28,11 @@ from scipy.ndimage import label
 
 from ..fusion._io_types import FusionLayout
 from ._base import RegionNode
+from ._mask import THRESHOLD, bbox
 from .grid import grid_masks
 
 DIRECTIONS = ["auto", "columns", "rows"]
 SHAPES = ["strip", "box"]
-THRESHOLD = 0.5
-
-
-def _box_of(mask: torch.Tensor) -> tuple[int, int, int, int] | None:
-    """(top, left, bottom, right) of a mask's solid area, or None when it is empty."""
-    solid = mask >= THRESHOLD
-    rows = torch.nonzero(solid.any(dim=1)).flatten()
-    cols = torch.nonzero(solid.any(dim=0)).flatten()
-    if rows.numel() == 0:
-        return None
-    return int(rows[0]), int(cols[0]), int(rows[-1]) + 1, int(cols[-1]) + 1
 
 
 def detections(masks, bboxes, height: int, width: int):
@@ -56,7 +46,7 @@ def detections(masks, bboxes, height: int, width: int):
             labelled, count = label((masks[0] >= THRESHOLD).cpu().numpy())
             pieces = [torch.from_numpy(labelled == n).float() for n in range(1, count + 1)]
         for piece in pieces:
-            box = _box_of(piece.cpu())
+            box = bbox(piece.cpu())
             if box:
                 found.append((box, piece.cpu().float()))
     elif bboxes:
@@ -268,7 +258,7 @@ class NynxzRegionSplit(RegionNode):
 
         layout = {
             "canvas": [width, height],
-            "boxes": [list(_box_of(strip) or (0, 0, 1, 1)) for strip in strips],
+            "boxes": [list(bbox(strip) or (0, 0, 1, 1)) for strip in strips],
             "flipped": [False] * count,
         }
         subjects = torch.stack([mask for _, mask in found])

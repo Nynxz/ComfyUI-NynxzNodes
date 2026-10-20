@@ -28,10 +28,10 @@ from .._widgets import color_input
 from ..background.config import hex_to_rgb
 from ..fusion._fusion import FIT_MODES, _gaussian_blur2d
 from ..fusion._io_types import FusionLayout
-from ..fusion.fusion_regions import _grown, lay_out
+from ..fusion.fusion_regions import lay_out
 from ._base import RegionNode
+from ._mask import THRESHOLD, grown_box
 
-THRESHOLD = 0.5
 OVAL_SIDE = 256
 
 
@@ -174,7 +174,7 @@ class NynxzRegionSketch(RegionNode):
         if not boxes:
             raise ValueError("Every region is empty, so there is nowhere to put the copies.")
 
-        boxes = [_grown(box, float(padding), height, width) for box in boxes]
+        boxes = [grown_box(box, float(padding), height, width) for box in boxes]
         boxes = [
             (top, left, max(bottom, top + 1), max(right, left + 1))
             for top, left, bottom, right in boxes
