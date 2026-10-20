@@ -1,0 +1,81 @@
+{
+ "kind": "layout",
+ "value": {
+  "mode": "ideogram",
+  "width": 1024,
+  "height": 768,
+  "prompt": "A cosy reading nook",
+  "background": "warm wooden walls",
+  "style": {
+   "on": true,
+   "kind": "photo",
+   "aesthetics": "warm, calm",
+   "lighting": "window light",
+   "medium": "photograph",
+   "photo": "",
+   "art_style": "",
+   "palette": [
+    "#FFAA00"
+   ]
+  },
+  "meta": [],
+  "canvas": "",
+  "palette": [],
+  "mixins": [],
+  "boxes": [
+   {
+    "id": "b1",
+    "name": "Box 1",
+    "color": "#3B82F6",
+    "x": 0.1,
+    "y": 0.1,
+    "w": 0.3,
+    "h": 0.3,
+    "hidden": false,
+    "locked": false,
+    "kind": "object",
+    "desc": "a green armchair",
+    "text": "",
+    "palette": [
+     "#2E7D32"
+    ],
+    "tags": [],
+    "mixins": []
+   },
+   {
+    "id": "b2",
+    "name": "Box 2",
+    "color": "#3B82F6",
+    "x": 0.5,
+    "y": 0.05,
+    "w": 0.4,
+    "h": 0.1,
+    "hidden": false,
+    "locked": false,
+    "kind": "text",
+    "desc": "a sign",
+    "text": "READ",
+    "palette": [],
+    "tags": [],
+    "mixins": []
+   },
+   {
+    "id": "b3",
+    "name": "Box 3",
+    "color": "#3B82F6",
+    "x": 0.1,
+    "y": 0.1,
+    "w": 0.3,
+    "h": 0.3,
+    "hidden": true,
+    "locked": false,
+    "kind": "object",
+    "desc": "hidden lamp",
+    "text": "",
+    "palette": [],
+    "tags": [],
+    "mixins": []
+   }
+  ]
+ }
+}

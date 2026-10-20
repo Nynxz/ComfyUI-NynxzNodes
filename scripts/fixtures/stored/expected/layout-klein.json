@@ -1,0 +1,83 @@
+{
+ "parsed": {
+  "mode": "klein",
+  "width": 1024,
+  "height": 768,
+  "prompt": "A desk with <obj_1> and <obj_2>",
+  "background": "",
+  "style": {
+   "on": false,
+   "kind": "photo",
+   "aesthetics": "",
+   "lighting": "",
+   "medium": "photograph",
+   "photo": "",
+   "art_style": "",
+   "palette": []
+  },
+  "meta": [],
+  "canvas": "",
+  "palette": [],
+  "mixins": [],
+  "boxes": [
+   {
+    "id": "b1",
+    "name": "Box 1",
+    "x": 0.1,
+    "y": 0.1,
+    "w": 0.3,
+    "h": 0.3,
+    "hidden": false,
+    "kind": "object",
+    "desc": "a laptop",
+    "text": "",
+    "palette": [],
+    "tags": [],
+    "mixins": []
+   },
+   {
+    "id": "b2",
+    "name": "Box 2",
+    "x": 0.6,
+    "y": 0.1,
+    "w": 0.3,
+    "h": 0.3,
+    "hidden": false,
+    "kind": "object",
+    "desc": "a coffee mug",
+    "text": "",
+    "palette": [],
+    "tags": [],
+    "mixins": []
+   }
+  ]
+ },
+ "prompt": "A desk with <obj_1> and <obj_2> [{\"id\": \"obj_1\", \"bbox\": [100, 100, 400, 400], \"desc\": \"a laptop\"}, {\"id\": \"obj_2\", \"bbox\": [100, 600, 400, 900], \"desc\": \"a coffee mug\"}]",
+ "warnings": [],
+ "elements": [
+  {
+   "type": "obj",
+   "bbox": [
+    100,
+    100,
+    400,
+    400
+   ],
+   "desc": "a laptop"
+  },
+  {
+   "type": "obj",
+   "bbox": [
+    100,
+    600,
+    400,
+    900
+   ],
+   "desc": "a coffee mug"
+  }
+ ],
+ "region_prompts": [
+  "A desk with <obj_1> and <obj_2>. a laptop.",
+  "A desk with <obj_1> and <obj_2>. a coffee mug."
+ ]
+}

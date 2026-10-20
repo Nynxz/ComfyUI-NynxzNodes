@@ -1,0 +1,57 @@
+{
+ "parsed": {
+  "mode": "moss",
+  "width": 1024,
+  "height": 768,
+  "prompt": "Anime style",
+  "background": "",
+  "style": {
+   "on": false,
+   "kind": "photo",
+   "aesthetics": "",
+   "lighting": "",
+   "medium": "photograph",
+   "photo": "",
+   "art_style": "",
+   "palette": []
+  },
+  "meta": [],
+  "canvas": "",
+  "palette": [],
+  "mixins": [],
+  "boxes": [
+   {
+    "id": "b1",
+    "name": "Amber",
+    "x": 0.1,
+    "y": 0.1,
+    "w": 0.3,
+    "h": 0.3,
+    "hidden": false,
+    "kind": "object",
+    "desc": "she waves",
+    "text": "",
+    "palette": [],
+    "tags": [],
+    "mixins": []
+   }
+  ]
+ },
+ "prompt": "{\"summary\":{\"caption\":\"Anime style\"},\"items\":[{\"label\":\"object\",\"caption\":\"she waves\",\"bbox\":[-308,-410,-76,-102]}],\"bbox_coord_space\":\"abs_centralized\",\"bbox_format\":\"yxyx\"}",
+ "warnings": [],
+ "elements": [
+  {
+   "type": "obj",
+   "bbox": [
+    100,
+    100,
+    400,
+    400
+   ],
+   "desc": "she waves"
+  }
+ ],
+ "region_prompts": [
+  "Anime style. she waves."
+ ]
+}

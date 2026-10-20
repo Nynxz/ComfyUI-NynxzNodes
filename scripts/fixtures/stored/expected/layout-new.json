@@ -1,0 +1,31 @@
+{
+ "parsed": {
+  "mode": "ideogram",
+  "width": 1024,
+  "height": 1024,
+  "prompt": "",
+  "background": "",
+  "style": {
+   "on": false,
+   "kind": "photo",
+   "aesthetics": "",
+   "lighting": "",
+   "medium": "",
+   "photo": "",
+   "art_style": "",
+   "palette": []
+  },
+  "meta": [],
+  "canvas": "",
+  "palette": [],
+  "mixins": [],
+  "boxes": []
+ },
+ "prompt": "{\"compositional_deconstruction\":{\"background\":\"\",\"elements\":[]}}",
+ "warnings": [
+  "The prompt is empty.",
+  "Ideogram expects a background."
+ ],
+ "elements": [],
+ "region_prompts": []
+}
