@@ -10,8 +10,30 @@
       :in-panel="inPanel"
       property-prefix="nynxzLayout"
       :help="HELP"
+      :tabs="[{ id: 'mixins', label: 'Mixins', count: scene.mixins.length }]"
       @pop-out="emit('popOut')"
     >
+      <template #box="{ box: face }">
+        <div v-if="faceMixins(face.id).length" class="pl-face">
+          <MixinAvatar
+            v-for="mixin in faceMixins(face.id)"
+            :key="mixin.id"
+            :mixin="mixin"
+            :size="18"
+            :title="mixin.name"
+          />
+        </div>
+      </template>
+      <template #tab-mixins>
+        <LayoutMixins
+          v-model:open="openMixin"
+          :boxes="scene.boxes"
+          :model-value="scene.mixins"
+          @update:model-value="setMixins"
+          @create="addMixin()"
+          @select-boxes="selectMixinBoxes"
+        />
+      </template>
       <template #add>
         <ZenButton
           sm
@@ -125,6 +147,20 @@
             />
           </FrescoSection>
           <FrescoSection label="Mixins" :note="mixinNote">
+            <template #actions>
+              <ZenIconButton
+                size="sm"
+                icon="mdi mdi-plus"
+                title="New mixin, in this box"
+                @click="addMixin(box.name)"
+              />
+              <ZenIconButton
+                size="sm"
+                icon="mdi mdi-pencil-outline"
+                title="Edit mixins"
+                @click="editMixin(box.mixins[0])"
+              />
+            </template>
             <div v-if="scene.mixins.length" class="pl-chips">
               <button
                 v-for="mixin in scene.mixins"
@@ -134,14 +170,16 @@
                 :title="
                   box.mixins.includes(mixin.id)
                     ? `Take ${mixin.name} out of this box`
-                    : `${mixin.name} is in this box: their look and LoRAs apply here`
+                    : `Put ${mixin.name} in this box: its look, LoRAs and trigger words apply here`
                 "
                 @click="toggleMixin(mixin.id)"
+                @dblclick="editMixin(mixin.id)"
               >
+                <MixinAvatar :mixin="mixin" :size="18" />
                 {{ mixin.name }}
               </button>
             </div>
-            <p v-else class="pl-hint">Add the mixins in the scene settings (click the canvas).</p>
+            <p v-else class="pl-hint">None yet: + makes one in this box, from what it holds.</p>
           </FrescoSection>
           <FrescoSection v-if="scene.mode !== 'klein'" label="Colours" note="up to 5">
             <PaletteEdit
@@ -240,25 +278,6 @@
             </FrescoSection>
           </template>
 
-          <FrescoSection
-            label="Mixins"
-            :note="scene.mixins.length ? String(scene.mixins.length) : ''"
-          >
-            <template #actions>
-              <ZenIconButton
-                size="sm"
-                icon="mdi mdi-account-plus-outline"
-                title="Add a mixin: references, LoRAs and trigger words to reuse across boxes"
-                @click="addMixin"
-              />
-            </template>
-            <LayoutMixins
-              :boxes="scene.boxes"
-              :model-value="scene.mixins"
-              @update:model-value="setMixins"
-            />
-          </FrescoSection>
-
           <p v-if="scene.mode === 'klein'" class="pl-note">
             Klein reads only the caption and each box's description, so colours go in the words.
             Cite every box in the caption as &lt;obj_N&gt;.
@@ -313,6 +332,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import FrescoSection from "@/components/fresco/FrescoSection.vue";
 import LayoutAgent from "@/components/layout/LayoutAgent.vue";
 import LayoutMixins from "@/components/layout/LayoutMixins.vue";
+import MixinAvatar from "@/components/layout/MixinAvatar.vue";
 import LayoutEditor from "@/components/layout/LayoutEditor.vue";
 import LayoutSettings from "@/components/layout/LayoutSettings.vue";
 import ModeCards from "@/components/layout/ModeCards.vue";
@@ -324,7 +344,7 @@ import { uid } from "@/lib/frescoScene";
 import { keepContextMenu } from "@/lib/ownContextMenu";
 import { PROMPT_MODES } from "@/layout/modes";
 import type { AgentImage, AgentLayout } from "@/layout/agent";
-import { boxId, kleinId, nextColor, readBox } from "@/layout/promptScene";
+import { boxId, kleinId, nextColor, readBox, readMixin } from "@/layout/promptScene";
 import type { SourceType } from "@/lib/fusionApi";
 import type {
   BoxKind,
@@ -369,10 +389,12 @@ const editor = ref<{
   update: (next: unknown) => void;
   offerBackdrop: (image: { ref: string; type: SourceType; size?: [number, number] }) => void;
   backdrop: AgentImage | null;
+  showTab: (id: string) => void;
 } | null>(null);
 const agentOpen = ref(false);
 const selected = ref<string[]>([]);
 const settingsOpen = ref(false);
+const openMixin = ref<string | null>(null);
 const choosing = ref(!!props.chooseMode);
 const scene = props.layout.scene;
 const mode = computed(
@@ -470,15 +492,40 @@ function setMixins(mixins: Mixin[]) {
     ),
   });
 }
-function addMixin() {
-  const member: Mixin = {
+/** A new mixin, opened in the Mixins tab; named after `fromBox` and put in it when given. */
+function addMixin(fromBox?: string) {
+  const index = scene.value.mixins.length;
+  const mixin: Mixin = {
+    ...readMixin({}, index),
     id: uid("c"),
-    name: `Mixin ${scene.value.mixins.length + 1}`,
-    trigger: "",
-    refs: [],
-    loras: [],
+    name: fromBox && !DEFAULT_NAME.test(fromBox) ? fromBox : `Mixin ${index + 1}`,
   };
-  patchScene({ mixins: [...scene.value.mixins, member] });
+  const into = fromBox !== undefined ? box.value?.id : undefined;
+  patchScene({
+    mixins: [...scene.value.mixins, mixin],
+    boxes: into
+      ? scene.value.boxes.map((b) =>
+          b.id === into ? { ...b, mixins: [...b.mixins, mixin.id] } : b,
+        )
+      : scene.value.boxes,
+  });
+  editMixin(mixin.id);
+}
+/** Open a mixin (or the first) in the Mixins tab. */
+function editMixin(id?: string) {
+  openMixin.value = id ?? scene.value.mixins[0]?.id ?? null;
+  editor.value?.showTab("mixins");
+}
+function selectMixinBoxes(id: string) {
+  selected.value = scene.value.boxes.filter((b) => b.mixins.includes(id)).map((b) => b.id);
+}
+/** The mixins a box on the canvas carries, for its badges. */
+function faceMixins(id: string): Mixin[] {
+  const found = scene.value.boxes.find((b) => b.id === id);
+  if (!found?.mixins.length) return [];
+  return found.mixins
+    .map((m) => scene.value.mixins.find((x) => x.id === m))
+    .filter((m): m is Mixin => !!m);
 }
 function toggleMixin(id: string) {
   const current = box.value?.mixins ?? [];
@@ -661,9 +708,20 @@ async function copyOutput() {
   flex-wrap: wrap;
   gap: 4px;
 }
+.pl-face {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: flex;
+  gap: 2px;
+  pointer-events: none;
+}
 .pl-chip {
-  height: 22px;
-  padding: 0 9px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 24px;
+  padding: 0 9px 0 3px;
   border: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 80%, transparent);
   border-radius: 11px;
   background: transparent;

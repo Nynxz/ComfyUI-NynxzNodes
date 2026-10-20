@@ -1,109 +1,167 @@
 <template>
   <div class="lm">
-    <div v-for="mixin in mixins" :key="mixin.id" class="lm-card">
+    <div class="lm-grid">
+      <button
+        v-for="mixin in mixins"
+        :key="mixin.id"
+        type="button"
+        :class="['lm-tile', { on: mixin.id === openId }]"
+        :title="`${mixin.name} — in ${boxCount(mixin.id)} box(es)`"
+        @click="open(mixin.id)"
+      >
+        <MixinAvatar :mixin="mixin" :size="40" />
+        <span class="lm-tile-name">{{ mixin.name }}</span>
+        <span class="lm-tile-meta">
+          <span>{{ boxCount(mixin.id) }} box{{ boxCount(mixin.id) === 1 ? "" : "es" }}</span>
+          <i
+            v-if="loraCount(mixin)"
+            class="mdi mdi-puzzle-outline"
+            :title="`${loraCount(mixin)} LoRA(s)`"
+          />
+        </span>
+      </button>
+      <button type="button" class="lm-tile lm-new" title="New mixin" @click="emit('create')">
+        <i class="mdi mdi-plus" />
+        <span class="lm-tile-name">New</span>
+      </button>
+    </div>
+
+    <p v-if="!mixins.length" class="lm-empty">
+      A mixin is something several boxes share — a character, an object, a style: reference images,
+      LoRAs and trigger words given once, then picked in each box (Box tab). Needs Regions Apply
+      after Layout Extras.
+    </p>
+
+    <div v-if="current" class="lm-edit">
       <div class="lm-head">
+        <MixinAvatar :mixin="current" :size="28" />
         <ZenInput
           sm
           class="lm-name"
-          :model-value="mixin.name"
+          :model-value="current.name"
           placeholder="Name"
-          @update:model-value="patch(mixin.id, { name: String($event ?? '') })"
+          @update:model-value="patch({ name: String($event ?? '') })"
         />
-        <span class="lm-count" :title="`${boxCount(mixin.id)} box(es) name ${mixin.name}`">
-          {{ boxCount(mixin.id) }}
-        </span>
+        <input
+          class="lm-color"
+          type="color"
+          :value="current.color"
+          title="Its colour"
+          @input="patch({ color: ($event.target as HTMLInputElement).value })"
+        />
         <ZenIconButton
           size="sm"
-          icon="mdi mdi-close"
-          :title="`Remove ${mixin.name} (and from every box)`"
-          @click="remove(mixin.id)"
+          icon="mdi mdi-select-group"
+          :title="`Select the ${boxCount(current.id)} box(es) it's in`"
+          :disabled="!boxCount(current.id)"
+          @click="emit('selectBoxes', current.id)"
+        />
+        <ZenIconButton
+          size="sm"
+          danger
+          icon="mdi mdi-delete-outline"
+          :title="`Delete ${current.name} (and take it out of every box)`"
+          @click="remove(current.id)"
         />
       </div>
-      <ZenInput
-        sm
-        :model-value="mixin.trigger"
-        placeholder="Trigger words (added to each box's prompt)"
-        @update:model-value="patch(mixin.id, { trigger: String($event ?? '') })"
-      />
-      <FrescoSection label="Look" :note="mixin.refs.length ? String(mixin.refs.length) : ''">
+      <FrescoSection label="Trigger words" note="added to each box's prompt">
+        <ZenInput
+          sm
+          :model-value="current.trigger"
+          placeholder="e.g. amb3r"
+          @update:model-value="patch({ trigger: String($event ?? '') })"
+        />
+      </FrescoSection>
+      <FrescoSection
+        label="Look"
+        :note="current.refs.length ? String(current.refs.length) : 'reference images'"
+      >
         <template #actions>
           <ZenIconButton
             size="sm"
             icon="mdi mdi-upload-outline"
             title="Upload images"
-            :disabled="panels[mixin.id]?.busy"
-            @click="panels[mixin.id]?.upload()"
+            :disabled="refsPanel?.busy"
+            @click="refsPanel?.upload()"
           />
           <ZenIconButton
             size="sm"
             icon="mdi mdi-view-grid-plus-outline"
             title="Browse images"
-            @click="panels[mixin.id]?.openBrowse()"
+            @click="refsPanel?.openBrowse()"
           />
         </template>
         <FrescoRefs
-          :ref="(el) => setPanel(mixin.id, el)"
-          :model-value="mixin.refs"
-          @update:model-value="patch(mixin.id, { refs: $event })"
+          ref="refsPanel"
+          :model-value="current.refs"
+          @update:model-value="patch({ refs: $event })"
         />
       </FrescoSection>
-      <FrescoSection label="LoRAs" :note="mixin.loras.length ? String(mixin.loras.length) : ''">
+      <FrescoSection label="LoRAs" :note="current.loras.length ? String(current.loras.length) : ''">
         <template #actions>
           <ZenIconButton
             size="sm"
             icon="mdi mdi-plus"
             title="Add a LoRA"
-            @click="patch(mixin.id, { loras: [...mixin.loras, newLora()] })"
+            @click="patch({ loras: [...current.loras, newLora()] })"
           />
         </template>
         <FrescoLoras
-          v-if="mixin.loras.length"
-          :model-value="mixin.loras"
-          @update:model-value="patch(mixin.id, { loras: $event })"
+          v-if="current.loras.length"
+          :model-value="current.loras"
+          @update:model-value="patch({ loras: $event })"
         />
       </FrescoSection>
     </div>
-    <p v-if="!mixins.length" class="lm-empty">
-      Something several boxes share — a character, an object, a style: give it reference images,
-      LoRAs and trigger words once, then pick it in each box. Needs Regions Apply after Layout
-      Extras.
-    </p>
   </div>
 </template>
 
 <script setup lang="ts">
 /**
- * A layout's mixins: what several boxes share, with its reference images, LoRAs and trigger words
- * given once. Boxes name mixins by id; Layout Extras gives each box its mixins' LoRAs and trigger
- * words and reads their images into its prompt.
+ * The layout's Mixins tab: every mixin as a tile, and the open one's editor — what several boxes
+ * share, with its reference images, LoRAs and trigger words given once. Boxes name mixins by id;
+ * Layout Extras gives each box its mixins' LoRAs and trigger words and reads their images into its
+ * prompt.
  */
 import { ZenIconButton, ZenInput } from "@nynxz/zenkit-ui";
-import { reactive } from "vue";
+import { computed, ref } from "vue";
 
 import FrescoLoras from "@/components/fresco/FrescoLoras.vue";
 import FrescoRefs from "@/components/fresco/FrescoRefs.vue";
 import FrescoSection from "@/components/fresco/FrescoSection.vue";
+import MixinAvatar from "@/components/layout/MixinAvatar.vue";
 import type { FrescoLora } from "@/lib/frescoScene";
 import { uid } from "@/lib/frescoScene";
 import type { Mixin, PromptBox } from "@/layout/promptScene";
 
 const { boxes } = defineProps<{ boxes: PromptBox[] }>();
 const mixins = defineModel<Mixin[]>({ required: true });
+/** The mixin whose editor is open. */
+const openId = defineModel<string | null>("open", { default: null });
+const emit = defineEmits<{ create: []; selectBoxes: [id: string] }>();
 
-type RefsPanel = { upload: () => void; openBrowse: () => void; busy: boolean };
-const panels = reactive<Record<string, RefsPanel | undefined>>({});
-function setPanel(id: string, el: unknown) {
-  panels[id] = (el as RefsPanel | null) ?? undefined;
+const refsPanel = ref<{ upload: () => void; openBrowse: () => void; busy: boolean } | null>(null);
+const current = computed(
+  () => mixins.value.find((m) => m.id === openId.value) ?? mixins.value[0] ?? null,
+);
+
+function open(id: string) {
+  openId.value = id;
 }
-
-function patch(id: string, change: Partial<Mixin>) {
+function patch(change: Partial<Mixin>) {
+  const id = current.value?.id;
+  if (!id) return;
   mixins.value = mixins.value.map((m) => (m.id === id ? { ...m, ...change } : m));
 }
 function remove(id: string) {
   mixins.value = mixins.value.filter((m) => m.id !== id);
+  if (openId.value === id) openId.value = null;
 }
 function boxCount(id: string): number {
   return boxes.filter((b) => b.mixins.includes(id)).length;
+}
+function loraCount(mixin: Mixin): number {
+  return mixin.loras.filter((l) => l.on && l.name).length;
 }
 function newLora(): FrescoLora {
   return { id: uid("o"), name: "", strength: 1, on: true };
@@ -114,15 +172,67 @@ function newLora(): FrescoLora {
 .lm {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
-.lm-card {
+.lm-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+  gap: 6px;
+}
+.lm-tile {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 8px;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  padding: 8px 4px 6px;
   border: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 70%, transparent);
   border-radius: var(--zen-radius, 7px);
+  background: transparent;
+  color: var(--zen-text, #e5e5ea);
+  cursor: pointer;
+}
+.lm-tile:hover {
+  background: color-mix(in srgb, var(--zen-text, #fff) 4%, transparent);
+}
+.lm-tile.on {
+  border-color: var(--zen-accent, #3b82f6);
+  background: color-mix(in srgb, var(--zen-accent, #3b82f6) 12%, transparent);
+}
+.lm-tile-name {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 11px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.lm-tile-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  color: var(--zen-muted, #9aa0aa);
+}
+.lm-new {
+  justify-content: center;
+  border-style: dashed;
+  color: var(--zen-muted, #9aa0aa);
+}
+.lm-new .mdi {
+  font-size: 22px;
+}
+.lm-empty {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--zen-muted, #9aa0aa);
+}
+.lm-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 60%, transparent);
 }
 .lm-head {
   display: flex;
@@ -133,16 +243,14 @@ function newLora(): FrescoLora {
   flex: 1;
   min-width: 0;
 }
-.lm-count {
-  min-width: 18px;
-  font-size: 11px;
-  text-align: center;
-  color: var(--zen-muted, #9aa0aa);
-}
-.lm-empty {
-  margin: 0;
-  font-size: 11px;
-  line-height: 1.45;
-  color: var(--zen-muted, #9aa0aa);
+.lm-color {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
 }
 </style>

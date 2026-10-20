@@ -199,8 +199,35 @@
           </template>
           <template #pane-1>
             <section class="le-pane">
-              <header class="le-head">
-                <template v-if="current">
+              <nav v-if="tabbed" class="le-tabs">
+                <button
+                  type="button"
+                  :class="['le-tab', { on: tab === 'box' }]"
+                  :disabled="!selected.length"
+                  :title="selected.length ? 'The selected box' : 'Select a box on the canvas'"
+                  @click="tab = 'box'"
+                >
+                  {{ selected.length > 1 ? `${selected.length} boxes` : "Box" }}
+                </button>
+                <button
+                  type="button"
+                  :class="['le-tab', { on: tab === 'scene' }]"
+                  @click="tab = 'scene'"
+                >
+                  Scene
+                </button>
+                <button
+                  v-for="t in tabs"
+                  :key="t.id"
+                  type="button"
+                  :class="['le-tab', { on: tab === t.id }]"
+                  @click="tab = t.id"
+                >
+                  {{ t.label }}<span v-if="t.count" class="le-count">{{ t.count }}</span>
+                </button>
+              </nav>
+              <header v-if="view === 'element' || view === 'multi' || !tabbed" class="le-head">
+                <template v-if="view === 'element' && current">
                   <span class="le-swatch" :style="{ background: current.color }" />
                   <ZenInput
                     class="le-grow"
@@ -219,7 +246,7 @@
                     @click="removeBoxes([current.id])"
                   />
                 </template>
-                <template v-else-if="selected.length > 1">
+                <template v-else-if="view === 'multi'">
                   <span class="le-title">{{ selected.length }} boxes</span>
                   <ZenIconButton
                     size="sm"
@@ -233,14 +260,15 @@
               </header>
 
               <ZenScroll class="le-body">
-                <slot v-if="current" name="element" :id="current.id" />
-                <slot v-else-if="selected.length > 1" name="multi" :ids="selected">
+                <slot v-if="view === 'element' && current" name="element" :id="current.id" />
+                <slot v-else-if="view === 'multi'" name="multi" :ids="selected">
                   <p class="le-note">
                     Drag any of them on the canvas to move them together; the frame's handles scale
                     them.
                   </p>
                 </slot>
-                <slot v-else name="scene" />
+                <slot v-else-if="view === 'scene'" name="scene" />
+                <slot v-else :name="`tab-${tab}`" />
               </ZenScroll>
             </section>
           </template>
@@ -443,6 +471,9 @@ const props = withDefaults(
     backdropTitle?: string;
     sizeSnap?: number;
     maxSide?: number;
+    /** More inspector tabs after Box and Scene; each fills its `tab-<id>` slot. Without any, the
+     *  inspector shows the selection or the scene, untabbed. */
+    tabs?: { id: string; label: string; count?: number }[];
   }>(),
   {
     node: undefined,
@@ -457,6 +488,7 @@ const props = withDefaults(
     backdropTitle: "Trace image — something to draw over",
     sizeSnap: 16,
     maxSide: 2048,
+    tabs: () => [],
   },
 );
 const emit = defineEmits<{
@@ -470,6 +502,30 @@ const emit = defineEmits<{
 
 const selected = defineModel<string[]>("selected", { default: () => [] });
 const tool = defineModel<BoxTool>("tool", { default: "select" });
+
+// --- the inspector's tabs ------------------------------------------------------------------------
+
+const tabbed = computed(() => props.tabs.length > 0);
+const tab = ref<string>(selected.value.length ? "box" : "scene");
+// Picking boxes shows them; clearing the selection leaves the box tab for the scene. A host tab
+// stays put until a box is picked.
+watch(
+  () => selected.value.join("\n"),
+  (ids) => {
+    if (ids) tab.value = "box";
+    else if (tab.value === "box") tab.value = "scene";
+  },
+);
+/** What the inspector shows: the selected box, several, the scene, or a host tab. */
+const view = computed<"element" | "multi" | "scene" | "extra">(() => {
+  const picked =
+    selected.value.length === 1 ? "element" : selected.value.length ? "multi" : "scene";
+  if (!tabbed.value || tab.value === "box") return picked;
+  return tab.value === "scene" ? "scene" : "extra";
+});
+function showTab(id: string) {
+  tab.value = id;
+}
 
 const canPopOut = !props.inPanel && hasZenPanels();
 const hostModes = computed(() => props.modes ?? [props.mode]);
@@ -999,7 +1055,7 @@ function matchSource() {
   if (s) setSize(s[0], s[1]);
 }
 
-defineExpose({ addBox, update, patchBoxes, stagePoint, offerBackdrop, backdrop });
+defineExpose({ addBox, update, patchBoxes, stagePoint, offerBackdrop, backdrop, showTab });
 </script>
 
 <style scoped>
@@ -1186,6 +1242,40 @@ defineExpose({ addBox, update, patchBoxes, stagePoint, offerBackdrop, backdrop }
   border-radius: var(--zen-radius, 7px);
   background: color-mix(in srgb, var(--zen-text, #fff) 2%, transparent);
   overflow: hidden;
+}
+.le-tabs {
+  flex: none;
+  display: flex;
+  gap: 2px;
+  padding: 4px 4px 0;
+  border-bottom: 1px solid var(--zen-border, #34343c);
+}
+.le-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 28px;
+  padding: 0 10px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--zen-muted, #9aa0aa);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.le-tab:hover:not(:disabled) {
+  color: var(--zen-text, #e5e5ea);
+}
+.le-tab.on {
+  border-bottom-color: var(--zen-accent, #3b82f6);
+  color: var(--zen-text, #e5e5ea);
+}
+.le-tab:disabled {
+  opacity: 0.4;
+  cursor: default;
 }
 .le-head {
   flex: none;
