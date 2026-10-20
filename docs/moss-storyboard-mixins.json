@@ -44,7 +44,7 @@
     "w": 0.0679,
     "h": 0.1175,
     "kind": "character",
-    "desc": "Amber, a teenage girl with a short copper-red bob, big green eyes and light freckles, wearing a yellow yukata with a sunflower pattern and a red obi. Tiny in the crowd, holding a cotton candy, happy.",
+    "desc": "Tiny in the crowd, holding a cotton candy, happy.",
     "text": "",
     "palette": [],
     "mixins": [
@@ -111,7 +111,7 @@
     "w": 0.21,
     "h": 0.2167,
     "kind": "character",
-    "desc": "Kai, a tall teenage boy with straight black chin-length hair, brown eyes and a thin scar over his left eyebrow, wearing a dark blue jinbei. Behind her, holding two red candy apples, puzzled.",
+    "desc": "Behind her, holding two red candy apples, puzzled.",
     "text": "",
     "palette": [],
     "mixins": [
@@ -126,7 +126,7 @@
     "w": 0.27,
     "h": 0.2295,
     "kind": "character",
-    "desc": "Amber, a teenage girl with a short copper-red bob, big green eyes and light freckles, wearing a yellow yukata with a sunflower pattern and a red obi. She gasps and points off-panel, her other hand on an empty bag strap, shocked.",
+    "desc": "She gasps and points off-panel, her other hand on an empty bag strap, shocked.",
     "text": "",
     "palette": [],
     "mixins": [
@@ -180,7 +180,7 @@
     "w": 0.2485,
     "h": 0.2833,
     "kind": "character",
-    "desc": "Amber, a teenage girl with a short copper-red bob, big green eyes and light freckles, wearing a yellow yukata with a sunflower pattern and a red obi. She runs down the stairs, yukata sleeves flying, determined.",
+    "desc": "She runs down the stairs, yukata sleeves flying, determined.",
     "text": "",
     "palette": [],
     "mixins": [
@@ -221,7 +221,7 @@
     "w": 0.108,
     "h": 0.1103,
     "kind": "character",
-    "desc": "Amber, a teenage girl with a short copper-red bob, big green eyes and light freckles, wearing a yellow yukata with a sunflower pattern and a red obi. Far ahead, small, leaping over the goldfish stand.",
+    "desc": "Far ahead, small, leaping over the goldfish stand.",
     "text": "",
     "palette": [],
     "mixins": [
@@ -236,7 +236,7 @@
     "w": 0.252,
     "h": 0.1837,
     "kind": "character",
-    "desc": "Kai, a tall teenage boy with straight black chin-length hair, brown eyes and a thin scar over his left eyebrow, wearing a dark blue jinbei. Seen from behind in the foreground, one arm reaching out.",
+    "desc": "Seen from behind in the foreground, one arm reaching out.",
     "text": "",
     "palette": [],
     "mixins": [
@@ -318,7 +318,7 @@
     "w": 0.2015,
     "h": 0.1615,
     "kind": "character",
-    "desc": "Kai, a tall teenage boy with straight black chin-length hair, brown eyes and a thin scar over his left eyebrow, wearing a dark blue jinbei. Bent over, hands on his knees, panting and sweating.",
+    "desc": "Bent over, hands on his knees, panting and sweating.",
     "text": "",
     "palette": [],
     "mixins": [
@@ -372,7 +372,7 @@
     "w": 0.1178,
     "h": 0.133,
     "kind": "character",
-    "desc": "Amber, a teenage girl with a short copper-red bob, big green eyes and light freckles, wearing a yellow yukata with a sunflower pattern and a red obi. Laughing, holding the keychain up to the fireworks.",
+    "desc": "Laughing, holding the keychain up to the fireworks.",
     "text": "",
     "palette": [],
     "mixins": [
@@ -387,7 +387,7 @@
     "w": 0.1178,
     "h": 0.1425,
     "kind": "character",
-    "desc": "Kai, a tall teenage boy with straight black chin-length hair, brown eyes and a thin scar over his left eyebrow, wearing a dark blue jinbei. Laughing beside her, rubbing the back of his head.",
+    "desc": "Laughing beside her, rubbing the back of his head.",
     "text": "",
     "palette": [],
     "mixins": [
@@ -427,14 +427,16 @@
     "name": "Amber",
     "trigger": "",
     "refs": [],
-    "loras": []
+    "loras": [],
+    "desc": "Amber, a teenage girl with a short copper-red bob, big green eyes and light freckles, wearing a yellow yukata with a sunflower pattern and a red obi"
    },
    {
     "id": "kai",
     "name": "Kai",
     "trigger": "",
     "refs": [],
-    "loras": []
+    "loras": [],
+    "desc": "Kai, a tall teenage boy with straight black chin-length hair, brown eyes and a thin scar over his left eyebrow, wearing a dark blue jinbei"
    }
   ]
  }
