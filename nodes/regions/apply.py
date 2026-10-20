@@ -58,8 +58,7 @@ class NynxzRegionsApply(RegionNode):
                 "Runs each region's LoRA as a live per-token branch gated to that region's tokens, "
                 "instead of merging every delta into the weights where they collide, and gives "
                 "each region its own prompt when it has one. Composes with ordinary merged "
-                "LoRAs. Krea 2, Z-Image and MOSS-Image (region prompts only on MOSS); tracking and layout "
-                "lock are Krea 2 only for now."
+                "LoRAs. Krea 2, Z-Image and MOSS-Image; tracking and layout lock are Krea 2 only for now."
             ),
             is_experimental=True,
             inputs=[
@@ -471,38 +470,45 @@ def _apply_moss(
     layout_lock,
     sources,
 ):
-    """Regions Apply on MOSS-Image: each region's own prompt, routed by attention (see `_moss`)."""
-    if any(r.get("loras") for r in entries):
+    """Regions Apply on MOSS-Image: each region's own prompt and its LoRAs, routed by attention
+    and gated per token (see `_moss`)."""
+    if not prompted and not conditioned and not any(r.get("loras") for r in entries):
         raise ValueError(
-            "Region LoRAs don't run on MOSS-Image yet — only each region's own prompt does. "
-            "Load the LoRA for the whole image with a LoRA loader, or take it off the region."
-        )
-    if not prompted and not conditioned:
-        raise ValueError(
-            "On MOSS-Image, Regions Apply routes each region's own prompt, and no region has one. "
-            "Give the regions a prompt (Region LoRAs' prompt row, or Layout Extras' regions)."
+            "On MOSS-Image, Regions Apply routes each region's own prompt and its LoRAs, and no "
+            "region has either. Give the regions a prompt or a LoRA."
         )
     if _moss.already_regioned(model):
         raise ValueError(
             "This model already has regions on it from another Regions Apply upstream. Use one."
         )
     patched = model.clone()
-    state = _state.GateState(entries, schedule, 0.0, sources)
+    state = _zimage.ZGateState(entries, schedule, 0.0, sources)
     # The prompts read at full weight: the schedule is for ramping LoRAs in, and a prompt is not one.
     state.copy_full = True
     prompts = dict(conditioned)
     for index, prompt in prompted.items():
         encoded, extra = clip.encode_from_tokens_scheduled(clip.tokenize(prompt))[0]
         prompts[index] = _zimage.trim(encoded, extra)
-    _moss.install(patched, state, prompts, config)
+    loaded = _moss.load_region_loras(patched, entries)
+    _moss.install(patched, state, prompts, config, loaded)
+    if loaded:
+        _branch.attach(patched, loaded, state)
     _capture.clear()
 
-    lines = [
-        f"region {i + 1}: " + ("own prompt" if i in prompts else "holds territory only")
-        for i in range(len(entries))
-    ]
+    def _line(i: int) -> str:
+        parts = ["own prompt"] if i in prompts else []
+        layers = sum(len(b) for region, b in loaded if region == i)
+        if layers:
+            parts.append(f"{layers} LoRA layers")
+        return f"region {i + 1}: " + (", ".join(parts) or "holds territory only")
+
+    lines = [_line(i) for i in range(len(entries))]
     lines.append("")
-    lines.append(f"MOSS-Image: {len(prompts)} region prompt(s) routed by attention")
+    lines.append(
+        f"MOSS-Image: {len(prompts)} region prompt(s) routed by attention"
+        + (f", {sum(len(b) for _, b in loaded)} LoRA branch(es)" if loaded else "")
+    )
+    lines.append(f"schedule: {schedule.describe()}")
     lines.append(f"isolation: {config.isolation:.2f}")
     if track > 0.0:
         lines.append("tracking: not on MOSS-Image yet — the masks are used exactly as given")

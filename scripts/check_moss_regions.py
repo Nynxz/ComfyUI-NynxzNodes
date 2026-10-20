@@ -18,10 +18,12 @@ from pathlib import Path
 NODES = Path(__file__).resolve().parents[1] / "nodes"
 
 torch = moss = state_mod = schedule_mod = patches = extension = MOSSImage = ops = None
+branch_mod = zimage = None
 
 
 def _setup(comfy_path: str) -> None:
     global torch, moss, state_mod, schedule_mod, patches, extension, MOSSImage, ops
+    global branch_mod, zimage
     sys.path.insert(0, comfy_path)
     argv, sys.argv = sys.argv, [sys.argv[0], "--cpu"]
     import comfy.options
@@ -35,14 +37,17 @@ def _setup(comfy_path: str) -> None:
     import torch as torch_mod
     from comfy.ldm.moss_image.model import MOSSImage as model_class
 
-    package = types.ModuleType("nynxz_regions")
-    package.__path__ = [str(NODES / "regions")]
-    sys.modules["nynxz_regions"] = package
+    for name, folder in (("nynxz_pack", NODES), ("nynxz_pack.regions", NODES / "regions")):
+        package = types.ModuleType(name)
+        package.__path__ = [str(folder)]
+        sys.modules[name] = package
     torch, ops, extension, MOSSImage = torch_mod, comfy_ops, comfy_extension, model_class
-    moss = importlib.import_module("nynxz_regions._moss")
-    state_mod = importlib.import_module("nynxz_regions._state")
-    schedule_mod = importlib.import_module("nynxz_regions._schedule")
-    patches = importlib.import_module("nynxz_regions._patches")
+    moss = importlib.import_module("nynxz_pack.regions._moss")
+    state_mod = importlib.import_module("nynxz_pack.regions._state")
+    schedule_mod = importlib.import_module("nynxz_pack.regions._schedule")
+    patches = importlib.import_module("nynxz_pack.regions._patches")
+    branch_mod = importlib.import_module("nynxz_pack.regions._branch")
+    zimage = importlib.import_module("nynxz_pack.regions._zimage")
 
 
 GRID = 4
@@ -282,6 +287,115 @@ class Install(Harness):
         direct = self.routed([left()], {0: own})
         torch.testing.assert_close(out, self.run_routed(direct, main))
         self.assertGreater(float((out - self.plain(main)).abs().max()), 0.1)
+
+
+class Bump:
+    """A stand-in LoRA branch: adds `value` to every output feature it is gated onto."""
+
+    def __init__(self, out: int, value: float = 1.0, seen=None):
+        self.out, self.value, self.seen = out, value, seen
+
+    def delta(self, x):
+        if self.seen is not None:
+            self.seen(x)
+        return x.new_full((*x.shape[:-1], self.out), self.value)
+
+    def energy(self) -> float:
+        return 1.0
+
+
+class RegionLoras(Harness):
+    def patched_run(self, mask, loaded, prompts=None, context=None):
+        import comfy.model_patcher
+
+        holder = torch.nn.Module()
+        holder.diffusion_model = self.model
+        holder.model_options = {}
+        patched = comfy.model_patcher.ModelPatcher(
+            holder, torch.device("cpu"), torch.device("cpu")
+        ).clone()
+        state = zimage.ZGateState([region(mask)], schedule_mod.Schedule(), 0.0)
+        state.copy_full = True
+        routed = moss.install(patched, state, prompts or {}, patches.TrackConfig(track=0.0), loaded)
+        branch_mod.attach(patched, loaded, state)
+        options = dict(patched.model_options["transformer_options"])
+        extension.merge_nested_dicts(
+            options.setdefault("wrappers", {}), patched.wrappers, copy_dict1=False
+        )
+        patched.patch_model()
+        try:
+            with torch.no_grad():
+                out = self.model(
+                    self.x, self.t, context if context is not None else prompt(10), options
+                )
+            gates = dict(state.by_len)
+        finally:
+            patched.unpatch_model()
+        return out, routed, gates
+
+    def bumps(self, value=1.0, seen=None):
+        return [
+            (
+                0,
+                {
+                    "diffusion_model.layers.0.proj.o": Bump(64, value, seen),
+                    "diffusion_model.layers.1.proj.o": Bump(64, value, seen),
+                    "diffusion_model.text_embedder.blocks.0.proj": Bump(64, value, seen),
+                },
+            )
+        ]
+
+    def test_the_gates_reach_the_region_s_canvas_and_its_own_copy_only(self):
+        _, routed, gates = self.patched_run(left(), self.bumps())
+        layout = routed.layout
+        (_, start, length) = layout.slots[0]
+        joint = gates[layout.joint][0, :, 0]
+        text = gates[layout.text][0, :, 0]
+        canvas = joint[: layout.canvas].reshape(GRID, GRID)
+        self.assertEqual(float(canvas[:, 0].min()), 1.0)
+        self.assertEqual(float(canvas[:, -1].max()), 0.0)
+        main = slice(layout.canvas, layout.canvas + layout.main)
+        copy = slice(layout.canvas + start, layout.canvas + start + length)
+        self.assertEqual(float(joint[main].abs().max()), 0.0)
+        self.assertEqual(float(joint[copy].min()), 1.0)
+        self.assertEqual(float(text[: layout.main].abs().max()), 0.0)
+        self.assertEqual(float(text[start : start + length].min()), 1.0)
+
+    def test_a_lora_region_without_a_prompt_copies_the_main_prompt(self):
+        context = prompt(10)
+        _, routed, _ = self.patched_run(left(), self.bumps(), context=context)
+        self.assertEqual(len(routed.layout.slots), 1)
+        (_, start, length) = routed.layout.slots[0]
+        self.assertEqual((start, length), (context.shape[1], context.shape[1]))
+
+    def test_the_lora_changes_its_region_and_nothing_where_it_claims_nothing(self):
+        plain = self.plain(prompt(10))
+        whole, _, _ = self.patched_run(torch.ones((GRID, GRID)), self.bumps(3.0))
+        nothing, _, _ = self.patched_run(torch.zeros((GRID, GRID)), self.bumps(3.0))
+        self.assertGreater(float((whole - plain).abs().max()), 0.1)
+        self.assert_same_image(nothing, plain, whole)
+
+    def test_ffn_down_runs_its_own_forward_while_regioned_and_is_put_back(self):
+        flags = []
+        loaded = [(0, {"diffusion_model.layers.0.proj.ffn_down": Bump(64, 0.5)})]
+        module = self.model.layers[0].proj["ffn_down"]
+        loaded[0][1]["diffusion_model.layers.0.proj.ffn_down"].seen = lambda x: flags.append(
+            module.__dict__.get("comfy_force_forward")
+        )
+        self.patched_run(left(), loaded)
+        self.assertEqual(flags, [True])
+        self.assertNotIn("comfy_force_forward", module.__dict__)
+        self.assertEqual(
+            moss.forced_paths(loaded + self.bumps()), ["diffusion_model.layers.0.proj.ffn_down"]
+        )
+
+    def test_only_attention_and_mlp_linears_are_routable(self):
+        self.assertTrue(moss._routable("diffusion_model.layers.3.proj.qkv"))
+        self.assertTrue(moss._routable("diffusion_model.layers.3.proj.ffn_down"))
+        self.assertTrue(moss._routable("diffusion_model.text_embedder.blocks.1.ffn_up"))
+        self.assertFalse(moss._routable("diffusion_model.text_embedder.proj"))
+        self.assertFalse(moss._routable("diffusion_model.shared_block_modulation"))
+        self.assertFalse(moss._routable("diffusion_model.video_embedder"))
 
 
 if __name__ == "__main__":

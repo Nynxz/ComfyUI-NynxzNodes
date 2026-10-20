@@ -125,8 +125,7 @@ character B's delta never touches character A's tokens. The gate comes from a ma
 main prompt there, in the same single pass.
 
 > **Krea 2, Z-Image and MOSS-Image, and experimental.** Tracking and the layout lock are Krea 2
-> only, and on MOSS-Image only the region prompts are routed (no region LoRAs yet). `Regions Apply`
-> fails loudly on any other architecture rather than silently gating nothing.
+> only. `Regions Apply` fails loudly on any other architecture rather than silently gating nothing.
 >
 > **From a layout:** Layout Extras' `regions` output turns each box into a region with the box's
 > mask (the upper box owning any overlap) and its own prompt (the scene's caption, then the box's
@@ -139,7 +138,7 @@ main prompt there, in the same single pass.
 > and picked in each box that uses it. Each such box's region then carries its LoRAs, its prompt
 > gets the trigger words, and with the CLIP wired into Layout Extras its images are read into the
 > box's prompt (as Text Encode (Fusion) does; the encoder must see images: Qwen3-VL, or Qwen3.5 for
-> MOSS-Image). Region LoRAs don't run on MOSS-Image yet.
+> MOSS-Image).
 
 ```
 Regions from Masks ──> Region LoRAs ──> Regions Apply ──> MODEL ──> KSampler

@@ -13,8 +13,17 @@ attention call goes through `optimized_attention_override`, and a `DIFFUSION_MOD
 A copy is the region's own prompt alone, not the main prompt followed by it as on Z-Image. On MOSS
 the main prompt is often a layout prompt that names every box, and a copy that carried it would
 hand each region the others' descriptions. Layout Extras writes each box's prompt with the scene's
-caption in front, so the region keeps the scene's style. On an unconditional row a copy is that
-row's own (negative) prompt.
+caption in front, so the region keeps the scene's style. A region with a LoRA and no prompt of its
+own gets a copy of the main prompt, so a trigger word there is read through its LoRA. On an
+unconditional row a copy is that row's own (negative) prompt.
+
+Region LoRAs are forward hooks on the Linears (see `_branch`), gated per token as on Z-Image: by
+the region's claim on the canvas tokens, and in full on the region's own copy, in the joint blocks
+and the `text_embedder` (each sees its own sequence length, so the gates are kept per length).
+The joint blocks' `ffn_down` runs through `comfy.ops.linear_input_act`, which on its fast path
+calls the weight directly and skips the module's forward, hooks included; for the duration of a
+forward, the `ffn_down`s a LoRA reaches are set to `comfy_force_forward`, core's switch for exactly
+this, and put back after.
 
 Who reads what, in the joint blocks:
 
@@ -35,8 +44,7 @@ the prompt for its own region.
 MOSS runs its blocks inside a memory compiler region that recycles tensors allocated there between
 blocks, so the masks are built in the wrapper, before the blocks, never inside an attention call.
 
-Not here yet: region LoRAs (MOSS's `ffn_down` runs through a fused op that skips the module's
-forward, so a hook there would not fire), tracking, the layout lock and region references.
+Not here yet: tracking, the layout lock and region references.
 """
 
 from __future__ import annotations
@@ -45,9 +53,10 @@ import logging
 import math
 
 import comfy.patcher_extension
+import comfy.utils
 import torch
 
-from . import _capture, _patches
+from . import _capture, _patches, _zimage
 
 WRAPPER_KEY = "nynxz_regions_moss"
 
@@ -68,6 +77,28 @@ def block_count(model) -> int:
 def already_regioned(model) -> bool:
     get = getattr(model, "get_wrappers", None)
     return bool(get and get(comfy.patcher_extension.WrappersMP.DIFFUSION_MODEL, WRAPPER_KEY))
+
+
+def _routable(path: str) -> bool:
+    """The Linears a region LoRA runs on: attention and MLP in the joint blocks and the text
+    refiner, as on Z-Image. Not the embedders or the modulation."""
+    return (".layers." in path and ".proj." in path) or ".text_embedder.blocks." in path
+
+
+def load_region_loras(model, entries) -> list[tuple[int, dict]]:
+    return _zimage.load_region_loras(model, entries, _routable, "MOSS-Image")
+
+
+def forced_paths(loaded) -> list[str]:
+    """The joint blocks' `ffn_down`s a LoRA reaches: they must run their own forward for its hook."""
+    return sorted(
+        {
+            path
+            for _, branches in loaded
+            for path in branches
+            if ".layers." in path and path.endswith(".proj.ffn_down")
+        }
+    )
 
 
 class Layout:
@@ -98,11 +129,24 @@ class Layout:
 class MossRegions:
     """The wrapper, the attention override and the rope patch, sharing the region state."""
 
-    def __init__(self, state, prompts: dict[int, torch.Tensor], config, rope, previous=None):
+    def __init__(
+        self,
+        state,
+        prompts: dict[int, torch.Tensor],
+        config,
+        rope,
+        previous=None,
+        lora_regions=(),
+        forced=(),
+    ):
         self.state = state
         #: `region -> [1, seq, features]`, the regions with a prompt of their own.
         self.prompts = prompts
-        self.regions = sorted(prompts)
+        #: Regions with a LoRA: they get a copy too, and gates for their branches.
+        self.lora_regions = set(lora_regions)
+        self.regions = sorted(set(prompts) | self.lora_regions)
+        #: `ffn_down` modules to run through their own forward while this model runs.
+        self.forced = list(forced)
         self.config = config
         #: The model's own `rope`, to build each part's positions from.
         self.base_rope = rope
@@ -136,8 +180,10 @@ class MossRegions:
         cond = _patches._conditional_rows(options, batch) or [True] * batch
         parts, valids, slots, start = [context], [], [], main
         for region in self.regions:
-            own = self.prompts[region][0].to(device=context.device, dtype=context.dtype)
-            rows = [own if cond[row] else context[row] for row in range(batch)]
+            own = self.prompts.get(region)
+            if own is not None:
+                own = own[0].to(device=context.device, dtype=context.dtype)
+            rows = [own if own is not None and cond[row] else context[row] for row in range(batch)]
             length = max(tokens.shape[0] for tokens in rows)
             block = context.new_zeros((batch, length, features))
             valid = torch.zeros((batch, length), dtype=torch.bool, device=context.device)
@@ -154,9 +200,40 @@ class MossRegions:
             valid = None
 
         self.layout = Layout(state.canvas_tokens, main, slots, valid)
-        state.txtlen = self.layout.text
         self._build_masks(batch, x.device, x.dtype)
-        return executor(x, timestep, extended, transformer_options, **kwargs)
+        if self.lora_regions:
+            self._build_gates(batch, x.device)
+        state.txtlen = self.layout.text
+        before = [(module, module.__dict__.get("comfy_force_forward")) for module in self.forced]
+        for module, _ in before:
+            module.comfy_force_forward = True
+        try:
+            return executor(x, timestep, extended, transformer_options, **kwargs)
+        finally:
+            for module, value in before:
+                if value is None:
+                    module.__dict__.pop("comfy_force_forward", None)
+                else:
+                    module.comfy_force_forward = value
+
+    def _build_gates(self, batch: int, device) -> None:
+        """The LoRA gates for the joint blocks and the `text_embedder`, by sequence length: canvas
+        rows by claim (the canvas comes first), each copy in full for its own region."""
+        state, layout = self.state, self.layout
+        state.txtlen = 0
+        joint = state.build_gates(batch, layout.joint, device)
+        text = torch.zeros((batch, layout.text, joint.shape[-1]), device=device, dtype=joint.dtype)
+        for region, start, length in layout.slots:
+            if region not in self.lora_regions:
+                continue
+            weight = torch.full((batch, length), state.scale, device=device, dtype=joint.dtype)
+            if layout.valid is not None:
+                first = start - layout.main
+                weight = weight * layout.valid[:, first : first + length].to(joint.dtype)
+            at = layout.canvas + start
+            joint[:, at : at + length, region] = weight
+            text[:, start : start + length, region] = weight
+        state.by_len = {layout.joint: joint, layout.text: text}
 
     def _build_masks(self, batch: int, device, dtype) -> None:
         layout = self.layout
@@ -317,8 +394,9 @@ class MossRegions:
         return self._cached("joint", key, build)
 
 
-def install(patched, state, prompts: dict[int, torch.Tensor], config):
-    """Put the wrapper, the attention override and the rope patch on `patched` (a clone)."""
+def install(patched, state, prompts: dict[int, torch.Tensor], config, loaded=()):
+    """Put the wrapper, the attention override and the rope patch on `patched` (a clone); `loaded`
+    is the region LoRAs (`load_region_loras`), attached separately with `_branch.attach`."""
     options = patched.model_options.setdefault("transformer_options", {})
     routed = MossRegions(
         state,
@@ -326,6 +404,8 @@ def install(patched, state, prompts: dict[int, torch.Tensor], config):
         config,
         patched.get_model_object("diffusion_model.rope"),
         options.get("optimized_attention_override"),
+        lora_regions=[region for region, _ in loaded],
+        forced=[comfy.utils.get_attr(patched.model, path) for path in forced_paths(loaded)],
     )
     patched.add_wrapper_with_key(
         comfy.patcher_extension.WrappersMP.DIFFUSION_MODEL, WRAPPER_KEY, routed.wrapper
