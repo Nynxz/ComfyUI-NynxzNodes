@@ -60,7 +60,7 @@ import comfy.patcher_extension
 import comfy.utils
 import torch
 
-from . import _bias, _branch, _copies, _zimage
+from . import _bias, _branch, _copies, _lora, _zimage
 from ._bias import NEVER
 from ._branch import PROFILE, PROFILE_AT, profiled
 
@@ -97,7 +97,11 @@ def _routable(path: str) -> bool:
 
 
 def load_region_loras(model, entries) -> list[tuple[int, dict]]:
-    return _zimage.load_region_loras(model, entries, _routable, "MOSS-Image")
+    """`[(region, {module_path: branch})]` for every region's LoRAs, on the routable Linears."""
+    return [
+        (lora.region, lora.branches)
+        for lora in _lora.load_region_loras(model, entries, _routable, "MOSS-Image")
+    ]
 
 
 FFN_INJECTION_KEY = "nynxz_regions_moss_ffn"

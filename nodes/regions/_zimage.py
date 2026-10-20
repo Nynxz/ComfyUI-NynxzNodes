@@ -43,7 +43,6 @@ from __future__ import annotations
 import logging
 
 import comfy.patcher_extension
-import comfy.utils
 import torch
 
 from . import _bias, _branch, _copies, _lora
@@ -273,135 +272,12 @@ def _wanted(path: str) -> bool:
     return any(stack in path for stack in _STACKS) and any(marker in path for marker in _MARKERS)
 
 
-class FusedBranch:
-    """Several branches writing into disjoint slices of one fused output (Z-Image's `attention.qkv`).
-
-    Lumina fuses q, k and v into one Linear; a LoRA's `to_q`/`to_k`/`to_v` each target one
-    `(offset)` slice of it, so three branches land on the same module. They are kept together here:
-    `delta` assembles a full-width `[batch, seq, out]` output with each inner branch in its slice,
-    zero elsewhere, so the gate — one per token for the whole projection — multiplies it exactly as
-    for an unfused Linear. Strength is already folded into each inner branch, so this has no scale.
-    """
-
-    __slots__ = ("out", "parts")
-
-    def __init__(self, out: int):
-        self.out = out
-        #: `(inner, start, length)` per slice.
-        self.parts: list[tuple[object, int, int]] = []
-
-    def add(self, inner, offset: tuple[int, int, int]) -> None:
-        _, start, length = offset
-        self.parts.append((inner, start, length))
-
-    def delta(self, x: torch.Tensor) -> torch.Tensor:
-        out = None
-        for inner, start, length in self.parts:
-            piece = inner.delta(x)
-            if out is None:
-                out = piece.new_zeros(*piece.shape[:-1], self.out)
-            out[..., start : start + length] = piece
-        return out
-
-
-def _out_features(model, path: str) -> int | None:
-    try:
-        return comfy.utils.get_attr(model.model, path).weight.shape[0]
-    except (AttributeError, IndexError):
-        return None
-
-
-def load_region_loras(
-    model, entries, wanted=_wanted, family: str = "Z-Image"
-) -> list[tuple[int, dict]]:
-    """`[(region_index, {module_path: branch})]` for every region's LoRAs, on the Linears
-    `wanted(path)` accepts."""
-    loaded: list[tuple[int, dict]] = []
-    # A LoRA several regions carry at the same strength loads once and its branches are shared, so
-    # the hooks compute it once per layer for all of them (see `_branch.by_module`).
-    cache: dict[tuple[str, float], dict] = {}
-    for index, region in enumerate(entries):
-        for spec in region.get("loras") or []:
-            name = spec.get("lora_name")
-            if not name:
-                continue
-            key = (name, float(spec.get("strength", 1.0)))
-            if key not in cache:
-                cache[key] = _branches_for(model, name, key[1], wanted, family)
-            loaded.append((index, cache[key]))
-    return loaded
-
-
-def _branches_for(
-    model, lora_name: str, strength: float, wanted=_wanted, family: str = "Z-Image"
-) -> dict:
-    import comfy.lora
-    import comfy.lora_convert
-    import folder_paths
-
-    path = folder_paths.get_full_path_or_raise("loras", lora_name)
-    state = comfy.utils.load_torch_file(path, safe_load=True)
-    state = comfy.lora_convert.convert_lora(state)
-    key_map = comfy.lora.model_lora_keys_unet(model.model, {})
-    loaded = comfy.lora.load_lora(state, key_map, log_missing=False)
-
-    branches: dict = {}
-    unsupported: dict[str, int] = {}
-    off_target = 0
-    for weight_key, patch in loaded.items():
-        offset = None
-        if isinstance(weight_key, tuple):
-            weight_key, offset = weight_key[0], weight_key[1]
-        target = _lora.module_path(weight_key)
-        if not wanted(target):
-            off_target += 1
-            continue
-        branch = _lora.branch_of(patch)
-        if branch is None:
-            kind = _lora.patch_kind(patch)
-            unsupported[kind] = unsupported.get(kind, 0) + 1
-            continue
-        branch.scale *= strength
-        if offset is not None:
-            out = _out_features(model, target)
-            if out is None:
-                continue
-            fused = branches.get(target)
-            if not isinstance(fused, FusedBranch):
-                fused = FusedBranch(out)
-                branches[target] = fused
-            fused.add(branch, offset)
-        else:
-            branches[target] = branch
-
-    if not branches:
-        raise ValueError(
-            f"`{lora_name}` became no region branch on this {family} model — it matched "
-            f"{len(loaded)} weight(s) but none on a routable layer"
-            + (f" ({_fmt(unsupported)})" if unsupported else "")
-            + ". Load it with a stock LoraLoader for an overall effect, or check it is a "
-            f"{family} LoRA."
-        )
-    if unsupported:
-        logging.warning(
-            "Nynxz Regions: %s — %d layer(s) not applied (%s): those formats do not factor into a "
-            "gated branch.",
-            lora_name,
-            sum(unsupported.values()),
-            _fmt(unsupported),
-        )
-    if off_target:
-        logging.info(
-            "Nynxz Regions: %s — %d layer(s) outside the attention/MLP Linears (modulation, "
-            "embedders) are not applied per region.",
-            lora_name,
-            off_target,
-        )
-    return branches
-
-
-def _fmt(unsupported: dict[str, int]) -> str:
-    return ", ".join(f"{kind} x{count}" for kind, count in sorted(unsupported.items()))
+def load_region_loras(model, entries) -> list[tuple[int, dict]]:
+    """`[(region, {module_path: branch})]` for every region's LoRAs, on the routable Linears."""
+    return [
+        (lora.region, lora.branches)
+        for lora in _lora.load_region_loras(model, entries, _wanted, "Z-Image")
+    ]
 
 
 def install(patched, state, regions: list[int], prompts: dict[int, torch.Tensor], settings):

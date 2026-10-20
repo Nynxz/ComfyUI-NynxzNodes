@@ -10,7 +10,7 @@ from __future__ import annotations
 import comfy.patcher_extension
 
 from . import _branch, _lock, _patches, _state, _text
-from ._lora import load_branches
+from ._lora import load_region_loras
 
 
 def is_krea2(model) -> bool:
@@ -52,44 +52,47 @@ def install_regions(patched, entries, prompts, settings, sources) -> list[str]:
     return summary(report, settings, block_count(patched), text)
 
 
+#: Substrings that pick out the attention projections in Krea 2's `SingleStreamBlock`. Identity is
+#: mostly written into attention, but most character LoRAs put real weight into the MLP layers too,
+#: so both are routed. Attention-only was a knob once and is not one now: with the MLP layers
+#: unrouted they are simply not applied, identity comes out weak, and the natural fix — more
+#: strength — buys the bleeding straight back.
+_ATTN_MARKERS = (".attn.wq", ".attn.wk", ".attn.wv", ".attn.wo", ".attn.gate")
+_MLP_MARKER = ".mlp."
+#: Krea 2's 12-layer Qwen3-VL aggregator. Its blocks are named exactly like the DiT's — `attn.wq`,
+#: `mlp.*` — but it runs over the TEXT sequence, which has no spatial extent for a region gate to
+#: index. Its layers are kept apart, as text-side branches that make each region's own copy of the
+#: prompt (see `_text`).
+TEXT_MARKER = "txtfusion."
+
+
+def routable(path: str) -> bool:
+    """Whether a module path is one of the DiT blocks' Linears the region LoRAs run on."""
+    if TEXT_MARKER in path:
+        return False
+    return _MLP_MARKER in path or any(marker in path for marker in _ATTN_MARKERS)
+
+
 def load(patcher, entries, text: bool = True):
     """`([(region_index, branches)], {region_index: {path: [text branch]}}, [report line])` — every
-    LoRA on every region, in region order.
-
-    Pairs and not one entry per region, because a region may carry several. Each LoRA's own
-    strength is applied when it LOADS rather than to the region's gate: the gate is per REGION and
-    several LoRAs share it, so a per-LoRA strength has nowhere else to live.
-
-    The report line is built here, where the name, the strength and the branches that came back
-    are all in hand, so a skipped spec can't shift every later line onto the wrong LoRA.
-    """
+    LoRA on every region, in region order, and a log line for each."""
+    by_region: dict[int, list] = {}
+    for lora in load_region_loras(patcher, entries, routable, "Krea 2", TEXT_MARKER, text):
+        by_region.setdefault(lora.region, []).append(lora)
     loaded, text_loaded, report = [], {}, []
-    # A LoRA several regions carry at the same strength loads once and its branches are shared, so
-    # the hooks compute it once per layer for all of them (see `_branch.by_module`).
-    cache: dict[tuple[str, float, bool], tuple[dict, dict]] = {}
     for index, region in enumerate(entries):
-        bound = region.get("loras") or []
-        if not bound:
+        if not region.get("loras"):
             what = "its own prompt" if region.get("prompt") else "holds territory only"
             report.append(f"region {index + 1}: no LoRA — {what}")
-            continue
-        for spec in bound:
-            name = spec.get("lora_name")
-            if not name:
-                continue
-            strength = float(spec.get("strength", 1.0))
-            key = (name, strength, text)
-            if key not in cache:
-                cache[key] = load_branches(patcher, name, strength, text)
-            branches, text_branches = cache[key]
-            loaded.append((index, branches))
-            for path, branch in text_branches.items():
+        for lora in by_region.get(index, []):
+            loaded.append((index, lora.branches))
+            for path, branch in lora.text_branches.items():
                 text_loaded.setdefault(index, {}).setdefault(path, []).append(branch)
-            mlp = sum(1 for path in branches if ".mlp." in path)
+            mlp = sum(1 for path in lora.branches if _MLP_MARKER in path)
             report.append(
-                f"region {index + 1}: {name} @ {strength:.2f} — "
-                f"{len(branches)} layers ({len(branches) - mlp} attn, {mlp} mlp)"
-                + (f", {len(text_branches)} text" if text_branches else "")
+                f"region {index + 1}: {lora.name} @ {lora.strength:.2f} — "
+                f"{len(lora.branches)} layers ({len(lora.branches) - mlp} attn, {mlp} mlp)"
+                + (f", {len(lora.text_branches)} text" if lora.text_branches else "")
             )
     return loaded, text_loaded, report
 
