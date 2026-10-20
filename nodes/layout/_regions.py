@@ -79,18 +79,9 @@ def regions(
 def _encode_with_refs(clip, prompt: str, refs: list[dict], label: str, settings: dict):
     """`prompt` encoded with the reference images, `[1, seq, features]`; None when none load."""
     from ..fusion._fusion import FusionSettings, encode_fusion
-    from ..fusion.fusion_input import _load_image, _resolve_path
+    from ..fusion._sources import load_refs
 
-    images, strengths, fits = [], [], []
-    for ref in refs:
-        path = _resolve_path(ref["ref"], ref["type"])
-        image = _load_image(path) if path else None
-        if image is None:
-            logging.warning("Nynxz Layout: box %s skips a missing reference: %s", label, ref["ref"])
-            continue
-        images.append(image)
-        strengths.append(ref["strength"])
-        fits.append(ref["fit"])
+    images, strengths, fits = load_refs(refs, f"Layout: box {label}")
     if not images:
         return None
     try:

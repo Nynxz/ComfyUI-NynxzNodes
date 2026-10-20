@@ -6,12 +6,13 @@ Run: python scripts/check_layout_prompt.py
 
 from __future__ import annotations
 
+import importlib
 import json
 import sys
 import types
 import unittest
 
-from _harness import load
+from _harness import NODES, load
 
 prompt = load("layout._prompt")
 
@@ -314,9 +315,9 @@ class MixinRegions(unittest.TestCase):
     def setUp(self):
         self.encoded = []
         fusion_pkg = types.ModuleType("nynxz_pack.fusion")
-        fusion_pkg.__path__ = []
+        fusion_pkg.__path__ = [str(NODES / "fusion")]
         engine = types.ModuleType("nynxz_pack.fusion._fusion")
-        loader = types.ModuleType("nynxz_pack.fusion.fusion_input")
+        paths = types.ModuleType("nynxz_pack._paths")
 
         class Settings:
             def __init__(self, visual_size, prompt_mode, prompt_blend):
@@ -332,23 +333,26 @@ class MixinRegions(unittest.TestCase):
             return [[torch.ones((1, 4, 8)), {}]]
 
         engine.FusionSettings, engine.encode_fusion = Settings, encode_fusion
-        loader._resolve_path = lambda ref, kind: None if ref == "gone.png" else f"{kind}/{ref}"
-        loader._load_image = lambda path: torch.zeros((1, 8, 8, 3))
+        paths.media_file = lambda name: None if name.startswith("gone.png") else name
         self.saved = {
             name: sys.modules.get(name)
             for name in (
                 "nynxz_pack.fusion",
                 "nynxz_pack.fusion._fusion",
-                "nynxz_pack.fusion.fusion_input",
+                "nynxz_pack.fusion._sources",
+                "nynxz_pack._paths",
             )
         }
         sys.modules.update(
             {
                 "nynxz_pack.fusion": fusion_pkg,
                 "nynxz_pack.fusion._fusion": engine,
-                "nynxz_pack.fusion.fusion_input": loader,
+                "nynxz_pack._paths": paths,
             }
         )
+        sys.modules.pop("nynxz_pack.fusion._sources", None)
+        sources = importlib.import_module("nynxz_pack.fusion._sources")
+        sources.load_image = lambda path: torch.zeros((1, 8, 8, 3))
 
     def tearDown(self):
         for name, module in self.saved.items():

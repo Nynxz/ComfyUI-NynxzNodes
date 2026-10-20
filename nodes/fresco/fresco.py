@@ -32,7 +32,7 @@ from comfy_api.latest import io, ui
 
 from .._zenkit.io_types import advanced
 from ..fusion._fusion import FusionSettings, empty_latent, encode_fusion
-from ..fusion.fusion_input import _load_image, _resolve_path
+from ..fusion._sources import load_refs
 from ..regions import _refs
 from ..regions._io_types import Regions
 from ..regions.apply import NynxzRegionsApply
@@ -45,21 +45,6 @@ from ._io_types import Fresco, FrescoInputs, FrescoSceneType
 def _encode_text(clip, prompt: str) -> torch.Tensor:
     """`[1, seq, features]` — a prompt encoded as CLIP Text Encode would."""
     return clip.encode_from_tokens_scheduled(clip.tokenize(prompt))[0][0]
-
-
-def _references(refs: list[dict], where: str) -> tuple[list, list, list]:
-    """The images, strengths and fits of a layer's references that load."""
-    images, strengths, fits = [], [], []
-    for ref in refs:
-        path = _resolve_path(ref["ref"], ref["type"])
-        image = _load_image(path) if path else None
-        if image is None:
-            logging.warning("Nynxz Fresco: %s skips a missing reference: %s", where, ref["ref"])
-            continue
-        images.append(image)
-        strengths.append(ref["strength"])
-        fits.append(ref["fit"])
-    return images, strengths, fits
 
 
 def _fusion_settings(layer: dict, visual_size: int) -> FusionSettings:
@@ -85,7 +70,7 @@ def _fusion_settings(layer: dict, visual_size: int) -> FusionSettings:
 
 def _conditioning(clip, layer: dict, scene_prompt: str, visual_size: int, where: str, images=None):
     """A layer's own conditioning, or None when it has nothing to say."""
-    images, strengths, fits = images or _references(layer["refs"], where)
+    images, strengths, fits = images or load_refs(layer["refs"], f"Fresco: {where}")
     prompt = layer["prompt"]
     if images:
         encoded = encode_fusion(
@@ -119,7 +104,7 @@ def _region(
     }
     if layer["prompt"]:
         region["prompt"] = layer["prompt"]
-    loaded = _references(layer["refs"], where)
+    loaded = load_refs(layer["refs"], f"Fresco: {where}")
     if layer.get("read") == "look" and loaded[0]:
         region["look"] = loaded[0]
         shown = ([photo] if photo is not None else []) + loaded[0]

@@ -9,12 +9,12 @@ import logging
 import numpy as np
 import torch
 from comfy_api.latest import io
-from PIL import Image, ImageOps
+from PIL import Image
 
 from .. import _categories
 from .._base import NynxzNode
-from .._paths import media_file
 from ..fusion._fusion import PROMPT_MODES
+from ..fusion._sources import open_image, resolve_path
 from ..regions._io_types import Regions
 from . import _overlay, _prompt, _regions, _sheet
 from .layout import Layout
@@ -28,12 +28,10 @@ def _to_tensor(image: Image.Image) -> tuple[torch.Tensor, torch.Tensor]:
 def _open_ref(ref: dict) -> Image.Image | None:
     """A mixin's reference image, from ComfyUI's input, output or temp folder; None if it can't be
     read."""
-    path = media_file(f"{ref['ref']} [{ref['type']}]")
-    if path is None:
-        return None
+    path = resolve_path(ref["ref"], ref["type"])
+    image = open_image(path) if path else None
     try:
-        with Image.open(path) as image:
-            return ImageOps.exif_transpose(image).convert("RGB")
+        return image.convert("RGB") if image else None
     except OSError:
         return None
 

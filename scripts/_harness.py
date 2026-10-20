@@ -57,11 +57,11 @@ class _Io(_Any):
 
 
 def stub_comfy() -> None:
-    """Just enough of ComfyUI for the fusion and regions engines to import and run on CPU: `comfy.utils`
-    (a working `common_upscale`), `comfy.model_management`, `node_helpers` (a working
-    `conditioning_set_values`) and `comfy_api.latest.io`; the pack's `_zenkit` identity, and its
-    `io_types` with `advanced` as a no-op, since the real one builds ComfyUI widgets. Node modules
-    import too, so their helpers can be tested; their schemas can't be built."""
+    """Just enough of ComfyUI for the pack's engines to import and run on CPU: `comfy.utils` (a
+    working `common_upscale`), `comfy.model_management`, `node_helpers` (working
+    `conditioning_set_values` and `pillow`), `comfy_api.latest.io`, the pack's `_zenkit` identity,
+    and its `io_types` with `advanced` as a no-op, since the real one builds ComfyUI widgets. Node
+    modules import too, so their helpers can be tested; their schemas can't be built."""
     if "comfy" in sys.modules:
         return
     import torch
@@ -99,6 +99,7 @@ def stub_comfy() -> None:
     comfy.model_management = management
     helpers = types.ModuleType("node_helpers")
     helpers.conditioning_set_values = conditioning_set_values
+    helpers.pillow = lambda fn, *args: fn(*args)
     latest = types.ModuleType("comfy_api.latest")
     latest.io = _Io()
     api = types.ModuleType("comfy_api")
