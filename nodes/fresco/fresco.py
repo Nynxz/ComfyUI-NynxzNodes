@@ -35,8 +35,9 @@ from .._zenkit.io_types import advanced
 from ..fusion._fusion import FusionSettings, empty_latent, encode_fusion
 from ..fusion._sources import load_refs
 from ..regions import _refs
+from ..regions._apply import apply_regions
 from ..regions._io_types import Regions
-from ..regions.apply import NynxzRegionsApply
+from ..regions._settings import RegionSettings
 from ..regions.latent import NynxzRegionLatent
 from . import _layout, _look, _scene, _segment
 from ._base import FrescoNode
@@ -500,9 +501,7 @@ class NynxzFrescoApply(FrescoNode):
         if _active(regions):
             # The layers' prompt copies at full weight all run: in Fresco the copy IS the content
             # (prompt and references), and the early steps are where it lands.
-            patched = NynxzRegionsApply.execute(
-                model,
-                regions,
+            settings = RegionSettings(
                 isolation=isolation,
                 layout_lock=layout_lock,
                 preheat=lora_warmup,
@@ -511,8 +510,10 @@ class NynxzFrescoApply(FrescoNode):
                 release=release,
                 prompt_follows_schedule=False,
                 layout_isolation=layout_isolation,
-                sources=sources,
-            ).result[0]
+            )
+            patched = apply_regions(
+                model, regions, settings, sources=sources, node_name="Fresco Apply"
+            )
         else:
             logging.info(
                 "Nynxz Fresco: no layer has a prompt, references or LoRAs — the model is passed "

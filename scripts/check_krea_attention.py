@@ -15,6 +15,7 @@ from _harness import load, stub_comfy
 
 stub_comfy()
 patches = load("regions._patches")
+settings = load("regions._settings")
 
 TEXT = 2
 ISOLATION = 3.0
@@ -45,7 +46,9 @@ def bias(claim: torch.Tensor, groups: torch.Tensor | None = None) -> torch.Tenso
     """The canvas-against-canvas block of the bias, `[canvas, canvas]`."""
     canvas = claim.shape[0]
     q = torch.zeros((1, 1, TEXT + canvas, 4))
-    out = patches._attention_bias(state(claim, groups), patches.TrackConfig(isolation=ISOLATION), q)
+    out = patches._attention_bias(
+        state(claim, groups), settings.RegionSettings(isolation=ISOLATION), q
+    )
     return out[0, 0, TEXT:, TEXT:]
 
 

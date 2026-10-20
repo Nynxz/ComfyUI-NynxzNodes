@@ -15,12 +15,12 @@ import unittest
 from pathlib import Path
 
 torch = moss = state_mod = schedule_mod = patches = extension = MOSSImage = ops = None
-branch_mod = zimage = None
+branch_mod = zimage = settings_mod = None
 
 
 def _setup(comfy_path: str) -> None:
     global torch, moss, state_mod, schedule_mod, patches, extension, MOSSImage, ops
-    global branch_mod, zimage
+    global branch_mod, zimage, settings_mod
     sys.path.insert(0, comfy_path)
     argv, sys.argv = sys.argv, [sys.argv[0], "--cpu"]
     import comfy.options
@@ -42,6 +42,7 @@ def _setup(comfy_path: str) -> None:
     patches = load("regions._patches")
     branch_mod = load("regions._branch")
     zimage = load("regions._zimage")
+    settings_mod = load("regions._settings")
 
 
 GRID = 4
@@ -103,9 +104,8 @@ class Harness(unittest.TestCase):
 
     def routed(self, masks, prompts, isolation=0.0, partition=True):
         state = state_mod.GateState([region(m) for m in masks], schedule_mod.Schedule(), 0.0)
-        state.copy_full = True
-        config = patches.TrackConfig(track=0.0, isolation=isolation)
-        routed = moss.MossRegions(state, prompts, config, self.model.rope)
+        settings = settings_mod.RegionSettings(track=0.0, isolation=isolation)
+        routed = moss.MossRegions(state, prompts, settings, self.model.rope)
         routed.partition = partition
         return routed
 
@@ -328,9 +328,8 @@ class Install(Harness):
         patcher = comfy.model_patcher.ModelPatcher(holder, torch.device("cpu"), torch.device("cpu"))
         patched = patcher.clone()
         state = state_mod.GateState([region(left())], schedule_mod.Schedule(), 0.0)
-        state.copy_full = True
         main, own = prompt(10), prompt(11)
-        moss.install(patched, state, {0: own}, patches.TrackConfig(track=0.0))
+        moss.install(patched, state, {0: own}, settings_mod.RegionSettings(track=0.0))
         self.assertTrue(moss.already_regioned(patched))
         self.assertFalse(moss.already_regioned(patcher))
 
@@ -378,8 +377,9 @@ class RegionLoras(Harness):
             holder, torch.device("cpu"), torch.device("cpu")
         ).clone()
         state = zimage.ZGateState([region(m) for m in masks], schedule_mod.Schedule(), 0.0)
-        state.copy_full = True
-        routed = moss.install(patched, state, prompts or {}, patches.TrackConfig(track=0.0), loaded)
+        routed = moss.install(
+            patched, state, prompts or {}, settings_mod.RegionSettings(track=0.0), loaded
+        )
         (attach or moss.attach_loras)(patched, loaded, state)
         options = dict(patched.model_options["transformer_options"])
         extension.merge_nested_dicts(

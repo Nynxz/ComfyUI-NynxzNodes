@@ -274,7 +274,7 @@ class MossRegions:
         self,
         state,
         prompts: dict[int, torch.Tensor],
-        config,
+        settings,
         rope,
         previous=None,
         lora_regions=(),
@@ -285,7 +285,7 @@ class MossRegions:
         #: Regions with a LoRA: they get a copy too, and gates for their branches.
         self.lora_regions = set(lora_regions)
         self.regions = sorted(set(prompts) | self.lora_regions)
-        self.config = config
+        self.settings = settings
         #: The model's own `rope`, to build each part's positions from.
         self.base_rope = rope
         #: An attention override that was on the model before this one, called in place of the
@@ -521,7 +521,7 @@ class MossRegions:
         current = state.map if state.map is not None else state.anchor
         if current is None or current.shape[0] < layout.canvas:
             return None
-        isolation = self.config.isolation_at(state.schedule, state.fraction)
+        isolation = self.settings.isolation_at(state.fraction)
         if isolation > 0.0 and len(state.regions) >= 2:
             return None
         copied = [region for region, _, _ in layout.slots]
@@ -631,7 +631,7 @@ class MossRegions:
         if current is None or current.shape[0] < layout.canvas:
             return None
         regions = len(state.regions)
-        isolation = self.config.isolation_at(state.schedule, state.fraction)
+        isolation = self.settings.isolation_at(state.fraction)
         isolate = isolation > 0.0 and regions >= 2
         if not layout.slots and not isolate:
             return None
@@ -689,14 +689,14 @@ class MossRegions:
         return self._cached("joint", key, build)
 
 
-def install(patched, state, prompts: dict[int, torch.Tensor], config, loaded=()):
+def install(patched, state, prompts: dict[int, torch.Tensor], settings, loaded=()):
     """Put the wrapper, the attention override and the rope patch on `patched` (a clone); `loaded`
     is the region LoRAs (`load_region_loras`), attached separately with `attach_loras`."""
     options = patched.model_options.setdefault("transformer_options", {})
     routed = MossRegions(
         state,
         prompts,
-        config,
+        settings,
         patched.get_model_object("diffusion_model.rope"),
         options.get("optimized_attention_override"),
         lora_regions=[region for region, _ in loaded],
@@ -707,3 +707,28 @@ def install(patched, state, prompts: dict[int, torch.Tensor], config, loaded=())
     patched.add_object_patch("diffusion_model.rope", routed.rope)
     options["optimized_attention_override"] = routed.attention
     return routed
+
+
+def install_regions(patched, entries, prompts, settings, sources) -> list[str]:
+    """Regions on `patched` (a clone): each region's own prompt, routed by attention, and its
+    LoRAs, gated per token. Returns the log lines."""
+    state = _zimage.ZGateState(entries, settings.schedule, 0.0, sources)
+    loaded = load_region_loras(patched, entries)
+    install(patched, state, prompts, settings, loaded)
+    if loaded:
+        attach_loras(patched, loaded, state)
+    lines = _zimage.region_lines(len(entries), prompts, loaded)
+    lines.append("")
+    lines.append(
+        f"MOSS-Image: {len(prompts)} region prompt(s) routed by attention"
+        + (f", {sum(len(b) for _, b in loaded)} LoRA branch(es)" if loaded else "")
+    )
+    if loaded:
+        count, params, ranks = branch_footprint(loaded)
+        lines.append(
+            f"LoRA branches: {count} distinct, rank {', '.join(map(str, sorted(ranks))) or '-'}, "
+            f"{params * 2 / 1e6:.0f} MB at 16-bit on the GPU"
+        )
+    lines.append(f"schedule: {settings.schedule.describe()}")
+    lines.append(f"isolation: {settings.isolation:.2f}")
+    return lines

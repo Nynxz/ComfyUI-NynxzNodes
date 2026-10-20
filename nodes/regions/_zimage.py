@@ -47,7 +47,7 @@ import comfy.patcher_extension
 import comfy.utils
 import torch
 
-from . import _capture, _lora, _patches, _state
+from . import _branch, _capture, _lora, _patches, _state
 
 WRAPPER_KEY = "nynxz_regions_zimage"
 
@@ -68,17 +68,6 @@ def block_count(model) -> int:
 def already_regioned(model) -> bool:
     get = getattr(model, "get_wrappers", None)
     return bool(get and get(comfy.patcher_extension.WrappersMP.DIFFUSION_MODEL, WRAPPER_KEY))
-
-
-def trim(conditioning: torch.Tensor, extra: dict | None) -> torch.Tensor:
-    """An encoded prompt without the tokens its attention mask leaves out, `[1, seq, features]`."""
-    mask = (extra or {}).get("attention_mask")
-    if mask is None:
-        return conditioning
-    keep = mask.reshape(-1).bool()
-    if keep.shape[0] != conditioning.shape[1] or bool(keep.all()):
-        return conditioning
-    return conditioning[:, keep.to(conditioning.device)]
 
 
 class ZGateState(_state.GateState):
@@ -136,14 +125,14 @@ class ZImageRegions:
     """The wrapper and the attention override, sharing the region state."""
 
     def __init__(
-        self, state, regions: list[int], prompts: dict[int, torch.Tensor], config, previous=None
+        self, state, regions: list[int], prompts: dict[int, torch.Tensor], settings, previous=None
     ):
         self.state = state
         #: Regions with a copy of the prompt, in sequence order.
         self.regions = sorted(regions)
         #: `region -> [1, seq, features]` for regions with a prompt of their own.
         self.prompts = prompts
-        self.config = config
+        self.settings = settings
         #: An attention override that was on the model before this one, called in place of the
         #: attention itself so both apply.
         self.previous = previous
@@ -309,7 +298,7 @@ class ZImageRegions:
             return None
         batch, _, seqlen, _ = q.shape
         regions = len(state.regions)
-        isolation = self.config.isolation_at(state.schedule, state.fraction)
+        isolation = self.settings.isolation_at(state.fraction)
         isolate = isolation > 0.0 and regions >= 2
         if not layout.slots and not isolate:
             return None
@@ -520,14 +509,49 @@ def _fmt(unsupported: dict[str, int]) -> str:
     return ", ".join(f"{kind} x{count}" for kind, count in sorted(unsupported.items()))
 
 
-def install(patched, state, regions: list[int], prompts: dict[int, torch.Tensor], config):
+def install(patched, state, regions: list[int], prompts: dict[int, torch.Tensor], settings):
     """Put the wrapper and the attention override on `patched` (a clone)."""
     options = patched.model_options.setdefault("transformer_options", {})
     routed = ZImageRegions(
-        state, regions, prompts, config, options.get("optimized_attention_override")
+        state, regions, prompts, settings, options.get("optimized_attention_override")
     )
     patched.add_wrapper_with_key(
         comfy.patcher_extension.WrappersMP.DIFFUSION_MODEL, WRAPPER_KEY, routed.wrapper
     )
     options["optimized_attention_override"] = routed.attention
     return routed
+
+
+def install_regions(patched, entries, prompts, settings, sources) -> list[str]:
+    """Regions on `patched` (a clone): each region's own prompt, routed by attention, and its
+    LoRAs. Returns the log lines."""
+    state = ZGateState(entries, settings.schedule, 0.0, sources)
+    loaded = load_region_loras(patched, entries)
+    # Every region with a LoRA or a prompt of its own gets a copy of the prompt, so a LoRA's trigger
+    # word is read through the LoRA there.
+    copied = sorted(set(prompts) | {region for region, _ in loaded})
+    install(patched, state, copied, prompts, settings)
+    if loaded:
+        _branch.attach(patched, loaded, state)
+    lines = region_lines(len(entries), prompts, loaded)
+    lines.append("")
+    lines.append(
+        f"Z-Image: {len(copied)} region copy(ies) of the prompt routed by attention"
+        + (f", {sum(len(b) for _, b in loaded)} LoRA branch(es)" if loaded else "")
+    )
+    lines.append(f"schedule: {settings.schedule.describe()}")
+    lines.append(f"isolation: {settings.isolation:.2f}")
+    return lines
+
+
+def region_lines(count: int, prompts, loaded) -> list[str]:
+    """One log line per region: its own prompt and how many LoRA layers it carries."""
+
+    def line(i: int) -> str:
+        parts = ["own prompt"] if i in prompts else []
+        layers = sum(len(b) for region, b in loaded if region == i)
+        if layers:
+            parts.append(f"{layers} LoRA layers")
+        return f"region {i + 1}: " + (", ".join(parts) or "holds territory only")
+
+    return [line(i) for i in range(count)]

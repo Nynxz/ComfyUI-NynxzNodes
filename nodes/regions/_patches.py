@@ -53,58 +53,6 @@ _WARN_BYTES = 256 * 1024 * 1024
 _warned = False
 
 
-class TrackConfig:
-    """Everything the patches need that is not layout. Built once by the node."""
-
-    __slots__ = (
-        "isolation",
-        "layout_isolation",
-        "refine",
-        "route_at",
-        "route_blocks",
-        "sharpness",
-        "smooth",
-        "track",
-    )
-
-    def __init__(
-        self,
-        track: float = 0.4,
-        refine: int = 2,
-        route_at: float = 0.5,
-        route_blocks: int = 3,
-        sharpness: float = 2.0,
-        smooth: int = 1,
-        isolation: float = 0.0,
-        layout_isolation: float = 0.0,
-    ):
-        self.track = float(track)
-        self.refine = int(refine)
-        self.route_at = float(route_at)
-        self.route_blocks = int(route_blocks)
-        self.sharpness = float(sharpness)
-        self.smooth = int(smooth)
-        self.isolation = float(isolation)
-        #: Isolation while the layout forms: in force until the schedule's commit, easing down to
-        #: `isolation` over its ramp. 0 = the same isolation all run.
-        self.layout_isolation = float(layout_isolation)
-
-    def isolation_at(self, schedule, fraction: float) -> float:
-        """The isolation for this point in the run."""
-        if self.layout_isolation <= self.isolation:
-            return self.isolation
-        commit, ramp = schedule.commit_at, schedule.ramp
-        if fraction < commit:
-            return self.layout_isolation
-        t = 1.0 if ramp <= 0.0 else min(max((fraction - commit) / ramp, 0.0), 1.0)
-        eased = t * t * (3.0 - 2.0 * t)
-        return self.layout_isolation + (self.isolation - self.layout_isolation) * eased
-
-    @property
-    def tracking(self) -> bool:
-        return self.track > 0.0 and self.refine > 0
-
-
 def route_block(route_at: float, total: int, count: int = 1) -> list[int]:
     """The block indices the map is read at, evenly spread around `route_at`.
 
@@ -189,12 +137,12 @@ def conditional_rows(options, batch: int) -> list[bool] | None:
     return [kind == 0 for kind in kinds for _ in range(share)]
 
 
-def _attention_bias(state, config: TrackConfig, q) -> torch.Tensor | None:
+def _attention_bias(state, settings, q) -> torch.Tensor | None:
     """The logit bias for this step: prompt routing when there are copies, and `isolation`."""
     global _warned
     routed = state.copy_tokens > 0
     owned = [s for s in state.ref_spans if s.slot.region is not None]
-    isolation = config.isolation_at(state.schedule, state.fraction)
+    isolation = settings.isolation_at(state.fraction)
     isolate = isolation > 0.0 and len(state.regions) >= 2
     if not routed and not isolate and not owned:
         # Decided BEFORE allocating. A `[B, L, L]` matrix is ~35 MB at 4096 tokens, and returning
@@ -337,7 +285,7 @@ def _base_bias(state, q) -> torch.Tensor | None:
     return out
 
 
-def attn1_patch(state, config: TrackConfig):
+def attn1_patch(state, settings):
     """Track the map at a few blocks, and bias every block with what was last tracked."""
 
     def patch(q, k, v, pe=None, attn_mask=None, extra_options=None):
@@ -360,25 +308,25 @@ def attn1_patch(state, config: TrackConfig):
                 swapped = {"q": q, "k": k}
 
         if (
-            config.tracking
+            settings.tracking
             and not state.frozen
             and anchor is not None
             and canvas > 0
             and state.txtlen + canvas <= q.shape[2]
             and block is not None
             and total
-            and block in route_block(config.route_at, total, config.route_blocks)
+            and block in route_block(settings.route_at, total, settings.route_blocks)
         ):
             rows = slice(state.txtlen, state.txtlen + canvas)
             features = _track.canvas_features(k, rows)
             if features.shape[0] == anchor.shape[0]:
                 tracked = _track.refine(
-                    anchor.to(features.device), features, config.refine, config.sharpness
+                    anchor.to(features.device), features, settings.refine, settings.sharpness
                 )
-                blended = _track.blend(anchor.to(features.device), tracked, config.track)
+                blended = _track.blend(anchor.to(features.device), tracked, settings.track)
                 # Blur AFTER the blend, so it closes holes the clustering opened and feathers the
                 # boundary the mask brought, in one pass over both.
-                state.map = _track.smooth(blended, state.grid, config.smooth)
+                state.map = _track.smooth(blended, state.grid, settings.smooth)
                 state.build_gates(q.shape[0], q.shape[2], q.device)
                 _capture.remember(state, _track.drift(anchor.to(state.map.device), state.map))
         elif block == 0 and anchor is not None:
@@ -387,7 +335,7 @@ def attn1_patch(state, config: TrackConfig):
             moved = 0.0 if state.map is None else _track.drift(anchor, state.map.to(anchor.device))
             _capture.remember(state, moved)
 
-        bias = _attention_bias(state, config, q)
+        bias = _attention_bias(state, settings, q)
         if bias is None:
             return swapped
         # Additive rather than replacing: logit biases compose, so this stacks with any other pack
