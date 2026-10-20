@@ -44,6 +44,14 @@ from ._inspect import build_inspect_payload
 from ._io_types import FusionInput, FusionInspect
 
 
+def _latent_ratio(latent) -> float | None:
+    """Width / height of a latent's spatial dims (the last two, so video latents work too)."""
+    if latent is None:
+        return None
+    height, width = latent["samples"].shape[-2:]
+    return width / height
+
+
 def _source_thumb(image: torch.Tensor, size: int = 72) -> str:
     """A small aspect-preserving JPEG data-uri of a source image, for the inspector legend.
 
@@ -142,12 +150,21 @@ class NynxzFusionEncode(FusionNode):
                 reference_mode_input(),
                 *structure_inputs(),
                 io.Vae.Input("vae", optional=True),
+                io.Latent.Input(
+                    "latent",
+                    optional=True,
+                    tooltip="The latent you sample. When wired, the visual grid takes its aspect "
+                    "(overriding visual_aspect) so the blend, and the inspector, match the canvas; "
+                    "visual_size still sets how many tokens. It passes through to the latent "
+                    "output unchanged.",
+                ),
             ],
             outputs=[
                 io.Conditioning.Output(),
                 io.Latent.Output(
                     display_name="latent",
-                    tooltip="Empty latent matching the visual grid, shaped for the wired VAE. "
+                    tooltip="The wired latent, passed through. Without one, an empty latent "
+                    "matching the visual grid, shaped for the wired VAE. "
                     "Qwen Image 2.1 samples 64-channel at 1/16 scale and nothing in core builds "
                     "that shape except its own encode node, so this saves wiring one in just for "
                     "the canvas. With no VAE wired it falls back to 16 channels at 1/8.",
@@ -190,6 +207,7 @@ class NynxzFusionEncode(FusionNode):
         reference_mode=DEFAULT_REFERENCE_MODE,
         structure_source=DEFAULT_STRUCTURE_SOURCE,
         semantic_strength=1.0,
+        latent=None,
     ) -> io.NodeOutput:
         # One image is fine: the blend is a passthrough, which is what you want when this node
         # is doing style release or standing in for a plain single-reference encode.
@@ -217,6 +235,7 @@ class NynxzFusionEncode(FusionNode):
             strength_roll=strength_roll,
             seed=seed,
             visual_aspect=visual_aspect,
+            visual_ratio=_latent_ratio(latent),
             visual_size=visual_size,
             alpha_mode=alpha_mode,
             reference_mode=reference_mode,
@@ -282,7 +301,7 @@ class NynxzFusionEncode(FusionNode):
                     "preserve_norm": settings.preserve_norm,
                     "seed": settings.seed,
                     "visual_size": settings.visual_size,
-                    "visual_aspect": settings.visual_aspect,
+                    "visual_aspect": "latent" if latent is not None else settings.visual_aspect,
                     "alpha_mode": settings.alpha_mode,
                     # Resolved, not requested: 'auto' is the default, so echoing the widget back
                     # would leave the inspector unable to say which of the two blends actually
@@ -302,5 +321,7 @@ class NynxzFusionEncode(FusionNode):
             )
         else:
             inspect = {}
+        if latent is not None:
+            return io.NodeOutput(conditioning, latent, inspect)
         width, height = debug.get("pixels", (settings.visual_size, settings.visual_size))
         return io.NodeOutput(conditioning, empty_latent(width, height, vae), inspect)

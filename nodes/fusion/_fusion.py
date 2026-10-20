@@ -181,6 +181,9 @@ class FusionSettings:
     strength_roll: float = 0.0
     seed: int = 0
     visual_aspect: str = "auto"
+    #: Width / height of a wired latent. Wins over `visual_aspect`, so the grid has the shape of
+    #: the canvas being sampled rather than of a preset or the first source.
+    visual_ratio: float | None = None
     visual_size: int = 384
     alpha_mode: str = DEFAULT_ALPHA_MODE
     reference_mode: str = DEFAULT_REFERENCE_MODE
@@ -859,10 +862,11 @@ def fit_image(source, width, height, fit="cover"):
     return out.movedim(1, -1)
 
 
-def _visual_grid(first, aspect, size, align=0):
+def _visual_grid(first, aspect, size, align=0, ratio=None):
     """Pixel dims for the encoder pass, as a `size`x`size`-area frame at the chosen aspect.
 
-    "auto" keeps the original behavior: take the aspect from the first source.
+    "auto" keeps the original behavior: take the aspect from the first source. A `ratio` (width /
+    height, from a wired latent) overrides `aspect`.
 
     `align` rounds both sides to a multiple of itself. Qwen Image 2.1 needs 32: it hands the SAME
     resized pixels to the vision tower and to the VAE, and only on a 32-multiple do the two agree
@@ -870,7 +874,9 @@ def _visual_grid(first, aspect, size, align=0):
     it. Left at 0 (every other encoder) the dims come out exactly as they always have.
     """
     total = float(size * size)
-    if aspect == "auto":
+    if ratio is not None:
+        width, height = round(math.sqrt(total * ratio)), round(math.sqrt(total / ratio))
+    elif aspect == "auto":
         samples = first.movedim(-1, 1)  # [1, C, H, W]
         source_width, source_height = samples.shape[3], samples.shape[2]
         scale_by = math.sqrt(total / (source_width * source_height))
@@ -1021,7 +1027,11 @@ def _prepare_sources(sources, settings, fits=None, profile=QWEN3VL, size=None):
     sets of images produce token streams that line up position for position.
     """
     width, height = size or _visual_grid(
-        sources[0], settings.visual_aspect, settings.visual_size, profile.pixel_align
+        sources[0],
+        settings.visual_aspect,
+        settings.visual_size,
+        profile.pixel_align,
+        settings.visual_ratio,
     )
 
     def fit_of(i):
