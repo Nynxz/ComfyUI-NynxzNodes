@@ -61,6 +61,11 @@ from . import _capture, _patches, _zimage
 WRAPPER_KEY = "nynxz_regions_moss"
 
 
+#: Above this share of claimed tokens being part-claimed, a mask is soft by design and the routing
+#: keeps it as drawn (masks) rather than giving each token to whoever claims most of it.
+SOFT_SHARE = 0.25
+
+
 def is_moss(model) -> bool:
     """Whether `model` (a ModelPatcher) wraps MOSS-Image's DiT."""
     diffusion_model = getattr(getattr(model, "model", None), "diffusion_model", None)
@@ -156,6 +161,11 @@ class MossRegions:
         self.layout: Layout | None = None
         #: `seqlen -> [batch, 1, seqlen, seqlen]`, this forward's masks.
         self.masks: dict[int, torch.Tensor] = {}
+        #: `seqlen -> [(rows, queries, keys)]`: the routing as separate unmasked attention calls,
+        #: when it is hard (see `_plans`); None when the masks carry it instead.
+        self.plans: dict[int, list] | None = None
+        #: Route hard regions by separate attention calls rather than masks (off only to compare).
+        self.partition = True
         self.cache: dict[str, tuple] = {}
         self.warned = False
 
@@ -237,6 +247,10 @@ class MossRegions:
 
     def _build_masks(self, batch: int, device, dtype) -> None:
         layout = self.layout
+        self.plans = self._plans(batch, device) if self.partition else None
+        if self.plans is not None:
+            self.masks = {}
+            return
         masks = {}
         if layout.slots:
             masks[layout.text] = self._text_bias(batch, device, dtype)
@@ -268,6 +282,9 @@ class MossRegions:
         if layout is not None and q.ndim == 3:
             seqlen = q.shape[1]
             joint = options.get("block_index") is not None
+            plan = self.plans.get(seqlen) if self.plans else None
+            if plan is not None and (seqlen == layout.joint) == joint:
+                return self._partitioned(plan, func, q, k, v, heads, args, kwargs)
             if joint and seqlen == layout.joint:
                 mask = self.masks.get(seqlen)
             elif joint and not self.warned:
@@ -288,6 +305,112 @@ class MossRegions:
         if self.previous is not None:
             return self.previous(func, q, k, v, heads, *args, **kwargs)
         return func(q, k, v, heads, *args, **kwargs)
+
+    def _partitioned(self, plan, func, q, k, v, heads, args, kwargs):
+        """The routing as one unmasked attention call per group of queries that read the same keys
+        — so the fast kernels (flash, sage) run, and nothing `[seq, seq]` is ever built."""
+
+        def call(*a, **kw):
+            return self.previous(func, *a, **kw) if self.previous is not None else func(*a, **kw)
+
+        out = q.new_empty((*q.shape[:2], v.shape[-1]))
+        for rows, queries, keys in plan:
+            out[rows, queries] = call(
+                q[rows][:, queries],
+                k[rows][:, keys],
+                v[rows][:, keys],
+                heads,
+                *args,
+                **kwargs,
+            )
+        return out
+
+    def _plans(self, batch: int, device) -> dict[int, list] | None:
+        """The routing as groups of queries and the keys each reads, when every canvas token is in
+        one region or none (a token on a box's edge going to whoever claims most of it), nothing is
+        isolated and no region reads its prompt more or less strongly than its claim: then the masks
+        only ever say "read these, never those", which separate attention calls say exactly. None
+        otherwise, and the masks do it.
+
+        Groups, per batch row (or for all rows when every copy has the same length on each):
+
+          * the background (canvas tokens no copied region claims) and the main prompt read the
+            canvas and the main prompt;
+          * each copied region's canvas tokens and its copy read the canvas and the copy;
+
+        and in the `text_embedder`, each prompt reads itself."""
+        state, layout = self.state, self.layout
+        if not layout.slots:
+            return None
+        current = state.map if state.map is not None else state.anchor
+        if current is None or current.shape[0] < layout.canvas:
+            return None
+        isolation = self.config.isolation_at(state.schedule, state.fraction)
+        if isolation > 0.0 and len(state.regions) >= 2:
+            return None
+        if not state.copy_full and state.scale != 1.0:
+            return None
+        copied = [region for region, _, _ in layout.slots]
+        if any(state.influences[r] != 1.0 for r in copied if r < len(state.influences)):
+            return None
+        claim = current[: layout.canvas, copied].float()
+        # Box edges rarely fall on the 16px token grid, so the tokens along them are part-claimed.
+        # Those go to whoever claims most of them; a mask that is soft through and through (a wide
+        # feather) is left to the masks, which read it as drawn.
+        soft = ((claim > 1e-3) & (claim < 1.0 - 1e-3)).any(dim=-1)
+        claimed = (claim > 1e-3).any(dim=-1)
+        if int(soft.sum()) > SOFT_SHARE * max(int(claimed.sum()), 1):
+            return None
+
+        key = (batch, device, tuple(layout.slots), self._valid_key(), id(current))
+        hit = self.cache.get("plans")
+        if hit is not None and hit[0] == key:
+            return hit[1]
+
+        strongest, which = claim.max(dim=-1)
+        owner = torch.where(strongest >= 0.5, which, torch.full_like(which, -1)).to(device)
+
+        def arange(start, length):
+            return torch.arange(start, start + length, device=device)
+
+        if layout.valid is None:
+            row_sets = [(slice(0, batch), [length for _, _, length in layout.slots])]
+        else:
+            valid = layout.valid.to(device)
+            row_sets = []
+            for row in range(batch):
+                lengths = []
+                for _, start, length in layout.slots:
+                    first = start - layout.main
+                    lengths.append(int(valid[row, first : first + length].sum()))
+                row_sets.append((slice(row, row + 1), lengths))
+
+        canvas = arange(0, layout.canvas)
+        main = arange(layout.canvas, layout.main)
+        joint, text = [], []
+        for rows, lengths in row_sets:
+            joint.append(
+                (
+                    rows,
+                    torch.cat(((owner == -1).nonzero().flatten(), main)),
+                    torch.cat((canvas, main)),
+                )
+            )
+            text.append((rows, arange(0, layout.main), arange(0, layout.main)))
+            for j, ((_, start, length), used) in enumerate(zip(layout.slots, lengths, strict=True)):
+                span = arange(layout.canvas + start, length)
+                read = arange(layout.canvas + start, used)
+                joint.append(
+                    (
+                        rows,
+                        torch.cat(((owner == j).nonzero().flatten(), span)),
+                        torch.cat((canvas, read)),
+                    )
+                )
+                text.append((rows, arange(start, length), arange(start, used)))
+        plans = {layout.joint: joint, layout.text: text}
+        self.cache["plans"] = (key, plans)
+        return plans
 
     # -- the masks -----------------------------------------------------------------------------
 

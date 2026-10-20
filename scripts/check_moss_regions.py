@@ -107,11 +107,13 @@ class Harness(unittest.TestCase):
         with torch.no_grad():
             return self.model(self.x, self.t, context, {})
 
-    def routed(self, masks, prompts, isolation=0.0):
+    def routed(self, masks, prompts, isolation=0.0, partition=True):
         state = state_mod.GateState([region(m) for m in masks], schedule_mod.Schedule(), 0.0)
         state.copy_full = True
         config = patches.TrackConfig(track=0.0, isolation=isolation)
-        return moss.MossRegions(state, prompts, config, self.model.rope)
+        routed = moss.MossRegions(state, prompts, config, self.model.rope)
+        routed.partition = partition
+        return routed
 
     def run_routed(self, routed, context, options=None):
         options = dict(options or {})
@@ -147,7 +149,7 @@ class Routing(Harness):
 
     def test_the_routing_runs_in_every_attention_call(self):
         seen = []
-        routed = self.routed([left()], {0: prompt(11)})
+        routed = self.routed([left()], {0: prompt(11)}, partition=False)
         original = routed.attention
 
         def counting(func, q, *args, **kwargs):
@@ -165,9 +167,76 @@ class Routing(Harness):
         self.assertEqual(len(seen), 4)
 
 
+class Partition(Harness):
+    """Hard regions route by separate unmasked attention calls; the result is the masks' own."""
+
+    def both(self, masks, prompts, context=None, options=None):
+        context = context if context is not None else prompt(10)
+        fast = self.run_routed(self.routed(masks, prompts), context, options)
+        dense = self.run_routed(self.routed(masks, prompts, partition=False), context, options)
+        return fast, dense
+
+    def test_one_region_over_the_canvas_matches_the_masks(self):
+        fast, dense = self.both([torch.ones((GRID, GRID))], {0: prompt(11)})
+        self.assert_same_image(fast, dense, self.plain(prompt(10)))
+
+    def test_two_regions_match_the_masks(self):
+        fast, dense = self.both([left(), left().flip(-1)], {0: prompt(11), 1: prompt(12, length=3)})
+        self.assert_same_image(fast, dense, self.plain(prompt(10)))
+
+    def test_padded_rows_match_the_masks(self):
+        self.x = self.x.repeat(2, 1, 1, 1)
+        context = torch.cat([prompt(10), prompt(20)], dim=0)
+        options = {"cond_or_uncond": [0, 1]}
+        fast, dense = self.both([left()], {0: prompt(11, length=3)}, context, options)
+        with torch.no_grad():
+            plain = self.model(self.x, self.t, context, {})
+        self.assert_same_image(fast, dense, plain)
+
+    def test_the_calls_carry_no_mask_one_per_group(self):
+        seen = []
+        routed = self.routed([left(), left().flip(-1)], {0: prompt(11), 1: prompt(12)})
+        original = routed.attention
+
+        def counting(func, q, *args, **kwargs):
+            def recorded(q, *inner, **options):
+                seen.append(options.get("mask") is None)
+                return func(q, *inner, **options)
+
+            return original(recorded, q, *args, **kwargs)
+
+        routed.attention = counting
+        self.run_routed(routed, prompt(10))
+        # Per block: background + main, then one group per copied region. 2 text + 2 joint blocks.
+        self.assertEqual(len(seen), 4 * 3)
+        self.assertTrue(all(seen))
+        self.assertEqual(routed.masks, {})
+
+    def test_part_claimed_edge_tokens_go_to_whoever_claims_most(self):
+        # A box from a third of the way across: the column it starts in is part-claimed.
+        mask = torch.zeros((GRID * 3, GRID * 3))
+        mask[:, 4:] = 1.0  # token column 1 is two thirds in the box, so it goes to the box
+        routed = self.routed([mask], {0: prompt(11)})
+        self.run_routed(routed, prompt(10))
+        self.assertIsNotNone(routed.plans)
+        background = routed.plans[routed.layout.joint][0][1]
+        self.assertEqual(
+            sorted(int(i) % GRID for i in background[background < GRID * GRID]), [0] * GRID
+        )
+
+    def test_soft_regions_still_use_the_masks(self):
+        soft = left() * 0.6
+        routed = self.routed([soft], {0: prompt(11)})
+        self.run_routed(routed, prompt(10))
+        self.assertIsNone(routed.plans)
+        self.assertIn(routed.layout.joint, routed.masks)
+
+
 class Masks(Harness):
     def test_each_region_s_canvas_reads_its_own_copy(self):
-        routed = self.routed([left(), left().flip(-1)], {0: prompt(11), 1: prompt(12, length=3)})
+        routed = self.routed(
+            [left(), left().flip(-1)], {0: prompt(11), 1: prompt(12, length=3)}, partition=False
+        )
         self.run_routed(routed, prompt(10))
         layout = routed.layout
         bias = routed.masks[layout.joint][0, 0]
@@ -188,7 +257,7 @@ class Masks(Harness):
         self.assertEqual(float(bias[a, : layout.canvas].min()), 0.0)
 
     def test_in_the_text_refiner_each_prompt_reads_only_itself(self):
-        routed = self.routed([left()], {0: prompt(11)})
+        routed = self.routed([left()], {0: prompt(11)}, partition=False)
         self.run_routed(routed, prompt(10))
         layout = routed.layout
         bias = routed.masks[layout.text][0, 0]
