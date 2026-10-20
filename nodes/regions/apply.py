@@ -492,7 +492,7 @@ def _apply_moss(
     loaded = _moss.load_region_loras(patched, entries)
     _moss.install(patched, state, prompts, config, loaded)
     if loaded:
-        _branch.attach(patched, loaded, state)
+        _moss.attach_loras(patched, loaded, state)
     _capture.clear()
 
     def _line(i: int) -> str:

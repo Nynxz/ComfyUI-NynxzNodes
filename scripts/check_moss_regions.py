@@ -377,7 +377,7 @@ class RegionLoras(Harness):
     def patched_run(self, mask, loaded, prompts=None, context=None):
         return self.patched_runs([mask], loaded, prompts, context)
 
-    def patched_runs(self, masks, loaded, prompts=None, context=None):
+    def patched_runs(self, masks, loaded, prompts=None, context=None, attach=None):
         import comfy.model_patcher
 
         holder = torch.nn.Module()
@@ -389,7 +389,7 @@ class RegionLoras(Harness):
         state = zimage.ZGateState([region(m) for m in masks], schedule_mod.Schedule(), 0.0)
         state.copy_full = True
         routed = moss.install(patched, state, prompts or {}, patches.TrackConfig(track=0.0), loaded)
-        branch_mod.attach(patched, loaded, state)
+        (attach or moss.attach_loras)(patched, loaded, state)
         options = dict(patched.model_options["transformer_options"])
         extension.merge_nested_dicts(
             options.setdefault("wrappers", {}), patched.wrappers, copy_dict1=False
@@ -447,18 +447,22 @@ class RegionLoras(Harness):
         self.assertGreater(float((whole - plain).abs().max()), 0.1)
         self.assert_same_image(nothing, plain, whole)
 
-    def test_ffn_down_runs_its_own_forward_while_regioned_and_is_put_back(self):
-        flags = []
-        loaded = [(0, {"diffusion_model.layers.0.proj.ffn_down": Bump(64, 0.5)})]
+    def test_ffn_down_is_applied_around_the_module_as_a_hook_on_it_would(self):
+        # On CPU in float32 core calls ffn_down's own forward, so a plain hook on it fires: the
+        # reference. On the GPU's fused path it would not, which is why MOSS applies it around.
+        path = "diffusion_model.layers.0.proj.ffn_down"
         module = self.model.layers[0].proj["ffn_down"]
-        loaded[0][1]["diffusion_model.layers.0.proj.ffn_down"].seen = lambda x: flags.append(
-            module.__dict__.get("comfy_force_forward")
+        around, _, _ = self.patched_run(left(), [(0, {path: Bump(64, 0.7)})])
+        hooked, _, _ = self.patched_runs(
+            [left()], [(0, {path: Bump(64, 0.7)})], attach=branch_mod.attach
         )
-        self.patched_run(left(), loaded)
-        self.assertEqual(flags, [True])
+        plain = self.plain(prompt(10))
+        self.assertGreater(float((around - plain).abs().max()), 1e-3)
+        torch.testing.assert_close(around, hooked)
         self.assertNotIn("comfy_force_forward", module.__dict__)
+        rest, ffn = moss.split_ffn_down([(0, {path: 1, "diffusion_model.layers.0.proj.o": 2})])
         self.assertEqual(
-            moss.forced_paths(loaded + self.bumps()), ["diffusion_model.layers.0.proj.ffn_down"]
+            (rest, ffn), ([(0, {"diffusion_model.layers.0.proj.o": 2})], [(0, {path: 1})])
         )
 
     def test_a_lora_shared_by_regions_runs_once_and_matches_separate_copies(self):
