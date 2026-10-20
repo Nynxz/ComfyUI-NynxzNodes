@@ -58,12 +58,6 @@
         />
         <ZenIconButton
           size="sm"
-          icon="mdi mdi-account-box-multiple-outline"
-          :title="`Make a reference sheet for ${current.name}: a new Layout node with front, side and back views and expressions, all using ${current.name}. Generate it, then add the image to its Look.`"
-          @click="emit('sheet', current.id)"
-        />
-        <ZenIconButton
-          size="sm"
           danger
           icon="mdi mdi-delete-outline"
           :title="`Delete ${current.name} (and take it out of every box)`"
@@ -154,7 +148,7 @@ const { boxes } = defineProps<{ boxes: PromptBox[] }>();
 const mixins = defineModel<Mixin[]>({ required: true });
 /** The mixin whose editor is open. */
 const openId = defineModel<string | null>("open", { default: null });
-const emit = defineEmits<{ create: []; selectBoxes: [id: string]; sheet: [id: string] }>();
+const emit = defineEmits<{ create: []; selectBoxes: [id: string] }>();
 
 const refsPanel = ref<{ upload: () => void; openBrowse: () => void; busy: boolean } | null>(null);
 const current = computed(
