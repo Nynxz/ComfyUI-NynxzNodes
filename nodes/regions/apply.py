@@ -508,6 +508,12 @@ def _apply_moss(
         f"MOSS-Image: {len(prompts)} region prompt(s) routed by attention"
         + (f", {sum(len(b) for _, b in loaded)} LoRA branch(es)" if loaded else "")
     )
+    if loaded:
+        count, params, ranks = _moss.branch_footprint(loaded)
+        lines.append(
+            f"LoRA branches: {count} distinct, rank {', '.join(map(str, sorted(ranks))) or '-'}, "
+            f"{params * 2 / 1e6:.0f} MB at 16-bit on the GPU"
+        )
     lines.append(f"schedule: {schedule.describe()}")
     lines.append(f"isolation: {config.isolation:.2f}")
     if track > 0.0:

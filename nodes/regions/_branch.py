@@ -50,6 +50,10 @@ def _hook(entries, state):
     """
 
     def hook(module, args, output):
+        with _moss_profiled("nynxz/lora"):
+            return add(module, args, output)
+
+    def add(module, args, output):
         x = args[0]
         if x.ndim != 3:
             return output
@@ -70,6 +74,12 @@ def _hook(entries, state):
         return output if out is None else out
 
     return hook
+
+
+def _moss_profiled(label: str):
+    from ._moss import profiled
+
+    return profiled(label)
 
 
 def _by_module(loaded) -> dict[str, list[tuple[tuple[int, ...], object]]]:

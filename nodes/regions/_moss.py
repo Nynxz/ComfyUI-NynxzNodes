@@ -51,9 +51,12 @@ Not here yet: tracking, the layout lock and region references.
 
 from __future__ import annotations
 
+import contextlib
 import logging
 import math
+import os
 import re
+import time
 
 import comfy.ops
 import comfy.patcher_extension
@@ -99,6 +102,46 @@ def load_region_loras(model, entries) -> list[tuple[int, dict]]:
 
 
 FFN_INJECTION_KEY = "nynxz_regions_moss_ffn"
+
+#: `NYNXZ_REGIONS_PROFILE=1` in ComfyUI's environment logs each regioned forward's time and peak
+#: memory, and one forward's profile (where the time went, by op, with this pack's hooks labelled).
+PROFILE = os.environ.get("NYNXZ_REGIONS_PROFILE", "") not in ("", "0")
+#: The forward profiled in full: a few in, past the first step's setup and the uncond's first run.
+PROFILE_AT = 4
+
+
+def profiled(label: str):
+    """A profiler label for `label` when profiling, else nothing."""
+    return torch.profiler.record_function(label) if PROFILE else contextlib.nullcontext()
+
+
+def branch_footprint(loaded) -> tuple[int, int, set[int]]:
+    """`(branches, parameters, ranks)` of the distinct branches in `loaded`."""
+    seen, params, ranks = set(), 0, set()
+
+    def walk(branch):
+        nonlocal params
+        if id(branch) in seen:
+            return
+        seen.add(id(branch))
+        parts = getattr(branch, "parts", None)
+        if parts is not None:
+            for inner, _, _ in parts:
+                walk(inner)
+            return
+        for name in ("down", "up", "w1", "w2"):
+            tensor = getattr(branch, name, None)
+            if tensor is not None:
+                params += tensor.numel()
+        if getattr(branch, "down", None) is not None:
+            ranks.add(int(branch.down.shape[0]))
+
+    for _, branches in loaded:
+        for branch in branches.values():
+            walk(branch)
+    return len(seen), params, ranks
+
+
 _FFN_DOWN = re.compile(r"^(?P<block>.*\.layers\.\d+)\.proj\.ffn_down$")
 
 
@@ -163,6 +206,10 @@ class FfnDownBranches:
         state = self.state
 
         def hook(module, args, output):
+            with profiled("nynxz/lora ffn_down"):
+                return add(module, args, output)
+
+        def add(module, args, output):
             act = self.acts.pop(key, None)
             if act is None or output.ndim != 3 or len(args) < 2:
                 return output
@@ -311,7 +358,55 @@ class MossRegions:
         if self.lora_regions:
             self._build_gates(batch, x.device)
         state.txtlen = self.layout.text
-        return executor(x, timestep, extended, transformer_options, **kwargs)
+        if not PROFILE:
+            return executor(x, timestep, extended, transformer_options, **kwargs)
+        return self._profiled(executor, x, timestep, extended, transformer_options, kwargs)
+
+    def _profiled(self, executor, x, timestep, context, options, kwargs):
+        """A forward, timed — and on the `PROFILE_AT`th, profiled by op into the log."""
+        self.forwards = getattr(self, "forwards", 0) + 1
+        cuda = x.is_cuda
+        if cuda:
+            torch.cuda.synchronize(x.device)
+            torch.cuda.reset_peak_memory_stats(x.device)
+        start = time.perf_counter()
+        if self.forwards == PROFILE_AT:
+            activities = [torch.profiler.ProfilerActivity.CPU]
+            if cuda:
+                activities.append(torch.profiler.ProfilerActivity.CUDA)
+            with torch.profiler.profile(activities=activities) as prof:
+                out = executor(x, timestep, context, options, **kwargs)
+                if cuda:
+                    torch.cuda.synchronize(x.device)
+            sort = "cuda_time_total" if cuda else "cpu_time_total"
+            logging.info(
+                "Nynxz Regions profile, forward %d, by %s:\n%s",
+                self.forwards,
+                sort,
+                prof.key_averages().table(sort_by=sort, row_limit=30),
+            )
+            logging.info(
+                "Nynxz Regions profile, by CPU time:\n%s",
+                prof.key_averages().table(sort_by="cpu_time_total", row_limit=15),
+            )
+        else:
+            out = executor(x, timestep, context, options, **kwargs)
+        if cuda:
+            torch.cuda.synchronize(x.device)
+        layout = self.layout
+        logging.info(
+            "Nynxz Regions forward %d: %.0f ms, batch %d, %d tokens (%d canvas, %d text), %s, "
+            "peak %.1f GB",
+            self.forwards,
+            (time.perf_counter() - start) * 1000.0,
+            x.shape[0],
+            layout.joint,
+            layout.canvas,
+            layout.text,
+            "split attention" if self.plans else "masked attention",
+            (torch.cuda.max_memory_allocated(x.device) if cuda else 0) / 1e9,
+        )
+        return out
 
     def _build_gates(self, batch: int, device) -> None:
         """The LoRA gates for the joint blocks and the `text_embedder`, by sequence length: canvas
@@ -363,6 +458,10 @@ class MossRegions:
     # -- the attention override ----------------------------------------------------------------
 
     def attention(self, func, q, k, v, heads, *args, **kwargs):
+        with profiled("nynxz/attention"):
+            return self._attention(func, q, k, v, heads, *args, **kwargs)
+
+    def _attention(self, func, q, k, v, heads, *args, **kwargs):
         options = kwargs.get("transformer_options") or {}
         layout = self.layout
         mask = None
