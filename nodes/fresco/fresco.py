@@ -28,8 +28,9 @@ from __future__ import annotations
 import logging
 
 import torch
-from comfy_api.latest import io, ui
+from comfy_api.latest import io
 
+from .._sent_back import sent_back
 from .._zenkit.io_types import advanced
 from ..fusion._fusion import FusionSettings, empty_latent, encode_fusion
 from ..fusion._sources import load_refs
@@ -307,11 +308,7 @@ class NynxzFresco(FrescoNode):
         if image is None:
             return None
         return {
-            "fresco_node": [node],
-            "fresco_source": ui.ImageSaveHelper.save_images(
-                image[:1], "nynxz.fresco.source", io.FolderType.temp, cls, compress_level=1
-            ),
-            "fresco_size": [int(image.shape[2]), int(image.shape[1])],
+            **sent_back("fresco", node, image, cls, "nynxz.fresco.source"),
             "fresco_masks": segmented,
         }
 
@@ -536,13 +533,7 @@ class NynxzFrescoApply(FrescoNode):
             latent = NynxzRegionLatent.execute(
                 vae, image, regions, background=float(fresco.get("background_denoise", 0.0))
             ).result[0]
-            shown = {
-                "fresco_source": ui.ImageSaveHelper.save_images(
-                    image[:1], "nynxz.fresco.source", io.FolderType.temp, cls, compress_level=1
-                ),
-                "fresco_node": [fresco.get("node", "")],
-                "fresco_size": [int(image.shape[2]), int(image.shape[1])],
-            }
+            shown = sent_back("fresco", fresco.get("node", ""), image, cls, "nynxz.fresco.source")
         elif layout_start > 0.0 and vae is not None:
             latent = _layout_latent(fresco, vae, width, height, layout_start)
         else:

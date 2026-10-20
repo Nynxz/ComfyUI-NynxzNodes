@@ -243,8 +243,7 @@
  * The scene is the widget value (lib/frescoScene.ts). Fresco Apply sends its source image back
  * after a run, which lands as the trace image, and a SAM3 run sends masks back to the layers.
  */
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watchEffect } from "vue";
-import { api } from "@comfy/api";
+import { computed, nextTick, ref, watchEffect } from "vue";
 import { app } from "@comfy/app";
 import { readMediaDrop } from "@/framework";
 import { frescoLayout } from "@/lib/frescoStore";
@@ -266,7 +265,7 @@ import FrescoPills from "@/components/fresco/FrescoPills.vue";
 import FrescoSection from "@/components/fresco/FrescoSection.vue";
 import LayoutEditor from "@/components/layout/LayoutEditor.vue";
 import { regionsMode } from "@/layout/modes/regions";
-import type { SourceType } from "@/lib/mediaRefs";
+import { useSentBack, type SentImage } from "@/lib/sentBack";
 import {
   isImage,
   newRef,
@@ -330,7 +329,7 @@ const layout = frescoLayout(props.widget);
 const scene = layout.scene;
 const editor = ref<{
   addBox: (rect: BoxRect) => string;
-  offerBackdrop: (image: { ref: string; type: SourceType; size?: [number, number] }) => void;
+  offerBackdrop: (image: SentImage) => void;
 } | null>(null);
 const selected = ref<string[]>([]);
 const tool = ref<BoxTool>("select");
@@ -581,31 +580,18 @@ function onKey(e: KeyboardEvent) {
 
 // --- what a run sends back: SAM3 masks, and Fresco Apply's source image as the trace image -------
 
-function isMine(id: unknown): boolean {
-  const mine = String(props.node?.id ?? "");
-  const theirs = String(id ?? "");
-  return !!mine && (theirs === mine || theirs.endsWith(`:${mine}`));
-}
-function onExecuted(e: Event) {
-  const output = (e as CustomEvent).detail?.output as Record<string, unknown[]> | undefined;
-  if (!output?.fresco_node?.some(isMine)) return;
-  if (Array.isArray(output.fresco_masks)) {
-    takeMasks(output.fresco_masks as { id: string; mask: string; source: string }[]);
-    segmenting.value = false;
-    clearTimeout(segmentWatchdog);
-  }
-  const image = output.fresco_source?.[0] as
-    { filename: string; subfolder?: string; type?: string } | undefined;
-  if (!image) return;
-  const size = output.fresco_size as [number, number] | undefined;
-  editor.value?.offerBackdrop({
-    ref: image.subfolder ? `${image.subfolder}/${image.filename}` : image.filename,
-    type: (image.type ?? "temp") as SourceType,
-    size: size && size.length === 2 ? [Number(size[0]), Number(size[1])] : undefined,
-  });
-}
-onMounted(() => api.addEventListener("executed", onExecuted));
-onBeforeUnmount(() => api.removeEventListener("executed", onExecuted));
+useSentBack(
+  "fresco",
+  () => String(props.node?.id ?? ""),
+  (output, image) => {
+    if (Array.isArray(output.fresco_masks)) {
+      takeMasks(output.fresco_masks as { id: string; mask: string; source: string }[]);
+      segmenting.value = false;
+      clearTimeout(segmentWatchdog);
+    }
+    if (image) editor.value?.offerBackdrop(image);
+  },
+);
 </script>
 
 <style scoped>

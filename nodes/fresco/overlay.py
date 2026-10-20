@@ -17,6 +17,7 @@ import torch.nn.functional as F
 from comfy_api.latest import io, ui
 from PIL import Image, ImageDraw, ImageFont
 
+from .._sent_back import sent_back
 from ..regions._mask import bbox
 from ._base import FrescoNode
 from ._io_types import Fresco
@@ -116,11 +117,5 @@ class NynxzFrescoOverlay(FrescoNode):
             )
         }
         if fresco.get("image") is None:
-            shown |= {
-                "fresco_source": ui.ImageSaveHelper.save_images(
-                    image[:1], "nynxz.fresco.render", io.FolderType.temp, cls, compress_level=1
-                ),
-                "fresco_node": [fresco.get("node", "")],
-                "fresco_size": [int(image.shape[2]), int(image.shape[1])],
-            }
+            shown |= sent_back("fresco", fresco.get("node", ""), image, cls, "nynxz.fresco.render")
         return io.NodeOutput(overlay, ui=shown)

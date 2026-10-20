@@ -326,8 +326,7 @@ import {
   ZenSelect,
   ZenToggleGroup,
 } from "@nynxz/zenkit-ui";
-import { api } from "@comfy/api";
-import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { computed, onBeforeUnmount, ref, watch } from "vue";
 
 import FrescoSection from "@/components/fresco/FrescoSection.vue";
 import LayoutAgent from "@/components/layout/LayoutAgent.vue";
@@ -345,7 +344,7 @@ import { keepContextMenu } from "@/lib/ownContextMenu";
 import { PROMPT_MODES } from "@/layout/modes";
 import type { AgentImage, AgentLayout } from "@/layout/agent";
 import { boxId, kleinId, nextColor, readBox, readMixin } from "@/layout/promptScene";
-import type { SourceType } from "@/lib/mediaRefs";
+import { useSentBack, type SentImage } from "@/lib/sentBack";
 import type {
   BoxKind,
   Mixin,
@@ -387,7 +386,7 @@ const PROMPT_NOTE: Record<PromptModeId, string> = {
 const editor = ref<{
   addBox: (rect: { x: number; y: number; w: number; h: number }) => string;
   update: (next: unknown) => void;
-  offerBackdrop: (image: { ref: string; type: SourceType; size?: [number, number] }) => void;
+  offerBackdrop: (image: SentImage) => void;
   backdrop: AgentImage | null;
   showTab: (id: string) => void;
 } | null>(null);
@@ -584,30 +583,11 @@ function applyAgent(result: AgentLayout, how: "replace" | "add") {
   selected.value = [];
 }
 
-interface ExecutedOutput {
-  layout_node?: string[];
-  layout_source?: { filename: string; subfolder?: string; type?: string }[];
-  layout_size?: number[];
-}
-function onExecuted(e: Event) {
-  const output = (e as CustomEvent<{ output?: ExecutedOutput }>).detail?.output;
-  const mine = String(props.node?.id ?? "");
-  if (!mine || !output?.layout_node?.some((id) => id === mine || id.endsWith(`:${mine}`))) return;
-  const image = output.layout_source?.[0];
-  if (!image) return;
-  const size = output.layout_size;
-  editor.value?.offerBackdrop({
-    ref: image.subfolder ? `${image.subfolder}/${image.filename}` : image.filename,
-    type: (image.type ?? "temp") as SourceType,
-    size: size?.length === 2 ? [Number(size[0]), Number(size[1])] : undefined,
-  });
-}
-const events = api as unknown as {
-  addEventListener(t: string, f: (e: Event) => void): void;
-  removeEventListener(t: string, f: (e: Event) => void): void;
-};
-onMounted(() => events.addEventListener("executed", onExecuted));
-onBeforeUnmount(() => events.removeEventListener("executed", onExecuted));
+useSentBack(
+  "layout",
+  () => String(props.node?.id ?? ""),
+  (_, image) => image && editor.value?.offerBackdrop(image),
+);
 
 // --- the prompt out -----------------------------------------------------------------------------
 

@@ -7,10 +7,11 @@ Layout Extras breaks it out into the prompt, core's elements, the canvas size an
 
 from __future__ import annotations
 
-from comfy_api.latest import io, ui
+from comfy_api.latest import io
 
 from .. import _categories
 from .._base import NynxzNode
+from .._sent_back import sent_back
 from .._zenkit.io_types import widget_type
 
 #: Bound to frontend/widgets/LayoutScene.vue -> io_type NYNXZ_LAYOUT_SCENE.
@@ -59,11 +60,5 @@ class NynxzLayout(NynxzNode):
             return io.NodeOutput(value)
         return io.NodeOutput(
             value,
-            ui={
-                "layout_node": [str(cls.hidden.unique_id)],
-                "layout_source": ui.ImageSaveHelper.save_images(
-                    image[:1], "nynxz.layout.source", io.FolderType.temp, cls, compress_level=1
-                ),
-                "layout_size": [int(image.shape[2]), int(image.shape[1])],
-            },
+            ui=sent_back("layout", str(cls.hidden.unique_id), image, cls, "nynxz.layout.source"),
         )
