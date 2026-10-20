@@ -37,7 +37,7 @@ disagree with; nothing below is done yet except where it says so.
 - **Layout/Fresco:** unused exports/consts (`BACKGROUND_ID`, …), unused `defineExpose` members,
   unused store options, dead CSS, "mixins's" typos, stale docstrings; NODES.md has no section for the
   Layout nodes and four region nodes (Grid, Split, Sketch, Overlay) are undocumented.
-- **Done already:** the reference-sheet button the revert left behind (ea03ae1).
+- **Done:** all of Phase 1 (54832a6…, ea03ae1, bb9e2dc and the NODES.md sections).
 
 ## Phase 2 — one copy of each shared thing
 

@@ -7,6 +7,28 @@ The full reference. The [README](../README.md) has the short tour.
 - **LoRA Loader** — a whole LoRA stack on one node: an on/off dot, a searchable picker with
   bookmarks and previews, and a strength per row. Set it to apply to `MODEL`, `CLIP` or both.
 
+## Layout — boxes on a canvas, in the prompt your model was trained on
+
+Lay the picture out as boxes and the editor writes the layout prompt for the model you pick:
+Ideogram 4, FLUX 3 Image Klein or MOSS-Image. Switch modes any time; the boxes stay. Each box has
+its words, and in the Mixins tab you add the recurring things (a character, a prop) once, with
+reference images, LoRAs and trigger words, and tick the boxes they appear in.
+
+```
+Layout Inputs ──> Layout ──> Layout Extras ──> prompt ──> your text encoder
+                                   └──────────> regions ──> Regions Apply
+```
+
+- **Layout** — the editor. Boxes, Scene settings and Mixins in tabs; a library to save and load
+  layouts; pop it out for a larger canvas.
+- **Layout Inputs** _(optional)_ — a photo to trace and remix in the editor, and a vision-language
+  model (Qwen3-VL) for the editor's agent to draw boxes with. The model only loads when you ask the
+  agent.
+- **Layout Extras** — the layout broken out: the `prompt`, core's `elements` and `bboxes` for its
+  own layout nodes, the canvas `width` and `height`, an `overlay` of the boxes (over a generation
+  you wire in, to check it against the plan), `regions` for Regions Apply, and the `mixin_sheet`.
+  With a CLIP wired, mixins' reference images are read into the prompt (see `prompt_mode`).
+
 ## Fresco — paint ideas into places
 
 _Experimental, Krea 2._ Compose a scene as layers on a canvas instead of wiring regions together.
@@ -220,6 +242,21 @@ report socket:
   mask, a subject that moved, and a LoRA bleeding for some other reason stop looking alike. Wire the
   sampler's `LATENT` in to sequence it after the run. The _post_-sampling view.
 
+Four more build regions without drawing a mask, and check them:
+
+- **Region Grid** — an even (or weighted, `column_sizes`/`row_sizes`) grid of rectangle regions.
+  `masks` are the LoRA regions for Regions from Masks, one per cell or joined like `1+4, 2+3`;
+  `fusion_layout` places the fusion references (`2~` mirrors one) for Fusion Regions. Cells count
+  left to right, then down.
+- **Region Split** — one clean rectangle per detected subject, split halfway between neighbours
+  and ordered left to right, for a second pass with proper regions. Feed SAM3's per-object masks,
+  a union mask or its bboxes. `fusion_layout` and `subject_masks` come out in the same order.
+- **Region Sketch** — a colour-blocked start image: a tile (or a soft oval) in every region over a
+  background colour. Encode it and sample at denoise ~0.6–0.8 so each subject starts where its
+  region is.
+- **Region Overlay** — draws the setup over an image: LoRA regions tinted, numbered and named,
+  fusion cells outlined with a ghost of their copy. Every input is optional.
+
 ## SAM3 — segmentation with subtraction
 
 - **SAM3 Detect (Signed)** — core's `SAM3 Detect` with a minus sign. Prefix any term with `-` and
@@ -332,6 +369,10 @@ Fusion Images ┘             ├────────────> latent �
 - **Fusion Inspector** — hover the token grid to see which source won which cell, the per-source
   shares, and the settings that produced them. It shows the field that actually ran, captured
   inside the encode.
+- **Fusion Regions** — lays every reference out over region masks, so each subject gets a whole
+  copy of its reference where it stands instead of its slice of one full-frame reference. Wire it
+  on the `fusion_input` pipe before the encode; use the same masks as Regions from Masks, or Region
+  Grid's `fusion_layout`.
 
 **Masking a source with alpha.** An image with an alpha channel only contributes where it is
 opaque. Cut an element out and it is _absent_ from the blend rather than dimmed — its share of
