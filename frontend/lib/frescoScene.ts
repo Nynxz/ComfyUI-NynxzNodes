@@ -2,6 +2,7 @@
 // Pure — parsing a saved value, defaults, and the shapes — so the widget only deals in state.
 
 import type { SourceType } from "@/lib/mediaRefs";
+import { clamp01, nextColor, num, uid } from "@/lib/sceneUtil";
 
 export type RefFit = "contain" | "cover" | "stretch";
 export const REF_FITS: RefFit[] = ["contain", "cover", "stretch"];
@@ -153,16 +154,6 @@ export const PALETTE = [
   "#ff9a4f",
 ];
 
-let seq = 0;
-export function uid(prefix = "l"): string {
-  return `${prefix}${Date.now().toString(36)}${(seq++).toString(36)}`;
-}
-
-function num(v: unknown, fallback: number): number {
-  const n = +(v as number);
-  return Number.isFinite(n) ? n : fallback;
-}
-const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 const obj = (v: unknown): Record<string, unknown> =>
   v && typeof v === "object" && !Array.isArray(v) ? (v as Record<string, unknown>) : {};
 const list = (v: unknown): Record<string, unknown>[] =>
@@ -281,8 +272,7 @@ export function newLayer(
   rect: { x: number; y: number; w: number; h: number },
   existing: FrescoLayer[],
 ): FrescoLayer {
-  const used = new Set(existing.map((l) => l.color));
-  const color = PALETTE.find((c) => !used.has(c)) ?? PALETTE[existing.length % PALETTE.length]!;
+  const color = nextColor(existing, PALETTE);
   let n = existing.length + 1;
   const names = new Set(existing.map((l) => l.name));
   while (names.has(`Layer ${n}`)) n++;

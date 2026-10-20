@@ -9,7 +9,8 @@
 import type { BoxRect } from "@nynxz/zenkit-ui";
 
 import type { FrescoLora, FrescoRef } from "@/lib/frescoScene";
-import { readLoras, readRefs, uid } from "@/lib/frescoScene";
+import { readLoras, readRefs } from "@/lib/frescoScene";
+import { clamp01, nextColor as nextColorOf, num, uid } from "@/lib/sceneUtil";
 
 import { digJson } from "./jsonIo";
 
@@ -93,25 +94,13 @@ const CANVASES: MossCanvas[] = ["", "single", "multi_panel", "collage"];
 const SNAP = 16;
 const GRID = 1000;
 
-let seq = 0;
-export function boxId(): string {
-  seq += 1;
-  return `b${Date.now().toString(36)}${seq.toString(36)}`;
-}
+export const boxId = () => uid("b");
 
-export function nextColor(boxes: { color: string }[]): string {
-  const used = new Set(boxes.map((b) => b.color));
-  return BOX_COLORS.find((c) => !used.has(c)) ?? BOX_COLORS[boxes.length % BOX_COLORS.length]!;
-}
+export const nextColor = (boxes: { color: string }[]) => nextColorOf(boxes, BOX_COLORS);
 
 const str = (v: unknown) => (typeof v === "string" ? v : "");
-const num = (v: unknown, d: number) => {
-  const n = Number(v);
-  return Number.isFinite(n) ? n : d;
-};
 const strings = (v: unknown) =>
   Array.isArray(v) ? v.filter((s): s is string => typeof s === "string" && !!s.trim()) : [];
-const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 const side = (v: unknown) =>
   Math.max(SNAP, Math.min(16384, Math.round(num(v, 1024) / SNAP) * SNAP));
 

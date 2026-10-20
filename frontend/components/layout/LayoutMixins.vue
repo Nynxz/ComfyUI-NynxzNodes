@@ -141,7 +141,7 @@ import FrescoRefs from "@/components/fresco/FrescoRefs.vue";
 import FrescoSection from "@/components/fresco/FrescoSection.vue";
 import MixinAvatar from "@/components/layout/MixinAvatar.vue";
 import type { FrescoLora } from "@/lib/frescoScene";
-import { uid } from "@/lib/frescoScene";
+import { uid } from "@/lib/sceneUtil";
 import type { Mixin, PromptBox } from "@/layout/promptScene";
 
 const { boxes } = defineProps<{ boxes: PromptBox[] }>();

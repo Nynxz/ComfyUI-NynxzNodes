@@ -188,6 +188,7 @@ export const nodeDef: Omit<NodeDef, "widgets"> = {
 import { computed, ref, type ComponentPublicInstance } from "vue";
 import { ZenSlider, ZenNumber, ZenIconButton, ZenMediaPicker, ZenScroll } from "@nynxz/zenkit-ui";
 import { listImages, thumbUrl, uploadImage, shortName, type SourceType } from "@/lib/mediaRefs";
+import { num } from "@/lib/sceneUtil";
 
 type FitMode = "cover" | "contain" | "stretch";
 const FITS: FitMode[] = ["contain", "cover", "stretch"];
@@ -233,10 +234,6 @@ function nextId() {
   return `r${Date.now().toString(36)}${(seq++).toString(36)}`;
 }
 
-function num(v: unknown, fallback: number) {
-  const n = +(v as number);
-  return Number.isFinite(n) ? n : fallback;
-}
 function parseRows(v: unknown): FusionRow[] {
   let arr = v;
   if (typeof arr === "string") {

@@ -2,22 +2,17 @@
 // shape, and the scene goes to Fresco, which turns it into the Regions wire.
 
 import { thumbUrl } from "@/lib/mediaRefs";
+import { nextColor, uid } from "@/lib/sceneUtil";
 import {
   PALETTE,
   newLayer,
   parseScene,
   summarize,
-  uid,
   type FrescoLayer,
   type FrescoScene,
 } from "@/lib/frescoScene";
 
 import type { LayoutBox, LayoutMode } from "../mode";
-
-function nextColor(layers: FrescoLayer[]): string {
-  const used = new Set(layers.map((l) => l.color));
-  return PALETTE.find((c) => !used.has(c)) ?? PALETTE[layers.length % PALETTE.length]!;
-}
 
 export const regionsMode: LayoutMode<FrescoScene> = {
   id: "regions",
@@ -69,7 +64,7 @@ export const regionsMode: LayoutMode<FrescoScene> = {
         ...rect,
         id: uid(),
         name: `${item.name} copy`,
-        color: nextColor(layers),
+        color: nextColor(layers, PALETTE),
         points: item.points.map((p) => ({
           ...p,
           x: rect.x + (p.x - item.x),

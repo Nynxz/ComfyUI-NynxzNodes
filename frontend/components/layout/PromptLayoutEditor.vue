@@ -339,7 +339,7 @@ import PaletteEdit from "@/components/layout/PaletteEdit.vue";
 import PresetInput from "@/components/layout/PresetInput.vue";
 import { STYLE_PRESETS } from "@/layout/stylePresets";
 import { compileLayout } from "@/layout/library";
-import { uid } from "@/lib/frescoScene";
+import { uid } from "@/lib/sceneUtil";
 import { keepContextMenu } from "@/lib/ownContextMenu";
 import { PROMPT_MODES } from "@/layout/modes";
 import type { AgentImage, AgentLayout } from "@/layout/agent";
