@@ -90,5 +90,3 @@ Fusion decides *which reference wins a visual token*; the `regions` group decide
 LoRA each part of the canvas reads in the model. They meet in Fresco and Layout, where a region's
 prompt can be encoded with its references.
 """
-
-from . import api  # noqa: F401  (registers the /nynxz/fusion/* route on import)

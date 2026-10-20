@@ -86,7 +86,7 @@ import { ref } from "vue";
 import { ZenMediaPicker, ZenNumber } from "@nynxz/zenkit-ui";
 
 import { hasMediaDrop, mediaLibrary, readMediaDrop } from "@/framework";
-import { thumbUrl, uploadImage, type SourceType } from "@/lib/fusionApi";
+import { thumbUrl, uploadImage, type SourceType } from "@/lib/mediaRefs";
 import {
   REF_FITS,
   isImage,

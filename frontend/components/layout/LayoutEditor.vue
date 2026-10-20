@@ -426,7 +426,7 @@ import {
 
 import { hasMediaDrop, hasZenPanels, mediaLibrary } from "@/framework";
 import { keepContextMenu } from "@/lib/ownContextMenu";
-import { thumbUrl, type SourceType } from "@/lib/fusionApi";
+import { thumbUrl, type SourceType } from "@/lib/mediaRefs";
 import { copiedFor, copyBoxes } from "@/layout/clipboard";
 import { exportLayout, importLayout } from "@/layout/jsonIo";
 import LayoutBrowser from "@/components/layout/LayoutBrowser.vue";

@@ -8,7 +8,7 @@ import { api } from "@comfy/api";
 import { app } from "@comfy/app";
 
 import { route } from "@/framework";
-import type { SourceType } from "@/lib/fusionApi";
+import type { SourceType } from "@/lib/mediaRefs";
 
 import type { PromptScene } from "./promptScene";
 

@@ -1,7 +1,7 @@
 // The Fresco scene: what the editor edits and what the backend reads (nodes/fresco/_io_types.py).
 // Pure — parsing a saved value, defaults, and the shapes — so the widget only deals in state.
 
-import type { SourceType } from "@/lib/fusionApi";
+import type { SourceType } from "@/lib/mediaRefs";
 
 export type RefFit = "contain" | "cover" | "stretch";
 export const REF_FITS: RefFit[] = ["contain", "cover", "stretch"];

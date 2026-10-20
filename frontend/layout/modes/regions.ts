@@ -1,7 +1,7 @@
 // Regions — Fresco's mode: each box is a layer with a prompt, references, LoRAs and a painted
 // shape, and the scene goes to Fresco, which turns it into the Regions wire.
 
-import { thumbUrl } from "@/lib/fusionApi";
+import { thumbUrl } from "@/lib/mediaRefs";
 import {
   PALETTE,
   newLayer,

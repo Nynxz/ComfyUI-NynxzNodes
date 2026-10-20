@@ -16,7 +16,7 @@
 import { computed } from "vue";
 
 import type { Mixin } from "@/layout/promptScene";
-import { thumbUrl } from "@/lib/fusionApi";
+import { thumbUrl } from "@/lib/mediaRefs";
 
 const {
   mixin,

@@ -187,7 +187,7 @@ export const nodeDef: Omit<NodeDef, "widgets"> = {
 <script setup lang="ts">
 import { computed, ref, type ComponentPublicInstance } from "vue";
 import { ZenSlider, ZenNumber, ZenIconButton, ZenMediaPicker, ZenScroll } from "@nynxz/zenkit-ui";
-import { listImages, thumbUrl, uploadImage, shortName, type SourceType } from "@/lib/fusionApi";
+import { listImages, thumbUrl, uploadImage, shortName, type SourceType } from "@/lib/mediaRefs";
 
 type FitMode = "cover" | "contain" | "stretch";
 const FITS: FitMode[] = ["contain", "cover", "stretch"];

@@ -345,7 +345,7 @@ import { keepContextMenu } from "@/lib/ownContextMenu";
 import { PROMPT_MODES } from "@/layout/modes";
 import type { AgentImage, AgentLayout } from "@/layout/agent";
 import { boxId, kleinId, nextColor, readBox, readMixin } from "@/layout/promptScene";
-import type { SourceType } from "@/lib/fusionApi";
+import type { SourceType } from "@/lib/mediaRefs";
 import type {
   BoxKind,
   Mixin,

@@ -226,12 +226,13 @@ import {
 } from "@nynxz/zenkit-ui";
 import {
   listImages,
+  fileThumbUrl,
   thumbUrl,
   uploadImage,
   fmtSize,
   type ImageItem,
   type SourceType,
-} from "@/lib/imagePickApi";
+} from "@/lib/mediaRefs";
 import { annotatedValue, uploadSidecarAsClipspaceImage } from "@/lib/maskUpload";
 import {
   addNodeHeaderButton,
@@ -436,16 +437,9 @@ function short(name: string) {
 function thumbByName(value: string) {
   if (!value) return "";
   const it = byName.value.get(value);
-  if (it) return thumbUrl(it);
-  // List not loaded yet — derive filename/subfolder/type from the (possibly annotated)
-  // value so an already-selected image still previews without fetching the whole list.
+  if (it) return fileThumbUrl(it);
   const { name, type } = parseVal(value);
-  const i = name.lastIndexOf("/");
-  return thumbUrl({
-    filename: i >= 0 ? name.slice(i + 1) : name,
-    subfolder: i >= 0 ? name.slice(0, i) : "",
-    type,
-  });
+  return thumbUrl(name, type);
 }
 const previewUrl = computed(() => thumbByName(selected.value));
 const imgW = ref(0);
@@ -630,7 +624,7 @@ async function uploadAndSelect(file: File) {
   if (!it) return;
   srcType.value = "input"; // uploads always land in the input dir
   images.value = await listImages("input", true);
-  pick(it.name);
+  pick(it.ref);
 }
 async function onUpload(e: Event) {
   const input = e.target as HTMLInputElement;

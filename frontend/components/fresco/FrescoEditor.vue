@@ -266,7 +266,7 @@ import FrescoPills from "@/components/fresco/FrescoPills.vue";
 import FrescoSection from "@/components/fresco/FrescoSection.vue";
 import LayoutEditor from "@/components/layout/LayoutEditor.vue";
 import { regionsMode } from "@/layout/modes/regions";
-import type { SourceType } from "@/lib/fusionApi";
+import type { SourceType } from "@/lib/mediaRefs";
 import {
   isImage,
   newRef,
