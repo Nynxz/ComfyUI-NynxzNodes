@@ -1,11 +1,10 @@
-"""Regions Apply — patch the model so each region's LoRA fires only on that region's tokens.
+"""Regions Apply — patch the model so each region's LoRA and prompt reach only that region's tokens.
 
 Model in, model out. Nothing else changes: the CONDITIONING goes to the sampler untouched, a stock
 `LoraLoader` upstream still merges an overall style into the weights as usual, and the branches
 added here sit on top of it additively.
 
-Three mechanisms, and each one has an off position that recovers a baseline you can compare
-against. That is deliberate — this was resolved by bisection and never by tuning:
+Every knob has an off position that recovers a baseline you can compare against. That is deliberate — this was resolved by bisection and never by tuning:
 
     track = 0        the mask is a cage. Exactly "regional LoRA with the mask you drew" — the
                      behaviour everything else has to beat.
@@ -20,7 +19,8 @@ against. That is deliberate — this was resolved by bisection and never by tuni
 
 Set them all and this is the plain, obvious implementation — which is exactly why they exist.
 
-The order things happen in one step:
+The order things happen in one step, on Krea 2 (Z-Image and MOSS-Image add the prompt copies in a
+`DIFFUSION_MODEL` wrapper and route them in the attention override instead; see `_zimage`, `_moss`):
 
     post_input   grid known -> masks projected -> each region's prompt copy added after the canvas
                  -> map in force -> gates built -> LoRAs live
@@ -145,8 +145,8 @@ class NynxzRegionsApply(RegionNode):
                     "clip",
                     optional=True,
                     tooltip="The text encoder, for regions given a prompt of their own in "
-                    "Region LoRAs. A region's prompt replaces the main prompt there. Not needed "
-                    "otherwise.",
+                    "Region LoRAs. A region reads its prompt where it would read the main one "
+                    "(on Z-Image, after the main prompt). Not needed otherwise.",
                 ),
                 advanced(
                     io.Float.Input(

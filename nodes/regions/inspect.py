@@ -117,10 +117,10 @@ def _report(entries, stacked, claim) -> str:
     lines.append(f"  unclaimed: {free:.1%} of the frame carries no LoRA at all")
     lines.append(f"  overlap: {_mask.overlap(stacked):.1%} claimed by more than one region")
 
-    if not any(r.get("loras") for r in entries):
+    if not any(r.get("loras") or r.get("prompt") or r.get("conditioning") for r in entries):
         lines.append(
-            "\n  NO LoRA IS BOUND ANYWHERE. Regions Apply will refuse this — put a Region LoRAs "
-            "node between the source and it."
+            "\n  NO REGION HAS A LoRA OR A PROMPT. Regions Apply will refuse this — give the regions "
+            "a LoRA or a prompt with a Region LoRAs node between the source and it."
         )
     if free < 0.02 and len(entries) > 1:
         lines.append(

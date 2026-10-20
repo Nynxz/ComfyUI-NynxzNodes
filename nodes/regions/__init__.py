@@ -21,8 +21,8 @@ into the weights, and these branches sit on top additively.
 
 Krea 2, Z-Image and MOSS-Image, and `Regions Apply` says so loudly on anything else rather than
 silently gating nothing. Krea 2 is patched through its `post_input` / `attn1_patch` hooks; Z-Image
-(`_zimage`) and MOSS-Image (`_moss`, region prompts only) through a `DIFFUSION_MODEL` wrapper and
-the attention override.
+(`_zimage`) and MOSS-Image (`_moss`) through a `DIFFUSION_MODEL` wrapper and the attention
+override.
 
 The graph::
 

@@ -60,7 +60,7 @@
           sm
           :model-value="prompts[group.region] ?? ''"
           placeholder="Prompt for this region (optional)"
-          title="Replaces the main prompt in this region. Needs Regions Apply's clip wired."
+          title="Read in this region where the main prompt would be (after it, on Z-Image). Needs Regions Apply's clip wired."
           @update:model-value="setPrompt(group.region, String($event ?? ''))"
         />
 

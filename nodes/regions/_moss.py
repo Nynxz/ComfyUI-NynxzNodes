@@ -1,4 +1,4 @@
-"""Regions on MOSS-Image: each region's own prompt, routed by attention.
+"""Regions on MOSS-Image: each region's own prompt, routed by attention, and its LoRAs.
 
 MOSS-Image is a single-stream DiT: `[canvas | text]` in one sequence, the canvas first, the text
 first refined on its own by a two-block `text_embedder`. Nothing in it takes a mask, but every

@@ -58,7 +58,7 @@ class NynxzRegionLoRA(RegionNode):
                 io.Combo.Input(
                     "lora_name",
                     options=folder_paths.get_filename_list("loras"),
-                    tooltip="Must be a plain LoRA. LoHa/LoKr/DoRA cannot be run as an unmerged "
+                    tooltip="A plain LoRA or a LoKr. LoHa and DoRA cannot be run as an unmerged "
                     "side branch and their layers are skipped with a warning.",
                 ),
                 io.Float.Input(
