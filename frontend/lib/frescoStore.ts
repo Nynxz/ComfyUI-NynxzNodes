@@ -8,8 +8,6 @@ import { regionsMode } from "@/layout/modes/regions";
 import { sharedLayout, type SharedLayout } from "@/layout/store";
 import type { FrescoScene } from "@/lib/frescoScene";
 
-export { isPanelOpen, setPanelOpen } from "@/layout/store";
-
 interface SceneWidget {
   value: unknown;
   callback?: (v: unknown) => void;
