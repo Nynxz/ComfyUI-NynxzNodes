@@ -32,6 +32,13 @@ VISUAL_MARK = 1000.0
 def _bootstrap(comfyui: Path):
     """Put a real ComfyUI on the path, then load the pack's fusion engine against it."""
     sys.path.insert(0, str(comfyui))
+    argv, sys.argv = sys.argv, [sys.argv[0], "--cpu"]
+    import comfy.options
+
+    comfy.options.enable_args_parsing()
+    import comfy.cli_args
+
+    sys.argv = argv
     import importlib.util
     import types
 
