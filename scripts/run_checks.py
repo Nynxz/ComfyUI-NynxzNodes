@@ -24,6 +24,7 @@ NEED_COMFYUI = {
     "check_moss_regions.py",
     "check_nodes.py",
     "check_qwen21_contract.py",
+    "check_region_families.py",
     "check_region_lora.py",
 }
 

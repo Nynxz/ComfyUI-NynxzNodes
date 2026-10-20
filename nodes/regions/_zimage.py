@@ -5,8 +5,8 @@ is enough for the same design:
 
   * a `DIFFUSION_MODEL` wrapper sees `context` before the model does. Each region with a LoRA or a
     prompt of its own gets a copy of the prompt added to it there — the main prompt followed by its
-    own, else the main one alone — so the model's own `context_refiner` turns the copies into text tokens exactly as it
-    turns the main prompt. The latent's size gives the canvas grid.
+    own, else the main one alone — so the model's own `context_refiner` turns the copies into text
+    tokens exactly as it turns the main prompt. The latent's size gives the canvas grid.
   * every attention call goes through `optimized_attention_override`, with `block_index` set for
     the joint layers. The routing is an additive mask there.
   * the region LoRAs are forward hooks on the Linears (see `_branch`), gated per token: a region's
@@ -14,10 +14,17 @@ is enough for the same design:
     prompt — which is how a character LoRA's trigger word gets read through the LoRA, as it would
     be under a normal LoRA loader.
 
-The sequence is text first: `[main prompt | region copies | padding | canvas]`. The model pads the
-text block to a whole number of `pad_tokens_multiple` at its end, after the copies. The
-`context_refiner` sees only the text block, the `noise_refiner` only the canvas, the joint layers
-both — so the gates are kept per sequence length.
+The sequence is text first: `[main prompt | region copies | filler | padding | canvas]`. The model
+pads the text block to a whole number of `pad_tokens_multiple` at its end; the copies are filled
+out to a whole number of it first, so that padding is exactly what the main prompt alone gets.
+The `context_refiner` sees only the text block, the `noise_refiner` only the canvas, the joint
+layers both — so the gates are kept per sequence length, and the `context_refiner` marks itself
+(`TextRefinerMark`), since the text block and the canvas can be the same length.
+
+Positions are the model's own without regions: NextDiT numbers the text 1, 2, 3... and puts the
+image after it, so the rope is patched (`ZImageRegions.positions`) to keep the main prompt, its
+padding and the image where they were, and to number each copy from 1. A region that claims
+nothing then leaves the image exactly as it was.
 
 Who reads what, in the joint layers:
 
@@ -72,11 +79,18 @@ def already_regioned(model) -> bool:
 class Layout:
     """Where everything sits in this forward's sequence."""
 
-    __slots__ = ("canvas", "image", "main", "slots", "text", "valid")
+    __slots__ = ("canvas", "copies", "image", "main", "plain", "slots", "text", "valid")
 
-    def __init__(self, main, slots, text, canvas, image, valid):
+    def __init__(self, main, slots, copies, text, canvas, image, valid, plain):
         #: Main prompt tokens, from 0.
         self.main = main
+        #: The copies' tokens, after the main prompt: the slots, then filler up to a whole number of
+        #: `pad_tokens_multiple`, so the model pads the text block exactly as it would the main
+        #: prompt alone.
+        self.copies = copies
+        #: The text block the main prompt alone would make, padding included: where the image's
+        #: positions start without regions, and so with them.
+        self.plain = plain
         #: `(region, start, length)` per copy, `start` counted from 0.
         self.slots = slots
         #: The whole text block, padding included: where the canvas starts.
@@ -95,7 +109,7 @@ class Layout:
 
     @property
     def copies_end(self) -> int:
-        return self.main + sum(length for _, _, length in self.slots)
+        return self.main + self.copies
 
 
 class ZImageRegions(_copies.Routing):
@@ -107,6 +121,9 @@ class ZImageRegions(_copies.Routing):
         super().__init__(state, prompts, settings, previous)
         #: Regions with a copy of the prompt, in sequence order.
         self.regions = sorted(regions)
+        #: Inside the `context_refiner`: the text block and the image can be the same length, so
+        #: the refiner says which it is (see `TextRefinerMark`) rather than the length.
+        self.refining_text = False
 
     # -- the wrapper ---------------------------------------------------------------------------
 
@@ -130,9 +147,19 @@ class ZImageRegions(_copies.Routing):
             context, self.regions, self.prompts, options, with_main=True
         )
         multiple = getattr(diffusion_model, "pad_tokens_multiple", None) or 1
+        batch, main, features = context.shape
+        copies = extended.shape[1] - main
+        filler = -copies % multiple
+        if copies and filler:
+            extended = torch.cat((extended, extended.new_zeros((batch, filler, features))), dim=1)
+            if valid is None:
+                valid = torch.ones((batch, copies), dtype=torch.bool, device=context.device)
+            valid = torch.cat((valid, valid.new_zeros((batch, filler))), dim=1)
+            copies += filler
         text = -(-extended.shape[1] // multiple) * multiple
         image = -(-state.canvas_tokens // multiple) * multiple
-        self.layout = Layout(context.shape[1], slots, text, state.canvas_tokens, image, valid)
+        plain = -(-main // multiple) * multiple
+        self.layout = Layout(main, slots, copies, text, state.canvas_tokens, image, valid, plain)
         state.txtlen = text
         self._build_gates(x.shape[0], x.device)
         return executor(x, timesteps, extended, extended.shape[1], None, **kwargs)
@@ -158,6 +185,44 @@ class ZImageRegions(_copies.Routing):
             by_len[image] = gates[:, text:joint]
         state.by_len = by_len
 
+    # -- positions -----------------------------------------------------------------------------
+
+    def positions(self, ids: torch.Tensor) -> torch.Tensor:
+        """NextDiT's position ids with the copies taken out of the count.
+
+        NextDiT numbers the text block 1, 2, 3... and puts the image after it, so copies appended
+        to the text would move the image and every token's distance to it. Instead the main prompt
+        and the image keep exactly the positions they have without regions, the padding follows the
+        main prompt as it would, and each copy reads from 1, as though it were the prompt for its
+        own region.
+        """
+        layout = self.layout
+        if layout is None or not layout.slots or ids.ndim != 3:
+            return ids
+        axis = ids[..., 0]
+        if ids.shape[1] == layout.text and not bool(ids[..., 1:].any()):
+            if float(axis[0, -1]) != layout.text:
+                return ids
+            numbered = torch.arange(1, layout.text + 1, device=ids.device, dtype=ids.dtype)
+            for _, start, length in layout.slots:
+                numbered[start : start + length] = torch.arange(
+                    1, length + 1, device=ids.device, dtype=ids.dtype
+                )
+            padding = layout.text - layout.copies_end
+            numbered[layout.copies_end :] = torch.arange(
+                layout.main + 1, layout.main + padding + 1, device=ids.device, dtype=ids.dtype
+            )
+            out = ids.clone()
+            out[..., 0] = numbered
+            return out
+        if ids.shape[1] == layout.image:
+            image = axis == layout.text + 1
+            if bool(image.any()):
+                out = ids.clone()
+                out[..., 0] = torch.where(image, float(layout.plain + 1), axis)
+                return out
+        return ids
+
     # -- the attention override ----------------------------------------------------------------
 
     def attention(self, func, q, k, v, heads, *args, **kwargs):
@@ -177,7 +242,7 @@ class ZImageRegions(_copies.Routing):
                     seqlen,
                     layout.joint,
                 )
-            elif not joint and seqlen == layout.text and layout.slots:
+            elif self.refining_text and seqlen == layout.text and layout.slots:
                 bias = self._text_bias(q)
         if bias is not None:
             args, kwargs = _with_mask(args, kwargs, bias)
@@ -290,7 +355,59 @@ def install(patched, state, regions: list[int], prompts: dict[int, torch.Tensor]
         comfy.patcher_extension.WrappersMP.DIFFUSION_MODEL, WRAPPER_KEY, routed.wrapper
     )
     options["optimized_attention_override"] = routed.attention
+    patched.add_object_patch(
+        "diffusion_model.rope_embedder",
+        Rope(patched.get_model_object("diffusion_model.rope_embedder"), routed.positions),
+    )
+    mark = TextRefinerMark(routed)
+    patched.set_injections(
+        TEXT_REFINER_KEY,
+        [comfy.patcher_extension.PatcherInjection(mark.inject, mark.eject)],
+    )
     return routed
+
+
+TEXT_REFINER_KEY = "nynxz_regions_zimage_text"
+
+
+class TextRefinerMark:
+    """Hooks on the `context_refiner` layers that tell the attention override it is refining the
+    text, for as long as the patched model is."""
+
+    def __init__(self, routed):
+        self.routed = routed
+        self.handles: list = []
+
+    def inject(self, patcher):
+        if self.handles:
+            return
+        for layer in patcher.model.diffusion_model.context_refiner:
+            self.handles.append(layer.register_forward_pre_hook(self._enter))
+            self.handles.append(layer.register_forward_hook(self._leave))
+
+    def eject(self, patcher):
+        for handle in self.handles:
+            handle.remove()
+        self.handles.clear()
+        self.routed.refining_text = False
+
+    def _enter(self, module, args):
+        self.routed.refining_text = True
+
+    def _leave(self, module, args, output):
+        self.routed.refining_text = False
+
+
+class Rope(torch.nn.Module):
+    """NextDiT's rope, with the positions remapped first (see `ZImageRegions.positions`)."""
+
+    def __init__(self, base, positions):
+        super().__init__()
+        self.base = base
+        self.positions = positions
+
+    def forward(self, ids):
+        return self.base(self.positions(ids))
 
 
 def install_regions(patched, entries, prompts, settings, sources) -> list[str]:
