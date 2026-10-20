@@ -19,9 +19,10 @@ these nodes deliberately do not touch the conditioning at all. Being a MODEL pat
 them compose with everything else: an ordinary `LoraLoader` upstream still merges a global style
 into the weights, and these branches sit on top additively.
 
-Krea 2 only, and `Regions Apply` says so loudly rather than silently gating nothing — the routing
-map is read out of that DiT's `post_input` / `attn1_patch` hooks, which other architectures either
-number differently or never populate.
+Krea 2, Z-Image and MOSS-Image, and `Regions Apply` says so loudly on anything else rather than
+silently gating nothing. Krea 2 is patched through its `post_input` / `attn1_patch` hooks; Z-Image
+(`_zimage`) and MOSS-Image (`_moss`, region prompts only) through a `DIFFUSION_MODEL` wrapper and
+the attention override.
 
 The graph::
 

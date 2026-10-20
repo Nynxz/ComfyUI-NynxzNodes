@@ -27,6 +27,7 @@ def check_krea2(model, node_name: str) -> int:
         raise ValueError(
             f"{node_name} only works on Krea 2 — it reads its routing map from that DiT's "
             "per-block attention hooks. The wired model isn't a Krea 2 checkpoint (no `txtfusion` "
-            "stack). Load a Krea 2 UNet and its `krea2` text encoder."
+            "stack). Load a Krea 2 UNet and its `krea2` text encoder. (Regions Apply also takes "
+            "Z-Image and MOSS-Image.)"
         )
     return block_count(model)
