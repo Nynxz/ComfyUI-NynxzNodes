@@ -51,10 +51,8 @@ Not here yet: tracking, the layout lock and region references.
 
 from __future__ import annotations
 
-import contextlib
 import logging
 import math
-import os
 import re
 import time
 
@@ -64,6 +62,7 @@ import comfy.utils
 import torch
 
 from . import _branch, _capture, _patches, _zimage
+from ._branch import PROFILE, PROFILE_AT, profiled
 
 WRAPPER_KEY = "nynxz_regions_moss"
 
@@ -102,17 +101,6 @@ def load_region_loras(model, entries) -> list[tuple[int, dict]]:
 
 
 FFN_INJECTION_KEY = "nynxz_regions_moss_ffn"
-
-#: `NYNXZ_REGIONS_PROFILE=1` in ComfyUI's environment logs each regioned forward's time and peak
-#: memory, and one forward's profile (where the time went, by op, with this pack's hooks labelled).
-PROFILE = os.environ.get("NYNXZ_REGIONS_PROFILE", "") not in ("", "0")
-#: The forward profiled in full: a few in, past the first step's setup and the uncond's first run.
-PROFILE_AT = 4
-
-
-def profiled(label: str):
-    """A profiler label for `label` when profiling, else nothing."""
-    return torch.profiler.record_function(label) if PROFILE else contextlib.nullcontext()
 
 
 def branch_footprint(loaded) -> tuple[int, int, set[int]]:

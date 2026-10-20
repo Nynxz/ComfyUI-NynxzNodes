@@ -140,6 +140,10 @@ main prompt there, in the same single pass.
 > box's prompt (as Text Encode (Fusion) does; the encoder must see images: Qwen3-VL, or Qwen3.5 for
 > MOSS-Image).
 >
+> **Slow regioned runs?** Launch ComfyUI with `NYNXZ_REGIONS_PROFILE=1`: each regioned MOSS-Image
+> forward then logs its time, and one forward logs a profile of where the time went, with the region
+> hooks labelled. Turn it off again afterwards; it waits for the GPU after every step.
+>
 > Layout Extras' **mixin_sheet** shows what was used where: a map of the layout with each mixin's
 > reference image in every box that uses it, then a row per mixin with its images, description,
 > trigger words, LoRAs and the boxes it's in.

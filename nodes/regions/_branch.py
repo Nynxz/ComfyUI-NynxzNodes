@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import contextlib
 import logging
+import os
 
 import comfy.utils
 import torch
@@ -51,7 +52,7 @@ def _hook(entries, state):
     """
 
     def hook(module, args, output):
-        with outside_compiled_memory(), _moss_profiled("nynxz/lora"):
+        with outside_compiled_memory(), profiled("nynxz/lora"):
             return add(module, args, output)
 
     def add(module, args, output):
@@ -85,18 +86,37 @@ def outside_compiled_memory():
     then allocates the slow way, thousands of driver calls a step. Core's own extra kernels step out
     of the plan for their scratch memory the same way. Nothing on a ComfyUI without the compiler.
     """
-    try:
-        import comfy.model_prefetch
-    except ImportError:
-        return contextlib.nullcontext()
-    pause = getattr(comfy.model_prefetch, "pause_malloc_graph", None)
-    return pause() if pause is not None else contextlib.nullcontext()
+    pause = _pause_malloc_graph()
+    return pause() if pause else contextlib.nullcontext()
 
 
-def _moss_profiled(label: str):
-    from ._moss import profiled
+_PAUSE = None
 
-    return profiled(label)
+
+def _pause_malloc_graph():
+    """Core's `pause_malloc_graph`, looked up once; False on a ComfyUI without it."""
+    global _PAUSE
+    if _PAUSE is None:
+        try:
+            import comfy.model_prefetch
+
+            _PAUSE = getattr(comfy.model_prefetch, "pause_malloc_graph", None) or False
+        except ImportError:
+            _PAUSE = False
+    return _PAUSE
+
+
+#: `NYNXZ_REGIONS_PROFILE=1` in ComfyUI's environment logs each regioned forward's time and peak
+#: memory, and one forward's profile (where the time went, by op, with this pack's hooks labelled).
+#: Only the MOSS-Image path times its forwards so far.
+PROFILE = os.environ.get("NYNXZ_REGIONS_PROFILE", "") not in ("", "0")
+#: The forward profiled in full: a few in, past the first step's setup and the uncond's first run.
+PROFILE_AT = 4
+
+
+def profiled(label: str):
+    """A profiler label for `label` when profiling, else nothing."""
+    return torch.profiler.record_function(label) if PROFILE else contextlib.nullcontext()
 
 
 def _by_module(loaded) -> dict[str, list[tuple[tuple[int, ...], object]]]:
