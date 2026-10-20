@@ -45,14 +45,16 @@ def regions(
         }
         own = _prompt.region_prompt(layout, box)
         refs = [ref for mixin in mixins for ref in mixin["refs"]]
-        if refs:
-            if clip is None:
-                names = ", ".join(m["name"] or m["id"] for m in mixins if m["refs"])
-                raise ValueError(
-                    f'Box "{label}" names {names}, whose reference images are read into its '
-                    "prompt by the text encoder. Wire the CLIP (one that can see images, such as "
-                    "Qwen3-VL or Qwen3.5) into Layout Extras."
-                )
+        if refs and clip is None:
+            names = ", ".join(m["name"] or m["id"] for m in mixins if m["refs"])
+            logging.warning(
+                'Nynxz Layout: box "%s" uses %s, whose reference images are not read into its '
+                "prompt — wire the CLIP (one that sees images, Qwen3-VL or Qwen3.5) into Layout "
+                "Extras for that.",
+                label,
+                names,
+            )
+        elif refs:
             conditioning = _encode_with_refs(
                 clip,
                 own or layout["prompt"],

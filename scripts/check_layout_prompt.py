@@ -408,9 +408,13 @@ class MixinRegions(unittest.TestCase):
         )
         self.assertEqual(self.encoded[0][-1], ("append clean", 0.2))
 
-    def test_references_without_a_clip_say_to_wire_one(self):
-        with self.assertRaisesRegex(ValueError, "Wire the CLIP"):
-            self.regions([box(mixins=["amber"])], [AMBER])
+    def test_references_without_a_clip_are_skipped_with_a_warning(self):
+        with self.assertLogs(level="WARNING") as logs:
+            (region,) = self.regions([box(mixins=["amber"], desc="she waves")], [AMBER])
+        self.assertIn("wire the CLIP", logs.output[0])
+        self.assertNotIn("conditioning", region)
+        self.assertEqual(region["prompt"], "Anime style. amb3r. she waves.")
+        self.assertEqual(self.encoded, [])
 
     def test_an_encoder_that_cannot_see_images_names_the_box(self):
         with self.assertRaisesRegex(ValueError, 'Box "Lamp".*can\'t read them'):
@@ -421,6 +425,61 @@ class MixinRegions(unittest.TestCase):
         (region,) = self.regions([box(mixins=["amber"])], [gone], clip="vl")
         self.assertNotIn("conditioning", region)
         self.assertEqual(self.encoded, [])
+
+
+try:
+    from PIL import Image as PILImage
+
+    for name, folder in (("nynxz_sheet", ""), ("nynxz_sheet.layout", "layout")):
+        package = types.ModuleType(name)
+        package.__path__ = [str(NODES / folder)]
+        sys.modules[name] = package
+    sys.modules["nynxz_sheet.layout._prompt"] = prompt
+    for module in ("_overlay", "_sheet"):
+        spec_ = importlib.util.spec_from_file_location(
+            f"nynxz_sheet.layout.{module}", NODES / "layout" / f"{module}.py"
+        )
+        loaded = importlib.util.module_from_spec(spec_)
+        sys.modules[f"nynxz_sheet.layout.{module}"] = loaded
+        spec_.loader.exec_module(loaded)
+    sheet = sys.modules["nynxz_sheet.layout._sheet"]
+except ImportError:
+    PILImage = None
+
+
+@unittest.skipIf(PILImage is None, "needs Pillow")
+class MixinSheet(unittest.TestCase):
+    RED = (200, 30, 30)
+
+    def render(self, mixins, boxes):
+        scene = prompt.parse({**layout("moss", boxes, width=1024, height=1024), "mixins": mixins})
+        return sheet.render(scene, lambda ref: PILImage.new("RGB", (64, 64), self.RED))
+
+    def test_a_mixin_s_image_fills_the_boxes_that_use_it_on_the_map(self):
+        out = self.render(
+            [AMBER, {**KAI, "color": "#10B981"}],
+            [
+                box(id="a", x=0.0, y=0.0, w=0.5, h=0.5, mixins=["amber"]),
+                box(id="b", x=0.5, y=0.5, w=0.5, h=0.5, mixins=["kai"]),
+            ],
+        )
+        self.assertEqual(out.width, sheet.WIDTH)
+        # A square layout's map is as tall as it's allowed to be, centred across the sheet.
+        side = min(sheet.WIDTH - 2 * sheet.PAD, sheet.MAP_MAX_HEIGHT)
+        left = sheet.PAD + (sheet.WIDTH - 2 * sheet.PAD - side) // 2
+
+        def at(fx, fy):
+            return out.getpixel((left + round(fx * side), sheet.PAD + round(fy * side)))
+
+        self.assertEqual(at(0.25, 0.4), self.RED)
+        kai = at(0.6, 0.6)
+        self.assertNotEqual(kai, self.RED)
+        self.assertGreater(kai[1], kai[0])
+        self.assertEqual(at(0.75, 0.25), (255, 255, 255))
+
+    def test_a_layout_without_mixins_says_so(self):
+        out = self.render([], [box()])
+        self.assertLess(out.height, 200)
 
 
 if __name__ == "__main__":

@@ -139,6 +139,10 @@ main prompt there, in the same single pass.
 > gets the trigger words, and with the CLIP wired into Layout Extras its images are read into the
 > box's prompt (as Text Encode (Fusion) does; the encoder must see images: Qwen3-VL, or Qwen3.5 for
 > MOSS-Image).
+>
+> Layout Extras' **mixin_sheet** shows what was used where: a map of the layout with each mixin's
+> reference image in every box that uses it, then a row per mixin with its images, description,
+> trigger words, LoRAs and the boxes it's in.
 
 ```
 Regions from Masks ──> Region LoRAs ──> Regions Apply ──> MODEL ──> KSampler

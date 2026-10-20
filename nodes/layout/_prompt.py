@@ -13,7 +13,7 @@ The Layout node's value, as the editor stores it (frontend/layout/promptScene.ts
         "boxes": [Box, ...],                   # bottom to top: background first, foreground last
     }
 
-    Mixin = {"id", "name", "desc": str, "trigger": str,
+    Mixin = {"id", "name", "color", "desc": str, "trigger": str,
               "refs": [{"ref", "type", "strength", "fit", "on"}],   # images, as Fresco's
               "loras": [{"name", "strength", "on"}]}
 
@@ -119,6 +119,20 @@ def _style(raw) -> dict:
     }
 
 
+#: The editor's box colours (frontend/layout/promptScene.ts BOX_COLORS); a mixin without one of its
+#: own gets the one the editor shows it in.
+MIXIN_COLORS = (
+    "#3B82F6",
+    "#F59E0B",
+    "#10B981",
+    "#EF4444",
+    "#8B5CF6",
+    "#EC4899",
+    "#14B8A6",
+    "#F97316",
+    "#84CC16",
+    "#06B6D4",
+)
 REF_TYPES = ("input", "output", "temp")
 FITS = ("contain", "cover", "stretch")
 
@@ -147,6 +161,7 @@ def _mixin(raw: dict, index: int) -> dict:
     return {
         "id": _str(raw.get("id")) or f"c{index + 1}",
         "name": _str(raw.get("name")).strip(),
+        "color": hex_color(raw.get("color")) or MIXIN_COLORS[(index + 3) % len(MIXIN_COLORS)],
         #: Who or what it is, in words: added to the description of every box that uses it.
         "desc": _str(raw.get("desc")).strip(),
         "trigger": _str(raw.get("trigger")).strip(),

@@ -9,19 +9,33 @@ import logging
 import numpy as np
 import torch
 from comfy_api.latest import io
-from PIL import Image
+from PIL import Image, ImageOps
 
 from .. import _categories
 from .._base import NynxzNode
+from .._paths import media_file
 from ..fusion._fusion import PROMPT_MODES
 from ..regions._io_types import Regions
-from . import _overlay, _prompt, _regions
+from . import _overlay, _prompt, _regions, _sheet
 from .layout import Layout
 
 
 def _to_tensor(image: Image.Image) -> tuple[torch.Tensor, torch.Tensor]:
     rgba = np.asarray(image, dtype=np.float32) / 255.0
     return torch.from_numpy(rgba[..., :3]).unsqueeze(0), torch.from_numpy(rgba[..., 3]).unsqueeze(0)
+
+
+def _open_ref(ref: dict) -> Image.Image | None:
+    """A mixin's reference image, from ComfyUI's input, output or temp folder; None if it can't be
+    read."""
+    path = media_file(f"{ref['ref']} [{ref['type']}]")
+    if path is None:
+        return None
+    try:
+        with Image.open(path) as image:
+            return ImageOps.exif_transpose(image).convert("RGB")
+    except OSError:
+        return None
 
 
 def _over(image: torch.Tensor, overlay: Image.Image) -> torch.Tensor:
@@ -118,6 +132,11 @@ class NynxzLayoutExtras(NynxzNode):
                     "the clip here for that). Keep the prompt above as the positive: Regions Apply "
                     "then makes each part of the picture read its own box.",
                 ),
+                io.Image.Output(
+                    display_name="mixin_sheet",
+                    tooltip="Every mixin on one sheet: its reference images beside its name, "
+                    "description, trigger words and LoRAs.",
+                ),
             ],
         )
 
@@ -162,6 +181,7 @@ class NynxzLayoutExtras(NynxzNode):
             overlay,
             alpha,
             _regions.regions(parsed, clip, reference_size, reference_prompt, reference_blend),
+            _to_tensor(_sheet.render(parsed, _open_ref).convert("RGBA"))[0],
         )
 
 
