@@ -326,7 +326,6 @@ class NynxzRegionsApply(RegionNode):
                     isolation=isolation,
                     layout_isolation=layout_isolation,
                 ),
-                copy_full=True,
                 track=track,
                 layout_lock=layout_lock,
                 sources=sources,
@@ -399,27 +398,19 @@ def _apply_zimage(
     clip,
     schedule,
     config,
-    copy_full,
     track,
     layout_lock,
     sources,
 ):
     """Regions Apply on Z-Image: each region's own prompt, routed by attention (see `_zimage`)."""
-    has_lora = any(r.get("loras") for r in entries)
-    if not prompted and not conditioned and not has_lora:
-        raise ValueError(
-            "On Z-Image, Regions Apply routes each region's own prompt and its LoRAs, and no "
-            "region has either. Give the regions a prompt or a LoRA."
-        )
     if _zimage.already_regioned(model):
         raise ValueError(
             "This model already has regions on it from another Regions Apply upstream. Use one."
         )
     patched = model.clone()
     state = _zimage.ZGateState(entries, schedule, 0.0, sources)
-    # The prompts read at full weight (the schedule is for ramping LoRAs in, and a prompt is not a
-    # LoRA); the LoRA branches follow the schedule through the gate. `copy_full` carries this.
-    state.copy_full = copy_full
+    # The prompts read at full weight: the schedule is for ramping LoRAs in, and a prompt is not one.
+    state.copy_full = True
     prompts = dict(conditioned)
     for index, prompt in prompted.items():
         encoded, extra = clip.encode_from_tokens_scheduled(clip.tokenize(prompt))[0]
@@ -472,11 +463,6 @@ def _apply_moss(
 ):
     """Regions Apply on MOSS-Image: each region's own prompt and its LoRAs, routed by attention
     and gated per token (see `_moss`)."""
-    if not prompted and not conditioned and not any(r.get("loras") for r in entries):
-        raise ValueError(
-            "On MOSS-Image, Regions Apply routes each region's own prompt and its LoRAs, and no "
-            "region has either. Give the regions a prompt or a LoRA."
-        )
     if _moss.already_regioned(model):
         raise ValueError(
             "This model already has regions on it from another Regions Apply upstream. Use one."

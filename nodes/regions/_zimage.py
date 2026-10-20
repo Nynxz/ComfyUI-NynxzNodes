@@ -97,8 +97,6 @@ class ZGateState(_state.GateState):
         self.by_len = {}
 
     def for_tokens(self, batch: int, seqlen: int, region: int, device, dtype):
-        if self.lock_pass == _state.BASE_PASS:
-            return None
         gates = self.by_len.get(seqlen)
         if gates is None or gates.shape[0] != batch:
             return None
@@ -315,7 +313,6 @@ class ZImageRegions:
         isolate = isolation > 0.0 and regions >= 2
         if not layout.slots and not isolate:
             return None
-        scale = 1.0 if state.copy_full else state.scale
         key = (
             "joint",
             batch,
@@ -324,7 +321,6 @@ class ZImageRegions:
             q.device,
             tuple(layout.slots),
             self._valid_key(),
-            round(scale, 4),
             round(isolation, 4),
             id(current),
         )
@@ -357,7 +353,7 @@ class ZImageRegions:
                     bias[:, copy, text] = _patches._NEVER
                     bias[:, copy, copy] = 0.0
                     bias[:, copy, layout.copies_end : layout.text] = 0.0
-                    weight = claim[:, region] * scale
+                    weight = claim[:, region]
                     taken = taken + weight
                     logits = weight.clamp(min=_patches._LEAST).log()
                     influence = state.influences[region] if region < len(state.influences) else 1.0
@@ -422,9 +418,6 @@ class FusedBranch:
                 out = piece.new_zeros(*piece.shape[:-1], self.out)
             out[..., start : start + length] = piece
         return out
-
-    def energy(self) -> float:
-        return sum(inner.energy() for inner, _, _ in self.parts)
 
 
 def _out_features(model, path: str) -> int | None:

@@ -363,9 +363,6 @@ class Bump:
             self.seen(x)
         return x.new_full((*x.shape[:-1], self.out), self.value)
 
-    def energy(self) -> float:
-        return 1.0
-
 
 class RegionLoras(Harness):
     def patched_run(self, mask, loaded, prompts=None, context=None):

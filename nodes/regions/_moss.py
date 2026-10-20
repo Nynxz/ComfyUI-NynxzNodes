@@ -358,7 +358,6 @@ class MossRegions:
         self._build_masks(batch, x.device, x.dtype)
         if self.lora_regions:
             self._build_gates(batch, x.device)
-        state.txtlen = self.layout.text
         if not PROFILE:
             return executor(x, timestep, extended, transformer_options, **kwargs)
         return self._profiled(executor, x, timestep, extended, transformer_options, kwargs)
@@ -537,8 +536,6 @@ class MossRegions:
         isolation = self.config.isolation_at(state.schedule, state.fraction)
         if isolation > 0.0 and len(state.regions) >= 2:
             return None
-        if not state.copy_full and state.scale != 1.0:
-            return None
         copied = [region for region, _, _ in layout.slots]
         if any(state.influences[r] != 1.0 for r in copied if r < len(state.influences)):
             return None
@@ -650,7 +647,6 @@ class MossRegions:
         isolate = isolation > 0.0 and regions >= 2
         if not layout.slots and not isolate:
             return None
-        scale = 1.0 if state.copy_full else state.scale
         size = layout.joint
         key = (
             batch,
@@ -659,7 +655,6 @@ class MossRegions:
             device,
             tuple(layout.slots),
             self._valid_key(),
-            round(scale, 4),
             round(isolation, 4),
             id(current),
         )
@@ -689,7 +684,7 @@ class MossRegions:
                     copy = slice(layout.canvas + start, layout.canvas + start + length)
                     bias[:, copy, text] = _patches._NEVER
                     bias[:, copy, copy] = 0.0
-                    weight = claim[:, region] * scale
+                    weight = claim[:, region]
                     taken = taken + weight
                     logits = weight.clamp(min=_patches._LEAST).log()
                     influence = state.influences[region] if region < len(state.influences) else 1.0

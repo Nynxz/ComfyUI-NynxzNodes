@@ -91,9 +91,6 @@ class FactoredBranch:
         self._cast = None
 
     @property
-    def rank(self) -> int:
-        return self.down.shape[0]
-
     def factors(self, device, dtype) -> tuple[torch.Tensor, torch.Tensor]:
         key = (device, dtype)
         if self._cast_key != key:
