@@ -13,7 +13,8 @@ from PIL import Image
 
 from .. import _categories
 from .._base import NynxzNode
-from . import _overlay, _prompt
+from ..regions._io_types import Regions
+from . import _overlay, _prompt, _regions
 from .layout import Layout
 
 
@@ -40,7 +41,8 @@ class NynxzLayoutExtras(NynxzNode):
             display_name="Layout Extras",
             description=(
                 "Break a layout out: its prompt, core's elements and bounding boxes, the canvas "
-                "size, and an overlay of the boxes to check a generation against."
+                "size, an overlay of the boxes to check a generation against, and the boxes as "
+                "regions, each with its own prompt, for Regions Apply."
             ),
             is_experimental=True,
             inputs=[
@@ -70,6 +72,13 @@ class NynxzLayoutExtras(NynxzNode):
                 io.Int.Output(display_name="height"),
                 io.Image.Output(display_name="overlay"),
                 io.Mask.Output(display_name="alpha", tooltip="The overlay's coverage."),
+                Regions.Output(
+                    display_name="regions",
+                    tooltip="Each box as a region for Regions Apply (wire its clip too): the box's "
+                    "mask, the upper box owning any overlap, and its own prompt, the scene's "
+                    "caption followed by the box's description. Keep the prompt above as the "
+                    "positive: Regions Apply then makes each part of the picture read its own box.",
+                ),
             ],
         )
 
@@ -109,6 +118,7 @@ class NynxzLayoutExtras(NynxzNode):
             height,
             overlay,
             alpha,
+            _regions.regions(parsed),
         )
 
 

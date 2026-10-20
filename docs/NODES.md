@@ -124,8 +124,15 @@ character B's delta never touches character A's tokens. The gate comes from a ma
 `LoraLoader` for a global style. A region can also have a **prompt of its own**, which replaces the
 main prompt there, in the same single pass.
 
-> **Krea 2 only, and experimental.** The routing map is read out of that DiT's per-block attention
-> hooks; `Regions Apply` fails loudly on any other architecture rather than silently gating nothing.
+> **Krea 2, Z-Image and MOSS-Image, and experimental.** Tracking and the layout lock are Krea 2
+> only, and on MOSS-Image only the region prompts are routed (no region LoRAs yet). `Regions Apply`
+> fails loudly on any other architecture rather than silently gating nothing.
+>
+> **From a layout:** Layout Extras' `regions` output turns each box into a region with the box's
+> mask (the upper box owning any overlap) and its own prompt (the scene's caption, then the box's
+> description). Keep Layout Extras' `prompt` as the positive and wire `regions` and the CLIP into
+> Regions Apply: on MOSS-Image the layout JSON says where things go, and the routing makes each
+> part of the picture read its own box.
 
 ```
 Regions from Masks ──> Region LoRAs ──> Regions Apply ──> MODEL ──> KSampler

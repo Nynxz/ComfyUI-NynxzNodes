@@ -169,5 +169,90 @@ class Elements(unittest.TestCase):
             prompt.compile_prompt(raw)
 
 
+class RegionPrompt(unittest.TestCase):
+    def parsed(self, *boxes, scene="A rainy street at night"):
+        return prompt.parse(layout("moss", list(boxes), prompt=scene))
+
+    def test_a_box_reads_the_scene_then_itself(self):
+        scene = self.parsed(box(desc="a red umbrella"))
+        self.assertEqual(
+            prompt.region_prompt(scene, scene["boxes"][0]),
+            "A rainy street at night. a red umbrella.",
+        )
+
+    def test_a_text_box_quotes_its_text(self):
+        scene = self.parsed(box(kind="text", desc="a neon sign", text="OPEN"))
+        self.assertEqual(
+            prompt.region_prompt(scene, scene["boxes"][0]),
+            'A rainy street at night. a neon sign. The text "OPEN".',
+        )
+
+    def test_a_box_that_says_nothing_has_no_prompt_of_its_own(self):
+        scene = self.parsed(box(desc=""))
+        self.assertEqual(prompt.region_prompt(scene, scene["boxes"][0]), "")
+
+    def test_punctuation_already_there_is_kept(self):
+        scene = self.parsed(box(desc="a cat!"), scene="Dusk.")
+        self.assertEqual(prompt.region_prompt(scene, scene["boxes"][0]), "Dusk. a cat!")
+
+
+try:
+    import sys
+    import types
+
+    import torch
+
+    for name, folder in (
+        ("nynxz_pack", ""),
+        ("nynxz_pack.layout", "layout"),
+        ("nynxz_pack.fresco", "fresco"),
+        ("nynxz_pack.regions", "regions"),
+    ):
+        package = types.ModuleType(name)
+        package.__path__ = [str(NODES / folder)]
+        sys.modules[name] = package
+    sys.modules["nynxz_pack.layout._prompt"] = prompt
+    regions_spec = importlib.util.spec_from_file_location(
+        "nynxz_pack.layout._regions", NODES / "layout" / "_regions.py"
+    )
+    layout_regions = importlib.util.module_from_spec(regions_spec)
+    sys.modules["nynxz_pack.layout._regions"] = layout_regions
+    regions_spec.loader.exec_module(layout_regions)
+except ImportError:
+    torch = None
+
+
+@unittest.skipIf(torch is None, "needs torch")
+class LayoutRegions(unittest.TestCase):
+    def regions(self, *boxes):
+        return layout_regions.regions(prompt.parse(layout("moss", list(boxes), prompt="A room")))
+
+    def test_each_shown_box_is_a_region_with_its_mask_and_prompt(self):
+        (lamp,) = self.regions(box(x=0.0, y=0.0, w=0.5, h=1.0, desc="a lamp"))
+        mask = lamp["mask"]
+        height, width = mask.shape
+        self.assertAlmostEqual(width / height, 1024 / 768, delta=0.02)
+        self.assertEqual(float(mask[:, : width // 2 - 1].min()), 1.0)
+        self.assertEqual(float(mask[:, width // 2 + 1 :].max()), 0.0)
+        self.assertEqual(lamp["prompt"], "A room. a lamp.")
+        self.assertEqual((lamp["fit"], lamp["loras"], lamp["label"]), ("stretch", [], "Lamp"))
+
+    def test_the_upper_box_owns_the_overlap(self):
+        under, over = self.regions(
+            box(id="a", x=0.0, y=0.0, w=1.0, h=1.0, desc="a wall"),
+            box(id="b", x=0.25, y=0.25, w=0.5, h=0.5, desc="a door"),
+        )
+        height, width = under["mask"].shape
+        centre = (height // 2, width // 2)
+        self.assertEqual(float(over["mask"][centre]), 1.0)
+        self.assertEqual(float(under["mask"][centre]), 0.0)
+        self.assertEqual(float(under["mask"][0, 0]), 1.0)
+
+    def test_hidden_and_silent_boxes(self):
+        regions = self.regions(box(id="a", hidden=True), box(id="b", desc=""))
+        self.assertEqual(len(regions), 1)
+        self.assertNotIn("prompt", regions[0])
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -287,6 +287,21 @@ def moss(layout: dict) -> str:
 COMPILERS = {"ideogram": ideogram, "klein": klein, "moss": moss}
 
 
+def _sentence(text: str) -> str:
+    return text if text[-1] in ".!?\"'" else text + "."
+
+
+def region_prompt(layout: dict, box: dict) -> str:
+    """A box's own prompt for Regions Apply: the scene's caption, then what the box holds, so the
+    region keeps the scene's style and setting. Empty for a box that says nothing of its own."""
+    own = [box["desc"]]
+    if box["kind"] == "text" and box["text"]:
+        own.append('The text "' + box["text"] + '".')
+    if not any(own):
+        return ""
+    return " ".join(_sentence(part) for part in (layout["prompt"], *own) if part)
+
+
 def compile_prompt(raw) -> str:
     """The prompt for the layout's own mode."""
     layout = parse(raw)
