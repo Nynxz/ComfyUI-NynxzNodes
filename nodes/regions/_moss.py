@@ -247,11 +247,11 @@ def attach_loras(patched, loaded, state) -> None:
 
 
 class Layout:
-    """Where everything sits in this forward's sequence: `[canvas | main | copies]`."""
+    """Where everything sits in this forward's sequence: `[canvas | main | copies | refs]`."""
 
-    __slots__ = ("canvas", "main", "slots", "valid")
+    __slots__ = ("canvas", "main", "refs", "slots", "valid")
 
-    def __init__(self, canvas, main, slots, valid):
+    def __init__(self, canvas, main, slots, valid, refs=0):
         self.canvas = canvas
         #: Main prompt tokens.
         self.main = main
@@ -259,6 +259,9 @@ class Layout:
         self.slots = slots
         #: `[batch, copy tokens]` bool, False on a copy's padding; None when there is none.
         self.valid = valid
+        #: Reference latent tokens riding in the sequence after the text (the "index" methods).
+        #: References MOSS turns into keys and values beforehand aren't counted: they only add keys.
+        self.refs = refs
 
     @property
     def text(self) -> int:
@@ -268,7 +271,20 @@ class Layout:
     @property
     def joint(self) -> int:
         """The sequence length the joint blocks see."""
-        return self.canvas + self.text
+        return self.canvas + self.text + self.refs
+
+
+#: The reference methods whose latents MOSS-Image keeps in the sequence; any other turns them into
+#: keys and values before the blocks.
+IN_SEQUENCE_REFS = ("index", "index_timestep_zero")
+
+
+def sequence_refs(kwargs) -> int:
+    """How many reference latent tokens this forward's blocks carry after the text."""
+    latents = kwargs.get("ref_latents") or []
+    if not latents or kwargs.get("ref_latents_method") not in IN_SEQUENCE_REFS:
+        return 0
+    return sum(ref.shape[-2] * ref.shape[-1] for ref in latents)
 
 
 class MossRegions(_copies.Routing):
@@ -296,6 +312,9 @@ class MossRegions(_copies.Routing):
         self.plans: dict[int, list] | None = None
         #: Route hard regions by separate attention calls rather than masks (off only to compare).
         self.partition = True
+        #: True while MOSS encodes the references on their own (`preprocess_refs`), whose attention
+        #: is neither the text's nor the blocks' and is left alone.
+        self.encoding_refs = False
 
     # -- the wrapper ---------------------------------------------------------------------------
 
@@ -306,7 +325,10 @@ class MossRegions(_copies.Routing):
         extended, slots, valid = _copies.append_copies(
             context, self.regions, self.prompts, options, with_main=False
         )
-        self.layout = Layout(state.canvas_tokens, context.shape[1], slots, valid)
+        self.layout = Layout(
+            state.canvas_tokens, context.shape[1], slots, valid, sequence_refs(kwargs)
+        )
+        self.encoding_refs = False
         batch = x.shape[0]
         self._build_masks(batch, x.device, x.dtype)
         if self.lora_regions:
@@ -395,17 +417,34 @@ class MossRegions(_copies.Routing):
 
     # -- rope ----------------------------------------------------------------------------------
 
-    def rope(self, h, w, text_len, device, transformer_options=None):
+    def rope(self, h, w, text_len, device, transformer_options=None, ref_shapes=(), f_offset=0):
         transformer_options = transformer_options if transformer_options is not None else {}
+        self.encoding_refs = h == 0 and w == 0 and text_len == 0 and bool(ref_shapes)
         layout = self.layout
         if layout is None or not layout.slots or text_len != layout.text:
-            return self.base_rope(h, w, text_len, device, transformer_options)
-        # The image and the main prompt exactly as without regions; each copy from position 0.
-        parts = [self.base_rope(h, w, layout.main, device, transformer_options)]
+            return self._base_rope(
+                h, w, text_len, device, transformer_options, ref_shapes, f_offset
+            )
+        # With references MOSS ends the text just before the image (`f_offset = -text_len`): end
+        # the main prompt there, as it is without regions.
+        if f_offset and f_offset == -text_len:
+            f_offset = -layout.main
+        # The image, the main prompt and the references exactly as without regions; each copy from
+        # where the main prompt starts.
+        base = self._base_rope(h, w, layout.main, device, transformer_options, ref_shapes, f_offset)
+        split = h * w + layout.main
         longest = max(length for _, _, length in layout.slots)
-        copy = self.base_rope(1, 1, longest, device, transformer_options)[:, 1:]
+        copy = self._base_rope(1, 1, longest, device, transformer_options, (), f_offset)[:, 1:]
+        parts = [base[:, :split]]
         parts += [copy[:, :length] for _, _, length in layout.slots]
+        parts.append(base[:, split:])
         return torch.cat(parts, dim=1)
+
+    def _base_rope(self, h, w, text_len, device, transformer_options, ref_shapes, f_offset):
+        # A ComfyUI from before MOSS-Image's references takes no `ref_shapes` or `f_offset`.
+        if not ref_shapes and not f_offset:
+            return self.base_rope(h, w, text_len, device, transformer_options)
+        return self.base_rope(h, w, text_len, device, transformer_options, ref_shapes, f_offset)
 
     # -- the attention override ----------------------------------------------------------------
 
@@ -419,7 +458,7 @@ class MossRegions(_copies.Routing):
         options = kwargs.get("transformer_options") or {}
         layout = self.layout
         mask = None
-        if layout is not None and q.ndim == 3:
+        if layout is not None and q.ndim == 3 and not self.encoding_refs:
             seqlen = q.shape[1]
             joint = options.get("block_index") is not None
             plan = self.plans.get(seqlen) if self.plans else None
@@ -440,6 +479,9 @@ class MossRegions(_copies.Routing):
         if mask is not None:
             if mask.dtype != q.dtype or mask.device != q.device:
                 mask = mask.to(device=q.device, dtype=q.dtype)
+            if k.shape[1] > mask.shape[-1]:
+                # References' keys and values computed beforehand: everyone reads them.
+                mask = torch.nn.functional.pad(mask, (0, k.shape[1] - mask.shape[-1]))
             previous = kwargs.get("mask")
             kwargs = {**kwargs, "mask": mask if previous is None else previous + mask}
         return self.call(func, q, k, v, heads, *args, **kwargs)
@@ -448,7 +490,19 @@ class MossRegions(_copies.Routing):
         """The routing as one unmasked attention call per group of queries that read the same keys
         — so the fast kernels (flash, sage) run, and nothing `[seq, seq]` is ever built."""
         out = q.new_empty((*q.shape[:2], v.shape[-1]))
+        # References' keys and values computed beforehand sit after the sequence: everyone reads them.
+        extra = (
+            torch.arange(q.shape[1], k.shape[1], device=q.device)
+            if k.shape[1] > q.shape[1]
+            else None
+        )
+        previous = kwargs.get("mask")
         for rows, queries, keys in plan:
+            if extra is not None:
+                keys = torch.cat((keys, extra))
+            call_kwargs = kwargs
+            if previous is not None:
+                call_kwargs = {**kwargs, "mask": _slice_mask(previous, rows, queries, keys)}
             out[rows, queries] = self.call(
                 func,
                 q[rows][:, queries],
@@ -456,7 +510,7 @@ class MossRegions(_copies.Routing):
                 v[rows][:, keys],
                 heads,
                 *args,
-                **kwargs,
+                **call_kwargs,
             )
         return out
 
@@ -492,7 +546,7 @@ class MossRegions(_copies.Routing):
         if int(soft.sum()) > SOFT_SHARE * max(int(claimed.sum()), 1):
             return None
 
-        key = (batch, device, tuple(layout.slots), self.valid_key(), id(current))
+        key = (batch, device, tuple(layout.slots), layout.refs, self.valid_key(), id(current))
         hit = self.cache.get("plans")
         if hit is not None and hit[0] == key:
             return hit[1]
@@ -517,15 +571,18 @@ class MossRegions(_copies.Routing):
 
         canvas = arange(0, layout.canvas)
         main = arange(layout.canvas, layout.main)
+        refs = arange(layout.canvas + layout.text, layout.refs)
         joint, text = [], []
         for rows, lengths in row_sets:
             joint.append(
                 (
                     rows,
                     torch.cat(((owner == -1).nonzero().flatten(), main)),
-                    torch.cat((canvas, main)),
+                    torch.cat((canvas, main, refs)),
                 )
             )
+            if layout.refs:
+                joint.append((rows, refs, torch.cat((canvas, main, refs))))
             text.append((rows, arange(0, layout.main), arange(0, layout.main)))
             for j, ((_, start, length), used) in enumerate(zip(layout.slots, lengths, strict=True)):
                 span = arange(layout.canvas + start, length)
@@ -534,7 +591,7 @@ class MossRegions(_copies.Routing):
                     (
                         rows,
                         torch.cat(((owner == j).nonzero().flatten(), span)),
-                        torch.cat((canvas, read)),
+                        torch.cat((canvas, read, refs)),
                     )
                 )
                 text.append((rows, arange(start, length), arange(start, used)))
@@ -589,8 +646,10 @@ class MossRegions(_copies.Routing):
             canvas = slice(0, layout.canvas)
             if isolation > 0.0:
                 bias[:, canvas, canvas] = _bias.isolation(claim, state.groups, isolation)
+            text_end = layout.canvas + layout.text
+            refs = slice(text_end, size)
             # Nobody but a copy's own tokens and the canvas reads a copy.
-            bias[:, :, layout.canvas + layout.main : size] = NEVER
+            bias[:, :, layout.canvas + layout.main : text_end] = NEVER
             if layout.slots:
                 at = layout.canvas
                 _bias.route_copies(
@@ -601,14 +660,24 @@ class MossRegions(_copies.Routing):
                         (r, slice(at + start, at + start + length))
                         for r, start, length in layout.slots
                     ],
-                    hidden=slice(layout.canvas, size),
+                    hidden=slice(layout.canvas, text_end),
                     shared=[slice(layout.canvas, layout.canvas + layout.main)],
                     influences=state.influences,
+                    also_read=[refs] if layout.refs else (),
                 )
             _bias.hide_padding(bias, layout.valid, layout.canvas + layout.main)
             return bias.to(dtype).unsqueeze(1)
 
         return self.cached("joint", key, build)
+
+
+def _slice_mask(mask, rows, queries, keys):
+    """The model's own attention mask (`[batch or 1, 1, queries or 1, keys]`) for one group."""
+    if mask.shape[0] != 1:
+        mask = mask[rows]
+    if mask.shape[-2] != 1:
+        mask = mask[..., queries, :]
+    return mask[..., keys]
 
 
 def install(patched, state, prompts: dict[int, torch.Tensor], settings, loaded=()):
