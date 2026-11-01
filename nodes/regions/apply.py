@@ -41,7 +41,7 @@ import comfy.patcher_extension
 from comfy_api.latest import io
 
 from .._zenkit.io_types import advanced
-from . import _branch, _capture, _lock, _patches, _schedule, _state, _text, _zimage
+from . import _branch, _capture, _lock, _moss, _patches, _schedule, _state, _text, _zimage
 from ._base import RegionNode
 from ._io_types import Regions
 from ._krea import check_krea2
@@ -58,11 +58,12 @@ class NynxzRegionsApply(RegionNode):
                 "Runs each region's LoRA as a live per-token branch gated to that region's tokens, "
                 "instead of merging every delta into the weights where they collide, and gives "
                 "each region its own prompt when it has one. Composes with ordinary merged "
-                "LoRAs. Krea 2 and Z-Image; tracking and layout lock are Krea 2 only for now."
+                "LoRAs. Krea 2, Z-Image and MOSS-Image; tracking is not on Z-Image and layout "
+                "lock is Krea 2 only for now."
             ),
             is_experimental=True,
             inputs=[
-                io.Model.Input("model", tooltip="A Krea 2 or Z-Image model. Returned patched."),
+                io.Model.Input("model", tooltip="A Krea 2, Z-Image or MOSS-Image model. Returned patched."),
                 Regions.Input(
                     "regions",
                     tooltip="Regions with LoRAs bound. Regions without one still hold territory.",
@@ -240,8 +241,8 @@ class NynxzRegionsApply(RegionNode):
         layout_isolation=0.0,
         sources=(),
     ) -> io.NodeOutput:
-        zimage = _zimage.is_zimage(model)
-        total_blocks = _zimage.block_count(model) if zimage else check_krea2(model, "Regions Apply")
+        backend = _moss if _moss.is_moss(model) else _zimage if _zimage.is_zimage(model) else None
+        total_blocks = backend.block_count(model) if backend else check_krea2(model, "Regions Apply")
         entries = list(regions or [])
         if not entries:
             raise ValueError("No regions arrived on the wire — there is nothing to gate.")
@@ -272,8 +273,9 @@ class NynxzRegionsApply(RegionNode):
                 "you encode the main prompt with) into Regions Apply's `clip`."
             )
 
-        if zimage:
-            return _apply_zimage(
+        if backend:
+            return _apply_routed(
+                backend,
                 model,
                 entries,
                 prompted,
@@ -283,7 +285,7 @@ class NynxzRegionsApply(RegionNode):
                     commit_at=commit_at, preheat=preheat, ramp=ramp, release=release
                 ),
                 _patches.TrackConfig(
-                    track=0.0,
+                    track=track if backend.TRACKS else 0.0,
                     refine=refine,
                     route_at=route_at,
                     route_blocks=route_blocks,
@@ -357,7 +359,8 @@ class NynxzRegionsApply(RegionNode):
         return io.NodeOutput(patched)
 
 
-def _apply_zimage(
+def _apply_routed(
+    backend,
     model,
     entries,
     prompted,
@@ -370,19 +373,19 @@ def _apply_zimage(
     layout_lock,
     sources,
 ):
-    """Regions Apply on Z-Image: each region's own prompt, routed by attention (see `_zimage`)."""
+    """Regions Apply on a model routed by attention override (see `_zimage` and `_moss`)."""
     has_lora = any(r.get("loras") for r in entries)
     if not prompted and not conditioned and not has_lora:
         raise ValueError(
-            "On Z-Image, Regions Apply routes each region's own prompt and its LoRAs, and no "
-            "region has either. Give the regions a prompt or a LoRA."
+            f"On {backend.LABEL}, Regions Apply routes each region's own prompt and its LoRAs, and "
+            "no region has either. Give the regions a prompt or a LoRA."
         )
-    if _zimage.already_regioned(model):
+    if backend.already_regioned(model):
         raise ValueError(
             "This model already has regions on it from another Regions Apply upstream. Use one."
         )
     patched = model.clone()
-    state = _zimage.ZGateState(entries, schedule, 0.0, sources)
+    state = _zimage.ZGateState(entries, schedule, config.track, sources)
     # The prompts read at full weight (the schedule is for ramping LoRAs in, and a prompt is not a
     # LoRA); the LoRA branches follow the schedule through the gate. `copy_full` carries this.
     state.copy_full = copy_full
@@ -390,11 +393,11 @@ def _apply_zimage(
     for index, prompt in prompted.items():
         encoded, extra = clip.encode_from_tokens_scheduled(clip.tokenize(prompt))[0]
         prompts[index] = _zimage.trim(encoded, extra)
-    loaded = _zimage.load_region_loras(patched, entries)
+    loaded = backend.load_region_loras(patched, entries)
     # Every region with a LoRA or a prompt of its own gets a copy of the prompt, so a LoRA's trigger
     # word is read through the LoRA there (see `_zimage`).
     copied = sorted(set(prompts) | {region for region, _ in loaded})
-    _zimage.install(patched, state, copied, prompts, config)
+    backend.install(patched, state, copied, prompts, config)
     if loaded:
         _branch.attach(patched, loaded, state)
     _capture.clear()
@@ -411,15 +414,17 @@ def _apply_zimage(
     lines = [_line(i) for i in range(len(entries))]
     lines.append("")
     lines.append(
-        f"Z-Image: {len(copied)} region copy(ies) of the prompt routed by attention"
+        f"{backend.LABEL}: {len(copied)} region copy(ies) of the prompt routed by attention"
         + (f", {sum(len(b) for _, b in loaded)} LoRA branch(es)" if loaded else "")
     )
     lines.append(f"schedule: {schedule.describe()}")
     lines.append(f"isolation: {config.isolation:.2f}")
-    if track > 0.0:
-        lines.append("tracking: not on Z-Image yet — the masks are used exactly as given")
+    if config.tracking:
+        lines.append(f"tracking: {config.track:.2f} toward the image, {config.refine} rounds")
+    elif track > 0.0:
+        lines.append(f"tracking: not on {backend.LABEL} yet — the masks are used exactly as given")
     if layout_lock > 0.0:
-        lines.append("layout lock: not on Z-Image yet — ignored")
+        lines.append(f"layout lock: not on {backend.LABEL} yet — ignored")
     logging.info("Nynxz Regions: %s", "\n".join(lines))
     return io.NodeOutput(patched)
 
