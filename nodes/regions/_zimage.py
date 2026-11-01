@@ -47,8 +47,11 @@ import comfy.patcher_extension
 import comfy.utils
 import torch
 
+from ..lora import _qkv
 from . import _capture, _lora, _patches, _state
 
+LABEL = "Z-Image"
+TRACKS = False
 WRAPPER_KEY = "nynxz_regions_zimage"
 
 
@@ -434,7 +437,7 @@ def _out_features(model, path: str) -> int | None:
         return None
 
 
-def load_region_loras(model, entries) -> list[tuple[int, dict]]:
+def load_region_loras(model, entries, wanted=_wanted, label=LABEL) -> list[tuple[int, dict]]:
     """`[(region_index, {module_path: branch})]` for every region's LoRAs."""
     loaded: list[tuple[int, dict]] = []
     for index, region in enumerate(entries):
@@ -442,12 +445,12 @@ def load_region_loras(model, entries) -> list[tuple[int, dict]]:
             name = spec.get("lora_name")
             if not name:
                 continue
-            branches = _branches_for(model, name, float(spec.get("strength", 1.0)))
+            branches = _branches_for(model, name, float(spec.get("strength", 1.0)), wanted, label)
             loaded.append((index, branches))
     return loaded
 
 
-def _branches_for(model, lora_name: str, strength: float) -> dict:
+def _branches_for(model, lora_name: str, strength: float, wanted, label: str) -> dict:
     import comfy.lora
     import comfy.lora_convert
     import folder_paths
@@ -456,6 +459,7 @@ def _branches_for(model, lora_name: str, strength: float) -> dict:
     state = comfy.utils.load_torch_file(path, safe_load=True)
     state = comfy.lora_convert.convert_lora(state)
     key_map = comfy.lora.model_lora_keys_unet(model.model, {})
+    state, _ = _qkv.for_model(state, key_map)
     loaded = comfy.lora.load_lora(state, key_map, log_missing=False)
 
     branches: dict = {}
@@ -466,7 +470,7 @@ def _branches_for(model, lora_name: str, strength: float) -> dict:
         if isinstance(weight_key, tuple):
             weight_key, offset = weight_key[0], weight_key[1]
         target = _lora.module_path(weight_key)
-        if not _wanted(target):
+        if not wanted(target):
             off_target += 1
             continue
         branch = _lora._branch_of(patch)
@@ -489,10 +493,10 @@ def _branches_for(model, lora_name: str, strength: float) -> dict:
 
     if not branches:
         raise ValueError(
-            f"`{lora_name}` became no region branch on this Z-Image model — it matched "
+            f"`{lora_name}` became no region branch on this {label} model — it matched "
             f"{len(loaded)} weight(s) but none on a routable layer"
             + (f" ({_fmt(unsupported)})" if unsupported else "")
-            + ". Load it with a stock LoraLoader for an overall effect, or check it is a Z-Image "
+            + f". Load it with a stock LoraLoader for an overall effect, or check it is a {label} "
             "LoRA."
         )
     if unsupported:
