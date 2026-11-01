@@ -416,6 +416,9 @@ function pickFromBrowse(name: string) {
 /* the glyph must never be the pointer target — the grip itself is what the press resolves to */
 .ls-grip > * {
   pointer-events: none;
+  /* the icon font draws this glyph high in its box: measured 0.75px above the dot's centre at
+     14px, so it comes down that much (in em, to hold at any size) */
+  transform: translateY(0.054em);
 }
 .ls-grip:active {
   cursor: grabbing;
