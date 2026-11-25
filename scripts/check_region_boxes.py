@@ -14,6 +14,14 @@ import torch
 from _harness import _Any, load, stub_comfy
 
 stub_comfy()
+
+
+def _stub_getattr(name: str):
+    if name.startswith("__") and name.endswith("__"):
+        raise AttributeError(name)
+    return _Any()
+
+
 for _mod in (
     "comfy.ops",
     "comfy.patcher_extension",
@@ -24,7 +32,7 @@ for _mod in (
 ):
     if _mod not in sys.modules:
         m = types.ModuleType(_mod)
-        m.__getattr__ = lambda _name: _Any()
+        m.__getattr__ = _stub_getattr
         sys.modules[_mod] = m
 sys.modules["comfy.weight_adapter"].LoKrAdapter = type("LoKrAdapter", (), {})
 sys.modules["comfy.weight_adapter"].LoRAAdapter = type("LoRAAdapter", (), {})
