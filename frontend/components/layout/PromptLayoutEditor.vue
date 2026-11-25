@@ -1567,7 +1567,7 @@ const segmentError = ref("");
 const captureNote = computed(() => {
   if (segmenting.value) return "segmenting…";
   const n = box.value?.points.length ?? 0;
-  return n ? `${n} point${n === 1 ? "" : "s"} · SAM3` : "SAM3, inside the box";
+  return n ? `${n} point${n === 1 ? "" : "s"} · source photo` : "masks wired source photo";
 });
 let segmentTimer: ReturnType<typeof setTimeout> | undefined;
 let segmentWatchdog: ReturnType<typeof setTimeout> | undefined;

@@ -60,6 +60,10 @@ Layout Inputs ──> Layout ──> Layout Apply (+ model, clip) ──> model 
   and sends the render back to the Layout editor as its trace image.
 - **Layout Extras** — breaks the layout out for manual wiring: `prompt`, core's `elements` and
   `bboxes`, `width`/`height`, `overlay`/`alpha`, `regions`, and the `mixin_sheet`.
+- **Layout Reference Cutout** — segments a subject out of any reference image with SAM3 (signed
+  text or click points), fills or removes the background, crops tight, and saves the reusable
+  cutout into `input/fresco/cutouts/` (also invoked directly from the wand icon on any Mixin or Box
+  reference tile).
 
 ## Fresco _(deprecated — moved into Layout)_
 

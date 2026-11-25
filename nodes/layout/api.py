@@ -6,6 +6,7 @@ from __future__ import annotations
 from aiohttp import web
 
 from .._zenkit.server import request_allowed
+from ..fresco import _segment
 from . import _agent, _prompt, library
 
 try:
@@ -118,6 +119,12 @@ if _routes is not None and folder_paths is not None:
         if read is None:
             return web.json_response({"error": "no boxes in the answer"}, status=422)
         return web.json_response(read)
+
+    @_routes.get("/nynxz/layouts/sam3-checkpoints")
+    async def nynxz_layouts_sam3_checkpoints(request):
+        return web.json_response(
+            {"checkpoints": [name for name in _segment.checkpoints() if name != _segment.NONE]}
+        )
 
     @_routes.get("/nynxz/layouts/mixins")
     async def nynxz_layouts_mixins_list(request):

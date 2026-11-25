@@ -16,6 +16,14 @@
           draggable="false"
         />
         <div class="fr-acts">
+          <button
+            type="button"
+            class="fr-act"
+            title="Cut out subject with SAM3"
+            @click="openCutout(i)"
+          >
+            <i class="mdi mdi-auto-fix" />
+          </button>
           <button type="button" class="fr-act" :title="FIT_LABEL[r.fit]" @click="cycleFit(i)">
             <i class="mdi" :class="FIT_ICON[r.fit]" />
           </button>
@@ -73,6 +81,7 @@
       multiple
       @pick="addPicked"
     />
+    <RefCutoutDialog v-model:open="cutoutOpen" :source="cutoutSource" @apply="applyCutout" />
   </div>
 </template>
 
@@ -82,10 +91,12 @@
  * has a strength, a fit and a mute; several on one layer blend into its conditioning the way Text
  * Encode (Fusion) blends them. The section header adds through `upload` and `openBrowse`.
  */
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { ZenMediaPicker, ZenNumber } from "@nynxz/zenkit-ui";
 
+import RefCutoutDialog from "@/components/fresco/RefCutoutDialog.vue";
 import { hasMediaDrop, mediaLibrary, readMediaDrop } from "@/framework";
+import type { CutoutResult } from "@/layout/cutout";
 import { thumbUrl, uploadImage, type SourceType } from "@/lib/mediaRefs";
 import {
   REF_FITS,
@@ -113,6 +124,23 @@ const fileInput = ref<HTMLInputElement | null>(null);
 const busy = ref(false);
 const browse = ref(false);
 const dragOver = ref(false);
+const cutoutOpen = ref(false);
+const cutoutIndex = ref(-1);
+const cutoutSource = computed(() =>
+  cutoutIndex.value >= 0 ? (refs.value[cutoutIndex.value] ?? null) : null,
+);
+
+function openCutout(i: number) {
+  cutoutIndex.value = i;
+  cutoutOpen.value = true;
+}
+function applyCutout(cutout: CutoutResult, how: "replace" | "add") {
+  if (how === "replace" && cutoutIndex.value >= 0 && cutoutIndex.value < refs.value.length) {
+    patch(cutoutIndex.value, { ref: cutout.ref, type: cutout.type });
+  } else {
+    add([{ ref: cutout.ref, type: cutout.type }]);
+  }
+}
 
 function patch(i: number, fields: Partial<FrescoRef>) {
   refs.value = refs.value.map((r, j) => (j === i ? { ...r, ...fields } : r));
@@ -231,7 +259,7 @@ function addPicked(picked: string[]) {
   inset: auto 2px 2px 2px;
   display: flex;
   justify-content: flex-end;
-  gap: 2px;
+  gap: 1px;
   opacity: 0;
   transition: opacity 0.12s ease;
 }
@@ -241,15 +269,15 @@ function addPicked(picked: string[]) {
 .fr-act {
   display: grid;
   place-items: center;
-  width: 18px;
-  height: 18px;
+  width: 15px;
+  height: 16px;
   padding: 0;
   border: 0;
-  border-radius: 4px;
-  background: rgb(0 0 0 / 70%);
+  border-radius: 3px;
+  background: rgb(0 0 0 / 72%);
   color: #fff;
   cursor: pointer;
-  font-size: 11px;
+  font-size: 10.5px;
 }
 .fr-act.danger:hover {
   background: var(--zen-danger, #dc2626);
