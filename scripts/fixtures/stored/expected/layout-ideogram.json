@@ -4,6 +4,12 @@
   "width": 1024,
   "height": 768,
   "prompt": "A cosy reading nook",
+  "refs": [],
+  "refs_scope": "all",
+  "blend": "mix",
+  "softness": 0.5,
+  "style_mode": "none",
+  "style_strength": 0.0,
   "background": "warm wooden walls",
   "style": {
    "on": true,

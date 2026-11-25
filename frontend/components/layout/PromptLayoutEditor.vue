@@ -606,6 +606,79 @@
           </FrescoSection>
 
           <FrescoSection
+            label="Base references"
+            :note="scene.refs.length ? String(scene.refs.length) : 'scene fusion refs'"
+          >
+            <template #actions>
+              <ZenIconButton
+                size="sm"
+                icon="mdi mdi-upload-outline"
+                title="Upload base reference images for the scene"
+                :disabled="sceneRefsPanel?.busy"
+                @click="sceneRefsPanel?.upload()"
+              />
+              <ZenIconButton
+                size="sm"
+                icon="mdi mdi-view-grid-plus-outline"
+                title="Browse base reference images for the scene"
+                @click="sceneRefsPanel?.openBrowse()"
+              />
+            </template>
+            <FrescoRefs
+              ref="sceneRefsPanel"
+              :model-value="scene.refs"
+              @update:model-value="patchScene({ refs: $event })"
+            />
+            <template v-if="sceneActiveRefCount >= 1">
+              <div class="pl-scope-row">
+                <span class="pl-blend-lbl">
+                  <span>apply</span>
+                  <InfoHover label="Where Base references apply">
+                    <p class="pl-tip-title">Scene Base References (Fusion Encode)</p>
+                    <p class="pl-tip-p">
+                      Encodes these images into the scene's positive prompt via Fusion Encode —
+                      generating fresh instead of editing a photo (unlike Layout Inputs). Use for
+                      overall style, lighting, mood, or layout guidance:
+                    </p>
+                    <ul class="pl-tip-list">
+                      <li :class="{ on: scene.refsScope === 'all' }">
+                        <strong>Scene + boxes</strong> — applies to the main prompt and fuses into
+                        every box (best for style, lighting, or colour cohesion).
+                      </li>
+                      <li :class="{ on: scene.refsScope === 'plain' }">
+                        <strong>Plain boxes</strong> — applies to the main prompt and text-only
+                        boxes; boxes with their own character/object refs stay pure.
+                      </li>
+                      <li :class="{ on: scene.refsScope === 'base' }">
+                        <strong>Base only</strong> — encodes into the main prompt only, leaving all
+                        boxes untouched (best for layout/backdrop refs).
+                      </li>
+                    </ul>
+                  </InfoHover>
+                </span>
+                <ZenToggleGroup
+                  class="pl-seg"
+                  size="sm"
+                  :model-value="scene.refsScope"
+                  :options="SCENE_REFS_SCOPES"
+                  @update:model-value="patchScene({ refsScope: $event as SceneRefsScope })"
+                />
+              </div>
+              <MixinFusionBar
+                :active-count="sceneActiveRefCount"
+                :blend="scene.blend"
+                :softness="scene.softness"
+                :style-mode="scene.styleMode"
+                :style-strength="scene.styleStrength"
+                @update:blend="patchScene({ blend: $event })"
+                @update:softness="patchScene({ softness: $event })"
+                @update:style-mode="patchScene({ styleMode: $event })"
+                @update:style-strength="patchScene({ styleStrength: $event })"
+              />
+            </template>
+          </FrescoSection>
+
+          <FrescoSection
             v-if="scene.mode === 'ideogram'"
             label="Background"
             note="behind every box"
@@ -845,6 +918,7 @@ import LayoutEditor from "@/components/layout/LayoutEditor.vue";
 import LayoutMixins from "@/components/layout/LayoutMixins.vue";
 import LayoutSettings from "@/components/layout/LayoutSettings.vue";
 import MixinAvatar from "@/components/layout/MixinAvatar.vue";
+import MixinFusionBar from "@/components/layout/MixinFusionBar.vue";
 import MixinLibraryDialog from "@/components/layout/MixinLibraryDialog.vue";
 import ModeCards from "@/components/layout/ModeCards.vue";
 import PaletteEdit from "@/components/layout/PaletteEdit.vue";
@@ -854,6 +928,7 @@ import type { AgentImage, AgentLayout } from "@/layout/agent";
 import { compileLayout, saveMixinPreset } from "@/layout/library";
 import { PROMPT_MODES } from "@/layout/modes";
 import {
+  SCENE_REFS_SCOPES,
   boxActiveRefs,
   boxId,
   kleinId,
@@ -870,6 +945,7 @@ import {
   type PromptBox,
   type PromptModeId,
   type PromptScene,
+  type SceneRefsScope,
   type ShapeFor,
 } from "@/layout/promptScene";
 import type { SharedLayout } from "@/layout/store";
@@ -953,6 +1029,10 @@ const descInput = ref<{ $el?: HTMLElement } | null>(null);
 const boxRefsPanel = ref<{ upload: () => void; openBrowse: () => void; busy: boolean } | null>(
   null,
 );
+const sceneRefsPanel = ref<{ upload: () => void; openBrowse: () => void; busy: boolean } | null>(
+  null,
+);
+const sceneActiveRefCount = computed(() => scene.value.refs.filter((r) => r.on).length);
 const agentOpen = ref(false);
 const selected = ref<string[]>([]);
 const tool = ref<BoxTool>("select");
@@ -1928,6 +2008,15 @@ async function copyOutput() {
   grid-template-columns: 52px minmax(0, 1fr) 82px;
   align-items: center;
   gap: 6px;
+  color: var(--zen-muted, #9aa0aa);
+  font-size: 11px;
+}
+.pl-scope-row {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  align-items: center;
+  gap: 6px;
+  padding-top: 6px;
   color: var(--zen-muted, #9aa0aa);
   font-size: 11px;
 }

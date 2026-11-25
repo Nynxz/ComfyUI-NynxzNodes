@@ -262,6 +262,7 @@ class NynxzLayoutApply(NynxzNode):
         ref_size = (
             int(reference_size) if int(reference_size) >= 128 else parsed["settings"]["visual_size"]
         )
+        img_cache: dict = {}
         regions, layout_layers, backdrop_img, _ = _regions.build(
             parsed,
             clip,
@@ -269,10 +270,21 @@ class NynxzLayoutApply(NynxzNode):
             reference_prompt,
             reference_blend,
             include_backdrop=image is not None,
+            img_cache=img_cache,
         )
 
         prompt_text = _prompt.COMPILERS[parsed["mode"]](parsed)
-        positive = clip.encode_from_tokens_scheduled(clip.tokenize(prompt_text))
+        positive, scene_img = _regions.encode_scene_positive(
+            parsed,
+            prompt_text,
+            clip,
+            ref_size,
+            reference_prompt,
+            reference_blend,
+            img_cache=img_cache,
+        )
+        if backdrop_img is None:
+            backdrop_img = scene_img
 
         if _active(regions):
             settings = RegionSettings(

@@ -4,6 +4,12 @@
   "width": 1024,
   "height": 768,
   "prompt": "A desk with <obj_1> and <obj_2>",
+  "refs": [],
+  "refs_scope": "all",
+  "blend": "mix",
+  "softness": 0.5,
+  "style_mode": "none",
+  "style_strength": 0.0,
   "background": "",
   "style": {
    "on": false,

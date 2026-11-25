@@ -18,6 +18,25 @@ export type BoxKind = "object" | "character" | "text";
 export type MossCanvas = "" | "single" | "multi_panel" | "collage";
 export type ShapeFor = "layer" | "refs";
 export type RefStyleMode = "none" | "gist" | "whiten";
+export type SceneRefsScope = "all" | "plain" | "base";
+
+export const SCENE_REFS_SCOPES: { value: SceneRefsScope; label: string; title: string }[] = [
+  {
+    value: "all",
+    label: "Scene + boxes",
+    title: "Encode into the main prompt and fuse into every box (best for style/lighting refs)",
+  },
+  {
+    value: "plain",
+    label: "Plain boxes",
+    title: "Encode into the main prompt and text-only boxes; boxes with their own refs stay pure",
+  },
+  {
+    value: "base",
+    label: "Base only",
+    title: "Encode only into the main prompt and background; leave boxes untouched",
+  },
+];
 
 export const STYLE_MODES: { value: RefStyleMode; label: string; title: string }[] = [
   {
@@ -137,6 +156,18 @@ export interface PromptScene {
   width: number;
   height: number;
   prompt: string;
+  /** Base scene-wide reference images (Fusion Encode on the whole scene). */
+  refs: FrescoRef[];
+  /** Whether base scene references also fuse into boxes (`all`, `plain`, or `base`). */
+  refsScope: SceneRefsScope;
+  /** How multiple base scene references combine in Fusion Encode. */
+  blend: Blend;
+  /** Softness between base scene references (0..1). */
+  softness: number;
+  /** Fusion Encode style release mode for base scene references. */
+  styleMode: RefStyleMode;
+  /** Style release strength for base scene references (0..1). */
+  styleStrength: number;
   background: string;
   style: IdeogramStyle;
   meta: string[];
@@ -180,6 +211,8 @@ const side = (v: unknown) =>
 const readBlend = (v: unknown): Blend => (BLENDS.some((b) => b.value === v) ? (v as Blend) : "mix");
 const readStyleMode = (v: unknown): RefStyleMode =>
   STYLE_MODES.some((s) => s.value === v) ? (v as RefStyleMode) : "none";
+const readRefsScope = (v: unknown): SceneRefsScope =>
+  SCENE_REFS_SCOPES.some((s) => s.value === v) ? (v as SceneRefsScope) : "all";
 const readPoints = (v: unknown): FrescoPoint[] =>
   Array.isArray(v)
     ? v
@@ -345,6 +378,12 @@ export function readPromptScene(raw: unknown): PromptScene {
     width: side(s.width),
     height: side(s.height),
     prompt: str(s.prompt),
+    refs: readRefs(s.refs),
+    refsScope: readRefsScope(s.refsScope ?? s.refs_scope),
+    blend: readBlend(s.blend),
+    softness: clamp01(num(s.softness, 0.5)),
+    styleMode: readStyleMode(s.styleMode ?? s.style_mode),
+    styleStrength: clamp01(num(s.styleStrength ?? s.style_strength, 0)),
     background: typeof rawBg === "string" ? rawBg : "",
     style: {
       on: !!style.on,

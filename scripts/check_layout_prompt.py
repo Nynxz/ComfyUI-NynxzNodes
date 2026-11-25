@@ -577,6 +577,66 @@ class MixinRegions(unittest.TestCase):
         self.assertEqual(len(self.encoded), 1)
         self.assertIs(r1["conditioning"], r2["conditioning"])
 
+    def test_scene_base_refs_encode_positive_and_respect_scope(self):
+        base = {
+            **layout(
+                "regions",
+                [
+                    box(id="a", x=0.0, y=0.0, w=0.5, h=1.0, mixins=["amber"], desc="waves"),
+                    box(id="b", x=0.5, y=0.0, w=0.5, h=1.0, desc="a wooden table"),
+                ],
+                prompt="Watercolor room",
+            ),
+            "mixins": [AMBER],
+            "refs": [{"ref": "style.png", "type": "input", "strength": 0.6, "fit": "contain"}],
+            "blend": "salient",
+            "softness": 0.8,
+            "styleMode": "gist",
+            "styleStrength": 0.35,
+        }
+
+        # Scope "all": both boxes fuse the scene base ref (Amber gets [amber, style], table gets [style]).
+        parsed_all = prompt.parse({**base, "refsScope": "all"})
+        regions_all = layout_regions.regions(parsed_all, "vl", 512)
+        self.assertEqual(len(self.encoded), 2)
+        self.assertEqual(self.encoded[0][1], 2)
+        self.assertEqual(self.encoded[0][2], [1.0, 0.6])
+        self.assertEqual(self.encoded[1][1], 1)
+        self.assertEqual(self.encoded[1][2], [0.6])
+        self.assertEqual(self.encoded[1][6]["style_mode"], "gist")
+        self.assertEqual(self.encoded[1][6]["style_strength"], 0.35)
+        self.assertIn("conditioning", regions_all[0])
+        self.assertIn("conditioning", regions_all[1])
+
+        # Scope "plain": Amber stays pure to her own ref; plain text box inherits scene ref.
+        self.encoded.clear()
+        parsed_plain = prompt.parse({**base, "refsScope": "plain"})
+        layout_regions.regions(parsed_plain, "vl", 512)
+        self.assertEqual(self.encoded[0][1], 1)
+        self.assertEqual(self.encoded[0][2], [1.0])
+        self.assertEqual(self.encoded[1][1], 1)
+        self.assertEqual(self.encoded[1][2], [0.6])
+
+        # Scope "base": only main positive gets scene base refs; plain box has no conditioning override.
+        self.encoded.clear()
+        parsed_base = prompt.parse({**base, "refsScope": "base"})
+        regions_base = layout_regions.regions(parsed_base, "vl", 512)
+        self.assertEqual(len(self.encoded), 1)
+        self.assertEqual(self.encoded[0][1], 1)
+        self.assertNotIn("conditioning", regions_base[1])
+
+        # Main positive encoding uses Fusion Encode with scene refs & settings.
+        self.encoded.clear()
+        encoded_pos, first_img = layout_regions.encode_scene_positive(
+            parsed_base, "Watercolor room", "vl", 512
+        )
+        self.assertIsNotNone(first_img)
+        self.assertEqual(encoded_pos[0][0].shape, (1, 4, 8))
+        self.assertEqual(self.encoded[0][0], "Watercolor room")
+        self.assertEqual(self.encoded[0][1], 1)
+        self.assertEqual(self.encoded[0][6]["content_mode"], "saliency")
+        self.assertEqual(self.encoded[0][6]["style_mode"], "gist")
+
 
 try:
     from PIL import Image as PILImage

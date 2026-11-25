@@ -58,6 +58,8 @@ BLENDS = ("mix", "weighted", "tiled", "salient")
 DEFAULT_BLEND = "mix"
 STYLE_MODES = ("none", "gist", "whiten")
 DEFAULT_STYLE_MODE = "none"
+REFS_SCOPES = ("all", "plain", "base")
+DEFAULT_REFS_SCOPE = "all"
 DEFAULT_VISUAL_SIZE = 384
 BACKGROUND_DENOISE = 0.05
 GRID = 1000
@@ -292,11 +294,21 @@ def parse(raw) -> dict:
     raw_backdrop = raw.get("backdrop")
     if not isinstance(raw_backdrop, dict) and isinstance(raw_bg, dict):
         raw_backdrop = raw_bg
+    refs_scope = raw.get("refsScope", raw.get("refs_scope"))
+    style_mode = raw.get("styleMode", raw.get("style_mode"))
     return {
         "mode": mode if mode in MODES else "ideogram",
         "width": _side(raw.get("width")),
         "height": _side(raw.get("height")),
         "prompt": _str(raw.get("prompt")).strip(),
+        "refs": read_refs(raw.get("refs")),
+        "refs_scope": refs_scope if refs_scope in REFS_SCOPES else DEFAULT_REFS_SCOPE,
+        "blend": raw.get("blend") if raw.get("blend") in BLENDS else DEFAULT_BLEND,
+        "softness": min(1.0, max(0.0, num(raw.get("softness"), 0.5))),
+        "style_mode": style_mode if style_mode in STYLE_MODES else DEFAULT_STYLE_MODE,
+        "style_strength": min(
+            1.0, max(0.0, num(raw.get("styleStrength", raw.get("style_strength")), 0.0))
+        ),
         "background": bg_text,
         "style": _style(raw.get("style")),
         "meta": _strings(raw.get("meta")),
