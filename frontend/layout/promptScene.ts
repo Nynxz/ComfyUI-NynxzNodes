@@ -17,6 +17,25 @@ export type PromptModeId = "regions" | "ideogram" | "klein" | "moss";
 export type BoxKind = "object" | "character" | "text";
 export type MossCanvas = "" | "single" | "multi_panel" | "collage";
 export type ShapeFor = "layer" | "refs";
+export type RefStyleMode = "none" | "gist" | "whiten";
+
+export const STYLE_MODES: { value: RefStyleMode; label: string; title: string }[] = [
+  {
+    value: "none",
+    label: "Keep style",
+    title: "Keep the reference's own art style and look (default)",
+  },
+  {
+    value: "gist",
+    label: "Release gist",
+    title: "Fade the overall style signature so the prompt or LoRA can restyle the subject",
+  },
+  {
+    value: "whiten",
+    label: "Release stats",
+    title: "Flatten per-channel style statistics (stronger style release, e.g. anime → photoreal)",
+  },
+];
 
 export interface PromptBox extends BoxRect {
   id: string;
@@ -75,6 +94,14 @@ export interface Mixin {
   trigger: string;
   refs: FrescoRef[];
   loras: FrescoLora[];
+  /** How multiple references on this mixin combine in Fusion Encode. */
+  blend: Blend;
+  /** Softness between multiple references (0 = hard cells, 1 = fully feathered). */
+  softness: number;
+  /** Fusion Encode style release mode (loosen the reference's style grip while keeping structure). */
+  styleMode: RefStyleMode;
+  /** How strongly `styleMode` releases style (0..1; 0 = off). */
+  styleStrength: number;
 }
 
 /** Background region (wherever no box sits), for Regions mode and source-image edits. */
@@ -151,6 +178,8 @@ const strings = (v: unknown) =>
 const side = (v: unknown) =>
   Math.max(SNAP, Math.min(16384, Math.round(num(v, 1024) / SNAP) * SNAP));
 const readBlend = (v: unknown): Blend => (BLENDS.some((b) => b.value === v) ? (v as Blend) : "mix");
+const readStyleMode = (v: unknown): RefStyleMode =>
+  STYLE_MODES.some((s) => s.value === v) ? (v as RefStyleMode) : "none";
 const readPoints = (v: unknown): FrescoPoint[] =>
   Array.isArray(v)
     ? v
@@ -243,6 +272,8 @@ export function readBox(raw: unknown, index = 0, fromFresco = false): PromptBox 
 export function readMixin(raw: unknown, index = 0): Mixin {
   const m = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
   const libraryId = str(m.libraryId ?? m.library_id).trim();
+  const styleMode = readStyleMode(m.styleMode ?? m.style_mode);
+  const styleStrength = clamp01(num(m.styleStrength ?? m.style_strength, 0));
   return {
     id: str(m.id) || uid("c"),
     ...(libraryId ? { libraryId } : {}),
@@ -252,6 +283,10 @@ export function readMixin(raw: unknown, index = 0): Mixin {
     trigger: str(m.trigger),
     refs: readRefs(m.refs),
     loras: readLoras(m.loras),
+    blend: readBlend(m.blend),
+    softness: clamp01(num(m.softness, 0.5)),
+    styleMode,
+    styleStrength,
   };
 }
 
@@ -264,6 +299,10 @@ export function mixinContentKey(m: Mixin): string {
     trigger: m.trigger.trim(),
     refs: m.refs.map(({ ref, type, strength, fit, on }) => ({ ref, type, strength, fit, on })),
     loras: m.loras.map(({ name, strength, on }) => ({ name, strength, on })),
+    blend: m.blend,
+    softness: m.softness,
+    styleMode: m.styleMode,
+    styleStrength: m.styleStrength,
   });
 }
 

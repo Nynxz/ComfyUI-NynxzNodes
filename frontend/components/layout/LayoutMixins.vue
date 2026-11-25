@@ -1,7 +1,6 @@
 <template>
   <div class="lm">
     <div class="lm-bar">
-      <span class="lm-bar-note">Shared across boxes — right-click to swap or manage</span>
       <ZenButton
         sm
         variant="ghost"
@@ -15,13 +14,26 @@
 
     <div class="lm-grid">
       <button
-        v-for="mixin in mixins"
+        v-for="(mixin, idx) in mixins"
         :key="mixin.id"
         type="button"
-        :class="['lm-tile', { on: mixin.id === openId }]"
+        draggable="true"
+        :class="[
+          'lm-tile',
+          {
+            on: mixin.id === openId,
+            dragging: dragIndex === idx,
+            'drop-target': dropIndex === idx && dragIndex !== null && dragIndex !== idx,
+          },
+        ]"
         :title="tileTooltip(mixin)"
         @click="open(mixin.id)"
         @contextmenu.prevent.stop="openTileMenu($event, mixin)"
+        @dragstart="onTileDragStart($event, idx)"
+        @dragover="onTileDragOver($event, idx)"
+        @dragleave="onTileDragLeave(idx)"
+        @drop.prevent="onTileDrop(idx)"
+        @dragend="onTileDragEnd"
       >
         <MixinAvatar :mixin="mixin" :size="40" />
         <span class="lm-tile-name">{{ mixin.name }}</span>
@@ -161,6 +173,17 @@
           :model-value="current.refs"
           @update:model-value="patch({ refs: $event })"
         />
+        <MixinFusionBar
+          :active-count="refCount(current)"
+          :blend="current.blend"
+          :softness="current.softness"
+          :style-mode="current.styleMode"
+          :style-strength="current.styleStrength"
+          @update:blend="patch({ blend: $event })"
+          @update:softness="patch({ softness: $event })"
+          @update:style-mode="patch({ styleMode: $event })"
+          @update:style-strength="patch({ styleStrength: $event })"
+        />
       </FrescoSection>
       <FrescoSection label="LoRAs" :note="current.loras.length ? String(current.loras.length) : ''">
         <template #actions>
@@ -201,6 +224,7 @@ import FrescoLoras from "@/components/fresco/FrescoLoras.vue";
 import FrescoRefs from "@/components/fresco/FrescoRefs.vue";
 import FrescoSection from "@/components/fresco/FrescoSection.vue";
 import MixinAvatar from "@/components/layout/MixinAvatar.vue";
+import MixinFusionBar from "@/components/layout/MixinFusionBar.vue";
 import { saveMixinPreset } from "@/layout/library";
 import type { Mixin, PromptBox } from "@/layout/promptScene";
 import type { FrescoLora } from "@/lib/frescoScene";
@@ -317,11 +341,49 @@ function tileTooltip(mixin: Mixin): string {
         .join(", ")}`,
     );
   }
-  parts.push("Right-click to swap, inspect or delete");
+  parts.push("Drag to reorder · right-click to swap, inspect or delete");
   return parts.join("\n");
 }
 function newLora(): FrescoLora {
   return { id: uid("o"), name: "", strength: 1, on: true };
+}
+
+// --- drag-to-reorder mixin tiles ----------------------------------------------------------------
+
+const dragIndex = ref<number | null>(null);
+const dropIndex = ref<number | null>(null);
+
+function onTileDragStart(e: DragEvent, index: number) {
+  dragIndex.value = index;
+  dropIndex.value = index;
+  if (e.dataTransfer) {
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("application/x-nynxz-mixin", mixins.value[index]?.id ?? "");
+  }
+}
+function onTileDragOver(e: DragEvent, index: number) {
+  if (dragIndex.value === null) return;
+  e.preventDefault();
+  if (e.dataTransfer) e.dataTransfer.dropEffect = "move";
+  dropIndex.value = index;
+}
+function onTileDragLeave(index: number) {
+  if (dropIndex.value === index) dropIndex.value = null;
+}
+function onTileDrop(targetIndex: number) {
+  const from = dragIndex.value;
+  dragIndex.value = null;
+  dropIndex.value = null;
+  if (from === null || from === targetIndex) return;
+  const next = [...mixins.value];
+  const [moved] = next.splice(from, 1);
+  if (!moved) return;
+  next.splice(targetIndex, 0, moved);
+  mixins.value = next;
+}
+function onTileDragEnd() {
+  dragIndex.value = null;
+  dropIndex.value = null;
 }
 
 // --- right-click menu on mixin tiles ------------------------------------------------------------
@@ -423,12 +485,8 @@ const tileMenuItems = computed<ContextMenuItem[]>(() => {
 .lm-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 6px;
-}
-.lm-bar-note {
-  font-size: 11px;
-  color: var(--zen-muted, #9aa0aa);
 }
 .lm-grid {
   display: grid;
@@ -446,7 +504,22 @@ const tileMenuItems = computed<ContextMenuItem[]>(() => {
   border-radius: var(--zen-radius, 7px);
   background: transparent;
   color: var(--zen-text, #e5e5ea);
-  cursor: pointer;
+  cursor: grab;
+  transition:
+    border-color 0.12s ease,
+    background 0.12s ease,
+    opacity 0.12s ease;
+}
+.lm-tile:active {
+  cursor: grabbing;
+}
+.lm-tile.dragging {
+  opacity: 0.4;
+}
+.lm-tile.drop-target {
+  border-color: var(--zen-accent, #6366f1);
+  box-shadow: 0 0 0 1px var(--zen-accent, #6366f1);
+  background: color-mix(in srgb, var(--zen-accent, #6366f1) 14%, transparent);
 }
 .lm-tile:hover {
   background: color-mix(in srgb, var(--zen-text, #fff) 4%, transparent);
@@ -476,6 +549,7 @@ const tileMenuItems = computed<ContextMenuItem[]>(() => {
   justify-content: center;
   border-style: dashed;
   color: var(--zen-muted, #9aa0aa);
+  cursor: pointer;
 }
 .lm-new .mdi {
   font-size: 22px;

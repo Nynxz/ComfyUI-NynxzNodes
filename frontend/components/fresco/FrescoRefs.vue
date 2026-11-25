@@ -6,7 +6,12 @@
     @dragleave="dragOver = false"
     @drop="onDrop"
   >
-    <div v-for="(r, i) in refs" :key="r.id" class="fr-tile" :class="{ off: !r.on }">
+    <div v-for="(r, i) in refs" :key="r.id" class="fr-row" :class="{ off: !r.on }">
+      <ZenDot
+        :model-value="r.on"
+        :title="r.on ? 'Enabled — click to mute' : 'Muted — click to enable'"
+        @update:model-value="patch(i, { on: $event })"
+      />
       <div class="fr-thumb" :title="r.ref">
         <img
           :src="thumbUrl(r.ref, r.type)"
@@ -15,34 +20,17 @@
           loading="lazy"
           draggable="false"
         />
-        <div class="fr-acts">
-          <button
-            type="button"
-            class="fr-act"
-            title="Cut out subject with SAM3"
-            @click="openCutout(i)"
-          >
-            <i class="mdi mdi-auto-fix" />
-          </button>
-          <button type="button" class="fr-act" :title="FIT_LABEL[r.fit]" @click="cycleFit(i)">
-            <i class="mdi" :class="FIT_ICON[r.fit]" />
-          </button>
-          <button
-            type="button"
-            class="fr-act"
-            :title="r.on ? 'Mute' : 'Unmute'"
-            @click="patch(i, { on: !r.on })"
-          >
-            <i class="mdi" :class="r.on ? 'mdi-eye-outline' : 'mdi-eye-off-outline'" />
-          </button>
-          <button type="button" class="fr-act danger" title="Remove" @click="remove(i)">
-            <i class="mdi mdi-close" />
-          </button>
-        </div>
+      </div>
+      <div class="fr-info">
+        <span class="fr-name" :title="r.ref">{{ shortName(r.ref) }}</span>
+        <button type="button" class="fr-fit" :title="FIT_LABEL[r.fit]" @click="cycleFit(i)">
+          <i class="mdi" :class="FIT_ICON[r.fit]" />
+          <span>{{ FIT_SHORT[r.fit] }}</span>
+        </button>
       </div>
       <ZenNumber
         class="fr-str"
-        bare
+        size="sm"
         :model-value="r.strength"
         :min="0"
         :max="4"
@@ -50,6 +38,13 @@
         title="Strength — this image's share when there are several"
         @update:model-value="patch(i, { strength: Math.max(0, $event) })"
       />
+      <ZenIconButton
+        size="sm"
+        icon="mdi mdi-auto-fix"
+        title="Cut out subject with SAM3"
+        @click="openCutout(i)"
+      />
+      <ZenIconButton size="sm" icon="mdi mdi-close" title="Remove" @click="remove(i)" />
     </div>
 
     <button
@@ -87,12 +82,13 @@
 
 <script setup lang="ts">
 /**
- * A layer's reference images as a row of tiles, or a slim drop strip while there are none. Each
- * has a strength, a fit and a mute; several on one layer blend into its conditioning the way Text
- * Encode (Fusion) blends them. The section header adds through `upload` and `openBrowse`.
+ * Reference images as a LoRA-style vertical list, or a slim drop strip while there are none.
+ * Each row exposes enable/mute, a thumbnail with hover-peek, filename + clickable fit pill,
+ * strength, always-visible SAM3 cutout wand, and remove. Multiple references blend via the
+ * Fusion encoder (`encode_fusion`).
  */
 import { computed, ref } from "vue";
-import { ZenMediaPicker, ZenNumber } from "@nynxz/zenkit-ui";
+import { ZenDot, ZenIconButton, ZenMediaPicker, ZenNumber } from "@nynxz/zenkit-ui";
 
 import RefCutoutDialog from "@/components/fresco/RefCutoutDialog.vue";
 import { hasMediaDrop, mediaLibrary, readMediaDrop } from "@/framework";
@@ -114,10 +110,15 @@ const FIT_ICON: Record<RefFit, string> = {
   cover: "mdi-crop",
   stretch: "mdi-arrow-expand-all",
 };
+const FIT_SHORT: Record<RefFit, string> = {
+  contain: "Contain",
+  cover: "Cover",
+  stretch: "Stretch",
+};
 const FIT_LABEL: Record<RefFit, string> = {
-  contain: "Contain — the whole image (click to change)",
-  cover: "Cover — centre-cropped to fill (click to change)",
-  stretch: "Stretch — distorted to fill (click to change)",
+  contain: "Contain — the whole image (click to cycle fit)",
+  cover: "Cover — centre-cropped to fill (click to cycle fit)",
+  stretch: "Stretch — distorted to fill (click to cycle fit)",
 };
 
 const fileInput = ref<HTMLInputElement | null>(null);
@@ -129,6 +130,11 @@ const cutoutIndex = ref(-1);
 const cutoutSource = computed(() =>
   cutoutIndex.value >= 0 ? (refs.value[cutoutIndex.value] ?? null) : null,
 );
+
+function shortName(refPath: string): string {
+  const leaf = refPath.split(/[\\/]/).pop() ?? refPath;
+  return leaf.replace(/\.[^.]+$/, "") || leaf;
+}
 
 function openCutout(i: number) {
   cutoutIndex.value = i;
@@ -218,9 +224,10 @@ function addPicked(picked: string[]) {
 
 <style scoped>
 .fr {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 64px);
-  gap: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: stretch;
   padding: 2px;
   border-radius: var(--zen-radius, 7px);
   outline: 1.5px dashed transparent;
@@ -231,68 +238,96 @@ function addPicked(picked: string[]) {
   outline-color: var(--zen-accent, #6366f1);
   background: color-mix(in srgb, var(--zen-accent, #6366f1) 8%, transparent);
 }
-.fr-tile {
+.fr-row {
   display: flex;
-  flex-direction: column;
-  gap: 3px;
-  width: 64px;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 5px;
+  border: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 55%, transparent);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);
 }
-.fr-tile.off .fr-thumb {
-  opacity: 0.4;
+.fr-row.off .fr-thumb,
+.fr-row.off .fr-info {
+  opacity: 0.42;
 }
 .fr-thumb {
-  position: relative;
-  width: 64px;
-  height: 64px;
-  border-radius: 6px;
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 5px;
   overflow: hidden;
-  background: #000;
-  box-shadow: inset 0 0 0 1px var(--zen-border, #34343c);
+  background-color: #18181d;
+  background-image:
+    linear-gradient(45deg, #24242c 25%, transparent 25%),
+    linear-gradient(-45deg, #24242c 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #24242c 75%),
+    linear-gradient(-45deg, transparent 75%, #24242c 75%);
+  background-size: 10px 10px;
+  background-position:
+    0 0,
+    0 5px,
+    5px -5px,
+    -5px 0;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--zen-border, #34343c) 75%, transparent);
 }
 .fr-thumb img {
   width: 100%;
   height: 100%;
   display: block;
 }
-.fr-acts {
-  position: absolute;
-  inset: auto 2px 2px 2px;
+.fr-info {
+  flex: 1;
+  min-width: 0;
   display: flex;
-  justify-content: flex-end;
-  gap: 1px;
-  opacity: 0;
-  transition: opacity 0.12s ease;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
 }
-.fr-thumb:hover .fr-acts {
-  opacity: 1;
+.fr-name {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 11px;
+  line-height: 1.2;
+  color: var(--zen-text, #e5e5ea);
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
-.fr-act {
-  display: grid;
-  place-items: center;
-  width: 15px;
-  height: 16px;
-  padding: 0;
-  border: 0;
-  border-radius: 3px;
-  background: rgb(0 0 0 / 72%);
-  color: #fff;
+.fr-fit {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 6px;
+  border: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 70%, transparent);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--zen-muted, #9aa0aa);
+  font: inherit;
+  font-size: 10px;
+  line-height: 1.3;
   cursor: pointer;
-  font-size: 10.5px;
+  transition:
+    border-color 0.12s ease,
+    color 0.12s ease;
 }
-.fr-act.danger:hover {
-  background: var(--zen-danger, #dc2626);
+.fr-fit:hover {
+  border-color: var(--zen-accent, #6366f1);
+  color: var(--zen-text, #e5e5ea);
+}
+.fr-fit .mdi {
+  font-size: 11px;
 }
 .fr-str {
-  width: 64px;
+  width: 58px;
+  flex: none;
 }
 .fr-empty {
-  grid-column: 1 / -1;
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  height: 30px;
+  height: 32px;
   padding: 0 8px;
   border: 1.5px dashed var(--zen-border, #34343c);
   border-radius: 6px;

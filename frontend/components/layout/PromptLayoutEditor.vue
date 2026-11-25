@@ -1174,6 +1174,8 @@ function promoteToMixin() {
     desc: current.desc,
     refs: current.refs.map((r) => ({ ...r, id: uid("r") })),
     loras: current.loras.map((l) => ({ ...l, id: uid("o") })),
+    blend: current.blend,
+    softness: current.softness,
   };
   patchScene({
     mixins: [...scene.value.mixins, mixin],

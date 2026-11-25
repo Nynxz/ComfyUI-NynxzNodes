@@ -143,8 +143,8 @@
           <div v-else class="rc-empty">
             <i class="mdi mdi-content-cut" />
             <span>
-              Your isolated cutout appears here. White or grey backgrounds work best for Qwen3-VL /
-              Qwen3.5 vision encoders.
+              Your isolated cutout appears here. Use White for a single reference, or Transparent
+              PNG when fusing multiple references together.
             </span>
           </div>
         </div>
@@ -203,10 +203,10 @@ const emit = defineEmits<{
 
 const CHIPS = ["person", "face", "outfit", "hair", "object"];
 const BG_OPTIONS = [
-  { value: "white", label: "White (best for VL)" },
+  { value: "white", label: "White (best for single ref)" },
   { value: "grey", label: "Neutral grey" },
   { value: "black", label: "Black" },
-  { value: "transparent", label: "Transparent PNG" },
+  { value: "transparent", label: "Transparent PNG (best for multi-ref fusion)" },
 ];
 
 const checkpoints = ref<string[]>([]);

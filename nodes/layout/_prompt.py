@@ -56,6 +56,8 @@ OVERLAPS = ("top", "share")
 DEFAULT_OVERLAP = "top"
 BLENDS = ("mix", "weighted", "tiled", "salient")
 DEFAULT_BLEND = "mix"
+STYLE_MODES = ("none", "gist", "whiten")
+DEFAULT_STYLE_MODE = "none"
 DEFAULT_VISUAL_SIZE = 384
 BACKGROUND_DENOISE = 0.05
 GRID = 1000
@@ -218,6 +220,7 @@ def _style(raw) -> dict:
 
 def _mixin(raw: dict, index: int) -> dict:
     """A mixin; its muted references and LoRAs are dropped."""
+    style_mode = raw.get("styleMode", raw.get("style_mode"))
     return {
         "id": _str(raw.get("id")) or f"c{index + 1}",
         "name": _str(raw.get("name")).strip(),
@@ -227,6 +230,12 @@ def _mixin(raw: dict, index: int) -> dict:
         "trigger": _str(raw.get("trigger")).strip(),
         "refs": read_refs(raw.get("refs")),
         "loras": read_loras(raw.get("loras")),
+        "blend": raw.get("blend") if raw.get("blend") in BLENDS else DEFAULT_BLEND,
+        "softness": min(1.0, max(0.0, num(raw.get("softness"), 0.5))),
+        "style_mode": style_mode if style_mode in STYLE_MODES else DEFAULT_STYLE_MODE,
+        "style_strength": min(
+            1.0, max(0.0, num(raw.get("styleStrength", raw.get("style_strength")), 0.0))
+        ),
     }
 
 

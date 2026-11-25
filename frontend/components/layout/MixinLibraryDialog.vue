@@ -232,6 +232,17 @@
                   :model-value="draft.refs"
                   @update:model-value="patchDraft({ refs: $event })"
                 />
+                <MixinFusionBar
+                  :active-count="activeRefs(draft).length"
+                  :blend="draft.blend"
+                  :softness="draft.softness"
+                  :style-mode="draft.styleMode"
+                  :style-strength="draft.styleStrength"
+                  @update:blend="patchDraft({ blend: $event })"
+                  @update:softness="patchDraft({ softness: $event })"
+                  @update:style-mode="patchDraft({ styleMode: $event })"
+                  @update:style-strength="patchDraft({ styleStrength: $event })"
+                />
               </FrescoSection>
 
               <FrescoSection
@@ -373,6 +384,7 @@ import FrescoLoras from "@/components/fresco/FrescoLoras.vue";
 import FrescoRefs from "@/components/fresco/FrescoRefs.vue";
 import FrescoSection from "@/components/fresco/FrescoSection.vue";
 import MixinAvatar from "@/components/layout/MixinAvatar.vue";
+import MixinFusionBar from "@/components/layout/MixinFusionBar.vue";
 import {
   deleteMixinPreset,
   listSavedMixins,

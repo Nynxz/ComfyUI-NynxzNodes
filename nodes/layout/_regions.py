@@ -21,9 +21,11 @@ def _fusion_kwargs(
     prompt_blend: float,
     blend: str = _prompt.DEFAULT_BLEND,
     softness: float = 0.5,
+    style_mode: str = _prompt.DEFAULT_STYLE_MODE,
+    style_strength: float = 0.0,
 ) -> dict:
     """Keyword args for `FusionSettings`, matching Fresco's blend modes while keeping Layout's
-    `prompt_mode`/`prompt_blend` defaults."""
+    `prompt_mode`/`prompt_blend` defaults and optional mixin style release."""
     settings: dict = {
         "visual_size": reference_size,
         "prompt_mode": prompt_mode,
@@ -38,7 +40,38 @@ def _fusion_kwargs(
     elif blend == "salient":
         settings["content_mode"] = "saliency"
         settings["content_strength"] = 0.7
+    if style_mode != _prompt.DEFAULT_STYLE_MODE and style_strength > 0.0:
+        settings["style_mode"] = style_mode
+        settings["style_strength"] = style_strength
     return settings
+
+
+def _effective_fusion(layout: dict, box: dict) -> tuple[str, float, str, float]:
+    """`(blend, softness, style_mode, style_strength)` for `box`.
+
+    Explicit box blend/softness wins; otherwise inherit from the first mixin on the box that
+    carries reference images and sets a non-default fusion mode or style release.
+    """
+    ref_mixins = [m for m in _prompt.mixins_of(layout, box) if m["refs"]]
+    blend = box.get("blend", _prompt.DEFAULT_BLEND)
+    softness = float(box.get("softness", 0.5))
+    box_explicit = blend != _prompt.DEFAULT_BLEND or softness != 0.5
+    if not box_explicit:
+        for m in ref_mixins:
+            m_blend = m.get("blend", _prompt.DEFAULT_BLEND)
+            m_soft = float(m.get("softness", 0.5))
+            if m_blend != _prompt.DEFAULT_BLEND or m_soft != 0.5:
+                blend, softness = m_blend, m_soft
+                break
+    style_mode = _prompt.DEFAULT_STYLE_MODE
+    style_strength = 0.0
+    for m in ref_mixins:
+        m_mode = m.get("style_mode", _prompt.DEFAULT_STYLE_MODE)
+        m_strength = float(m.get("style_strength", 0.0))
+        if m_mode != _prompt.DEFAULT_STYLE_MODE and m_strength > 0.0:
+            style_mode, style_strength = m_mode, m_strength
+            break
+    return blend, softness, style_mode, style_strength
 
 
 def _refs_key(refs: list[dict]) -> tuple:
@@ -123,12 +156,15 @@ def build(
                 source,
             )
         elif refs:
+            blend, softness, style_mode, style_strength = _effective_fusion(layout, box)
             settings = _fusion_kwargs(
                 reference_size,
                 prompt_mode,
                 prompt_blend,
-                box.get("blend", _prompt.DEFAULT_BLEND),
-                float(box.get("softness", 0.5)),
+                blend,
+                softness,
+                style_mode,
+                style_strength,
             )
             conditioning, first_img = _encode_with_refs(
                 clip,

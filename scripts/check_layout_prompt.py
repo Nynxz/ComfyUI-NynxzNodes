@@ -395,15 +395,24 @@ class MixinRegions(unittest.TestCase):
         paths = types.ModuleType("nynxz_pack._paths")
 
         class Settings:
-            def __init__(self, visual_size, prompt_mode, prompt_blend):
+            def __init__(self, visual_size, prompt_mode, prompt_blend, **extra):
                 self.visual_size = visual_size
                 self.prompt = (prompt_mode, prompt_blend)
+                self.extra = extra
 
         def encode_fusion(clip, text, sources, settings, strengths, fits):
             if clip == "text-only":
                 raise ValueError("Visual fusion requires a Qwen3-VL text encoder")
             self.encoded.append(
-                (text, len(sources), strengths, fits, settings.visual_size, settings.prompt)
+                (
+                    text,
+                    len(sources),
+                    strengths,
+                    fits,
+                    settings.visual_size,
+                    settings.prompt,
+                    settings.extra,
+                )
             )
             return [[torch.ones((1, 4, 8)), {}]]
 
@@ -455,7 +464,17 @@ class MixinRegions(unittest.TestCase):
         self.assertEqual(region["prompt"], "Anime style. amb3r. she waves.")
         self.assertEqual(
             self.encoded,
-            [("Anime style. amb3r. she waves.", 1, [1.0], ["cover"], 512, ("blend clean", 0.5))],
+            [
+                (
+                    "Anime style. amb3r. she waves.",
+                    1,
+                    [1.0],
+                    ["cover"],
+                    512,
+                    ("blend clean", 0.5),
+                    {},
+                )
+            ],
         )
 
     def test_the_box_prompt_can_be_read_how_the_node_says(self):
@@ -466,7 +485,42 @@ class MixinRegions(unittest.TestCase):
             prompt_mode="append clean",
             prompt_blend=0.2,
         )
-        self.assertEqual(self.encoded[0][-1], ("append clean", 0.2))
+        self.assertEqual(self.encoded[0][5], ("append clean", 0.2))
+
+    def test_mixin_fusion_settings_flow_to_encoder_and_box_blend_can_override(self):
+        styled = {
+            **AMBER,
+            "blend": "salient",
+            "softness": 0.75,
+            "styleMode": "gist",
+            "styleStrength": 0.4,
+        }
+        self.regions([box(mixins=["amber"])], [styled], clip="vl")
+        self.assertEqual(
+            self.encoded[0][6],
+            {
+                "blend_strength": 0.75,
+                "content_mode": "saliency",
+                "content_strength": 0.7,
+                "style_mode": "gist",
+                "style_strength": 0.4,
+            },
+        )
+        self.encoded.clear()
+        self.regions(
+            [box(mixins=["amber"], blend="tiled", softness=0.2)],
+            [styled],
+            clip="vl",
+        )
+        self.assertEqual(
+            self.encoded[0][6],
+            {
+                "blend_strength": 0.2,
+                "fusion_method": "spatial-grid",
+                "style_mode": "gist",
+                "style_strength": 0.4,
+            },
+        )
 
     def test_references_without_a_clip_are_skipped_with_a_warning(self):
         with self.assertLogs(level="WARNING") as logs:

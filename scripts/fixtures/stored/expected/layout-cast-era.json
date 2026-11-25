@@ -31,7 +31,11 @@
       "lora_name": "amber.safetensors",
       "strength": 0.8
      }
-    ]
+    ],
+    "blend": "mix",
+    "softness": 0.5,
+    "style_mode": "none",
+    "style_strength": 0.0
    }
   ],
   "backdrop": {
