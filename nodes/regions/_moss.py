@@ -160,8 +160,10 @@ class MossRegions:
         finally:
             self.bias = {}
 
-    def rope(self, h, w, text_len, device, transformer_options={}):
+    def rope(self, h, w, text_len, device, transformer_options=None):
         """Each prompt on the positions it has alone, the image right after the main prompt."""
+        if transformer_options is None:
+            transformer_options = {}
         layout = self.layout
         if layout is None or not layout.slots:
             return self.original_rope(h, w, text_len, device, transformer_options)

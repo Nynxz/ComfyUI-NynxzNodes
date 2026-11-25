@@ -63,7 +63,9 @@ class NynxzRegionsApply(RegionNode):
             ),
             is_experimental=True,
             inputs=[
-                io.Model.Input("model", tooltip="A Krea 2, Z-Image or MOSS-Image model. Returned patched."),
+                io.Model.Input(
+                    "model", tooltip="A Krea 2, Z-Image or MOSS-Image model. Returned patched."
+                ),
                 Regions.Input(
                     "regions",
                     tooltip="Regions with LoRAs bound. Regions without one still hold territory.",
@@ -242,7 +244,9 @@ class NynxzRegionsApply(RegionNode):
         sources=(),
     ) -> io.NodeOutput:
         backend = _moss if _moss.is_moss(model) else _zimage if _zimage.is_zimage(model) else None
-        total_blocks = backend.block_count(model) if backend else check_krea2(model, "Regions Apply")
+        total_blocks = (
+            backend.block_count(model) if backend else check_krea2(model, "Regions Apply")
+        )
         entries = list(regions or [])
         if not entries:
             raise ValueError("No regions arrived on the wire — there is nothing to gate.")
