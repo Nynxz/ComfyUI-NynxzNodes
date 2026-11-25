@@ -195,7 +195,8 @@ function addPicked(picked: string[]) {
   gap: 8px;
   padding: 2px;
   border-radius: var(--zen-radius, 7px);
-  outline: 1px dashed transparent;
+  outline: 1.5px dashed transparent;
+  outline-offset: -1.5px;
   transition: outline-color 0.12s ease;
 }
 .fr.dropping {
@@ -258,13 +259,14 @@ function addPicked(picked: string[]) {
 }
 .fr-empty {
   grid-column: 1 / -1;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
   height: 30px;
-  padding: 0;
-  border: 1px dashed var(--zen-border, #34343c);
+  padding: 0 8px;
+  border: 1.5px dashed var(--zen-border, #34343c);
   border-radius: 6px;
   background: transparent;
   color: var(--zen-muted, #9aa0aa);
@@ -273,10 +275,12 @@ function addPicked(picked: string[]) {
   cursor: pointer;
   transition:
     border-color 0.12s ease,
+    background 0.12s ease,
     color 0.12s ease;
 }
 .fr-empty:hover {
   border-color: var(--zen-accent, #6366f1);
+  background: color-mix(in srgb, var(--zen-accent, #6366f1) 10%, transparent);
   color: var(--zen-text, #e5e5ea);
 }
 .fr-empty .mdi {
