@@ -196,6 +196,10 @@
 
       <template #element>
         <div v-if="box" class="pl-form">
+          <div v-if="box.hidden" class="pl-muted-bar">
+            <span><i class="mdi mdi-eye-off-outline" /> Box muted — skipped on run</span>
+            <ZenButton sm variant="ghost" @click="patchBox({ hidden: false })">Unmute</ZenButton>
+          </div>
           <FrescoSection label="Mixins" :note="mixinNote">
             <template #actions>
               <ZenIconButton
@@ -982,7 +986,7 @@ const emit = defineEmits<{ popOut: [] }>();
 
 const HELP: [string, string][] = [
   ["Order", "bottom to top — background first, foreground on top"],
-  ["Hidden boxes", "left out of the prompt and regions"],
+  ["Muted boxes", "skipped in the prompt, refs, LoRAs and regions"],
   ["W", "SAM3 wand — click what to capture, Alt+click to leave out"],
   ["Drop an image", "on a box: add reference · on empty canvas: new box"],
 ];
@@ -1517,7 +1521,7 @@ const citeId = computed(() =>
   scene.value.mode === "klein" && box.value ? kleinId(scene.value, box.value.id) : null,
 );
 const citeNote = computed(() => {
-  if (!citeId.value) return scene.value.mode === "klein" ? "hidden: not in the prompt" : undefined;
+  if (!citeId.value) return scene.value.mode === "klein" ? "muted: not in the prompt" : undefined;
   const cited = scene.value.prompt.includes(`<${citeId.value}>`);
   return `<${citeId.value}>${cited ? "" : " — not cited yet"}`;
 });
@@ -1888,6 +1892,23 @@ async function copyOutput() {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+.pl-muted-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 8px;
+  border: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 80%, transparent);
+  border-radius: var(--zen-radius, 7px);
+  background: color-mix(in srgb, var(--zen-text, #fff) 4%, transparent);
+  color: var(--zen-muted, #9aa0aa);
+  font-size: 11px;
+}
+.pl-muted-bar span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
 }
 .pl-seg {
   display: flex;

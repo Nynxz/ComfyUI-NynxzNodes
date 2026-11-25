@@ -569,7 +569,7 @@ const HELP: [string, string][] = [
   ["Shift / Ctrl + click", "add to the selection"],
   ["Shift + drag on empty", "select several"],
   ["Double-click a box", "edit it"],
-  ["Right-click", "copy, paste, order, hide, lock, delete"],
+  ["Right-click", "copy, paste, order, mute, lock, delete"],
   ["Ctrl+Z · Ctrl+Shift+Z", "undo · redo"],
   ["Ctrl+C · X · V · D", "copy · cut · paste at the pointer · duplicate"],
   ["Arrows", "nudge — Shift for more"],
@@ -818,7 +818,7 @@ const menuItems = computed<ContextMenuItem[]>(() => {
     },
     "-",
     {
-      label: allHidden ? "Show" : "Hide",
+      label: allHidden ? "Unmute" : "Mute",
       icon: allHidden ? "mdi mdi-eye-outline" : "mdi mdi-eye-off-outline",
       run: () => patchBoxes(ids, () => ({ hidden: !allHidden })),
     },
@@ -913,14 +913,18 @@ function saveSplit(which: "columns" | "rows", sizes: number[] | undefined) {
 
 const SCENE_ROW = "background";
 const layerItems = computed<LayerItem[]>(() => [
-  ...[...layoutBoxes.value].reverse().map((b) => ({
-    id: b.id,
-    label: b.name,
-    color: b.color,
-    ...props.mode.describe?.(scene.value, b.id),
-    hidden: b.hidden,
-    locked: b.locked,
-  })),
+  ...[...layoutBoxes.value].reverse().map((b) => {
+    const info = props.mode.describe?.(scene.value, b.id);
+    return {
+      id: b.id,
+      label: b.name,
+      color: b.color,
+      ...info,
+      sub: b.hidden ? (info?.sub ? `Muted · ${info.sub}` : "Muted") : info?.sub,
+      hidden: b.hidden,
+      locked: b.locked,
+    };
+  }),
   {
     id: SCENE_ROW,
     label: "Scene",
