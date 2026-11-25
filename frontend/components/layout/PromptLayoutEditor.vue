@@ -200,7 +200,11 @@
             <span><i class="mdi mdi-eye-off-outline" /> Box muted — skipped on run</span>
             <ZenButton sm variant="ghost" @click="patchBox({ hidden: false })">Unmute</ZenButton>
           </div>
-          <FrescoSection label="Mixins" :note="mixinNote">
+          <FrescoSection
+            label="Mixins"
+            :note="mixinNote"
+            help="Reusable characters, props, or styles shared across boxes. Tick a mixin to give this box its description, trigger words, reference images, and LoRAs. Right-click a chip to swap or manage."
+          >
             <template #actions>
               <ZenIconButton
                 v-if="canPromote"
@@ -248,7 +252,11 @@
             </p>
           </FrescoSection>
 
-          <FrescoSection v-if="scene.mode !== 'regions'" label="Kind">
+          <FrescoSection
+            v-if="scene.mode !== 'regions'"
+            label="Kind"
+            help="Tells MOSS, Ideogram, or Klein whether this box holds a general object, a character, or exact rendered text."
+          >
             <ZenToggleGroup
               class="pl-seg"
               size="sm"
@@ -267,7 +275,11 @@
             />
           </FrescoSection>
 
-          <FrescoSection label="Description" :note="citeNote">
+          <FrescoSection
+            label="Description"
+            :note="citeNote"
+            help="What appears inside this box. Combined with the scene prompt and any ticked mixin descriptions so this region knows what to draw here."
+          >
             <template v-if="citeId" #actions>
               <ZenIconButton
                 size="sm"
@@ -287,7 +299,11 @@
             />
           </FrescoSection>
 
-          <FrescoSection label="References" :note="boxRefNote">
+          <FrescoSection
+            label="References"
+            :note="boxRefNote"
+            help="Reference images just for this box, encoded with Fusion Encode alongside any refs inherited from ticked mixins or Scene Base references."
+          >
             <template #actions>
               <ZenIconButton
                 size="sm"
@@ -371,7 +387,11 @@
             </div>
           </FrescoSection>
 
-          <FrescoSection label="LoRAs" :note="boxLoraNote">
+          <FrescoSection
+            label="LoRAs"
+            :note="boxLoraNote"
+            help="Regional LoRAs that run only inside this box's pixels, stacked on top of any LoRAs inherited from ticked mixins."
+          >
             <template #actions>
               <ZenIconButton
                 size="sm"
@@ -401,7 +421,13 @@
             />
           </FrescoSection>
 
-          <FrescoSection label="Capture" :note="captureNote">
+          <FrescoSection
+            label="Capture"
+            :note="captureNote"
+            collapsible
+            :default-open="!!box.capture.trim() || !!box.points.length || !!segmentError"
+            help="Auto-masks a subject from a photo wired into Layout Inputs using SAM3 (type words like 'jacket, -hands' or click points with the Wand tool W). Not needed when generating from scratch — to cut out a reference image instead, click the wand button on that reference row."
+          >
             <template #actions>
               <ZenIconButton
                 v-if="box.points.length"
@@ -437,6 +463,9 @@
           <FrescoSection
             label="Shape"
             :note="box.mask ? 'painted · B paint, E erase' : 'whole box · B to paint'"
+            collapsible
+            :default-open="!!box.mask || box.grow !== 0 || box.feather !== 0"
+            help="Narrows this box's region from a rectangle to a painted or SAM3-captured silhouette (press B to paint, E to erase). Grow expands or shrinks the mask edge; Feather softens it."
           >
             <template #actions>
               <ZenIconButton
@@ -485,7 +514,25 @@
             </div>
           </FrescoSection>
 
-          <FrescoSection label="Strength">
+          <FrescoSection
+            label="Strength"
+            :note="`${box.influence.toFixed(2)} · denoise ${box.denoise.toFixed(2)}`"
+            collapsible
+            :default-open="box.influence !== 1 || box.denoise !== 1"
+          >
+            <template #help>
+              <p class="pl-tip-title">Region Strength &amp; Edit Denoise</p>
+              <ul class="pl-tip-list">
+                <li>
+                  <strong>Influence</strong> (0–4) — how strongly this box's prompt and references
+                  pull against the rest of the image (1.0 = normal).
+                </li>
+                <li>
+                  <strong>Denoise</strong> (0–1) — how much of a wired source photo this box may
+                  rewrite when editing in Layout Apply (ignored when generating from scratch).
+                </li>
+              </ul>
+            </template>
             <div class="pl-pairs">
               <label class="pl-pair">
                 <span :title="INFLUENCE_TIP">influence</span>
@@ -520,6 +567,7 @@
             v-if="scene.mode === 'ideogram' || scene.mode === 'moss'"
             label="Colours"
             note="up to 5"
+            help="Optional palette hints (up to 5 hex colours) written into MOSS or Ideogram captions for this box."
           >
             <PaletteEdit
               :model-value="box.palette"
@@ -527,7 +575,12 @@
             />
           </FrescoSection>
 
-          <FrescoSection v-if="scene.mode === 'moss'" label="Tags" note="comma separated">
+          <FrescoSection
+            v-if="scene.mode === 'moss'"
+            label="Tags"
+            note="comma separated"
+            help="Optional short tags (e.g. 1girl, red scarf) included in MOSS-Image's item layout JSON."
+          >
             <ZenInput
               sm
               :model-value="box.tags.join(', ')"
@@ -598,7 +651,11 @@
 
       <template #scene>
         <div class="pl-form">
-          <FrescoSection :label="PROMPT_LABEL[scene.mode]" :note="PROMPT_NOTE[scene.mode]">
+          <FrescoSection
+            :label="PROMPT_LABEL[scene.mode]"
+            :note="PROMPT_NOTE[scene.mode]"
+            help="The overall scene description shared by the whole canvas (and compiled into the native layout caption for MOSS, Ideogram, or Klein)."
+          >
             <ZenInput
               type="textarea"
               :rows="4"
@@ -612,6 +669,7 @@
           <FrescoSection
             label="Base references"
             :note="scene.refs.length ? String(scene.refs.length) : 'scene fusion refs'"
+            help="Scene-wide Fusion Encode references for overall style, lighting, mood, or layout guidance — generates fresh from noise instead of editing a photo like Layout Inputs."
           >
             <template #actions>
               <ZenIconButton
@@ -633,7 +691,7 @@
               :model-value="scene.refs"
               @update:model-value="patchScene({ refs: $event })"
             />
-            <template v-if="sceneActiveRefCount >= 1">
+            <div v-if="sceneActiveRefCount >= 1" class="pl-fusion-group">
               <div class="pl-scope-row">
                 <span class="pl-scope-lbl">
                   <span>Apply</span>
@@ -679,7 +737,7 @@
                 @update:style-mode="patchScene({ styleMode: $event })"
                 @update:style-strength="patchScene({ styleStrength: $event })"
               />
-            </template>
+            </div>
           </FrescoSection>
 
           <FrescoSection
@@ -756,6 +814,19 @@
           </p>
 
           <FrescoSection label="Regions & references">
+            <template #help>
+              <p class="pl-tip-title">Regions &amp; References</p>
+              <ul class="pl-tip-list">
+                <li>
+                  <strong>Overlap</strong> — whether upper boxes cover lower ones cleanly (Cover) or
+                  blend where they meet (Share).
+                </li>
+                <li>
+                  <strong>Ref detail</strong> — visual grid resolution for Fusion reference images
+                  (higher reads finer detail but uses more tokens; 384 is the default).
+                </li>
+              </ul>
+            </template>
             <div class="pl-grid" title="How overlapping boxes share the pixels they both cover">
               <span>overlap</span>
               <FrescoPills
@@ -780,7 +851,11 @@
             </div>
           </FrescoSection>
 
-          <FrescoSection label="Background region" note="wherever no box is">
+          <FrescoSection
+            label="Background region"
+            note="wherever no box is"
+            help="Controls pixels outside every box. Enable to give the background its own prompt, references, LoRAs, influence, or low denoise (e.g. 0.05 to keep the original background when editing a photo)."
+          >
             <template #actions>
               <ZenDot
                 :model-value="scene.backdrop.on"
@@ -2032,11 +2107,15 @@ async function copyOutput() {
   color: var(--zen-muted, #9aa0aa);
   font-size: 11px;
 }
+.pl-fusion-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
 .pl-scope-row {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding-top: 6px;
   color: var(--zen-muted, #9aa0aa);
   font-size: 11px;
 }

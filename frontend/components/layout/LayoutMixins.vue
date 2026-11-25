@@ -150,7 +150,11 @@
           @click="remove(current.id)"
         />
       </div>
-      <FrescoSection label="Description" note="who or what it is — in every box that uses it">
+      <FrescoSection
+        label="Description"
+        note="in every box using this"
+        help="Who or what this mixin is. Automatically prepended to the description of every box that ticks this mixin."
+      >
         <ZenInput
           type="textarea"
           :rows="3"
@@ -160,7 +164,11 @@
           @update:model-value="patch({ desc: String($event ?? '') })"
         />
       </FrescoSection>
-      <FrescoSection label="Trigger words" note="added to each box's prompt">
+      <FrescoSection
+        label="Trigger words"
+        note="added to box prompt"
+        help="Added to the regional prompt of every box using this mixin so its LoRAs hear their trigger words inside those boxes."
+      >
         <ZenInput
           sm
           :model-value="current.trigger"
@@ -171,6 +179,7 @@
       <FrescoSection
         label="References"
         :note="current.refs.length ? String(current.refs.length) : 'visual refs'"
+        help="Reference images shared by every box using this mixin (encoded via Fusion Encode). Drag rows to reorder, click the wand to SAM3-cutout a subject, and tune Blend or Style below."
       >
         <template #actions>
           <ZenIconButton
@@ -204,7 +213,11 @@
           @update:style-strength="patch({ styleStrength: $event })"
         />
       </FrescoSection>
-      <FrescoSection label="LoRAs" :note="current.loras.length ? String(current.loras.length) : ''">
+      <FrescoSection
+        label="LoRAs"
+        :note="current.loras.length ? String(current.loras.length) : ''"
+        help="Regional LoRAs that run only inside boxes using this mixin, without leaking into the rest of the image."
+      >
         <template #actions>
           <ZenIconButton
             size="sm"

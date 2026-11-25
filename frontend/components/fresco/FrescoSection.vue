@@ -1,17 +1,62 @@
 <template>
-  <section class="fsec">
+  <section class="fsec" :class="{ collapsed: collapsible && !isOpen }">
     <header class="fsec-head">
-      <span class="fsec-label">{{ label }}</span>
+      <button
+        v-if="collapsible"
+        type="button"
+        class="fsec-toggle"
+        :aria-expanded="isOpen"
+        @click="isOpen = !isOpen"
+      >
+        <i class="mdi" :class="isOpen ? 'mdi-chevron-down' : 'mdi-chevron-right'" />
+        <span class="fsec-label">{{ label }}</span>
+      </button>
+      <span v-else class="fsec-label">{{ label }}</span>
+      <InfoHover v-if="help || $slots.help" :label="`About ${label}`">
+        <slot name="help">
+          <p class="fsec-tip-title">{{ label }}</p>
+          <p class="fsec-tip-text">{{ help }}</p>
+        </slot>
+      </InfoHover>
       <span v-if="note" class="fsec-note">{{ note }}</span>
-      <span class="fsec-acts"><slot name="actions" /></span>
+      <span v-if="!collapsible || isOpen" class="fsec-acts"><slot name="actions" /></span>
     </header>
-    <slot />
+    <template v-if="!collapsible || isOpen">
+      <slot />
+    </template>
   </section>
 </template>
 
 <script setup lang="ts">
-/** One block of the inspector: a small caps label, a note, and its actions as icons at the end. */
-defineProps<{ label: string; note?: string }>();
+/** One block of the inspector: a small-caps label, optional `?` info hover, optional collapse
+ *  toggle, muted note, and right-aligned action icons. */
+import { ref, watch } from "vue";
+
+import InfoHover from "@/components/layout/InfoHover.vue";
+
+const props = withDefaults(
+  defineProps<{
+    label: string;
+    note?: string;
+    help?: string;
+    collapsible?: boolean;
+    defaultOpen?: boolean;
+  }>(),
+  {
+    note: "",
+    help: "",
+    collapsible: false,
+    defaultOpen: true,
+  },
+);
+
+const isOpen = ref(props.defaultOpen);
+watch(
+  () => props.defaultOpen,
+  (v) => {
+    if (v) isOpen.value = true;
+  },
+);
 </script>
 
 <style scoped>
@@ -29,8 +74,28 @@ defineProps<{ label: string; note?: string }>();
 .fsec-head {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   min-height: 22px;
+}
+.fsec-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.fsec-toggle .mdi {
+  font-size: 14px;
+  line-height: 1;
+  color: var(--zen-muted, #9aa0aa);
+}
+.fsec-toggle:hover .fsec-label,
+.fsec-toggle:hover .mdi {
+  color: var(--zen-text, #e5e5ea);
 }
 .fsec-label {
   font-size: 10px;
@@ -51,5 +116,15 @@ defineProps<{ label: string; note?: string }>();
   display: flex;
   gap: 2px;
   margin-left: auto;
+}
+.fsec-tip-title {
+  margin: 0 0 4px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--zen-text, #e5e5ea);
+}
+.fsec-tip-text {
+  margin: 0;
+  color: var(--zen-muted, #9aa0aa);
 }
 </style>

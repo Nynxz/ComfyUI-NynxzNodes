@@ -141,7 +141,6 @@ function onStyleMode(next: RefStyleMode) {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  padding-top: 6px;
 }
 .mf-row {
   display: flex;
