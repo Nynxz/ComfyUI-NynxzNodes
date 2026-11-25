@@ -99,7 +99,12 @@ class Browsing(unittest.TestCase):
         self.assertEqual(len(listed), 1)
         self.assertEqual(listed[0]["name"], "Amber")
         self.assertEqual(listed[0]["mixin"], amber)
-        self.assertTrue(library.delete_mixin(self.root, "Amber"))
+        self.assertEqual(library.rename_mixin(self.root, "Amber", " Amber  V2 "), "Amber V2")
+        self.assertIsNone(library.rename_mixin(self.root, "Amber V2", "../escape"))
+        renamed = library.list_mixins(self.root)
+        self.assertEqual([item["name"] for item in renamed], ["Amber V2"])
+        self.assertEqual(renamed[0]["mixin"]["name"], "Amber V2")
+        self.assertTrue(library.delete_mixin(self.root, "Amber V2"))
         self.assertEqual(library.list_mixins(self.root), [])
 
 

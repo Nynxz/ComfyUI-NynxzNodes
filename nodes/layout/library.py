@@ -215,3 +215,31 @@ def delete_mixin(root: str, name: str) -> bool:
         return False
     os.remove(path)
     return True
+
+
+def rename_mixin(root: str, name: str, new_name: str) -> str | None:
+    """Rename a saved mixin preset and return its clean name, or None on conflict/invalid name."""
+    old = _mixin_file(root, name)
+    new = _mixin_file(root, new_name)
+    if old is None or new is None or not os.path.isfile(old):
+        return None
+    stem = os.path.basename(new)[: -len(".json")]
+    if os.path.exists(new) and os.path.normcase(new) != os.path.normcase(old):
+        return None
+    try:
+        with open(old, encoding="utf-8") as f:
+            data = json.load(f)
+    except (OSError, ValueError):
+        return None
+    if not isinstance(data, dict):
+        return None
+    data["name"] = stem
+    if isinstance(data.get("mixin"), dict):
+        data["mixin"] = {**data["mixin"], "name": stem}
+    temp = f"{new}.tmp"
+    with open(temp, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False)
+    os.replace(temp, new)
+    if os.path.normcase(new) != os.path.normcase(old):
+        os.remove(old)
+    return stem

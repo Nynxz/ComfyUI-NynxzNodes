@@ -67,6 +67,9 @@
           @create="addMixin()"
           @select-boxes="selectMixinBoxes"
           @assign-selected="assignMixinToSelected"
+          @open-library="openMixinLibrary($event)"
+          @swap-from-library="openMixinSwap($event)"
+          @swap-boxes="swapMixinBoxes"
         />
       </template>
 
@@ -204,6 +207,12 @@
               />
               <ZenIconButton
                 size="sm"
+                icon="mdi mdi-bookshelf"
+                title="Open Mixin Library — browse, create or add a saved mixin"
+                @click="openMixinLibrary()"
+              />
+              <ZenIconButton
+                size="sm"
                 icon="mdi mdi-plus"
                 title="New mixin, in this box"
                 @click="addMixin(box.name)"
@@ -221,13 +230,10 @@
                 :key="mixin.id"
                 type="button"
                 :class="['pl-chip', { on: box.mixins.includes(mixin.id) }]"
-                :title="
-                  box.mixins.includes(mixin.id)
-                    ? `Take ${mixin.name} out of this box (double-click to edit)`
-                    : `Put ${mixin.name} in this box: its refs, LoRAs and trigger words apply here`
-                "
+                :title="chipTooltip(mixin, box.mixins.includes(mixin.id))"
                 @click="toggleMixin(mixin.id)"
                 @dblclick="editMixin(mixin.id)"
+                @contextmenu.prevent.stop="openChipMenu($event, mixin)"
               >
                 <MixinAvatar :mixin="mixin" :size="18" />
                 {{ mixin.name }}
@@ -742,6 +748,17 @@
       :mode="scene.mode"
       @pick="patchScene({ mode: $event })"
     />
+    <MixinLibraryDialog
+      v-model:open="mixinLibOpen"
+      :layout-mixins="scene.mixins"
+      :selected-boxes="selected"
+      :swap-target="mixinSwapTarget"
+      :initial-mixin="mixinLibInitial"
+      @add="addMixinFromLibrary"
+      @swap="swapMixinFromLibrary"
+      @update-layout-mixin="updateLayoutMixin"
+    />
+    <ZenContextMenu ref="chipMenu" :items="chipMenuItems" />
     <div v-if="choosing" class="pl-choose">
       <div class="pl-choose-card">
         <span class="pl-choose-title">What is this layout for?</span>
@@ -764,6 +781,7 @@
 import { app } from "@comfy/app";
 import {
   ZenButton,
+  ZenContextMenu,
   ZenDot,
   ZenField,
   ZenIconButton,
@@ -775,6 +793,7 @@ import {
   boxAt,
   type BoxRect,
   type BoxTool,
+  type ContextMenuItem,
 } from "@nynxz/zenkit-ui";
 import { computed, nextTick, onBeforeUnmount, ref, watch, watchEffect } from "vue";
 
@@ -788,12 +807,13 @@ import LayoutEditor from "@/components/layout/LayoutEditor.vue";
 import LayoutMixins from "@/components/layout/LayoutMixins.vue";
 import LayoutSettings from "@/components/layout/LayoutSettings.vue";
 import MixinAvatar from "@/components/layout/MixinAvatar.vue";
+import MixinLibraryDialog from "@/components/layout/MixinLibraryDialog.vue";
 import ModeCards from "@/components/layout/ModeCards.vue";
 import PaletteEdit from "@/components/layout/PaletteEdit.vue";
 import PresetInput from "@/components/layout/PresetInput.vue";
 import { readMediaDrop } from "@/framework";
 import type { AgentImage, AgentLayout } from "@/layout/agent";
-import { compileLayout } from "@/layout/library";
+import { compileLayout, saveMixinPreset } from "@/layout/library";
 import { PROMPT_MODES } from "@/layout/modes";
 import {
   boxActiveRefs,
@@ -1185,6 +1205,153 @@ function toggleMixin(id: string) {
 const mixinNote = computed(() => {
   const named = box.value?.mixins.length ?? 0;
   return named ? `${named} here` : "";
+});
+
+// --- Mixin Library modal & chip context menu ----------------------------------------------------
+
+const mixinLibOpen = ref(false);
+const mixinSwapTarget = ref<Mixin | null>(null);
+const mixinLibInitial = ref<Mixin | null>(null);
+
+function openMixinLibrary(initial?: Mixin) {
+  mixinSwapTarget.value = null;
+  mixinLibInitial.value = initial ?? null;
+  mixinLibOpen.value = true;
+}
+function openMixinSwap(target: Mixin) {
+  mixinSwapTarget.value = target;
+  mixinLibInitial.value = null;
+  mixinLibOpen.value = true;
+}
+function addMixinFromLibrary(mixin: Mixin, assignSelected: boolean) {
+  const want = assignSelected ? new Set(selected.value) : null;
+  patchScene({
+    mixins: [...scene.value.mixins, mixin],
+    boxes:
+      want && want.size
+        ? scene.value.boxes.map((b) =>
+            want.has(b.id) ? { ...b, mixins: [...b.mixins, mixin.id] } : b,
+          )
+        : scene.value.boxes,
+  });
+  openMixin.value = mixin.id;
+}
+function swapMixinFromLibrary(targetId: string, replacement: Mixin) {
+  patchScene({
+    mixins: scene.value.mixins.map((m) =>
+      m.id === targetId ? { ...replacement, id: targetId } : m,
+    ),
+  });
+  openMixin.value = targetId;
+}
+function updateLayoutMixin(updated: Mixin) {
+  patchScene({
+    mixins: scene.value.mixins.map((m) => (m.id === updated.id ? updated : m)),
+  });
+}
+function swapMixinBoxes(idA: string, idB: string) {
+  if (idA === idB) return;
+  patchScene({
+    boxes: scene.value.boxes.map((b) => {
+      const hasA = b.mixins.includes(idA);
+      const hasB = b.mixins.includes(idB);
+      if (!hasA && !hasB) return b;
+      const next = b.mixins.map((id) => (id === idA ? idB : id === idB ? idA : id));
+      return { ...b, mixins: [...new Set(next)] };
+    }),
+  });
+}
+function replaceBoxMixin(boxId: string, oldId: string, newId: string) {
+  patchScene({
+    boxes: scene.value.boxes.map((b) => {
+      if (b.id !== boxId) return b;
+      const next = b.mixins.map((id) => (id === oldId ? newId : id));
+      return { ...b, mixins: [...new Set(next)] };
+    }),
+  });
+}
+function chipTooltip(mixin: Mixin, active: boolean): string {
+  const lines = [
+    active
+      ? `${mixin.name} (active in this box — click to remove, right-click for options)`
+      : `${mixin.name} (click to add to this box, right-click for options)`,
+  ];
+  if (mixin.desc.trim()) lines.push(mixin.desc.trim().slice(0, 120));
+  if (mixin.trigger.trim()) lines.push(`Trigger: ${mixin.trigger.trim()}`);
+  const refs = mixin.refs.filter((r) => r.on).length;
+  const loras = mixin.loras.filter((l) => l.on && l.name);
+  if (refs) lines.push(`${refs} reference image(s)`);
+  if (loras.length) {
+    lines.push(
+      `LoRAs: ${loras.map((l) => `${shortLora(l.name)} (${l.strength.toFixed(2)})`).join(", ")}`,
+    );
+  }
+  return lines.join("\n");
+}
+
+const chipMenu = ref<{ show: (e: MouseEvent) => void } | null>(null);
+const chipMenuTarget = ref<Mixin | null>(null);
+function openChipMenu(e: MouseEvent, mixin: Mixin) {
+  chipMenuTarget.value = mixin;
+  chipMenu.value?.show(e);
+}
+const chipMenuItems = computed<ContextMenuItem[]>(() => {
+  const m = chipMenuTarget.value;
+  const currentBox = box.value;
+  if (!m) return [];
+  const active = !!currentBox?.mixins.includes(m.id);
+  const others = scene.value.mixins.filter((x) => x.id !== m.id);
+  const items: ContextMenuItem[] = [
+    {
+      label: "Inspect in Library dialog…",
+      icon: "mdi mdi-eye-outline",
+      run: () => openMixinLibrary(m),
+    },
+    {
+      label: "Edit in Mixins tab",
+      icon: "mdi mdi-pencil-outline",
+      run: () => editMixin(m.id),
+    },
+    {
+      label: "Swap from Library…",
+      icon: "mdi mdi-swap-horizontal",
+      run: () => openMixinSwap(m),
+    },
+  ];
+  if (currentBox && active && others.length) {
+    items.push("-");
+    for (const other of others.slice(0, 5)) {
+      items.push({
+        label: `Swap in this box → ${other.name}`,
+        icon: "mdi mdi-swap-horizontal-variant",
+        run: () => replaceBoxMixin(currentBox.id, m.id, other.id),
+      });
+    }
+  }
+  items.push("-");
+  if (currentBox) {
+    items.push({
+      label: active ? "Remove from this box" : "Add to this box",
+      icon: active ? "mdi mdi-minus-circle-outline" : "mdi mdi-plus-circle-outline",
+      run: () => toggleMixin(m.id),
+    });
+  }
+  items.push(
+    {
+      label: "Save to Library",
+      icon: "mdi mdi-content-save-outline",
+      disabled: !m.name.trim(),
+      run: () => void saveMixinPreset(m.name.trim(), JSON.parse(JSON.stringify(m))),
+    },
+    "-",
+    {
+      label: "Delete mixin from layout",
+      icon: "mdi mdi-delete-outline",
+      danger: true,
+      run: () => setMixins(scene.value.mixins.filter((x) => x.id !== m.id)),
+    },
+  );
+  return items;
 });
 
 // --- prompt mode helpers ------------------------------------------------------------------------

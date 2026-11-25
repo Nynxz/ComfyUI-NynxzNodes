@@ -141,3 +141,13 @@ if _routes is not None and folder_paths is not None:
         if not library.delete_mixin(_root(), body.get("name", "")):
             return web.json_response({"error": "not found"}, status=404)
         return web.json_response({"ok": True})
+
+    @_routes.post("/nynxz/layouts/mixins/rename")
+    async def nynxz_layouts_mixins_rename(request):
+        if (denied := request_allowed(request)) is not None:
+            return denied
+        body = await _body(request)
+        renamed = library.rename_mixin(_root(), body.get("name", ""), body.get("to", ""))
+        if renamed is None:
+            return web.json_response({"error": "can't rename mixin to that"}, status=400)
+        return web.json_response({"name": renamed})

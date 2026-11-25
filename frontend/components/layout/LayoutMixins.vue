@@ -1,58 +1,16 @@
 <template>
   <div class="lm">
     <div class="lm-bar">
-      <span class="lm-bar-note">Shared across boxes — refs, LoRAs &amp; triggers</span>
-      <ZenPopover v-model:open="libOpen" placement="bottom-end" role="dialog">
-        <template #trigger="{ toggle }">
-          <ZenButton
-            sm
-            variant="ghost"
-            icon="mdi mdi-bookshelf"
-            title="Saved mixin presets — reuse characters, props or styles across layouts"
-            @click="openLib(toggle)"
-          >
-            Library
-          </ZenButton>
-        </template>
-        <div class="lm-lib">
-          <div class="lm-lib-head">
-            <span class="lm-lib-title">Mixin library</span>
-            <ZenButton
-              v-if="current"
-              sm
-              icon="mdi mdi-content-save-outline"
-              :disabled="!current.name.trim() || saving"
-              title="Save the open mixin to your library"
-              @click="saveCurrent"
-            >
-              {{ savedNote || `Save "${current.name}"` }}
-            </ZenButton>
-          </div>
-          <p v-if="!savedMixins.length" class="lm-empty">
-            No saved mixins yet. Save a character, prop or style here to drop it into any layout.
-          </p>
-          <div v-else class="lm-lib-list">
-            <div v-for="item in savedMixins" :key="item.name" class="lm-lib-row">
-              <button
-                type="button"
-                class="lm-lib-pick"
-                title="Add this mixin to the layout"
-                @click="addFromLibrary(item)"
-              >
-                <MixinAvatar :mixin="readMixin(item.mixin, 0)" :size="24" />
-                <span class="lm-lib-name">{{ item.name }}</span>
-              </button>
-              <ZenIconButton
-                size="sm"
-                danger
-                icon="mdi mdi-delete-outline"
-                title="Delete from library"
-                @click="removeSaved(item.name)"
-              />
-            </div>
-          </div>
-        </div>
-      </ZenPopover>
+      <span class="lm-bar-note">Shared across boxes — right-click to swap or manage</span>
+      <ZenButton
+        sm
+        variant="ghost"
+        icon="mdi mdi-bookshelf"
+        title="Open Mixin Library — browse, inspect, create, and swap saved mixins"
+        @click="emit('openLibrary')"
+      >
+        Library
+      </ZenButton>
     </div>
 
     <div class="lm-grid">
@@ -61,8 +19,9 @@
         :key="mixin.id"
         type="button"
         :class="['lm-tile', { on: mixin.id === openId }]"
-        :title="`${mixin.name} — in ${boxCount(mixin.id)} box(es)`"
+        :title="tileTooltip(mixin)"
         @click="open(mixin.id)"
+        @contextmenu.prevent.stop="openTileMenu($event, mixin)"
       >
         <MixinAvatar :mixin="mixin" :size="40" />
         <span class="lm-tile-name">{{ mixin.name }}</span>
@@ -107,6 +66,19 @@
           :value="current.color"
           title="Its colour"
           @input="patch({ color: ($event.target as HTMLInputElement).value })"
+        />
+        <ZenIconButton
+          size="sm"
+          icon="mdi mdi-swap-horizontal"
+          :title="`Swap ${current.name} with another mixin from the library`"
+          @click="emit('swapFromLibrary', current)"
+        />
+        <ZenIconButton
+          size="sm"
+          :icon="savedId === current.id ? 'mdi mdi-check' : 'mdi mdi-content-save-outline'"
+          :disabled="!current.name.trim() || saving"
+          :title="savedId === current.id ? 'Saved to library' : `Save ${current.name} to library`"
+          @click="saveToLibrary(current)"
         />
         <ZenIconButton
           v-if="selectedBoxes.length"
@@ -189,28 +161,31 @@
         />
       </FrescoSection>
     </div>
+
+    <ZenContextMenu ref="tileMenu" :items="tileMenuItems" />
   </div>
 </template>
 
 <script setup lang="ts">
 /**
- * The layout's Mixins tab: every mixin as a tile, a reusable preset library, and the open mixin's
- * editor — what several boxes share, with its reference images, LoRAs and trigger words given once.
+ * The layout's Mixins tab: every mixin as a tile (right-click to swap, inspect, duplicate, save or
+ * delete), a button for the full Mixin Library modal, and the open mixin's inline editor.
  */
-import { ZenButton, ZenIconButton, ZenInput, ZenPopover } from "@nynxz/zenkit-ui";
+import {
+  ZenButton,
+  ZenContextMenu,
+  ZenIconButton,
+  ZenInput,
+  type ContextMenuItem,
+} from "@nynxz/zenkit-ui";
 import { computed, ref } from "vue";
 
 import FrescoLoras from "@/components/fresco/FrescoLoras.vue";
 import FrescoRefs from "@/components/fresco/FrescoRefs.vue";
 import FrescoSection from "@/components/fresco/FrescoSection.vue";
 import MixinAvatar from "@/components/layout/MixinAvatar.vue";
-import {
-  deleteMixinPreset,
-  listSavedMixins,
-  saveMixinPreset,
-  type SavedMixin,
-} from "@/layout/library";
-import { readMixin, type Mixin, type PromptBox } from "@/layout/promptScene";
+import { saveMixinPreset } from "@/layout/library";
+import type { Mixin, PromptBox } from "@/layout/promptScene";
 import type { FrescoLora } from "@/lib/frescoScene";
 import { uid } from "@/lib/sceneUtil";
 
@@ -224,6 +199,9 @@ const emit = defineEmits<{
   create: [];
   selectBoxes: [id: string];
   assignSelected: [id: string];
+  openLibrary: [initial?: Mixin];
+  swapFromLibrary: [target: Mixin];
+  swapBoxes: [idA: string, idB: string];
 }>();
 
 const refsPanel = ref<{ upload: () => void; openBrowse: () => void; busy: boolean } | null>(null);
@@ -231,46 +209,33 @@ const current = computed(
   () => mixins.value.find((m) => m.id === openId.value) ?? mixins.value[0] ?? null,
 );
 
-const libOpen = ref(false);
-const savedMixins = ref<SavedMixin[]>([]);
 const saving = ref(false);
-const savedNote = ref("");
+const savedId = ref<string | null>(null);
 
-async function refreshLibrary() {
-  savedMixins.value = await listSavedMixins();
-}
-function openLib(toggle: () => void) {
-  toggle();
-  if (libOpen.value) void refreshLibrary();
-}
-async function saveCurrent() {
-  const m = current.value;
-  if (!m || !m.name.trim()) return;
+async function saveToLibrary(mixin: Mixin) {
+  if (!mixin.name.trim()) return;
   saving.value = true;
   try {
-    await saveMixinPreset(m.name.trim(), JSON.parse(JSON.stringify(m)));
-    savedNote.value = "Saved";
-    setTimeout(() => (savedNote.value = ""), 1500);
-    await refreshLibrary();
+    await saveMixinPreset(mixin.name.trim(), JSON.parse(JSON.stringify(mixin)));
+    savedId.value = mixin.id;
+    setTimeout(() => {
+      if (savedId.value === mixin.id) savedId.value = null;
+    }, 1500);
   } finally {
     saving.value = false;
   }
 }
-function addFromLibrary(item: SavedMixin) {
-  const loaded = readMixin(item.mixin, mixins.value.length);
+
+function duplicateMixin(source: Mixin) {
   const copy: Mixin = {
-    ...loaded,
+    ...JSON.parse(JSON.stringify(source)),
     id: uid("c"),
-    refs: loaded.refs.map((r) => ({ ...r, id: uid("r") })),
-    loras: loaded.loras.map((l) => ({ ...l, id: uid("o") })),
+    name: `${source.name || "Mixin"} copy`,
+    refs: source.refs.map((r) => ({ ...r, id: uid("r") })),
+    loras: source.loras.map((l) => ({ ...l, id: uid("o") })),
   };
   mixins.value = [...mixins.value, copy];
   openId.value = copy.id;
-  libOpen.value = false;
-}
-async function removeSaved(name: string) {
-  await deleteMixinPreset(name);
-  await refreshLibrary();
 }
 
 function open(id: string) {
@@ -294,9 +259,106 @@ function refCount(mixin: Mixin): number {
 function loraCount(mixin: Mixin): number {
   return mixin.loras.filter((l) => l.on && l.name).length;
 }
+function tileTooltip(mixin: Mixin): string {
+  const parts = [`${mixin.name || "Mixin"} (${boxCount(mixin.id)} box(es))`];
+  if (mixin.desc.trim()) parts.push(mixin.desc.trim().slice(0, 110));
+  if (mixin.trigger.trim()) parts.push(`Trigger: ${mixin.trigger.trim()}`);
+  const refs = refCount(mixin);
+  const loras = mixin.loras.filter((l) => l.on && l.name);
+  if (refs) parts.push(`${refs} reference image(s)`);
+  if (loras.length) {
+    parts.push(
+      `LoRAs: ${loras
+        .map(
+          (l) =>
+            `${l.name
+              .split(/[\\/]/)
+              .pop()
+              ?.replace(/\.[^.]+$/, "")} (${l.strength.toFixed(2)})`,
+        )
+        .join(", ")}`,
+    );
+  }
+  parts.push("Right-click to swap, inspect or delete");
+  return parts.join("\n");
+}
 function newLora(): FrescoLora {
   return { id: uid("o"), name: "", strength: 1, on: true };
 }
+
+// --- right-click menu on mixin tiles ------------------------------------------------------------
+
+const tileMenu = ref<{ show: (e: MouseEvent) => void } | null>(null);
+const menuMixin = ref<Mixin | null>(null);
+function openTileMenu(e: MouseEvent, mixin: Mixin) {
+  menuMixin.value = mixin;
+  openId.value = mixin.id;
+  tileMenu.value?.show(e);
+}
+
+const tileMenuItems = computed<ContextMenuItem[]>(() => {
+  const m = menuMixin.value;
+  if (!m) return [];
+  const others = mixins.value.filter((x) => x.id !== m.id);
+  const items: ContextMenuItem[] = [
+    {
+      label: "Inspect in Library dialog…",
+      icon: "mdi mdi-eye-outline",
+      run: () => emit("openLibrary", m),
+    },
+    {
+      label: "Swap from Library…",
+      icon: "mdi mdi-swap-horizontal",
+      run: () => emit("swapFromLibrary", m),
+    },
+  ];
+  if (others.length) {
+    items.push("-");
+    for (const other of others.slice(0, 6)) {
+      items.push({
+        label: `Swap places with "${other.name}"`,
+        icon: "mdi mdi-swap-horizontal-variant",
+        run: () => emit("swapBoxes", m.id, other.id),
+      });
+    }
+  }
+  items.push("-");
+  if (props.selectedBoxes.length) {
+    items.push({
+      label: `Assign to ${props.selectedBoxes.length} selected box(es)`,
+      icon: "mdi mdi-checkbox-marked-circle-plus-outline",
+      run: () => emit("assignSelected", m.id),
+    });
+  }
+  if (boxCount(m.id)) {
+    items.push({
+      label: `Select ${boxCount(m.id)} box(es) using this`,
+      icon: "mdi mdi-select-group",
+      run: () => emit("selectBoxes", m.id),
+    });
+  }
+  items.push(
+    {
+      label: "Duplicate",
+      icon: "mdi mdi-content-copy",
+      run: () => duplicateMixin(m),
+    },
+    {
+      label: "Save to Library",
+      icon: "mdi mdi-content-save-outline",
+      disabled: !m.name.trim(),
+      run: () => void saveToLibrary(m),
+    },
+    "-",
+    {
+      label: "Delete mixin",
+      icon: "mdi mdi-delete-outline",
+      danger: true,
+      run: () => remove(m.id),
+    },
+  );
+  return items;
+});
 </script>
 
 <style scoped>
@@ -314,64 +376,6 @@ function newLora(): FrescoLora {
 .lm-bar-note {
   font-size: 11px;
   color: var(--zen-muted, #9aa0aa);
-}
-.lm-lib {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 280px;
-  padding: 10px;
-  color: var(--zen-text, #e5e5ea);
-}
-.lm-lib-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
-}
-.lm-lib-title {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--zen-muted, #9aa0aa);
-}
-.lm-lib-list {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  max-height: 240px;
-  overflow-y: auto;
-}
-.lm-lib-row {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.lm-lib-pick {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 4px 6px;
-  border: 1px solid transparent;
-  border-radius: var(--zen-radius, 6px);
-  background: transparent;
-  color: var(--zen-text, #e5e5ea);
-  font: inherit;
-  font-size: 12px;
-  text-align: left;
-  cursor: pointer;
-}
-.lm-lib-pick:hover {
-  border-color: var(--zen-border, #34343c);
-  background: color-mix(in srgb, var(--zen-text, #fff) 5%, transparent);
-}
-.lm-lib-name {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 .lm-grid {
   display: grid;

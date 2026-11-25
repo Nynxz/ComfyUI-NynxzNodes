@@ -1,4 +1,4 @@
-(function(){var s=document.createElement('style');s.setAttribute('data-extension',"comfyui-nynxznodes");s.textContent="\n.bp-row[data-v-32c9ebc0] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n  min-height: 24px;\n}\n.bp-lbl[data-v-32c9ebc0] {\n  flex: none;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n  font-weight: 600;\n}\n.bp-pair[data-v-32c9ebc0] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  justify-content: flex-end;\n}\n.bp-hint[data-v-32c9ebc0] {\n  display: flex;\n  align-items: flex-start;\n  gap: 5px;\n  margin: 0;\n  padding: 5px 7px;\n  border-radius: var(--zen-radius, 6px);\n  background: var(--zen-input, #1b1b20);\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  line-height: 1.35;\n}\n.bp-hint .mdi[data-v-32c9ebc0] {\n  flex: none;\n  font-size: 13px;\n  color: var(--zen-accent, #6366f1);\n}\n.bp-patterns[data-v-32c9ebc0] {\n  display: grid;\n  grid-template-columns: repeat(6, 1fr);\n  gap: 5px;\n  padding: 2px 0;\n}\n.bp-sw[data-v-32c9ebc0] {\n  position: relative;\n  aspect-ratio: 1;\n  padding: 0;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 6px);\n  cursor: pointer;\n  overflow: hidden;\n}\n.bp-sw[data-v-32c9ebc0]:hover {\n  border-color: var(--zen-accent, #6366f1);\n}\n.bp-sw.on[data-v-32c9ebc0] {\n  border-color: var(--zen-accent, #6366f1);\n  box-shadow: 0 0 0 1px var(--zen-accent, #6366f1) inset;\n}\n.bp-sw-fill[data-v-32c9ebc0] {\n  position: absolute;\n  inset: 0;\n  background-repeat: repeat;\n}\n\n.wa[data-v-0d8685b2] {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  padding: 3px;\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  transition:\n    border-color 0.12s ease,\n    background 0.12s ease;\n}\n.wa.active[data-v-0d8685b2] {\n  border-color: var(--zen-accent, #6366f1);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 10%, transparent);\n}\n/* the slotted icon buttons keep their own size; only the primary button flexes */\n.wa[data-v-0d8685b2] > :not(.wa-main) {\n  flex: none;\n}\n.wa-main[data-v-0d8685b2] {\n  flex: 1;\n  min-width: 0;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  height: 26px; /* matches ZenIconButton, so the row is one height whatever it contains */\n  border: none;\n  border-radius: var(--zen-radius, 5px);\n  background: transparent;\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 11px;\n  font-weight: 600;\n  /* A label that can change (a drag hint, a growing count) must never WRAP: in a widget whose\n     drop zones were measured once, a second line moves everything below it. */\n  white-space: nowrap;\n  overflow: hidden;\n  cursor: pointer;\n  transition:\n    color 0.12s ease,\n    background 0.12s ease;\n}\n.wa-main[data-v-0d8685b2]:hover {\n  color: var(--zen-text, #e5e5ea);\n  background: color-mix(in srgb, var(--zen-text, #fff) 8%, transparent);\n}\n.wa-main .mdi[data-v-0d8685b2] {\n  font-size: 15px;\n}\n.wa-label[data-v-0d8685b2] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.wa-count[data-v-0d8685b2] {\n  padding: 0 5px;\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 22%, transparent);\n  color: var(--zen-text, #e5e5ea);\n  font-size: 10px;\n  font-weight: 700;\n}\n\n.cl-rows[data-v-299b8ff3] {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n}\n.cl-row[data-v-299b8ff3] {\n  position: relative;\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  transition: transform 0.15s ease;\n}\n.cl-rows.settling .cl-row[data-v-299b8ff3] {\n  transition: none;\n}\n.cl-row.dragging[data-v-299b8ff3] {\n  z-index: 5;\n  transition: none;\n  box-shadow: 0 6px 16px rgb(0 0 0 / 45%);\n  border-radius: var(--zen-radius, 6px);\n  cursor: grabbing;\n}\n.cl-grip[data-v-299b8ff3] {\n  flex: none;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: 12px;\n  cursor: grab;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 14px;\n  line-height: 1;\n  touch-action: none;\n  -webkit-user-select: none;\n  user-select: none;\n}\n.cl-grip[data-v-299b8ff3] > * {\n  pointer-events: none;\n}\n.cl-grip[data-v-299b8ff3]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.cl-text[data-v-299b8ff3] {\n  flex: 1;\n  min-width: 0;\n  height: 24px;\n  padding: 0 7px;\n  font: inherit;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n  background: var(--zen-surface, #202026);\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 6px);\n  outline: none;\n}\n.cl-text[data-v-299b8ff3]:focus {\n  border-color: var(--zen-accent, #6366f1);\n}\n.cl-row.on .cl-text[data-v-299b8ff3] {\n  border-color: color-mix(in srgb, var(--zen-accent, #6366f1) 55%, transparent);\n}\n.cl-pop-head[data-v-299b8ff3] {\n  padding: 4px 8px 6px;\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.06em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.cf[data-v-22d311f2] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  height: 28px;\n  padding: 0 2px;\n  font-size: 12px;\n}\n.cf-label[data-v-22d311f2] {\n  flex: 0 1 40%;\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  color: var(--zen-muted, #9aa0aa);\n}\n.cf-field[data-v-22d311f2] {\n  flex: 1;\n  min-width: 0;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  height: 26px;\n  padding: 0 6px;\n  box-sizing: border-box;\n  border: 1px solid var(--zen-control-border, var(--zen-border, #34343c));\n  border-radius: var(--zen-radius, 6px);\n  background: var(--zen-field-bg, var(--zen-input, #15151a));\n}\n.cf-field[data-v-22d311f2]:focus-within {\n  border-color: var(--zen-accent, #6366f1);\n}\n.cf-text[data-v-22d311f2] {\n  flex: 1;\n  min-width: 0;\n  padding: 0;\n  border: none;\n  outline: none;\n  background: none;\n  color: var(--zen-text, #e5e5ea);\n  font: inherit;\n  font-family: var(--zen-mono, ui-monospace, monospace);\n  font-size: 11px;\n}\n.cf-text.invalid[data-v-22d311f2] {\n  color: var(--zen-danger, #f87171);\n}\n.cf-linked[data-v-22d311f2] {\n  font-size: 11px;\n  font-style: italic;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.fbf[data-v-163982f0] {\n  position: absolute;\n  inset: 0;\n}\n.fbf-pic[data-v-163982f0] {\n  position: absolute;\n  inset: 0;\n  -webkit-mask-size: 100% 100%;\n  mask-size: 100% 100%;\n}\n.fbf-img[data-v-163982f0] {\n  position: absolute;\n  inset: 0;\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n  opacity: 0.8;\n}\n.fbf-more[data-v-163982f0] {\n  position: absolute;\n  right: 4px;\n  top: 4px;\n  display: flex;\n  gap: 3px;\n}\n.fbf-more img[data-v-163982f0],\n.fbf-plus[data-v-163982f0] {\n  width: 22px;\n  height: 22px;\n  border-radius: 4px;\n  object-fit: cover;\n  box-shadow: 0 0 0 1px rgb(0 0 0 / 50%);\n}\n.fbf-more.big img[data-v-163982f0],\n.fbf-more.big .fbf-plus[data-v-163982f0] {\n  width: 34px;\n  height: 34px;\n}\n.fbf-plus[data-v-163982f0] {\n  display: grid;\n  place-items: center;\n  background: rgb(0 0 0 / 65%);\n  color: #fff;\n  font-size: 10px;\n}\n.fbf-lora[data-v-163982f0] {\n  position: absolute;\n  left: 4px;\n  top: 20px;\n  display: inline-flex;\n  align-items: center;\n  gap: 2px;\n  padding: 0 5px;\n  border-radius: 999px;\n  background: rgb(0 0 0 / 60%);\n  color: #fff;\n  font-size: 10px;\n  line-height: 16px;\n}\n.fbf-text[data-v-163982f0] {\n  position: absolute;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  margin: 0;\n  padding: 14px 6px 4px;\n  background: linear-gradient(to top, rgb(0 0 0 / 75%), transparent);\n  color: #fff;\n  font-size: 11px;\n  line-height: 1.3;\n  text-shadow: 0 1px 2px rgb(0 0 0 / 60%);\n  display: -webkit-box;\n  -webkit-line-clamp: 2;\n  -webkit-box-orient: vertical;\n  overflow: hidden;\n}\n.fbf.bare .fbf-text[data-v-163982f0] {\n  background: none;\n  color: color-mix(in srgb, #fff 85%, transparent);\n}\n@container (max-height: 70px) {\n.fbf-text[data-v-163982f0],\n  .fbf-lora[data-v-163982f0] {\n    display: none;\n}\n}\n@container (max-width: 90px) {\n.fbf-more[data-v-163982f0] {\n    display: none;\n}\n}\n@container (min-height: 160px) {\n.fbf-text[data-v-163982f0] {\n    -webkit-line-clamp: 3;\n}\n}\n\n.fl[data-v-71f8bdb9] {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n  align-items: stretch;\n}\n.fl-row[data-v-71f8bdb9] {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n}\n.fl-row.off .fl-pick[data-v-71f8bdb9] {\n  opacity: 0.5;\n}\n.fl-pick[data-v-71f8bdb9] {\n  flex: 1;\n  min-width: 0;\n}\n.fl-str[data-v-71f8bdb9] {\n  width: 64px;\n  flex: none;\n}\n\n.fp[data-v-744c36c6] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n}\n.fp-pill[data-v-744c36c6] {\n  height: 24px;\n  padding: 0 12px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: 999px;\n  background: transparent;\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 11px;\n  cursor: pointer;\n  transition:\n    background 0.12s ease,\n    color 0.12s ease,\n    border-color 0.12s ease;\n}\n.fp-pill[data-v-744c36c6]:hover:not(:disabled) {\n  color: var(--zen-text, #e5e5ea);\n  border-color: color-mix(in srgb, var(--zen-text, #fff) 25%, transparent);\n}\n.fp-pill.on[data-v-744c36c6] {\n  border-color: color-mix(in srgb, var(--zen-accent, #6366f1) 70%, transparent);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 18%, transparent);\n  color: var(--zen-text, #e5e5ea);\n}\n.fp-pill[data-v-744c36c6]:disabled {\n  opacity: 0.45;\n  cursor: default;\n}\n\n.fr[data-v-f6094846] {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, 64px);\n  gap: 8px;\n  padding: 2px;\n  border-radius: var(--zen-radius, 7px);\n  outline: 1px dashed transparent;\n  transition: outline-color 0.12s ease;\n}\n.fr.dropping[data-v-f6094846] {\n  outline-color: var(--zen-accent, #6366f1);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 8%, transparent);\n}\n.fr-tile[data-v-f6094846] {\n  display: flex;\n  flex-direction: column;\n  gap: 3px;\n  width: 64px;\n}\n.fr-tile.off .fr-thumb[data-v-f6094846] {\n  opacity: 0.4;\n}\n.fr-thumb[data-v-f6094846] {\n  position: relative;\n  width: 64px;\n  height: 64px;\n  border-radius: 6px;\n  overflow: hidden;\n  background: #000;\n  box-shadow: inset 0 0 0 1px var(--zen-border, #34343c);\n}\n.fr-thumb img[data-v-f6094846] {\n  width: 100%;\n  height: 100%;\n  display: block;\n}\n.fr-acts[data-v-f6094846] {\n  position: absolute;\n  inset: auto 2px 2px 2px;\n  display: flex;\n  justify-content: flex-end;\n  gap: 2px;\n  opacity: 0;\n  transition: opacity 0.12s ease;\n}\n.fr-thumb:hover .fr-acts[data-v-f6094846] {\n  opacity: 1;\n}\n.fr-act[data-v-f6094846] {\n  display: grid;\n  place-items: center;\n  width: 18px;\n  height: 18px;\n  padding: 0;\n  border: 0;\n  border-radius: 4px;\n  background: rgb(0 0 0 / 70%);\n  color: #fff;\n  cursor: pointer;\n  font-size: 11px;\n}\n.fr-act.danger[data-v-f6094846]:hover {\n  background: var(--zen-danger, #dc2626);\n}\n.fr-str[data-v-f6094846] {\n  width: 64px;\n}\n.fr-empty[data-v-f6094846] {\n  grid-column: 1 / -1;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  height: 30px;\n  padding: 0;\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: 6px;\n  background: transparent;\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 11px;\n  cursor: pointer;\n  transition:\n    border-color 0.12s ease,\n    color 0.12s ease;\n}\n.fr-empty[data-v-f6094846]:hover {\n  border-color: var(--zen-accent, #6366f1);\n  color: var(--zen-text, #e5e5ea);\n}\n.fr-empty .mdi[data-v-f6094846] {\n  font-size: 15px;\n}\n\n.fsec[data-v-3701245b] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  padding-top: 10px;\n  border-top: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 60%, transparent);\n}\n.fsec[data-v-3701245b]:first-child {\n  padding-top: 0;\n  border-top: 0;\n}\n.fsec-head[data-v-3701245b] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  min-height: 22px;\n}\n.fsec-label[data-v-3701245b] {\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fsec-note[data-v-3701245b] {\n  overflow: hidden;\n  min-width: 0;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  font-size: 10px;\n  color: color-mix(in srgb, var(--zen-muted, #9aa0aa) 75%, transparent);\n}\n.fsec-acts[data-v-3701245b] {\n  display: flex;\n  gap: 2px;\n  margin-left: auto;\n}\n\n.fcf[data-v-73b750b4] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n}\n.fcf[data-v-73b750b4] > * {\n  flex: none;\n}\n.fcf-row[data-v-73b750b4] {\n  display: grid;\n  grid-template-columns: 52px minmax(0, 1fr) 92px;\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fcf-read[data-v-73b750b4] {\n  display: grid;\n  grid-template-columns: 52px minmax(0, 1fr);\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fcf-pairs[data-v-73b750b4] {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));\n  gap: 6px 10px;\n}\n.fcf-pair[data-v-73b750b4] {\n  display: grid;\n  grid-template-columns: 52px minmax(0, 1fr);\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.lt[data-v-863b189a] {\n  display: block;\n  width: 100%;\n  height: 100%;\n}\n.lt-canvas[data-v-863b189a] {\n  fill: var(--zen-surface-2, #26262d);\n  stroke: var(--zen-border, #34343c);\n}\n.lt-label[data-v-863b189a] {\n  font-size: 10px;\n  fill: var(--zen-text, #e5e5ea);\n  paint-order: stroke;\n  stroke: rgb(0 0 0 / 0.6);\n  stroke-width: 2px;\n}\n\n.lb[data-v-38d9a54a] {\n  display: grid;\n  grid-template-columns: 180px minmax(0, 1fr) 280px;\n  gap: 12px;\n  height: 100%;\n  min-height: 0;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n}\n.lb-search[data-v-38d9a54a] {\n  width: 260px;\n}\n.lb-save[data-v-38d9a54a] {\n  display: flex;\n  gap: 6px;\n  width: 340px;\n}\n.lb-save[data-v-38d9a54a] > :first-child {\n  flex: 1;\n}\n.lb-grow[data-v-38d9a54a] {\n  flex: 1;\n}\n.lb-modes[data-v-38d9a54a] {\n  display: flex;\n  flex-direction: column;\n  gap: 2px;\n}\n.lb-mode[data-v-38d9a54a] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  padding: 7px 9px;\n  border: 0;\n  border-radius: var(--zen-radius, 7px);\n  background: none;\n  color: inherit;\n  font: inherit;\n  text-align: left;\n  cursor: pointer;\n}\n.lb-mode[data-v-38d9a54a]:hover {\n  background: color-mix(in srgb, var(--zen-text, #e5e5ea) 8%, transparent);\n}\n.lb-mode.on[data-v-38d9a54a] {\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 22%, transparent);\n}\n.lb-mode i[data-v-38d9a54a] {\n  font-size: 15px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lb-mname[data-v-38d9a54a] {\n  flex: 1;\n}\n.lb-count[data-v-38d9a54a] {\n  font-size: 10px;\n  color: var(--zen-muted, #9aa0aa);\n  font-variant-numeric: tabular-nums;\n}\n.lb-main[data-v-38d9a54a] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  min-height: 0;\n}\n.lb-gridwrap[data-v-38d9a54a] {\n  flex: 1;\n  min-height: 0;\n}\n.lb-grid[data-v-38d9a54a] {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));\n  gap: 10px;\n  padding: 2px;\n}\n.lb-card[data-v-38d9a54a] {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n  padding: 6px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-surface, #1e1e24);\n  color: inherit;\n  font: inherit;\n  text-align: left;\n  cursor: pointer;\n}\n.lb-card[data-v-38d9a54a]:hover {\n  border-color: color-mix(in srgb, var(--zen-accent, #6366f1) 50%, var(--zen-border, #34343c));\n}\n.lb-card.on[data-v-38d9a54a] {\n  border-color: var(--zen-accent, #6366f1);\n  box-shadow: 0 0 0 1px var(--zen-accent, #6366f1);\n}\n.lb-thumb[data-v-38d9a54a] {\n  display: block;\n  height: 120px;\n}\n.lb-cname[data-v-38d9a54a] {\n  font-weight: 600;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.lb-cmeta[data-v-38d9a54a] {\n  font-size: 10.5px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lb-detail[data-v-38d9a54a] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  min-height: 0;\n  overflow: auto;\n  padding-left: 12px;\n  border-left: 1px solid var(--zen-border, #34343c);\n}\n.lb-big[data-v-38d9a54a] {\n  height: 200px;\n  flex: none;\n}\n.lb-row[data-v-38d9a54a] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.lb-facts[data-v-38d9a54a] {\n  display: grid;\n  grid-template-columns: auto 1fr;\n  gap: 2px 10px;\n  margin: 0;\n}\n.lb-facts dt[data-v-38d9a54a] {\n  color: var(--zen-muted, #9aa0aa);\n}\n.lb-facts dd[data-v-38d9a54a] {\n  margin: 0;\n}\n.lb-prompt[data-v-38d9a54a] {\n  margin: 0;\n  padding: 6px 8px;\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-surface-2, #26262d);\n  font-size: 11px;\n  line-height: 1.45;\n  max-height: 110px;\n  overflow: auto;\n  white-space: pre-wrap;\n}\n.lb-names[data-v-38d9a54a] {\n  margin: 0;\n  padding: 0;\n  list-style: none;\n  display: flex;\n  flex-direction: column;\n  gap: 2px;\n}\n.lb-dot[data-v-38d9a54a] {\n  display: inline-block;\n  width: 8px;\n  height: 8px;\n  margin-right: 6px;\n  border-radius: 2px;\n}\n.lb-note[data-v-38d9a54a] {\n  margin: 0;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lb-empty[data-v-38d9a54a] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  height: 100%;\n  min-height: 160px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lb-empty i[data-v-38d9a54a] {\n  font-size: 28px;\n}\n\n/* rail | canvas | side, with the status bar over the canvas so all three end on one line. Every\n   track is a fixed size or a share of the node, never its content, so selecting or typing can't\n   move anything. */\n.le[data-v-ef866b8f] {\n  display: grid;\n  grid-template-rows: minmax(0, 1fr) auto;\n  gap: 6px;\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n  color: var(--zen-text, #e5e5ea);\n  font-size: 12px;\n}\n/* In a ZenKit panel the window draws its own frame; inset so the rail and the panes don't sit on\n   it and double its border. On the node, the node body already pads. */\n.le.in-panel[data-v-ef866b8f] {\n  box-sizing: border-box;\n  padding: 8px;\n}\n.le-main[data-v-ef866b8f] {\n  min-width: 0;\n  min-height: 0;\n}\n.le-canvascol[data-v-ef866b8f] {\n  display: grid;\n  grid-template-rows: 28px minmax(0, 1fr);\n  gap: 6px;\n  height: 100%;\n  min-width: 0;\n  min-height: 0;\n}\n.le-toolbar[data-v-ef866b8f],\n.le-foot[data-v-ef866b8f] {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  min-width: 0;\n}\n.le-foot[data-v-ef866b8f] {\n  padding: 4px 6px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 2%, transparent);\n}\n.le-sep[data-v-ef866b8f] {\n  width: 1px;\n  height: 16px;\n  margin: 0 4px;\n  background: var(--zen-border, #34343c);\n}\n.le-opacity[data-v-ef866b8f] {\n  display: grid;\n  grid-template-columns: auto 1fr 34px;\n  align-items: center;\n  gap: 8px;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.le-menu[data-v-ef866b8f] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  padding: 8px;\n}\n.le-menu-title[data-v-ef866b8f] {\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n}\n.le-menu .zen-btn[data-v-ef866b8f] {\n  justify-content: flex-start;\n}\n.le-json[data-v-ef866b8f] {\n  color: var(--zen-text, #e5e5ea);\n  font-size: 12px;\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  width: 300px;\n  padding: 10px;\n}\n.le-row[data-v-ef866b8f] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.le-grow[data-v-ef866b8f] {\n  flex: 1;\n  min-width: 0;\n}\n.le-stage.dropping[data-v-ef866b8f] {\n  outline: 2px dashed var(--zen-accent, #6366f1);\n  outline-offset: -2px;\n  border-radius: var(--zen-radius, 7px);\n}\n.le-stage[data-v-ef866b8f] {\n  min-width: 0;\n  min-height: 0;\n}\n.le-hint-empty[data-v-ef866b8f] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 4px;\n}\n.le-hint-empty i[data-v-ef866b8f] {\n  font-size: 28px;\n  opacity: 0.6;\n}\n.le-help[data-v-ef866b8f] {\n  display: grid;\n  grid-template-columns: auto auto;\n  gap: 4px 14px;\n  margin: 0;\n  padding: 10px 12px;\n  font-size: 11px;\n}\n.le-help dt[data-v-ef866b8f] {\n  color: var(--zen-text, #e5e5ea);\n  white-space: nowrap;\n}\n.le-help dd[data-v-ef866b8f] {\n  margin: 0;\n  color: var(--zen-muted, #9aa0aa);\n}\n.le-tip[data-v-ef866b8f] {\n  flex: 0 1 auto;\n  min-width: 0;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n  overflow: hidden;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n}\n.le-link[data-v-ef866b8f] {\n  padding: 0;\n  border: 0;\n  background: none;\n  color: var(--zen-accent, #6366f1);\n  font: inherit;\n  cursor: pointer;\n}\n.le-ctl[data-v-ef866b8f] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  width: 104px;\n  transition: opacity 0.12s ease;\n}\n.le-chip[data-v-ef866b8f] {\n  flex: none;\n  display: inline-flex;\n  align-items: center;\n  gap: 4px;\n  height: 22px;\n  padding: 0 8px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: 999px;\n  background: var(--zen-input, #1b1b20);\n  color: var(--zen-text, #e5e5ea);\n  font-size: 11px;\n  font-variant-numeric: tabular-nums;\n  cursor: pointer;\n}\n.le-side[data-v-ef866b8f] {\n  height: 100%;\n  min-height: 0;\n}\n.le-pane[data-v-ef866b8f] {\n  display: flex;\n  flex-direction: column;\n  height: 100%;\n  min-height: 0;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 2%, transparent);\n  overflow: hidden;\n}\n.le-tabs[data-v-ef866b8f] {\n  flex: none;\n  display: flex;\n  gap: 2px;\n  padding: 4px 4px 0;\n  border-bottom: 1px solid var(--zen-border, #34343c);\n}\n.le-tab[data-v-ef866b8f] {\n  display: inline-flex;\n  align-items: center;\n  gap: 5px;\n  height: 28px;\n  padding: 0 10px;\n  border: 0;\n  border-bottom: 2px solid transparent;\n  background: transparent;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  cursor: pointer;\n}\n.le-tab[data-v-ef866b8f]:hover:not(:disabled) {\n  color: var(--zen-text, #e5e5ea);\n}\n.le-tab.on[data-v-ef866b8f] {\n  border-bottom-color: var(--zen-accent, #3b82f6);\n  color: var(--zen-text, #e5e5ea);\n}\n.le-tab[data-v-ef866b8f]:disabled {\n  opacity: 0.4;\n  cursor: default;\n}\n.le-head[data-v-ef866b8f] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  height: 34px;\n  padding: 0 8px;\n  border-bottom: 1px solid var(--zen-border, #34343c);\n}\n.le-title[data-v-ef866b8f] {\n  flex: 1;\n  font-size: 11px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n.le-count[data-v-ef866b8f] {\n  padding: 0 6px;\n  border-radius: 999px;\n  background: color-mix(in srgb, var(--zen-text, #fff) 8%, transparent);\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n}\n.le-swatch[data-v-ef866b8f] {\n  flex: none;\n  width: 12px;\n  height: 12px;\n  border-radius: 3px;\n}\n.le-body[data-v-ef866b8f] {\n  flex: 1 1 0;\n  min-height: 0;\n  padding: 6px;\n}\n.le-note[data-v-ef866b8f] {\n  margin: 0;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.fresco[data-v-6418226b] {\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n}\n.fs-menu[data-v-6418226b] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  padding: 8px;\n}\n.fs-menu-title[data-v-6418226b] {\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n}\n.fs-menu .zen-btn[data-v-6418226b] {\n  justify-content: flex-start;\n}\n.fs-swatch[data-v-6418226b] {\n  flex: none;\n  width: 12px;\n  height: 12px;\n  border-radius: 3px;\n}\n.fs-wand[data-v-6418226b] {\n  position: absolute;\n  inset: 0;\n  cursor: crosshair;\n}\n.fs-point[data-v-6418226b] {\n  position: absolute;\n  width: 10px;\n  height: 10px;\n  margin: -5px 0 0 -5px;\n  border: 2px solid #fff;\n  border-radius: 50%;\n  background: #22c55e;\n  box-shadow: 0 0 0 1px rgb(0 0 0 / 50%);\n  pointer-events: none;\n}\n.fs-point.live[data-v-6418226b] {\n  pointer-events: auto;\n  cursor: grab;\n  touch-action: none;\n}\n.fs-point.live[data-v-6418226b]:hover {\n  transform: scale(1.3);\n}\n.fs-point.out[data-v-6418226b] {\n  background: #ef4444;\n}\n.fs-form[data-v-6418226b] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n}\n.fs-form[data-v-6418226b] > * {\n  flex: none;\n}\n.fs-grid[data-v-6418226b] {\n  display: grid;\n  grid-template-columns: 62px minmax(0, 1fr);\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fs-pairs[data-v-6418226b] {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));\n  gap: 6px 10px;\n}\n.fs-pair[data-v-6418226b] {\n  display: grid;\n  grid-template-columns: 52px minmax(0, 1fr);\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fs-group[data-v-6418226b] {\n  margin-top: 6px;\n  padding: 6px 0 0;\n  border-top: 1px solid var(--zen-border, #34343c);\n  font-size: 12px;\n  font-weight: 600;\n  color: var(--zen-text, #e5e5ea);\n}\n.fs-group-note[data-v-6418226b] {\n  font-size: 11px;\n  font-weight: 400;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.fsum[data-v-71527fdd] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n}\n.fsum-stage[data-v-71527fdd] {\n  flex: 1;\n  min-height: 0;\n  pointer-events: none;\n}\n.fsum-bar[data-v-71527fdd] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fsum-text[data-v-71527fdd] {\n  overflow: hidden;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n}\n\n.fhost[data-v-4623400c] {\n  display: flex;\n  flex-direction: column;\n  box-sizing: border-box;\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n}\n.fhost-dep[data-v-4623400c] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n  padding: 4px 8px;\n  border-bottom: 1px solid color-mix(in srgb, var(--zen-warning, #f5b041) 35%, transparent);\n  background: color-mix(in srgb, var(--zen-warning, #f5b041) 10%, transparent);\n  color: var(--zen-text, #e5e5ea);\n  font-size: 11px;\n}\n.fhost-body[data-v-4623400c] {\n  position: relative;\n  flex: 1;\n  min-height: 0;\n}\n.fhost-body[data-v-4623400c] > * {\n  position: absolute;\n  inset: 0;\n}\n\n/* Fill layout (see mountWidget's `fill`): the widget takes the node body, the image grid\n   takes whatever height is left and scrolls, and the toolbar is pinned under it. Resizing\n   the node therefore shows more images, never more padding. */\n.fg[data-v-bbb08a38] {\n  position: relative;\n  display: flex;\n  flex-direction: column;\n  gap: 7px;\n  height: 100%;\n  min-height: 0;\n  padding: 2px;\n  box-sizing: border-box;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n}\n\n/* flex-basis 0 (not auto) so the grid's content can't push the toolbar off the node */\n/* focused programmatically on hover (see armScroll) — never show a ring for it */\n.fg-scroll[data-v-bbb08a38] {\n  flex: 1 1 0;\n  min-height: 0;\n  outline: none;\n}\n.fg-grid[data-v-bbb08a38] {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(124px, 1fr));\n  gap: 6px;\n  align-items: start;\n  padding-right: 2px;\n}\n.fg-card[data-v-bbb08a38] {\n  display: flex;\n  flex-direction: column;\n  gap: 3px;\n  padding: 4px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 9px);\n  background: var(--zen-input, #1b1b20);\n  transition:\n    border-color 0.12s ease,\n    opacity 0.12s ease;\n}\n.fg-card.off[data-v-bbb08a38] {\n  opacity: 0.5;\n}\n.fg-card.dragging[data-v-bbb08a38] {\n  opacity: 0.35;\n}\n.fg-card.over[data-v-bbb08a38] {\n  border-color: var(--zen-accent, #6366f1);\n  box-shadow: 0 0 0 1px var(--zen-accent, #6366f1) inset;\n}\n.fg-thumb[data-v-bbb08a38] {\n  position: relative;\n  width: 100%;\n  aspect-ratio: 1;\n  border-radius: var(--zen-radius, 6px);\n  background: var(--zen-surface, #202026);\n  overflow: hidden;\n  cursor: grab;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.fg-thumb[data-v-bbb08a38]:active {\n  cursor: grabbing;\n}\n/* contain on black: the encoder letterboxes with real black pixels, so the card shows the\n   actual frame it gets rather than flattering it with a themed backdrop */\n.fg-thumb img[data-v-bbb08a38] {\n  width: 100%;\n  height: 100%;\n  display: block;\n  object-fit: contain;\n  background: #000;\n}\n.fg-ph[data-v-bbb08a38] {\n  font-size: 30px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fg-ph.warn[data-v-bbb08a38] {\n  color: #e0a33a;\n}\n.fg-idx[data-v-bbb08a38] {\n  position: absolute;\n  top: 4px;\n  left: 4px;\n  min-width: 16px;\n  height: 16px;\n  padding: 0 4px;\n  border-radius: var(--zen-radius, 5px);\n  background: rgba(0, 0, 0, 0.62);\n  color: #fff;\n  font-size: 10px;\n  font-weight: 700;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n}\n.fg-acts[data-v-bbb08a38] {\n  position: absolute;\n  top: 4px;\n  right: 4px;\n  display: flex;\n  gap: 3px;\n  opacity: 0;\n  transition: opacity 0.12s ease;\n}\n.fg-card:hover .fg-acts[data-v-bbb08a38] {\n  opacity: 1;\n}\n.fg-act[data-v-bbb08a38] {\n  width: 19px;\n  height: 19px;\n  padding: 0;\n  border: none;\n  border-radius: var(--zen-radius, 5px);\n  background: rgba(0, 0, 0, 0.62);\n  color: #fff;\n  font-size: 12px;\n  cursor: pointer;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n}\n.fg-act[data-v-bbb08a38]:hover {\n  background: var(--zen-accent, #6366f1);\n}\n.fg-act.danger[data-v-bbb08a38]:hover {\n  background: #d9534f;\n}\n.fg-mutemark[data-v-bbb08a38] {\n  position: absolute;\n  inset: 0;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background: rgba(0, 0, 0, 0.45);\n  color: #fff;\n  font-size: 22px;\n  pointer-events: none;\n}\n\n/* name + share ride in the thumb's bottom strip rather than costing the card its own rows */\n.fg-meta[data-v-bbb08a38] {\n  position: absolute;\n  left: 0;\n  right: 0;\n  bottom: 3px;\n  display: flex;\n  align-items: flex-end;\n  gap: 4px;\n  padding: 10px 5px 1px;\n  background: linear-gradient(transparent, rgba(0, 0, 0, 0.78));\n  pointer-events: none;\n}\n.fg-name[data-v-bbb08a38] {\n  flex: 1;\n  min-width: 0;\n  font-size: 9.5px;\n  color: #fff;\n  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.fg-pct[data-v-bbb08a38] {\n  flex: none;\n  font-size: 9.5px;\n  font-weight: 700;\n  line-height: 1.25;\n  color: #fff;\n  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);\n}\n.fg-pct.dim[data-v-bbb08a38] {\n  font-weight: 500;\n  color: var(--zen-muted, #9aa0aa);\n}\n/* the live share of the blend this source claims */\n.fg-share[data-v-bbb08a38] {\n  position: absolute;\n  left: 0;\n  bottom: 0;\n  height: 3px;\n  background: var(--zen-accent, #6366f1);\n  transition: width 0.12s ease;\n  pointer-events: none;\n}\n.fg-foot[data-v-bbb08a38] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n}\n.fg-slider[data-v-bbb08a38] {\n  flex: 1;\n  min-width: 0;\n}\n.fg-num[data-v-bbb08a38] {\n  flex: none;\n  width: 46px;\n}\n\n/* fills the scroll area so the empty node reads as one big drop target */\n.fg-empty[data-v-bbb08a38] {\n  height: 100%;\n  min-height: 96px;\n  box-sizing: border-box;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 4px;\n  padding: 18px 8px;\n  text-align: center;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);\n}\n.fg-empty > .mdi[data-v-bbb08a38] {\n  font-size: 26px;\n  opacity: 0.8;\n}\n.fg-empty > span[data-v-bbb08a38] {\n  font-size: 11px;\n}\n.fg-empty > small[data-v-bbb08a38] {\n  font-size: 10px;\n  opacity: 0.7;\n}\n.fg-warn[data-v-bbb08a38] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  padding: 5px 8px;\n  border-radius: var(--zen-radius, 7px);\n  background: color-mix(in srgb, #e0a33a 14%, transparent);\n  color: #e0a33a;\n  font-size: 10.5px;\n}\n.fg-bar[data-v-bbb08a38] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.fg-add[data-v-bbb08a38] {\n  flex: 1;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  padding: 7px;\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  background: transparent;\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 11px;\n  font-weight: 600;\n  cursor: pointer;\n  transition:\n    border-color 0.12s ease,\n    color 0.12s ease,\n    background 0.12s ease;\n}\n.fg-add[data-v-bbb08a38]:hover:not(:disabled) {\n  border-color: var(--zen-accent, #6366f1);\n  color: var(--zen-text, #e5e5ea);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 8%, transparent);\n}\n.fg-add[data-v-bbb08a38]:disabled {\n  opacity: 0.6;\n  cursor: default;\n}\n.fg-add .mdi[data-v-bbb08a38] {\n  font-size: 15px;\n}\n.fg-add-n[data-v-bbb08a38] {\n  margin-left: 2px;\n  padding: 0 5px;\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 22%, transparent);\n  color: var(--zen-text, #e5e5ea);\n  font-size: 10px;\n  font-weight: 700;\n}\n.fg-dropmask[data-v-bbb08a38] {\n  position: absolute;\n  inset: 0;\n  z-index: 5;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  border: 2px dashed var(--zen-accent, #6366f1);\n  border-radius: var(--zen-radius, 9px);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 16%, rgba(0, 0, 0, 0.55));\n  color: var(--zen-text, #e5e5ea);\n  font-size: 11px;\n  font-weight: 600;\n  pointer-events: none;\n}\n.fg-dropmask .mdi[data-v-bbb08a38] {\n  font-size: 28px;\n}\n\n.fi[data-v-dec39350] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  height: 100%;\n  min-height: 0;\n  padding: 2px;\n  box-sizing: border-box;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n  --fs-rs: var(--radius-sm, 5px);\n}\n.fi-empty[data-v-dec39350] {\n  height: 100%;\n  min-height: 120px;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 5px;\n  color: var(--zen-muted, #9aa0aa);\n  text-align: center;\n}\n.fi-empty > .mdi[data-v-dec39350] {\n  font-size: 30px;\n  opacity: 0.8;\n}\n.fi-empty small[data-v-dec39350] {\n  font-size: 10px;\n  opacity: 0.75;\n}\n.fi-bar[data-v-dec39350] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  flex-wrap: wrap;\n  gap: 6px;\n}\n.fi-main[data-v-dec39350] {\n  flex: 1 1 auto;\n  min-height: 0;\n  display: flex;\n  gap: 6px;\n}\n.fi-gridwrap[data-v-dec39350] {\n  position: relative;\n  flex: 1 1 auto;\n  min-width: 0;\n  min-height: 0;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  overflow: hidden;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n  background: #0e0e12;\n}\n.fi-caption[data-v-dec39350] {\n  position: absolute;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  padding: 3px 6px;\n  font-size: 9px;\n  line-height: 1.25;\n  text-align: center;\n  color: var(--zen-text, #e5e5ea);\n  background: linear-gradient(transparent, rgba(0, 0, 0, 0.72));\n  pointer-events: none;\n}\n.fi-canvas[data-v-dec39350] {\n  display: block;\n  image-rendering: pixelated;\n}\n.fi-side[data-v-dec39350] {\n  flex: none;\n  width: 190px;\n  display: flex;\n  flex-direction: column;\n  min-height: 0;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 2%, transparent);\n  overflow: hidden;\n}\n.fi-side-head[data-v-dec39350] {\n  flex: none;\n  padding: 5px 8px;\n  font-size: 10px;\n  font-weight: 700;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n  border-bottom: 1px solid var(--zen-border, #34343c);\n}\n.fi-bars[data-v-dec39350],\n.fi-legend[data-v-dec39350] {\n  flex: 1 1 0;\n  min-height: 0;\n  overflow-y: auto;\n  padding: 5px;\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n}\n.fi-brow[data-v-dec39350],\n.fi-lrow[data-v-dec39350] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  font-size: 10.5px;\n}\n.fi-lrow[data-v-dec39350] {\n  padding: 3px;\n  border: 1px solid transparent;\n  border-radius: var(--fs-rs);\n  background: none;\n  color: inherit;\n  font: inherit;\n  cursor: pointer;\n  text-align: left;\n}\n.fi-lrow[data-v-dec39350]:hover {\n  border-color: color-mix(in srgb, var(--zen-accent, #6366f1) 50%, transparent);\n}\n.fi-lrow.on[data-v-dec39350] {\n  border-color: var(--zen-accent, #6366f1);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 16%, transparent);\n}\n.fi-thumb[data-v-dec39350] {\n  flex: none;\n  width: 24px;\n  height: 24px;\n  border-radius: 4px;\n  border: 1.5px solid;\n  overflow: hidden;\n  background: var(--zen-surface, #202026);\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.fi-thumb.sm[data-v-dec39350] {\n  width: 17px;\n  height: 17px;\n  border-radius: 3px;\n}\n.fi-thumb img[data-v-dec39350] {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n  display: block;\n}\n.fi-thumb-fill[data-v-dec39350] {\n  width: 100%;\n  height: 100%;\n}\n.fi-blabel[data-v-dec39350] {\n  flex: 1;\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.fi-btrack[data-v-dec39350] {\n  flex: 1.4;\n  height: 6px;\n  border-radius: 3px;\n  background: color-mix(in srgb, var(--zen-text, #fff) 10%, transparent);\n  overflow: hidden;\n}\n.fi-bfill[data-v-dec39350] {\n  display: block;\n  height: 100%;\n  border-radius: 3px;\n}\n.fi-bval[data-v-dec39350] {\n  flex: none;\n  width: 26px;\n  text-align: right;\n  font-variant-numeric: tabular-nums;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fi-lstr[data-v-dec39350] {\n  flex: none;\n  font-variant-numeric: tabular-nums;\n  font-size: 10px;\n  color: var(--zen-text, #e5e5ea);\n}\n.fi-lmeta[data-v-dec39350] {\n  flex: none;\n  min-width: 30px;\n  text-align: right;\n  font-variant-numeric: tabular-nums;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fi-lhint[data-v-dec39350] {\n  flex: none;\n  margin: 0;\n  padding: 5px 7px;\n  font-size: 9.5px;\n  line-height: 1.3;\n  color: var(--zen-muted, #9aa0aa);\n  border-top: 1px solid var(--zen-border, #34343c);\n}\n.fi-lhint b[data-v-dec39350] {\n  color: var(--zen-text, #e5e5ea);\n}\n\n/* side-panel tabs */\n.fi-side-tabs[data-v-dec39350] {\n  flex: none;\n  display: flex;\n  gap: 3px;\n  padding: 4px;\n  border-bottom: 1px solid var(--zen-border, #34343c);\n}\n.fi-tab[data-v-dec39350] {\n  flex: 1;\n  padding: 3px 6px;\n  border: 1px solid transparent;\n  border-radius: var(--zen-radius, 5px);\n  background: none;\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 10px;\n  font-weight: 700;\n  letter-spacing: 0.03em;\n  text-transform: uppercase;\n  cursor: pointer;\n}\n.fi-tab[data-v-dec39350]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.fi-tab.on[data-v-dec39350] {\n  color: var(--zen-text, #e5e5ea);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 16%, transparent);\n}\n\n/* settings tab */\n.fi-settings[data-v-dec39350] {\n  flex: 1 1 0;\n  min-height: 0;\n  overflow-y: auto;\n  padding: 4px 6px 6px;\n}\n.fi-sgroup[data-v-dec39350] {\n  margin-top: 5px;\n}\n.fi-sgroup-h[data-v-dec39350] {\n  font-size: 9px;\n  font-weight: 700;\n  letter-spacing: 0.05em;\n  text-transform: uppercase;\n  color: var(--zen-accent, #6366f1);\n  margin-bottom: 2px;\n}\n.fi-srow[data-v-dec39350] {\n  display: flex;\n  justify-content: space-between;\n  gap: 6px;\n  font-size: 10.5px;\n  padding: 1px 0;\n}\n.fi-srow.dim[data-v-dec39350] {\n  opacity: 0.4;\n}\n.fi-sk[data-v-dec39350] {\n  color: var(--zen-muted, #9aa0aa);\n}\n.fi-svv[data-v-dec39350] {\n  color: var(--zen-text, #e5e5ea);\n  font-variant-numeric: tabular-nums;\n  text-align: right;\n}\n\n/* section header */\n.gs-head[data-v-b38d9f08] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  width: 100%;\n  padding: 5px 2px;\n  background: none;\n  border: none;\n  cursor: pointer;\n  font: inherit;\n  font-size: 11px;\n  font-weight: 700;\n  letter-spacing: 0.02em;\n  color: var(--zen-muted, #9aa0aa);\n  text-align: left;\n}\n.gs-head[data-v-b38d9f08]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.gs-head .mdi[data-v-b38d9f08] {\n  font-size: 14px;\n}\n.gs-badge[data-v-b38d9f08] {\n  margin-left: auto;\n  padding: 1px 6px;\n  border-radius: 999px;\n  font-size: 9px;\n  font-weight: 700;\n  color: var(--zen-accent-text, #fff);\n  background: var(--zen-accent, #6366f1);\n}\n.gs-body[data-v-b38d9f08] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  padding: 2px 2px 8px 6px;\n}\n.gs-row[data-v-b38d9f08] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n  min-height: 24px;\n}\n.gs-lbl[data-v-b38d9f08] {\n  flex: none;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n  font-weight: 600;\n}\n.gs-pair[data-v-b38d9f08] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  justify-content: flex-end;\n}\n.gs-x[data-v-b38d9f08] {\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n}\n.gs-hint[data-v-b38d9f08] {\n  display: flex;\n  align-items: flex-start;\n  gap: 5px;\n  margin: 0;\n  padding: 5px 7px;\n  border-radius: var(--zen-radius, 6px);\n  background: var(--zen-input, #1b1b20);\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  line-height: 1.35;\n}\n.gs-hint .mdi[data-v-b38d9f08] {\n  flex: none;\n  font-size: 13px;\n  color: var(--zen-accent, #6366f1);\n}\n\n/* content-driven: the viewport sizes to the image aspect; the node grows to fit it */\n.ic-head[data-v-dd66395d] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 6px;\n  min-height: 26px;\n}\n.ic-head-nav[data-v-dd66395d] {\n  display: flex;\n  align-items: center;\n  gap: 2px;\n}\n.ic-nav-lbl[data-v-dd66395d] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n  font-variant-numeric: tabular-nums;\n  min-width: 30px;\n  text-align: center;\n}\n.ic-nav-gap[data-v-dd66395d] {\n  width: 8px;\n}\n/* fills the node body; the image is contained inside, so the box never drives the node size */\n.ic-view[data-v-dd66395d] {\n  position: relative;\n  flex: 1 1 0;\n  min-height: 0;\n  width: 100%;\n  overflow: hidden;\n  border-radius: var(--zen-radius, 8px);\n  background: var(--zen-input, #1b1b20);\n  border: 1px solid var(--zen-border, #34343c);\n  user-select: none;\n  touch-action: none;\n}\n.ic-view.dragging[data-v-dd66395d] {\n  cursor: grabbing !important;\n}\n.ic-img[data-v-dd66395d] {\n  position: absolute;\n  inset: 0;\n  width: 100%;\n  height: 100%;\n  object-fit: contain;\n  pointer-events: none;\n  transition: opacity 80ms ease;\n}\n.ic-handle[data-v-dd66395d] {\n  position: absolute;\n  width: 22px;\n  height: 22px;\n  border-radius: 50%;\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 35%, transparent);\n  border: 2px solid var(--zen-accent, #6366f1);\n  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);\n  pointer-events: none;\n  transform: translate(-50%, -50%);\n  z-index: 2;\n}\n/* box mode: A shows through this frame over B; the frame itself only draws the outline */\n.ic-box[data-v-dd66395d] {\n  position: absolute;\n  box-sizing: border-box;\n  border: 2px solid var(--zen-accent, #6366f1);\n  border-radius: 2px;\n  box-shadow:\n    0 0 0 1px rgba(0, 0, 0, 0.45),\n    0 2px 10px rgba(0, 0, 0, 0.35);\n  pointer-events: none;\n  z-index: 2;\n}\n.ic-box-tag[data-v-dd66395d] {\n  position: absolute;\n  top: 4px;\n  left: 4px;\n  padding: 0 5px;\n  border-radius: 4px;\n  font-size: 10px;\n  font-weight: 700;\n  line-height: 16px;\n  color: #fff;\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 80%, transparent);\n}\n/* fills the same body space the viewport will — so swapping empty↔image doesn't resize the node */\n.ic-empty[data-v-dd66395d] {\n  flex: 1 1 0;\n  min-height: 0;\n  width: 100%;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n}\n.ic-empty .mdi[data-v-dd66395d] {\n  font-size: 30px;\n  opacity: 0.5;\n}\n.ic-pop-head[data-v-dd66395d] {\n  padding: 4px 8px 6px;\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.06em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n/* fill mode: the panel fills the node body so the preview fits the current size (it doesn't\n   resize the node when the image changes); the picker row is fixed, the preview takes the rest */\n.li[data-v-b38870a5] {\n  position: relative;\n}\n.li-row[data-v-b38870a5] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  flex: none;\n}\n.li-preview[data-v-b38870a5] {\n  position: relative;\n  flex: 1 1 0;\n  min-height: 0;\n  width: 100%;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: var(--zen-radius, 8px);\n}\n.li-preview img[data-v-b38870a5] {\n  display: block;\n  border-radius: var(--zen-radius, 8px);\n  max-width: 100%;\n  max-height: 100%;\n  width: auto;\n  height: auto;\n  object-fit: contain;\n}\n.li-none[data-v-b38870a5] {\n  flex-direction: column;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  text-align: center;\n  padding: 8px;\n}\n.li-none .mdi[data-v-b38870a5] {\n  font-size: 26px;\n  opacity: 0.8;\n}\n.li-loading[data-v-b38870a5] {\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n}\n\n/* drag-and-drop overlay */\n.li-dropmask[data-v-b38870a5] {\n  position: absolute;\n  inset: 0;\n  z-index: 5;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 8px;\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 16%, var(--zen-bg, #1a1a1f) 78%);\n  border: 2px dashed var(--zen-accent, #6366f1);\n  border-radius: var(--zen-radius, 8px);\n  color: var(--zen-text, #e5e5ea);\n  pointer-events: none;\n}\n.li-dropmask .mdi[data-v-b38870a5] {\n  font-size: 32px;\n  color: var(--zen-accent, #6366f1);\n}\n.li-pick[data-v-b38870a5] {\n  flex: 1;\n  min-width: 0;\n}\n.li-sel[data-v-b38870a5] {\n  display: flex;\n  align-items: center;\n  gap: 7px;\n  min-width: 0;\n}\n.li-sel-ic[data-v-b38870a5] {\n  flex: none;\n  font-size: 15px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.li-sel-name[data-v-b38870a5] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n\n/* preview hover tools: lightweight corner actions; no full-image darkening */\n.li-ov[data-v-b38870a5] {\n  position: absolute;\n  inset: 0;\n  opacity: 0;\n  pointer-events: none;\n  transition: opacity 0.12s ease;\n}\n.li-preview:hover .li-ov[data-v-b38870a5] {\n  opacity: 1;\n  pointer-events: auto;\n}\n.li-ov-actions[data-v-b38870a5] {\n  position: absolute;\n  top: 6px;\n  right: 6px;\n  z-index: 2;\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  max-width: calc(100% - 12px);\n}\n/* A dark chip with a white icon, so the buttons read over any picture; the same as\n   Save Image's and Preview Image's (SavePreview.vue's .sp-act). ZenIconButton's own look (no background, muted icon) is for a toolbar, hence\n   the !important. Pointing at one fills it with the accent. */\n.li-ov-btn[data-v-b38870a5] {\n  width: 26px !important;\n  height: 26px !important;\n  border: 1px solid rgba(255, 255, 255, 0.14) !important;\n  background: rgba(0, 0, 0, 0.46) !important;\n  color: #fff !important;\n  backdrop-filter: blur(4px);\n}\n.li-ov-btn[data-v-b38870a5]:hover {\n  background: var(--zen-accent, #6366f1) !important;\n  border-color: var(--zen-accent, #6366f1) !important;\n  color: var(--zen-accent-text, #fff) !important;\n}\n.li-ov-info[data-v-b38870a5] {\n  cursor: help;\n}\n.li-ov-corner[data-v-b38870a5] {\n  position: absolute;\n  right: 6px;\n  bottom: 6px;\n  z-index: 2;\n}\n.li-info-pop[data-v-b38870a5] {\n  /* position/top/left/z-index come from the inline fixed style (teleported to body) */\n  box-sizing: border-box;\n  width: 210px;\n  max-width: calc(100vw - 24px);\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n  padding: 8px;\n  background: color-mix(in srgb, var(--zen-surface, #202026) 94%, #000 6%);\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);\n  cursor: default;\n}\n.li-info-row[data-v-b38870a5] {\n  display: grid;\n  grid-template-columns: 18px minmax(0, 1fr);\n  align-items: center;\n  min-width: 0;\n  gap: 7px;\n  min-height: 19px;\n  font-size: 11px;\n}\n.li-info-row > .mdi[data-v-b38870a5] {\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 14px;\n  text-align: center;\n}\n.li-info-row b[data-v-b38870a5] {\n  display: block;\n  min-width: 0;\n  color: var(--zen-text, #e5e5ea);\n  font-weight: 600;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.li-thumb[data-v-b38870a5] {\n  flex: none;\n  box-sizing: border-box;\n  width: 40px;\n  height: 40px;\n  object-fit: cover;\n  border-radius: var(--zen-radius, 6px);\n  background: var(--zen-input, #1b1b20);\n  border: 1px solid var(--zen-border, #34343c);\n}\n.li-thumb.sm[data-v-b38870a5] {\n  width: 18px;\n  height: 18px;\n  border-radius: var(--zen-radius, 5px);\n}\n.li-thumb.ph[data-v-b38870a5] {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  color: var(--zen-muted, #9aa0aa);\n}\n/* grid-combo cell (contain square + name) */\n.li-gthumb[data-v-b38870a5] {\n  width: 100%;\n  aspect-ratio: 1;\n  border-radius: var(--zen-radius, 6px);\n  overflow: hidden;\n  background: var(--zen-surface, #202026);\n  position: relative;\n}\n/* Pinned to the square: its height comes from aspect-ratio, which `height: 100%` can't measure\n   against, so a portrait picture would grow past it and be cropped. */\n.li-gthumb img[data-v-b38870a5] {\n  position: absolute;\n  inset: 0;\n  width: 100%;\n  height: 100%;\n  object-fit: contain;\n  display: block;\n}\n.li-gname[data-v-b38870a5] {\n  font-size: 10px;\n  color: var(--zen-text, #e5e5ea);\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  text-align: center;\n}\n.li-lname[data-v-b38870a5] {\n  flex: 1;\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.li-foot[data-v-b38870a5] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  width: 100%;\n}\n.li-foot-browse[data-v-b38870a5] {\n  margin-left: auto;\n}\n/* compact source switcher inside the combo search row */\n.li-src[data-v-b38870a5] .zen-tg-b {\n  padding: 2px 7px;\n  font-size: 10px;\n}\n.li-pop-head[data-v-b38870a5] {\n  padding: 4px 8px 6px;\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.06em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.ma[data-v-294512d9] {\n  flex: none;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  overflow: hidden;\n  border-radius: 50%;\n  border: 2px solid var(--ma-color);\n  background: color-mix(in srgb, var(--ma-color) 35%, var(--zen-bg, #141418));\n}\n.ma-img[data-v-294512d9] {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n}\n.ma-letter[data-v-294512d9] {\n  font-weight: 700;\n  line-height: 1;\n  color: var(--zen-text, #e5e5ea);\n}\n\n.lbf[data-v-77740021] {\n  position: absolute;\n  inset: 0;\n  pointer-events: none;\n}\n.lbf-pic[data-v-77740021] {\n  position: absolute;\n  inset: 0;\n  -webkit-mask-size: 100% 100%;\n  mask-size: 100% 100%;\n}\n.lbf-img[data-v-77740021] {\n  position: absolute;\n  inset: 0;\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n  opacity: 0.78;\n}\n.lbf-top[data-v-77740021] {\n  position: absolute;\n  right: 4px;\n  top: 4px;\n  display: flex;\n  align-items: center;\n  gap: 3px;\n}\n.lbf-more[data-v-77740021] {\n  display: flex;\n  gap: 3px;\n}\n.lbf-more img[data-v-77740021],\n.lbf-plus[data-v-77740021] {\n  width: 22px;\n  height: 22px;\n  border-radius: 4px;\n  object-fit: cover;\n  box-shadow: 0 0 0 1px rgb(0 0 0 / 50%);\n}\n.lbf-more.big img[data-v-77740021],\n.lbf-more.big .lbf-plus[data-v-77740021] {\n  width: 32px;\n  height: 32px;\n}\n.lbf-plus[data-v-77740021] {\n  display: grid;\n  place-items: center;\n  background: rgb(0 0 0 / 65%);\n  color: #fff;\n  font-size: 10px;\n}\n.lbf-lora[data-v-77740021] {\n  position: absolute;\n  left: 4px;\n  top: 20px;\n  display: inline-flex;\n  align-items: center;\n  gap: 2px;\n  padding: 0 5px;\n  border-radius: 999px;\n  background: rgb(0 0 0 / 65%);\n  color: #fff;\n  font-size: 10px;\n  line-height: 16px;\n}\n.lbf-text[data-v-77740021] {\n  position: absolute;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  margin: 0;\n  padding: 14px 6px 4px;\n  background: linear-gradient(to top, rgb(0 0 0 / 75%), transparent);\n  color: #fff;\n  font-size: 11px;\n  line-height: 1.3;\n  text-shadow: 0 1px 2px rgb(0 0 0 / 60%);\n  display: -webkit-box;\n  -webkit-line-clamp: 2;\n  -webkit-box-orient: vertical;\n  overflow: hidden;\n}\n.lbf.bare .lbf-text[data-v-77740021] {\n  background: none;\n  color: color-mix(in srgb, #fff 85%, transparent);\n}\n@container (max-height: 70px) {\n.lbf-text[data-v-77740021],\n  .lbf-lora[data-v-77740021] {\n    display: none;\n}\n}\n@container (max-width: 90px) {\n.lbf-more[data-v-77740021] {\n    display: none;\n}\n}\n@container (min-height: 160px) {\n.lbf-text[data-v-77740021] {\n    -webkit-line-clamp: 3;\n}\n}\n\n.lsum[data-v-0e068eb5] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n}\n.lsum-stage[data-v-0e068eb5] {\n  flex: 1;\n  min-height: 0;\n  pointer-events: none;\n}\n.lsum-bar[data-v-0e068eb5] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n.lsum-text[data-v-0e068eb5] {\n  flex: 1;\n  min-width: 0;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.la[data-v-18a7e0c3] {\n  display: grid;\n  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);\n  gap: 16px;\n  height: 100%;\n  min-height: 0;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n}\n.la-ask[data-v-18a7e0c3],\n.la-result[data-v-18a7e0c3] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n  min-height: 0;\n  overflow: auto;\n}\n.la-result[data-v-18a7e0c3] {\n  padding-left: 16px;\n  border-left: 1px solid var(--zen-border, #34343c);\n}\n.la-source[data-v-18a7e0c3] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n}\n.la-pic[data-v-18a7e0c3] {\n  height: 180px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-surface-2, #26262d);\n  overflow: hidden;\n}\n.la-pic.off img[data-v-18a7e0c3] {\n  opacity: 0.3;\n}\n.la-pic img[data-v-18a7e0c3] {\n  max-width: 100%;\n  max-height: 100%;\n  object-fit: contain;\n}\n.la-none[data-v-18a7e0c3] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 6px;\n  padding: 16px;\n  text-align: center;\n  color: var(--zen-muted, #9aa0aa);\n}\n.la-none i[data-v-18a7e0c3] {\n  font-size: 24px;\n}\n.la-toggle[data-v-18a7e0c3] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n.la-toggle.dim[data-v-18a7e0c3] {\n  opacity: 0.5;\n}\n.la-chips[data-v-18a7e0c3] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 4px;\n}\n.la-chip[data-v-18a7e0c3] {\n  padding: 3px 8px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: 999px;\n  background: none;\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 11px;\n  cursor: pointer;\n}\n.la-chip[data-v-18a7e0c3]:hover {\n  color: var(--zen-text, #e5e5ea);\n  border-color: var(--zen-accent, #6366f1);\n}\n.la-row[data-v-18a7e0c3] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n.la-ctl[data-v-18a7e0c3] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.la-grow[data-v-18a7e0c3] {\n  flex: 1;\n}\n.la-note[data-v-18a7e0c3] {\n  margin: 0;\n  color: var(--zen-muted, #9aa0aa);\n}\n.la-error[data-v-18a7e0c3] {\n  margin: 0;\n  color: var(--zen-danger, #f87171);\n  white-space: pre-wrap;\n}\n.la-thumb[data-v-18a7e0c3] {\n  height: 260px;\n  flex: none;\n}\n.la-caption[data-v-18a7e0c3] {\n  margin: 0;\n  padding: 6px 8px;\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-surface-2, #26262d);\n  line-height: 1.45;\n}\n.la-boxes[data-v-18a7e0c3] {\n  margin: 0;\n  padding: 0;\n  list-style: none;\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n}\n.la-dot[data-v-18a7e0c3] {\n  display: inline-block;\n  width: 8px;\n  height: 8px;\n  margin-right: 6px;\n  border-radius: 2px;\n}\n.la-kind[data-v-18a7e0c3] {\n  margin: 0 4px;\n  font-size: 10px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.la-empty[data-v-18a7e0c3] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 8px;\n  height: 100%;\n  color: var(--zen-muted, #9aa0aa);\n  text-align: center;\n}\n.la-empty i[data-v-18a7e0c3] {\n  font-size: 28px;\n}\n\n.lm[data-v-ede01aa2] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n}\n.lm-bar[data-v-ede01aa2] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 6px;\n}\n.lm-bar-note[data-v-ede01aa2] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lm-lib[data-v-ede01aa2] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  width: 280px;\n  padding: 10px;\n  color: var(--zen-text, #e5e5ea);\n}\n.lm-lib-head[data-v-ede01aa2] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 6px;\n}\n.lm-lib-title[data-v-ede01aa2] {\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lm-lib-list[data-v-ede01aa2] {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n  max-height: 240px;\n  overflow-y: auto;\n}\n.lm-lib-row[data-v-ede01aa2] {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n}\n.lm-lib-pick[data-v-ede01aa2] {\n  flex: 1;\n  min-width: 0;\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  padding: 4px 6px;\n  border: 1px solid transparent;\n  border-radius: var(--zen-radius, 6px);\n  background: transparent;\n  color: var(--zen-text, #e5e5ea);\n  font: inherit;\n  font-size: 12px;\n  text-align: left;\n  cursor: pointer;\n}\n.lm-lib-pick[data-v-ede01aa2]:hover {\n  border-color: var(--zen-border, #34343c);\n  background: color-mix(in srgb, var(--zen-text, #fff) 5%, transparent);\n}\n.lm-lib-name[data-v-ede01aa2] {\n  overflow: hidden;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n}\n.lm-grid[data-v-ede01aa2] {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));\n  gap: 6px;\n}\n.lm-tile[data-v-ede01aa2] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 4px;\n  min-width: 0;\n  padding: 8px 4px 6px;\n  border: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 70%, transparent);\n  border-radius: var(--zen-radius, 7px);\n  background: transparent;\n  color: var(--zen-text, #e5e5ea);\n  cursor: pointer;\n}\n.lm-tile[data-v-ede01aa2]:hover {\n  background: color-mix(in srgb, var(--zen-text, #fff) 4%, transparent);\n}\n.lm-tile.on[data-v-ede01aa2] {\n  border-color: var(--zen-accent, #3b82f6);\n  background: color-mix(in srgb, var(--zen-accent, #3b82f6) 12%, transparent);\n}\n.lm-tile-name[data-v-ede01aa2] {\n  max-width: 100%;\n  overflow: hidden;\n  font-size: 11px;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n}\n.lm-tile-meta[data-v-ede01aa2] {\n  display: inline-flex;\n  align-items: center;\n  gap: 3px;\n  font-size: 10px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lm-new[data-v-ede01aa2] {\n  justify-content: center;\n  border-style: dashed;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lm-new .mdi[data-v-ede01aa2] {\n  font-size: 22px;\n}\n.lm-empty[data-v-ede01aa2] {\n  margin: 0;\n  font-size: 11px;\n  line-height: 1.45;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lm-edit[data-v-ede01aa2] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  padding-top: 10px;\n  border-top: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 60%, transparent);\n}\n.lm-head[data-v-ede01aa2] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.lm-name[data-v-ede01aa2] {\n  flex: 1;\n  min-width: 0;\n}\n.lm-color[data-v-ede01aa2] {\n  flex: none;\n  width: 22px;\n  height: 22px;\n  padding: 0;\n  border: 0;\n  border-radius: 4px;\n  background: transparent;\n  cursor: pointer;\n}\n\n.mc[data-v-f481af91] {\n  display: grid;\n  grid-template-columns: repeat(2, minmax(0, 1fr));\n  gap: 10px;\n}\n.mc-card[data-v-f481af91] {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  gap: 4px;\n  padding: 12px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-surface, #1e1e24);\n  color: var(--zen-text, #e5e5ea);\n  font: inherit;\n  font-size: 12px;\n  text-align: left;\n  cursor: pointer;\n}\n.mc-card[data-v-f481af91]:hover {\n  border-color: color-mix(in srgb, var(--zen-accent, #6366f1) 50%, var(--zen-border, #34343c));\n}\n.mc-card.on[data-v-f481af91] {\n  border-color: var(--zen-accent, #6366f1);\n  box-shadow: 0 0 0 1px var(--zen-accent, #6366f1);\n}\n.mc-icon[data-v-f481af91] {\n  font-size: 22px;\n  color: var(--zen-accent, #6366f1);\n}\n.mc-label[data-v-f481af91] {\n  font-size: 14px;\n  font-weight: 600;\n}\n.mc-model[data-v-f481af91] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.mc-what[data-v-f481af91] {\n  margin-top: 4px;\n  font-size: 11px;\n  line-height: 1.4;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.ls[data-v-5978b710] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n  padding: 4px 2px;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n}\n.ls-note[data-v-5978b710] {\n  margin: 0;\n  font-size: 11px;\n  line-height: 1.45;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.pal[data-v-90f7fa68] {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  gap: 4px;\n}\n.pal-chip[data-v-90f7fa68] {\n  display: inline-flex;\n}\n.pal-none[data-v-90f7fa68] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.preset[data-v-86f41e2a] {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n}\n.preset-input[data-v-86f41e2a] {\n  flex: 1;\n  min-width: 0;\n}\n.preset-menu[data-v-86f41e2a] {\n  display: flex;\n  flex-direction: column;\n  gap: 1px;\n  padding: 4px;\n  max-height: 280px;\n  overflow: auto;\n}\n\n.pl-cog[data-v-5346ca44] {\n  margin-left: 2px;\n  font-size: 13px;\n  opacity: 0.7;\n}\n.pl-host[data-v-5346ca44] {\n  position: relative;\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n}\n.pl-choose[data-v-5346ca44] {\n  position: absolute;\n  inset: 0;\n  z-index: 5;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  padding: 16px;\n  border-radius: var(--zen-radius, 7px);\n  background: color-mix(in srgb, var(--zen-bg, #141418) 88%, transparent);\n  backdrop-filter: blur(2px);\n}\n.pl-choose-card[data-v-5346ca44] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n  max-width: 720px;\n  color: var(--zen-text, #e5e5ea);\n}\n.pl-choose-title[data-v-5346ca44] {\n  font-size: 16px;\n  font-weight: 600;\n}\n.pl-choose-note[data-v-5346ca44] {\n  font-size: 12px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.pl-note[data-v-5346ca44] {\n  margin: 0;\n  padding-top: 10px;\n  border-top: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 60%, transparent);\n  font-size: 11px;\n  line-height: 1.45;\n  color: var(--zen-muted, #9aa0aa);\n}\n.pl-form[data-v-5346ca44] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n}\n.pl-seg[data-v-5346ca44] {\n  display: flex;\n  width: 100%;\n}\n.pl-seg[data-v-5346ca44] .zen-tg-b {\n  flex: 1 1 0;\n  min-width: 0;\n}\n.pl-chips[data-v-5346ca44] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 4px;\n}\n.pl-face[data-v-5346ca44] {\n  position: absolute;\n  top: 4px;\n  right: 4px;\n  display: flex;\n  gap: 2px;\n  pointer-events: none;\n}\n.pl-chip[data-v-5346ca44] {\n  display: inline-flex;\n  align-items: center;\n  gap: 5px;\n  height: 24px;\n  padding: 0 9px 0 3px;\n  border: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 80%, transparent);\n  border-radius: 11px;\n  background: transparent;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n  cursor: pointer;\n}\n.pl-chip[data-v-5346ca44]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.pl-chip.on[data-v-5346ca44] {\n  border-color: var(--zen-accent, #3b82f6);\n  background: color-mix(in srgb, var(--zen-accent, #3b82f6) 22%, transparent);\n  color: var(--zen-text, #e5e5ea);\n}\n.pl-chip.partial[data-v-5346ca44] {\n  border-style: dashed;\n  border-color: var(--zen-accent, #3b82f6);\n  color: var(--zen-text, #e5e5ea);\n}\n.pl-inherited[data-v-5346ca44] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 4px;\n  margin-bottom: 4px;\n}\n.pl-inh-ref[data-v-5346ca44],\n.pl-inh-lora[data-v-5346ca44] {\n  display: inline-flex;\n  align-items: center;\n  gap: 4px;\n  max-width: 100%;\n  padding: 2px 6px 2px 3px;\n  border: 1px dashed color-mix(in srgb, var(--zen-border, #34343c) 90%, transparent);\n  border-radius: 5px;\n  background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 10.5px;\n  cursor: pointer;\n}\n.pl-inh-ref[data-v-5346ca44]:hover,\n.pl-inh-lora[data-v-5346ca44]:hover {\n  border-color: var(--zen-accent, #3b82f6);\n  color: var(--zen-text, #e5e5ea);\n}\n.pl-inh-ref img[data-v-5346ca44] {\n  width: 18px;\n  height: 18px;\n  border-radius: 3px;\n  object-fit: cover;\n}\n.pl-inh-name[data-v-5346ca44] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  max-width: 120px;\n}\n.pl-inh-str[data-v-5346ca44] {\n  font-variant-numeric: tabular-nums;\n  opacity: 0.75;\n}\n.pl-hint[data-v-5346ca44] {\n  margin: 0;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.pl-grid[data-v-5346ca44] {\n  display: grid;\n  grid-template-columns: 62px minmax(0, 1fr);\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n}\n.pl-blend-row[data-v-5346ca44] {\n  display: grid;\n  grid-template-columns: 44px minmax(0, 1fr) 82px;\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n}\n.pl-pairs[data-v-5346ca44] {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));\n  gap: 6px 10px;\n}\n.pl-pair[data-v-5346ca44] {\n  display: grid;\n  grid-template-columns: 52px minmax(0, 1fr);\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n}\n.pl-row-head[data-v-5346ca44] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n.pl-sub[data-v-5346ca44] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.pl-menu[data-v-5346ca44] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  padding: 8px;\n}\n.pl-menu-title[data-v-5346ca44] {\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n}\n.pl-menu .zen-btn[data-v-5346ca44] {\n  justify-content: flex-start;\n}\n.pl-swatch[data-v-5346ca44] {\n  flex: none;\n  width: 12px;\n  height: 12px;\n  border-radius: 3px;\n}\n.pl-wand[data-v-5346ca44] {\n  position: absolute;\n  inset: 0;\n  cursor: crosshair;\n}\n.pl-point[data-v-5346ca44] {\n  position: absolute;\n  width: 10px;\n  height: 10px;\n  margin: -5px 0 0 -5px;\n  border: 2px solid #fff;\n  border-radius: 50%;\n  background: #22c55e;\n  box-shadow: 0 0 0 1px rgb(0 0 0 / 50%);\n  pointer-events: none;\n}\n.pl-point.live[data-v-5346ca44] {\n  pointer-events: auto;\n  cursor: grab;\n  touch-action: none;\n}\n.pl-point.live[data-v-5346ca44]:hover {\n  transform: scale(1.3);\n}\n.pl-point.out[data-v-5346ca44] {\n  background: #ef4444;\n}\n.pl-status[data-v-5346ca44] {\n  display: inline-flex;\n  align-items: center;\n  gap: 5px;\n  height: 24px;\n  padding: 0 8px;\n  border: 0;\n  border-radius: var(--zen-radius, 7px);\n  background: none;\n  color: var(--zen-success, #4ade80);\n  font: inherit;\n  font-size: 11px;\n  cursor: pointer;\n}\n.pl-status[data-v-5346ca44]:hover {\n  background: color-mix(in srgb, var(--zen-text, #e5e5ea) 8%, transparent);\n}\n.pl-status.warn[data-v-5346ca44] {\n  color: var(--zen-warning, #f5b041);\n}\n.pl-count[data-v-5346ca44] {\n  color: var(--zen-muted, #9aa0aa);\n  font-variant-numeric: tabular-nums;\n}\n.pl-pop[data-v-5346ca44] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  width: min(340px, 88vw);\n  box-sizing: border-box;\n  padding: 10px;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n}\n.pl-pop-head[data-v-5346ca44] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n.pl-pop-title[data-v-5346ca44] {\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n.pl-out[data-v-5346ca44] {\n  margin: 0;\n  max-height: 320px;\n  overflow: auto;\n  padding: 6px 8px;\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-surface-2, #26262d);\n  font-family: var(--zen-mono, ui-monospace, monospace);\n  font-size: 10.5px;\n  line-height: 1.45;\n  white-space: pre-wrap;\n  word-break: break-word;\n  user-select: text;\n}\n.pl-warn[data-v-5346ca44] {\n  margin: 0;\n  padding-left: 16px;\n  font-size: 11px;\n  color: var(--zen-warning, #f5b041);\n}\n\n.lhost[data-v-caa49d38] {\n  position: relative;\n  box-sizing: border-box;\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n}\n.lhost[data-v-caa49d38] > * {\n  position: absolute;\n  inset: 0;\n}\n\n/* natural content flow — the node auto-grows to fit (see mountWidget), so rows are never\n   scrolled and the Add button simply follows the last row. */\n.ls-mid[data-v-04aebb5a] {\n  display: flex;\n  flex-direction: column;\n}\n.ls-rows[data-v-04aebb5a] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n}\n.ls-empty[data-v-04aebb5a] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 5px;\n  padding: 14px 8px;\n  text-align: center;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);\n}\n.ls-empty > .mdi[data-v-04aebb5a] {\n  font-size: 24px;\n  opacity: 0.8;\n}\n.ls-empty > span[data-v-04aebb5a] {\n  font-size: 11px;\n}\n.ls-row[data-v-04aebb5a] {\n  position: relative;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  transition: transform 0.15s ease;\n}\n.ls-row.off[data-v-04aebb5a] {\n  opacity: 0.5;\n}\n/* A group's rows step in under its header, joined by a rule down the side. */\n.ls-row.grouped[data-v-04aebb5a] {\n  margin-left: 6px;\n  padding-left: 6px;\n  border-left: 2px solid color-mix(in srgb, var(--zen-accent, #6366f1) 45%, transparent);\n}\n.ls-group[data-v-04aebb5a] {\n  position: relative;\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  min-height: 26px;\n  padding: 0 2px 0 0;\n  border-radius: var(--zen-radius, 6px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 6%, transparent);\n  transition: transform 0.15s ease;\n}\n.ls-rows.settling .ls-group[data-v-04aebb5a] {\n  transition: none;\n}\n.ls-group.muted .ls-gname[data-v-04aebb5a] {\n  text-decoration: line-through;\n  color: var(--zen-muted, #9aa0aa);\n}\n.ls-fold[data-v-04aebb5a],\n.ls-gname[data-v-04aebb5a] {\n  border: 0;\n  background: none;\n  color: inherit;\n  font: inherit;\n  cursor: pointer;\n  padding: 0;\n}\n.ls-fold[data-v-04aebb5a] {\n  flex: none;\n  width: 20px;\n  height: 24px;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 16px;\n  line-height: 1;\n}\n.ls-fold[data-v-04aebb5a]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.ls-gname[data-v-04aebb5a] {\n  flex: 1;\n  min-width: 0;\n  height: 24px;\n  overflow: hidden;\n  text-align: left;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  font-size: 12px;\n  font-weight: 600;\n}\n.ls-gname-edit[data-v-04aebb5a] {\n  flex: 1;\n  min-width: 0;\n  height: 22px;\n  padding: 0 5px;\n  font: inherit;\n  font-size: 12px;\n  font-weight: 600;\n  color: var(--zen-text, #e5e5ea);\n  background: var(--zen-bg, #1a1a1f);\n  border: 1px solid var(--zen-accent, #6366f1);\n  border-radius: var(--zen-radius, 6px);\n  outline: none;\n}\n.ls-driven[data-v-04aebb5a],\n.ls-solo[data-v-04aebb5a] {\n  flex: none;\n  font-size: 13px;\n  color: var(--zen-accent, #6366f1);\n}\n.ls-gcount[data-v-04aebb5a] {\n  flex: 0 1 auto;\n  max-width: 45%;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  padding: 0 4px;\n  font-size: 10.5px;\n  font-variant-numeric: tabular-nums;\n  color: var(--zen-muted, #9aa0aa);\n}\n/* The grabbed row is lifted, not ghosted — it's the real row, translated, so it stays exactly\n   its own size at any canvas zoom. z-index carries it over its neighbours as it passes them. */\n.ls-rows.settling .ls-row[data-v-04aebb5a] {\n  transition: none;\n}\n.ls-row.dragging[data-v-04aebb5a] {\n  z-index: 5;\n  transition: none;\n  box-shadow: 0 6px 16px rgb(0 0 0 / 45%);\n  border-radius: var(--zen-radius, 6px);\n  cursor: grabbing;\n}\n/* grip + dot travel together, so they pair at 2px instead of the row's 6px */\n.ls-gutter[data-v-04aebb5a] {\n  flex: none;\n  display: inline-flex;\n  align-items: center;\n  gap: 2px;\n}\n.ls-grip[data-v-04aebb5a] {\n  flex: none;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: 12px;\n  cursor: grab;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 14px;\n  line-height: 1;\n  /* The gesture-layer rules a drag handle needs (see useDragSurface): without touch-action the\n     browser reserves the gesture for scroll and fires pointercancel on the first pixel of\n     movement, and without user-select the drag turns into a text selection. */\n  touch-action: none;\n  -webkit-user-select: none;\n  user-select: none;\n}\n/* the glyph must never be the pointer target — the grip itself is what the press resolves to */\n.ls-grip[data-v-04aebb5a] > * {\n  pointer-events: none;\n  /* the icon font draws this glyph high in its box: measured 0.75px above the dot's centre at\n     14px, so it comes down that much (in em, to hold at any size) */\n  transform: translateY(0.054em);\n}\n.ls-grip[data-v-04aebb5a]:active {\n  cursor: grabbing;\n}\n.ls-grip[data-v-04aebb5a]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.ls-pick[data-v-04aebb5a] {\n  flex: 1;\n  min-width: 0;\n}\n/* No width: ZenNumber's intrinsic width is derived from the widest value its own min/max can\n   produce, so every row lines up at exactly the size the digits need. The 84px this used to\n   hardcode was two pixels short of \"-10.00\". */\n.ls-str[data-v-04aebb5a] {\n  flex: none;\n}\n.ls-confirm[data-v-04aebb5a] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  max-width: 230px;\n  padding: 6px 6px 4px;\n}\n.ls-confirm-text[data-v-04aebb5a] {\n  font-size: 12px;\n  line-height: 1.4;\n  color: var(--zen-text, #e5e5ea);\n}\n.ls-confirm-actions[data-v-04aebb5a] {\n  display: flex;\n  justify-content: flex-end;\n  gap: 6px;\n}\n.ls-pop-head[data-v-04aebb5a] {\n  padding: 4px 8px 6px;\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.06em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.nr-row[data-v-616b0b9a] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  height: 18px;\n}\n.nr-slider[data-v-616b0b9a] {\n  flex: 1;\n  min-width: 0;\n}\n.nr-tip[data-v-616b0b9a] {\n  position: fixed;\n  z-index: 10000;\n  transform: translate(-50%, -100%);\n  padding: 2px 6px;\n  font-size: 11px;\n  font-weight: 600;\n  font-variant-numeric: tabular-nums;\n  line-height: 1.3;\n  white-space: nowrap;\n  color: var(--zen-text, #e5e5ea);\n  background: var(--zen-surface, #202026);\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 6px);\n  box-shadow: 0 4px 12px rgb(0 0 0 / 45%);\n  pointer-events: none;\n}\n.nr-end[data-v-616b0b9a] {\n  flex: none;\n  font-size: 10.5px;\n  font-variant-numeric: tabular-nums;\n  color: var(--zen-muted, #9aa0aa);\n}\n.nr-menu[data-v-616b0b9a] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  width: 210px;\n  padding: 6px 8px 8px;\n}\n.nr-head[data-v-616b0b9a] {\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.06em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n.nr-field[data-v-616b0b9a] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 10px;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n}\n.nr-presets[data-v-616b0b9a] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 4px;\n  padding-top: 2px;\n}\n.nr-preset[data-v-616b0b9a] {\n  padding: 2px 7px;\n  font: inherit;\n  font-size: 11px;\n  color: var(--zen-muted, #cfd2d8);\n  background: color-mix(in srgb, var(--zen-text, #fff) 6%, transparent);\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 6px);\n  cursor: pointer;\n}\n.nr-preset[data-v-616b0b9a]:hover {\n  border-color: var(--zen-accent, #6366f1);\n  color: var(--zen-text, #e5e5ea);\n}\n\n/* The only positioned ancestor inside the widget, so every zone's offsetTop is measured against\n   it. Nothing between it and a row may be positioned or the drag maths silently shifts. */\n.rg-groups[data-v-c9d8e03d] {\n  position: relative;\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n}\n.rg-group[data-v-c9d8e03d] {\n  display: flex;\n  flex-direction: column;\n  gap: 5px;\n  padding: 4px 6px 6px;\n  border: 1px solid var(--zen-surface-border, var(--zen-border, #34343c));\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);\n  transition:\n    border-color 0.12s ease,\n    background 0.12s ease,\n    transform 0.15s ease;\n}\n.rg-group[data-v-c9d8e03d]:hover {\n  background: color-mix(in srgb, var(--zen-text, #fff) 5%, transparent);\n}\n/* the group the pointer is over, and the one the row came from */\n.rg-group.drop[data-v-c9d8e03d] {\n  border-color: var(--zen-accent, #6366f1);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 10%, transparent);\n}\n.rg-group.source[data-v-c9d8e03d]:not(.drop) {\n  border-style: dashed;\n}\ntextarea.rg-prompt.rg-prompt[data-v-c9d8e03d] {\n  width: 100%;\n  min-height: 28px;\n  padding: 5px 8px;\n}\n.rg-groups.settling .rg-group[data-v-c9d8e03d],\n.rg-groups.settling .rg-row[data-v-c9d8e03d] {\n  transition: none;\n}\n.rg-group.lifted[data-v-c9d8e03d] {\n  position: relative;\n  z-index: 1;\n  transition: none;\n  background: color-mix(in srgb, var(--zen-text, #fff) 5%, var(--zen-surface, #1f1f24));\n  box-shadow: 0 6px 18px rgb(0 0 0 / 35%);\n}\n.rg-head[data-v-c9d8e03d] {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  min-height: 24px;\n  padding-left: 2px;\n}\n.rg-label[data-v-c9d8e03d] {\n  flex: 1;\n  min-width: 0;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  cursor: help;\n}\n.rg-title[data-v-c9d8e03d] {\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n  white-space: nowrap;\n}\n.rg-count[data-v-c9d8e03d] {\n  flex: none;\n  padding: 0 5px;\n  border-radius: 999px;\n  background: color-mix(in srgb, var(--zen-text, #fff) 7%, transparent);\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  line-height: 15px;\n}\n/* An empty group still has to be a target big enough to aim at, so it keeps a row's worth of\n   height rather than collapsing to its header. */\n.rg-slot[data-v-c9d8e03d] {\n  margin: 0;\n  padding: 6px;\n  text-align: center;\n  font-size: 10px;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-surface-border, var(--zen-border, #34343c));\n  border-radius: var(--zen-radius, 6px);\n}\n.rg-rows[data-v-c9d8e03d] {\n  display: flex;\n  flex-direction: column;\n  gap: 5px;\n}\n.rg-row[data-v-c9d8e03d] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.rg-row.off[data-v-c9d8e03d] {\n  opacity: 0.5;\n}\n/* The grabbed row is lifted, not ghosted — it's the real row, translated, so it stays exactly its\n   own size at any canvas zoom. The z-index carries it over the groups it passes; no ancestor may\n   set one, or it would be trapped inside its own group's stacking context. */\n.rg-row.dragging[data-v-c9d8e03d] {\n  position: relative;\n  z-index: 5;\n  box-shadow: 0 6px 16px rgb(0 0 0 / 45%);\n  border-radius: var(--zen-radius, 6px);\n  cursor: grabbing;\n}\n.rg-grip[data-v-c9d8e03d] {\n  flex: none;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: 12px;\n  cursor: grab;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 14px;\n  line-height: 1;\n  /* The gesture-layer rules a drag handle needs (see useDragSurface): without touch-action the\n     browser reserves the gesture for scroll and fires pointercancel on the first pixel of\n     movement, and without user-select the drag turns into a text selection. */\n  touch-action: none;\n  -webkit-user-select: none;\n  user-select: none;\n}\n/* the glyph must never be the pointer target — the grip itself is what the press resolves to */\n.rg-grip[data-v-c9d8e03d] > * {\n  pointer-events: none;\n}\n.rg-grip[data-v-c9d8e03d]:active {\n  cursor: grabbing;\n}\n.rg-grip[data-v-c9d8e03d]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.rg-pick[data-v-c9d8e03d] {\n  flex: 1;\n  min-width: 0;\n}\n/* No width: ZenNumber's intrinsic width is now derived from the widest value its own min/max\n   can produce, so every row lines up at exactly the size the digits need and nothing clips. */\n.rg-str[data-v-c9d8e03d] {\n  flex: none;\n}\n\n/* content-driven panel: the node grows to fit this form */\n\n/* stacked field (label above a full-width control) */\n.si-field[data-v-289f994b] {\n  display: flex;\n  flex-direction: column;\n  gap: 3px;\n}\n/* inline row (label left, control right) */\n.si-row[data-v-289f994b] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n  min-height: 24px;\n}\n.si-lbl[data-v-289f994b] {\n  display: inline-flex;\n  align-items: center;\n  gap: 5px;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n  font-weight: 600;\n}\n.si-lbl .mdi[data-v-289f994b] {\n  font-size: 14px;\n}\n.si-grow[data-v-289f994b] {\n  flex: 1;\n  min-width: 0;\n}\n.si-project[data-v-289f994b] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n}\n.si-sel[data-v-289f994b] {\n  display: flex;\n  align-items: center;\n  gap: 7px;\n  min-width: 0;\n}\n.si-sel .mdi[data-v-289f994b] {\n  flex: none;\n  font-size: 15px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.si-sel-name[data-v-289f994b] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.si-opt-ic[data-v-289f994b] {\n  flex: none;\n  font-size: 15px;\n  color: var(--zen-accent, #6366f1);\n}\n.si-opt-name[data-v-289f994b] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.si-newbtn[data-v-289f994b] {\n  justify-content: flex-start !important;\n}\n\n/* quality */\n.si-quality[data-v-289f994b] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  flex: 1;\n  min-width: 0;\n  max-width: 60%;\n}\n.si-qval[data-v-289f994b] {\n  flex: none;\n  min-width: 26px;\n  text-align: right;\n  font-variant-numeric: tabular-nums;\n  color: var(--zen-text, #e5e5ea);\n}\n.si-sep[data-v-289f994b] {\n  height: 1px;\n  background: var(--zen-border, #34343c);\n  opacity: 0.7;\n  margin: 1px 0;\n}\n\n/* collapsible header */\n.si-exp[data-v-289f994b] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  width: 100%;\n  padding: 3px 2px;\n  background: none;\n  border: none;\n  cursor: pointer;\n  font: inherit;\n  font-size: 11px;\n  font-weight: 600;\n  color: var(--zen-muted, #9aa0aa);\n  text-align: left;\n}\n.si-exp[data-v-289f994b]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.si-exp .mdi[data-v-289f994b] {\n  font-size: 14px;\n}\n.si-badge[data-v-289f994b] {\n  margin-left: auto;\n  padding: 1px 6px;\n  border-radius: 999px;\n  font-size: 9px;\n  font-weight: 700;\n  letter-spacing: 0.02em;\n  color: var(--zen-accent-text, #fff);\n  background: var(--zen-accent, #6366f1);\n}\n.si-exp-body[data-v-289f994b] {\n  padding: 0 2px 2px;\n}\n.si-sub[data-v-289f994b] {\n  display: block;\n  margin-bottom: 3px;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n}\n\n/* destination footer */\n.si-dest[data-v-289f994b] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  margin-top: 1px;\n  padding: 5px 7px;\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-input, #1b1b20);\n  border: 1px solid var(--zen-border, #34343c);\n  color: var(--zen-text, #e5e5ea);\n  font-size: 11px;\n}\n.si-dest .mdi[data-v-289f994b] {\n  flex: none;\n  font-size: 14px;\n  color: var(--zen-accent, #6366f1);\n}\n.si-dest-path[data-v-289f994b] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n\n.sp[data-v-8adc7196] {\n  position: relative;\n}\n.sp-preview[data-v-8adc7196] {\n  position: relative;\n  flex: 1 1 0;\n  min-height: 0;\n  width: 100%;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: var(--zen-radius, 8px);\n}\n.sp-preview img[data-v-8adc7196] {\n  display: block;\n  border-radius: var(--zen-radius, 8px);\n  max-width: 100%;\n  max-height: 100%;\n  width: auto;\n  height: auto;\n  object-fit: contain;\n  /* no native image-drag ghost; the drag falls through to litegraph (moves the node) */\n  -webkit-user-drag: none;\n  user-select: none;\n}\n.sp-none[data-v-8adc7196] {\n  flex-direction: column;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  text-align: center;\n  padding: 8px;\n}\n.sp-none .mdi[data-v-8adc7196] {\n  font-size: 26px;\n  opacity: 0.8;\n}\n\n/* batch pager (bottom-center) */\n.sp-pager[data-v-8adc7196] {\n  position: absolute;\n  bottom: 6px;\n  left: 50%;\n  transform: translateX(-50%);\n  z-index: 3;\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  padding: 2px 4px;\n  border-radius: var(--zen-radius, 7px);\n  background: rgba(0, 0, 0, 0.5);\n  border: 1px solid rgba(255, 255, 255, 0.12);\n  backdrop-filter: blur(4px);\n  /* the body is pointer-events:none (drag-through), so controls opt back in + stay visible */\n  pointer-events: auto;\n}\n.sp-count[data-v-8adc7196] {\n  font-size: 11px;\n  color: #fff;\n  min-width: 38px;\n  text-align: center;\n}\n\n/* hover actions (top-right): download + lightbox */\n.sp-actions[data-v-8adc7196] {\n  position: absolute;\n  top: 6px;\n  right: 6px;\n  z-index: 3;\n  display: flex;\n  gap: 4px;\n  opacity: 0;\n  pointer-events: none;\n  transition: opacity 0.12s ease;\n}\n.sp-preview.sp-hot .sp-actions[data-v-8adc7196] {\n  opacity: 1;\n  pointer-events: auto;\n}\n/* A dark chip with a white icon, so the buttons read over any picture; the same as\n   Load Image's (ImagePick.vue's .li-ov-btn). ZenIconButton's own look (no background, muted icon) is for a toolbar, hence\n   the !important. Pointing at one fills it with the accent. */\n.sp-act[data-v-8adc7196] {\n  width: 26px !important;\n  height: 26px !important;\n  border: 1px solid rgba(255, 255, 255, 0.14) !important;\n  background: rgba(0, 0, 0, 0.46) !important;\n  color: #fff !important;\n  backdrop-filter: blur(4px);\n}\n.sp-act[data-v-8adc7196]:hover {\n  background: var(--zen-accent, #6366f1) !important;\n  border-color: var(--zen-accent, #6366f1) !important;\n  color: var(--zen-accent-text, #fff) !important;\n}\n\n.tl[data-v-e451bbd8] {\n  display: grid;\n  grid-template-columns: 250px minmax(0, 1fr);\n  gap: 14px;\n  height: 100%;\n  min-height: 0;\n}\n.tl-side[data-v-e451bbd8] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  min-height: 0;\n  padding-right: 14px;\n  border-right: 1px solid var(--zen-border, #34343c);\n}\n.tl-side-top[data-v-e451bbd8] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.tl-search[data-v-e451bbd8] {\n  flex: 1;\n  min-width: 0;\n}\n.tl-list[data-v-e451bbd8] {\n  flex: 1;\n  min-height: 0;\n  overflow-y: auto;\n  display: flex;\n  flex-direction: column;\n  gap: 2px;\n}\n.tl-cat[data-v-e451bbd8] {\n  padding: 8px 6px 3px;\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.06em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n.tl-item[data-v-e451bbd8] {\n  display: flex;\n  flex-direction: column;\n  gap: 1px;\n  padding: 6px 8px;\n  text-align: left;\n  font: inherit;\n  color: var(--zen-text, #e5e5ea);\n  background: none;\n  border: 1px solid transparent;\n  border-radius: var(--zen-radius, 7px);\n  cursor: pointer;\n}\n.tl-item[data-v-e451bbd8]:hover {\n  background: color-mix(in srgb, var(--zen-text, #fff) 6%, transparent);\n}\n.tl-item.on[data-v-e451bbd8] {\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 16%, transparent);\n  border-color: color-mix(in srgb, var(--zen-accent, #6366f1) 45%, transparent);\n}\n.tl-item-name[data-v-e451bbd8] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  font-size: 12.5px;\n  font-weight: 600;\n}\n.tl-used[data-v-e451bbd8] {\n  font-size: 13px;\n  color: var(--zen-accent, #6366f1);\n}\n.tl-item-sub[data-v-e451bbd8],\n.tl-none[data-v-e451bbd8] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.tl-item-sub[data-v-e451bbd8] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.tl-none[data-v-e451bbd8] {\n  padding: 16px 8px;\n  text-align: center;\n}\n.tl-edit[data-v-e451bbd8] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n  min-width: 0;\n  min-height: 0;\n}\n.tl-fields[data-v-e451bbd8] {\n  display: flex;\n  gap: 10px;\n}\n.tl-field[data-v-e451bbd8] {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n  flex: 0 0 200px;\n  min-width: 0;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.tl-field.tl-name[data-v-e451bbd8] {\n  flex: 1;\n}\n.tl-cat-input[data-v-e451bbd8],\n.tl-area[data-v-e451bbd8] {\n  font: inherit;\n  color: var(--zen-text, #e5e5ea);\n  background: var(--zen-surface, #202026);\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  outline: none;\n}\n.tl-cat-input[data-v-e451bbd8] {\n  height: 28px;\n  padding: 0 8px;\n  font-size: 12px;\n}\n.tl-cat-input[data-v-e451bbd8]:focus,\n.tl-area[data-v-e451bbd8]:focus {\n  border-color: var(--zen-accent, #6366f1);\n}\n.tl-area[data-v-e451bbd8] {\n  flex: 1;\n  min-height: 0;\n  resize: none;\n  padding: 10px 12px;\n  font-family: var(--zen-font-mono, ui-monospace, \"SF Mono\", Menlo, monospace);\n  font-size: 12.5px;\n  line-height: 1.55;\n}\n.tl-foot[data-v-e451bbd8] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.tl-count[data-v-e451bbd8] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.tl-grow[data-v-e451bbd8] {\n  flex: 1;\n}\n@media (max-width: 640px) {\n.tl[data-v-e451bbd8] {\n    grid-template-columns: minmax(0, 1fr);\n    grid-template-rows: 170px minmax(0, 1fr);\n}\n.tl-side[data-v-e451bbd8] {\n    padding: 0 0 10px;\n    border-right: 0;\n    border-bottom: 1px solid var(--zen-border, #34343c);\n}\n}\n\n.st-pick[data-v-b520f037] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.st-combo[data-v-b520f037] {\n  flex: 1;\n  min-width: 0;\n}\n/* One line, always: a long name is cut short with an ellipsis, never wrapped under itself. */\n.st-current[data-v-b520f037],\n.st-placeholder[data-v-b520f037] {\n  display: block;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.st-current[data-v-b520f037] {\n  font-weight: 600;\n}\n.st-placeholder[data-v-b520f037] {\n  color: var(--zen-muted, #9aa0aa);\n}\n.st-opt[data-v-b520f037] {\n  display: flex;\n  align-items: baseline;\n  justify-content: space-between;\n  gap: 10px;\n  min-width: 0;\n  width: 100%;\n}\n.st-opt-name[data-v-b520f037] {\n  flex: 1;\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.st-opt-cat[data-v-b520f037] {\n  flex: none;\n  font-size: 10.5px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.st-pick[data-v-b520f037],\n.st-note[data-v-b520f037] {\n  flex: none;\n}\n/* The text takes the rest of the node, and scrolls inside it when there is more. */\n/* ZenWidget's footer spacer grows too; this outweighs it, so the slack goes to the text. */\n.st-preview[data-v-b520f037],\n.st-empty[data-v-b520f037] {\n  flex: 1000 1 0;\n  min-height: 0;\n}\n.st-preview[data-v-b520f037] {\n  display: block;\n  overflow-y: auto;\n  padding: 7px 9px;\n  text-align: left;\n  white-space: pre-wrap;\n  overflow-wrap: anywhere;\n  font: inherit;\n  font-size: 11.5px;\n  line-height: 1.45;\n  color: var(--zen-muted, #b9bcc4);\n  background: color-mix(in srgb, var(--zen-text, #fff) 4%, transparent);\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  cursor: pointer;\n}\n.st-preview[data-v-b520f037]:hover {\n  border-color: var(--zen-accent, #6366f1);\n  color: var(--zen-text, #e5e5ea);\n}\n.st-empty[data-v-b520f037] {\n  display: grid;\n  place-items: center;\n  padding: 10px 8px;\n  text-align: center;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n}\n.st-note[data-v-b520f037] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  font-size: 11px;\n  color: var(--zen-warning, #f59e0b);\n}\n.st-link[data-v-b520f037] {\n  margin-left: auto;\n  padding: 0;\n  font: inherit;\n  color: var(--zen-accent, #6366f1);\n  background: none;\n  border: 0;\n  cursor: pointer;\n  text-decoration: underline;\n}\n.zen-widget[data-v-566c7d03]{display:flex;flex-direction:column;width:100%;padding:6px 2px;box-sizing:border-box;cursor:default;font-size:12px;color:var(--zen-text, #e5e5ea)}.zen-widget.fill[data-v-566c7d03]{height:100%;min-height:0}.zen-widget.has-footer[data-v-566c7d03]{flex:1 0 auto}.zen-widget-spacer[data-v-566c7d03]{flex:1 1 0;min-height:0}.zen-widget.drag-through[data-v-566c7d03]{cursor:inherit}.zen-row[data-v-33277610]{display:flex;width:100%;min-width:0}.zen-row[data-v-33277610]>*{flex:0 0 auto;width:auto}.zen-row[data-v-33277610]>[data-grow]{flex:1 1 var(--zen-row-min, 120px);width:auto;min-width:0}.zen-scroll{scrollbar-color:var( --zen-scrollbar, var(--dialog-surface, color-mix(in srgb, var(--zen-text, #e5e5ea) 24%, transparent)) ) transparent}:where(.zen-scroll,.zen-scroll *){scrollbar-width:thin}[data-zen-layer]{--zen-scrollbar: color-mix(in srgb, var(--zen-text, #e5e5ea) 32%, transparent)}:where(.zen-surface){box-sizing:border-box;border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius-surface, var(--zen-radius, 7px));background:var(--zen-chrome-bg, var(--zen-surface, #202026));box-shadow:var(--zen-shadow-pop, 0 10px 30px rgb(0 0 0 / 45%));color:var(--zen-text, #e5e5ea);font-family:var(--p-font-family, system-ui, sans-serif)}.zen-pop-tooltip[data-v-34f78306]{pointer-events:none}.zen-pop-anchor[data-v-34f78306]{display:inline-flex}.zen-pop[data-v-34f78306]{position:fixed;z-index:100000;min-width:160px;max-width:min(360px,92vw);padding:5px;display:flex;flex-direction:column;gap:1px}.zen-tip[data-v-e12bb9ef]{display:inline-grid;place-items:center;width:16px;height:16px;padding:0;margin:0;border:none;background:none;color:var(--zen-muted, #9aa0aa);cursor:help;border-radius:var(--zen-radius, 6px);flex:none;vertical-align:middle}.zen-tip.inline[data-v-e12bb9ef]{display:inline;width:auto;height:auto;font:inherit;color:inherit;text-align:inherit;text-decoration:underline dotted transparent;text-underline-offset:3px;transition:text-decoration-color .15s ease}.zen-tip.inline[data-v-e12bb9ef]:hover,.zen-tip.inline[data-v-e12bb9ef]:focus-visible{color:inherit;text-decoration-color:color-mix(in srgb,currentColor 55%,transparent)}.zen-tip svg[data-v-e12bb9ef]{width:13px;height:13px}.zen-tip[data-v-e12bb9ef]:hover,.zen-tip[data-v-e12bb9ef]:focus-visible{color:var(--zen-accent, #8ab4ff)}.zen-tip[data-v-e12bb9ef]:focus-visible{outline:2px solid var(--zen-accent, #8ab4ff);outline-offset:1px}.zen-tip-body[data-v-e12bb9ef]{max-width:280px;padding:8px 10px;font-size:12px;line-height:1.45;color:var(--zen-text, #e5e5ea);white-space:normal}.zen-field[data-v-9c483aa7]{display:flex;flex-direction:column;gap:2px;min-width:0}.zf-row[data-v-9c483aa7]{display:flex;align-items:center;gap:6px;min-width:0}.zen-field.stack .zf-row[data-v-9c483aa7]{flex-direction:column;align-items:stretch;gap:3px}.zf-label-wrap[data-v-9c483aa7]{flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;min-width:0}.zf-label[data-v-9c483aa7]{flex:0 0 auto;font-size:11px;color:var(--zen-muted, #9aa0aa);white-space:nowrap}.zf-control[data-v-9c483aa7]{flex:1 1 auto;min-width:0;display:flex;align-items:center;--zen-control-min: 0px}.zf-control[data-v-9c483aa7]>*{flex:1 1 auto;min-width:0}.zf-hint[data-v-9c483aa7]{font-size:10px;color:var(--zen-muted, #9aa0aa);opacity:.8}:root{--zen-dur-fast: .12s;--zen-dur: .2s}@media(prefers-reduced-motion:reduce){:root{--zen-dur-fast: 0s;--zen-dur: 0s}}:root[data-zen-motion=reduce]{--zen-dur-fast: 0s;--zen-dur: 0s}@media(prefers-reduced-motion:reduce){:root[data-zen-motion=full]{--zen-dur-fast: .12s;--zen-dur: .2s}}.zen-ico-img[data-v-819f0eab]{width:1em;height:1em;object-fit:contain;display:inline-block;vertical-align:-.15em;border-radius:var(--zen-radius, 7px)}.zen-section[data-v-217a9770]{display:flex;flex-direction:column;min-width:0;color:var(--zen-text, #e5e5ea)}.zen-section.plain+.zen-section.plain[data-v-217a9770]{border-top:1px solid var(--zen-border, #34343c)}.zen-section.card[data-v-217a9770]{border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-surface, #202026)}.zs-head[data-v-217a9770]{display:flex;align-items:center;gap:4px;min-height:26px}.zen-section.plain>.zs-head[data-v-217a9770]{padding:4px 0}.zen-section.card>.zs-head[data-v-217a9770]{padding:3px 4px 3px 8px}.zs-toggle[data-v-217a9770]{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:5px;padding:2px 0;border:0;border-radius:var(--zen-radius, 4px);background:none;color:inherit;font:inherit;font-size:11.5px;font-weight:600;text-align:left;cursor:pointer}.zs-toggle.static[data-v-217a9770]{cursor:default}.zs-toggle[data-v-217a9770]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zs-toggle[data-v-217a9770]:disabled{cursor:default}.zen-section.disabled>.zs-head[data-v-217a9770]{opacity:.5}.zs-chev[data-v-217a9770]{flex:0 0 auto;font-size:14px;color:var(--zen-muted, #9aa0aa);transition:transform var(--zen-dur, .2s) ease}.zen-section.open>.zs-head .zs-chev[data-v-217a9770]{transform:rotate(90deg)}.zs-icon[data-v-217a9770]{flex:0 0 auto;font-size:14px;color:var(--zen-muted, #9aa0aa)}.zs-title[data-v-217a9770]{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.zs-meta[data-v-217a9770]{margin-left:auto;padding-left:8px;flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:400;font-size:11px;color:var(--zen-muted, #9aa0aa)}.zs-actions[data-v-217a9770]{flex:0 0 auto;display:flex;align-items:center;gap:2px}.zs-wrap[data-v-217a9770]{display:grid;grid-template-rows:0fr;transition:grid-template-rows var(--zen-dur, .2s) ease}.zen-section.open>.zs-wrap[data-v-217a9770]{grid-template-rows:1fr}.zs-clip[data-v-217a9770]{min-height:0;min-width:0}.zs-clip.clipped[data-v-217a9770]{overflow:hidden}.zen-section:not(.open)>.zs-wrap>.zs-clip[data-v-217a9770]{visibility:hidden;transition:visibility 0s var(--zen-dur, .2s)}.zs-body[data-v-217a9770]{display:flex;flex-direction:column;gap:var(--zen-section-gap, 8px)}.zen-section.plain>.zs-wrap>.zs-clip>.zs-body[data-v-217a9770]{padding:2px 0 10px}.zen-section.card>.zs-wrap>.zs-clip>.zs-body[data-v-217a9770]{padding:2px 8px 8px}.zen-sections[data-v-be050f3f]{display:flex;flex-direction:column;min-width:0}.zen-resize-handle[data-v-732b507d]{position:relative;z-index:1;flex:0 0 8px;touch-action:none;user-select:none;background:transparent}.vertical[data-v-732b507d]{cursor:col-resize}.horizontal[data-v-732b507d]{cursor:row-resize}.both[data-v-732b507d]{cursor:move}.zen-resize-handle[data-v-732b507d]:after{content:\"\";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border-radius:999px;background:var(--zen-accent, #6366f1);opacity:0;transition:opacity var(--zen-dur-fast, .12s) ease;pointer-events:none}.vertical[data-v-732b507d]:after{width:3px;height:32px;max-height:calc(100% - 4px)}.horizontal[data-v-732b507d]:after{width:32px;height:3px;max-width:calc(100% - 4px)}.both[data-v-732b507d]:after{width:8px;height:8px}.zen-resize-handle[data-v-732b507d]:hover:after,.zen-resize-handle.active[data-v-732b507d]:after,.zen-resize-handle[data-v-732b507d]:focus-visible:after{opacity:1}.zen-resize-handle[data-v-732b507d]:focus-visible{outline:2px solid var(--zen-focus-ring, var(--zen-accent, #6366f1));outline-offset:1px}.line[data-v-732b507d]{flex-basis:1px;background:var(--zen-border, #34343c);transition:background var(--zen-dur-fast, .12s) ease}.line[data-v-732b507d]:before{content:\"\";position:absolute}.line.vertical[data-v-732b507d]:before{inset:0 -2.5px}.line.horizontal[data-v-732b507d]:before{inset:-2.5px 0}.line[data-v-732b507d]:hover,.line.active[data-v-732b507d]{background:var(--zen-accent, #6366f1)}.line[data-v-732b507d]:after{display:none}.zen-split[data-v-a558794f]{display:flex;width:100%;height:100%;min-width:0;min-height:0}.zen-split.vertical[data-v-a558794f]{flex-direction:column}.zen-split.dragging[data-v-a558794f]{user-select:none}.zen-split.horizontal.dragging[data-v-a558794f]{cursor:col-resize}.zen-split.vertical.dragging[data-v-a558794f]{cursor:row-resize}.zsp-pane[data-v-a558794f]{position:relative;min-width:0;min-height:0;overflow:hidden}.zsp-pane.collapsed[data-v-a558794f]{visibility:hidden}.zen-scroll[data-v-d68b9d36]{height:100%;min-height:0;overflow-y:auto;overflow-x:hidden}.zen-scroll.x[data-v-d68b9d36]{overflow-x:auto;overflow-y:hidden}.zen-scroll-ov[data-v-d68b9d36]{position:relative;height:100%;min-height:0;overflow:hidden}.zen-scroll-viewport[data-v-d68b9d36]{scrollbar-width:none;will-change:scroll-position}.zen-scroll-viewport[data-v-d68b9d36]::-webkit-scrollbar{display:none}.zen-scroll-track[data-v-d68b9d36]{position:absolute;top:0;right:0;bottom:0;width:12px;z-index:4;opacity:0;transition:opacity .2s ease}.zen-scroll-ov:hover .zen-scroll-track[data-v-d68b9d36],.zen-scroll-ov.active .zen-scroll-track[data-v-d68b9d36]{opacity:1}.zen-scroll-thumb[data-v-d68b9d36]{position:absolute;top:0;right:3px;width:6px;border-radius:var(--zen-radius-sm, 4px);background:var(--zen-scrollbar, color-mix(in srgb, var(--zen-text, #e5e5ea) 28%, transparent));transition:width .15s ease,right .15s ease,background .15s ease;touch-action:none;cursor:pointer}.zen-scroll-track:hover .zen-scroll-thumb[data-v-d68b9d36],.zen-scroll-thumb[data-v-d68b9d36]:active{width:8px;right:2px;background:var(--zen-accent, #6366f1)}.zen-scroll-ov.x .zen-scroll-track[data-v-d68b9d36]{top:auto;left:0;width:auto;height:12px}.zen-scroll-ov.x .zen-scroll-thumb[data-v-d68b9d36]{inset:auto auto 3px 0;width:auto;height:6px}.zen-scroll-ov.x .zen-scroll-track:hover .zen-scroll-thumb[data-v-d68b9d36],.zen-scroll-ov.x .zen-scroll-thumb[data-v-d68b9d36]:active{width:auto;right:auto;height:8px;bottom:2px}.zen-view[data-v-f7345db8]{position:relative;display:flex;flex-direction:column;height:100%;min-height:0;overflow:hidden;background:var(--zen-bg, #1a1a1f);color:var(--zen-text, #e5e5ea);font-family:var(--p-font-family, system-ui, sans-serif)}.zen-view-body[data-v-f7345db8]{flex:1 1 0;min-height:0}.zen-view-body.fill[data-v-f7345db8]{display:flex}.zen-view-body.pad[data-v-f7345db8]{padding:10px}.zen-toolbar[data-v-ea3754a7]{flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:7px 9px;border-bottom:1px solid var(--zen-surface-border, var(--zen-border, #34343c));background:var(--zen-chrome-bg, var(--zen-surface, #202026))}.tb-icon[data-v-ea3754a7]{font-size:15px;color:var(--zen-accent, #6366f1)}.tb-title[data-v-ea3754a7]{font-size:12px;font-weight:600;color:var(--zen-text, #e5e5ea);white-space:nowrap}.tb-grow[data-v-ea3754a7]{flex:1}.zen-btn[data-v-44a20193]{display:inline-flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;user-select:none;font-family:inherit;font-size:12px;font-weight:600;box-sizing:border-box;height:var(--zen-control-h, 28px);padding:0 12px;border-radius:var(--zen-radius, 7px);border:1px solid var(--zen-control-border, var(--zen-border, #34343c));background:var(--zen-control-bg, var(--zen-surface, #202026));color:var(--zen-text, #e5e5ea);transition:border-color var(--zen-dur-fast, .12s) ease,background var(--zen-dur-fast, .12s) ease,color var(--zen-dur-fast, .12s) ease,filter var(--zen-dur-fast, .12s) ease}.zen-btn[data-v-44a20193]:hover:not(:disabled){border-color:var(--zen-control-hover-border, var(--zen-accent, #6366f1));background:var(--zen-control-hover-bg, var(--zen-control-bg))}.zen-btn[data-v-44a20193]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zen-btn[data-v-44a20193]:disabled{opacity:.45;cursor:not-allowed}.zen-btn .mdi[data-v-44a20193]{font-size:15px}.zen-btn.block[data-v-44a20193]{width:100%}.zen-btn.sm[data-v-44a20193]{height:var(--zen-control-h-sm, 24px);padding:0 9px;font-size:11px}.zen-btn.primary[data-v-44a20193]{background:var(--zen-accent, #6366f1);border-color:var(--zen-accent, #6366f1);color:var(--zen-accent-text, #fff)}.zen-btn.primary[data-v-44a20193]:hover:not(:disabled){border-color:color-mix(in srgb,var(--zen-accent, #6366f1) 72%,var(--zen-accent-text, #fff));background:color-mix(in srgb,var(--zen-accent, #6366f1) 72%,var(--zen-accent-text, #fff))}.zen-btn.ghost[data-v-44a20193]{background:transparent;border-color:transparent}.zen-btn.ghost[data-v-44a20193]:hover:not(:disabled){background:color-mix(in srgb,var(--zen-text, #e5e5ea) 10%,transparent);border-color:transparent}.zen-btn.danger[data-v-44a20193]:hover:not(:disabled){background:var(--zen-danger, #dc2626);border-color:var(--zen-danger, #dc2626);color:var(--zen-danger-text, #fff)}.zen-iconbtn[data-v-350d2f84]{display:inline-flex;align-items:center;justify-content:center;flex:none;box-sizing:border-box;width:var(--zen-control-h, 28px);height:var(--zen-control-h, 28px);border:1px solid transparent;border-radius:var(--zen-radius, 7px);background:none;color:var(--zen-muted, #9aa0aa);cursor:pointer;user-select:none;transition:background var(--zen-dur-fast, .12s) ease,color var(--zen-dur-fast, .12s) ease}.zen-iconbtn[data-v-350d2f84]:hover:not(:disabled){background:color-mix(in srgb,var(--zen-text, #e5e5ea) 12%,transparent);color:var(--zen-text, #e5e5ea)}.zen-iconbtn.active[data-v-350d2f84]{color:var(--zen-accent, #6366f1)}.zen-iconbtn.danger[data-v-350d2f84]:hover:not(:disabled){background:var(--zen-danger, #dc2626);color:var(--zen-danger-text, #fff)}.zen-iconbtn[data-v-350d2f84]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zen-iconbtn.sm[data-v-350d2f84]{width:var(--zen-control-h-sm, 24px);height:var(--zen-control-h-sm, 24px)}.zen-iconbtn[data-v-350d2f84]:disabled{cursor:not-allowed;opacity:.4;cursor:default}.zen-iconbtn .mdi[data-v-350d2f84]{font-size:16px;line-height:1}.zen-iconbtn .mdi[data-v-350d2f84]:before{display:block;line-height:1}.zen-lotus[data-v-b2ab3c2d]{display:inline-block;flex:none;width:1.2em;overflow:visible}.petal[data-v-b2ab3c2d]{transform:rotate(var(--r));transform-origin:0 0;transform-box:view-box}.zen-lotus.interactive[data-v-b2ab3c2d]{cursor:pointer}.blooming .petal[data-v-b2ab3c2d]{animation:zen-lotus-bloom-b2ab3c2d .9s cubic-bezier(.3,0,.2,1) both}@keyframes zen-lotus-bloom-b2ab3c2d{0%{transform:rotate(var(--r)) scale(1)}28%{transform:rotate(calc(var(--r) * .12)) scale(.82,.9)}62%{transform:rotate(calc(var(--r) * 1.12)) scale(1.06)}to{transform:rotate(var(--r)) scale(1)}}.ripple[data-v-b2ab3c2d]{fill:none;stroke:currentColor;stroke-width:3;opacity:0;transform-origin:0 2px;transform-box:view-box;animation:zen-lotus-ripple-b2ab3c2d 1s ease-out .25s both}@keyframes zen-lotus-ripple-b2ab3c2d{0%{opacity:.6;transform:scale(.3)}to{opacity:0;transform:scale(1.5)}}.breathing>g[data-v-b2ab3c2d]{transform-origin:0 0;transform-box:view-box;animation:zen-lotus-breathe-b2ab3c2d 4.8s ease-in-out infinite}@keyframes zen-lotus-breathe-b2ab3c2d{0%,to{transform:scale(.94);opacity:.85}50%{transform:scale(1.04);opacity:1}}@media(prefers-reduced-motion:reduce){.blooming .petal[data-v-b2ab3c2d]{animation-name:zen-lotus-glow-b2ab3c2d}.ripple[data-v-b2ab3c2d]{animation:none}.breathing>g[data-v-b2ab3c2d]{animation-name:zen-lotus-fade-b2ab3c2d}}:root[data-zen-motion=reduce] .blooming .petal[data-v-b2ab3c2d]{animation-name:zen-lotus-glow-b2ab3c2d}:root[data-zen-motion=reduce] .ripple[data-v-b2ab3c2d]{animation:none}:root[data-zen-motion=reduce] .breathing>g[data-v-b2ab3c2d]{animation-name:zen-lotus-fade-b2ab3c2d}@keyframes zen-lotus-glow-b2ab3c2d{0%,to{transform:rotate(var(--r));filter:none}40%{transform:rotate(var(--r));filter:brightness(1.6) drop-shadow(0 0 6px currentColor)}}@keyframes zen-lotus-fade-b2ab3c2d{0%,to{opacity:.75}50%{opacity:1}}.zen-empty[data-v-71f336c3]{margin:auto;display:flex;flex-direction:column;align-items:center;gap:6px;max-width:260px;padding:20px;text-align:center;color:var(--zen-muted, #9aa0aa);font-family:var(--p-font-family, system-ui, sans-serif)}.zen-empty-mark[data-v-71f336c3]{width:44px;margin-bottom:4px;fill:currentColor;opacity:.45}.zen-empty-icon[data-v-71f336c3]{width:auto;font-size:36px}.zen-empty-title[data-v-71f336c3]{color:var(--zen-text, #e5e5ea);font-size:13px;font-weight:600}.zen-empty-text[data-v-71f336c3]{margin:0;font-size:12px;line-height:1.5}.zen-empty-actions[data-v-71f336c3]{display:flex;gap:6px;margin-top:6px}.zen-input[data-v-2eb7b22b]{width:100%;box-sizing:border-box;font:inherit;font-size:12px;line-height:normal;background:var(--zen-field-bg, var(--zen-input, #1b1b20));color:var(--zen-text, #e5e5ea);border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);height:var(--zen-control-h, 28px);padding:0 9px;transition:border-color var(--zen-dur-fast, .12s) ease}.zen-input[data-v-2eb7b22b]::placeholder{color:var(--zen-muted, #9aa0aa)}.zen-input[data-v-2eb7b22b]:focus{outline:none;border-color:var(--zen-accent, #6366f1)}.zen-input[data-v-2eb7b22b]:disabled{opacity:.45;cursor:not-allowed}.zen-input.sm[data-v-2eb7b22b]{height:var(--zen-control-h-sm, 24px);padding:0 8px;font-size:11px}.zen-input.area[data-v-2eb7b22b]{height:auto;padding:7px 9px;resize:vertical;min-height:64px;line-height:1.45}.zen-input.area.auto[data-v-2eb7b22b]{resize:none;min-height:0;overflow:hidden}.zmi[data-v-95e0cb5c]{position:relative;display:grid;min-height:0;border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);background:var(--zen-field-bg, var(--zen-input, #1b1b20));transition:border-color var(--zen-dur-fast, .12s) ease}.zmi.focused[data-v-95e0cb5c]{border-color:var(--zen-accent, #6366f1)}.zmi-mirror[data-v-95e0cb5c],.zmi-area[data-v-95e0cb5c]{grid-area:1 / 1;box-sizing:border-box;margin:0;padding:8px 10px;border:0;font-family:inherit;font-size:12.5px;line-height:1.5;letter-spacing:normal;white-space:pre-wrap;overflow-wrap:break-word;word-break:normal;scrollbar-gutter:stable}.zmi-mirror[data-v-95e0cb5c]{overflow:hidden;color:transparent;pointer-events:none}.zmi-mirror mark[data-v-95e0cb5c]{border-radius:3px;background:color-mix(in srgb,var(--zen-accent, #6366f1) 28%,transparent);color:transparent;box-shadow:0 0 0 1px color-mix(in srgb,var(--zen-accent, #6366f1) 45%,transparent)}.zmi-mirror mark.unknown[data-v-95e0cb5c]{background:color-mix(in srgb,var(--zen-danger, #dc2626) 22%,transparent);box-shadow:0 0 0 1px color-mix(in srgb,var(--zen-danger, #dc2626) 55%,transparent);text-decoration:wavy underline var(--zen-danger, #dc2626)}.zmi-area[data-v-95e0cb5c]{height:100%;min-height:100%;resize:none;outline:none;background:transparent;color:var(--zen-text, #e5e5ea);caret-color:var(--zen-text, #e5e5ea)}.zmi.sized[data-v-95e0cb5c]{grid-template-rows:100%;overflow:hidden}.zmi-grip[data-v-95e0cb5c]{position:absolute;right:1px;bottom:1px;z-index:1;width:12px;height:12px;cursor:ns-resize;touch-action:none;background:linear-gradient(135deg,transparent 55%,var(--zen-muted, #9aa0aa) 55%,var(--zen-muted, #9aa0aa) 62%,transparent 62%),linear-gradient(135deg,transparent 75%,var(--zen-muted, #9aa0aa) 75%,var(--zen-muted, #9aa0aa) 82%,transparent 82%);opacity:.6}.zmi-grip[data-v-95e0cb5c]:hover{opacity:1}.zmi-area[data-v-95e0cb5c]::placeholder{color:var(--zen-muted, #9aa0aa);opacity:.7}.zmi-peek[data-v-95e0cb5c]{position:fixed;z-index:100000;display:flex;flex-direction:column;gap:6px;width:220px;padding:6px;border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);background:var(--zen-surface, #202026);box-shadow:0 10px 30px #00000073;pointer-events:none}.zmi-peek>img[data-v-95e0cb5c],.zmi-peek[data-v-95e0cb5c]>img,.zmi-peek[data-v-95e0cb5c]>video{display:block;width:100%;max-height:180px;border-radius:calc(var(--zen-radius, 7px) - 2px);background:var(--zen-media-bg, #0b0b0e);object-fit:contain}.zmi-peek>.mdi[data-v-95e0cb5c]{display:grid;place-items:center;height:90px;color:var(--zen-muted, #9aa0aa);font-size:32px}.zmi-pop[data-v-95e0cb5c]{position:fixed;z-index:100000;width:250px;max-height:260px;overflow-y:auto;padding:4px}.zmi-item[data-v-95e0cb5c]{display:flex;align-items:center;gap:8px;width:100%;padding:4px 6px;border:0;border-radius:6px;background:none;color:var(--zen-text, #e5e5ea);font:inherit;text-align:left;cursor:pointer}.zmi-item.on[data-v-95e0cb5c]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 25%,transparent)}.zmi-thumb[data-v-95e0cb5c]{display:grid;flex:none;place-items:center;width:30px;height:30px;overflow:hidden;border-radius:5px;background:var(--zen-media-bg, #0b0b0e);color:var(--zen-muted, #9aa0aa)}.zmi-thumb img[data-v-95e0cb5c]{width:100%;height:100%;object-fit:contain}.zmi-text[data-v-95e0cb5c]{display:flex;flex-direction:column;min-width:0}.zmi-text b[data-v-95e0cb5c]{color:#9db7ff;font-size:12px}.zmi-text small[data-v-95e0cb5c]{overflow:hidden;color:var(--zen-muted, #9aa0aa);font-size:10.5px;white-space:nowrap;text-overflow:ellipsis}.zen-off[data-v-95e0cb5c]{opacity:.45}.zen-num[data-v-f28d60a9]{display:inline-flex;align-items:stretch;height:var(--zen-control-h, 28px);box-sizing:border-box;border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);background:var(--zen-field-bg, var(--zen-input, #1b1b20));overflow:hidden;user-select:none;font-size:11px;font-variant-numeric:tabular-nums;min-width:calc(50px + var(--zn-chars, 4) * 1ch)}.zen-num.bare[data-v-f28d60a9]{min-width:calc(2px + var(--zn-chars, 4) * 1ch)}.zen-num[data-v-f28d60a9]:focus-within{border-color:var(--zen-accent, #6366f1)}.zen-num.sm[data-v-f28d60a9]{height:var(--zen-control-h-sm, 24px)}.zen-num.disabled[data-v-f28d60a9]{cursor:not-allowed;opacity:.5;pointer-events:none}.zn-step[data-v-f28d60a9]{flex:none;width:21px;border:none;background:none;color:var(--zen-muted, #9aa0aa);cursor:pointer;display:inline-flex;align-items:center;justify-content:center}.zn-step.hot[data-v-f28d60a9]{color:var(--zen-text, #e5e5ea);background:color-mix(in srgb,var(--zen-text, #e5e5ea) 9%,transparent)}.zn-step .mdi[data-v-f28d60a9]{font-size:13px}.zn-val[data-v-f28d60a9]{flex:1;min-width:calc(var(--zn-chars, 4) * 1ch);display:flex;align-items:center;justify-content:center;cursor:ew-resize;border-left:1px solid var(--zen-border, #34343c);border-right:1px solid var(--zen-border, #34343c);padding:0 2px}.zen-num.bare .zn-val[data-v-f28d60a9]{border-left:none;border-right:none}.zn-input[data-v-f28d60a9]{width:100%;min-width:0;background:none;border:none;outline:none;color:var(--zen-text, #e5e5ea);font:inherit;line-height:normal;text-align:center;pointer-events:none;cursor:ew-resize}.zn-input.live[data-v-f28d60a9]{pointer-events:auto;cursor:text}.zn-input[data-v-f28d60a9]:disabled{color:var(--zen-muted, #9aa0aa)}.zen-tg.sm[data-v-9ef2e1ca]{height:var(--zen-control-h-sm, 24px)}.zen-tg.disabled[data-v-9ef2e1ca]{opacity:.45}.zen-tg.disabled .zen-tg-b[data-v-9ef2e1ca]{cursor:not-allowed}.zen-tg[data-v-9ef2e1ca]{display:inline-flex;box-sizing:border-box;height:var(--zen-control-h, 28px);border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);overflow:hidden;background:var(--zen-control-bg, var(--zen-surface, #202026))}.zen-tg-b[data-v-9ef2e1ca]{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:0 9px;border:none;background:none;color:var(--zen-muted, #9aa0aa);font-size:11px;font-weight:600;font-family:inherit;cursor:pointer;transition:background var(--zen-dur-fast, .12s) ease,color var(--zen-dur-fast, .12s) ease}.zen-tg-b[data-v-9ef2e1ca]:first-child{border-radius:calc(var(--zen-radius, 7px) - 1px) 0 0 calc(var(--zen-radius, 7px) - 1px)}.zen-tg-b[data-v-9ef2e1ca]:last-child{border-radius:0 calc(var(--zen-radius, 7px) - 1px) calc(var(--zen-radius, 7px) - 1px) 0}.zen-tg-b[data-v-9ef2e1ca]:only-child{border-radius:calc(var(--zen-radius, 7px) - 1px)}.zen-tg-b+.zen-tg-b[data-v-9ef2e1ca]{border-left:1px solid var(--zen-border, #34343c)}.zen-tg-b[data-v-9ef2e1ca]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}.zen-tg-b[data-v-9ef2e1ca]:hover{color:var(--zen-text, #e5e5ea)}.zen-tg-b.on[data-v-9ef2e1ca]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 22%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--zen-accent, #6366f1) 55%,transparent);color:var(--zen-accent, #6366f1)}.zen-tg-b .mdi[data-v-9ef2e1ca]{font-size:14px}.zen-tg.zen-tg-collapse .zen-tg-b[data-v-9ef2e1ca]{gap:0;padding:4px 7px;transition:background var(--zen-dur, .2s) ease,color var(--zen-dur, .2s) ease,gap var(--zen-dur, .2s) ease}.zen-tg.zen-tg-collapse .zen-tg-l[data-v-9ef2e1ca]{display:inline-grid;grid-template-columns:0fr;overflow:hidden;opacity:0;white-space:nowrap;transition:grid-template-columns var(--zen-dur, .2s) ease,opacity var(--zen-dur, .2s) ease}.zen-tg.zen-tg-collapse .zen-tg-l>span[data-v-9ef2e1ca]{min-width:0;overflow:hidden}.zen-tg.zen-tg-collapse .zen-tg-b.on[data-v-9ef2e1ca]{gap:5px;padding:4px 9px 4px 8px}.zen-tg.zen-tg-collapse .zen-tg-b.on .zen-tg-l[data-v-9ef2e1ca]{grid-template-columns:1fr;opacity:1}.zres[data-v-124b6fb4]{display:flex;flex-direction:column;gap:9px;width:268px;padding:6px;color:var(--zen-text, #e5e5ea);font-size:11px}.zres-sec[data-v-124b6fb4]{color:var(--zen-muted, #9aa0aa);font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}.zres-aspects[data-v-124b6fb4]{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.zres-chip[data-v-124b6fb4]{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;height:46px;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-field-bg, var(--zen-input, #1b1b20));color:var(--zen-muted, #9aa0aa);font:inherit;font-size:10px;font-weight:600;cursor:pointer}.zres-chip[data-v-124b6fb4]:hover,.zres-chip.on[data-v-124b6fb4]{border-color:var(--zen-accent, #6366f1);color:var(--zen-text, #e5e5ea)}.zres-chip.on[data-v-124b6fb4]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 16%,var(--zen-field-bg, var(--zen-input, #1b1b20)))}.zres-rect[data-v-124b6fb4]{display:block;border-radius:1px;background:currentColor;opacity:.7}.zres-wide[data-v-124b6fb4] .zen-tg{display:flex;width:100%}.zres-wide[data-v-124b6fb4] .zen-tg-b{flex:1}.zres-div[data-v-124b6fb4]{border-top:1px solid var(--zen-border, #34343c)}.zres-row[data-v-124b6fb4]{display:flex;align-items:center;gap:8px}.zres-lbl[data-v-124b6fb4]{flex:1;color:var(--zen-muted, #9aa0aa)}.zres-wh[data-v-124b6fb4]{display:flex;align-items:center;gap:6px}.zres-wh label[data-v-124b6fb4]{display:flex;flex:1;align-items:center;gap:5px;color:var(--zen-muted, #9aa0aa)}.zres-wh label[data-v-124b6fb4] .zen-num{flex:1;min-width:0}.zres-foot[data-v-124b6fb4]{display:flex;align-items:center;color:var(--zen-muted, #9aa0aa);font-size:10px;font-variant-numeric:tabular-nums}.zres-grow[data-v-124b6fb4]{flex:1}.zen-off[data-v-124b6fb4]{opacity:.45}.zen-select[data-v-564bc28a]{position:relative;display:inline-flex;min-width:var(--zen-control-min, 90px)}.zs-trigger[data-v-564bc28a]{display:inline-flex;user-select:none;flex:1 1 auto;align-items:center;gap:6px;min-width:0;box-sizing:border-box;height:var(--zen-control-h, 28px);padding:0 6px 0 8px;font-size:12px;font-family:inherit;cursor:pointer;background:var(--zen-control-bg, var(--zen-surface, #202026));color:var(--zen-text, #e5e5ea);border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);transition:border-color var(--zen-dur-fast, .12s) ease}.zen-select.sm .zs-trigger[data-v-564bc28a]{height:var(--zen-control-h-sm, 24px);font-size:11px}.zs-trigger[data-v-564bc28a]:disabled{opacity:.45;cursor:not-allowed}.zs-trigger[data-v-564bc28a]:hover,.zen-select.open .zs-trigger[data-v-564bc28a]{border-color:var(--zen-control-hover-border, var(--zen-accent, #6366f1));background:var(--zen-control-hover-bg, var(--zen-control-bg))}.zs-trigger[data-v-564bc28a]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zs-label[data-v-564bc28a]{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left}.zs-caret[data-v-564bc28a]{font-size:16px;color:var(--zen-muted, #9aa0aa);flex:0 0 auto}.zs-ico[data-v-564bc28a]{font-size:14px;flex:0 0 auto}.zs-menu[data-v-564bc28a]{position:fixed;user-select:none;z-index:100000;max-height:260px;overflow-y:auto;padding:4px;display:flex;flex-direction:column;gap:1px}.zs-opt[data-v-564bc28a]{display:flex;align-items:center;gap:7px;padding:6px 8px;font-size:12px;font-family:inherit;text-align:left;cursor:pointer;background:none;border:none;color:var(--zen-text, #e5e5ea);border-radius:var(--zen-radius, 7px);white-space:nowrap}.zs-opt span[data-v-564bc28a]{flex:1}.zs-opt[data-v-564bc28a]:hover,.zs-opt.cur[data-v-564bc28a]{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 10%,transparent)}.zs-opt[data-v-564bc28a]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}.zs-opt.on[data-v-564bc28a]{color:var(--zen-accent, #6366f1)}.zs-check[data-v-564bc28a]{font-size:14px;color:var(--zen-accent, #6366f1);flex:0 0 auto}.zen-peek{position:fixed;display:flex;flex-direction:column;max-width:min(560px,60vw);overflow:hidden;border-radius:var(--zen-radius, 8px);pointer-events:none;animation:zen-peek-in var(--zen-dur-fast, .12s) ease-out}.zen-peek img,.zen-peek video{display:block;max-width:min(560px,60vw);max-height:min(480px,70vh);object-fit:contain;background:var(--zen-media-bg, #0b0b0e)}.zen-peek-custom{display:block;max-width:min(560px,60vw);max-height:min(480px,70vh);overflow:hidden;background:var(--zen-media-bg, #0b0b0e)}.zen-peek-audio{display:flex;align-items:center;gap:10px;padding:14px;color:var(--zen-muted, #9aa0aa);font-size:22px}.zen-peek-caption{display:flex;flex-direction:column;gap:2px;max-width:100%;padding:8px 10px;font-size:12px;line-height:1.4}.zen-peek-caption span{color:var(--zen-muted, #9aa0aa)}@keyframes zen-peek-in{0%{opacity:0;transform:scale(.97)}}@media(prefers-reduced-motion:reduce){:root:not([data-zen-motion=full]) .zen-peek{animation:none}}:root[data-zen-motion=reduce] .zen-peek{animation:none}.zen-combo[data-v-77bb9f63]{position:relative;width:100%;min-width:var(--zen-control-min, 90px)}.zc-trigger[data-v-77bb9f63]{display:flex;user-select:none;align-items:center;gap:6px;width:100%;box-sizing:border-box;min-height:var(--zen-control-h, 28px);background:var(--zen-control-bg, var(--zen-input, #1b1b20));color:var(--zen-text, #e5e5ea);border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);padding:4px 8px;font:inherit;font-size:12px;cursor:pointer;text-align:left;transition:border-color var(--zen-dur-fast, .12s) ease}.zc-trigger[data-v-77bb9f63]:hover:not(:disabled){border-color:var(--zen-control-hover-border, var(--zen-accent, #6366f1));background:var(--zen-control-hover-bg, var(--zen-control-bg))}.zc-trigger[data-v-77bb9f63]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zc-trigger.sm[data-v-77bb9f63]{min-height:var(--zen-control-h-sm, 24px);padding:2px 7px;font-size:11px}.zc-trigger[data-v-77bb9f63]:disabled{cursor:not-allowed;opacity:.45;cursor:default}.zen-combo.open .zc-trigger[data-v-77bb9f63]{border-color:var(--zen-accent, #6366f1)}.zc-current[data-v-77bb9f63]{flex:1;min-width:0;overflow:hidden}.zc-caret[data-v-77bb9f63]{flex:none;color:var(--zen-muted, #9aa0aa);transition:transform var(--zen-dur-fast, .12s) ease}.zen-combo.open .zc-caret[data-v-77bb9f63]{transform:rotate(180deg)}.zen-combo-menu{position:fixed;user-select:none;z-index:100000;display:flex;flex-direction:column;max-height:360px;overflow:hidden}.zen-combo-menu .zc-search{display:flex;align-items:center;gap:6px;padding:8px 10px;border-bottom:1px solid var(--zen-border, #34343c)}.zen-combo-menu .zc-search>.mdi{color:var(--zen-muted, #9aa0aa);font-size:16px}.zen-combo-menu .zc-search input{flex:1;user-select:text;min-width:0;background:none;border:none;outline:none;color:inherit;font:inherit;font-size:12px}.zen-combo-menu .zc-clear{border:none;background:none;color:var(--zen-muted, #9aa0aa);cursor:pointer;padding:0 2px}.zen-combo-menu .zc-search-actions{flex:none;display:inline-flex;align-items:center}.zen-combo-menu .zc-header{flex:none;border-bottom:1px solid var(--zen-border, #34343c)}.zen-combo-menu .zc-list{overflow-y:auto;padding:4px;min-height:0;will-change:scroll-position}.zen-combo-menu .zc-list.virt{overflow-anchor:none}.zen-combo-menu .zc-virt{position:relative;width:100%}.zen-combo-menu .zc-win{position:absolute;top:0;left:0;right:0}.zen-combo-menu .zc-opt{display:flex;align-items:center;gap:9px;padding:6px 8px;border-radius:var(--zen-radius, 7px);cursor:pointer;font-size:12px;box-sizing:border-box;overflow:hidden}.zen-combo-menu .zc-opt.active{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 10%,transparent)}.zen-combo-menu .zc-opt.sel{color:var(--zen-accent, #6366f1)}.zen-combo-menu .zc-opt-lbl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.zen-combo-menu .zc-sep{height:1px;margin:4px 6px;background:var(--zen-border, #34343c)}.zen-combo-menu .zc-empty{padding:16px;text-align:center;font-size:12px;color:var(--zen-muted, #9aa0aa)}.zen-combo-menu .zc-footer{border-top:1px solid var(--zen-border, #34343c);padding:6px}.zen-combo-menu.grid .zc-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(var(--zc-grid-min, 92px),1fr));gap:6px;align-content:start}.zen-combo-menu.grid .zc-opt{flex-direction:column;align-items:stretch;height:auto;gap:4px;padding:4px}.zen-combo-menu.grid .zc-empty{grid-column:1 / -1}.zen-switch[data-v-c2dc757b]{position:relative;flex:0 0 auto;width:42px;height:23px;padding:0;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-switch-radius, var(--zen-radius, 7px));background:var(--zen-surface, #202026);cursor:pointer;transition:background var(--zen-dur, .2s) ease,border-color var(--zen-dur, .2s) ease}.zen-switch.on[data-v-c2dc757b]{background:var(--zen-accent, #6366f1);border-color:var(--zen-accent, #6366f1)}.zen-switch[data-v-c2dc757b]:disabled{opacity:.5;cursor:default}.zen-switch .knob[data-v-c2dc757b]{position:absolute;top:1px;left:1px;width:19px;height:19px;border-radius:var(--zen-switch-radius, var(--zen-radius, 7px));background:#fff;display:flex;align-items:center;justify-content:center;transition:transform var(--zen-dur, .2s) ease;box-shadow:0 1px 2px #00000059}.zen-switch.on .knob[data-v-c2dc757b]{transform:translate(19px);background:var(--zen-accent-text, #fff)}.zen-switch[data-v-c2dc757b]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zen-switch .knob .mdi[data-v-c2dc757b]{font-size:12px;color:var(--zen-muted, #9aa0aa)}.zen-switch.on .knob .mdi[data-v-c2dc757b]{color:var(--zen-accent, #6366f1)}.zen-check[data-v-36edc25d]{display:inline-flex;align-items:center;gap:7px;background:none;border:none;cursor:pointer;color:var(--zen-text, #e5e5ea);font:inherit;font-size:12px;padding:0;text-align:left}.zen-check[data-v-36edc25d]:focus-visible{outline:none}.zen-check:focus-visible .box[data-v-36edc25d]{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zen-check[data-v-36edc25d]:disabled{opacity:.5;cursor:default}.box[data-v-36edc25d]{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;flex:none;border:1px solid var(--zen-border, #34343c);border-radius:min(var(--zen-radius, 7px),6px);background:var(--zen-input, #1b1b20);color:var(--zen-accent-text, #fff);transition:background var(--zen-dur-fast, .12s) ease,border-color var(--zen-dur-fast, .12s) ease}.zen-check.on .box[data-v-36edc25d]{background:var(--zen-accent, #6366f1);border-color:var(--zen-accent, #6366f1)}.zen-check:hover:not(:disabled) .box[data-v-36edc25d]{border-color:var(--zen-accent, #6366f1)}.box .mdi[data-v-36edc25d]{font-size:13px;line-height:1}.lbl[data-v-36edc25d]{line-height:1.2}.zen-dot[data-v-73775b30]{display:inline-flex;align-items:center;gap:6px;padding:4px;margin:-4px;background:none;border:none;cursor:pointer;color:var(--zen-text, #e5e5ea);font:inherit;font-size:12px;line-height:1.2}.zen-dot[data-v-73775b30]:disabled{opacity:.4;cursor:default}.mark[data-v-73775b30]{position:relative;display:inline-block;flex:none;width:var(--zen-dot-size, 13px);height:var(--zen-dot-size, 13px);border-radius:var(--zen-dot-radius, var(--zen-radius, 7px));border:1px solid var(--zen-border, #34343c);background:var(--zen-input, #1b1b20);transition:border-color var(--zen-dur-fast, .12s) ease}.mark[data-v-73775b30]:after{content:\"\";position:absolute;inset:var(--zen-dot-gap, 2px);border-radius:max(0px,calc(min(var(--zen-dot-radius, var(--zen-radius, 7px)),var(--zen-dot-size, 13px) / 2) - 1px - var(--zen-dot-gap, 2px)));background:var(--zen-dot-on, var(--zen-accent, #6366f1));transform:scale(0);opacity:0;transition:transform var(--zen-dur-fast, .12s) ease,opacity var(--zen-dur-fast, .12s) ease}.zen-dot.on .mark[data-v-73775b30]{border-color:var(--zen-dot-on, var(--zen-accent, #6366f1))}.zen-dot.on .mark[data-v-73775b30]:after{transform:scale(1);opacity:1}.zen-dot:hover:not(:disabled) .mark[data-v-73775b30]{border-color:var(--zen-dot-on, var(--zen-accent, #6366f1))}.zen-dot:hover:not(:disabled):not(.on) .mark[data-v-73775b30]:after{transform:scale(1);opacity:.22}.zen-dot[data-v-73775b30]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px;border-radius:var(--zen-radius, 7px)}.zen-dot:not(.on) .lbl[data-v-73775b30]{color:var(--zen-muted, #9aa0aa)}.zvol[data-v-9e6c85be]{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 8px 0 2px;color:var(--zen-text, #e5e5ea);font-size:10.5px;user-select:none}.zvol.quiet[data-v-9e6c85be]{opacity:.45}.zvol-b[data-v-9e6c85be]{display:grid;place-items:center;width:26px;height:26px;padding:0;border:0;border-radius:var(--zen-radius, 7px);background:none;color:inherit;cursor:pointer}.zvol-b[data-v-9e6c85be]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 10%,transparent)}.zvol-b .mdi[data-v-9e6c85be]{font-size:17px}.zvol.off .zvol-b[data-v-9e6c85be]{color:var(--zen-muted, #9aa0aa)}.zvol-track[data-v-9e6c85be]{position:relative;width:72px;height:18px;cursor:pointer;touch-action:none}.zvol-track[data-v-9e6c85be]:before{position:absolute;top:50%;right:0;left:0;height:4px;border-radius:2px;background:color-mix(in srgb,var(--zen-text, #e5e5ea) 16%,transparent);transform:translateY(-50%);content:\"\"}.zvol-fill[data-v-9e6c85be]{position:absolute;top:50%;left:0;height:4px;border-radius:2px;background:var(--zen-accent, #6366f1);transform:translateY(-50%)}.zvol-knob[data-v-9e6c85be]{position:absolute;top:50%;width:11px;height:11px;border-radius:50%;background:var(--zen-text, #e5e5ea);box-shadow:0 1px 3px #00000073;transform:translate(-50%,-50%)}.zvol-n[data-v-9e6c85be]{min-width:20px;color:var(--zen-muted, #9aa0aa);font-variant-numeric:tabular-nums;text-align:right}.zce[data-v-b10dcc0e]{display:flex;flex-direction:column;gap:4px}.zce-box[data-v-b10dcc0e]{position:relative;height:80px;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-field-bg, var(--zen-input, #1b1b20))}.zce-svg[data-v-b10dcc0e]{display:block;width:100%;height:100%;cursor:crosshair}.zce-grid[data-v-b10dcc0e]{stroke:color-mix(in srgb,var(--zen-text, #e5e5ea) 7%,transparent);stroke-width:1;vector-effect:non-scaling-stroke}.zce-unit[data-v-b10dcc0e]{stroke:color-mix(in srgb,var(--zen-text, #e5e5ea) 25%,transparent);stroke-dasharray:3 3;stroke-width:1;vector-effect:non-scaling-stroke}.zce-area[data-v-b10dcc0e]{fill:color-mix(in srgb,var(--zen-accent, #6366f1) 16%,transparent)}.zce-line[data-v-b10dcc0e]{fill:none;stroke:var(--zen-accent, #6366f1);stroke-width:1.8;vector-effect:non-scaling-stroke}.zce-pt[data-v-b10dcc0e]{position:absolute;width:10px;height:10px;margin:-5px 0 0 -5px;border:2px solid var(--zen-accent, #6366f1);border-radius:50%;background:var(--zen-bg, #1a1a1f);cursor:grab;touch-action:none}.zce-pt[data-v-b10dcc0e]:hover{background:var(--zen-accent, #6366f1)}.zce-axis[data-v-b10dcc0e]{display:flex;justify-content:space-between;color:var(--zen-muted, #9aa0aa);font-size:10px}.zce-presets[data-v-b10dcc0e]{display:flex;flex-wrap:wrap;gap:4px}.zce-preset[data-v-b10dcc0e]{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:none;color:var(--zen-muted, #9aa0aa);font:inherit;font-size:10.5px;cursor:pointer}.zce-preset[data-v-b10dcc0e]:hover{border-color:var(--zen-accent, #6366f1);color:var(--zen-text, #e5e5ea)}.zen-off[data-v-b10dcc0e]{opacity:.45}.zen-slider[data-v-2a465bf0]{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:var(--zen-radius, 7px);background:var(--zen-border, #34343c);outline:none;cursor:pointer}.zen-slider[data-v-2a465bf0]:disabled{opacity:.5;cursor:default}.zen-slider[data-v-2a465bf0]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:var(--zen-radius, 7px);background:var(--zen-accent, #6366f1);border:2px solid var(--zen-bg, #1a1a1f);cursor:pointer;box-shadow:0 1px 3px #0006}.zen-slider[data-v-2a465bf0]::-moz-range-thumb{width:14px;height:14px;border:2px solid var(--zen-bg, #1a1a1f);border-radius:var(--zen-radius, 7px);background:var(--zen-accent, #6366f1);cursor:pointer}.zen-slider[data-v-2a465bf0]::-moz-range-track{height:4px;border-radius:var(--zen-radius, 7px);background:var(--zen-border, #34343c)}.zen-slider[data-v-2a465bf0]:focus-visible{box-shadow:0 0 0 2px var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent))}.zcp[data-v-2beb2797]{display:block;width:100%;min-width:var(--zen-control-min, 76px)}.zcp.compact[data-v-2beb2797]{display:inline-block;width:auto;min-width:0}.zcp.compact .zcp-trigger[data-v-2beb2797]{width:auto;height:auto;padding:0;border:none;background:none}.zcp-trigger[data-v-2beb2797]{display:flex;align-items:center;gap:6px;width:100%;height:var(--zen-control-h, 28px);box-sizing:border-box;padding:0 6px;border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);background:var(--zen-control-bg, var(--zen-input, #1b1b20));color:var(--zen-text, #e5e5ea);cursor:pointer;font:inherit;font-size:11px}.zcp-trigger[data-v-2beb2797]:hover{border-color:var(--zen-control-hover-border, var(--zen-accent, #6366f1));background:var(--zen-control-hover-bg, var(--zen-control-bg))}.zcp-sw[data-v-2beb2797]{width:16px;height:16px;flex:none;border-radius:4px;border:1px solid rgba(255,255,255,.2)}.zcp-sw.lg[data-v-2beb2797]{width:24px;height:24px}.zcp-hexlbl[data-v-2beb2797]{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left;text-transform:uppercase;font-variant-numeric:tabular-nums}.zcp-trigger .mdi[data-v-2beb2797]{font-size:14px;color:var(--zen-muted, #9aa0aa)}.zcp-pop[data-v-2beb2797]{position:fixed;z-index:100000;display:flex;flex-direction:column;gap:8px;padding:8px}.zcp-sv[data-v-2beb2797]{position:relative;width:100%;height:118px;border-radius:6px;overflow:hidden;cursor:crosshair;touch-action:none}.zcp-sv-white[data-v-2beb2797],.zcp-sv-black[data-v-2beb2797]{position:absolute;inset:0}.zcp-sv-white[data-v-2beb2797]{background:linear-gradient(to right,#fff,#fff0)}.zcp-sv-black[data-v-2beb2797]{background:linear-gradient(to top,#000,#0000)}.zcp-sv-thumb[data-v-2beb2797]{position:absolute;width:12px;height:12px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #00000080;transform:translate(-50%,-50%);pointer-events:none}.zcp-hue[data-v-2beb2797]{position:relative;width:100%;height:12px;border-radius:6px;cursor:pointer;touch-action:none;background:linear-gradient(to right,red,#ff0,#0f0,#0ff,#00f,#f0f,red)}.zcp-hue-thumb[data-v-2beb2797]{position:absolute;top:50%;width:12px;height:12px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #00000080;transform:translate(-50%,-50%);pointer-events:none}.zcp-row[data-v-2beb2797]{display:flex;align-items:center;gap:8px}.zcp-input[data-v-2beb2797]{flex:1;min-width:0;height:26px;box-sizing:border-box;padding:0 6px;border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);background:var(--zen-field-bg, var(--zen-input, #1b1b20));color:var(--zen-text, #e5e5ea);font:inherit;font-size:11px;text-transform:uppercase}.zcp-input[data-v-2beb2797]:focus{outline:none;border-color:var(--zen-accent, #6366f1)}.zcp-presets[data-v-2beb2797]{display:flex;gap:4px;flex-wrap:wrap}.zcp-pre[data-v-2beb2797]{width:20px;height:20px;padding:0;border-radius:4px;border:1px solid var(--zen-border, #34343c);cursor:pointer}.zen-off[data-v-2beb2797]{opacity:.45}.zen-dims[data-v-bb012b3c]{display:flex;align-items:center;flex-wrap:wrap;gap:5px}.zd-n[data-v-bb012b3c]{flex:1 1 60px;min-width:48px}.zd-x[data-v-bb012b3c]{flex:none;color:var(--zen-muted, #9aa0aa);font-size:11px}.zd-mp[data-v-bb012b3c]{flex:0 1 56px;min-width:44px}.zd-unit[data-v-bb012b3c],.zd-aspect[data-v-bb012b3c]{flex:none;font-size:10px;color:var(--zen-muted, #9aa0aa);font-variant-numeric:tabular-nums}.zd-aspect[data-v-bb012b3c]{margin-left:auto}.zen-off[data-v-bb012b3c]{opacity:.45}.zmi-lead[data-v-4282c43c]{flex:none;display:inline-flex;align-items:center}.zmi-wrap[data-v-4282c43c]{position:relative}.zmi[data-v-4282c43c]{display:flex;align-items:center;gap:9px;width:100%;text-align:left;cursor:pointer;font:inherit;font-size:12px;padding:7px 9px;border:none;border-radius:var(--zen-radius, 7px);background:none;color:var(--zen-text, #e5e5ea)}.zmi[data-v-4282c43c]:hover:not(:disabled),.zmi.on[data-v-4282c43c]{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 10%,transparent)}.zmi[data-v-4282c43c]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}.zmi[data-v-4282c43c]:disabled{opacity:.45;cursor:default}.zmi.danger[data-v-4282c43c]:hover:not(:disabled){background:var(--zen-danger, #dc2626);color:var(--zen-danger-text, #fff)}.zmi-ico[data-v-4282c43c]{flex:0 0 auto;font-size:15px;color:var(--zen-muted, #9aa0aa)}.zmi.danger:hover:not(:disabled) .zmi-ico[data-v-4282c43c]{color:var(--zen-danger-text, #fff)}.zmi-lbl[data-v-4282c43c]{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.zmi-caret[data-v-4282c43c]{margin-left:auto;flex:0 0 auto;font-size:15px;color:var(--zen-muted, #9aa0aa)}.zmi-hint[data-v-4282c43c]{margin-left:auto;flex:0 0 auto;font-size:10px;color:var(--zen-muted, #9aa0aa);font-variant-numeric:tabular-nums}.zmi-sub[data-v-4282c43c]{display:flex;flex-direction:column;gap:1px}.zen-msep[data-v-5c3057e1]{height:1px;background:var(--zen-border, #34343c);margin:4px}.zen-modal-back{position:fixed;inset:0;z-index:100100;display:flex;align-items:center;justify-content:center;background:#0000008c;backdrop-filter:blur(2px)}.zen-modal{display:flex;flex-direction:column;max-width:94vw;max-height:90vh;overflow:hidden;background:var(--zen-chrome-bg, var(--zen-surface, #202026));color:var(--zen-text, #e5e5ea);border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:calc(var(--zen-radius-surface, var(--zen-radius, 7px)) + 2px);box-shadow:0 24px 70px #0009;font-family:var(--p-font-family, system-ui, sans-serif)}.zen-modal .zm-head{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--zen-border, #34343c);flex:none}.zen-modal .zm-title{flex:none;font-size:13px;font-weight:600;white-space:nowrap}.zen-modal .zm-head-mid{flex:1;min-width:0;display:flex;align-items:center;gap:8px}.zen-modal .zm-x{border:none;background:none;color:var(--zen-muted, #9aa0aa);cursor:pointer;font-size:18px;display:inline-flex}.zen-modal .zm-x:hover{color:var(--zen-text, #e5e5ea)}.zen-modal .zm-body{flex:1;min-height:0;overflow:auto;padding:14px}.zen-modal .zm-foot{flex:none;border-top:1px solid var(--zen-border, #34343c);padding:10px 14px}.zw-root[data-v-5ca67f58]{position:fixed;inset:0;z-index:100200;pointer-events:none;font-family:var(--p-font-family, system-ui, sans-serif)}.zw-root.zw-backdrop[data-v-5ca67f58]{background:#0000006b;backdrop-filter:blur(2px);pointer-events:auto}.zw[data-v-5ca67f58]{position:fixed;pointer-events:auto;display:flex;flex-direction:column;overflow:hidden;color:var(--zen-text, #e5e5ea);background:var(--zen-glass, color-mix(in srgb, var(--zen-bg, #1a1a1f) 90%, transparent));border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius-surface, var(--zen-radius, 7px));box-shadow:0 24px 70px #0000008c;backdrop-filter:blur(12px)}.zw-bar[data-v-5ca67f58]{flex:0 0 auto;display:flex;align-items:center;gap:8px;height:40px;padding:0 8px 0 12px;cursor:grab;background:color-mix(in srgb,var(--zen-chrome-bg, var(--zen-surface, #202026)) 82%,transparent);border-bottom:1px solid var(--zen-surface-border, var(--zen-border, #34343c));user-select:none}.zw-bar[data-v-5ca67f58]:active{cursor:grabbing}.zw-icon[data-v-5ca67f58]{font-size:16px;color:var(--zen-accent, #6366f1)}.zw-title[data-v-5ca67f58]{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.zw-grow[data-v-5ca67f58]{flex:1}.zw-actions[data-v-5ca67f58]{display:inline-flex;align-items:center;gap:6px}.zw-no-drag[data-v-5ca67f58]{display:inline-flex;align-items:center;gap:2px;cursor:default}.zw-body[data-v-5ca67f58]{flex:1;min-height:0;display:flex}.zw-foot[data-v-5ca67f58]{flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:6px 12px;background:color-mix(in srgb,var(--zen-chrome-bg, var(--zen-surface, #202026)) 82%,transparent);border-top:1px solid var(--zen-surface-border, var(--zen-border, #34343c))}.zw-resize[data-v-5ca67f58]{position:absolute;right:0;bottom:0;width:16px;height:16px;cursor:nwse-resize;z-index:2}.zw-resize[data-v-5ca67f58]:after{content:\"\";position:absolute;right:3px;bottom:3px;width:7px;height:7px;border-right:2px solid var(--zen-muted, #9aa0aa);border-bottom:2px solid var(--zen-muted, #9aa0aa);opacity:.55}.zen-ctx[data-v-0b23826c]{position:fixed;z-index:100000;min-width:190px;max-height:70vh;overflow-y:auto;padding:4px;font-size:12px}.zen-ctx-item[data-v-0b23826c]{display:flex;align-items:center;gap:8px;width:100%;padding:6px 8px;border:0;border-radius:var(--zen-radius, 7px);background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}.zen-ctx-item[data-v-0b23826c]:hover:not(:disabled){background:color-mix(in srgb,var(--zen-accent, #6366f1) 22%,transparent)}.zen-ctx-item[data-v-0b23826c]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}.zen-ctx-item[data-v-0b23826c]:disabled{opacity:.4;cursor:default}.zen-ctx-item.danger[data-v-0b23826c]{color:var(--zen-danger, #dc2626)}.zen-ctx-item .mdi[data-v-0b23826c]{width:16px;color:var(--zen-muted, #9aa0aa);font-size:14px;text-align:center}.zen-ctx-item span[data-v-0b23826c]{flex:1}.zen-ctx-item kbd[data-v-0b23826c]{color:var(--zen-muted, #9aa0aa);font-family:inherit;font-size:10.5px}.zen-ctx-sep[data-v-0b23826c]{height:1px;margin:4px 2px;background:var(--zen-surface-border, var(--zen-border, #34343c))}.zen-ctx-head[data-v-0b23826c]{padding:5px 8px 3px;color:var(--zen-muted, #9aa0aa);font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}.zen-compare[data-v-7f4b84dd]{position:relative;overflow:hidden;width:100%;height:100%;user-select:none;touch-action:pan-y;background:var(--zen-surface-2, #222)}.zen-compare img[data-v-7f4b84dd]{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}.zen-compare.contain img[data-v-7f4b84dd]{object-fit:contain}.slider .zc-before[data-v-7f4b84dd]{clip-path:inset(0 calc(100% - var(--split)) 0 0)}.slider:not(.moving) .zc-before[data-v-7f4b84dd],.slider:not(.moving) .zc-line[data-v-7f4b84dd]{transition:clip-path var(--zen-dur, .2s) ease,left var(--zen-dur, .2s) ease}.dissolve .zc-before[data-v-7f4b84dd]{transition:opacity .45s ease}.dissolve.hovering .zc-before[data-v-7f4b84dd]{opacity:0}.zc-line[data-v-7f4b84dd]{position:absolute;top:0;bottom:0;left:var(--split);width:2px;margin-left:-1px;background:#ffffffe6;box-shadow:0 0 6px #0006;pointer-events:none}.zc-knob[data-v-7f4b84dd]{position:absolute;top:50%;left:50%;width:22px;height:22px;transform:translate(-50%,-50%) rotate(90deg);border-radius:50%;display:grid;place-items:center;background:#fffffff2;color:#222;font-size:14px;box-shadow:0 1px 4px #00000059;opacity:0;transition:opacity var(--zen-dur-fast, .12s)}.hovering .zc-knob[data-v-7f4b84dd],.zen-compare:focus-visible .zc-knob[data-v-7f4b84dd]{opacity:1}.zc-tag[data-v-7f4b84dd]{position:absolute;bottom:8px;font-size:10px;padding:2px 7px;border-radius:999px;background:#0000008c;color:#fff;backdrop-filter:blur(4px);pointer-events:none;opacity:0;transition:opacity var(--zen-dur-fast, .12s)}.hovering .zc-tag[data-v-7f4b84dd]{opacity:1}.zc-tag.left[data-v-7f4b84dd]{left:8px}.zc-tag.right[data-v-7f4b84dd]{right:8px}.zen-compare[data-v-7f4b84dd]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}.zmc[data-v-29f0e538]{display:flex;box-sizing:border-box;min-width:0;align-items:center;gap:4px;padding:5px 8px;border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius-surface, var(--zen-radius, 7px));background:color-mix(in srgb,var(--zen-surface, #202026) 88%,transparent);backdrop-filter:blur(10px);color:var(--zen-text, #e5e5ea);font-size:11px;user-select:none}.zmc-b[data-v-29f0e538]{display:inline-grid;flex:none;place-items:center;min-width:26px;height:26px;padding:0 4px;border:0;border-radius:var(--zen-radius, 7px);background:none;color:var(--zen-muted, #9aa0aa);font:inherit;cursor:pointer}.zmc-b[data-v-29f0e538]:hover,.zmc-b.on[data-v-29f0e538]{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 10%,transparent);color:var(--zen-text, #e5e5ea)}.zmc-b.on[data-v-29f0e538]{color:var(--zen-accent, #6366f1)}.zmc-b[data-v-29f0e538]:disabled{opacity:.4;cursor:default}.zmc-b .mdi[data-v-29f0e538]{font-size:17px}.zmc-rate[data-v-29f0e538]{min-width:38px;font-size:11px;font-weight:700;font-variant-numeric:tabular-nums}.zmc-time[data-v-29f0e538]{flex:none;min-width:44px;font-variant-numeric:tabular-nums;text-align:center}.zmc-time.soft[data-v-29f0e538]{color:var(--zen-muted, #9aa0aa)}.zmc-bar[data-v-29f0e538]{position:relative;flex:1;min-width:60px;height:22px;cursor:pointer;touch-action:none}.zmc-track[data-v-29f0e538]{position:absolute;top:50%;right:0;left:0;height:4px;overflow:hidden;border-radius:2px;background:color-mix(in srgb,var(--zen-text, #e5e5ea) 14%,transparent);transform:translateY(-50%);transition:height var(--zen-dur-fast, .12s)}.zmc-bar:hover .zmc-track[data-v-29f0e538]{height:6px}.zmc-buf[data-v-29f0e538]{position:absolute;top:0;bottom:0;background:color-mix(in srgb,var(--zen-text, #e5e5ea) 16%,transparent)}.zmc-fill[data-v-29f0e538]{position:absolute;top:0;bottom:0;left:0;background:var(--zen-accent, #6366f1)}.zmc-knob[data-v-29f0e538]{position:absolute;top:50%;width:12px;height:12px;border-radius:50%;background:var(--zen-text, #e5e5ea);box-shadow:0 1px 4px #0000007f;transform:translate(-50%,-50%) scale(0);transition:transform var(--zen-dur-fast, .12s)}.zmc-bar:hover .zmc-knob[data-v-29f0e538]{transform:translate(-50%,-50%) scale(1)}.zmc-tip[data-v-29f0e538]{position:absolute;bottom:100%;margin-bottom:4px;padding:2px 5px;border-radius:4px;background:#000c;color:#fff;font-size:10.5px;font-variant-numeric:tabular-nums;white-space:nowrap;transform:translate(-50%);pointer-events:none}.zmc.compact .zmc-time[data-v-29f0e538]{min-width:34px}.zmc.compact .zmc-bar[data-v-29f0e538]{min-width:40px}.zmc.tiny[data-v-29f0e538]{gap:2px;padding:4px 5px}.zmc.tiny[data-v-29f0e538] .zvol-track{display:none}.zlb[data-v-92030b8f]{position:fixed;inset:0;z-index:100300;display:flex;overflow:hidden;user-select:none;background:color-mix(in srgb,var(--zen-bg, #1a1a1f) 92%,transparent);backdrop-filter:blur(6px);font-family:var(--p-font-family, system-ui, sans-serif);color:var(--zen-text, #e5e5ea)}.zlb.inline[data-v-92030b8f]{position:absolute;z-index:1;border-radius:var(--zen-radius, 7px);background:var(--zen-bg, #1a1a1f);backdrop-filter:none}.zlb-main[data-v-92030b8f]{position:relative;flex:1;min-width:0;display:flex;flex-direction:column}.zlb-chrome[data-v-92030b8f]{display:flex;align-items:center;gap:2px;padding:3px;background:color-mix(in srgb,var(--zen-chrome-bg, var(--zen-surface, #202026)) 94%,transparent);border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius-surface, var(--zen-radius, 7px));box-shadow:var(--interface-floating-panel-shadow, 0 6px 18px rgba(0, 0, 0, .28));backdrop-filter:blur(12px)}.zlb-chrome .zen-iconbtn[data-v-92030b8f]{width:30px;height:30px}.zlb-top[data-v-92030b8f],.zlb-bottom[data-v-92030b8f]{position:absolute;left:12px;right:12px;z-index:4;display:flex;gap:8px;pointer-events:none;transition:opacity var(--zen-dur, .2s) ease,translate var(--zen-dur, .2s) ease}.zlb-top[data-v-92030b8f]>*,.zlb-bottom[data-v-92030b8f]>*{pointer-events:auto}.zlb-top[data-v-92030b8f]{top:12px;align-items:flex-start}.zlb-bottom[data-v-92030b8f]{bottom:12px;align-items:flex-end;justify-content:center;flex-wrap:wrap-reverse}.zlb-main.idle .zlb-top[data-v-92030b8f],.zlb-main.far-top .zlb-top[data-v-92030b8f]:not(:focus-within){opacity:0;translate:0 -6px}.zlb-main.idle .zlb-bottom[data-v-92030b8f],.zlb-main.far-bottom .zlb-bottom[data-v-92030b8f]:not(:focus-within,:has(.zlb-caret.on)){opacity:0;translate:0 6px}.zlb-main.far-top .zlb-top[data-v-92030b8f]:not(:focus-within)>*,.zlb-main.far-bottom .zlb-bottom[data-v-92030b8f]:not(:focus-within,:has(.zlb-caret.on))>*{pointer-events:none}.zlb-main.idle[data-v-92030b8f]{cursor:none}.zlb-grow[data-v-92030b8f]{flex:1}.zlb-info[data-v-92030b8f]{gap:6px;min-width:0;flex:0 0 auto;height:38px;box-sizing:border-box;padding:0 10px 0 4px;font-size:13px}.zlb-info[data-v-92030b8f]:not(:has(.zlb-pos)){padding-right:4px}.zlb-tip[data-v-92030b8f]{display:grid;place-items:center;width:30px;height:30px;font-size:15px;color:var(--zen-muted, #9aa0aa)}.zlb-pos[data-v-92030b8f],.zlb-zval[data-v-92030b8f]{font-size:11.5px;color:var(--zen-muted, #9aa0aa);font-variant-numeric:tabular-nums;white-space:nowrap}.zlb-zval[data-v-92030b8f]{min-width:40px;text-align:center}.zlb-tools[data-v-92030b8f]{position:relative;flex-wrap:wrap;justify-content:center;max-width:100%;overflow:hidden}.zlb-progress[data-v-92030b8f]{position:absolute;left:0;bottom:0;height:2px;width:100%;transform-origin:left;background:var(--zen-accent, #6366f1);animation:zlb-progress-92030b8f linear forwards}@keyframes zlb-progress-92030b8f{0%{transform:scaleX(0)}to{transform:scaleX(1)}}.zlb-caret[data-v-92030b8f]{display:inline-flex;align-items:center;justify-content:center;width:18px;height:30px;margin-left:-2px;padding:0;cursor:pointer;color:var(--zen-muted, #9aa0aa);background:none;border:1px solid transparent;border-radius:var(--zen-radius, 7px)}.zlb-caret .mdi[data-v-92030b8f]{line-height:1}.zlb-caret .mdi[data-v-92030b8f]:before{display:block;line-height:1}.zlb-caret[data-v-92030b8f]:hover,.zlb-caret.on[data-v-92030b8f]{color:var(--zen-text, #e5e5ea);background:color-mix(in srgb,var(--zen-text, #e5e5ea) 12%,transparent)}.zlb-slidepop[data-v-92030b8f]{display:flex;flex-direction:column;gap:12px;padding:10px 12px;min-width:230px}.zlb-slidepop-row[data-v-92030b8f]{display:flex;flex-direction:column;gap:6px}.zlb-slidepop-row.inline[data-v-92030b8f]{flex-direction:row;align-items:center;justify-content:space-between;cursor:pointer}.zlb-slidepop-speed[data-v-92030b8f]{display:flex;align-items:center;gap:10px}.zlb-slidepop-speed .zen-slider[data-v-92030b8f]{flex:1;min-width:0}.zlb-slidepop-value[data-v-92030b8f]{min-width:34px;text-align:right;font-size:12px;font-variant-numeric:tabular-nums;color:var(--zen-text, #e5e5ea)}.zlb-slidepop-label[data-v-92030b8f]{font-size:11.5px;font-weight:600;color:var(--zen-muted, #9aa0aa)}.zlb-sep[data-v-92030b8f]{width:1px;height:18px;margin:0 4px;background:var(--zen-surface-border, var(--zen-border, #34343c))}.zlb-side.zlb-side-enter-active[data-v-92030b8f],.zlb-side.zlb-side-leave-active[data-v-92030b8f]{transition:translate var(--zen-dur, .2s) cubic-bezier(.45,0,.2,1),margin-right var(--zen-dur, .2s) cubic-bezier(.45,0,.2,1),opacity var(--zen-dur, .2s) ease}.zlb-side.zlb-side-enter-from[data-v-92030b8f],.zlb-side.zlb-side-leave-to[data-v-92030b8f]{translate:calc(-100% - 12px) 0;margin-right:calc(-1 * (var(--zlb-side-w, 264px) + 12px));opacity:0}.zlb-side[data-v-92030b8f]{position:relative;z-index:5;flex:0 0 auto;display:flex;flex-direction:column;min-height:0;margin:12px 0 12px 12px;overflow:hidden;background:color-mix(in srgb,var(--zen-chrome-bg, var(--zen-surface, #202026)) 94%,transparent);border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius-surface, var(--zen-radius, 7px));box-shadow:var(--interface-floating-panel-shadow, 0 6px 18px rgba(0, 0, 0, .28));backdrop-filter:blur(12px)}.zlb-resize[data-v-92030b8f]{position:absolute;top:0;right:-3px;bottom:0;width:8px;z-index:4;cursor:ew-resize}.zlb-resize[data-v-92030b8f]:hover{background:color-mix(in srgb,var(--zen-accent, #6366f1) 45%,transparent)}.zlb-side-head[data-v-92030b8f]{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:8px 10px;border-bottom:1px solid var(--zen-border, #34343c)}.zlb-search[data-v-92030b8f]{flex:1;min-width:0;display:flex;align-items:center;gap:6px;height:28px;padding:0 8px;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-input, #1b1b20)}.zlb-search[data-v-92030b8f]:focus-within{border-color:var(--zen-accent, #6366f1)}.zlb-search .mdi[data-v-92030b8f]{font-size:14px;color:var(--zen-muted, #9aa0aa)}.zlb-search input[data-v-92030b8f]{flex:1;min-width:0;border:none;background:none;outline:none;color:var(--zen-text, #e5e5ea);font:inherit;font-size:12px}.zlb-tscroll[data-v-92030b8f]{flex:1;min-height:0}.zlb-tscroll[data-v-92030b8f] .zen-scroll-viewport{padding:10px 14px;overflow-anchor:none}.zlb-tscroll[data-v-92030b8f] .zen-scroll-thumb{width:4px;right:4px}.zlb-tscroll[data-v-92030b8f] .zen-scroll-track:hover .zen-scroll-thumb,.zlb-tscroll[data-v-92030b8f] .zen-scroll-thumb:active{width:6px;right:3px}.zlb-tpad[data-v-92030b8f]{position:relative;width:100%}.zlb-grid[data-v-92030b8f]{position:absolute;top:0;left:0;right:0;display:grid;align-content:start}.zlb-cell[data-v-92030b8f]{position:relative;aspect-ratio:1;padding:0;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-input, #1b1b20);cursor:pointer;overflow:hidden}.zlb-cell img[data-v-92030b8f],.zlb-cell video[data-v-92030b8f]{width:100%;height:100%;object-fit:cover;display:block}.zlb-grid.contain .zlb-cell img[data-v-92030b8f],.zlb-grid.contain .zlb-cell video[data-v-92030b8f]{object-fit:contain}.zlb-cell-audio[data-v-92030b8f]{display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:30px;color:var(--zen-muted, #9aa0aa)}.zlb-cell-badge[data-v-92030b8f]{position:absolute;top:4px;left:4px;font-size:16px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.8);pointer-events:none}.zlb-cell[data-v-92030b8f]:hover,.zlb-cell.on[data-v-92030b8f]{border-color:var(--zen-accent, #6366f1)}.zlb-cell.on[data-v-92030b8f]:after{content:\"\";position:absolute;inset:0;border:2px solid var(--zen-accent, #6366f1);border-radius:calc(var(--zen-radius, 7px) - 1px);pointer-events:none}.zlb-cell-wf[data-v-92030b8f]{position:absolute;bottom:3px;right:3px;font-size:11px;color:#fff;background:#0009;border-radius:max(0px,calc(var(--zen-radius, 7px) - 3px));padding:1px 3px}.zlb-side-foot[data-v-92030b8f]{flex:0 0 auto;display:flex;align-items:center;gap:3px;padding:6px 8px;border-top:1px solid var(--zen-border, #34343c)}.zlb-foot-n[data-v-92030b8f]{font-size:11px;color:var(--zen-muted, #9aa0aa);font-variant-numeric:tabular-nums;padding-right:4px}.zlb-stage[data-v-92030b8f]{container-type:size;position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:16px}.zlb-stage.has-mc[data-v-92030b8f]{padding-bottom:calc(60px + var(--zlb-foot, 0px))}.zlb.inline .zlb-stage.has-mc[data-v-92030b8f]{padding-bottom:52px}.zlb-mc[data-v-92030b8f]{position:absolute;right:12px;bottom:calc(8px + var(--zlb-foot, 0px));left:12px;z-index:3;max-width:760px;margin:0 auto}.zlb.inline .zlb-stage[data-v-92030b8f]{padding:6px}.zlb-media[data-v-92030b8f]{max-width:100%;max-height:100%;object-fit:contain;display:block;border-radius:var(--zen-radius, 7px);box-shadow:0 24px 60px -20px #0000008c;transition:transform var(--zen-dur, .2s) linear}.zlb-layered[data-v-92030b8f]{position:relative;overflow:hidden}.zlb-layered img[data-v-92030b8f]{position:absolute;inset:0;width:100%;height:100%;display:block;user-select:none}.zlb-overlay[data-v-92030b8f]{mix-blend-mode:multiply;opacity:.75;pointer-events:none}.zlb-masked-out[data-v-92030b8f]{filter:grayscale(.85) brightness(.32)}.zlb-overlay-mask[data-v-92030b8f]{mask-mode:luminance;mask-size:100% 100%;mask-repeat:no-repeat;pointer-events:none}.zlb-panel[data-v-92030b8f]{user-select:text;position:relative;z-index:5;flex:0 0 340px;min-width:0;display:flex;flex-direction:column;margin:12px 12px 12px 0;overflow:hidden;background:color-mix(in srgb,var(--zen-chrome-bg, var(--zen-surface, #202026)) 94%,transparent);border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius-surface, var(--zen-radius, 7px));box-shadow:var(--interface-floating-panel-shadow, 0 6px 18px rgba(0, 0, 0, .28));backdrop-filter:blur(12px)}.zlb-panel-scroll[data-v-92030b8f]{flex:1;min-height:0}.zlb-panel-body[data-v-92030b8f]{padding:16px}@media(max-width:860px){.zlb[data-v-92030b8f]{flex-direction:column}.zlb-panel[data-v-92030b8f]{flex:0 0 auto;max-height:45%;margin:0 12px 12px}}.zlb-media.steering[data-v-92030b8f]{transition:none;will-change:transform}.zlb.inline .zlb-media[data-v-92030b8f]{box-shadow:none}.zlb-empty[data-v-92030b8f]{opacity:.4;font-size:48px}.zlb-audio[data-v-92030b8f]{display:flex;flex-direction:column;align-items:center;gap:clamp(4px,3cqh,14px);padding:clamp(4px,5cqh,24px);max-width:560px;width:100%;color:var(--zen-text, #e5e5ea)}.zlb-audio .mdi[data-v-92030b8f]{font-size:clamp(28px,30cqh,96px);line-height:1;opacity:.5}.zlb-audio-name[data-v-92030b8f]{font-size:14px;font-weight:600;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.zlb-audio audio[data-v-92030b8f]{width:100%}.zlb-nav[data-v-92030b8f]{position:absolute;top:20%;bottom:20%;z-index:3;width:clamp(40px,7%,84px);display:flex;align-items:center;padding:0 8px;border:none;color:#fff;cursor:pointer;opacity:0;transition:opacity var(--zen-dur, .2s) ease;mask-image:linear-gradient(to bottom,transparent,#000 30%,#000 70%,transparent)}.zlb-nav.prev[data-v-92030b8f]{left:0;justify-content:flex-start;background:linear-gradient(to right,color-mix(in srgb,var(--zen-accent, #6366f1) 20%,transparent),transparent)}.zlb-nav.next[data-v-92030b8f]{right:0;justify-content:flex-end;background:linear-gradient(to left,color-mix(in srgb,var(--zen-accent, #6366f1) 20%,transparent),transparent)}.zlb-nav[data-v-92030b8f]:hover:not(:disabled){opacity:1}.zlb-nav[data-v-92030b8f]:disabled{display:none}.zlb-nav .mdi[data-v-92030b8f]{font-size:28px;filter:drop-shadow(0 1px 4px rgba(0,0,0,.6));transition:translate var(--zen-dur, .2s) ease}.zlb-nav.prev:hover .mdi[data-v-92030b8f]{translate:-3px 0}.zlb-nav.next:hover .mdi[data-v-92030b8f]{translate:3px 0}.zlb-slide-next-enter-active[data-v-92030b8f],.zlb-slide-next-leave-active[data-v-92030b8f],.zlb-slide-prev-enter-active[data-v-92030b8f],.zlb-slide-prev-leave-active[data-v-92030b8f],.zlb-slide-up-enter-active[data-v-92030b8f],.zlb-slide-up-leave-active[data-v-92030b8f],.zlb-slide-down-enter-active[data-v-92030b8f],.zlb-slide-down-leave-active[data-v-92030b8f]{transition:translate var(--zlb-slide-ms, .46s) cubic-bezier(.45,0,.2,1)}.zlb-slide-next-leave-active[data-v-92030b8f],.zlb-slide-prev-leave-active[data-v-92030b8f],.zlb-slide-up-leave-active[data-v-92030b8f],.zlb-slide-down-leave-active[data-v-92030b8f]{position:absolute}.zlb-slide-down-enter-from[data-v-92030b8f],.zlb-slide-up-leave-to[data-v-92030b8f]{translate:0 var(--zlb-slide-y, 100%)}.zlb-slide-down-leave-to[data-v-92030b8f],.zlb-slide-up-enter-from[data-v-92030b8f]{translate:0 calc(var(--zlb-slide-y, 100%) * -1)}.zlb-slide-next-enter-from[data-v-92030b8f],.zlb-slide-prev-leave-to[data-v-92030b8f]{translate:var(--zlb-slide, 100%) 0}.zlb-slide-next-leave-to[data-v-92030b8f],.zlb-slide-prev-enter-from[data-v-92030b8f]{translate:calc(var(--zlb-slide, 100%) * -1) 0}@media(prefers-reduced-motion:reduce){:root:not([data-zen-motion=full]){transition:none}}:root[data-zen-motion=reduce]{transition:none}.zsc[data-v-a47e719d]{display:block;width:100%;height:100%;outline:none;cursor:crosshair;touch-action:none}.zsc[data-v-a47e719d]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}.zft[data-v-86083019]{display:flex;flex-direction:column;gap:1px;font-size:12px}.zft-row[data-v-86083019]{display:flex;align-items:center;gap:4px;min-width:0;padding:4px 8px 4px 4px;border-radius:var(--zen-radius, 7px);color:var(--zen-muted, #9aa0aa);cursor:pointer}.zft-row[data-v-86083019]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 6%,transparent);color:var(--zen-text, #e5e5ea)}.zft-row.on[data-v-86083019]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 20%,transparent);color:var(--zen-text, #e5e5ea)}.zft-chev[data-v-86083019]{display:grid;flex:none;place-items:center;width:16px;height:16px;padding:0;border:0;border-radius:3px;background:none;color:inherit;cursor:pointer}.zft-row[data-v-86083019]:focus-visible,.zft-chev[data-v-86083019]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}button.zft-chev[data-v-86083019]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 12%,transparent)}.zft-icon[data-v-86083019]{flex:none;font-size:15px}.zft-name[data-v-86083019]{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.zft-count[data-v-86083019]{flex:none;font-size:10.5px;font-variant-numeric:tabular-nums}.zmp[data-v-3cc842c8]{position:relative;display:grid;grid-template-columns:190px minmax(0,1fr) 260px;height:calc(100% + 28px);margin:-14px;font-size:12px}.zmp-search[data-v-3cc842c8]{flex:1;max-width:320px}.zmp-grow[data-v-3cc842c8]{flex:1}.zmp-folders[data-v-3cc842c8]{display:flex;flex-direction:column;gap:1px;min-height:0;overflow-y:auto;padding:10px 8px;border-right:1px solid var(--zen-border, #34343c)}.zmp-folder[data-v-3cc842c8]{display:flex;align-items:center;gap:6px;width:100%;padding:5px 8px;border:0;border-radius:var(--zen-radius, 7px);background:none;color:var(--zen-muted, #9aa0aa);font:inherit;text-align:left;cursor:pointer}.zmp-folder[data-v-3cc842c8]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 6%,transparent);color:var(--zen-text, #e5e5ea)}.zmp-folder.on[data-v-3cc842c8]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 20%,transparent);color:var(--zen-text, #e5e5ea)}.zmp-folder .mdi[data-v-3cc842c8]{flex:none;font-size:15px}.zmp-fname[data-v-3cc842c8]{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.zmp-count[data-v-3cc842c8]{flex:none;color:var(--zen-muted, #9aa0aa);font-size:10.5px;font-variant-numeric:tabular-nums}.zmp-main[data-v-3cc842c8]{display:flex;flex-direction:column;min-width:0;min-height:0}.zmp-filters[data-v-3cc842c8]{display:flex;flex:none;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--zen-border, #34343c)}.zmp-grid[data-v-3cc842c8]{display:grid;flex:1;align-content:start;gap:10px;min-height:0;overflow-y:auto;padding:12px}.zmp-card[data-v-3cc842c8]{display:flex;flex-direction:column;gap:4px;min-width:0;padding:4px;border:1px solid transparent;border-radius:calc(var(--zen-radius, 7px) + 2px);background:none;color:var(--zen-text, #e5e5ea);font:inherit;text-align:left;cursor:pointer}.zmp-card[data-v-3cc842c8]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 5%,transparent)}.zmp-card.focus[data-v-3cc842c8]{border-color:var(--zen-border, #34343c)}.zmp-card.sel .zmp-thumb[data-v-3cc842c8]{outline:2px solid var(--zen-accent, #6366f1);outline-offset:1px}.zmp-thumb[data-v-3cc842c8]{position:relative;display:grid;place-items:center;aspect-ratio:1;overflow:hidden;border-radius:var(--zen-radius, 7px);background:var(--zen-media-bg, #0b0b0e)}.zmp-thumb img[data-v-3cc842c8],.zmp-thumb video[data-v-3cc842c8]{width:100%;height:100%;object-fit:contain}.zmp-audio[data-v-3cc842c8]{display:grid;place-items:center;width:100%;height:100%;background:linear-gradient(160deg,color-mix(in srgb,var(--zen-accent, #6366f1) 22%,var(--zen-media-bg, #0b0b0e)),var(--zen-media-bg, #0b0b0e));color:color-mix(in srgb,var(--zen-accent, #6366f1) 70%,white);font-size:34px}.zmp-kind[data-v-3cc842c8]{position:absolute;bottom:5px;left:5px;display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#000000a6;color:#fff;font-size:13px}.zmp-tick[data-v-3cc842c8]{position:absolute;top:5px;right:5px;display:grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:var(--zen-accent, #6366f1);color:var(--zen-accent-text, #fff);font-size:11px;font-weight:700}.zmp-name[data-v-3cc842c8],.zmp-dir[data-v-3cc842c8]{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.zmp-name[data-v-3cc842c8]{font-size:11.5px}.zmp-dir[data-v-3cc842c8]{margin-top:-3px;color:var(--zen-muted, #9aa0aa);font-size:10.5px}.zmp-empty[data-v-3cc842c8]{display:flex;flex-direction:column;grid-column:1 / -1;align-items:center;gap:6px;padding:48px 12px;color:var(--zen-muted, #9aa0aa);text-align:center}.zmp-empty .mdi[data-v-3cc842c8]{font-size:28px}.zmp-preview[data-v-3cc842c8]{display:flex;flex-direction:column;gap:10px;min-height:0;overflow-y:auto;padding:12px;border-left:1px solid var(--zen-border, #34343c)}.zmp-big[data-v-3cc842c8]{display:grid;place-items:center;aspect-ratio:1;overflow:hidden;border-radius:var(--zen-radius, 7px);background:var(--zen-media-bg, #0b0b0e)}.zmp-big img[data-v-3cc842c8],.zmp-big video[data-v-3cc842c8]{width:100%;height:100%;object-fit:contain}.zmp-bigaudio[data-v-3cc842c8]{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;padding:10px;color:color-mix(in srgb,var(--zen-accent, #6366f1) 70%,white);font-size:48px}.zmp-bigaudio audio[data-v-3cc842c8]{width:100%}.zmp-meta[data-v-3cc842c8]{display:flex;flex-direction:column;gap:3px;color:var(--zen-muted, #9aa0aa);overflow-wrap:anywhere}.zmp-meta b[data-v-3cc842c8]{color:var(--zen-text, #e5e5ea);font-size:12.5px}.zmp-hint[data-v-3cc842c8]{display:flex;flex-direction:column;align-items:center;gap:8px;margin:auto 0;color:var(--zen-muted, #9aa0aa);line-height:1.5;text-align:center}.zmp-hint .mdi[data-v-3cc842c8]{font-size:26px}.zmp-drop[data-v-3cc842c8]{position:absolute;inset:8px;display:flex;align-items:center;justify-content:center;gap:8px;border:2px dashed var(--zen-accent, #6366f1);border-radius:calc(var(--zen-radius, 7px) + 2px);background:color-mix(in srgb,var(--zen-accent, #6366f1) 14%,rgb(0 0 0 / 60%));color:var(--zen-text, #e5e5ea);font-size:14px;font-weight:600;pointer-events:none}.zmp-foot[data-v-3cc842c8]{display:flex;align-items:center;gap:8px}.zmp-soft[data-v-3cc842c8]{color:var(--zen-muted, #9aa0aa)}.ztl[data-v-ad0b766d]{position:relative;--ztl-bg: color-mix(in srgb, var(--zen-bg, #1a1a1f) 70%, #000);--ztl-bg: oklch(from var(--zen-bg, #1a1a1f) calc(l - .07) c h);--ztl-row: color-mix(in srgb, var(--zen-text, #e5e5ea) 3%, transparent);--ztl-line: color-mix(in srgb, var(--zen-text, #e5e5ea) 9%, transparent);--ztl-accent: var(--zen-accent, #6366f1);--ztl-seam: color-mix(in srgb, var(--zen-text, #e5e5ea) 62%, transparent);--ztl-playhead: var(--zen-playhead, #ff5a4f);display:flex;min-width:0;overflow:hidden;border:1px solid var(--ztl-line);border-radius:var(--zen-radius, 7px);background:var(--ztl-bg);user-select:none;touch-action:none}.ztl-grid[data-v-ad0b766d]{display:flex;width:max-content;min-width:100%}.ztl-heads[data-v-ad0b766d]{position:sticky;left:0;z-index:8;flex:none;width:var(--ztl-head);border-right:1px solid var(--ztl-line);background:var(--ztl-bg)}.ztl-corner[data-v-ad0b766d]{position:sticky;top:0;z-index:5;background:var(--ztl-bg);display:flex;align-items:center;justify-content:center;height:24px;border-bottom:1px solid var(--ztl-line)}.ztl-time[data-v-ad0b766d]{color:var(--zen-text, #e5e5ea);font-family:var(--zen-mono, ui-monospace, monospace);font-size:10.5px;font-variant-numeric:tabular-nums}.ztl-head[data-v-ad0b766d]{display:flex;align-items:center;gap:6px;box-sizing:border-box;min-width:0;overflow:hidden;padding:0 8px;border-bottom:1px solid var(--ztl-line);color:var(--zen-muted, #9aa0aa);font-size:10.5px;font-weight:600;letter-spacing:.02em}.ztl-head.movable[data-v-ad0b766d]{cursor:grab}.ztl-head.lifted[data-v-ad0b766d]{position:relative;z-index:6;background:color-mix(in srgb,var(--ztl-accent) 22%,var(--ztl-bg));box-shadow:0 4px 14px #00000073;cursor:grabbing}.ztl-insert[data-v-ad0b766d]{position:absolute;right:0;left:0;z-index:3;height:2px;margin-top:-1px;background:var(--ztl-accent);pointer-events:none}.ztl-head .mdi[data-v-ad0b766d]{flex:none;font-size:13px}.ztl-head.has-actions[data-v-ad0b766d]{flex-wrap:wrap;align-content:center;row-gap:2px}.ztl-head.has-actions .ztl-head-label[data-v-ad0b766d]{flex:1 1 0}.ztl-head-actions[data-v-ad0b766d]{display:flex;flex:1 0 100%;gap:2px;padding-left:24px}.ztl-head.has-actions.inline[data-v-ad0b766d]{flex-wrap:nowrap}.ztl-head.inline .ztl-head-actions[data-v-ad0b766d]{flex:none;padding-left:0}.ztl-head.inline .ztl-head-action[data-v-ad0b766d]{justify-content:center;width:20px;height:20px;padding:0;opacity:.6}.ztl-head.inline:hover .ztl-head-action[data-v-ad0b766d],.ztl-head.inline .ztl-head-action.on[data-v-ad0b766d]{opacity:1}.ztl-head-action[data-v-ad0b766d]{display:inline-flex;align-items:center;gap:2px;height:17px;padding:0 4px;border:1px solid transparent;border-radius:4px;background:none;color:var(--zen-muted, #9aa0aa);font:inherit;font-size:9.5px;font-weight:600;cursor:pointer}.ztl-head-action .mdi[data-v-ad0b766d]{font-size:12px}.ztl-head-action[data-v-ad0b766d]:hover{color:var(--zen-text, #e5e5ea)}.ztl-head-action.on[data-v-ad0b766d]{border-color:color-mix(in srgb,var(--ztl-accent) 55%,transparent);background:color-mix(in srgb,var(--ztl-accent) 22%,transparent);color:var(--zen-text, #e5e5ea)}.ztl-head-thumb[data-v-ad0b766d]{flex:none;width:18px;height:18px;border-radius:calc(var(--zen-radius, 7px) / 2);object-fit:cover}.ztl-head-label[data-v-ad0b766d]{min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.ztl-scroll[data-v-ad0b766d]{position:relative;flex:1;min-width:0;overflow:auto;scrollbar-width:none}.ztl-scroll[data-v-ad0b766d]::-webkit-scrollbar{display:none}.ztl-curve[data-v-ad0b766d]{position:absolute;top:0;left:0;overflow:visible}.ztl-cstep[data-v-ad0b766d]{fill:none;stroke:color-mix(in srgb,var(--ztl-curve) 70%,transparent);stroke-dasharray:3 3;stroke-width:1.5}.ztl-carea[data-v-ad0b766d]{fill:color-mix(in srgb,var(--ztl-curve) 22%,transparent)}.ztl-cunit[data-v-ad0b766d]{stroke:color-mix(in srgb,var(--zen-text, #e5e5ea) 18%,transparent);stroke-dasharray:4 4;stroke-width:1}.ztl-cline[data-v-ad0b766d]{fill:none;stroke:var(--ztl-curve);stroke-width:2.2;stroke-linejoin:round}.ztl-cval[data-v-ad0b766d]{fill:var(--ztl-curve);font-size:10px;font-variant-numeric:tabular-nums;pointer-events:none;paint-order:stroke;stroke:var(--ztl-bg);stroke-width:3px}.ztl-larea[data-v-ad0b766d]{fill:color-mix(in srgb,var(--ztl-curve) 20%,transparent)}.ztl-lbar[data-v-ad0b766d]{stroke:var(--ztl-curve);stroke-width:2.5;stroke-linecap:round}.ztl-lhit[data-v-ad0b766d]{stroke:transparent;stroke-width:12;cursor:ns-resize}.ztl-lseg:hover .ztl-lbar[data-v-ad0b766d]{stroke-width:3.5}.ztl-lseg.inherited .ztl-larea[data-v-ad0b766d]{fill:color-mix(in srgb,var(--ztl-curve) 10%,transparent)}.ztl-lseg.inherited .ztl-lbar[data-v-ad0b766d],.ztl-lseg.inherited .ztl-cline[data-v-ad0b766d]{stroke-dasharray:5 4}.ztl-lseg.inherited .ztl-carea[data-v-ad0b766d]{fill:color-mix(in srgb,var(--ztl-curve) 9%,transparent)}.ztl-lpad[data-v-ad0b766d]{fill:transparent}.ztl-levels.shaped .ztl-lseg+.ztl-lseg .ztl-lpad[data-v-ad0b766d]{stroke:color-mix(in srgb,var(--zen-text, #e5e5ea) 8%,transparent);stroke-dasharray:2 3}.ztl-cpt[data-v-ad0b766d]{fill:var(--ztl-bg);stroke:var(--ztl-curve);stroke-width:2;cursor:grab}.ztl-cpt[data-v-ad0b766d]:hover{fill:var(--ztl-curve)}.ztl-range[data-v-ad0b766d]{position:absolute;top:0;bottom:0;z-index:1;border-right:1px solid color-mix(in srgb,var(--ztl-accent) 60%,transparent);border-left:1px solid color-mix(in srgb,var(--ztl-accent) 60%,transparent);background:color-mix(in srgb,var(--ztl-accent) 9%,transparent);pointer-events:none}.ztl-range[data-v-ad0b766d]:before{position:absolute;top:0;right:0;left:0;height:4px;background:var(--ztl-accent);content:\"\"}.ztl-tail[data-v-ad0b766d]{position:absolute;top:0;right:0;bottom:0;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;border-left:1px dashed color-mix(in srgb,var(--zen-text, #e5e5ea) 45%,transparent);background:repeating-linear-gradient(-45deg,color-mix(in srgb,var(--zen-text, #e5e5ea) 14%,transparent) 0 4px,transparent 4px 9px);pointer-events:none}.ztl-tail-label[data-v-ad0b766d]{padding:0 4px 2px;overflow:hidden;color:var(--zen-text, #e5e5ea);font-size:10px;white-space:nowrap;text-overflow:ellipsis;opacity:.85}.ztl-progress[data-v-ad0b766d]{position:absolute;bottom:0;left:0;height:3px;border-radius:0 2px 2px 0;background:var(--ztl-playhead);transition:width var(--zen-dur, .2s) ease;pointer-events:none}.ztl-hbar[data-v-ad0b766d]{position:absolute;right:0;bottom:0;z-index:6;height:9px;touch-action:none}.ztl-thumb[data-v-ad0b766d]{position:absolute;top:2px;bottom:2px;border-radius:3px;background:color-mix(in srgb,var(--zen-text, #e5e5ea) 22%,transparent);transition:background var(--zen-dur-fast, .12s)}.ztl-hbar:hover .ztl-thumb[data-v-ad0b766d]{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 38%,transparent)}.ztl-body[data-v-ad0b766d]{position:relative;flex:none}.ztl-ruler[data-v-ad0b766d]{position:sticky;top:0;z-index:5;background:var(--ztl-bg);height:24px;border-bottom:1px solid var(--ztl-line);cursor:col-resize}.ztl-tick[data-v-ad0b766d]{position:absolute;bottom:0;width:1px;height:5px;background:var(--ztl-line)}.ztl-tick.major[data-v-ad0b766d]{height:9px;background:color-mix(in srgb,var(--zen-text, #e5e5ea) 30%,transparent)}.ztl-tick b[data-v-ad0b766d]{position:absolute;bottom:10px;left:3px;color:var(--zen-muted, #9aa0aa);font-size:9.5px;font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}.ztl-track[data-v-ad0b766d]{position:relative;box-sizing:border-box;border-bottom:1px solid var(--ztl-line)}.ztl-track.zebra[data-v-ad0b766d]{background:var(--ztl-row)}.ztl-track.dropping[data-v-ad0b766d]{background:color-mix(in srgb,var(--ztl-accent) 16%,transparent)}.ztl-item[data-v-ad0b766d]{position:absolute;box-sizing:border-box;touch-action:none}.ztl-item.clip[data-v-ad0b766d]{top:3px;bottom:3px;display:flex;align-items:center;gap:5px;overflow:hidden;padding:0 7px;border:1px solid color-mix(in srgb,var(--ztl-color, var(--ztl-accent)) 70%,#000);border-radius:calc(var(--zen-radius, 7px) * .65);background:color-mix(in srgb,var(--ztl-color, var(--ztl-accent)) 42%,var(--ztl-bg));cursor:pointer}.ztl-item.clip.join-start[data-v-ad0b766d]{border-left-color:var(--ztl-seam);border-top-left-radius:0;border-bottom-left-radius:0}.ztl-item.clip.join-end[data-v-ad0b766d]{border-top-right-radius:0;border-bottom-right-radius:0}.ztl-item.clip.on[data-v-ad0b766d]{border-color:var(--zen-text, #e5e5ea);box-shadow:0 0 0 1px var(--zen-text, #e5e5ea) inset;background:color-mix(in srgb,var(--ztl-color, var(--ztl-accent)) 62%,var(--ztl-bg))}.ztl-item.droptarget[data-v-ad0b766d]{z-index:3;outline:2px solid var(--ztl-accent);outline-offset:1px}.ztl-item.lifted[data-v-ad0b766d]{z-index:3;box-shadow:0 6px 16px #00000073;cursor:grabbing;opacity:.92}.ztl-item.clip.ghost[data-v-ad0b766d]{border-style:dashed;background:color-mix(in srgb,var(--ztl-color, var(--ztl-accent)) 16%,var(--ztl-bg))}.ztl-item.clip.muted[data-v-ad0b766d]{opacity:.4}.ztl-item.clip img[data-v-ad0b766d]{flex:none;height:100%;margin-left:-7px;aspect-ratio:1;object-fit:cover}.ztl-badge[data-v-ad0b766d]{flex:none;padding:0 4px;border-radius:3px;background:#00000052;color:color-mix(in srgb,var(--zen-text, #e5e5ea) 88%,var(--ztl-color, var(--ztl-accent)));font-family:var(--zen-mono, ui-monospace, monospace);font-size:9px;line-height:13px;white-space:nowrap}.ztl-item.clip.banded[data-v-ad0b766d]{align-items:flex-start;padding-top:1px}.ztl-item.clip.banded>.ztl-label[data-v-ad0b766d],.ztl-item.clip.banded>.ztl-icon[data-v-ad0b766d],.ztl-item.clip.banded>.ztl-badge[data-v-ad0b766d]{position:relative;z-index:1;margin-top:1px}.ztl-mark[data-v-ad0b766d]{position:absolute;top:0;bottom:0;z-index:1;width:1px;margin-left:-.5px;background:#ffffff73}.ztl-mark[data-v-ad0b766d]:before{content:\"\";position:absolute;top:0;left:-3px;border:3.5px solid transparent;border-top-color:#ffffffb3}.ztl-mark.strong[data-v-ad0b766d]{background:#fffc}.ztl-mark.strong[data-v-ad0b766d]:before{border-top-color:#fff}.ztl-frames[data-v-ad0b766d],.ztl-wave[data-v-ad0b766d]{position:absolute;inset:16px 0 0;pointer-events:none}.ztl-frames[data-v-ad0b766d]{overflow:hidden;border-top:1px solid rgb(0 0 0 / 35%)}.ztl-item.clip .ztl-frames img[data-v-ad0b766d]{position:absolute;top:0;height:100%;margin:0;aspect-ratio:auto;object-fit:cover;opacity:.9}.ztl-wave[data-v-ad0b766d]{width:100%;height:calc(100% - 16px);padding:2px 0;box-sizing:border-box;fill:color-mix(in srgb,var(--ztl-color, var(--ztl-accent)) 35%,#fff);opacity:.85}.ztl-label[data-v-ad0b766d]{overflow:hidden;color:color-mix(in srgb,var(--zen-text, #e5e5ea) 78%,var(--ztl-color, var(--ztl-accent)));font-size:10.5px;font-weight:500;white-space:nowrap;text-overflow:ellipsis;text-shadow:0 1px 1px rgb(0 0 0 / 40%)}.ztl-icon[data-v-ad0b766d]{flex:none;color:#fff;font-size:12px;opacity:.85}.ztl-fade[data-v-ad0b766d]{position:absolute;top:0;bottom:0;pointer-events:none}.ztl-fade.in[data-v-ad0b766d]{left:0;background:linear-gradient(to top right,transparent calc(50% - .75px),rgb(255 255 255 / 70%) 50%,transparent calc(50% + .75px)),linear-gradient(to top right,transparent 50%,rgb(0 0 0 / 45%) 50%)}.ztl-fade.out[data-v-ad0b766d]{right:0;background:linear-gradient(to top left,transparent calc(50% - .75px),rgb(255 255 255 / 70%) 50%,transparent calc(50% + .75px)),linear-gradient(to top left,transparent 50%,rgb(0 0 0 / 45%) 50%)}.ztl-fadeknob[data-v-ad0b766d]{position:absolute;top:1px;z-index:2;width:9px;height:9px;margin:0 -4.5px;border:1px solid rgb(0 0 0 / 55%);border-radius:50%;background:#fff;cursor:ew-resize;opacity:0;transition:opacity var(--zen-dur-fast, .12s)}.ztl-fadeknob.set[data-v-ad0b766d],.ztl-item:hover .ztl-fadeknob[data-v-ad0b766d]{opacity:1}.ztl-grip[data-v-ad0b766d]{position:absolute;top:0;bottom:0;width:7px;cursor:ew-resize}.ztl-grip.end[data-v-ad0b766d]{right:0}.ztl-grip.start[data-v-ad0b766d]{left:0}.ztl-grip[data-v-ad0b766d]:after{content:\"\";position:absolute;top:25%;bottom:25%;left:3px;width:1px;background:#ffffff8c;opacity:0;transition:opacity var(--zen-dur-fast, .12s)}.ztl-item:hover .ztl-grip[data-v-ad0b766d]:after{opacity:1}.ztl-item.marker[data-v-ad0b766d]{z-index:2;top:50%;width:22px;height:22px;overflow:hidden;transform:translate(-50%,-50%);border:2px solid var(--ztl-color, var(--zen-marker, #f5c542));border-radius:5px;background:var(--ztl-bg);cursor:grab}.ztl-item.marker[data-v-ad0b766d]:not(.thumbed):not(.ghost){width:12px;height:12px;border-radius:2px;background:var(--ztl-color, var(--zen-marker, #f5c542));transform:translate(-50%,-50%) rotate(45deg)}.ztl-item.marker.on[data-v-ad0b766d]{border-color:#fff;box-shadow:0 0 0 2px var(--ztl-accent)}.ztl-item.marker.ghost[data-v-ad0b766d]{width:22px;height:22px;display:grid;place-items:center;border:1px dashed color-mix(in srgb,var(--zen-text, #e5e5ea) 35%,transparent);border-radius:5px;background:transparent;color:color-mix(in srgb,var(--zen-text, #e5e5ea) 55%,transparent);transform:translate(-50%,-50%);cursor:pointer}.ztl-item.marker.ghost[data-v-ad0b766d]:hover{border-color:var(--ztl-accent);color:var(--zen-text, #e5e5ea)}.ztl-item.marker.ghost .ztl-icon[data-v-ad0b766d]{color:inherit;font-size:12px}.ztl-item.marker img[data-v-ad0b766d]{width:100%;height:100%;object-fit:cover;pointer-events:none}.ztl-guide[data-v-ad0b766d]{position:absolute;top:24px;bottom:0;width:0;border-left:1px dashed color-mix(in srgb,var(--zen-text, #e5e5ea) 22%,transparent);pointer-events:none}.ztl-marquee[data-v-ad0b766d]{position:absolute;z-index:7;border:1px solid var(--ztl-accent);border-radius:calc(var(--zen-radius, 7px) * .65);background:color-mix(in srgb,var(--ztl-accent) 14%,transparent);pointer-events:none}.ztl-snapline[data-v-ad0b766d]{position:absolute;top:24px;bottom:0;z-index:3;width:1px;background:var(--zen-accent, #6366f1);box-shadow:0 0 4px var(--zen-accent, #6366f1);pointer-events:none}.ztl-playhead[data-v-ad0b766d]{position:absolute;top:0;bottom:0;left:0;z-index:6;width:0;border-left:1px solid var(--ztl-playhead);pointer-events:none}.ztl-playhead span[data-v-ad0b766d]{position:absolute;top:0;left:-6px;width:11px;height:11px;background:var(--ztl-playhead);clip-path:polygon(0 0,100% 0,100% 60%,50% 100%,0 60%)}.zbc-frame[data-v-657d6f53]{position:relative;width:100%;height:100%;min-height:0;overflow:hidden}.zbc[data-v-657d6f53]{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);overflow:hidden;border-radius:var(--zen-radius, 7px);background:repeating-conic-gradient(color-mix(in srgb,var(--zen-text, #fff) 4%,transparent) 0% 25%,transparent 0% 50%) 0 0 / 16px 16px,var(--zen-input, #1b1b20);outline:1px solid var(--zen-border, #34343c);outline-offset:-1px;user-select:none;touch-action:none;cursor:crosshair}.zbc-keys[data-v-657d6f53]{position:absolute;top:0;left:0;width:1px;height:1px;padding:0;border:0;opacity:0;pointer-events:none}.zbc[data-v-657d6f53]:focus-within{outline:1px solid color-mix(in srgb,var(--zen-text, #fff) 22%,transparent);outline-offset:-1px}.zbc.tool-brush[data-v-657d6f53],.zbc.tool-erase[data-v-657d6f53]{cursor:none}.zbc-backdrop[data-v-657d6f53]{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none}.zbc-grid[data-v-657d6f53]{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(to right,color-mix(in srgb,var(--zen-text, #fff) 8%,transparent) 1px,transparent 1px),linear-gradient(to bottom,color-mix(in srgb,var(--zen-text, #fff) 8%,transparent) 1px,transparent 1px)}.zbc-box[data-v-657d6f53]{position:absolute;box-sizing:border-box;border:1.5px solid var(--zbc-color);border-radius:3px;cursor:move;transition:box-shadow .12s ease}.zbc-box.masked[data-v-657d6f53]{border-style:dashed}.zbc-box.locked[data-v-657d6f53]{cursor:default}.zbc-box.sel[data-v-657d6f53]{box-shadow:0 0 0 1px color-mix(in srgb,var(--zbc-color) 70%,transparent),0 0 14px color-mix(in srgb,var(--zbc-color) 40%,transparent)}.zbc-fill[data-v-657d6f53]{position:absolute;inset:0;background:color-mix(in srgb,var(--zbc-color) 22%,transparent);-webkit-mask-size:100% 100%;mask-size:100% 100%;pointer-events:none}.zbc-content[data-v-657d6f53]{position:absolute;inset:0;overflow:hidden;container-type:size;pointer-events:none}.zbc-box.painting .zbc-content[data-v-657d6f53]{opacity:.35}.zbc-box.masked .zbc-fill[data-v-657d6f53]{background:color-mix(in srgb,var(--zbc-color) 45%,transparent)}.zbc-box.painting .zbc-fill[data-v-657d6f53]{visibility:hidden}.zbc-paint[data-v-657d6f53]{position:absolute;opacity:.5;pointer-events:none}.zbc-tag[data-v-657d6f53]{position:absolute;left:-1px;top:-1px;display:flex;align-items:center;gap:4px;max-width:calc(100% + 2px);padding:1px 6px 1px 4px;border-radius:3px 0 4px;background:var(--zbc-color);color:#fff;font-size:10px;line-height:15px;white-space:nowrap;overflow:hidden;text-shadow:0 1px 1px rgb(0 0 0 / 35%);pointer-events:none}.zbc-n[data-v-657d6f53]{font-weight:700}.zbc-label[data-v-657d6f53]{overflow:hidden;text-overflow:ellipsis}.zbc-h[data-v-657d6f53]{position:absolute;width:9px;height:9px;margin:-5px 0 0 -5px;border:1.5px solid #fff;border-radius:2px;background:var(--zbc-color, var(--zen-accent, #6366f1));box-shadow:0 0 0 1px #0006}.h-nw[data-v-657d6f53]{left:0;top:0;cursor:nwse-resize}.h-n[data-v-657d6f53]{left:50%;top:0;cursor:ns-resize}.h-ne[data-v-657d6f53]{left:100%;top:0;cursor:nesw-resize}.h-e[data-v-657d6f53]{left:100%;top:50%;cursor:ew-resize}.h-se[data-v-657d6f53]{left:100%;top:100%;cursor:nwse-resize}.h-s[data-v-657d6f53]{left:50%;top:100%;cursor:ns-resize}.h-sw[data-v-657d6f53]{left:0;top:100%;cursor:nesw-resize}.h-w[data-v-657d6f53]{left:0;top:50%;cursor:ew-resize}.zbc-selframe[data-v-657d6f53]{position:absolute;box-sizing:border-box;outline:1.5px dashed var(--zbc-color);outline-offset:-1px;pointer-events:none}.zbc-selframe .zbc-h[data-v-657d6f53]{pointer-events:auto}.zbc-group[data-v-657d6f53]{position:absolute;box-sizing:border-box;border:1px dashed var(--zen-accent, #6366f1);pointer-events:none}.zbc-group .zbc-h[data-v-657d6f53]{pointer-events:auto;background:var(--zen-accent, #6366f1)}.zbc-draft[data-v-657d6f53],.zbc-marquee[data-v-657d6f53]{position:absolute;box-sizing:border-box;pointer-events:none}.zbc-draft[data-v-657d6f53]{border:1.5px dashed var(--zen-text, #e5e5ea);background:color-mix(in srgb,var(--zen-text, #fff) 8%,transparent)}.zbc-marquee[data-v-657d6f53]{border:1px solid var(--zen-accent, #6366f1);background:color-mix(in srgb,var(--zen-accent, #6366f1) 12%,transparent)}.zbc-ring[data-v-657d6f53]{position:absolute;box-sizing:border-box;border:1.5px solid #fff;border-radius:50%;box-shadow:0 0 0 1px #0000007f;pointer-events:none}.zbc-ring.erase[data-v-657d6f53]{border-style:dashed}.zbc-empty[data-v-657d6f53]{position:absolute;inset:0;display:grid;place-items:center;color:var(--zen-muted, #9aa0aa);font-size:12px;pointer-events:none}.zll[data-v-6dd767a3]{display:flex;flex-direction:column;gap:2px}.zll-row[data-v-6dd767a3]{position:relative;display:flex;align-items:center;gap:6px;min-height:30px;padding:2px 4px;border-radius:var(--zen-radius, 7px);border:1px solid transparent;color:var(--zen-text, #e5e5ea);cursor:pointer;transition:transform .15s ease,background .12s ease}.zll-row[data-v-6dd767a3]:hover{background:color-mix(in srgb,var(--zen-text, #fff) 5%,transparent)}.zll-row.sel[data-v-6dd767a3]{border-color:color-mix(in srgb,var(--zen-accent, #6366f1) 60%,transparent);background:color-mix(in srgb,var(--zen-accent, #6366f1) 14%,transparent)}.zll-row.hidden .zll-text[data-v-6dd767a3],.zll-row.hidden .zll-swatch[data-v-6dd767a3]{opacity:.45}.zll.settling .zll-row[data-v-6dd767a3]{transition:background .12s ease}.zll-row.dragging[data-v-6dd767a3]{z-index:1;transition:none;background:var(--zen-surface-2, #26262d);box-shadow:0 6px 18px #00000059}.zll-grip[data-v-6dd767a3]{display:grid;place-items:center;width:14px;color:var(--zen-muted, #9aa0aa);cursor:grab;touch-action:none}.zll-grip.pin[data-v-6dd767a3]{cursor:default;opacity:.6}.zll-swatch[data-v-6dd767a3]{flex:none;width:22px;height:22px;border-radius:5px;overflow:hidden;box-shadow:inset 0 0 0 1px #00000040}.zll-swatch img[data-v-6dd767a3]{width:100%;height:100%;object-fit:cover}.zll-text[data-v-6dd767a3]{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2}.zll-label[data-v-6dd767a3]{font-size:12px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.zll-sub[data-v-6dd767a3]{font-size:10px;color:var(--zen-muted, #9aa0aa);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.zll-btn[data-v-6dd767a3]{display:grid;place-items:center;width:22px;height:22px;padding:0;border:0;border-radius:5px;background:transparent;color:var(--zen-muted, #9aa0aa);cursor:pointer;opacity:.55}.zll-row:hover .zll-btn[data-v-6dd767a3],.zll-btn.on[data-v-6dd767a3]{opacity:1}.zll-btn[data-v-6dd767a3]:hover{background:color-mix(in srgb,var(--zen-text, #fff) 8%,transparent);color:var(--zen-text, #e5e5ea)}.lpk[data-v-9a639d76]{position:fixed;z-index:100400;pointer-events:none;display:flex;flex-direction:column;max-height:480px;overflow:hidden;background:var(--zen-chrome-bg, var(--zen-surface, #202026));color:var(--zen-text, #e5e5ea);border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:calc(var(--zen-radius-surface, var(--zen-radius, 7px)) + 2px);box-shadow:0 16px 48px #0000008c;font-family:var(--p-font-family, system-ui, sans-serif)}.lpk-media[data-v-9a639d76]{flex:1 1 auto;min-height:0;display:flex;justify-content:center;background:var(--zen-input, #1b1b20)}.lpk-media img[data-v-9a639d76],.lpk-media video[data-v-9a639d76]{display:block;max-width:100%;max-height:360px;object-fit:contain}.lpk-body[data-v-9a639d76]{flex:none;display:flex;flex-direction:column;gap:5px;padding:8px 10px 9px}.lpk-title[data-v-9a639d76]{font-size:12.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lpk-chips[data-v-9a639d76]{display:flex;flex-wrap:wrap;gap:4px}.lpk-chips[data-v-9a639d76]:empty{display:none}.lpk-chip[data-v-9a639d76]{font-size:10.5px;padding:1px 6px;border-radius:999px;background:color-mix(in srgb,var(--zen-accent, #6366f1) 18%,transparent);color:var(--zen-text, #e5e5ea)}.lpk-words[data-v-9a639d76]{font-size:11px;color:var(--zen-muted, #9aa0aa);display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.lpk-hint[data-v-9a639d76]{font-size:10px;color:var(--zen-muted, #9aa0aa);opacity:.8}.ld[data-v-a9e6a30b]{height:100%;box-sizing:border-box;overflow:auto;padding:12px 14px 16px;display:flex;flex-direction:column;gap:14px;color:var(--zen-text, #e5e5ea);font-size:12px}.ld-head[data-v-a9e6a30b]{display:flex;gap:12px;align-items:flex-start}.ld-cover[data-v-a9e6a30b]{flex:none;width:104px;height:136px;padding:0;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-input, #1b1b20);overflow:hidden;cursor:zoom-in;display:flex;align-items:center;justify-content:center}.ld-cover[data-v-a9e6a30b]:disabled{cursor:default}.ld-cover img[data-v-a9e6a30b],.ld-cover video[data-v-a9e6a30b]{width:100%;height:100%;object-fit:contain;display:block}.ld-cover>.mdi[data-v-a9e6a30b]{font-size:32px;color:var(--zen-muted, #9aa0aa)}.ld-id[data-v-a9e6a30b]{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}.ld-title[data-v-a9e6a30b]{font-size:14px;font-weight:600;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.ld-file[data-v-a9e6a30b]{font-size:10.5px;color:var(--zen-muted, #9aa0aa);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ld-chips[data-v-a9e6a30b]{display:flex;flex-wrap:wrap;gap:4px}.ld-chip[data-v-a9e6a30b]{display:inline-flex;align-items:center;gap:3px;font:inherit;font-size:11px;padding:2px 8px;border:1px solid var(--zen-border, #34343c);border-radius:999px;background:var(--zen-input, #1b1b20);color:var(--zen-text, #e5e5ea)}.ld-chip.accent[data-v-a9e6a30b]{border-color:transparent;background:color-mix(in srgb,var(--zen-accent, #6366f1) 22%,transparent)}.ld-chip.word[data-v-a9e6a30b]{cursor:pointer}.ld-chip.word[data-v-a9e6a30b]:hover{border-color:var(--zen-accent, #6366f1)}.ld-actions[data-v-a9e6a30b]{display:flex;align-items:center;gap:6px;margin-top:2px}.ld-link[data-v-a9e6a30b]{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;color:var(--zen-accent, #6366f1);text-decoration:none}.ld-link[data-v-a9e6a30b]:hover{text-decoration:underline}.ld-sec[data-v-a9e6a30b]{display:flex;flex-direction:column;gap:7px}.ld-sec h4[data-v-a9e6a30b]{margin:0;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--zen-muted, #9aa0aa)}.ld-count[data-v-a9e6a30b]{font-weight:400}.ld-copy[data-v-a9e6a30b],.ld-toggle[data-v-a9e6a30b],.ld-more[data-v-a9e6a30b]{border:none;background:none;padding:0 2px;font:inherit;cursor:pointer;color:var(--zen-muted, #9aa0aa);display:inline-flex;align-items:center;gap:3px;text-transform:none;letter-spacing:0}.ld-copy[data-v-a9e6a30b]:hover,.ld-toggle[data-v-a9e6a30b]:hover,.ld-more[data-v-a9e6a30b]:hover,.ld-toggle.on[data-v-a9e6a30b]{color:var(--zen-text, #e5e5ea)}.ld-toggle[data-v-a9e6a30b]{margin-left:auto;font-size:11px}.ld-more[data-v-a9e6a30b]{align-self:flex-start;font-size:11px;color:var(--zen-accent, #6366f1)}.ld-examples[data-v-a9e6a30b]{container:ld-examples / inline-size}.ld-viewer[data-v-a9e6a30b]{display:flex;flex-direction:column;gap:12px;outline:none}.ld-look[data-v-a9e6a30b]{display:flex;flex-direction:column;gap:6px;min-width:0}@container ld-examples (min-width: 560px){.ld-viewer[data-v-a9e6a30b]{display:grid;grid-template-columns:minmax(0,1fr) minmax(200px,38%);align-items:start}}.ld-stage[data-v-a9e6a30b]{position:relative;display:flex;height:340px;overflow:hidden;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-media-bg, #0b0b0e)}.ld-stage-media[data-v-a9e6a30b]{flex:1;display:flex;align-items:center;justify-content:center;min-width:0;padding:0;border:0;background:none;cursor:zoom-in}.ld-stage-media img[data-v-a9e6a30b],.ld-stage-media video[data-v-a9e6a30b]{display:block;max-width:100%;max-height:100%;object-fit:contain}.ld-nav[data-v-a9e6a30b]{position:absolute;top:50%;display:grid;place-items:center;width:30px;height:44px;padding:0;border:0;border-radius:var(--zen-radius, 7px);background:#00000073;color:#fff;font-size:22px;opacity:0;transform:translateY(-50%);cursor:pointer;transition:opacity var(--zen-dur-fast, .12s) ease}.ld-nav.prev[data-v-a9e6a30b]{left:6px}.ld-nav.next[data-v-a9e6a30b]{right:6px}.ld-stage:hover .ld-nav[data-v-a9e6a30b],.ld-nav[data-v-a9e6a30b]:focus-visible{opacity:1}.ld-nav[data-v-a9e6a30b]:hover{background:#000000a6}.ld-counter[data-v-a9e6a30b]{position:absolute;right:8px;bottom:8px;padding:2px 7px;border-radius:999px;background:#0000008c;color:#fff;font-size:10.5px;font-variant-numeric:tabular-nums;pointer-events:none}.ld-strip[data-v-a9e6a30b]{display:flex;gap:4px;overflow-x:auto;overflow-y:hidden;padding-bottom:4px}.ld-thumb[data-v-a9e6a30b]{position:relative;flex:none;height:64px;padding:0;overflow:hidden;border:1px solid var(--zen-border, #34343c);border-radius:calc(var(--zen-radius, 7px) - 2px);background:var(--zen-media-bg, #0b0b0e);opacity:.7;cursor:pointer;transition:opacity var(--zen-dur-fast, .12s) ease}.ld-thumb[data-v-a9e6a30b]:hover,.ld-thumb.sel[data-v-a9e6a30b]{opacity:1}.ld-thumb.sel[data-v-a9e6a30b]{border-color:var(--zen-accent, #6366f1);box-shadow:inset 0 0 0 1px var(--zen-accent, #6366f1)}.ld-thumb img[data-v-a9e6a30b],.ld-thumb video[data-v-a9e6a30b]{display:block;width:100%;height:100%;object-fit:cover}.ld-badge[data-v-a9e6a30b]{position:absolute;right:3px;bottom:3px;font-size:14px;color:#fff;text-shadow:0 1px 3px rgb(0 0 0 / 70%)}.blur img[data-v-a9e6a30b],.blur video[data-v-a9e6a30b]{filter:blur(14px)}.ld-params[data-v-a9e6a30b]{min-width:0;display:flex;flex-direction:column;gap:8px}.ld-k[data-v-a9e6a30b]{display:flex;align-items:center;gap:4px;font-size:10.5px;font-weight:600;color:var(--zen-muted, #9aa0aa)}.ld-text[data-v-a9e6a30b]{max-height:140px;overflow:auto;padding:6px 8px;border-radius:var(--zen-radius, 7px);background:var(--zen-input, #1b1b20);white-space:pre-wrap;word-break:break-word;line-height:1.45;user-select:text}.ld-kv[data-v-a9e6a30b]{margin:0;display:grid;grid-template-columns:max-content minmax(0,1fr);gap:3px 10px;font-size:11.5px}.ld-kv dt[data-v-a9e6a30b]{color:var(--zen-muted, #9aa0aa)}.ld-kv dd[data-v-a9e6a30b]{margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;user-select:text}.ld-desc[data-v-a9e6a30b]{white-space:pre-wrap;line-height:1.5;user-select:text;display:-webkit-box;-webkit-line-clamp:8;line-clamp:8;-webkit-box-orient:vertical;overflow:hidden}.ld-desc.open[data-v-a9e6a30b]{display:block}.ld-muted[data-v-a9e6a30b]{margin:0;color:var(--zen-muted, #9aa0aa);font-size:11.5px}.lt[data-v-40f2868d]{flex:none;box-sizing:border-box;width:40px;height:40px;object-fit:cover;border-radius:var(--zen-radius, 7px);background:var(--zen-input, #1b1b20);border:1px solid var(--zen-border, #34343c)}.lt.sm[data-v-40f2868d]{width:18px;height:18px;border-radius:var(--zen-radius, 7px)}.lt.ph[data-v-40f2868d]{display:inline-flex;align-items:center;justify-content:center;color:var(--zen-muted, #9aa0aa);font-size:20px}.lt.sm.ph[data-v-40f2868d]{font-size:11px}.lt.warn[data-v-40f2868d]{display:inline-flex;align-items:center;justify-content:center;color:var(--zen-danger, #dc2626);background:color-mix(in srgb,var(--zen-danger, #dc2626) 14%,transparent);border-color:color-mix(in srgb,var(--zen-danger, #dc2626) 45%,transparent);font-size:20px}.lt.sm.warn[data-v-40f2868d]{font-size:12px}.lp-sel[data-v-ba2b3a49]{display:flex;align-items:center;gap:7px;min-width:0}.lp-sel-name[data-v-ba2b3a49]{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lp-sel.missing .lp-sel-name[data-v-ba2b3a49]{color:var(--zen-danger, #dc2626)}.lp-opt[data-v-ba2b3a49]{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;line-height:1.25}.lp-opt-name[data-v-ba2b3a49]{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12.5px}.lp-opt-dir[data-v-ba2b3a49]{font-size:10px;color:var(--zen-muted, #9aa0aa);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lp-star[data-v-ba2b3a49]{flex:none;border:none;background:none;cursor:pointer;color:var(--zen-muted, #9aa0aa);font-size:15px;padding:2px;display:inline-flex}.lp-star.on[data-v-ba2b3a49],.lp-star[data-v-ba2b3a49]:hover{color:var(--zen-star, #f5b301)}.lp-browse[data-v-ba2b3a49]{border:none;background:none;cursor:pointer;color:var(--zen-muted, #9aa0aa);font-size:16px;padding:0 2px;display:inline-flex}.lp-browse[data-v-ba2b3a49]:hover{color:var(--zen-text, #e5e5ea)}.lp-crumbs[data-v-ba2b3a49]{display:flex;align-items:center;gap:2px;min-width:0;padding:4px 8px;overflow:hidden;white-space:nowrap}.lp-crumbs>.mdi[data-v-ba2b3a49]{flex:none;font-size:13px;color:var(--zen-muted, #9aa0aa)}.lp-up[data-v-ba2b3a49],.lp-crumb[data-v-ba2b3a49]{flex:none;border:none;background:none;cursor:pointer;font:inherit;font-size:11.5px;padding:2px 5px;border-radius:var(--zen-radius, 7px);color:var(--zen-muted, #9aa0aa)}.lp-crumb.on[data-v-ba2b3a49]{color:var(--zen-text, #e5e5ea);font-weight:600}.lp-up[data-v-ba2b3a49]:hover:not(:disabled),.lp-crumb[data-v-ba2b3a49]:hover{color:var(--zen-text, #e5e5ea);background:color-mix(in srgb,var(--zen-text, #e5e5ea) 6%,transparent)}.lp-up[data-v-ba2b3a49]:disabled{opacity:.35;cursor:default}.lp-folder[data-v-ba2b3a49]{flex:none;box-sizing:border-box;width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;font-size:22px;color:var(--zen-accent, #6366f1);border-radius:var(--zen-radius, 7px);background:color-mix(in srgb,var(--zen-accent, #6366f1) 10%,var(--zen-input, #1b1b20));border:1px solid var(--zen-border, #34343c)}.lp-chev[data-v-ba2b3a49]{flex:none;color:var(--zen-muted, #9aa0aa);font-size:16px}.lb[data-v-e37dd837]{display:grid;grid-template-columns:210px minmax(0,1fr) 360px;height:calc(100% + 28px);margin:-14px;font-size:12px}.lb-search[data-v-e37dd837]{display:flex;flex:1;max-width:340px}.lb-grow[data-v-e37dd837]{flex:1}.lb-soft[data-v-e37dd837]{color:var(--zen-muted, #9aa0aa)}.lb-folders[data-v-e37dd837]{display:flex;flex-direction:column;gap:1px;min-height:0;overflow-y:auto;padding:10px 8px;border-right:1px solid var(--zen-border, #34343c)}.lb-folder[data-v-e37dd837]{display:flex;align-items:center;gap:6px;width:100%;padding:5px 8px;border:0;border-radius:var(--zen-radius, 7px);background:none;color:var(--zen-muted, #9aa0aa);font:inherit;text-align:left;cursor:pointer}.lb-folder[data-v-e37dd837]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 6%,transparent);color:var(--zen-text, #e5e5ea)}.lb-folder.on[data-v-e37dd837]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 20%,transparent);color:var(--zen-text, #e5e5ea)}.lb-folder .mdi[data-v-e37dd837]{flex:none;font-size:15px}.lb-folder .mdi-star[data-v-e37dd837]{color:var(--zen-star, #f5b301)}.lb-fname[data-v-e37dd837]{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.lb-count[data-v-e37dd837]{flex:none;font-size:10.5px;font-variant-numeric:tabular-nums}.lb-sep[data-v-e37dd837]{margin:6px 4px;border-top:1px solid var(--zen-border, #34343c)}.lb-main[data-v-e37dd837]{display:flex;flex-direction:column;min-width:0;min-height:0}.lb-filters[data-v-e37dd837]{display:flex;flex:none;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--zen-border, #34343c)}.lb-scope[data-v-e37dd837]{display:inline-flex;align-items:center;gap:5px;font-weight:600}.lb-grid[data-v-e37dd837]{display:grid;flex:1;align-content:start;gap:10px;min-height:0;overflow-y:auto;padding:12px;outline:none}.lb-card[data-v-e37dd837]{display:flex;flex-direction:column;gap:3px;min-width:0;padding:4px;border:1px solid transparent;border-radius:calc(var(--zen-radius, 7px) + 2px);background:none;color:var(--zen-text, #e5e5ea);font:inherit;text-align:left;cursor:pointer}.lb-card[data-v-e37dd837]:focus{outline:none}.lb-card[data-v-e37dd837]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 5%,transparent)}.lb-card.focus .lb-img[data-v-e37dd837]{outline:2px solid var(--zen-accent, #6366f1);outline-offset:1px}.lb-img[data-v-e37dd837]{position:relative;display:grid;place-items:center;aspect-ratio:3 / 4;overflow:hidden;border-radius:var(--zen-radius, 7px);background:var(--zen-media-bg, #0b0b0e)}.lb-img img[data-v-e37dd837],.lb-img video[data-v-e37dd837]{width:100%;height:100%;object-fit:cover}.lb-noimg[data-v-e37dd837]{color:var(--zen-muted, #9aa0aa);font-size:30px;opacity:.5}.lb-badge[data-v-e37dd837],.lb-star[data-v-e37dd837],.lb-inuse[data-v-e37dd837]{position:absolute;display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#0009;color:#fff;font-size:13px}.lb-badge[data-v-e37dd837]{bottom:5px;left:5px}.lb-star[data-v-e37dd837]{top:5px;right:5px;opacity:0;transition:opacity var(--zen-dur-fast, .12s)}.lb-card:hover .lb-star[data-v-e37dd837],.lb-star.on[data-v-e37dd837]{opacity:1}.lb-star.on[data-v-e37dd837]{color:var(--zen-star, #f5b301)}.lb-inuse[data-v-e37dd837]{top:5px;left:5px;background:var(--zen-accent, #6366f1);color:var(--zen-accent-text, #fff)}.lb-name[data-v-e37dd837],.lb-dir[data-v-e37dd837]{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.lb-name[data-v-e37dd837]{font-size:11.5px}.lb-dir[data-v-e37dd837]{margin-top:-2px;color:var(--zen-muted, #9aa0aa);font-size:10.5px}.lb-empty[data-v-e37dd837]{display:flex;flex-direction:column;grid-column:1 / -1;align-items:center;gap:6px;padding:48px 12px;color:var(--zen-muted, #9aa0aa);text-align:center}.lb-empty .mdi[data-v-e37dd837]{font-size:28px}.lb-list[data-v-e37dd837]{display:flex;flex:1;flex-direction:column;min-height:0}.lb-lhead[data-v-e37dd837],.lb-row[data-v-e37dd837]{display:grid;grid-template-columns:34px minmax(0,2.4fr) minmax(0,1.2fr) 72px 104px 28px;align-items:center;gap:10px;padding:0 12px}.lb-lhead[data-v-e37dd837]{flex:none;height:28px;border-bottom:1px solid var(--zen-border, #34343c);color:var(--zen-muted, #9aa0aa);font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase}.lb-lrows[data-v-e37dd837]{display:grid;flex:1;align-content:start;min-height:0;overflow-y:auto;outline:none}.lb-row[data-v-e37dd837]{height:34px;border-bottom:1px solid color-mix(in srgb,var(--zen-border, #34343c) 50%,transparent);cursor:pointer}.lb-row[data-v-e37dd837]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 5%,transparent)}.lb-row.focus[data-v-e37dd837]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 18%,transparent)}.lb-rthumb[data-v-e37dd837]{display:grid;place-items:center;width:26px;height:26px;overflow:hidden;border-radius:5px;background:var(--zen-media-bg, #0b0b0e);color:var(--zen-muted, #9aa0aa)}.lb-rthumb img[data-v-e37dd837]{width:100%;height:100%;object-fit:cover}.lb-rname[data-v-e37dd837],.lb-rdir[data-v-e37dd837]{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.lb-rname .mdi[data-v-e37dd837]{margin-left:4px;color:var(--zen-muted, #9aa0aa)}.lb-rname .lb-rcur[data-v-e37dd837]{color:var(--zen-accent, #6366f1)}.lb-rdir[data-v-e37dd837]{color:var(--zen-muted, #9aa0aa)}.num[data-v-e37dd837]{color:var(--zen-muted, #9aa0aa);font-variant-numeric:tabular-nums;text-align:right}.lb-rstar[data-v-e37dd837]{display:grid;place-items:center;color:var(--zen-muted, #9aa0aa);opacity:0}.lb-row:hover .lb-rstar[data-v-e37dd837],.lb-rstar.on[data-v-e37dd837]{opacity:1}.lb-rstar.on[data-v-e37dd837]{color:var(--zen-star, #f5b301)}.lb-detail[data-v-e37dd837]{min-height:0;overflow-y:auto;padding:12px;border-left:1px solid var(--zen-border, #34343c)}.lb-hint[data-v-e37dd837]{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:40%;color:var(--zen-muted, #9aa0aa);line-height:1.5;text-align:center}.lb-hint .mdi[data-v-e37dd837]{font-size:26px}.lb-foot[data-v-e37dd837]{display:flex;align-items:center;gap:8px}.lb-foot-name[data-v-e37dd837]{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.jt[data-v-e4670a8d]{font-family:var(--zen-mono, ui-monospace, \"SF Mono\", Menlo, Consolas, monospace);font-size:11.5px;line-height:1.6}.jt-row[data-v-e4670a8d]{display:flex;align-items:center;gap:3px;cursor:pointer;white-space:nowrap;border-radius:var(--zen-radius, 7px)}.jt-row[data-v-e4670a8d]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 7%,transparent)}.jt-row.leaf[data-v-e4670a8d]{cursor:default}.jt-caret[data-v-e4670a8d]{font-size:14px;color:var(--zen-muted, #9aa0aa);margin-left:-2px}.jt-key[data-v-e4670a8d]{color:var(--zen-accent, #6366f1)}.jt-key[data-v-e4670a8d]:after{content:\":\";color:var(--zen-muted, #9aa0aa);margin:0 2px 0 1px}.jt-brace[data-v-e4670a8d]{color:var(--zen-muted, #9aa0aa)}.jt-close[data-v-e4670a8d]{cursor:default}.jt-collapsed[data-v-e4670a8d]{color:var(--zen-muted, #9aa0aa);font-style:italic;margin:0 4px;opacity:.8}.jt-children[data-v-e4670a8d]{border-left:1px solid var(--zen-border, #34343c)}.jt-val[data-v-e4670a8d]{white-space:pre-wrap;word-break:break-word}.t-string[data-v-e4670a8d]{color:color-mix(in srgb,#4caf50 70%,var(--zen-text, #e5e5ea))}.t-number[data-v-e4670a8d]{color:color-mix(in srgb,#d4a017 70%,var(--zen-text, #e5e5ea))}.t-boolean[data-v-e4670a8d]{color:color-mix(in srgb,#b16ce8 70%,var(--zen-text, #e5e5ea))}.t-null[data-v-e4670a8d]{color:#9aa0aa;font-style:italic}\n/* ZenKit ↔ ComfyUI theme bridge — the runtime-free way to theme @nynxz/zenkit-ui.\n *\n * @nynxz/zenkit-ui components read --zen-* tokens. WITH the ZenKit runtime installed,\n * @nynxz/zenkit-core sets those from the active theme pack (the derivation in @nynxz/zenkit-theme's\n * zen.ts → zenAliases). Consumers that use @nynxz/zenkit-ui WITHOUT the runtime import this file\n * instead: it maps the same --zen-* set straight onto ComfyUI's native theme variables, so\n * the components follow the user's selected ComfyUI theme with zero JS.\n *\n * Declared at :root so teleported overlays (ZenPopover / ZenCombo menus, ZenModal) — which\n * mount outside any component subtree — pick the tokens up too. The right-hand fallbacks keep\n * every token sane if ComfyUI renames or drops a variable. Kept in lockstep with zen.ts:\n * the same core and status tokens, sourced from the host instead of a pack. (The other\n * --zen-* tokens the components use — glass, scrollbar, switch-radius — resolve through\n * inline fallbacks that chain back to these.)\n *\n * Import once, near your extension entry:  import '@nynxz/zenkit-ui/comfy-bridge.css'\n */\n:root {\n  --zen-bg: var(--comfy-menu-bg, #1a1a1f);\n  --zen-surface: var(--comfy-menu-secondary-bg, #202026);\n  --zen-surface-2: var(--comfy-menu-secondary-bg, #26262d);\n  --zen-input: var(--comfy-input-bg, #1b1b20);\n  --zen-border: var(--border-color, #34343c);\n  --zen-text: var(--input-text, var(--fg-color, #e5e5ea));\n  --zen-muted: var(--descrip-text, #9aa0aa);\n  --zen-accent: var(--p-primary-color, #6366f1);\n  --zen-accent-text: var(--p-button-text-primary-color, #fff);\n  --zen-radius: var(--border-radius-base, 7px);\n  --zen-danger: var(--color-destructive-background, #dc2626);\n  --zen-danger-text: #fff;\n  --zen-warn: var(--color-warning-background, #d97706);\n  --zen-warn-text: var(--color-warning-on-background, #15151a);\n  --zen-ok: var(--color-success-background, #16a34a);\n  --zen-ok-text: #fff;\n  --zen-info: var(--zen-accent);\n  --zen-info-text: var(--zen-accent-text);\n  --zen-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;\n  /* keyboard-focus outline colour shared by every control's :focus-visible */\n  --zen-focus-ring: color-mix(in srgb, var(--zen-accent) 60%, transparent);\n}\n\n.gs-head[data-v-e2a0d204] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  /* lines the master switch up with the cards' switches below it */\n  padding-right: 7px;\n}\n.gs-colors[data-v-e2a0d204] {\n  flex: 1;\n  min-width: 0;\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  gap: 4px;\n}\n.gs-all[data-v-e2a0d204] {\n  height: 18px;\n  padding: 0 7px;\n  border: 1px solid var(--zen-control-border, var(--zen-border, #34343c));\n  border-radius: 999px;\n  background: var(--zen-control-bg, transparent);\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 10px;\n  cursor: pointer;\n}\n.gs-all.on[data-v-e2a0d204] {\n  color: var(--zen-text, #e5e5ea);\n  border-color: var(--zen-accent, #6366f1);\n}\n/* A colour chip: the group colour itself, ringed in the accent while selected. */\n.gs-color[data-v-e2a0d204] {\n  width: 16px;\n  height: 16px;\n  padding: 0;\n  border: 2px solid transparent;\n  border-radius: 50%;\n  background: var(--gs-c) padding-box;\n  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 12%);\n  cursor: pointer;\n  opacity: 0.55;\n}\n.gs-color.on[data-v-e2a0d204] {\n  opacity: 1;\n  border-color: var(--zen-accent, #6366f1);\n}\n.gs-color.none[data-v-e2a0d204] {\n  background: transparent;\n  box-shadow: inset 0 0 0 1px var(--zen-muted, #9aa0aa);\n}\n.gs-rows[data-v-e2a0d204] {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n}\n\n/* One card per group: its own outline, a lift on hover, and the group's colour as a stripe down\n   the left edge so the card still reads as that group without a separate swatch. */\n.gs-card[data-v-e2a0d204] {\n  display: flex;\n  flex-direction: column;\n  border: 1px solid var(--zen-surface-border, var(--zen-border, #34343c));\n  border-left: 3px solid var(--gs-c, var(--zen-surface-border, var(--zen-border, #34343c)));\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);\n  transition:\n    background 0.12s ease,\n    border-color 0.12s ease;\n}\n.gs-card[data-v-e2a0d204]:hover {\n  background: color-mix(in srgb, var(--zen-text, #fff) 5%, transparent);\n}\n.gs-card-head[data-v-e2a0d204] {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  min-height: 32px;\n  padding: 3px 6px 3px 8px;\n}\n.gs-card.off .gs-name[data-v-e2a0d204],\n.gs-node.off .gs-name[data-v-e2a0d204] {\n  opacity: 0.5;\n}\n.gs-card.empty .gs-name[data-v-e2a0d204] {\n  opacity: 0.45;\n}\n\n/* The name is a button so the whole label toggles — a far bigger target than the switch. */\n.gs-name[data-v-e2a0d204] {\n  flex: 1;\n  min-width: 0;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  padding: 2px 0;\n  border: none;\n  background: none;\n  color: var(--zen-text, #e5e5ea);\n  font: inherit;\n  text-align: left;\n  cursor: pointer;\n}\n.gs-name[data-v-e2a0d204]:disabled {\n  cursor: default;\n}\n.gs-title[data-v-e2a0d204] {\n  min-width: 0;\n  font-size: 12px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.gs-count[data-v-e2a0d204] {\n  flex: none;\n  padding: 0 5px;\n  border-radius: 999px;\n  background: color-mix(in srgb, var(--zen-text, #fff) 7%, transparent);\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  line-height: 16px;\n  font-variant-numeric: tabular-nums;\n}\n/* Some nodes running, some not: the badge carries it, in the accent. */\n.gs-count.mixed[data-v-e2a0d204] {\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 20%, transparent);\n  color: var(--zen-text, #e5e5ea);\n}\n.gs-nodes[data-v-e2a0d204] {\n  display: flex;\n  flex-direction: column;\n  gap: 2px;\n  padding: 4px 6px 6px 8px;\n  border-top: 1px solid var(--zen-surface-border, var(--zen-border, #34343c));\n}\n.gs-node[data-v-e2a0d204] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  min-height: 24px;\n}\n.gs-node .gs-title[data-v-e2a0d204] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.gs-node-switch[data-v-e2a0d204] {\n  zoom: 0.75;\n}\n.gs-empty[data-v-e2a0d204] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 5px;\n  padding: 14px 8px;\n  text-align: center;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);\n}\n.gs-empty > .mdi[data-v-e2a0d204] {\n  font-size: 24px;\n  opacity: 0.8;\n}\n.gs-empty > span[data-v-e2a0d204] {\n  font-size: 11px;\n}\n/*$vite$:1*/";document.head.appendChild(s);})();import { ComfyApp, app } from "../../../scripts/app.js";
+(function(){var s=document.createElement('style');s.setAttribute('data-extension',"comfyui-nynxznodes");s.textContent="\n.bp-row[data-v-32c9ebc0] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n  min-height: 24px;\n}\n.bp-lbl[data-v-32c9ebc0] {\n  flex: none;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n  font-weight: 600;\n}\n.bp-pair[data-v-32c9ebc0] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  justify-content: flex-end;\n}\n.bp-hint[data-v-32c9ebc0] {\n  display: flex;\n  align-items: flex-start;\n  gap: 5px;\n  margin: 0;\n  padding: 5px 7px;\n  border-radius: var(--zen-radius, 6px);\n  background: var(--zen-input, #1b1b20);\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  line-height: 1.35;\n}\n.bp-hint .mdi[data-v-32c9ebc0] {\n  flex: none;\n  font-size: 13px;\n  color: var(--zen-accent, #6366f1);\n}\n.bp-patterns[data-v-32c9ebc0] {\n  display: grid;\n  grid-template-columns: repeat(6, 1fr);\n  gap: 5px;\n  padding: 2px 0;\n}\n.bp-sw[data-v-32c9ebc0] {\n  position: relative;\n  aspect-ratio: 1;\n  padding: 0;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 6px);\n  cursor: pointer;\n  overflow: hidden;\n}\n.bp-sw[data-v-32c9ebc0]:hover {\n  border-color: var(--zen-accent, #6366f1);\n}\n.bp-sw.on[data-v-32c9ebc0] {\n  border-color: var(--zen-accent, #6366f1);\n  box-shadow: 0 0 0 1px var(--zen-accent, #6366f1) inset;\n}\n.bp-sw-fill[data-v-32c9ebc0] {\n  position: absolute;\n  inset: 0;\n  background-repeat: repeat;\n}\n\n.wa[data-v-0d8685b2] {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  padding: 3px;\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  transition:\n    border-color 0.12s ease,\n    background 0.12s ease;\n}\n.wa.active[data-v-0d8685b2] {\n  border-color: var(--zen-accent, #6366f1);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 10%, transparent);\n}\n/* the slotted icon buttons keep their own size; only the primary button flexes */\n.wa[data-v-0d8685b2] > :not(.wa-main) {\n  flex: none;\n}\n.wa-main[data-v-0d8685b2] {\n  flex: 1;\n  min-width: 0;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  height: 26px; /* matches ZenIconButton, so the row is one height whatever it contains */\n  border: none;\n  border-radius: var(--zen-radius, 5px);\n  background: transparent;\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 11px;\n  font-weight: 600;\n  /* A label that can change (a drag hint, a growing count) must never WRAP: in a widget whose\n     drop zones were measured once, a second line moves everything below it. */\n  white-space: nowrap;\n  overflow: hidden;\n  cursor: pointer;\n  transition:\n    color 0.12s ease,\n    background 0.12s ease;\n}\n.wa-main[data-v-0d8685b2]:hover {\n  color: var(--zen-text, #e5e5ea);\n  background: color-mix(in srgb, var(--zen-text, #fff) 8%, transparent);\n}\n.wa-main .mdi[data-v-0d8685b2] {\n  font-size: 15px;\n}\n.wa-label[data-v-0d8685b2] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.wa-count[data-v-0d8685b2] {\n  padding: 0 5px;\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 22%, transparent);\n  color: var(--zen-text, #e5e5ea);\n  font-size: 10px;\n  font-weight: 700;\n}\n\n.cl-rows[data-v-299b8ff3] {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n}\n.cl-row[data-v-299b8ff3] {\n  position: relative;\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  transition: transform 0.15s ease;\n}\n.cl-rows.settling .cl-row[data-v-299b8ff3] {\n  transition: none;\n}\n.cl-row.dragging[data-v-299b8ff3] {\n  z-index: 5;\n  transition: none;\n  box-shadow: 0 6px 16px rgb(0 0 0 / 45%);\n  border-radius: var(--zen-radius, 6px);\n  cursor: grabbing;\n}\n.cl-grip[data-v-299b8ff3] {\n  flex: none;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: 12px;\n  cursor: grab;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 14px;\n  line-height: 1;\n  touch-action: none;\n  -webkit-user-select: none;\n  user-select: none;\n}\n.cl-grip[data-v-299b8ff3] > * {\n  pointer-events: none;\n}\n.cl-grip[data-v-299b8ff3]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.cl-text[data-v-299b8ff3] {\n  flex: 1;\n  min-width: 0;\n  height: 24px;\n  padding: 0 7px;\n  font: inherit;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n  background: var(--zen-surface, #202026);\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 6px);\n  outline: none;\n}\n.cl-text[data-v-299b8ff3]:focus {\n  border-color: var(--zen-accent, #6366f1);\n}\n.cl-row.on .cl-text[data-v-299b8ff3] {\n  border-color: color-mix(in srgb, var(--zen-accent, #6366f1) 55%, transparent);\n}\n.cl-pop-head[data-v-299b8ff3] {\n  padding: 4px 8px 6px;\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.06em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.cf[data-v-22d311f2] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  height: 28px;\n  padding: 0 2px;\n  font-size: 12px;\n}\n.cf-label[data-v-22d311f2] {\n  flex: 0 1 40%;\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  color: var(--zen-muted, #9aa0aa);\n}\n.cf-field[data-v-22d311f2] {\n  flex: 1;\n  min-width: 0;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  height: 26px;\n  padding: 0 6px;\n  box-sizing: border-box;\n  border: 1px solid var(--zen-control-border, var(--zen-border, #34343c));\n  border-radius: var(--zen-radius, 6px);\n  background: var(--zen-field-bg, var(--zen-input, #15151a));\n}\n.cf-field[data-v-22d311f2]:focus-within {\n  border-color: var(--zen-accent, #6366f1);\n}\n.cf-text[data-v-22d311f2] {\n  flex: 1;\n  min-width: 0;\n  padding: 0;\n  border: none;\n  outline: none;\n  background: none;\n  color: var(--zen-text, #e5e5ea);\n  font: inherit;\n  font-family: var(--zen-mono, ui-monospace, monospace);\n  font-size: 11px;\n}\n.cf-text.invalid[data-v-22d311f2] {\n  color: var(--zen-danger, #f87171);\n}\n.cf-linked[data-v-22d311f2] {\n  font-size: 11px;\n  font-style: italic;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.fbf[data-v-163982f0] {\n  position: absolute;\n  inset: 0;\n}\n.fbf-pic[data-v-163982f0] {\n  position: absolute;\n  inset: 0;\n  -webkit-mask-size: 100% 100%;\n  mask-size: 100% 100%;\n}\n.fbf-img[data-v-163982f0] {\n  position: absolute;\n  inset: 0;\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n  opacity: 0.8;\n}\n.fbf-more[data-v-163982f0] {\n  position: absolute;\n  right: 4px;\n  top: 4px;\n  display: flex;\n  gap: 3px;\n}\n.fbf-more img[data-v-163982f0],\n.fbf-plus[data-v-163982f0] {\n  width: 22px;\n  height: 22px;\n  border-radius: 4px;\n  object-fit: cover;\n  box-shadow: 0 0 0 1px rgb(0 0 0 / 50%);\n}\n.fbf-more.big img[data-v-163982f0],\n.fbf-more.big .fbf-plus[data-v-163982f0] {\n  width: 34px;\n  height: 34px;\n}\n.fbf-plus[data-v-163982f0] {\n  display: grid;\n  place-items: center;\n  background: rgb(0 0 0 / 65%);\n  color: #fff;\n  font-size: 10px;\n}\n.fbf-lora[data-v-163982f0] {\n  position: absolute;\n  left: 4px;\n  top: 20px;\n  display: inline-flex;\n  align-items: center;\n  gap: 2px;\n  padding: 0 5px;\n  border-radius: 999px;\n  background: rgb(0 0 0 / 60%);\n  color: #fff;\n  font-size: 10px;\n  line-height: 16px;\n}\n.fbf-text[data-v-163982f0] {\n  position: absolute;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  margin: 0;\n  padding: 14px 6px 4px;\n  background: linear-gradient(to top, rgb(0 0 0 / 75%), transparent);\n  color: #fff;\n  font-size: 11px;\n  line-height: 1.3;\n  text-shadow: 0 1px 2px rgb(0 0 0 / 60%);\n  display: -webkit-box;\n  -webkit-line-clamp: 2;\n  -webkit-box-orient: vertical;\n  overflow: hidden;\n}\n.fbf.bare .fbf-text[data-v-163982f0] {\n  background: none;\n  color: color-mix(in srgb, #fff 85%, transparent);\n}\n@container (max-height: 70px) {\n.fbf-text[data-v-163982f0],\n  .fbf-lora[data-v-163982f0] {\n    display: none;\n}\n}\n@container (max-width: 90px) {\n.fbf-more[data-v-163982f0] {\n    display: none;\n}\n}\n@container (min-height: 160px) {\n.fbf-text[data-v-163982f0] {\n    -webkit-line-clamp: 3;\n}\n}\n\n.fl[data-v-71f8bdb9] {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n  align-items: stretch;\n}\n.fl-row[data-v-71f8bdb9] {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n}\n.fl-row.off .fl-pick[data-v-71f8bdb9] {\n  opacity: 0.5;\n}\n.fl-pick[data-v-71f8bdb9] {\n  flex: 1;\n  min-width: 0;\n}\n.fl-str[data-v-71f8bdb9] {\n  width: 64px;\n  flex: none;\n}\n\n.fp[data-v-744c36c6] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n}\n.fp-pill[data-v-744c36c6] {\n  height: 24px;\n  padding: 0 12px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: 999px;\n  background: transparent;\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 11px;\n  cursor: pointer;\n  transition:\n    background 0.12s ease,\n    color 0.12s ease,\n    border-color 0.12s ease;\n}\n.fp-pill[data-v-744c36c6]:hover:not(:disabled) {\n  color: var(--zen-text, #e5e5ea);\n  border-color: color-mix(in srgb, var(--zen-text, #fff) 25%, transparent);\n}\n.fp-pill.on[data-v-744c36c6] {\n  border-color: color-mix(in srgb, var(--zen-accent, #6366f1) 70%, transparent);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 18%, transparent);\n  color: var(--zen-text, #e5e5ea);\n}\n.fp-pill[data-v-744c36c6]:disabled {\n  opacity: 0.45;\n  cursor: default;\n}\n\n.fr[data-v-f6094846] {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, 64px);\n  gap: 8px;\n  padding: 2px;\n  border-radius: var(--zen-radius, 7px);\n  outline: 1px dashed transparent;\n  transition: outline-color 0.12s ease;\n}\n.fr.dropping[data-v-f6094846] {\n  outline-color: var(--zen-accent, #6366f1);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 8%, transparent);\n}\n.fr-tile[data-v-f6094846] {\n  display: flex;\n  flex-direction: column;\n  gap: 3px;\n  width: 64px;\n}\n.fr-tile.off .fr-thumb[data-v-f6094846] {\n  opacity: 0.4;\n}\n.fr-thumb[data-v-f6094846] {\n  position: relative;\n  width: 64px;\n  height: 64px;\n  border-radius: 6px;\n  overflow: hidden;\n  background: #000;\n  box-shadow: inset 0 0 0 1px var(--zen-border, #34343c);\n}\n.fr-thumb img[data-v-f6094846] {\n  width: 100%;\n  height: 100%;\n  display: block;\n}\n.fr-acts[data-v-f6094846] {\n  position: absolute;\n  inset: auto 2px 2px 2px;\n  display: flex;\n  justify-content: flex-end;\n  gap: 2px;\n  opacity: 0;\n  transition: opacity 0.12s ease;\n}\n.fr-thumb:hover .fr-acts[data-v-f6094846] {\n  opacity: 1;\n}\n.fr-act[data-v-f6094846] {\n  display: grid;\n  place-items: center;\n  width: 18px;\n  height: 18px;\n  padding: 0;\n  border: 0;\n  border-radius: 4px;\n  background: rgb(0 0 0 / 70%);\n  color: #fff;\n  cursor: pointer;\n  font-size: 11px;\n}\n.fr-act.danger[data-v-f6094846]:hover {\n  background: var(--zen-danger, #dc2626);\n}\n.fr-str[data-v-f6094846] {\n  width: 64px;\n}\n.fr-empty[data-v-f6094846] {\n  grid-column: 1 / -1;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  height: 30px;\n  padding: 0;\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: 6px;\n  background: transparent;\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 11px;\n  cursor: pointer;\n  transition:\n    border-color 0.12s ease,\n    color 0.12s ease;\n}\n.fr-empty[data-v-f6094846]:hover {\n  border-color: var(--zen-accent, #6366f1);\n  color: var(--zen-text, #e5e5ea);\n}\n.fr-empty .mdi[data-v-f6094846] {\n  font-size: 15px;\n}\n\n.fsec[data-v-3701245b] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  padding-top: 10px;\n  border-top: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 60%, transparent);\n}\n.fsec[data-v-3701245b]:first-child {\n  padding-top: 0;\n  border-top: 0;\n}\n.fsec-head[data-v-3701245b] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  min-height: 22px;\n}\n.fsec-label[data-v-3701245b] {\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fsec-note[data-v-3701245b] {\n  overflow: hidden;\n  min-width: 0;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  font-size: 10px;\n  color: color-mix(in srgb, var(--zen-muted, #9aa0aa) 75%, transparent);\n}\n.fsec-acts[data-v-3701245b] {\n  display: flex;\n  gap: 2px;\n  margin-left: auto;\n}\n\n.fcf[data-v-73b750b4] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n}\n.fcf[data-v-73b750b4] > * {\n  flex: none;\n}\n.fcf-row[data-v-73b750b4] {\n  display: grid;\n  grid-template-columns: 52px minmax(0, 1fr) 92px;\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fcf-read[data-v-73b750b4] {\n  display: grid;\n  grid-template-columns: 52px minmax(0, 1fr);\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fcf-pairs[data-v-73b750b4] {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));\n  gap: 6px 10px;\n}\n.fcf-pair[data-v-73b750b4] {\n  display: grid;\n  grid-template-columns: 52px minmax(0, 1fr);\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.lt[data-v-863b189a] {\n  display: block;\n  width: 100%;\n  height: 100%;\n}\n.lt-canvas[data-v-863b189a] {\n  fill: var(--zen-surface-2, #26262d);\n  stroke: var(--zen-border, #34343c);\n}\n.lt-label[data-v-863b189a] {\n  font-size: 10px;\n  fill: var(--zen-text, #e5e5ea);\n  paint-order: stroke;\n  stroke: rgb(0 0 0 / 0.6);\n  stroke-width: 2px;\n}\n\n.lb[data-v-38d9a54a] {\n  display: grid;\n  grid-template-columns: 180px minmax(0, 1fr) 280px;\n  gap: 12px;\n  height: 100%;\n  min-height: 0;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n}\n.lb-search[data-v-38d9a54a] {\n  width: 260px;\n}\n.lb-save[data-v-38d9a54a] {\n  display: flex;\n  gap: 6px;\n  width: 340px;\n}\n.lb-save[data-v-38d9a54a] > :first-child {\n  flex: 1;\n}\n.lb-grow[data-v-38d9a54a] {\n  flex: 1;\n}\n.lb-modes[data-v-38d9a54a] {\n  display: flex;\n  flex-direction: column;\n  gap: 2px;\n}\n.lb-mode[data-v-38d9a54a] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  padding: 7px 9px;\n  border: 0;\n  border-radius: var(--zen-radius, 7px);\n  background: none;\n  color: inherit;\n  font: inherit;\n  text-align: left;\n  cursor: pointer;\n}\n.lb-mode[data-v-38d9a54a]:hover {\n  background: color-mix(in srgb, var(--zen-text, #e5e5ea) 8%, transparent);\n}\n.lb-mode.on[data-v-38d9a54a] {\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 22%, transparent);\n}\n.lb-mode i[data-v-38d9a54a] {\n  font-size: 15px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lb-mname[data-v-38d9a54a] {\n  flex: 1;\n}\n.lb-count[data-v-38d9a54a] {\n  font-size: 10px;\n  color: var(--zen-muted, #9aa0aa);\n  font-variant-numeric: tabular-nums;\n}\n.lb-main[data-v-38d9a54a] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  min-height: 0;\n}\n.lb-gridwrap[data-v-38d9a54a] {\n  flex: 1;\n  min-height: 0;\n}\n.lb-grid[data-v-38d9a54a] {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));\n  gap: 10px;\n  padding: 2px;\n}\n.lb-card[data-v-38d9a54a] {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n  padding: 6px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-surface, #1e1e24);\n  color: inherit;\n  font: inherit;\n  text-align: left;\n  cursor: pointer;\n}\n.lb-card[data-v-38d9a54a]:hover {\n  border-color: color-mix(in srgb, var(--zen-accent, #6366f1) 50%, var(--zen-border, #34343c));\n}\n.lb-card.on[data-v-38d9a54a] {\n  border-color: var(--zen-accent, #6366f1);\n  box-shadow: 0 0 0 1px var(--zen-accent, #6366f1);\n}\n.lb-thumb[data-v-38d9a54a] {\n  display: block;\n  height: 120px;\n}\n.lb-cname[data-v-38d9a54a] {\n  font-weight: 600;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.lb-cmeta[data-v-38d9a54a] {\n  font-size: 10.5px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lb-detail[data-v-38d9a54a] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  min-height: 0;\n  overflow: auto;\n  padding-left: 12px;\n  border-left: 1px solid var(--zen-border, #34343c);\n}\n.lb-big[data-v-38d9a54a] {\n  height: 200px;\n  flex: none;\n}\n.lb-row[data-v-38d9a54a] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.lb-facts[data-v-38d9a54a] {\n  display: grid;\n  grid-template-columns: auto 1fr;\n  gap: 2px 10px;\n  margin: 0;\n}\n.lb-facts dt[data-v-38d9a54a] {\n  color: var(--zen-muted, #9aa0aa);\n}\n.lb-facts dd[data-v-38d9a54a] {\n  margin: 0;\n}\n.lb-prompt[data-v-38d9a54a] {\n  margin: 0;\n  padding: 6px 8px;\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-surface-2, #26262d);\n  font-size: 11px;\n  line-height: 1.45;\n  max-height: 110px;\n  overflow: auto;\n  white-space: pre-wrap;\n}\n.lb-names[data-v-38d9a54a] {\n  margin: 0;\n  padding: 0;\n  list-style: none;\n  display: flex;\n  flex-direction: column;\n  gap: 2px;\n}\n.lb-dot[data-v-38d9a54a] {\n  display: inline-block;\n  width: 8px;\n  height: 8px;\n  margin-right: 6px;\n  border-radius: 2px;\n}\n.lb-note[data-v-38d9a54a] {\n  margin: 0;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lb-empty[data-v-38d9a54a] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  height: 100%;\n  min-height: 160px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lb-empty i[data-v-38d9a54a] {\n  font-size: 28px;\n}\n\n/* rail | canvas | side, with the status bar over the canvas so all three end on one line. Every\n   track is a fixed size or a share of the node, never its content, so selecting or typing can't\n   move anything. */\n.le[data-v-ef866b8f] {\n  display: grid;\n  grid-template-rows: minmax(0, 1fr) auto;\n  gap: 6px;\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n  color: var(--zen-text, #e5e5ea);\n  font-size: 12px;\n}\n/* In a ZenKit panel the window draws its own frame; inset so the rail and the panes don't sit on\n   it and double its border. On the node, the node body already pads. */\n.le.in-panel[data-v-ef866b8f] {\n  box-sizing: border-box;\n  padding: 8px;\n}\n.le-main[data-v-ef866b8f] {\n  min-width: 0;\n  min-height: 0;\n}\n.le-canvascol[data-v-ef866b8f] {\n  display: grid;\n  grid-template-rows: 28px minmax(0, 1fr);\n  gap: 6px;\n  height: 100%;\n  min-width: 0;\n  min-height: 0;\n}\n.le-toolbar[data-v-ef866b8f],\n.le-foot[data-v-ef866b8f] {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  min-width: 0;\n}\n.le-foot[data-v-ef866b8f] {\n  padding: 4px 6px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 2%, transparent);\n}\n.le-sep[data-v-ef866b8f] {\n  width: 1px;\n  height: 16px;\n  margin: 0 4px;\n  background: var(--zen-border, #34343c);\n}\n.le-opacity[data-v-ef866b8f] {\n  display: grid;\n  grid-template-columns: auto 1fr 34px;\n  align-items: center;\n  gap: 8px;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.le-menu[data-v-ef866b8f] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  padding: 8px;\n}\n.le-menu-title[data-v-ef866b8f] {\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n}\n.le-menu .zen-btn[data-v-ef866b8f] {\n  justify-content: flex-start;\n}\n.le-json[data-v-ef866b8f] {\n  color: var(--zen-text, #e5e5ea);\n  font-size: 12px;\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  width: 300px;\n  padding: 10px;\n}\n.le-row[data-v-ef866b8f] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.le-grow[data-v-ef866b8f] {\n  flex: 1;\n  min-width: 0;\n}\n.le-stage.dropping[data-v-ef866b8f] {\n  outline: 2px dashed var(--zen-accent, #6366f1);\n  outline-offset: -2px;\n  border-radius: var(--zen-radius, 7px);\n}\n.le-stage[data-v-ef866b8f] {\n  min-width: 0;\n  min-height: 0;\n}\n.le-hint-empty[data-v-ef866b8f] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 4px;\n}\n.le-hint-empty i[data-v-ef866b8f] {\n  font-size: 28px;\n  opacity: 0.6;\n}\n.le-help[data-v-ef866b8f] {\n  display: grid;\n  grid-template-columns: auto auto;\n  gap: 4px 14px;\n  margin: 0;\n  padding: 10px 12px;\n  font-size: 11px;\n}\n.le-help dt[data-v-ef866b8f] {\n  color: var(--zen-text, #e5e5ea);\n  white-space: nowrap;\n}\n.le-help dd[data-v-ef866b8f] {\n  margin: 0;\n  color: var(--zen-muted, #9aa0aa);\n}\n.le-tip[data-v-ef866b8f] {\n  flex: 0 1 auto;\n  min-width: 0;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n  overflow: hidden;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n}\n.le-link[data-v-ef866b8f] {\n  padding: 0;\n  border: 0;\n  background: none;\n  color: var(--zen-accent, #6366f1);\n  font: inherit;\n  cursor: pointer;\n}\n.le-ctl[data-v-ef866b8f] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  width: 104px;\n  transition: opacity 0.12s ease;\n}\n.le-chip[data-v-ef866b8f] {\n  flex: none;\n  display: inline-flex;\n  align-items: center;\n  gap: 4px;\n  height: 22px;\n  padding: 0 8px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: 999px;\n  background: var(--zen-input, #1b1b20);\n  color: var(--zen-text, #e5e5ea);\n  font-size: 11px;\n  font-variant-numeric: tabular-nums;\n  cursor: pointer;\n}\n.le-side[data-v-ef866b8f] {\n  height: 100%;\n  min-height: 0;\n}\n.le-pane[data-v-ef866b8f] {\n  display: flex;\n  flex-direction: column;\n  height: 100%;\n  min-height: 0;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 2%, transparent);\n  overflow: hidden;\n}\n.le-tabs[data-v-ef866b8f] {\n  flex: none;\n  display: flex;\n  gap: 2px;\n  padding: 4px 4px 0;\n  border-bottom: 1px solid var(--zen-border, #34343c);\n}\n.le-tab[data-v-ef866b8f] {\n  display: inline-flex;\n  align-items: center;\n  gap: 5px;\n  height: 28px;\n  padding: 0 10px;\n  border: 0;\n  border-bottom: 2px solid transparent;\n  background: transparent;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  cursor: pointer;\n}\n.le-tab[data-v-ef866b8f]:hover:not(:disabled) {\n  color: var(--zen-text, #e5e5ea);\n}\n.le-tab.on[data-v-ef866b8f] {\n  border-bottom-color: var(--zen-accent, #3b82f6);\n  color: var(--zen-text, #e5e5ea);\n}\n.le-tab[data-v-ef866b8f]:disabled {\n  opacity: 0.4;\n  cursor: default;\n}\n.le-head[data-v-ef866b8f] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  height: 34px;\n  padding: 0 8px;\n  border-bottom: 1px solid var(--zen-border, #34343c);\n}\n.le-title[data-v-ef866b8f] {\n  flex: 1;\n  font-size: 11px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n.le-count[data-v-ef866b8f] {\n  padding: 0 6px;\n  border-radius: 999px;\n  background: color-mix(in srgb, var(--zen-text, #fff) 8%, transparent);\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n}\n.le-swatch[data-v-ef866b8f] {\n  flex: none;\n  width: 12px;\n  height: 12px;\n  border-radius: 3px;\n}\n.le-body[data-v-ef866b8f] {\n  flex: 1 1 0;\n  min-height: 0;\n  padding: 6px;\n}\n.le-note[data-v-ef866b8f] {\n  margin: 0;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.fresco[data-v-6418226b] {\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n}\n.fs-menu[data-v-6418226b] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  padding: 8px;\n}\n.fs-menu-title[data-v-6418226b] {\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n}\n.fs-menu .zen-btn[data-v-6418226b] {\n  justify-content: flex-start;\n}\n.fs-swatch[data-v-6418226b] {\n  flex: none;\n  width: 12px;\n  height: 12px;\n  border-radius: 3px;\n}\n.fs-wand[data-v-6418226b] {\n  position: absolute;\n  inset: 0;\n  cursor: crosshair;\n}\n.fs-point[data-v-6418226b] {\n  position: absolute;\n  width: 10px;\n  height: 10px;\n  margin: -5px 0 0 -5px;\n  border: 2px solid #fff;\n  border-radius: 50%;\n  background: #22c55e;\n  box-shadow: 0 0 0 1px rgb(0 0 0 / 50%);\n  pointer-events: none;\n}\n.fs-point.live[data-v-6418226b] {\n  pointer-events: auto;\n  cursor: grab;\n  touch-action: none;\n}\n.fs-point.live[data-v-6418226b]:hover {\n  transform: scale(1.3);\n}\n.fs-point.out[data-v-6418226b] {\n  background: #ef4444;\n}\n.fs-form[data-v-6418226b] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n}\n.fs-form[data-v-6418226b] > * {\n  flex: none;\n}\n.fs-grid[data-v-6418226b] {\n  display: grid;\n  grid-template-columns: 62px minmax(0, 1fr);\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fs-pairs[data-v-6418226b] {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));\n  gap: 6px 10px;\n}\n.fs-pair[data-v-6418226b] {\n  display: grid;\n  grid-template-columns: 52px minmax(0, 1fr);\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fs-group[data-v-6418226b] {\n  margin-top: 6px;\n  padding: 6px 0 0;\n  border-top: 1px solid var(--zen-border, #34343c);\n  font-size: 12px;\n  font-weight: 600;\n  color: var(--zen-text, #e5e5ea);\n}\n.fs-group-note[data-v-6418226b] {\n  font-size: 11px;\n  font-weight: 400;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.fsum[data-v-71527fdd] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n}\n.fsum-stage[data-v-71527fdd] {\n  flex: 1;\n  min-height: 0;\n  pointer-events: none;\n}\n.fsum-bar[data-v-71527fdd] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fsum-text[data-v-71527fdd] {\n  overflow: hidden;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n}\n\n.fhost[data-v-4623400c] {\n  display: flex;\n  flex-direction: column;\n  box-sizing: border-box;\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n}\n.fhost-dep[data-v-4623400c] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n  padding: 4px 8px;\n  border-bottom: 1px solid color-mix(in srgb, var(--zen-warning, #f5b041) 35%, transparent);\n  background: color-mix(in srgb, var(--zen-warning, #f5b041) 10%, transparent);\n  color: var(--zen-text, #e5e5ea);\n  font-size: 11px;\n}\n.fhost-body[data-v-4623400c] {\n  position: relative;\n  flex: 1;\n  min-height: 0;\n}\n.fhost-body[data-v-4623400c] > * {\n  position: absolute;\n  inset: 0;\n}\n\n/* Fill layout (see mountWidget's `fill`): the widget takes the node body, the image grid\n   takes whatever height is left and scrolls, and the toolbar is pinned under it. Resizing\n   the node therefore shows more images, never more padding. */\n.fg[data-v-bbb08a38] {\n  position: relative;\n  display: flex;\n  flex-direction: column;\n  gap: 7px;\n  height: 100%;\n  min-height: 0;\n  padding: 2px;\n  box-sizing: border-box;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n}\n\n/* flex-basis 0 (not auto) so the grid's content can't push the toolbar off the node */\n/* focused programmatically on hover (see armScroll) — never show a ring for it */\n.fg-scroll[data-v-bbb08a38] {\n  flex: 1 1 0;\n  min-height: 0;\n  outline: none;\n}\n.fg-grid[data-v-bbb08a38] {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(124px, 1fr));\n  gap: 6px;\n  align-items: start;\n  padding-right: 2px;\n}\n.fg-card[data-v-bbb08a38] {\n  display: flex;\n  flex-direction: column;\n  gap: 3px;\n  padding: 4px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 9px);\n  background: var(--zen-input, #1b1b20);\n  transition:\n    border-color 0.12s ease,\n    opacity 0.12s ease;\n}\n.fg-card.off[data-v-bbb08a38] {\n  opacity: 0.5;\n}\n.fg-card.dragging[data-v-bbb08a38] {\n  opacity: 0.35;\n}\n.fg-card.over[data-v-bbb08a38] {\n  border-color: var(--zen-accent, #6366f1);\n  box-shadow: 0 0 0 1px var(--zen-accent, #6366f1) inset;\n}\n.fg-thumb[data-v-bbb08a38] {\n  position: relative;\n  width: 100%;\n  aspect-ratio: 1;\n  border-radius: var(--zen-radius, 6px);\n  background: var(--zen-surface, #202026);\n  overflow: hidden;\n  cursor: grab;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.fg-thumb[data-v-bbb08a38]:active {\n  cursor: grabbing;\n}\n/* contain on black: the encoder letterboxes with real black pixels, so the card shows the\n   actual frame it gets rather than flattering it with a themed backdrop */\n.fg-thumb img[data-v-bbb08a38] {\n  width: 100%;\n  height: 100%;\n  display: block;\n  object-fit: contain;\n  background: #000;\n}\n.fg-ph[data-v-bbb08a38] {\n  font-size: 30px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fg-ph.warn[data-v-bbb08a38] {\n  color: #e0a33a;\n}\n.fg-idx[data-v-bbb08a38] {\n  position: absolute;\n  top: 4px;\n  left: 4px;\n  min-width: 16px;\n  height: 16px;\n  padding: 0 4px;\n  border-radius: var(--zen-radius, 5px);\n  background: rgba(0, 0, 0, 0.62);\n  color: #fff;\n  font-size: 10px;\n  font-weight: 700;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n}\n.fg-acts[data-v-bbb08a38] {\n  position: absolute;\n  top: 4px;\n  right: 4px;\n  display: flex;\n  gap: 3px;\n  opacity: 0;\n  transition: opacity 0.12s ease;\n}\n.fg-card:hover .fg-acts[data-v-bbb08a38] {\n  opacity: 1;\n}\n.fg-act[data-v-bbb08a38] {\n  width: 19px;\n  height: 19px;\n  padding: 0;\n  border: none;\n  border-radius: var(--zen-radius, 5px);\n  background: rgba(0, 0, 0, 0.62);\n  color: #fff;\n  font-size: 12px;\n  cursor: pointer;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n}\n.fg-act[data-v-bbb08a38]:hover {\n  background: var(--zen-accent, #6366f1);\n}\n.fg-act.danger[data-v-bbb08a38]:hover {\n  background: #d9534f;\n}\n.fg-mutemark[data-v-bbb08a38] {\n  position: absolute;\n  inset: 0;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background: rgba(0, 0, 0, 0.45);\n  color: #fff;\n  font-size: 22px;\n  pointer-events: none;\n}\n\n/* name + share ride in the thumb's bottom strip rather than costing the card its own rows */\n.fg-meta[data-v-bbb08a38] {\n  position: absolute;\n  left: 0;\n  right: 0;\n  bottom: 3px;\n  display: flex;\n  align-items: flex-end;\n  gap: 4px;\n  padding: 10px 5px 1px;\n  background: linear-gradient(transparent, rgba(0, 0, 0, 0.78));\n  pointer-events: none;\n}\n.fg-name[data-v-bbb08a38] {\n  flex: 1;\n  min-width: 0;\n  font-size: 9.5px;\n  color: #fff;\n  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.fg-pct[data-v-bbb08a38] {\n  flex: none;\n  font-size: 9.5px;\n  font-weight: 700;\n  line-height: 1.25;\n  color: #fff;\n  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);\n}\n.fg-pct.dim[data-v-bbb08a38] {\n  font-weight: 500;\n  color: var(--zen-muted, #9aa0aa);\n}\n/* the live share of the blend this source claims */\n.fg-share[data-v-bbb08a38] {\n  position: absolute;\n  left: 0;\n  bottom: 0;\n  height: 3px;\n  background: var(--zen-accent, #6366f1);\n  transition: width 0.12s ease;\n  pointer-events: none;\n}\n.fg-foot[data-v-bbb08a38] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n}\n.fg-slider[data-v-bbb08a38] {\n  flex: 1;\n  min-width: 0;\n}\n.fg-num[data-v-bbb08a38] {\n  flex: none;\n  width: 46px;\n}\n\n/* fills the scroll area so the empty node reads as one big drop target */\n.fg-empty[data-v-bbb08a38] {\n  height: 100%;\n  min-height: 96px;\n  box-sizing: border-box;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 4px;\n  padding: 18px 8px;\n  text-align: center;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);\n}\n.fg-empty > .mdi[data-v-bbb08a38] {\n  font-size: 26px;\n  opacity: 0.8;\n}\n.fg-empty > span[data-v-bbb08a38] {\n  font-size: 11px;\n}\n.fg-empty > small[data-v-bbb08a38] {\n  font-size: 10px;\n  opacity: 0.7;\n}\n.fg-warn[data-v-bbb08a38] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  padding: 5px 8px;\n  border-radius: var(--zen-radius, 7px);\n  background: color-mix(in srgb, #e0a33a 14%, transparent);\n  color: #e0a33a;\n  font-size: 10.5px;\n}\n.fg-bar[data-v-bbb08a38] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.fg-add[data-v-bbb08a38] {\n  flex: 1;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  padding: 7px;\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  background: transparent;\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 11px;\n  font-weight: 600;\n  cursor: pointer;\n  transition:\n    border-color 0.12s ease,\n    color 0.12s ease,\n    background 0.12s ease;\n}\n.fg-add[data-v-bbb08a38]:hover:not(:disabled) {\n  border-color: var(--zen-accent, #6366f1);\n  color: var(--zen-text, #e5e5ea);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 8%, transparent);\n}\n.fg-add[data-v-bbb08a38]:disabled {\n  opacity: 0.6;\n  cursor: default;\n}\n.fg-add .mdi[data-v-bbb08a38] {\n  font-size: 15px;\n}\n.fg-add-n[data-v-bbb08a38] {\n  margin-left: 2px;\n  padding: 0 5px;\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 22%, transparent);\n  color: var(--zen-text, #e5e5ea);\n  font-size: 10px;\n  font-weight: 700;\n}\n.fg-dropmask[data-v-bbb08a38] {\n  position: absolute;\n  inset: 0;\n  z-index: 5;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  border: 2px dashed var(--zen-accent, #6366f1);\n  border-radius: var(--zen-radius, 9px);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 16%, rgba(0, 0, 0, 0.55));\n  color: var(--zen-text, #e5e5ea);\n  font-size: 11px;\n  font-weight: 600;\n  pointer-events: none;\n}\n.fg-dropmask .mdi[data-v-bbb08a38] {\n  font-size: 28px;\n}\n\n.fi[data-v-dec39350] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  height: 100%;\n  min-height: 0;\n  padding: 2px;\n  box-sizing: border-box;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n  --fs-rs: var(--radius-sm, 5px);\n}\n.fi-empty[data-v-dec39350] {\n  height: 100%;\n  min-height: 120px;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 5px;\n  color: var(--zen-muted, #9aa0aa);\n  text-align: center;\n}\n.fi-empty > .mdi[data-v-dec39350] {\n  font-size: 30px;\n  opacity: 0.8;\n}\n.fi-empty small[data-v-dec39350] {\n  font-size: 10px;\n  opacity: 0.75;\n}\n.fi-bar[data-v-dec39350] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  flex-wrap: wrap;\n  gap: 6px;\n}\n.fi-main[data-v-dec39350] {\n  flex: 1 1 auto;\n  min-height: 0;\n  display: flex;\n  gap: 6px;\n}\n.fi-gridwrap[data-v-dec39350] {\n  position: relative;\n  flex: 1 1 auto;\n  min-width: 0;\n  min-height: 0;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  overflow: hidden;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n  background: #0e0e12;\n}\n.fi-caption[data-v-dec39350] {\n  position: absolute;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  padding: 3px 6px;\n  font-size: 9px;\n  line-height: 1.25;\n  text-align: center;\n  color: var(--zen-text, #e5e5ea);\n  background: linear-gradient(transparent, rgba(0, 0, 0, 0.72));\n  pointer-events: none;\n}\n.fi-canvas[data-v-dec39350] {\n  display: block;\n  image-rendering: pixelated;\n}\n.fi-side[data-v-dec39350] {\n  flex: none;\n  width: 190px;\n  display: flex;\n  flex-direction: column;\n  min-height: 0;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 2%, transparent);\n  overflow: hidden;\n}\n.fi-side-head[data-v-dec39350] {\n  flex: none;\n  padding: 5px 8px;\n  font-size: 10px;\n  font-weight: 700;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n  border-bottom: 1px solid var(--zen-border, #34343c);\n}\n.fi-bars[data-v-dec39350],\n.fi-legend[data-v-dec39350] {\n  flex: 1 1 0;\n  min-height: 0;\n  overflow-y: auto;\n  padding: 5px;\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n}\n.fi-brow[data-v-dec39350],\n.fi-lrow[data-v-dec39350] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  font-size: 10.5px;\n}\n.fi-lrow[data-v-dec39350] {\n  padding: 3px;\n  border: 1px solid transparent;\n  border-radius: var(--fs-rs);\n  background: none;\n  color: inherit;\n  font: inherit;\n  cursor: pointer;\n  text-align: left;\n}\n.fi-lrow[data-v-dec39350]:hover {\n  border-color: color-mix(in srgb, var(--zen-accent, #6366f1) 50%, transparent);\n}\n.fi-lrow.on[data-v-dec39350] {\n  border-color: var(--zen-accent, #6366f1);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 16%, transparent);\n}\n.fi-thumb[data-v-dec39350] {\n  flex: none;\n  width: 24px;\n  height: 24px;\n  border-radius: 4px;\n  border: 1.5px solid;\n  overflow: hidden;\n  background: var(--zen-surface, #202026);\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.fi-thumb.sm[data-v-dec39350] {\n  width: 17px;\n  height: 17px;\n  border-radius: 3px;\n}\n.fi-thumb img[data-v-dec39350] {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n  display: block;\n}\n.fi-thumb-fill[data-v-dec39350] {\n  width: 100%;\n  height: 100%;\n}\n.fi-blabel[data-v-dec39350] {\n  flex: 1;\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.fi-btrack[data-v-dec39350] {\n  flex: 1.4;\n  height: 6px;\n  border-radius: 3px;\n  background: color-mix(in srgb, var(--zen-text, #fff) 10%, transparent);\n  overflow: hidden;\n}\n.fi-bfill[data-v-dec39350] {\n  display: block;\n  height: 100%;\n  border-radius: 3px;\n}\n.fi-bval[data-v-dec39350] {\n  flex: none;\n  width: 26px;\n  text-align: right;\n  font-variant-numeric: tabular-nums;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fi-lstr[data-v-dec39350] {\n  flex: none;\n  font-variant-numeric: tabular-nums;\n  font-size: 10px;\n  color: var(--zen-text, #e5e5ea);\n}\n.fi-lmeta[data-v-dec39350] {\n  flex: none;\n  min-width: 30px;\n  text-align: right;\n  font-variant-numeric: tabular-nums;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fi-lhint[data-v-dec39350] {\n  flex: none;\n  margin: 0;\n  padding: 5px 7px;\n  font-size: 9.5px;\n  line-height: 1.3;\n  color: var(--zen-muted, #9aa0aa);\n  border-top: 1px solid var(--zen-border, #34343c);\n}\n.fi-lhint b[data-v-dec39350] {\n  color: var(--zen-text, #e5e5ea);\n}\n\n/* side-panel tabs */\n.fi-side-tabs[data-v-dec39350] {\n  flex: none;\n  display: flex;\n  gap: 3px;\n  padding: 4px;\n  border-bottom: 1px solid var(--zen-border, #34343c);\n}\n.fi-tab[data-v-dec39350] {\n  flex: 1;\n  padding: 3px 6px;\n  border: 1px solid transparent;\n  border-radius: var(--zen-radius, 5px);\n  background: none;\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 10px;\n  font-weight: 700;\n  letter-spacing: 0.03em;\n  text-transform: uppercase;\n  cursor: pointer;\n}\n.fi-tab[data-v-dec39350]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.fi-tab.on[data-v-dec39350] {\n  color: var(--zen-text, #e5e5ea);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 16%, transparent);\n}\n\n/* settings tab */\n.fi-settings[data-v-dec39350] {\n  flex: 1 1 0;\n  min-height: 0;\n  overflow-y: auto;\n  padding: 4px 6px 6px;\n}\n.fi-sgroup[data-v-dec39350] {\n  margin-top: 5px;\n}\n.fi-sgroup-h[data-v-dec39350] {\n  font-size: 9px;\n  font-weight: 700;\n  letter-spacing: 0.05em;\n  text-transform: uppercase;\n  color: var(--zen-accent, #6366f1);\n  margin-bottom: 2px;\n}\n.fi-srow[data-v-dec39350] {\n  display: flex;\n  justify-content: space-between;\n  gap: 6px;\n  font-size: 10.5px;\n  padding: 1px 0;\n}\n.fi-srow.dim[data-v-dec39350] {\n  opacity: 0.4;\n}\n.fi-sk[data-v-dec39350] {\n  color: var(--zen-muted, #9aa0aa);\n}\n.fi-svv[data-v-dec39350] {\n  color: var(--zen-text, #e5e5ea);\n  font-variant-numeric: tabular-nums;\n  text-align: right;\n}\n\n/* section header */\n.gs-head[data-v-b38d9f08] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  width: 100%;\n  padding: 5px 2px;\n  background: none;\n  border: none;\n  cursor: pointer;\n  font: inherit;\n  font-size: 11px;\n  font-weight: 700;\n  letter-spacing: 0.02em;\n  color: var(--zen-muted, #9aa0aa);\n  text-align: left;\n}\n.gs-head[data-v-b38d9f08]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.gs-head .mdi[data-v-b38d9f08] {\n  font-size: 14px;\n}\n.gs-badge[data-v-b38d9f08] {\n  margin-left: auto;\n  padding: 1px 6px;\n  border-radius: 999px;\n  font-size: 9px;\n  font-weight: 700;\n  color: var(--zen-accent-text, #fff);\n  background: var(--zen-accent, #6366f1);\n}\n.gs-body[data-v-b38d9f08] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  padding: 2px 2px 8px 6px;\n}\n.gs-row[data-v-b38d9f08] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n  min-height: 24px;\n}\n.gs-lbl[data-v-b38d9f08] {\n  flex: none;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n  font-weight: 600;\n}\n.gs-pair[data-v-b38d9f08] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  justify-content: flex-end;\n}\n.gs-x[data-v-b38d9f08] {\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n}\n.gs-hint[data-v-b38d9f08] {\n  display: flex;\n  align-items: flex-start;\n  gap: 5px;\n  margin: 0;\n  padding: 5px 7px;\n  border-radius: var(--zen-radius, 6px);\n  background: var(--zen-input, #1b1b20);\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  line-height: 1.35;\n}\n.gs-hint .mdi[data-v-b38d9f08] {\n  flex: none;\n  font-size: 13px;\n  color: var(--zen-accent, #6366f1);\n}\n\n/* content-driven: the viewport sizes to the image aspect; the node grows to fit it */\n.ic-head[data-v-dd66395d] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 6px;\n  min-height: 26px;\n}\n.ic-head-nav[data-v-dd66395d] {\n  display: flex;\n  align-items: center;\n  gap: 2px;\n}\n.ic-nav-lbl[data-v-dd66395d] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n  font-variant-numeric: tabular-nums;\n  min-width: 30px;\n  text-align: center;\n}\n.ic-nav-gap[data-v-dd66395d] {\n  width: 8px;\n}\n/* fills the node body; the image is contained inside, so the box never drives the node size */\n.ic-view[data-v-dd66395d] {\n  position: relative;\n  flex: 1 1 0;\n  min-height: 0;\n  width: 100%;\n  overflow: hidden;\n  border-radius: var(--zen-radius, 8px);\n  background: var(--zen-input, #1b1b20);\n  border: 1px solid var(--zen-border, #34343c);\n  user-select: none;\n  touch-action: none;\n}\n.ic-view.dragging[data-v-dd66395d] {\n  cursor: grabbing !important;\n}\n.ic-img[data-v-dd66395d] {\n  position: absolute;\n  inset: 0;\n  width: 100%;\n  height: 100%;\n  object-fit: contain;\n  pointer-events: none;\n  transition: opacity 80ms ease;\n}\n.ic-handle[data-v-dd66395d] {\n  position: absolute;\n  width: 22px;\n  height: 22px;\n  border-radius: 50%;\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 35%, transparent);\n  border: 2px solid var(--zen-accent, #6366f1);\n  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);\n  pointer-events: none;\n  transform: translate(-50%, -50%);\n  z-index: 2;\n}\n/* box mode: A shows through this frame over B; the frame itself only draws the outline */\n.ic-box[data-v-dd66395d] {\n  position: absolute;\n  box-sizing: border-box;\n  border: 2px solid var(--zen-accent, #6366f1);\n  border-radius: 2px;\n  box-shadow:\n    0 0 0 1px rgba(0, 0, 0, 0.45),\n    0 2px 10px rgba(0, 0, 0, 0.35);\n  pointer-events: none;\n  z-index: 2;\n}\n.ic-box-tag[data-v-dd66395d] {\n  position: absolute;\n  top: 4px;\n  left: 4px;\n  padding: 0 5px;\n  border-radius: 4px;\n  font-size: 10px;\n  font-weight: 700;\n  line-height: 16px;\n  color: #fff;\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 80%, transparent);\n}\n/* fills the same body space the viewport will — so swapping empty↔image doesn't resize the node */\n.ic-empty[data-v-dd66395d] {\n  flex: 1 1 0;\n  min-height: 0;\n  width: 100%;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n}\n.ic-empty .mdi[data-v-dd66395d] {\n  font-size: 30px;\n  opacity: 0.5;\n}\n.ic-pop-head[data-v-dd66395d] {\n  padding: 4px 8px 6px;\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.06em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n/* fill mode: the panel fills the node body so the preview fits the current size (it doesn't\n   resize the node when the image changes); the picker row is fixed, the preview takes the rest */\n.li[data-v-b38870a5] {\n  position: relative;\n}\n.li-row[data-v-b38870a5] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  flex: none;\n}\n.li-preview[data-v-b38870a5] {\n  position: relative;\n  flex: 1 1 0;\n  min-height: 0;\n  width: 100%;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: var(--zen-radius, 8px);\n}\n.li-preview img[data-v-b38870a5] {\n  display: block;\n  border-radius: var(--zen-radius, 8px);\n  max-width: 100%;\n  max-height: 100%;\n  width: auto;\n  height: auto;\n  object-fit: contain;\n}\n.li-none[data-v-b38870a5] {\n  flex-direction: column;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  text-align: center;\n  padding: 8px;\n}\n.li-none .mdi[data-v-b38870a5] {\n  font-size: 26px;\n  opacity: 0.8;\n}\n.li-loading[data-v-b38870a5] {\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n}\n\n/* drag-and-drop overlay */\n.li-dropmask[data-v-b38870a5] {\n  position: absolute;\n  inset: 0;\n  z-index: 5;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 8px;\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 16%, var(--zen-bg, #1a1a1f) 78%);\n  border: 2px dashed var(--zen-accent, #6366f1);\n  border-radius: var(--zen-radius, 8px);\n  color: var(--zen-text, #e5e5ea);\n  pointer-events: none;\n}\n.li-dropmask .mdi[data-v-b38870a5] {\n  font-size: 32px;\n  color: var(--zen-accent, #6366f1);\n}\n.li-pick[data-v-b38870a5] {\n  flex: 1;\n  min-width: 0;\n}\n.li-sel[data-v-b38870a5] {\n  display: flex;\n  align-items: center;\n  gap: 7px;\n  min-width: 0;\n}\n.li-sel-ic[data-v-b38870a5] {\n  flex: none;\n  font-size: 15px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.li-sel-name[data-v-b38870a5] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n\n/* preview hover tools: lightweight corner actions; no full-image darkening */\n.li-ov[data-v-b38870a5] {\n  position: absolute;\n  inset: 0;\n  opacity: 0;\n  pointer-events: none;\n  transition: opacity 0.12s ease;\n}\n.li-preview:hover .li-ov[data-v-b38870a5] {\n  opacity: 1;\n  pointer-events: auto;\n}\n.li-ov-actions[data-v-b38870a5] {\n  position: absolute;\n  top: 6px;\n  right: 6px;\n  z-index: 2;\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  max-width: calc(100% - 12px);\n}\n/* A dark chip with a white icon, so the buttons read over any picture; the same as\n   Save Image's and Preview Image's (SavePreview.vue's .sp-act). ZenIconButton's own look (no background, muted icon) is for a toolbar, hence\n   the !important. Pointing at one fills it with the accent. */\n.li-ov-btn[data-v-b38870a5] {\n  width: 26px !important;\n  height: 26px !important;\n  border: 1px solid rgba(255, 255, 255, 0.14) !important;\n  background: rgba(0, 0, 0, 0.46) !important;\n  color: #fff !important;\n  backdrop-filter: blur(4px);\n}\n.li-ov-btn[data-v-b38870a5]:hover {\n  background: var(--zen-accent, #6366f1) !important;\n  border-color: var(--zen-accent, #6366f1) !important;\n  color: var(--zen-accent-text, #fff) !important;\n}\n.li-ov-info[data-v-b38870a5] {\n  cursor: help;\n}\n.li-ov-corner[data-v-b38870a5] {\n  position: absolute;\n  right: 6px;\n  bottom: 6px;\n  z-index: 2;\n}\n.li-info-pop[data-v-b38870a5] {\n  /* position/top/left/z-index come from the inline fixed style (teleported to body) */\n  box-sizing: border-box;\n  width: 210px;\n  max-width: calc(100vw - 24px);\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n  padding: 8px;\n  background: color-mix(in srgb, var(--zen-surface, #202026) 94%, #000 6%);\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);\n  cursor: default;\n}\n.li-info-row[data-v-b38870a5] {\n  display: grid;\n  grid-template-columns: 18px minmax(0, 1fr);\n  align-items: center;\n  min-width: 0;\n  gap: 7px;\n  min-height: 19px;\n  font-size: 11px;\n}\n.li-info-row > .mdi[data-v-b38870a5] {\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 14px;\n  text-align: center;\n}\n.li-info-row b[data-v-b38870a5] {\n  display: block;\n  min-width: 0;\n  color: var(--zen-text, #e5e5ea);\n  font-weight: 600;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.li-thumb[data-v-b38870a5] {\n  flex: none;\n  box-sizing: border-box;\n  width: 40px;\n  height: 40px;\n  object-fit: cover;\n  border-radius: var(--zen-radius, 6px);\n  background: var(--zen-input, #1b1b20);\n  border: 1px solid var(--zen-border, #34343c);\n}\n.li-thumb.sm[data-v-b38870a5] {\n  width: 18px;\n  height: 18px;\n  border-radius: var(--zen-radius, 5px);\n}\n.li-thumb.ph[data-v-b38870a5] {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  color: var(--zen-muted, #9aa0aa);\n}\n/* grid-combo cell (contain square + name) */\n.li-gthumb[data-v-b38870a5] {\n  width: 100%;\n  aspect-ratio: 1;\n  border-radius: var(--zen-radius, 6px);\n  overflow: hidden;\n  background: var(--zen-surface, #202026);\n  position: relative;\n}\n/* Pinned to the square: its height comes from aspect-ratio, which `height: 100%` can't measure\n   against, so a portrait picture would grow past it and be cropped. */\n.li-gthumb img[data-v-b38870a5] {\n  position: absolute;\n  inset: 0;\n  width: 100%;\n  height: 100%;\n  object-fit: contain;\n  display: block;\n}\n.li-gname[data-v-b38870a5] {\n  font-size: 10px;\n  color: var(--zen-text, #e5e5ea);\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  text-align: center;\n}\n.li-lname[data-v-b38870a5] {\n  flex: 1;\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.li-foot[data-v-b38870a5] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  width: 100%;\n}\n.li-foot-browse[data-v-b38870a5] {\n  margin-left: auto;\n}\n/* compact source switcher inside the combo search row */\n.li-src[data-v-b38870a5] .zen-tg-b {\n  padding: 2px 7px;\n  font-size: 10px;\n}\n.li-pop-head[data-v-b38870a5] {\n  padding: 4px 8px 6px;\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.06em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.ma[data-v-294512d9] {\n  flex: none;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  overflow: hidden;\n  border-radius: 50%;\n  border: 2px solid var(--ma-color);\n  background: color-mix(in srgb, var(--ma-color) 35%, var(--zen-bg, #141418));\n}\n.ma-img[data-v-294512d9] {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n}\n.ma-letter[data-v-294512d9] {\n  font-weight: 700;\n  line-height: 1;\n  color: var(--zen-text, #e5e5ea);\n}\n\n.lbf[data-v-77740021] {\n  position: absolute;\n  inset: 0;\n  pointer-events: none;\n}\n.lbf-pic[data-v-77740021] {\n  position: absolute;\n  inset: 0;\n  -webkit-mask-size: 100% 100%;\n  mask-size: 100% 100%;\n}\n.lbf-img[data-v-77740021] {\n  position: absolute;\n  inset: 0;\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n  opacity: 0.78;\n}\n.lbf-top[data-v-77740021] {\n  position: absolute;\n  right: 4px;\n  top: 4px;\n  display: flex;\n  align-items: center;\n  gap: 3px;\n}\n.lbf-more[data-v-77740021] {\n  display: flex;\n  gap: 3px;\n}\n.lbf-more img[data-v-77740021],\n.lbf-plus[data-v-77740021] {\n  width: 22px;\n  height: 22px;\n  border-radius: 4px;\n  object-fit: cover;\n  box-shadow: 0 0 0 1px rgb(0 0 0 / 50%);\n}\n.lbf-more.big img[data-v-77740021],\n.lbf-more.big .lbf-plus[data-v-77740021] {\n  width: 32px;\n  height: 32px;\n}\n.lbf-plus[data-v-77740021] {\n  display: grid;\n  place-items: center;\n  background: rgb(0 0 0 / 65%);\n  color: #fff;\n  font-size: 10px;\n}\n.lbf-lora[data-v-77740021] {\n  position: absolute;\n  left: 4px;\n  top: 20px;\n  display: inline-flex;\n  align-items: center;\n  gap: 2px;\n  padding: 0 5px;\n  border-radius: 999px;\n  background: rgb(0 0 0 / 65%);\n  color: #fff;\n  font-size: 10px;\n  line-height: 16px;\n}\n.lbf-text[data-v-77740021] {\n  position: absolute;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  margin: 0;\n  padding: 14px 6px 4px;\n  background: linear-gradient(to top, rgb(0 0 0 / 75%), transparent);\n  color: #fff;\n  font-size: 11px;\n  line-height: 1.3;\n  text-shadow: 0 1px 2px rgb(0 0 0 / 60%);\n  display: -webkit-box;\n  -webkit-line-clamp: 2;\n  -webkit-box-orient: vertical;\n  overflow: hidden;\n}\n.lbf.bare .lbf-text[data-v-77740021] {\n  background: none;\n  color: color-mix(in srgb, #fff 85%, transparent);\n}\n@container (max-height: 70px) {\n.lbf-text[data-v-77740021],\n  .lbf-lora[data-v-77740021] {\n    display: none;\n}\n}\n@container (max-width: 90px) {\n.lbf-more[data-v-77740021] {\n    display: none;\n}\n}\n@container (min-height: 160px) {\n.lbf-text[data-v-77740021] {\n    -webkit-line-clamp: 3;\n}\n}\n\n.lsum[data-v-0e068eb5] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n}\n.lsum-stage[data-v-0e068eb5] {\n  flex: 1;\n  min-height: 0;\n  pointer-events: none;\n}\n.lsum-bar[data-v-0e068eb5] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n.lsum-text[data-v-0e068eb5] {\n  flex: 1;\n  min-width: 0;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.la[data-v-18a7e0c3] {\n  display: grid;\n  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);\n  gap: 16px;\n  height: 100%;\n  min-height: 0;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n}\n.la-ask[data-v-18a7e0c3],\n.la-result[data-v-18a7e0c3] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n  min-height: 0;\n  overflow: auto;\n}\n.la-result[data-v-18a7e0c3] {\n  padding-left: 16px;\n  border-left: 1px solid var(--zen-border, #34343c);\n}\n.la-source[data-v-18a7e0c3] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n}\n.la-pic[data-v-18a7e0c3] {\n  height: 180px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-surface-2, #26262d);\n  overflow: hidden;\n}\n.la-pic.off img[data-v-18a7e0c3] {\n  opacity: 0.3;\n}\n.la-pic img[data-v-18a7e0c3] {\n  max-width: 100%;\n  max-height: 100%;\n  object-fit: contain;\n}\n.la-none[data-v-18a7e0c3] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 6px;\n  padding: 16px;\n  text-align: center;\n  color: var(--zen-muted, #9aa0aa);\n}\n.la-none i[data-v-18a7e0c3] {\n  font-size: 24px;\n}\n.la-toggle[data-v-18a7e0c3] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n.la-toggle.dim[data-v-18a7e0c3] {\n  opacity: 0.5;\n}\n.la-chips[data-v-18a7e0c3] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 4px;\n}\n.la-chip[data-v-18a7e0c3] {\n  padding: 3px 8px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: 999px;\n  background: none;\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 11px;\n  cursor: pointer;\n}\n.la-chip[data-v-18a7e0c3]:hover {\n  color: var(--zen-text, #e5e5ea);\n  border-color: var(--zen-accent, #6366f1);\n}\n.la-row[data-v-18a7e0c3] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n.la-ctl[data-v-18a7e0c3] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.la-grow[data-v-18a7e0c3] {\n  flex: 1;\n}\n.la-note[data-v-18a7e0c3] {\n  margin: 0;\n  color: var(--zen-muted, #9aa0aa);\n}\n.la-error[data-v-18a7e0c3] {\n  margin: 0;\n  color: var(--zen-danger, #f87171);\n  white-space: pre-wrap;\n}\n.la-thumb[data-v-18a7e0c3] {\n  height: 260px;\n  flex: none;\n}\n.la-caption[data-v-18a7e0c3] {\n  margin: 0;\n  padding: 6px 8px;\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-surface-2, #26262d);\n  line-height: 1.45;\n}\n.la-boxes[data-v-18a7e0c3] {\n  margin: 0;\n  padding: 0;\n  list-style: none;\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n}\n.la-dot[data-v-18a7e0c3] {\n  display: inline-block;\n  width: 8px;\n  height: 8px;\n  margin-right: 6px;\n  border-radius: 2px;\n}\n.la-kind[data-v-18a7e0c3] {\n  margin: 0 4px;\n  font-size: 10px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.la-empty[data-v-18a7e0c3] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 8px;\n  height: 100%;\n  color: var(--zen-muted, #9aa0aa);\n  text-align: center;\n}\n.la-empty i[data-v-18a7e0c3] {\n  font-size: 28px;\n}\n\n.lm[data-v-a5e3cb24] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n}\n.lm-bar[data-v-a5e3cb24] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 6px;\n}\n.lm-bar-note[data-v-a5e3cb24] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lm-grid[data-v-a5e3cb24] {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));\n  gap: 6px;\n}\n.lm-tile[data-v-a5e3cb24] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 4px;\n  min-width: 0;\n  padding: 8px 4px 6px;\n  border: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 70%, transparent);\n  border-radius: var(--zen-radius, 7px);\n  background: transparent;\n  color: var(--zen-text, #e5e5ea);\n  cursor: pointer;\n}\n.lm-tile[data-v-a5e3cb24]:hover {\n  background: color-mix(in srgb, var(--zen-text, #fff) 4%, transparent);\n}\n.lm-tile.on[data-v-a5e3cb24] {\n  border-color: var(--zen-accent, #3b82f6);\n  background: color-mix(in srgb, var(--zen-accent, #3b82f6) 12%, transparent);\n}\n.lm-tile-name[data-v-a5e3cb24] {\n  max-width: 100%;\n  overflow: hidden;\n  font-size: 11px;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n}\n.lm-tile-meta[data-v-a5e3cb24] {\n  display: inline-flex;\n  align-items: center;\n  gap: 3px;\n  font-size: 10px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lm-new[data-v-a5e3cb24] {\n  justify-content: center;\n  border-style: dashed;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lm-new .mdi[data-v-a5e3cb24] {\n  font-size: 22px;\n}\n.lm-empty[data-v-a5e3cb24] {\n  margin: 0;\n  font-size: 11px;\n  line-height: 1.45;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lm-edit[data-v-a5e3cb24] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  padding-top: 10px;\n  border-top: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 60%, transparent);\n}\n.lm-head[data-v-a5e3cb24] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.lm-name[data-v-a5e3cb24] {\n  flex: 1;\n  min-width: 0;\n}\n.lm-color[data-v-a5e3cb24] {\n  flex: none;\n  width: 22px;\n  height: 22px;\n  padding: 0;\n  border: 0;\n  border-radius: 4px;\n  background: transparent;\n  cursor: pointer;\n}\n\n.mc[data-v-f481af91] {\n  display: grid;\n  grid-template-columns: repeat(2, minmax(0, 1fr));\n  gap: 10px;\n}\n.mc-card[data-v-f481af91] {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  gap: 4px;\n  padding: 12px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-surface, #1e1e24);\n  color: var(--zen-text, #e5e5ea);\n  font: inherit;\n  font-size: 12px;\n  text-align: left;\n  cursor: pointer;\n}\n.mc-card[data-v-f481af91]:hover {\n  border-color: color-mix(in srgb, var(--zen-accent, #6366f1) 50%, var(--zen-border, #34343c));\n}\n.mc-card.on[data-v-f481af91] {\n  border-color: var(--zen-accent, #6366f1);\n  box-shadow: 0 0 0 1px var(--zen-accent, #6366f1);\n}\n.mc-icon[data-v-f481af91] {\n  font-size: 22px;\n  color: var(--zen-accent, #6366f1);\n}\n.mc-label[data-v-f481af91] {\n  font-size: 14px;\n  font-weight: 600;\n}\n.mc-model[data-v-f481af91] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.mc-what[data-v-f481af91] {\n  margin-top: 4px;\n  font-size: 11px;\n  line-height: 1.4;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.ls[data-v-5978b710] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n  padding: 4px 2px;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n}\n.ls-note[data-v-5978b710] {\n  margin: 0;\n  font-size: 11px;\n  line-height: 1.45;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.ml[data-v-87e37a4e] {\n  display: grid;\n  grid-template-columns: 180px minmax(0, 1fr) 340px;\n  gap: 12px;\n  height: 100%;\n  min-height: 0;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n}\n.ml-search[data-v-87e37a4e] {\n  width: 280px;\n}\n.ml-grow[data-v-87e37a4e] {\n  flex: 1;\n  min-width: 0;\n}\n.ml-nav[data-v-87e37a4e] {\n  display: flex;\n  flex-direction: column;\n  gap: 2px;\n}\n.ml-scope[data-v-87e37a4e] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  padding: 7px 9px;\n  border: 0;\n  border-radius: var(--zen-radius, 7px);\n  background: none;\n  color: inherit;\n  font: inherit;\n  text-align: left;\n  cursor: pointer;\n}\n.ml-scope.sep[data-v-87e37a4e] {\n  margin-top: 8px;\n  padding-top: 10px;\n  border-top: 1px solid var(--zen-border, #34343c);\n  border-top-left-radius: 0;\n  border-top-right-radius: 0;\n}\n.ml-scope[data-v-87e37a4e]:hover {\n  background: color-mix(in srgb, var(--zen-text, #e5e5ea) 8%, transparent);\n}\n.ml-scope.on[data-v-87e37a4e] {\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 22%, transparent);\n}\n.ml-scope i[data-v-87e37a4e] {\n  font-size: 15px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.ml-sname[data-v-87e37a4e] {\n  flex: 1;\n}\n.ml-count[data-v-87e37a4e] {\n  font-size: 10px;\n  color: var(--zen-muted, #9aa0aa);\n  font-variant-numeric: tabular-nums;\n}\n.ml-main[data-v-87e37a4e] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  min-height: 0;\n}\n.ml-gridwrap[data-v-87e37a4e] {\n  flex: 1;\n  min-height: 0;\n}\n.ml-grid[data-v-87e37a4e] {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(156px, 1fr));\n  gap: 10px;\n  padding: 2px;\n}\n.ml-card[data-v-87e37a4e] {\n  display: flex;\n  flex-direction: column;\n  gap: 5px;\n  padding: 6px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-surface, #1e1e24);\n  color: inherit;\n  font: inherit;\n  text-align: left;\n  cursor: pointer;\n}\n.ml-card[data-v-87e37a4e]:hover {\n  border-color: color-mix(in srgb, var(--zen-accent, #6366f1) 50%, var(--zen-border, #34343c));\n}\n.ml-card.on[data-v-87e37a4e] {\n  border-color: var(--zen-accent, #6366f1);\n  box-shadow: 0 0 0 1px var(--zen-accent, #6366f1);\n}\n.ml-card.target[data-v-87e37a4e] {\n  opacity: 0.55;\n}\n.ml-hero[data-v-87e37a4e] {\n  position: relative;\n  display: grid;\n  place-items: center;\n  height: 118px;\n  border-radius: 5px;\n  overflow: hidden;\n}\n.ml-hero-img[data-v-87e37a4e] {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n}\n.ml-dot[data-v-87e37a4e] {\n  position: absolute;\n  top: 6px;\n  left: 6px;\n  width: 10px;\n  height: 10px;\n  border-radius: 50%;\n  box-shadow: 0 0 0 1.5px rgb(0 0 0 / 55%);\n}\n.ml-badge[data-v-87e37a4e],\n.ml-origin[data-v-87e37a4e] {\n  position: absolute;\n  padding: 1px 6px;\n  border-radius: 999px;\n  background: rgb(0 0 0 / 68%);\n  color: #fff;\n  font-size: 10px;\n  font-weight: 600;\n}\n.ml-badge[data-v-87e37a4e] {\n  right: 6px;\n  bottom: 6px;\n}\n.ml-origin[data-v-87e37a4e] {\n  top: 6px;\n  right: 6px;\n}\n.ml-cname[data-v-87e37a4e] {\n  font-weight: 600;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.ml-cmeta[data-v-87e37a4e] {\n  display: flex;\n  align-items: center;\n  flex-wrap: wrap;\n  gap: 5px;\n  font-size: 10.5px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.ml-chip[data-v-87e37a4e] {\n  display: inline-flex;\n  align-items: center;\n  gap: 2px;\n}\n.ml-trigger[data-v-87e37a4e] {\n  max-width: 100%;\n  padding: 0 5px;\n  border-radius: 4px;\n  background: color-mix(in srgb, var(--zen-text, #fff) 7%, transparent);\n  font-family: var(--zen-mono, ui-monospace, monospace);\n  font-size: 10px;\n  overflow: hidden;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n}\n.ml-muted[data-v-87e37a4e] {\n  opacity: 0.75;\n}\n.ml-detail[data-v-87e37a4e] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  min-height: 0;\n  padding-left: 12px;\n  border-left: 1px solid var(--zen-border, #34343c);\n}\n.ml-dhead[data-v-87e37a4e] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n.ml-color[data-v-87e37a4e] {\n  flex: none;\n  width: 24px;\n  height: 24px;\n  padding: 0;\n  border: 0;\n  border-radius: 5px;\n  background: transparent;\n  cursor: pointer;\n}\n.ml-dsub[data-v-87e37a4e] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  font-size: 10.5px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.ml-dtag[data-v-87e37a4e] {\n  padding: 1px 6px;\n  border-radius: 999px;\n  background: color-mix(in srgb, var(--zen-text, #fff) 8%, transparent);\n}\n.ml-dtime[data-v-87e37a4e] {\n  margin-left: auto;\n}\n.ml-dirty[data-v-87e37a4e] {\n  color: var(--zen-warning, #f5b041);\n  font-weight: 600;\n}\n.ml-dbody[data-v-87e37a4e] {\n  flex: 1;\n  min-height: 0;\n}\n.ml-form[data-v-87e37a4e] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n  padding-right: 4px;\n}\n.ml-hint[data-v-87e37a4e] {\n  margin: 0;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.ml-dfoot[data-v-87e37a4e] {\n  flex: none;\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  padding-top: 8px;\n  border-top: 1px solid var(--zen-border, #34343c);\n}\n.ml-drow[data-v-87e37a4e] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.ml-primary-row[data-v-87e37a4e]:empty {\n  display: none;\n}\n.ml-note[data-v-87e37a4e] {\n  margin: 0;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.ml-empty[data-v-87e37a4e] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 8px;\n  height: 100%;\n  min-height: 180px;\n  padding: 16px;\n  text-align: center;\n  color: var(--zen-muted, #9aa0aa);\n}\n.ml-empty i[data-v-87e37a4e] {\n  font-size: 28px;\n}\n\n.pal[data-v-90f7fa68] {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  gap: 4px;\n}\n.pal-chip[data-v-90f7fa68] {\n  display: inline-flex;\n}\n.pal-none[data-v-90f7fa68] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.preset[data-v-86f41e2a] {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n}\n.preset-input[data-v-86f41e2a] {\n  flex: 1;\n  min-width: 0;\n}\n.preset-menu[data-v-86f41e2a] {\n  display: flex;\n  flex-direction: column;\n  gap: 1px;\n  padding: 4px;\n  max-height: 280px;\n  overflow: auto;\n}\n\n.pl-cog[data-v-7372a834] {\n  margin-left: 2px;\n  font-size: 13px;\n  opacity: 0.7;\n}\n.pl-host[data-v-7372a834] {\n  position: relative;\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n}\n.pl-choose[data-v-7372a834] {\n  position: absolute;\n  inset: 0;\n  z-index: 5;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  padding: 16px;\n  border-radius: var(--zen-radius, 7px);\n  background: color-mix(in srgb, var(--zen-bg, #141418) 88%, transparent);\n  backdrop-filter: blur(2px);\n}\n.pl-choose-card[data-v-7372a834] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n  max-width: 720px;\n  color: var(--zen-text, #e5e5ea);\n}\n.pl-choose-title[data-v-7372a834] {\n  font-size: 16px;\n  font-weight: 600;\n}\n.pl-choose-note[data-v-7372a834] {\n  font-size: 12px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.pl-note[data-v-7372a834] {\n  margin: 0;\n  padding-top: 10px;\n  border-top: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 60%, transparent);\n  font-size: 11px;\n  line-height: 1.45;\n  color: var(--zen-muted, #9aa0aa);\n}\n.pl-form[data-v-7372a834] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n}\n.pl-seg[data-v-7372a834] {\n  display: flex;\n  width: 100%;\n}\n.pl-seg[data-v-7372a834] .zen-tg-b {\n  flex: 1 1 0;\n  min-width: 0;\n}\n.pl-chips[data-v-7372a834] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 4px;\n}\n.pl-face[data-v-7372a834] {\n  position: absolute;\n  top: 4px;\n  right: 4px;\n  display: flex;\n  gap: 2px;\n  pointer-events: none;\n}\n.pl-chip[data-v-7372a834] {\n  display: inline-flex;\n  align-items: center;\n  gap: 5px;\n  height: 24px;\n  padding: 0 9px 0 3px;\n  border: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 80%, transparent);\n  border-radius: 11px;\n  background: transparent;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n  cursor: pointer;\n}\n.pl-chip[data-v-7372a834]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.pl-chip.on[data-v-7372a834] {\n  border-color: var(--zen-accent, #3b82f6);\n  background: color-mix(in srgb, var(--zen-accent, #3b82f6) 22%, transparent);\n  color: var(--zen-text, #e5e5ea);\n}\n.pl-chip.partial[data-v-7372a834] {\n  border-style: dashed;\n  border-color: var(--zen-accent, #3b82f6);\n  color: var(--zen-text, #e5e5ea);\n}\n.pl-inherited[data-v-7372a834] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 4px;\n  margin-bottom: 4px;\n}\n.pl-inh-ref[data-v-7372a834],\n.pl-inh-lora[data-v-7372a834] {\n  display: inline-flex;\n  align-items: center;\n  gap: 4px;\n  max-width: 100%;\n  padding: 2px 6px 2px 3px;\n  border: 1px dashed color-mix(in srgb, var(--zen-border, #34343c) 90%, transparent);\n  border-radius: 5px;\n  background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 10.5px;\n  cursor: pointer;\n}\n.pl-inh-ref[data-v-7372a834]:hover,\n.pl-inh-lora[data-v-7372a834]:hover {\n  border-color: var(--zen-accent, #3b82f6);\n  color: var(--zen-text, #e5e5ea);\n}\n.pl-inh-ref img[data-v-7372a834] {\n  width: 18px;\n  height: 18px;\n  border-radius: 3px;\n  object-fit: cover;\n}\n.pl-inh-name[data-v-7372a834] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  max-width: 120px;\n}\n.pl-inh-str[data-v-7372a834] {\n  font-variant-numeric: tabular-nums;\n  opacity: 0.75;\n}\n.pl-hint[data-v-7372a834] {\n  margin: 0;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.pl-grid[data-v-7372a834] {\n  display: grid;\n  grid-template-columns: 62px minmax(0, 1fr);\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n}\n.pl-blend-row[data-v-7372a834] {\n  display: grid;\n  grid-template-columns: 44px minmax(0, 1fr) 82px;\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n}\n.pl-pairs[data-v-7372a834] {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));\n  gap: 6px 10px;\n}\n.pl-pair[data-v-7372a834] {\n  display: grid;\n  grid-template-columns: 52px minmax(0, 1fr);\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n}\n.pl-row-head[data-v-7372a834] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n.pl-sub[data-v-7372a834] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.pl-menu[data-v-7372a834] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  padding: 8px;\n}\n.pl-menu-title[data-v-7372a834] {\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n}\n.pl-menu .zen-btn[data-v-7372a834] {\n  justify-content: flex-start;\n}\n.pl-swatch[data-v-7372a834] {\n  flex: none;\n  width: 12px;\n  height: 12px;\n  border-radius: 3px;\n}\n.pl-wand[data-v-7372a834] {\n  position: absolute;\n  inset: 0;\n  cursor: crosshair;\n}\n.pl-point[data-v-7372a834] {\n  position: absolute;\n  width: 10px;\n  height: 10px;\n  margin: -5px 0 0 -5px;\n  border: 2px solid #fff;\n  border-radius: 50%;\n  background: #22c55e;\n  box-shadow: 0 0 0 1px rgb(0 0 0 / 50%);\n  pointer-events: none;\n}\n.pl-point.live[data-v-7372a834] {\n  pointer-events: auto;\n  cursor: grab;\n  touch-action: none;\n}\n.pl-point.live[data-v-7372a834]:hover {\n  transform: scale(1.3);\n}\n.pl-point.out[data-v-7372a834] {\n  background: #ef4444;\n}\n.pl-status[data-v-7372a834] {\n  display: inline-flex;\n  align-items: center;\n  gap: 5px;\n  height: 24px;\n  padding: 0 8px;\n  border: 0;\n  border-radius: var(--zen-radius, 7px);\n  background: none;\n  color: var(--zen-success, #4ade80);\n  font: inherit;\n  font-size: 11px;\n  cursor: pointer;\n}\n.pl-status[data-v-7372a834]:hover {\n  background: color-mix(in srgb, var(--zen-text, #e5e5ea) 8%, transparent);\n}\n.pl-status.warn[data-v-7372a834] {\n  color: var(--zen-warning, #f5b041);\n}\n.pl-count[data-v-7372a834] {\n  color: var(--zen-muted, #9aa0aa);\n  font-variant-numeric: tabular-nums;\n}\n.pl-pop[data-v-7372a834] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  width: min(340px, 88vw);\n  box-sizing: border-box;\n  padding: 10px;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n}\n.pl-pop-head[data-v-7372a834] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n.pl-pop-title[data-v-7372a834] {\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n.pl-out[data-v-7372a834] {\n  margin: 0;\n  max-height: 320px;\n  overflow: auto;\n  padding: 6px 8px;\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-surface-2, #26262d);\n  font-family: var(--zen-mono, ui-monospace, monospace);\n  font-size: 10.5px;\n  line-height: 1.45;\n  white-space: pre-wrap;\n  word-break: break-word;\n  user-select: text;\n}\n.pl-warn[data-v-7372a834] {\n  margin: 0;\n  padding-left: 16px;\n  font-size: 11px;\n  color: var(--zen-warning, #f5b041);\n}\n\n.lhost[data-v-caa49d38] {\n  position: relative;\n  box-sizing: border-box;\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n}\n.lhost[data-v-caa49d38] > * {\n  position: absolute;\n  inset: 0;\n}\n\n/* natural content flow — the node auto-grows to fit (see mountWidget), so rows are never\n   scrolled and the Add button simply follows the last row. */\n.ls-mid[data-v-04aebb5a] {\n  display: flex;\n  flex-direction: column;\n}\n.ls-rows[data-v-04aebb5a] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n}\n.ls-empty[data-v-04aebb5a] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 5px;\n  padding: 14px 8px;\n  text-align: center;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);\n}\n.ls-empty > .mdi[data-v-04aebb5a] {\n  font-size: 24px;\n  opacity: 0.8;\n}\n.ls-empty > span[data-v-04aebb5a] {\n  font-size: 11px;\n}\n.ls-row[data-v-04aebb5a] {\n  position: relative;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  transition: transform 0.15s ease;\n}\n.ls-row.off[data-v-04aebb5a] {\n  opacity: 0.5;\n}\n/* A group's rows step in under its header, joined by a rule down the side. */\n.ls-row.grouped[data-v-04aebb5a] {\n  margin-left: 6px;\n  padding-left: 6px;\n  border-left: 2px solid color-mix(in srgb, var(--zen-accent, #6366f1) 45%, transparent);\n}\n.ls-group[data-v-04aebb5a] {\n  position: relative;\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  min-height: 26px;\n  padding: 0 2px 0 0;\n  border-radius: var(--zen-radius, 6px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 6%, transparent);\n  transition: transform 0.15s ease;\n}\n.ls-rows.settling .ls-group[data-v-04aebb5a] {\n  transition: none;\n}\n.ls-group.muted .ls-gname[data-v-04aebb5a] {\n  text-decoration: line-through;\n  color: var(--zen-muted, #9aa0aa);\n}\n.ls-fold[data-v-04aebb5a],\n.ls-gname[data-v-04aebb5a] {\n  border: 0;\n  background: none;\n  color: inherit;\n  font: inherit;\n  cursor: pointer;\n  padding: 0;\n}\n.ls-fold[data-v-04aebb5a] {\n  flex: none;\n  width: 20px;\n  height: 24px;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 16px;\n  line-height: 1;\n}\n.ls-fold[data-v-04aebb5a]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.ls-gname[data-v-04aebb5a] {\n  flex: 1;\n  min-width: 0;\n  height: 24px;\n  overflow: hidden;\n  text-align: left;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  font-size: 12px;\n  font-weight: 600;\n}\n.ls-gname-edit[data-v-04aebb5a] {\n  flex: 1;\n  min-width: 0;\n  height: 22px;\n  padding: 0 5px;\n  font: inherit;\n  font-size: 12px;\n  font-weight: 600;\n  color: var(--zen-text, #e5e5ea);\n  background: var(--zen-bg, #1a1a1f);\n  border: 1px solid var(--zen-accent, #6366f1);\n  border-radius: var(--zen-radius, 6px);\n  outline: none;\n}\n.ls-driven[data-v-04aebb5a],\n.ls-solo[data-v-04aebb5a] {\n  flex: none;\n  font-size: 13px;\n  color: var(--zen-accent, #6366f1);\n}\n.ls-gcount[data-v-04aebb5a] {\n  flex: 0 1 auto;\n  max-width: 45%;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  padding: 0 4px;\n  font-size: 10.5px;\n  font-variant-numeric: tabular-nums;\n  color: var(--zen-muted, #9aa0aa);\n}\n/* The grabbed row is lifted, not ghosted — it's the real row, translated, so it stays exactly\n   its own size at any canvas zoom. z-index carries it over its neighbours as it passes them. */\n.ls-rows.settling .ls-row[data-v-04aebb5a] {\n  transition: none;\n}\n.ls-row.dragging[data-v-04aebb5a] {\n  z-index: 5;\n  transition: none;\n  box-shadow: 0 6px 16px rgb(0 0 0 / 45%);\n  border-radius: var(--zen-radius, 6px);\n  cursor: grabbing;\n}\n/* grip + dot travel together, so they pair at 2px instead of the row's 6px */\n.ls-gutter[data-v-04aebb5a] {\n  flex: none;\n  display: inline-flex;\n  align-items: center;\n  gap: 2px;\n}\n.ls-grip[data-v-04aebb5a] {\n  flex: none;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: 12px;\n  cursor: grab;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 14px;\n  line-height: 1;\n  /* The gesture-layer rules a drag handle needs (see useDragSurface): without touch-action the\n     browser reserves the gesture for scroll and fires pointercancel on the first pixel of\n     movement, and without user-select the drag turns into a text selection. */\n  touch-action: none;\n  -webkit-user-select: none;\n  user-select: none;\n}\n/* the glyph must never be the pointer target — the grip itself is what the press resolves to */\n.ls-grip[data-v-04aebb5a] > * {\n  pointer-events: none;\n  /* the icon font draws this glyph high in its box: measured 0.75px above the dot's centre at\n     14px, so it comes down that much (in em, to hold at any size) */\n  transform: translateY(0.054em);\n}\n.ls-grip[data-v-04aebb5a]:active {\n  cursor: grabbing;\n}\n.ls-grip[data-v-04aebb5a]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.ls-pick[data-v-04aebb5a] {\n  flex: 1;\n  min-width: 0;\n}\n/* No width: ZenNumber's intrinsic width is derived from the widest value its own min/max can\n   produce, so every row lines up at exactly the size the digits need. The 84px this used to\n   hardcode was two pixels short of \"-10.00\". */\n.ls-str[data-v-04aebb5a] {\n  flex: none;\n}\n.ls-confirm[data-v-04aebb5a] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  max-width: 230px;\n  padding: 6px 6px 4px;\n}\n.ls-confirm-text[data-v-04aebb5a] {\n  font-size: 12px;\n  line-height: 1.4;\n  color: var(--zen-text, #e5e5ea);\n}\n.ls-confirm-actions[data-v-04aebb5a] {\n  display: flex;\n  justify-content: flex-end;\n  gap: 6px;\n}\n.ls-pop-head[data-v-04aebb5a] {\n  padding: 4px 8px 6px;\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.06em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.nr-row[data-v-616b0b9a] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  height: 18px;\n}\n.nr-slider[data-v-616b0b9a] {\n  flex: 1;\n  min-width: 0;\n}\n.nr-tip[data-v-616b0b9a] {\n  position: fixed;\n  z-index: 10000;\n  transform: translate(-50%, -100%);\n  padding: 2px 6px;\n  font-size: 11px;\n  font-weight: 600;\n  font-variant-numeric: tabular-nums;\n  line-height: 1.3;\n  white-space: nowrap;\n  color: var(--zen-text, #e5e5ea);\n  background: var(--zen-surface, #202026);\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 6px);\n  box-shadow: 0 4px 12px rgb(0 0 0 / 45%);\n  pointer-events: none;\n}\n.nr-end[data-v-616b0b9a] {\n  flex: none;\n  font-size: 10.5px;\n  font-variant-numeric: tabular-nums;\n  color: var(--zen-muted, #9aa0aa);\n}\n.nr-menu[data-v-616b0b9a] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  width: 210px;\n  padding: 6px 8px 8px;\n}\n.nr-head[data-v-616b0b9a] {\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.06em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n.nr-field[data-v-616b0b9a] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 10px;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n}\n.nr-presets[data-v-616b0b9a] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 4px;\n  padding-top: 2px;\n}\n.nr-preset[data-v-616b0b9a] {\n  padding: 2px 7px;\n  font: inherit;\n  font-size: 11px;\n  color: var(--zen-muted, #cfd2d8);\n  background: color-mix(in srgb, var(--zen-text, #fff) 6%, transparent);\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 6px);\n  cursor: pointer;\n}\n.nr-preset[data-v-616b0b9a]:hover {\n  border-color: var(--zen-accent, #6366f1);\n  color: var(--zen-text, #e5e5ea);\n}\n\n/* The only positioned ancestor inside the widget, so every zone's offsetTop is measured against\n   it. Nothing between it and a row may be positioned or the drag maths silently shifts. */\n.rg-groups[data-v-c9d8e03d] {\n  position: relative;\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n}\n.rg-group[data-v-c9d8e03d] {\n  display: flex;\n  flex-direction: column;\n  gap: 5px;\n  padding: 4px 6px 6px;\n  border: 1px solid var(--zen-surface-border, var(--zen-border, #34343c));\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);\n  transition:\n    border-color 0.12s ease,\n    background 0.12s ease,\n    transform 0.15s ease;\n}\n.rg-group[data-v-c9d8e03d]:hover {\n  background: color-mix(in srgb, var(--zen-text, #fff) 5%, transparent);\n}\n/* the group the pointer is over, and the one the row came from */\n.rg-group.drop[data-v-c9d8e03d] {\n  border-color: var(--zen-accent, #6366f1);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 10%, transparent);\n}\n.rg-group.source[data-v-c9d8e03d]:not(.drop) {\n  border-style: dashed;\n}\ntextarea.rg-prompt.rg-prompt[data-v-c9d8e03d] {\n  width: 100%;\n  min-height: 28px;\n  padding: 5px 8px;\n}\n.rg-groups.settling .rg-group[data-v-c9d8e03d],\n.rg-groups.settling .rg-row[data-v-c9d8e03d] {\n  transition: none;\n}\n.rg-group.lifted[data-v-c9d8e03d] {\n  position: relative;\n  z-index: 1;\n  transition: none;\n  background: color-mix(in srgb, var(--zen-text, #fff) 5%, var(--zen-surface, #1f1f24));\n  box-shadow: 0 6px 18px rgb(0 0 0 / 35%);\n}\n.rg-head[data-v-c9d8e03d] {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  min-height: 24px;\n  padding-left: 2px;\n}\n.rg-label[data-v-c9d8e03d] {\n  flex: 1;\n  min-width: 0;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  cursor: help;\n}\n.rg-title[data-v-c9d8e03d] {\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n  white-space: nowrap;\n}\n.rg-count[data-v-c9d8e03d] {\n  flex: none;\n  padding: 0 5px;\n  border-radius: 999px;\n  background: color-mix(in srgb, var(--zen-text, #fff) 7%, transparent);\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  line-height: 15px;\n}\n/* An empty group still has to be a target big enough to aim at, so it keeps a row's worth of\n   height rather than collapsing to its header. */\n.rg-slot[data-v-c9d8e03d] {\n  margin: 0;\n  padding: 6px;\n  text-align: center;\n  font-size: 10px;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-surface-border, var(--zen-border, #34343c));\n  border-radius: var(--zen-radius, 6px);\n}\n.rg-rows[data-v-c9d8e03d] {\n  display: flex;\n  flex-direction: column;\n  gap: 5px;\n}\n.rg-row[data-v-c9d8e03d] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.rg-row.off[data-v-c9d8e03d] {\n  opacity: 0.5;\n}\n/* The grabbed row is lifted, not ghosted — it's the real row, translated, so it stays exactly its\n   own size at any canvas zoom. The z-index carries it over the groups it passes; no ancestor may\n   set one, or it would be trapped inside its own group's stacking context. */\n.rg-row.dragging[data-v-c9d8e03d] {\n  position: relative;\n  z-index: 5;\n  box-shadow: 0 6px 16px rgb(0 0 0 / 45%);\n  border-radius: var(--zen-radius, 6px);\n  cursor: grabbing;\n}\n.rg-grip[data-v-c9d8e03d] {\n  flex: none;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: 12px;\n  cursor: grab;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 14px;\n  line-height: 1;\n  /* The gesture-layer rules a drag handle needs (see useDragSurface): without touch-action the\n     browser reserves the gesture for scroll and fires pointercancel on the first pixel of\n     movement, and without user-select the drag turns into a text selection. */\n  touch-action: none;\n  -webkit-user-select: none;\n  user-select: none;\n}\n/* the glyph must never be the pointer target — the grip itself is what the press resolves to */\n.rg-grip[data-v-c9d8e03d] > * {\n  pointer-events: none;\n}\n.rg-grip[data-v-c9d8e03d]:active {\n  cursor: grabbing;\n}\n.rg-grip[data-v-c9d8e03d]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.rg-pick[data-v-c9d8e03d] {\n  flex: 1;\n  min-width: 0;\n}\n/* No width: ZenNumber's intrinsic width is now derived from the widest value its own min/max\n   can produce, so every row lines up at exactly the size the digits need and nothing clips. */\n.rg-str[data-v-c9d8e03d] {\n  flex: none;\n}\n\n/* content-driven panel: the node grows to fit this form */\n\n/* stacked field (label above a full-width control) */\n.si-field[data-v-289f994b] {\n  display: flex;\n  flex-direction: column;\n  gap: 3px;\n}\n/* inline row (label left, control right) */\n.si-row[data-v-289f994b] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n  min-height: 24px;\n}\n.si-lbl[data-v-289f994b] {\n  display: inline-flex;\n  align-items: center;\n  gap: 5px;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n  font-weight: 600;\n}\n.si-lbl .mdi[data-v-289f994b] {\n  font-size: 14px;\n}\n.si-grow[data-v-289f994b] {\n  flex: 1;\n  min-width: 0;\n}\n.si-project[data-v-289f994b] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n}\n.si-sel[data-v-289f994b] {\n  display: flex;\n  align-items: center;\n  gap: 7px;\n  min-width: 0;\n}\n.si-sel .mdi[data-v-289f994b] {\n  flex: none;\n  font-size: 15px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.si-sel-name[data-v-289f994b] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.si-opt-ic[data-v-289f994b] {\n  flex: none;\n  font-size: 15px;\n  color: var(--zen-accent, #6366f1);\n}\n.si-opt-name[data-v-289f994b] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.si-newbtn[data-v-289f994b] {\n  justify-content: flex-start !important;\n}\n\n/* quality */\n.si-quality[data-v-289f994b] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  flex: 1;\n  min-width: 0;\n  max-width: 60%;\n}\n.si-qval[data-v-289f994b] {\n  flex: none;\n  min-width: 26px;\n  text-align: right;\n  font-variant-numeric: tabular-nums;\n  color: var(--zen-text, #e5e5ea);\n}\n.si-sep[data-v-289f994b] {\n  height: 1px;\n  background: var(--zen-border, #34343c);\n  opacity: 0.7;\n  margin: 1px 0;\n}\n\n/* collapsible header */\n.si-exp[data-v-289f994b] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  width: 100%;\n  padding: 3px 2px;\n  background: none;\n  border: none;\n  cursor: pointer;\n  font: inherit;\n  font-size: 11px;\n  font-weight: 600;\n  color: var(--zen-muted, #9aa0aa);\n  text-align: left;\n}\n.si-exp[data-v-289f994b]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.si-exp .mdi[data-v-289f994b] {\n  font-size: 14px;\n}\n.si-badge[data-v-289f994b] {\n  margin-left: auto;\n  padding: 1px 6px;\n  border-radius: 999px;\n  font-size: 9px;\n  font-weight: 700;\n  letter-spacing: 0.02em;\n  color: var(--zen-accent-text, #fff);\n  background: var(--zen-accent, #6366f1);\n}\n.si-exp-body[data-v-289f994b] {\n  padding: 0 2px 2px;\n}\n.si-sub[data-v-289f994b] {\n  display: block;\n  margin-bottom: 3px;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n}\n\n/* destination footer */\n.si-dest[data-v-289f994b] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  margin-top: 1px;\n  padding: 5px 7px;\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-input, #1b1b20);\n  border: 1px solid var(--zen-border, #34343c);\n  color: var(--zen-text, #e5e5ea);\n  font-size: 11px;\n}\n.si-dest .mdi[data-v-289f994b] {\n  flex: none;\n  font-size: 14px;\n  color: var(--zen-accent, #6366f1);\n}\n.si-dest-path[data-v-289f994b] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n\n.sp[data-v-8adc7196] {\n  position: relative;\n}\n.sp-preview[data-v-8adc7196] {\n  position: relative;\n  flex: 1 1 0;\n  min-height: 0;\n  width: 100%;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: var(--zen-radius, 8px);\n}\n.sp-preview img[data-v-8adc7196] {\n  display: block;\n  border-radius: var(--zen-radius, 8px);\n  max-width: 100%;\n  max-height: 100%;\n  width: auto;\n  height: auto;\n  object-fit: contain;\n  /* no native image-drag ghost; the drag falls through to litegraph (moves the node) */\n  -webkit-user-drag: none;\n  user-select: none;\n}\n.sp-none[data-v-8adc7196] {\n  flex-direction: column;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  text-align: center;\n  padding: 8px;\n}\n.sp-none .mdi[data-v-8adc7196] {\n  font-size: 26px;\n  opacity: 0.8;\n}\n\n/* batch pager (bottom-center) */\n.sp-pager[data-v-8adc7196] {\n  position: absolute;\n  bottom: 6px;\n  left: 50%;\n  transform: translateX(-50%);\n  z-index: 3;\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  padding: 2px 4px;\n  border-radius: var(--zen-radius, 7px);\n  background: rgba(0, 0, 0, 0.5);\n  border: 1px solid rgba(255, 255, 255, 0.12);\n  backdrop-filter: blur(4px);\n  /* the body is pointer-events:none (drag-through), so controls opt back in + stay visible */\n  pointer-events: auto;\n}\n.sp-count[data-v-8adc7196] {\n  font-size: 11px;\n  color: #fff;\n  min-width: 38px;\n  text-align: center;\n}\n\n/* hover actions (top-right): download + lightbox */\n.sp-actions[data-v-8adc7196] {\n  position: absolute;\n  top: 6px;\n  right: 6px;\n  z-index: 3;\n  display: flex;\n  gap: 4px;\n  opacity: 0;\n  pointer-events: none;\n  transition: opacity 0.12s ease;\n}\n.sp-preview.sp-hot .sp-actions[data-v-8adc7196] {\n  opacity: 1;\n  pointer-events: auto;\n}\n/* A dark chip with a white icon, so the buttons read over any picture; the same as\n   Load Image's (ImagePick.vue's .li-ov-btn). ZenIconButton's own look (no background, muted icon) is for a toolbar, hence\n   the !important. Pointing at one fills it with the accent. */\n.sp-act[data-v-8adc7196] {\n  width: 26px !important;\n  height: 26px !important;\n  border: 1px solid rgba(255, 255, 255, 0.14) !important;\n  background: rgba(0, 0, 0, 0.46) !important;\n  color: #fff !important;\n  backdrop-filter: blur(4px);\n}\n.sp-act[data-v-8adc7196]:hover {\n  background: var(--zen-accent, #6366f1) !important;\n  border-color: var(--zen-accent, #6366f1) !important;\n  color: var(--zen-accent-text, #fff) !important;\n}\n\n.tl[data-v-e451bbd8] {\n  display: grid;\n  grid-template-columns: 250px minmax(0, 1fr);\n  gap: 14px;\n  height: 100%;\n  min-height: 0;\n}\n.tl-side[data-v-e451bbd8] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  min-height: 0;\n  padding-right: 14px;\n  border-right: 1px solid var(--zen-border, #34343c);\n}\n.tl-side-top[data-v-e451bbd8] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.tl-search[data-v-e451bbd8] {\n  flex: 1;\n  min-width: 0;\n}\n.tl-list[data-v-e451bbd8] {\n  flex: 1;\n  min-height: 0;\n  overflow-y: auto;\n  display: flex;\n  flex-direction: column;\n  gap: 2px;\n}\n.tl-cat[data-v-e451bbd8] {\n  padding: 8px 6px 3px;\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.06em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n.tl-item[data-v-e451bbd8] {\n  display: flex;\n  flex-direction: column;\n  gap: 1px;\n  padding: 6px 8px;\n  text-align: left;\n  font: inherit;\n  color: var(--zen-text, #e5e5ea);\n  background: none;\n  border: 1px solid transparent;\n  border-radius: var(--zen-radius, 7px);\n  cursor: pointer;\n}\n.tl-item[data-v-e451bbd8]:hover {\n  background: color-mix(in srgb, var(--zen-text, #fff) 6%, transparent);\n}\n.tl-item.on[data-v-e451bbd8] {\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 16%, transparent);\n  border-color: color-mix(in srgb, var(--zen-accent, #6366f1) 45%, transparent);\n}\n.tl-item-name[data-v-e451bbd8] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  font-size: 12.5px;\n  font-weight: 600;\n}\n.tl-used[data-v-e451bbd8] {\n  font-size: 13px;\n  color: var(--zen-accent, #6366f1);\n}\n.tl-item-sub[data-v-e451bbd8],\n.tl-none[data-v-e451bbd8] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.tl-item-sub[data-v-e451bbd8] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.tl-none[data-v-e451bbd8] {\n  padding: 16px 8px;\n  text-align: center;\n}\n.tl-edit[data-v-e451bbd8] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n  min-width: 0;\n  min-height: 0;\n}\n.tl-fields[data-v-e451bbd8] {\n  display: flex;\n  gap: 10px;\n}\n.tl-field[data-v-e451bbd8] {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n  flex: 0 0 200px;\n  min-width: 0;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.tl-field.tl-name[data-v-e451bbd8] {\n  flex: 1;\n}\n.tl-cat-input[data-v-e451bbd8],\n.tl-area[data-v-e451bbd8] {\n  font: inherit;\n  color: var(--zen-text, #e5e5ea);\n  background: var(--zen-surface, #202026);\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  outline: none;\n}\n.tl-cat-input[data-v-e451bbd8] {\n  height: 28px;\n  padding: 0 8px;\n  font-size: 12px;\n}\n.tl-cat-input[data-v-e451bbd8]:focus,\n.tl-area[data-v-e451bbd8]:focus {\n  border-color: var(--zen-accent, #6366f1);\n}\n.tl-area[data-v-e451bbd8] {\n  flex: 1;\n  min-height: 0;\n  resize: none;\n  padding: 10px 12px;\n  font-family: var(--zen-font-mono, ui-monospace, \"SF Mono\", Menlo, monospace);\n  font-size: 12.5px;\n  line-height: 1.55;\n}\n.tl-foot[data-v-e451bbd8] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.tl-count[data-v-e451bbd8] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.tl-grow[data-v-e451bbd8] {\n  flex: 1;\n}\n@media (max-width: 640px) {\n.tl[data-v-e451bbd8] {\n    grid-template-columns: minmax(0, 1fr);\n    grid-template-rows: 170px minmax(0, 1fr);\n}\n.tl-side[data-v-e451bbd8] {\n    padding: 0 0 10px;\n    border-right: 0;\n    border-bottom: 1px solid var(--zen-border, #34343c);\n}\n}\n\n.st-pick[data-v-b520f037] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.st-combo[data-v-b520f037] {\n  flex: 1;\n  min-width: 0;\n}\n/* One line, always: a long name is cut short with an ellipsis, never wrapped under itself. */\n.st-current[data-v-b520f037],\n.st-placeholder[data-v-b520f037] {\n  display: block;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.st-current[data-v-b520f037] {\n  font-weight: 600;\n}\n.st-placeholder[data-v-b520f037] {\n  color: var(--zen-muted, #9aa0aa);\n}\n.st-opt[data-v-b520f037] {\n  display: flex;\n  align-items: baseline;\n  justify-content: space-between;\n  gap: 10px;\n  min-width: 0;\n  width: 100%;\n}\n.st-opt-name[data-v-b520f037] {\n  flex: 1;\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.st-opt-cat[data-v-b520f037] {\n  flex: none;\n  font-size: 10.5px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.st-pick[data-v-b520f037],\n.st-note[data-v-b520f037] {\n  flex: none;\n}\n/* The text takes the rest of the node, and scrolls inside it when there is more. */\n/* ZenWidget's footer spacer grows too; this outweighs it, so the slack goes to the text. */\n.st-preview[data-v-b520f037],\n.st-empty[data-v-b520f037] {\n  flex: 1000 1 0;\n  min-height: 0;\n}\n.st-preview[data-v-b520f037] {\n  display: block;\n  overflow-y: auto;\n  padding: 7px 9px;\n  text-align: left;\n  white-space: pre-wrap;\n  overflow-wrap: anywhere;\n  font: inherit;\n  font-size: 11.5px;\n  line-height: 1.45;\n  color: var(--zen-muted, #b9bcc4);\n  background: color-mix(in srgb, var(--zen-text, #fff) 4%, transparent);\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  cursor: pointer;\n}\n.st-preview[data-v-b520f037]:hover {\n  border-color: var(--zen-accent, #6366f1);\n  color: var(--zen-text, #e5e5ea);\n}\n.st-empty[data-v-b520f037] {\n  display: grid;\n  place-items: center;\n  padding: 10px 8px;\n  text-align: center;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n}\n.st-note[data-v-b520f037] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  font-size: 11px;\n  color: var(--zen-warning, #f59e0b);\n}\n.st-link[data-v-b520f037] {\n  margin-left: auto;\n  padding: 0;\n  font: inherit;\n  color: var(--zen-accent, #6366f1);\n  background: none;\n  border: 0;\n  cursor: pointer;\n  text-decoration: underline;\n}\n.zen-widget[data-v-566c7d03]{display:flex;flex-direction:column;width:100%;padding:6px 2px;box-sizing:border-box;cursor:default;font-size:12px;color:var(--zen-text, #e5e5ea)}.zen-widget.fill[data-v-566c7d03]{height:100%;min-height:0}.zen-widget.has-footer[data-v-566c7d03]{flex:1 0 auto}.zen-widget-spacer[data-v-566c7d03]{flex:1 1 0;min-height:0}.zen-widget.drag-through[data-v-566c7d03]{cursor:inherit}.zen-row[data-v-33277610]{display:flex;width:100%;min-width:0}.zen-row[data-v-33277610]>*{flex:0 0 auto;width:auto}.zen-row[data-v-33277610]>[data-grow]{flex:1 1 var(--zen-row-min, 120px);width:auto;min-width:0}.zen-scroll{scrollbar-color:var( --zen-scrollbar, var(--dialog-surface, color-mix(in srgb, var(--zen-text, #e5e5ea) 24%, transparent)) ) transparent}:where(.zen-scroll,.zen-scroll *){scrollbar-width:thin}[data-zen-layer]{--zen-scrollbar: color-mix(in srgb, var(--zen-text, #e5e5ea) 32%, transparent)}:where(.zen-surface){box-sizing:border-box;border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius-surface, var(--zen-radius, 7px));background:var(--zen-chrome-bg, var(--zen-surface, #202026));box-shadow:var(--zen-shadow-pop, 0 10px 30px rgb(0 0 0 / 45%));color:var(--zen-text, #e5e5ea);font-family:var(--p-font-family, system-ui, sans-serif)}.zen-pop-tooltip[data-v-34f78306]{pointer-events:none}.zen-pop-anchor[data-v-34f78306]{display:inline-flex}.zen-pop[data-v-34f78306]{position:fixed;z-index:100000;min-width:160px;max-width:min(360px,92vw);padding:5px;display:flex;flex-direction:column;gap:1px}.zen-tip[data-v-e12bb9ef]{display:inline-grid;place-items:center;width:16px;height:16px;padding:0;margin:0;border:none;background:none;color:var(--zen-muted, #9aa0aa);cursor:help;border-radius:var(--zen-radius, 6px);flex:none;vertical-align:middle}.zen-tip.inline[data-v-e12bb9ef]{display:inline;width:auto;height:auto;font:inherit;color:inherit;text-align:inherit;text-decoration:underline dotted transparent;text-underline-offset:3px;transition:text-decoration-color .15s ease}.zen-tip.inline[data-v-e12bb9ef]:hover,.zen-tip.inline[data-v-e12bb9ef]:focus-visible{color:inherit;text-decoration-color:color-mix(in srgb,currentColor 55%,transparent)}.zen-tip svg[data-v-e12bb9ef]{width:13px;height:13px}.zen-tip[data-v-e12bb9ef]:hover,.zen-tip[data-v-e12bb9ef]:focus-visible{color:var(--zen-accent, #8ab4ff)}.zen-tip[data-v-e12bb9ef]:focus-visible{outline:2px solid var(--zen-accent, #8ab4ff);outline-offset:1px}.zen-tip-body[data-v-e12bb9ef]{max-width:280px;padding:8px 10px;font-size:12px;line-height:1.45;color:var(--zen-text, #e5e5ea);white-space:normal}.zen-field[data-v-9c483aa7]{display:flex;flex-direction:column;gap:2px;min-width:0}.zf-row[data-v-9c483aa7]{display:flex;align-items:center;gap:6px;min-width:0}.zen-field.stack .zf-row[data-v-9c483aa7]{flex-direction:column;align-items:stretch;gap:3px}.zf-label-wrap[data-v-9c483aa7]{flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;min-width:0}.zf-label[data-v-9c483aa7]{flex:0 0 auto;font-size:11px;color:var(--zen-muted, #9aa0aa);white-space:nowrap}.zf-control[data-v-9c483aa7]{flex:1 1 auto;min-width:0;display:flex;align-items:center;--zen-control-min: 0px}.zf-control[data-v-9c483aa7]>*{flex:1 1 auto;min-width:0}.zf-hint[data-v-9c483aa7]{font-size:10px;color:var(--zen-muted, #9aa0aa);opacity:.8}:root{--zen-dur-fast: .12s;--zen-dur: .2s}@media(prefers-reduced-motion:reduce){:root{--zen-dur-fast: 0s;--zen-dur: 0s}}:root[data-zen-motion=reduce]{--zen-dur-fast: 0s;--zen-dur: 0s}@media(prefers-reduced-motion:reduce){:root[data-zen-motion=full]{--zen-dur-fast: .12s;--zen-dur: .2s}}.zen-ico-img[data-v-819f0eab]{width:1em;height:1em;object-fit:contain;display:inline-block;vertical-align:-.15em;border-radius:var(--zen-radius, 7px)}.zen-section[data-v-217a9770]{display:flex;flex-direction:column;min-width:0;color:var(--zen-text, #e5e5ea)}.zen-section.plain+.zen-section.plain[data-v-217a9770]{border-top:1px solid var(--zen-border, #34343c)}.zen-section.card[data-v-217a9770]{border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-surface, #202026)}.zs-head[data-v-217a9770]{display:flex;align-items:center;gap:4px;min-height:26px}.zen-section.plain>.zs-head[data-v-217a9770]{padding:4px 0}.zen-section.card>.zs-head[data-v-217a9770]{padding:3px 4px 3px 8px}.zs-toggle[data-v-217a9770]{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:5px;padding:2px 0;border:0;border-radius:var(--zen-radius, 4px);background:none;color:inherit;font:inherit;font-size:11.5px;font-weight:600;text-align:left;cursor:pointer}.zs-toggle.static[data-v-217a9770]{cursor:default}.zs-toggle[data-v-217a9770]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zs-toggle[data-v-217a9770]:disabled{cursor:default}.zen-section.disabled>.zs-head[data-v-217a9770]{opacity:.5}.zs-chev[data-v-217a9770]{flex:0 0 auto;font-size:14px;color:var(--zen-muted, #9aa0aa);transition:transform var(--zen-dur, .2s) ease}.zen-section.open>.zs-head .zs-chev[data-v-217a9770]{transform:rotate(90deg)}.zs-icon[data-v-217a9770]{flex:0 0 auto;font-size:14px;color:var(--zen-muted, #9aa0aa)}.zs-title[data-v-217a9770]{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.zs-meta[data-v-217a9770]{margin-left:auto;padding-left:8px;flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:400;font-size:11px;color:var(--zen-muted, #9aa0aa)}.zs-actions[data-v-217a9770]{flex:0 0 auto;display:flex;align-items:center;gap:2px}.zs-wrap[data-v-217a9770]{display:grid;grid-template-rows:0fr;transition:grid-template-rows var(--zen-dur, .2s) ease}.zen-section.open>.zs-wrap[data-v-217a9770]{grid-template-rows:1fr}.zs-clip[data-v-217a9770]{min-height:0;min-width:0}.zs-clip.clipped[data-v-217a9770]{overflow:hidden}.zen-section:not(.open)>.zs-wrap>.zs-clip[data-v-217a9770]{visibility:hidden;transition:visibility 0s var(--zen-dur, .2s)}.zs-body[data-v-217a9770]{display:flex;flex-direction:column;gap:var(--zen-section-gap, 8px)}.zen-section.plain>.zs-wrap>.zs-clip>.zs-body[data-v-217a9770]{padding:2px 0 10px}.zen-section.card>.zs-wrap>.zs-clip>.zs-body[data-v-217a9770]{padding:2px 8px 8px}.zen-sections[data-v-be050f3f]{display:flex;flex-direction:column;min-width:0}.zen-resize-handle[data-v-732b507d]{position:relative;z-index:1;flex:0 0 8px;touch-action:none;user-select:none;background:transparent}.vertical[data-v-732b507d]{cursor:col-resize}.horizontal[data-v-732b507d]{cursor:row-resize}.both[data-v-732b507d]{cursor:move}.zen-resize-handle[data-v-732b507d]:after{content:\"\";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border-radius:999px;background:var(--zen-accent, #6366f1);opacity:0;transition:opacity var(--zen-dur-fast, .12s) ease;pointer-events:none}.vertical[data-v-732b507d]:after{width:3px;height:32px;max-height:calc(100% - 4px)}.horizontal[data-v-732b507d]:after{width:32px;height:3px;max-width:calc(100% - 4px)}.both[data-v-732b507d]:after{width:8px;height:8px}.zen-resize-handle[data-v-732b507d]:hover:after,.zen-resize-handle.active[data-v-732b507d]:after,.zen-resize-handle[data-v-732b507d]:focus-visible:after{opacity:1}.zen-resize-handle[data-v-732b507d]:focus-visible{outline:2px solid var(--zen-focus-ring, var(--zen-accent, #6366f1));outline-offset:1px}.line[data-v-732b507d]{flex-basis:1px;background:var(--zen-border, #34343c);transition:background var(--zen-dur-fast, .12s) ease}.line[data-v-732b507d]:before{content:\"\";position:absolute}.line.vertical[data-v-732b507d]:before{inset:0 -2.5px}.line.horizontal[data-v-732b507d]:before{inset:-2.5px 0}.line[data-v-732b507d]:hover,.line.active[data-v-732b507d]{background:var(--zen-accent, #6366f1)}.line[data-v-732b507d]:after{display:none}.zen-split[data-v-a558794f]{display:flex;width:100%;height:100%;min-width:0;min-height:0}.zen-split.vertical[data-v-a558794f]{flex-direction:column}.zen-split.dragging[data-v-a558794f]{user-select:none}.zen-split.horizontal.dragging[data-v-a558794f]{cursor:col-resize}.zen-split.vertical.dragging[data-v-a558794f]{cursor:row-resize}.zsp-pane[data-v-a558794f]{position:relative;min-width:0;min-height:0;overflow:hidden}.zsp-pane.collapsed[data-v-a558794f]{visibility:hidden}.zen-scroll[data-v-d68b9d36]{height:100%;min-height:0;overflow-y:auto;overflow-x:hidden}.zen-scroll.x[data-v-d68b9d36]{overflow-x:auto;overflow-y:hidden}.zen-scroll-ov[data-v-d68b9d36]{position:relative;height:100%;min-height:0;overflow:hidden}.zen-scroll-viewport[data-v-d68b9d36]{scrollbar-width:none;will-change:scroll-position}.zen-scroll-viewport[data-v-d68b9d36]::-webkit-scrollbar{display:none}.zen-scroll-track[data-v-d68b9d36]{position:absolute;top:0;right:0;bottom:0;width:12px;z-index:4;opacity:0;transition:opacity .2s ease}.zen-scroll-ov:hover .zen-scroll-track[data-v-d68b9d36],.zen-scroll-ov.active .zen-scroll-track[data-v-d68b9d36]{opacity:1}.zen-scroll-thumb[data-v-d68b9d36]{position:absolute;top:0;right:3px;width:6px;border-radius:var(--zen-radius-sm, 4px);background:var(--zen-scrollbar, color-mix(in srgb, var(--zen-text, #e5e5ea) 28%, transparent));transition:width .15s ease,right .15s ease,background .15s ease;touch-action:none;cursor:pointer}.zen-scroll-track:hover .zen-scroll-thumb[data-v-d68b9d36],.zen-scroll-thumb[data-v-d68b9d36]:active{width:8px;right:2px;background:var(--zen-accent, #6366f1)}.zen-scroll-ov.x .zen-scroll-track[data-v-d68b9d36]{top:auto;left:0;width:auto;height:12px}.zen-scroll-ov.x .zen-scroll-thumb[data-v-d68b9d36]{inset:auto auto 3px 0;width:auto;height:6px}.zen-scroll-ov.x .zen-scroll-track:hover .zen-scroll-thumb[data-v-d68b9d36],.zen-scroll-ov.x .zen-scroll-thumb[data-v-d68b9d36]:active{width:auto;right:auto;height:8px;bottom:2px}.zen-view[data-v-f7345db8]{position:relative;display:flex;flex-direction:column;height:100%;min-height:0;overflow:hidden;background:var(--zen-bg, #1a1a1f);color:var(--zen-text, #e5e5ea);font-family:var(--p-font-family, system-ui, sans-serif)}.zen-view-body[data-v-f7345db8]{flex:1 1 0;min-height:0}.zen-view-body.fill[data-v-f7345db8]{display:flex}.zen-view-body.pad[data-v-f7345db8]{padding:10px}.zen-toolbar[data-v-ea3754a7]{flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:7px 9px;border-bottom:1px solid var(--zen-surface-border, var(--zen-border, #34343c));background:var(--zen-chrome-bg, var(--zen-surface, #202026))}.tb-icon[data-v-ea3754a7]{font-size:15px;color:var(--zen-accent, #6366f1)}.tb-title[data-v-ea3754a7]{font-size:12px;font-weight:600;color:var(--zen-text, #e5e5ea);white-space:nowrap}.tb-grow[data-v-ea3754a7]{flex:1}.zen-btn[data-v-44a20193]{display:inline-flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;user-select:none;font-family:inherit;font-size:12px;font-weight:600;box-sizing:border-box;height:var(--zen-control-h, 28px);padding:0 12px;border-radius:var(--zen-radius, 7px);border:1px solid var(--zen-control-border, var(--zen-border, #34343c));background:var(--zen-control-bg, var(--zen-surface, #202026));color:var(--zen-text, #e5e5ea);transition:border-color var(--zen-dur-fast, .12s) ease,background var(--zen-dur-fast, .12s) ease,color var(--zen-dur-fast, .12s) ease,filter var(--zen-dur-fast, .12s) ease}.zen-btn[data-v-44a20193]:hover:not(:disabled){border-color:var(--zen-control-hover-border, var(--zen-accent, #6366f1));background:var(--zen-control-hover-bg, var(--zen-control-bg))}.zen-btn[data-v-44a20193]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zen-btn[data-v-44a20193]:disabled{opacity:.45;cursor:not-allowed}.zen-btn .mdi[data-v-44a20193]{font-size:15px}.zen-btn.block[data-v-44a20193]{width:100%}.zen-btn.sm[data-v-44a20193]{height:var(--zen-control-h-sm, 24px);padding:0 9px;font-size:11px}.zen-btn.primary[data-v-44a20193]{background:var(--zen-accent, #6366f1);border-color:var(--zen-accent, #6366f1);color:var(--zen-accent-text, #fff)}.zen-btn.primary[data-v-44a20193]:hover:not(:disabled){border-color:color-mix(in srgb,var(--zen-accent, #6366f1) 72%,var(--zen-accent-text, #fff));background:color-mix(in srgb,var(--zen-accent, #6366f1) 72%,var(--zen-accent-text, #fff))}.zen-btn.ghost[data-v-44a20193]{background:transparent;border-color:transparent}.zen-btn.ghost[data-v-44a20193]:hover:not(:disabled){background:color-mix(in srgb,var(--zen-text, #e5e5ea) 10%,transparent);border-color:transparent}.zen-btn.danger[data-v-44a20193]:hover:not(:disabled){background:var(--zen-danger, #dc2626);border-color:var(--zen-danger, #dc2626);color:var(--zen-danger-text, #fff)}.zen-iconbtn[data-v-350d2f84]{display:inline-flex;align-items:center;justify-content:center;flex:none;box-sizing:border-box;width:var(--zen-control-h, 28px);height:var(--zen-control-h, 28px);border:1px solid transparent;border-radius:var(--zen-radius, 7px);background:none;color:var(--zen-muted, #9aa0aa);cursor:pointer;user-select:none;transition:background var(--zen-dur-fast, .12s) ease,color var(--zen-dur-fast, .12s) ease}.zen-iconbtn[data-v-350d2f84]:hover:not(:disabled){background:color-mix(in srgb,var(--zen-text, #e5e5ea) 12%,transparent);color:var(--zen-text, #e5e5ea)}.zen-iconbtn.active[data-v-350d2f84]{color:var(--zen-accent, #6366f1)}.zen-iconbtn.danger[data-v-350d2f84]:hover:not(:disabled){background:var(--zen-danger, #dc2626);color:var(--zen-danger-text, #fff)}.zen-iconbtn[data-v-350d2f84]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zen-iconbtn.sm[data-v-350d2f84]{width:var(--zen-control-h-sm, 24px);height:var(--zen-control-h-sm, 24px)}.zen-iconbtn[data-v-350d2f84]:disabled{cursor:not-allowed;opacity:.4;cursor:default}.zen-iconbtn .mdi[data-v-350d2f84]{font-size:16px;line-height:1}.zen-iconbtn .mdi[data-v-350d2f84]:before{display:block;line-height:1}.zen-lotus[data-v-b2ab3c2d]{display:inline-block;flex:none;width:1.2em;overflow:visible}.petal[data-v-b2ab3c2d]{transform:rotate(var(--r));transform-origin:0 0;transform-box:view-box}.zen-lotus.interactive[data-v-b2ab3c2d]{cursor:pointer}.blooming .petal[data-v-b2ab3c2d]{animation:zen-lotus-bloom-b2ab3c2d .9s cubic-bezier(.3,0,.2,1) both}@keyframes zen-lotus-bloom-b2ab3c2d{0%{transform:rotate(var(--r)) scale(1)}28%{transform:rotate(calc(var(--r) * .12)) scale(.82,.9)}62%{transform:rotate(calc(var(--r) * 1.12)) scale(1.06)}to{transform:rotate(var(--r)) scale(1)}}.ripple[data-v-b2ab3c2d]{fill:none;stroke:currentColor;stroke-width:3;opacity:0;transform-origin:0 2px;transform-box:view-box;animation:zen-lotus-ripple-b2ab3c2d 1s ease-out .25s both}@keyframes zen-lotus-ripple-b2ab3c2d{0%{opacity:.6;transform:scale(.3)}to{opacity:0;transform:scale(1.5)}}.breathing>g[data-v-b2ab3c2d]{transform-origin:0 0;transform-box:view-box;animation:zen-lotus-breathe-b2ab3c2d 4.8s ease-in-out infinite}@keyframes zen-lotus-breathe-b2ab3c2d{0%,to{transform:scale(.94);opacity:.85}50%{transform:scale(1.04);opacity:1}}@media(prefers-reduced-motion:reduce){.blooming .petal[data-v-b2ab3c2d]{animation-name:zen-lotus-glow-b2ab3c2d}.ripple[data-v-b2ab3c2d]{animation:none}.breathing>g[data-v-b2ab3c2d]{animation-name:zen-lotus-fade-b2ab3c2d}}:root[data-zen-motion=reduce] .blooming .petal[data-v-b2ab3c2d]{animation-name:zen-lotus-glow-b2ab3c2d}:root[data-zen-motion=reduce] .ripple[data-v-b2ab3c2d]{animation:none}:root[data-zen-motion=reduce] .breathing>g[data-v-b2ab3c2d]{animation-name:zen-lotus-fade-b2ab3c2d}@keyframes zen-lotus-glow-b2ab3c2d{0%,to{transform:rotate(var(--r));filter:none}40%{transform:rotate(var(--r));filter:brightness(1.6) drop-shadow(0 0 6px currentColor)}}@keyframes zen-lotus-fade-b2ab3c2d{0%,to{opacity:.75}50%{opacity:1}}.zen-empty[data-v-71f336c3]{margin:auto;display:flex;flex-direction:column;align-items:center;gap:6px;max-width:260px;padding:20px;text-align:center;color:var(--zen-muted, #9aa0aa);font-family:var(--p-font-family, system-ui, sans-serif)}.zen-empty-mark[data-v-71f336c3]{width:44px;margin-bottom:4px;fill:currentColor;opacity:.45}.zen-empty-icon[data-v-71f336c3]{width:auto;font-size:36px}.zen-empty-title[data-v-71f336c3]{color:var(--zen-text, #e5e5ea);font-size:13px;font-weight:600}.zen-empty-text[data-v-71f336c3]{margin:0;font-size:12px;line-height:1.5}.zen-empty-actions[data-v-71f336c3]{display:flex;gap:6px;margin-top:6px}.zen-input[data-v-2eb7b22b]{width:100%;box-sizing:border-box;font:inherit;font-size:12px;line-height:normal;background:var(--zen-field-bg, var(--zen-input, #1b1b20));color:var(--zen-text, #e5e5ea);border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);height:var(--zen-control-h, 28px);padding:0 9px;transition:border-color var(--zen-dur-fast, .12s) ease}.zen-input[data-v-2eb7b22b]::placeholder{color:var(--zen-muted, #9aa0aa)}.zen-input[data-v-2eb7b22b]:focus{outline:none;border-color:var(--zen-accent, #6366f1)}.zen-input[data-v-2eb7b22b]:disabled{opacity:.45;cursor:not-allowed}.zen-input.sm[data-v-2eb7b22b]{height:var(--zen-control-h-sm, 24px);padding:0 8px;font-size:11px}.zen-input.area[data-v-2eb7b22b]{height:auto;padding:7px 9px;resize:vertical;min-height:64px;line-height:1.45}.zen-input.area.auto[data-v-2eb7b22b]{resize:none;min-height:0;overflow:hidden}.zmi[data-v-95e0cb5c]{position:relative;display:grid;min-height:0;border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);background:var(--zen-field-bg, var(--zen-input, #1b1b20));transition:border-color var(--zen-dur-fast, .12s) ease}.zmi.focused[data-v-95e0cb5c]{border-color:var(--zen-accent, #6366f1)}.zmi-mirror[data-v-95e0cb5c],.zmi-area[data-v-95e0cb5c]{grid-area:1 / 1;box-sizing:border-box;margin:0;padding:8px 10px;border:0;font-family:inherit;font-size:12.5px;line-height:1.5;letter-spacing:normal;white-space:pre-wrap;overflow-wrap:break-word;word-break:normal;scrollbar-gutter:stable}.zmi-mirror[data-v-95e0cb5c]{overflow:hidden;color:transparent;pointer-events:none}.zmi-mirror mark[data-v-95e0cb5c]{border-radius:3px;background:color-mix(in srgb,var(--zen-accent, #6366f1) 28%,transparent);color:transparent;box-shadow:0 0 0 1px color-mix(in srgb,var(--zen-accent, #6366f1) 45%,transparent)}.zmi-mirror mark.unknown[data-v-95e0cb5c]{background:color-mix(in srgb,var(--zen-danger, #dc2626) 22%,transparent);box-shadow:0 0 0 1px color-mix(in srgb,var(--zen-danger, #dc2626) 55%,transparent);text-decoration:wavy underline var(--zen-danger, #dc2626)}.zmi-area[data-v-95e0cb5c]{height:100%;min-height:100%;resize:none;outline:none;background:transparent;color:var(--zen-text, #e5e5ea);caret-color:var(--zen-text, #e5e5ea)}.zmi.sized[data-v-95e0cb5c]{grid-template-rows:100%;overflow:hidden}.zmi-grip[data-v-95e0cb5c]{position:absolute;right:1px;bottom:1px;z-index:1;width:12px;height:12px;cursor:ns-resize;touch-action:none;background:linear-gradient(135deg,transparent 55%,var(--zen-muted, #9aa0aa) 55%,var(--zen-muted, #9aa0aa) 62%,transparent 62%),linear-gradient(135deg,transparent 75%,var(--zen-muted, #9aa0aa) 75%,var(--zen-muted, #9aa0aa) 82%,transparent 82%);opacity:.6}.zmi-grip[data-v-95e0cb5c]:hover{opacity:1}.zmi-area[data-v-95e0cb5c]::placeholder{color:var(--zen-muted, #9aa0aa);opacity:.7}.zmi-peek[data-v-95e0cb5c]{position:fixed;z-index:100000;display:flex;flex-direction:column;gap:6px;width:220px;padding:6px;border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);background:var(--zen-surface, #202026);box-shadow:0 10px 30px #00000073;pointer-events:none}.zmi-peek>img[data-v-95e0cb5c],.zmi-peek[data-v-95e0cb5c]>img,.zmi-peek[data-v-95e0cb5c]>video{display:block;width:100%;max-height:180px;border-radius:calc(var(--zen-radius, 7px) - 2px);background:var(--zen-media-bg, #0b0b0e);object-fit:contain}.zmi-peek>.mdi[data-v-95e0cb5c]{display:grid;place-items:center;height:90px;color:var(--zen-muted, #9aa0aa);font-size:32px}.zmi-pop[data-v-95e0cb5c]{position:fixed;z-index:100000;width:250px;max-height:260px;overflow-y:auto;padding:4px}.zmi-item[data-v-95e0cb5c]{display:flex;align-items:center;gap:8px;width:100%;padding:4px 6px;border:0;border-radius:6px;background:none;color:var(--zen-text, #e5e5ea);font:inherit;text-align:left;cursor:pointer}.zmi-item.on[data-v-95e0cb5c]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 25%,transparent)}.zmi-thumb[data-v-95e0cb5c]{display:grid;flex:none;place-items:center;width:30px;height:30px;overflow:hidden;border-radius:5px;background:var(--zen-media-bg, #0b0b0e);color:var(--zen-muted, #9aa0aa)}.zmi-thumb img[data-v-95e0cb5c]{width:100%;height:100%;object-fit:contain}.zmi-text[data-v-95e0cb5c]{display:flex;flex-direction:column;min-width:0}.zmi-text b[data-v-95e0cb5c]{color:#9db7ff;font-size:12px}.zmi-text small[data-v-95e0cb5c]{overflow:hidden;color:var(--zen-muted, #9aa0aa);font-size:10.5px;white-space:nowrap;text-overflow:ellipsis}.zen-off[data-v-95e0cb5c]{opacity:.45}.zen-num[data-v-f28d60a9]{display:inline-flex;align-items:stretch;height:var(--zen-control-h, 28px);box-sizing:border-box;border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);background:var(--zen-field-bg, var(--zen-input, #1b1b20));overflow:hidden;user-select:none;font-size:11px;font-variant-numeric:tabular-nums;min-width:calc(50px + var(--zn-chars, 4) * 1ch)}.zen-num.bare[data-v-f28d60a9]{min-width:calc(2px + var(--zn-chars, 4) * 1ch)}.zen-num[data-v-f28d60a9]:focus-within{border-color:var(--zen-accent, #6366f1)}.zen-num.sm[data-v-f28d60a9]{height:var(--zen-control-h-sm, 24px)}.zen-num.disabled[data-v-f28d60a9]{cursor:not-allowed;opacity:.5;pointer-events:none}.zn-step[data-v-f28d60a9]{flex:none;width:21px;border:none;background:none;color:var(--zen-muted, #9aa0aa);cursor:pointer;display:inline-flex;align-items:center;justify-content:center}.zn-step.hot[data-v-f28d60a9]{color:var(--zen-text, #e5e5ea);background:color-mix(in srgb,var(--zen-text, #e5e5ea) 9%,transparent)}.zn-step .mdi[data-v-f28d60a9]{font-size:13px}.zn-val[data-v-f28d60a9]{flex:1;min-width:calc(var(--zn-chars, 4) * 1ch);display:flex;align-items:center;justify-content:center;cursor:ew-resize;border-left:1px solid var(--zen-border, #34343c);border-right:1px solid var(--zen-border, #34343c);padding:0 2px}.zen-num.bare .zn-val[data-v-f28d60a9]{border-left:none;border-right:none}.zn-input[data-v-f28d60a9]{width:100%;min-width:0;background:none;border:none;outline:none;color:var(--zen-text, #e5e5ea);font:inherit;line-height:normal;text-align:center;pointer-events:none;cursor:ew-resize}.zn-input.live[data-v-f28d60a9]{pointer-events:auto;cursor:text}.zn-input[data-v-f28d60a9]:disabled{color:var(--zen-muted, #9aa0aa)}.zen-tg.sm[data-v-9ef2e1ca]{height:var(--zen-control-h-sm, 24px)}.zen-tg.disabled[data-v-9ef2e1ca]{opacity:.45}.zen-tg.disabled .zen-tg-b[data-v-9ef2e1ca]{cursor:not-allowed}.zen-tg[data-v-9ef2e1ca]{display:inline-flex;box-sizing:border-box;height:var(--zen-control-h, 28px);border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);overflow:hidden;background:var(--zen-control-bg, var(--zen-surface, #202026))}.zen-tg-b[data-v-9ef2e1ca]{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:0 9px;border:none;background:none;color:var(--zen-muted, #9aa0aa);font-size:11px;font-weight:600;font-family:inherit;cursor:pointer;transition:background var(--zen-dur-fast, .12s) ease,color var(--zen-dur-fast, .12s) ease}.zen-tg-b[data-v-9ef2e1ca]:first-child{border-radius:calc(var(--zen-radius, 7px) - 1px) 0 0 calc(var(--zen-radius, 7px) - 1px)}.zen-tg-b[data-v-9ef2e1ca]:last-child{border-radius:0 calc(var(--zen-radius, 7px) - 1px) calc(var(--zen-radius, 7px) - 1px) 0}.zen-tg-b[data-v-9ef2e1ca]:only-child{border-radius:calc(var(--zen-radius, 7px) - 1px)}.zen-tg-b+.zen-tg-b[data-v-9ef2e1ca]{border-left:1px solid var(--zen-border, #34343c)}.zen-tg-b[data-v-9ef2e1ca]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}.zen-tg-b[data-v-9ef2e1ca]:hover{color:var(--zen-text, #e5e5ea)}.zen-tg-b.on[data-v-9ef2e1ca]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 22%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--zen-accent, #6366f1) 55%,transparent);color:var(--zen-accent, #6366f1)}.zen-tg-b .mdi[data-v-9ef2e1ca]{font-size:14px}.zen-tg.zen-tg-collapse .zen-tg-b[data-v-9ef2e1ca]{gap:0;padding:4px 7px;transition:background var(--zen-dur, .2s) ease,color var(--zen-dur, .2s) ease,gap var(--zen-dur, .2s) ease}.zen-tg.zen-tg-collapse .zen-tg-l[data-v-9ef2e1ca]{display:inline-grid;grid-template-columns:0fr;overflow:hidden;opacity:0;white-space:nowrap;transition:grid-template-columns var(--zen-dur, .2s) ease,opacity var(--zen-dur, .2s) ease}.zen-tg.zen-tg-collapse .zen-tg-l>span[data-v-9ef2e1ca]{min-width:0;overflow:hidden}.zen-tg.zen-tg-collapse .zen-tg-b.on[data-v-9ef2e1ca]{gap:5px;padding:4px 9px 4px 8px}.zen-tg.zen-tg-collapse .zen-tg-b.on .zen-tg-l[data-v-9ef2e1ca]{grid-template-columns:1fr;opacity:1}.zres[data-v-124b6fb4]{display:flex;flex-direction:column;gap:9px;width:268px;padding:6px;color:var(--zen-text, #e5e5ea);font-size:11px}.zres-sec[data-v-124b6fb4]{color:var(--zen-muted, #9aa0aa);font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}.zres-aspects[data-v-124b6fb4]{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.zres-chip[data-v-124b6fb4]{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;height:46px;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-field-bg, var(--zen-input, #1b1b20));color:var(--zen-muted, #9aa0aa);font:inherit;font-size:10px;font-weight:600;cursor:pointer}.zres-chip[data-v-124b6fb4]:hover,.zres-chip.on[data-v-124b6fb4]{border-color:var(--zen-accent, #6366f1);color:var(--zen-text, #e5e5ea)}.zres-chip.on[data-v-124b6fb4]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 16%,var(--zen-field-bg, var(--zen-input, #1b1b20)))}.zres-rect[data-v-124b6fb4]{display:block;border-radius:1px;background:currentColor;opacity:.7}.zres-wide[data-v-124b6fb4] .zen-tg{display:flex;width:100%}.zres-wide[data-v-124b6fb4] .zen-tg-b{flex:1}.zres-div[data-v-124b6fb4]{border-top:1px solid var(--zen-border, #34343c)}.zres-row[data-v-124b6fb4]{display:flex;align-items:center;gap:8px}.zres-lbl[data-v-124b6fb4]{flex:1;color:var(--zen-muted, #9aa0aa)}.zres-wh[data-v-124b6fb4]{display:flex;align-items:center;gap:6px}.zres-wh label[data-v-124b6fb4]{display:flex;flex:1;align-items:center;gap:5px;color:var(--zen-muted, #9aa0aa)}.zres-wh label[data-v-124b6fb4] .zen-num{flex:1;min-width:0}.zres-foot[data-v-124b6fb4]{display:flex;align-items:center;color:var(--zen-muted, #9aa0aa);font-size:10px;font-variant-numeric:tabular-nums}.zres-grow[data-v-124b6fb4]{flex:1}.zen-off[data-v-124b6fb4]{opacity:.45}.zen-select[data-v-564bc28a]{position:relative;display:inline-flex;min-width:var(--zen-control-min, 90px)}.zs-trigger[data-v-564bc28a]{display:inline-flex;user-select:none;flex:1 1 auto;align-items:center;gap:6px;min-width:0;box-sizing:border-box;height:var(--zen-control-h, 28px);padding:0 6px 0 8px;font-size:12px;font-family:inherit;cursor:pointer;background:var(--zen-control-bg, var(--zen-surface, #202026));color:var(--zen-text, #e5e5ea);border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);transition:border-color var(--zen-dur-fast, .12s) ease}.zen-select.sm .zs-trigger[data-v-564bc28a]{height:var(--zen-control-h-sm, 24px);font-size:11px}.zs-trigger[data-v-564bc28a]:disabled{opacity:.45;cursor:not-allowed}.zs-trigger[data-v-564bc28a]:hover,.zen-select.open .zs-trigger[data-v-564bc28a]{border-color:var(--zen-control-hover-border, var(--zen-accent, #6366f1));background:var(--zen-control-hover-bg, var(--zen-control-bg))}.zs-trigger[data-v-564bc28a]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zs-label[data-v-564bc28a]{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left}.zs-caret[data-v-564bc28a]{font-size:16px;color:var(--zen-muted, #9aa0aa);flex:0 0 auto}.zs-ico[data-v-564bc28a]{font-size:14px;flex:0 0 auto}.zs-menu[data-v-564bc28a]{position:fixed;user-select:none;z-index:100000;max-height:260px;overflow-y:auto;padding:4px;display:flex;flex-direction:column;gap:1px}.zs-opt[data-v-564bc28a]{display:flex;align-items:center;gap:7px;padding:6px 8px;font-size:12px;font-family:inherit;text-align:left;cursor:pointer;background:none;border:none;color:var(--zen-text, #e5e5ea);border-radius:var(--zen-radius, 7px);white-space:nowrap}.zs-opt span[data-v-564bc28a]{flex:1}.zs-opt[data-v-564bc28a]:hover,.zs-opt.cur[data-v-564bc28a]{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 10%,transparent)}.zs-opt[data-v-564bc28a]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}.zs-opt.on[data-v-564bc28a]{color:var(--zen-accent, #6366f1)}.zs-check[data-v-564bc28a]{font-size:14px;color:var(--zen-accent, #6366f1);flex:0 0 auto}.zen-peek{position:fixed;display:flex;flex-direction:column;max-width:min(560px,60vw);overflow:hidden;border-radius:var(--zen-radius, 8px);pointer-events:none;animation:zen-peek-in var(--zen-dur-fast, .12s) ease-out}.zen-peek img,.zen-peek video{display:block;max-width:min(560px,60vw);max-height:min(480px,70vh);object-fit:contain;background:var(--zen-media-bg, #0b0b0e)}.zen-peek-custom{display:block;max-width:min(560px,60vw);max-height:min(480px,70vh);overflow:hidden;background:var(--zen-media-bg, #0b0b0e)}.zen-peek-audio{display:flex;align-items:center;gap:10px;padding:14px;color:var(--zen-muted, #9aa0aa);font-size:22px}.zen-peek-caption{display:flex;flex-direction:column;gap:2px;max-width:100%;padding:8px 10px;font-size:12px;line-height:1.4}.zen-peek-caption span{color:var(--zen-muted, #9aa0aa)}@keyframes zen-peek-in{0%{opacity:0;transform:scale(.97)}}@media(prefers-reduced-motion:reduce){:root:not([data-zen-motion=full]) .zen-peek{animation:none}}:root[data-zen-motion=reduce] .zen-peek{animation:none}.zen-combo[data-v-77bb9f63]{position:relative;width:100%;min-width:var(--zen-control-min, 90px)}.zc-trigger[data-v-77bb9f63]{display:flex;user-select:none;align-items:center;gap:6px;width:100%;box-sizing:border-box;min-height:var(--zen-control-h, 28px);background:var(--zen-control-bg, var(--zen-input, #1b1b20));color:var(--zen-text, #e5e5ea);border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);padding:4px 8px;font:inherit;font-size:12px;cursor:pointer;text-align:left;transition:border-color var(--zen-dur-fast, .12s) ease}.zc-trigger[data-v-77bb9f63]:hover:not(:disabled){border-color:var(--zen-control-hover-border, var(--zen-accent, #6366f1));background:var(--zen-control-hover-bg, var(--zen-control-bg))}.zc-trigger[data-v-77bb9f63]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zc-trigger.sm[data-v-77bb9f63]{min-height:var(--zen-control-h-sm, 24px);padding:2px 7px;font-size:11px}.zc-trigger[data-v-77bb9f63]:disabled{cursor:not-allowed;opacity:.45;cursor:default}.zen-combo.open .zc-trigger[data-v-77bb9f63]{border-color:var(--zen-accent, #6366f1)}.zc-current[data-v-77bb9f63]{flex:1;min-width:0;overflow:hidden}.zc-caret[data-v-77bb9f63]{flex:none;color:var(--zen-muted, #9aa0aa);transition:transform var(--zen-dur-fast, .12s) ease}.zen-combo.open .zc-caret[data-v-77bb9f63]{transform:rotate(180deg)}.zen-combo-menu{position:fixed;user-select:none;z-index:100000;display:flex;flex-direction:column;max-height:360px;overflow:hidden}.zen-combo-menu .zc-search{display:flex;align-items:center;gap:6px;padding:8px 10px;border-bottom:1px solid var(--zen-border, #34343c)}.zen-combo-menu .zc-search>.mdi{color:var(--zen-muted, #9aa0aa);font-size:16px}.zen-combo-menu .zc-search input{flex:1;user-select:text;min-width:0;background:none;border:none;outline:none;color:inherit;font:inherit;font-size:12px}.zen-combo-menu .zc-clear{border:none;background:none;color:var(--zen-muted, #9aa0aa);cursor:pointer;padding:0 2px}.zen-combo-menu .zc-search-actions{flex:none;display:inline-flex;align-items:center}.zen-combo-menu .zc-header{flex:none;border-bottom:1px solid var(--zen-border, #34343c)}.zen-combo-menu .zc-list{overflow-y:auto;padding:4px;min-height:0;will-change:scroll-position}.zen-combo-menu .zc-list.virt{overflow-anchor:none}.zen-combo-menu .zc-virt{position:relative;width:100%}.zen-combo-menu .zc-win{position:absolute;top:0;left:0;right:0}.zen-combo-menu .zc-opt{display:flex;align-items:center;gap:9px;padding:6px 8px;border-radius:var(--zen-radius, 7px);cursor:pointer;font-size:12px;box-sizing:border-box;overflow:hidden}.zen-combo-menu .zc-opt.active{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 10%,transparent)}.zen-combo-menu .zc-opt.sel{color:var(--zen-accent, #6366f1)}.zen-combo-menu .zc-opt-lbl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.zen-combo-menu .zc-sep{height:1px;margin:4px 6px;background:var(--zen-border, #34343c)}.zen-combo-menu .zc-empty{padding:16px;text-align:center;font-size:12px;color:var(--zen-muted, #9aa0aa)}.zen-combo-menu .zc-footer{border-top:1px solid var(--zen-border, #34343c);padding:6px}.zen-combo-menu.grid .zc-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(var(--zc-grid-min, 92px),1fr));gap:6px;align-content:start}.zen-combo-menu.grid .zc-opt{flex-direction:column;align-items:stretch;height:auto;gap:4px;padding:4px}.zen-combo-menu.grid .zc-empty{grid-column:1 / -1}.zen-switch[data-v-c2dc757b]{position:relative;flex:0 0 auto;width:42px;height:23px;padding:0;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-switch-radius, var(--zen-radius, 7px));background:var(--zen-surface, #202026);cursor:pointer;transition:background var(--zen-dur, .2s) ease,border-color var(--zen-dur, .2s) ease}.zen-switch.on[data-v-c2dc757b]{background:var(--zen-accent, #6366f1);border-color:var(--zen-accent, #6366f1)}.zen-switch[data-v-c2dc757b]:disabled{opacity:.5;cursor:default}.zen-switch .knob[data-v-c2dc757b]{position:absolute;top:1px;left:1px;width:19px;height:19px;border-radius:var(--zen-switch-radius, var(--zen-radius, 7px));background:#fff;display:flex;align-items:center;justify-content:center;transition:transform var(--zen-dur, .2s) ease;box-shadow:0 1px 2px #00000059}.zen-switch.on .knob[data-v-c2dc757b]{transform:translate(19px);background:var(--zen-accent-text, #fff)}.zen-switch[data-v-c2dc757b]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zen-switch .knob .mdi[data-v-c2dc757b]{font-size:12px;color:var(--zen-muted, #9aa0aa)}.zen-switch.on .knob .mdi[data-v-c2dc757b]{color:var(--zen-accent, #6366f1)}.zen-check[data-v-36edc25d]{display:inline-flex;align-items:center;gap:7px;background:none;border:none;cursor:pointer;color:var(--zen-text, #e5e5ea);font:inherit;font-size:12px;padding:0;text-align:left}.zen-check[data-v-36edc25d]:focus-visible{outline:none}.zen-check:focus-visible .box[data-v-36edc25d]{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zen-check[data-v-36edc25d]:disabled{opacity:.5;cursor:default}.box[data-v-36edc25d]{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;flex:none;border:1px solid var(--zen-border, #34343c);border-radius:min(var(--zen-radius, 7px),6px);background:var(--zen-input, #1b1b20);color:var(--zen-accent-text, #fff);transition:background var(--zen-dur-fast, .12s) ease,border-color var(--zen-dur-fast, .12s) ease}.zen-check.on .box[data-v-36edc25d]{background:var(--zen-accent, #6366f1);border-color:var(--zen-accent, #6366f1)}.zen-check:hover:not(:disabled) .box[data-v-36edc25d]{border-color:var(--zen-accent, #6366f1)}.box .mdi[data-v-36edc25d]{font-size:13px;line-height:1}.lbl[data-v-36edc25d]{line-height:1.2}.zen-dot[data-v-73775b30]{display:inline-flex;align-items:center;gap:6px;padding:4px;margin:-4px;background:none;border:none;cursor:pointer;color:var(--zen-text, #e5e5ea);font:inherit;font-size:12px;line-height:1.2}.zen-dot[data-v-73775b30]:disabled{opacity:.4;cursor:default}.mark[data-v-73775b30]{position:relative;display:inline-block;flex:none;width:var(--zen-dot-size, 13px);height:var(--zen-dot-size, 13px);border-radius:var(--zen-dot-radius, var(--zen-radius, 7px));border:1px solid var(--zen-border, #34343c);background:var(--zen-input, #1b1b20);transition:border-color var(--zen-dur-fast, .12s) ease}.mark[data-v-73775b30]:after{content:\"\";position:absolute;inset:var(--zen-dot-gap, 2px);border-radius:max(0px,calc(min(var(--zen-dot-radius, var(--zen-radius, 7px)),var(--zen-dot-size, 13px) / 2) - 1px - var(--zen-dot-gap, 2px)));background:var(--zen-dot-on, var(--zen-accent, #6366f1));transform:scale(0);opacity:0;transition:transform var(--zen-dur-fast, .12s) ease,opacity var(--zen-dur-fast, .12s) ease}.zen-dot.on .mark[data-v-73775b30]{border-color:var(--zen-dot-on, var(--zen-accent, #6366f1))}.zen-dot.on .mark[data-v-73775b30]:after{transform:scale(1);opacity:1}.zen-dot:hover:not(:disabled) .mark[data-v-73775b30]{border-color:var(--zen-dot-on, var(--zen-accent, #6366f1))}.zen-dot:hover:not(:disabled):not(.on) .mark[data-v-73775b30]:after{transform:scale(1);opacity:.22}.zen-dot[data-v-73775b30]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px;border-radius:var(--zen-radius, 7px)}.zen-dot:not(.on) .lbl[data-v-73775b30]{color:var(--zen-muted, #9aa0aa)}.zvol[data-v-9e6c85be]{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 8px 0 2px;color:var(--zen-text, #e5e5ea);font-size:10.5px;user-select:none}.zvol.quiet[data-v-9e6c85be]{opacity:.45}.zvol-b[data-v-9e6c85be]{display:grid;place-items:center;width:26px;height:26px;padding:0;border:0;border-radius:var(--zen-radius, 7px);background:none;color:inherit;cursor:pointer}.zvol-b[data-v-9e6c85be]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 10%,transparent)}.zvol-b .mdi[data-v-9e6c85be]{font-size:17px}.zvol.off .zvol-b[data-v-9e6c85be]{color:var(--zen-muted, #9aa0aa)}.zvol-track[data-v-9e6c85be]{position:relative;width:72px;height:18px;cursor:pointer;touch-action:none}.zvol-track[data-v-9e6c85be]:before{position:absolute;top:50%;right:0;left:0;height:4px;border-radius:2px;background:color-mix(in srgb,var(--zen-text, #e5e5ea) 16%,transparent);transform:translateY(-50%);content:\"\"}.zvol-fill[data-v-9e6c85be]{position:absolute;top:50%;left:0;height:4px;border-radius:2px;background:var(--zen-accent, #6366f1);transform:translateY(-50%)}.zvol-knob[data-v-9e6c85be]{position:absolute;top:50%;width:11px;height:11px;border-radius:50%;background:var(--zen-text, #e5e5ea);box-shadow:0 1px 3px #00000073;transform:translate(-50%,-50%)}.zvol-n[data-v-9e6c85be]{min-width:20px;color:var(--zen-muted, #9aa0aa);font-variant-numeric:tabular-nums;text-align:right}.zce[data-v-b10dcc0e]{display:flex;flex-direction:column;gap:4px}.zce-box[data-v-b10dcc0e]{position:relative;height:80px;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-field-bg, var(--zen-input, #1b1b20))}.zce-svg[data-v-b10dcc0e]{display:block;width:100%;height:100%;cursor:crosshair}.zce-grid[data-v-b10dcc0e]{stroke:color-mix(in srgb,var(--zen-text, #e5e5ea) 7%,transparent);stroke-width:1;vector-effect:non-scaling-stroke}.zce-unit[data-v-b10dcc0e]{stroke:color-mix(in srgb,var(--zen-text, #e5e5ea) 25%,transparent);stroke-dasharray:3 3;stroke-width:1;vector-effect:non-scaling-stroke}.zce-area[data-v-b10dcc0e]{fill:color-mix(in srgb,var(--zen-accent, #6366f1) 16%,transparent)}.zce-line[data-v-b10dcc0e]{fill:none;stroke:var(--zen-accent, #6366f1);stroke-width:1.8;vector-effect:non-scaling-stroke}.zce-pt[data-v-b10dcc0e]{position:absolute;width:10px;height:10px;margin:-5px 0 0 -5px;border:2px solid var(--zen-accent, #6366f1);border-radius:50%;background:var(--zen-bg, #1a1a1f);cursor:grab;touch-action:none}.zce-pt[data-v-b10dcc0e]:hover{background:var(--zen-accent, #6366f1)}.zce-axis[data-v-b10dcc0e]{display:flex;justify-content:space-between;color:var(--zen-muted, #9aa0aa);font-size:10px}.zce-presets[data-v-b10dcc0e]{display:flex;flex-wrap:wrap;gap:4px}.zce-preset[data-v-b10dcc0e]{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:none;color:var(--zen-muted, #9aa0aa);font:inherit;font-size:10.5px;cursor:pointer}.zce-preset[data-v-b10dcc0e]:hover{border-color:var(--zen-accent, #6366f1);color:var(--zen-text, #e5e5ea)}.zen-off[data-v-b10dcc0e]{opacity:.45}.zen-slider[data-v-2a465bf0]{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:var(--zen-radius, 7px);background:var(--zen-border, #34343c);outline:none;cursor:pointer}.zen-slider[data-v-2a465bf0]:disabled{opacity:.5;cursor:default}.zen-slider[data-v-2a465bf0]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:var(--zen-radius, 7px);background:var(--zen-accent, #6366f1);border:2px solid var(--zen-bg, #1a1a1f);cursor:pointer;box-shadow:0 1px 3px #0006}.zen-slider[data-v-2a465bf0]::-moz-range-thumb{width:14px;height:14px;border:2px solid var(--zen-bg, #1a1a1f);border-radius:var(--zen-radius, 7px);background:var(--zen-accent, #6366f1);cursor:pointer}.zen-slider[data-v-2a465bf0]::-moz-range-track{height:4px;border-radius:var(--zen-radius, 7px);background:var(--zen-border, #34343c)}.zen-slider[data-v-2a465bf0]:focus-visible{box-shadow:0 0 0 2px var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent))}.zcp[data-v-2beb2797]{display:block;width:100%;min-width:var(--zen-control-min, 76px)}.zcp.compact[data-v-2beb2797]{display:inline-block;width:auto;min-width:0}.zcp.compact .zcp-trigger[data-v-2beb2797]{width:auto;height:auto;padding:0;border:none;background:none}.zcp-trigger[data-v-2beb2797]{display:flex;align-items:center;gap:6px;width:100%;height:var(--zen-control-h, 28px);box-sizing:border-box;padding:0 6px;border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);background:var(--zen-control-bg, var(--zen-input, #1b1b20));color:var(--zen-text, #e5e5ea);cursor:pointer;font:inherit;font-size:11px}.zcp-trigger[data-v-2beb2797]:hover{border-color:var(--zen-control-hover-border, var(--zen-accent, #6366f1));background:var(--zen-control-hover-bg, var(--zen-control-bg))}.zcp-sw[data-v-2beb2797]{width:16px;height:16px;flex:none;border-radius:4px;border:1px solid rgba(255,255,255,.2)}.zcp-sw.lg[data-v-2beb2797]{width:24px;height:24px}.zcp-hexlbl[data-v-2beb2797]{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left;text-transform:uppercase;font-variant-numeric:tabular-nums}.zcp-trigger .mdi[data-v-2beb2797]{font-size:14px;color:var(--zen-muted, #9aa0aa)}.zcp-pop[data-v-2beb2797]{position:fixed;z-index:100000;display:flex;flex-direction:column;gap:8px;padding:8px}.zcp-sv[data-v-2beb2797]{position:relative;width:100%;height:118px;border-radius:6px;overflow:hidden;cursor:crosshair;touch-action:none}.zcp-sv-white[data-v-2beb2797],.zcp-sv-black[data-v-2beb2797]{position:absolute;inset:0}.zcp-sv-white[data-v-2beb2797]{background:linear-gradient(to right,#fff,#fff0)}.zcp-sv-black[data-v-2beb2797]{background:linear-gradient(to top,#000,#0000)}.zcp-sv-thumb[data-v-2beb2797]{position:absolute;width:12px;height:12px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #00000080;transform:translate(-50%,-50%);pointer-events:none}.zcp-hue[data-v-2beb2797]{position:relative;width:100%;height:12px;border-radius:6px;cursor:pointer;touch-action:none;background:linear-gradient(to right,red,#ff0,#0f0,#0ff,#00f,#f0f,red)}.zcp-hue-thumb[data-v-2beb2797]{position:absolute;top:50%;width:12px;height:12px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #00000080;transform:translate(-50%,-50%);pointer-events:none}.zcp-row[data-v-2beb2797]{display:flex;align-items:center;gap:8px}.zcp-input[data-v-2beb2797]{flex:1;min-width:0;height:26px;box-sizing:border-box;padding:0 6px;border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);background:var(--zen-field-bg, var(--zen-input, #1b1b20));color:var(--zen-text, #e5e5ea);font:inherit;font-size:11px;text-transform:uppercase}.zcp-input[data-v-2beb2797]:focus{outline:none;border-color:var(--zen-accent, #6366f1)}.zcp-presets[data-v-2beb2797]{display:flex;gap:4px;flex-wrap:wrap}.zcp-pre[data-v-2beb2797]{width:20px;height:20px;padding:0;border-radius:4px;border:1px solid var(--zen-border, #34343c);cursor:pointer}.zen-off[data-v-2beb2797]{opacity:.45}.zen-dims[data-v-bb012b3c]{display:flex;align-items:center;flex-wrap:wrap;gap:5px}.zd-n[data-v-bb012b3c]{flex:1 1 60px;min-width:48px}.zd-x[data-v-bb012b3c]{flex:none;color:var(--zen-muted, #9aa0aa);font-size:11px}.zd-mp[data-v-bb012b3c]{flex:0 1 56px;min-width:44px}.zd-unit[data-v-bb012b3c],.zd-aspect[data-v-bb012b3c]{flex:none;font-size:10px;color:var(--zen-muted, #9aa0aa);font-variant-numeric:tabular-nums}.zd-aspect[data-v-bb012b3c]{margin-left:auto}.zen-off[data-v-bb012b3c]{opacity:.45}.zmi-lead[data-v-4282c43c]{flex:none;display:inline-flex;align-items:center}.zmi-wrap[data-v-4282c43c]{position:relative}.zmi[data-v-4282c43c]{display:flex;align-items:center;gap:9px;width:100%;text-align:left;cursor:pointer;font:inherit;font-size:12px;padding:7px 9px;border:none;border-radius:var(--zen-radius, 7px);background:none;color:var(--zen-text, #e5e5ea)}.zmi[data-v-4282c43c]:hover:not(:disabled),.zmi.on[data-v-4282c43c]{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 10%,transparent)}.zmi[data-v-4282c43c]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}.zmi[data-v-4282c43c]:disabled{opacity:.45;cursor:default}.zmi.danger[data-v-4282c43c]:hover:not(:disabled){background:var(--zen-danger, #dc2626);color:var(--zen-danger-text, #fff)}.zmi-ico[data-v-4282c43c]{flex:0 0 auto;font-size:15px;color:var(--zen-muted, #9aa0aa)}.zmi.danger:hover:not(:disabled) .zmi-ico[data-v-4282c43c]{color:var(--zen-danger-text, #fff)}.zmi-lbl[data-v-4282c43c]{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.zmi-caret[data-v-4282c43c]{margin-left:auto;flex:0 0 auto;font-size:15px;color:var(--zen-muted, #9aa0aa)}.zmi-hint[data-v-4282c43c]{margin-left:auto;flex:0 0 auto;font-size:10px;color:var(--zen-muted, #9aa0aa);font-variant-numeric:tabular-nums}.zmi-sub[data-v-4282c43c]{display:flex;flex-direction:column;gap:1px}.zen-msep[data-v-5c3057e1]{height:1px;background:var(--zen-border, #34343c);margin:4px}.zen-modal-back{position:fixed;inset:0;z-index:100100;display:flex;align-items:center;justify-content:center;background:#0000008c;backdrop-filter:blur(2px)}.zen-modal{display:flex;flex-direction:column;max-width:94vw;max-height:90vh;overflow:hidden;background:var(--zen-chrome-bg, var(--zen-surface, #202026));color:var(--zen-text, #e5e5ea);border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:calc(var(--zen-radius-surface, var(--zen-radius, 7px)) + 2px);box-shadow:0 24px 70px #0009;font-family:var(--p-font-family, system-ui, sans-serif)}.zen-modal .zm-head{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--zen-border, #34343c);flex:none}.zen-modal .zm-title{flex:none;font-size:13px;font-weight:600;white-space:nowrap}.zen-modal .zm-head-mid{flex:1;min-width:0;display:flex;align-items:center;gap:8px}.zen-modal .zm-x{border:none;background:none;color:var(--zen-muted, #9aa0aa);cursor:pointer;font-size:18px;display:inline-flex}.zen-modal .zm-x:hover{color:var(--zen-text, #e5e5ea)}.zen-modal .zm-body{flex:1;min-height:0;overflow:auto;padding:14px}.zen-modal .zm-foot{flex:none;border-top:1px solid var(--zen-border, #34343c);padding:10px 14px}.zw-root[data-v-5ca67f58]{position:fixed;inset:0;z-index:100200;pointer-events:none;font-family:var(--p-font-family, system-ui, sans-serif)}.zw-root.zw-backdrop[data-v-5ca67f58]{background:#0000006b;backdrop-filter:blur(2px);pointer-events:auto}.zw[data-v-5ca67f58]{position:fixed;pointer-events:auto;display:flex;flex-direction:column;overflow:hidden;color:var(--zen-text, #e5e5ea);background:var(--zen-glass, color-mix(in srgb, var(--zen-bg, #1a1a1f) 90%, transparent));border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius-surface, var(--zen-radius, 7px));box-shadow:0 24px 70px #0000008c;backdrop-filter:blur(12px)}.zw-bar[data-v-5ca67f58]{flex:0 0 auto;display:flex;align-items:center;gap:8px;height:40px;padding:0 8px 0 12px;cursor:grab;background:color-mix(in srgb,var(--zen-chrome-bg, var(--zen-surface, #202026)) 82%,transparent);border-bottom:1px solid var(--zen-surface-border, var(--zen-border, #34343c));user-select:none}.zw-bar[data-v-5ca67f58]:active{cursor:grabbing}.zw-icon[data-v-5ca67f58]{font-size:16px;color:var(--zen-accent, #6366f1)}.zw-title[data-v-5ca67f58]{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.zw-grow[data-v-5ca67f58]{flex:1}.zw-actions[data-v-5ca67f58]{display:inline-flex;align-items:center;gap:6px}.zw-no-drag[data-v-5ca67f58]{display:inline-flex;align-items:center;gap:2px;cursor:default}.zw-body[data-v-5ca67f58]{flex:1;min-height:0;display:flex}.zw-foot[data-v-5ca67f58]{flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:6px 12px;background:color-mix(in srgb,var(--zen-chrome-bg, var(--zen-surface, #202026)) 82%,transparent);border-top:1px solid var(--zen-surface-border, var(--zen-border, #34343c))}.zw-resize[data-v-5ca67f58]{position:absolute;right:0;bottom:0;width:16px;height:16px;cursor:nwse-resize;z-index:2}.zw-resize[data-v-5ca67f58]:after{content:\"\";position:absolute;right:3px;bottom:3px;width:7px;height:7px;border-right:2px solid var(--zen-muted, #9aa0aa);border-bottom:2px solid var(--zen-muted, #9aa0aa);opacity:.55}.zen-ctx[data-v-0b23826c]{position:fixed;z-index:100000;min-width:190px;max-height:70vh;overflow-y:auto;padding:4px;font-size:12px}.zen-ctx-item[data-v-0b23826c]{display:flex;align-items:center;gap:8px;width:100%;padding:6px 8px;border:0;border-radius:var(--zen-radius, 7px);background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}.zen-ctx-item[data-v-0b23826c]:hover:not(:disabled){background:color-mix(in srgb,var(--zen-accent, #6366f1) 22%,transparent)}.zen-ctx-item[data-v-0b23826c]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}.zen-ctx-item[data-v-0b23826c]:disabled{opacity:.4;cursor:default}.zen-ctx-item.danger[data-v-0b23826c]{color:var(--zen-danger, #dc2626)}.zen-ctx-item .mdi[data-v-0b23826c]{width:16px;color:var(--zen-muted, #9aa0aa);font-size:14px;text-align:center}.zen-ctx-item span[data-v-0b23826c]{flex:1}.zen-ctx-item kbd[data-v-0b23826c]{color:var(--zen-muted, #9aa0aa);font-family:inherit;font-size:10.5px}.zen-ctx-sep[data-v-0b23826c]{height:1px;margin:4px 2px;background:var(--zen-surface-border, var(--zen-border, #34343c))}.zen-ctx-head[data-v-0b23826c]{padding:5px 8px 3px;color:var(--zen-muted, #9aa0aa);font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}.zen-compare[data-v-7f4b84dd]{position:relative;overflow:hidden;width:100%;height:100%;user-select:none;touch-action:pan-y;background:var(--zen-surface-2, #222)}.zen-compare img[data-v-7f4b84dd]{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}.zen-compare.contain img[data-v-7f4b84dd]{object-fit:contain}.slider .zc-before[data-v-7f4b84dd]{clip-path:inset(0 calc(100% - var(--split)) 0 0)}.slider:not(.moving) .zc-before[data-v-7f4b84dd],.slider:not(.moving) .zc-line[data-v-7f4b84dd]{transition:clip-path var(--zen-dur, .2s) ease,left var(--zen-dur, .2s) ease}.dissolve .zc-before[data-v-7f4b84dd]{transition:opacity .45s ease}.dissolve.hovering .zc-before[data-v-7f4b84dd]{opacity:0}.zc-line[data-v-7f4b84dd]{position:absolute;top:0;bottom:0;left:var(--split);width:2px;margin-left:-1px;background:#ffffffe6;box-shadow:0 0 6px #0006;pointer-events:none}.zc-knob[data-v-7f4b84dd]{position:absolute;top:50%;left:50%;width:22px;height:22px;transform:translate(-50%,-50%) rotate(90deg);border-radius:50%;display:grid;place-items:center;background:#fffffff2;color:#222;font-size:14px;box-shadow:0 1px 4px #00000059;opacity:0;transition:opacity var(--zen-dur-fast, .12s)}.hovering .zc-knob[data-v-7f4b84dd],.zen-compare:focus-visible .zc-knob[data-v-7f4b84dd]{opacity:1}.zc-tag[data-v-7f4b84dd]{position:absolute;bottom:8px;font-size:10px;padding:2px 7px;border-radius:999px;background:#0000008c;color:#fff;backdrop-filter:blur(4px);pointer-events:none;opacity:0;transition:opacity var(--zen-dur-fast, .12s)}.hovering .zc-tag[data-v-7f4b84dd]{opacity:1}.zc-tag.left[data-v-7f4b84dd]{left:8px}.zc-tag.right[data-v-7f4b84dd]{right:8px}.zen-compare[data-v-7f4b84dd]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}.zmc[data-v-29f0e538]{display:flex;box-sizing:border-box;min-width:0;align-items:center;gap:4px;padding:5px 8px;border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius-surface, var(--zen-radius, 7px));background:color-mix(in srgb,var(--zen-surface, #202026) 88%,transparent);backdrop-filter:blur(10px);color:var(--zen-text, #e5e5ea);font-size:11px;user-select:none}.zmc-b[data-v-29f0e538]{display:inline-grid;flex:none;place-items:center;min-width:26px;height:26px;padding:0 4px;border:0;border-radius:var(--zen-radius, 7px);background:none;color:var(--zen-muted, #9aa0aa);font:inherit;cursor:pointer}.zmc-b[data-v-29f0e538]:hover,.zmc-b.on[data-v-29f0e538]{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 10%,transparent);color:var(--zen-text, #e5e5ea)}.zmc-b.on[data-v-29f0e538]{color:var(--zen-accent, #6366f1)}.zmc-b[data-v-29f0e538]:disabled{opacity:.4;cursor:default}.zmc-b .mdi[data-v-29f0e538]{font-size:17px}.zmc-rate[data-v-29f0e538]{min-width:38px;font-size:11px;font-weight:700;font-variant-numeric:tabular-nums}.zmc-time[data-v-29f0e538]{flex:none;min-width:44px;font-variant-numeric:tabular-nums;text-align:center}.zmc-time.soft[data-v-29f0e538]{color:var(--zen-muted, #9aa0aa)}.zmc-bar[data-v-29f0e538]{position:relative;flex:1;min-width:60px;height:22px;cursor:pointer;touch-action:none}.zmc-track[data-v-29f0e538]{position:absolute;top:50%;right:0;left:0;height:4px;overflow:hidden;border-radius:2px;background:color-mix(in srgb,var(--zen-text, #e5e5ea) 14%,transparent);transform:translateY(-50%);transition:height var(--zen-dur-fast, .12s)}.zmc-bar:hover .zmc-track[data-v-29f0e538]{height:6px}.zmc-buf[data-v-29f0e538]{position:absolute;top:0;bottom:0;background:color-mix(in srgb,var(--zen-text, #e5e5ea) 16%,transparent)}.zmc-fill[data-v-29f0e538]{position:absolute;top:0;bottom:0;left:0;background:var(--zen-accent, #6366f1)}.zmc-knob[data-v-29f0e538]{position:absolute;top:50%;width:12px;height:12px;border-radius:50%;background:var(--zen-text, #e5e5ea);box-shadow:0 1px 4px #0000007f;transform:translate(-50%,-50%) scale(0);transition:transform var(--zen-dur-fast, .12s)}.zmc-bar:hover .zmc-knob[data-v-29f0e538]{transform:translate(-50%,-50%) scale(1)}.zmc-tip[data-v-29f0e538]{position:absolute;bottom:100%;margin-bottom:4px;padding:2px 5px;border-radius:4px;background:#000c;color:#fff;font-size:10.5px;font-variant-numeric:tabular-nums;white-space:nowrap;transform:translate(-50%);pointer-events:none}.zmc.compact .zmc-time[data-v-29f0e538]{min-width:34px}.zmc.compact .zmc-bar[data-v-29f0e538]{min-width:40px}.zmc.tiny[data-v-29f0e538]{gap:2px;padding:4px 5px}.zmc.tiny[data-v-29f0e538] .zvol-track{display:none}.zlb[data-v-92030b8f]{position:fixed;inset:0;z-index:100300;display:flex;overflow:hidden;user-select:none;background:color-mix(in srgb,var(--zen-bg, #1a1a1f) 92%,transparent);backdrop-filter:blur(6px);font-family:var(--p-font-family, system-ui, sans-serif);color:var(--zen-text, #e5e5ea)}.zlb.inline[data-v-92030b8f]{position:absolute;z-index:1;border-radius:var(--zen-radius, 7px);background:var(--zen-bg, #1a1a1f);backdrop-filter:none}.zlb-main[data-v-92030b8f]{position:relative;flex:1;min-width:0;display:flex;flex-direction:column}.zlb-chrome[data-v-92030b8f]{display:flex;align-items:center;gap:2px;padding:3px;background:color-mix(in srgb,var(--zen-chrome-bg, var(--zen-surface, #202026)) 94%,transparent);border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius-surface, var(--zen-radius, 7px));box-shadow:var(--interface-floating-panel-shadow, 0 6px 18px rgba(0, 0, 0, .28));backdrop-filter:blur(12px)}.zlb-chrome .zen-iconbtn[data-v-92030b8f]{width:30px;height:30px}.zlb-top[data-v-92030b8f],.zlb-bottom[data-v-92030b8f]{position:absolute;left:12px;right:12px;z-index:4;display:flex;gap:8px;pointer-events:none;transition:opacity var(--zen-dur, .2s) ease,translate var(--zen-dur, .2s) ease}.zlb-top[data-v-92030b8f]>*,.zlb-bottom[data-v-92030b8f]>*{pointer-events:auto}.zlb-top[data-v-92030b8f]{top:12px;align-items:flex-start}.zlb-bottom[data-v-92030b8f]{bottom:12px;align-items:flex-end;justify-content:center;flex-wrap:wrap-reverse}.zlb-main.idle .zlb-top[data-v-92030b8f],.zlb-main.far-top .zlb-top[data-v-92030b8f]:not(:focus-within){opacity:0;translate:0 -6px}.zlb-main.idle .zlb-bottom[data-v-92030b8f],.zlb-main.far-bottom .zlb-bottom[data-v-92030b8f]:not(:focus-within,:has(.zlb-caret.on)){opacity:0;translate:0 6px}.zlb-main.far-top .zlb-top[data-v-92030b8f]:not(:focus-within)>*,.zlb-main.far-bottom .zlb-bottom[data-v-92030b8f]:not(:focus-within,:has(.zlb-caret.on))>*{pointer-events:none}.zlb-main.idle[data-v-92030b8f]{cursor:none}.zlb-grow[data-v-92030b8f]{flex:1}.zlb-info[data-v-92030b8f]{gap:6px;min-width:0;flex:0 0 auto;height:38px;box-sizing:border-box;padding:0 10px 0 4px;font-size:13px}.zlb-info[data-v-92030b8f]:not(:has(.zlb-pos)){padding-right:4px}.zlb-tip[data-v-92030b8f]{display:grid;place-items:center;width:30px;height:30px;font-size:15px;color:var(--zen-muted, #9aa0aa)}.zlb-pos[data-v-92030b8f],.zlb-zval[data-v-92030b8f]{font-size:11.5px;color:var(--zen-muted, #9aa0aa);font-variant-numeric:tabular-nums;white-space:nowrap}.zlb-zval[data-v-92030b8f]{min-width:40px;text-align:center}.zlb-tools[data-v-92030b8f]{position:relative;flex-wrap:wrap;justify-content:center;max-width:100%;overflow:hidden}.zlb-progress[data-v-92030b8f]{position:absolute;left:0;bottom:0;height:2px;width:100%;transform-origin:left;background:var(--zen-accent, #6366f1);animation:zlb-progress-92030b8f linear forwards}@keyframes zlb-progress-92030b8f{0%{transform:scaleX(0)}to{transform:scaleX(1)}}.zlb-caret[data-v-92030b8f]{display:inline-flex;align-items:center;justify-content:center;width:18px;height:30px;margin-left:-2px;padding:0;cursor:pointer;color:var(--zen-muted, #9aa0aa);background:none;border:1px solid transparent;border-radius:var(--zen-radius, 7px)}.zlb-caret .mdi[data-v-92030b8f]{line-height:1}.zlb-caret .mdi[data-v-92030b8f]:before{display:block;line-height:1}.zlb-caret[data-v-92030b8f]:hover,.zlb-caret.on[data-v-92030b8f]{color:var(--zen-text, #e5e5ea);background:color-mix(in srgb,var(--zen-text, #e5e5ea) 12%,transparent)}.zlb-slidepop[data-v-92030b8f]{display:flex;flex-direction:column;gap:12px;padding:10px 12px;min-width:230px}.zlb-slidepop-row[data-v-92030b8f]{display:flex;flex-direction:column;gap:6px}.zlb-slidepop-row.inline[data-v-92030b8f]{flex-direction:row;align-items:center;justify-content:space-between;cursor:pointer}.zlb-slidepop-speed[data-v-92030b8f]{display:flex;align-items:center;gap:10px}.zlb-slidepop-speed .zen-slider[data-v-92030b8f]{flex:1;min-width:0}.zlb-slidepop-value[data-v-92030b8f]{min-width:34px;text-align:right;font-size:12px;font-variant-numeric:tabular-nums;color:var(--zen-text, #e5e5ea)}.zlb-slidepop-label[data-v-92030b8f]{font-size:11.5px;font-weight:600;color:var(--zen-muted, #9aa0aa)}.zlb-sep[data-v-92030b8f]{width:1px;height:18px;margin:0 4px;background:var(--zen-surface-border, var(--zen-border, #34343c))}.zlb-side.zlb-side-enter-active[data-v-92030b8f],.zlb-side.zlb-side-leave-active[data-v-92030b8f]{transition:translate var(--zen-dur, .2s) cubic-bezier(.45,0,.2,1),margin-right var(--zen-dur, .2s) cubic-bezier(.45,0,.2,1),opacity var(--zen-dur, .2s) ease}.zlb-side.zlb-side-enter-from[data-v-92030b8f],.zlb-side.zlb-side-leave-to[data-v-92030b8f]{translate:calc(-100% - 12px) 0;margin-right:calc(-1 * (var(--zlb-side-w, 264px) + 12px));opacity:0}.zlb-side[data-v-92030b8f]{position:relative;z-index:5;flex:0 0 auto;display:flex;flex-direction:column;min-height:0;margin:12px 0 12px 12px;overflow:hidden;background:color-mix(in srgb,var(--zen-chrome-bg, var(--zen-surface, #202026)) 94%,transparent);border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius-surface, var(--zen-radius, 7px));box-shadow:var(--interface-floating-panel-shadow, 0 6px 18px rgba(0, 0, 0, .28));backdrop-filter:blur(12px)}.zlb-resize[data-v-92030b8f]{position:absolute;top:0;right:-3px;bottom:0;width:8px;z-index:4;cursor:ew-resize}.zlb-resize[data-v-92030b8f]:hover{background:color-mix(in srgb,var(--zen-accent, #6366f1) 45%,transparent)}.zlb-side-head[data-v-92030b8f]{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:8px 10px;border-bottom:1px solid var(--zen-border, #34343c)}.zlb-search[data-v-92030b8f]{flex:1;min-width:0;display:flex;align-items:center;gap:6px;height:28px;padding:0 8px;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-input, #1b1b20)}.zlb-search[data-v-92030b8f]:focus-within{border-color:var(--zen-accent, #6366f1)}.zlb-search .mdi[data-v-92030b8f]{font-size:14px;color:var(--zen-muted, #9aa0aa)}.zlb-search input[data-v-92030b8f]{flex:1;min-width:0;border:none;background:none;outline:none;color:var(--zen-text, #e5e5ea);font:inherit;font-size:12px}.zlb-tscroll[data-v-92030b8f]{flex:1;min-height:0}.zlb-tscroll[data-v-92030b8f] .zen-scroll-viewport{padding:10px 14px;overflow-anchor:none}.zlb-tscroll[data-v-92030b8f] .zen-scroll-thumb{width:4px;right:4px}.zlb-tscroll[data-v-92030b8f] .zen-scroll-track:hover .zen-scroll-thumb,.zlb-tscroll[data-v-92030b8f] .zen-scroll-thumb:active{width:6px;right:3px}.zlb-tpad[data-v-92030b8f]{position:relative;width:100%}.zlb-grid[data-v-92030b8f]{position:absolute;top:0;left:0;right:0;display:grid;align-content:start}.zlb-cell[data-v-92030b8f]{position:relative;aspect-ratio:1;padding:0;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-input, #1b1b20);cursor:pointer;overflow:hidden}.zlb-cell img[data-v-92030b8f],.zlb-cell video[data-v-92030b8f]{width:100%;height:100%;object-fit:cover;display:block}.zlb-grid.contain .zlb-cell img[data-v-92030b8f],.zlb-grid.contain .zlb-cell video[data-v-92030b8f]{object-fit:contain}.zlb-cell-audio[data-v-92030b8f]{display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:30px;color:var(--zen-muted, #9aa0aa)}.zlb-cell-badge[data-v-92030b8f]{position:absolute;top:4px;left:4px;font-size:16px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.8);pointer-events:none}.zlb-cell[data-v-92030b8f]:hover,.zlb-cell.on[data-v-92030b8f]{border-color:var(--zen-accent, #6366f1)}.zlb-cell.on[data-v-92030b8f]:after{content:\"\";position:absolute;inset:0;border:2px solid var(--zen-accent, #6366f1);border-radius:calc(var(--zen-radius, 7px) - 1px);pointer-events:none}.zlb-cell-wf[data-v-92030b8f]{position:absolute;bottom:3px;right:3px;font-size:11px;color:#fff;background:#0009;border-radius:max(0px,calc(var(--zen-radius, 7px) - 3px));padding:1px 3px}.zlb-side-foot[data-v-92030b8f]{flex:0 0 auto;display:flex;align-items:center;gap:3px;padding:6px 8px;border-top:1px solid var(--zen-border, #34343c)}.zlb-foot-n[data-v-92030b8f]{font-size:11px;color:var(--zen-muted, #9aa0aa);font-variant-numeric:tabular-nums;padding-right:4px}.zlb-stage[data-v-92030b8f]{container-type:size;position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:16px}.zlb-stage.has-mc[data-v-92030b8f]{padding-bottom:calc(60px + var(--zlb-foot, 0px))}.zlb.inline .zlb-stage.has-mc[data-v-92030b8f]{padding-bottom:52px}.zlb-mc[data-v-92030b8f]{position:absolute;right:12px;bottom:calc(8px + var(--zlb-foot, 0px));left:12px;z-index:3;max-width:760px;margin:0 auto}.zlb.inline .zlb-stage[data-v-92030b8f]{padding:6px}.zlb-media[data-v-92030b8f]{max-width:100%;max-height:100%;object-fit:contain;display:block;border-radius:var(--zen-radius, 7px);box-shadow:0 24px 60px -20px #0000008c;transition:transform var(--zen-dur, .2s) linear}.zlb-layered[data-v-92030b8f]{position:relative;overflow:hidden}.zlb-layered img[data-v-92030b8f]{position:absolute;inset:0;width:100%;height:100%;display:block;user-select:none}.zlb-overlay[data-v-92030b8f]{mix-blend-mode:multiply;opacity:.75;pointer-events:none}.zlb-masked-out[data-v-92030b8f]{filter:grayscale(.85) brightness(.32)}.zlb-overlay-mask[data-v-92030b8f]{mask-mode:luminance;mask-size:100% 100%;mask-repeat:no-repeat;pointer-events:none}.zlb-panel[data-v-92030b8f]{user-select:text;position:relative;z-index:5;flex:0 0 340px;min-width:0;display:flex;flex-direction:column;margin:12px 12px 12px 0;overflow:hidden;background:color-mix(in srgb,var(--zen-chrome-bg, var(--zen-surface, #202026)) 94%,transparent);border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius-surface, var(--zen-radius, 7px));box-shadow:var(--interface-floating-panel-shadow, 0 6px 18px rgba(0, 0, 0, .28));backdrop-filter:blur(12px)}.zlb-panel-scroll[data-v-92030b8f]{flex:1;min-height:0}.zlb-panel-body[data-v-92030b8f]{padding:16px}@media(max-width:860px){.zlb[data-v-92030b8f]{flex-direction:column}.zlb-panel[data-v-92030b8f]{flex:0 0 auto;max-height:45%;margin:0 12px 12px}}.zlb-media.steering[data-v-92030b8f]{transition:none;will-change:transform}.zlb.inline .zlb-media[data-v-92030b8f]{box-shadow:none}.zlb-empty[data-v-92030b8f]{opacity:.4;font-size:48px}.zlb-audio[data-v-92030b8f]{display:flex;flex-direction:column;align-items:center;gap:clamp(4px,3cqh,14px);padding:clamp(4px,5cqh,24px);max-width:560px;width:100%;color:var(--zen-text, #e5e5ea)}.zlb-audio .mdi[data-v-92030b8f]{font-size:clamp(28px,30cqh,96px);line-height:1;opacity:.5}.zlb-audio-name[data-v-92030b8f]{font-size:14px;font-weight:600;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.zlb-audio audio[data-v-92030b8f]{width:100%}.zlb-nav[data-v-92030b8f]{position:absolute;top:20%;bottom:20%;z-index:3;width:clamp(40px,7%,84px);display:flex;align-items:center;padding:0 8px;border:none;color:#fff;cursor:pointer;opacity:0;transition:opacity var(--zen-dur, .2s) ease;mask-image:linear-gradient(to bottom,transparent,#000 30%,#000 70%,transparent)}.zlb-nav.prev[data-v-92030b8f]{left:0;justify-content:flex-start;background:linear-gradient(to right,color-mix(in srgb,var(--zen-accent, #6366f1) 20%,transparent),transparent)}.zlb-nav.next[data-v-92030b8f]{right:0;justify-content:flex-end;background:linear-gradient(to left,color-mix(in srgb,var(--zen-accent, #6366f1) 20%,transparent),transparent)}.zlb-nav[data-v-92030b8f]:hover:not(:disabled){opacity:1}.zlb-nav[data-v-92030b8f]:disabled{display:none}.zlb-nav .mdi[data-v-92030b8f]{font-size:28px;filter:drop-shadow(0 1px 4px rgba(0,0,0,.6));transition:translate var(--zen-dur, .2s) ease}.zlb-nav.prev:hover .mdi[data-v-92030b8f]{translate:-3px 0}.zlb-nav.next:hover .mdi[data-v-92030b8f]{translate:3px 0}.zlb-slide-next-enter-active[data-v-92030b8f],.zlb-slide-next-leave-active[data-v-92030b8f],.zlb-slide-prev-enter-active[data-v-92030b8f],.zlb-slide-prev-leave-active[data-v-92030b8f],.zlb-slide-up-enter-active[data-v-92030b8f],.zlb-slide-up-leave-active[data-v-92030b8f],.zlb-slide-down-enter-active[data-v-92030b8f],.zlb-slide-down-leave-active[data-v-92030b8f]{transition:translate var(--zlb-slide-ms, .46s) cubic-bezier(.45,0,.2,1)}.zlb-slide-next-leave-active[data-v-92030b8f],.zlb-slide-prev-leave-active[data-v-92030b8f],.zlb-slide-up-leave-active[data-v-92030b8f],.zlb-slide-down-leave-active[data-v-92030b8f]{position:absolute}.zlb-slide-down-enter-from[data-v-92030b8f],.zlb-slide-up-leave-to[data-v-92030b8f]{translate:0 var(--zlb-slide-y, 100%)}.zlb-slide-down-leave-to[data-v-92030b8f],.zlb-slide-up-enter-from[data-v-92030b8f]{translate:0 calc(var(--zlb-slide-y, 100%) * -1)}.zlb-slide-next-enter-from[data-v-92030b8f],.zlb-slide-prev-leave-to[data-v-92030b8f]{translate:var(--zlb-slide, 100%) 0}.zlb-slide-next-leave-to[data-v-92030b8f],.zlb-slide-prev-enter-from[data-v-92030b8f]{translate:calc(var(--zlb-slide, 100%) * -1) 0}@media(prefers-reduced-motion:reduce){:root:not([data-zen-motion=full]){transition:none}}:root[data-zen-motion=reduce]{transition:none}.zsc[data-v-a47e719d]{display:block;width:100%;height:100%;outline:none;cursor:crosshair;touch-action:none}.zsc[data-v-a47e719d]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}.zft[data-v-86083019]{display:flex;flex-direction:column;gap:1px;font-size:12px}.zft-row[data-v-86083019]{display:flex;align-items:center;gap:4px;min-width:0;padding:4px 8px 4px 4px;border-radius:var(--zen-radius, 7px);color:var(--zen-muted, #9aa0aa);cursor:pointer}.zft-row[data-v-86083019]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 6%,transparent);color:var(--zen-text, #e5e5ea)}.zft-row.on[data-v-86083019]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 20%,transparent);color:var(--zen-text, #e5e5ea)}.zft-chev[data-v-86083019]{display:grid;flex:none;place-items:center;width:16px;height:16px;padding:0;border:0;border-radius:3px;background:none;color:inherit;cursor:pointer}.zft-row[data-v-86083019]:focus-visible,.zft-chev[data-v-86083019]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}button.zft-chev[data-v-86083019]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 12%,transparent)}.zft-icon[data-v-86083019]{flex:none;font-size:15px}.zft-name[data-v-86083019]{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.zft-count[data-v-86083019]{flex:none;font-size:10.5px;font-variant-numeric:tabular-nums}.zmp[data-v-3cc842c8]{position:relative;display:grid;grid-template-columns:190px minmax(0,1fr) 260px;height:calc(100% + 28px);margin:-14px;font-size:12px}.zmp-search[data-v-3cc842c8]{flex:1;max-width:320px}.zmp-grow[data-v-3cc842c8]{flex:1}.zmp-folders[data-v-3cc842c8]{display:flex;flex-direction:column;gap:1px;min-height:0;overflow-y:auto;padding:10px 8px;border-right:1px solid var(--zen-border, #34343c)}.zmp-folder[data-v-3cc842c8]{display:flex;align-items:center;gap:6px;width:100%;padding:5px 8px;border:0;border-radius:var(--zen-radius, 7px);background:none;color:var(--zen-muted, #9aa0aa);font:inherit;text-align:left;cursor:pointer}.zmp-folder[data-v-3cc842c8]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 6%,transparent);color:var(--zen-text, #e5e5ea)}.zmp-folder.on[data-v-3cc842c8]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 20%,transparent);color:var(--zen-text, #e5e5ea)}.zmp-folder .mdi[data-v-3cc842c8]{flex:none;font-size:15px}.zmp-fname[data-v-3cc842c8]{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.zmp-count[data-v-3cc842c8]{flex:none;color:var(--zen-muted, #9aa0aa);font-size:10.5px;font-variant-numeric:tabular-nums}.zmp-main[data-v-3cc842c8]{display:flex;flex-direction:column;min-width:0;min-height:0}.zmp-filters[data-v-3cc842c8]{display:flex;flex:none;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--zen-border, #34343c)}.zmp-grid[data-v-3cc842c8]{display:grid;flex:1;align-content:start;gap:10px;min-height:0;overflow-y:auto;padding:12px}.zmp-card[data-v-3cc842c8]{display:flex;flex-direction:column;gap:4px;min-width:0;padding:4px;border:1px solid transparent;border-radius:calc(var(--zen-radius, 7px) + 2px);background:none;color:var(--zen-text, #e5e5ea);font:inherit;text-align:left;cursor:pointer}.zmp-card[data-v-3cc842c8]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 5%,transparent)}.zmp-card.focus[data-v-3cc842c8]{border-color:var(--zen-border, #34343c)}.zmp-card.sel .zmp-thumb[data-v-3cc842c8]{outline:2px solid var(--zen-accent, #6366f1);outline-offset:1px}.zmp-thumb[data-v-3cc842c8]{position:relative;display:grid;place-items:center;aspect-ratio:1;overflow:hidden;border-radius:var(--zen-radius, 7px);background:var(--zen-media-bg, #0b0b0e)}.zmp-thumb img[data-v-3cc842c8],.zmp-thumb video[data-v-3cc842c8]{width:100%;height:100%;object-fit:contain}.zmp-audio[data-v-3cc842c8]{display:grid;place-items:center;width:100%;height:100%;background:linear-gradient(160deg,color-mix(in srgb,var(--zen-accent, #6366f1) 22%,var(--zen-media-bg, #0b0b0e)),var(--zen-media-bg, #0b0b0e));color:color-mix(in srgb,var(--zen-accent, #6366f1) 70%,white);font-size:34px}.zmp-kind[data-v-3cc842c8]{position:absolute;bottom:5px;left:5px;display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#000000a6;color:#fff;font-size:13px}.zmp-tick[data-v-3cc842c8]{position:absolute;top:5px;right:5px;display:grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:var(--zen-accent, #6366f1);color:var(--zen-accent-text, #fff);font-size:11px;font-weight:700}.zmp-name[data-v-3cc842c8],.zmp-dir[data-v-3cc842c8]{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.zmp-name[data-v-3cc842c8]{font-size:11.5px}.zmp-dir[data-v-3cc842c8]{margin-top:-3px;color:var(--zen-muted, #9aa0aa);font-size:10.5px}.zmp-empty[data-v-3cc842c8]{display:flex;flex-direction:column;grid-column:1 / -1;align-items:center;gap:6px;padding:48px 12px;color:var(--zen-muted, #9aa0aa);text-align:center}.zmp-empty .mdi[data-v-3cc842c8]{font-size:28px}.zmp-preview[data-v-3cc842c8]{display:flex;flex-direction:column;gap:10px;min-height:0;overflow-y:auto;padding:12px;border-left:1px solid var(--zen-border, #34343c)}.zmp-big[data-v-3cc842c8]{display:grid;place-items:center;aspect-ratio:1;overflow:hidden;border-radius:var(--zen-radius, 7px);background:var(--zen-media-bg, #0b0b0e)}.zmp-big img[data-v-3cc842c8],.zmp-big video[data-v-3cc842c8]{width:100%;height:100%;object-fit:contain}.zmp-bigaudio[data-v-3cc842c8]{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;padding:10px;color:color-mix(in srgb,var(--zen-accent, #6366f1) 70%,white);font-size:48px}.zmp-bigaudio audio[data-v-3cc842c8]{width:100%}.zmp-meta[data-v-3cc842c8]{display:flex;flex-direction:column;gap:3px;color:var(--zen-muted, #9aa0aa);overflow-wrap:anywhere}.zmp-meta b[data-v-3cc842c8]{color:var(--zen-text, #e5e5ea);font-size:12.5px}.zmp-hint[data-v-3cc842c8]{display:flex;flex-direction:column;align-items:center;gap:8px;margin:auto 0;color:var(--zen-muted, #9aa0aa);line-height:1.5;text-align:center}.zmp-hint .mdi[data-v-3cc842c8]{font-size:26px}.zmp-drop[data-v-3cc842c8]{position:absolute;inset:8px;display:flex;align-items:center;justify-content:center;gap:8px;border:2px dashed var(--zen-accent, #6366f1);border-radius:calc(var(--zen-radius, 7px) + 2px);background:color-mix(in srgb,var(--zen-accent, #6366f1) 14%,rgb(0 0 0 / 60%));color:var(--zen-text, #e5e5ea);font-size:14px;font-weight:600;pointer-events:none}.zmp-foot[data-v-3cc842c8]{display:flex;align-items:center;gap:8px}.zmp-soft[data-v-3cc842c8]{color:var(--zen-muted, #9aa0aa)}.ztl[data-v-ad0b766d]{position:relative;--ztl-bg: color-mix(in srgb, var(--zen-bg, #1a1a1f) 70%, #000);--ztl-bg: oklch(from var(--zen-bg, #1a1a1f) calc(l - .07) c h);--ztl-row: color-mix(in srgb, var(--zen-text, #e5e5ea) 3%, transparent);--ztl-line: color-mix(in srgb, var(--zen-text, #e5e5ea) 9%, transparent);--ztl-accent: var(--zen-accent, #6366f1);--ztl-seam: color-mix(in srgb, var(--zen-text, #e5e5ea) 62%, transparent);--ztl-playhead: var(--zen-playhead, #ff5a4f);display:flex;min-width:0;overflow:hidden;border:1px solid var(--ztl-line);border-radius:var(--zen-radius, 7px);background:var(--ztl-bg);user-select:none;touch-action:none}.ztl-grid[data-v-ad0b766d]{display:flex;width:max-content;min-width:100%}.ztl-heads[data-v-ad0b766d]{position:sticky;left:0;z-index:8;flex:none;width:var(--ztl-head);border-right:1px solid var(--ztl-line);background:var(--ztl-bg)}.ztl-corner[data-v-ad0b766d]{position:sticky;top:0;z-index:5;background:var(--ztl-bg);display:flex;align-items:center;justify-content:center;height:24px;border-bottom:1px solid var(--ztl-line)}.ztl-time[data-v-ad0b766d]{color:var(--zen-text, #e5e5ea);font-family:var(--zen-mono, ui-monospace, monospace);font-size:10.5px;font-variant-numeric:tabular-nums}.ztl-head[data-v-ad0b766d]{display:flex;align-items:center;gap:6px;box-sizing:border-box;min-width:0;overflow:hidden;padding:0 8px;border-bottom:1px solid var(--ztl-line);color:var(--zen-muted, #9aa0aa);font-size:10.5px;font-weight:600;letter-spacing:.02em}.ztl-head.movable[data-v-ad0b766d]{cursor:grab}.ztl-head.lifted[data-v-ad0b766d]{position:relative;z-index:6;background:color-mix(in srgb,var(--ztl-accent) 22%,var(--ztl-bg));box-shadow:0 4px 14px #00000073;cursor:grabbing}.ztl-insert[data-v-ad0b766d]{position:absolute;right:0;left:0;z-index:3;height:2px;margin-top:-1px;background:var(--ztl-accent);pointer-events:none}.ztl-head .mdi[data-v-ad0b766d]{flex:none;font-size:13px}.ztl-head.has-actions[data-v-ad0b766d]{flex-wrap:wrap;align-content:center;row-gap:2px}.ztl-head.has-actions .ztl-head-label[data-v-ad0b766d]{flex:1 1 0}.ztl-head-actions[data-v-ad0b766d]{display:flex;flex:1 0 100%;gap:2px;padding-left:24px}.ztl-head.has-actions.inline[data-v-ad0b766d]{flex-wrap:nowrap}.ztl-head.inline .ztl-head-actions[data-v-ad0b766d]{flex:none;padding-left:0}.ztl-head.inline .ztl-head-action[data-v-ad0b766d]{justify-content:center;width:20px;height:20px;padding:0;opacity:.6}.ztl-head.inline:hover .ztl-head-action[data-v-ad0b766d],.ztl-head.inline .ztl-head-action.on[data-v-ad0b766d]{opacity:1}.ztl-head-action[data-v-ad0b766d]{display:inline-flex;align-items:center;gap:2px;height:17px;padding:0 4px;border:1px solid transparent;border-radius:4px;background:none;color:var(--zen-muted, #9aa0aa);font:inherit;font-size:9.5px;font-weight:600;cursor:pointer}.ztl-head-action .mdi[data-v-ad0b766d]{font-size:12px}.ztl-head-action[data-v-ad0b766d]:hover{color:var(--zen-text, #e5e5ea)}.ztl-head-action.on[data-v-ad0b766d]{border-color:color-mix(in srgb,var(--ztl-accent) 55%,transparent);background:color-mix(in srgb,var(--ztl-accent) 22%,transparent);color:var(--zen-text, #e5e5ea)}.ztl-head-thumb[data-v-ad0b766d]{flex:none;width:18px;height:18px;border-radius:calc(var(--zen-radius, 7px) / 2);object-fit:cover}.ztl-head-label[data-v-ad0b766d]{min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.ztl-scroll[data-v-ad0b766d]{position:relative;flex:1;min-width:0;overflow:auto;scrollbar-width:none}.ztl-scroll[data-v-ad0b766d]::-webkit-scrollbar{display:none}.ztl-curve[data-v-ad0b766d]{position:absolute;top:0;left:0;overflow:visible}.ztl-cstep[data-v-ad0b766d]{fill:none;stroke:color-mix(in srgb,var(--ztl-curve) 70%,transparent);stroke-dasharray:3 3;stroke-width:1.5}.ztl-carea[data-v-ad0b766d]{fill:color-mix(in srgb,var(--ztl-curve) 22%,transparent)}.ztl-cunit[data-v-ad0b766d]{stroke:color-mix(in srgb,var(--zen-text, #e5e5ea) 18%,transparent);stroke-dasharray:4 4;stroke-width:1}.ztl-cline[data-v-ad0b766d]{fill:none;stroke:var(--ztl-curve);stroke-width:2.2;stroke-linejoin:round}.ztl-cval[data-v-ad0b766d]{fill:var(--ztl-curve);font-size:10px;font-variant-numeric:tabular-nums;pointer-events:none;paint-order:stroke;stroke:var(--ztl-bg);stroke-width:3px}.ztl-larea[data-v-ad0b766d]{fill:color-mix(in srgb,var(--ztl-curve) 20%,transparent)}.ztl-lbar[data-v-ad0b766d]{stroke:var(--ztl-curve);stroke-width:2.5;stroke-linecap:round}.ztl-lhit[data-v-ad0b766d]{stroke:transparent;stroke-width:12;cursor:ns-resize}.ztl-lseg:hover .ztl-lbar[data-v-ad0b766d]{stroke-width:3.5}.ztl-lseg.inherited .ztl-larea[data-v-ad0b766d]{fill:color-mix(in srgb,var(--ztl-curve) 10%,transparent)}.ztl-lseg.inherited .ztl-lbar[data-v-ad0b766d],.ztl-lseg.inherited .ztl-cline[data-v-ad0b766d]{stroke-dasharray:5 4}.ztl-lseg.inherited .ztl-carea[data-v-ad0b766d]{fill:color-mix(in srgb,var(--ztl-curve) 9%,transparent)}.ztl-lpad[data-v-ad0b766d]{fill:transparent}.ztl-levels.shaped .ztl-lseg+.ztl-lseg .ztl-lpad[data-v-ad0b766d]{stroke:color-mix(in srgb,var(--zen-text, #e5e5ea) 8%,transparent);stroke-dasharray:2 3}.ztl-cpt[data-v-ad0b766d]{fill:var(--ztl-bg);stroke:var(--ztl-curve);stroke-width:2;cursor:grab}.ztl-cpt[data-v-ad0b766d]:hover{fill:var(--ztl-curve)}.ztl-range[data-v-ad0b766d]{position:absolute;top:0;bottom:0;z-index:1;border-right:1px solid color-mix(in srgb,var(--ztl-accent) 60%,transparent);border-left:1px solid color-mix(in srgb,var(--ztl-accent) 60%,transparent);background:color-mix(in srgb,var(--ztl-accent) 9%,transparent);pointer-events:none}.ztl-range[data-v-ad0b766d]:before{position:absolute;top:0;right:0;left:0;height:4px;background:var(--ztl-accent);content:\"\"}.ztl-tail[data-v-ad0b766d]{position:absolute;top:0;right:0;bottom:0;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;border-left:1px dashed color-mix(in srgb,var(--zen-text, #e5e5ea) 45%,transparent);background:repeating-linear-gradient(-45deg,color-mix(in srgb,var(--zen-text, #e5e5ea) 14%,transparent) 0 4px,transparent 4px 9px);pointer-events:none}.ztl-tail-label[data-v-ad0b766d]{padding:0 4px 2px;overflow:hidden;color:var(--zen-text, #e5e5ea);font-size:10px;white-space:nowrap;text-overflow:ellipsis;opacity:.85}.ztl-progress[data-v-ad0b766d]{position:absolute;bottom:0;left:0;height:3px;border-radius:0 2px 2px 0;background:var(--ztl-playhead);transition:width var(--zen-dur, .2s) ease;pointer-events:none}.ztl-hbar[data-v-ad0b766d]{position:absolute;right:0;bottom:0;z-index:6;height:9px;touch-action:none}.ztl-thumb[data-v-ad0b766d]{position:absolute;top:2px;bottom:2px;border-radius:3px;background:color-mix(in srgb,var(--zen-text, #e5e5ea) 22%,transparent);transition:background var(--zen-dur-fast, .12s)}.ztl-hbar:hover .ztl-thumb[data-v-ad0b766d]{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 38%,transparent)}.ztl-body[data-v-ad0b766d]{position:relative;flex:none}.ztl-ruler[data-v-ad0b766d]{position:sticky;top:0;z-index:5;background:var(--ztl-bg);height:24px;border-bottom:1px solid var(--ztl-line);cursor:col-resize}.ztl-tick[data-v-ad0b766d]{position:absolute;bottom:0;width:1px;height:5px;background:var(--ztl-line)}.ztl-tick.major[data-v-ad0b766d]{height:9px;background:color-mix(in srgb,var(--zen-text, #e5e5ea) 30%,transparent)}.ztl-tick b[data-v-ad0b766d]{position:absolute;bottom:10px;left:3px;color:var(--zen-muted, #9aa0aa);font-size:9.5px;font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}.ztl-track[data-v-ad0b766d]{position:relative;box-sizing:border-box;border-bottom:1px solid var(--ztl-line)}.ztl-track.zebra[data-v-ad0b766d]{background:var(--ztl-row)}.ztl-track.dropping[data-v-ad0b766d]{background:color-mix(in srgb,var(--ztl-accent) 16%,transparent)}.ztl-item[data-v-ad0b766d]{position:absolute;box-sizing:border-box;touch-action:none}.ztl-item.clip[data-v-ad0b766d]{top:3px;bottom:3px;display:flex;align-items:center;gap:5px;overflow:hidden;padding:0 7px;border:1px solid color-mix(in srgb,var(--ztl-color, var(--ztl-accent)) 70%,#000);border-radius:calc(var(--zen-radius, 7px) * .65);background:color-mix(in srgb,var(--ztl-color, var(--ztl-accent)) 42%,var(--ztl-bg));cursor:pointer}.ztl-item.clip.join-start[data-v-ad0b766d]{border-left-color:var(--ztl-seam);border-top-left-radius:0;border-bottom-left-radius:0}.ztl-item.clip.join-end[data-v-ad0b766d]{border-top-right-radius:0;border-bottom-right-radius:0}.ztl-item.clip.on[data-v-ad0b766d]{border-color:var(--zen-text, #e5e5ea);box-shadow:0 0 0 1px var(--zen-text, #e5e5ea) inset;background:color-mix(in srgb,var(--ztl-color, var(--ztl-accent)) 62%,var(--ztl-bg))}.ztl-item.droptarget[data-v-ad0b766d]{z-index:3;outline:2px solid var(--ztl-accent);outline-offset:1px}.ztl-item.lifted[data-v-ad0b766d]{z-index:3;box-shadow:0 6px 16px #00000073;cursor:grabbing;opacity:.92}.ztl-item.clip.ghost[data-v-ad0b766d]{border-style:dashed;background:color-mix(in srgb,var(--ztl-color, var(--ztl-accent)) 16%,var(--ztl-bg))}.ztl-item.clip.muted[data-v-ad0b766d]{opacity:.4}.ztl-item.clip img[data-v-ad0b766d]{flex:none;height:100%;margin-left:-7px;aspect-ratio:1;object-fit:cover}.ztl-badge[data-v-ad0b766d]{flex:none;padding:0 4px;border-radius:3px;background:#00000052;color:color-mix(in srgb,var(--zen-text, #e5e5ea) 88%,var(--ztl-color, var(--ztl-accent)));font-family:var(--zen-mono, ui-monospace, monospace);font-size:9px;line-height:13px;white-space:nowrap}.ztl-item.clip.banded[data-v-ad0b766d]{align-items:flex-start;padding-top:1px}.ztl-item.clip.banded>.ztl-label[data-v-ad0b766d],.ztl-item.clip.banded>.ztl-icon[data-v-ad0b766d],.ztl-item.clip.banded>.ztl-badge[data-v-ad0b766d]{position:relative;z-index:1;margin-top:1px}.ztl-mark[data-v-ad0b766d]{position:absolute;top:0;bottom:0;z-index:1;width:1px;margin-left:-.5px;background:#ffffff73}.ztl-mark[data-v-ad0b766d]:before{content:\"\";position:absolute;top:0;left:-3px;border:3.5px solid transparent;border-top-color:#ffffffb3}.ztl-mark.strong[data-v-ad0b766d]{background:#fffc}.ztl-mark.strong[data-v-ad0b766d]:before{border-top-color:#fff}.ztl-frames[data-v-ad0b766d],.ztl-wave[data-v-ad0b766d]{position:absolute;inset:16px 0 0;pointer-events:none}.ztl-frames[data-v-ad0b766d]{overflow:hidden;border-top:1px solid rgb(0 0 0 / 35%)}.ztl-item.clip .ztl-frames img[data-v-ad0b766d]{position:absolute;top:0;height:100%;margin:0;aspect-ratio:auto;object-fit:cover;opacity:.9}.ztl-wave[data-v-ad0b766d]{width:100%;height:calc(100% - 16px);padding:2px 0;box-sizing:border-box;fill:color-mix(in srgb,var(--ztl-color, var(--ztl-accent)) 35%,#fff);opacity:.85}.ztl-label[data-v-ad0b766d]{overflow:hidden;color:color-mix(in srgb,var(--zen-text, #e5e5ea) 78%,var(--ztl-color, var(--ztl-accent)));font-size:10.5px;font-weight:500;white-space:nowrap;text-overflow:ellipsis;text-shadow:0 1px 1px rgb(0 0 0 / 40%)}.ztl-icon[data-v-ad0b766d]{flex:none;color:#fff;font-size:12px;opacity:.85}.ztl-fade[data-v-ad0b766d]{position:absolute;top:0;bottom:0;pointer-events:none}.ztl-fade.in[data-v-ad0b766d]{left:0;background:linear-gradient(to top right,transparent calc(50% - .75px),rgb(255 255 255 / 70%) 50%,transparent calc(50% + .75px)),linear-gradient(to top right,transparent 50%,rgb(0 0 0 / 45%) 50%)}.ztl-fade.out[data-v-ad0b766d]{right:0;background:linear-gradient(to top left,transparent calc(50% - .75px),rgb(255 255 255 / 70%) 50%,transparent calc(50% + .75px)),linear-gradient(to top left,transparent 50%,rgb(0 0 0 / 45%) 50%)}.ztl-fadeknob[data-v-ad0b766d]{position:absolute;top:1px;z-index:2;width:9px;height:9px;margin:0 -4.5px;border:1px solid rgb(0 0 0 / 55%);border-radius:50%;background:#fff;cursor:ew-resize;opacity:0;transition:opacity var(--zen-dur-fast, .12s)}.ztl-fadeknob.set[data-v-ad0b766d],.ztl-item:hover .ztl-fadeknob[data-v-ad0b766d]{opacity:1}.ztl-grip[data-v-ad0b766d]{position:absolute;top:0;bottom:0;width:7px;cursor:ew-resize}.ztl-grip.end[data-v-ad0b766d]{right:0}.ztl-grip.start[data-v-ad0b766d]{left:0}.ztl-grip[data-v-ad0b766d]:after{content:\"\";position:absolute;top:25%;bottom:25%;left:3px;width:1px;background:#ffffff8c;opacity:0;transition:opacity var(--zen-dur-fast, .12s)}.ztl-item:hover .ztl-grip[data-v-ad0b766d]:after{opacity:1}.ztl-item.marker[data-v-ad0b766d]{z-index:2;top:50%;width:22px;height:22px;overflow:hidden;transform:translate(-50%,-50%);border:2px solid var(--ztl-color, var(--zen-marker, #f5c542));border-radius:5px;background:var(--ztl-bg);cursor:grab}.ztl-item.marker[data-v-ad0b766d]:not(.thumbed):not(.ghost){width:12px;height:12px;border-radius:2px;background:var(--ztl-color, var(--zen-marker, #f5c542));transform:translate(-50%,-50%) rotate(45deg)}.ztl-item.marker.on[data-v-ad0b766d]{border-color:#fff;box-shadow:0 0 0 2px var(--ztl-accent)}.ztl-item.marker.ghost[data-v-ad0b766d]{width:22px;height:22px;display:grid;place-items:center;border:1px dashed color-mix(in srgb,var(--zen-text, #e5e5ea) 35%,transparent);border-radius:5px;background:transparent;color:color-mix(in srgb,var(--zen-text, #e5e5ea) 55%,transparent);transform:translate(-50%,-50%);cursor:pointer}.ztl-item.marker.ghost[data-v-ad0b766d]:hover{border-color:var(--ztl-accent);color:var(--zen-text, #e5e5ea)}.ztl-item.marker.ghost .ztl-icon[data-v-ad0b766d]{color:inherit;font-size:12px}.ztl-item.marker img[data-v-ad0b766d]{width:100%;height:100%;object-fit:cover;pointer-events:none}.ztl-guide[data-v-ad0b766d]{position:absolute;top:24px;bottom:0;width:0;border-left:1px dashed color-mix(in srgb,var(--zen-text, #e5e5ea) 22%,transparent);pointer-events:none}.ztl-marquee[data-v-ad0b766d]{position:absolute;z-index:7;border:1px solid var(--ztl-accent);border-radius:calc(var(--zen-radius, 7px) * .65);background:color-mix(in srgb,var(--ztl-accent) 14%,transparent);pointer-events:none}.ztl-snapline[data-v-ad0b766d]{position:absolute;top:24px;bottom:0;z-index:3;width:1px;background:var(--zen-accent, #6366f1);box-shadow:0 0 4px var(--zen-accent, #6366f1);pointer-events:none}.ztl-playhead[data-v-ad0b766d]{position:absolute;top:0;bottom:0;left:0;z-index:6;width:0;border-left:1px solid var(--ztl-playhead);pointer-events:none}.ztl-playhead span[data-v-ad0b766d]{position:absolute;top:0;left:-6px;width:11px;height:11px;background:var(--ztl-playhead);clip-path:polygon(0 0,100% 0,100% 60%,50% 100%,0 60%)}.zbc-frame[data-v-657d6f53]{position:relative;width:100%;height:100%;min-height:0;overflow:hidden}.zbc[data-v-657d6f53]{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);overflow:hidden;border-radius:var(--zen-radius, 7px);background:repeating-conic-gradient(color-mix(in srgb,var(--zen-text, #fff) 4%,transparent) 0% 25%,transparent 0% 50%) 0 0 / 16px 16px,var(--zen-input, #1b1b20);outline:1px solid var(--zen-border, #34343c);outline-offset:-1px;user-select:none;touch-action:none;cursor:crosshair}.zbc-keys[data-v-657d6f53]{position:absolute;top:0;left:0;width:1px;height:1px;padding:0;border:0;opacity:0;pointer-events:none}.zbc[data-v-657d6f53]:focus-within{outline:1px solid color-mix(in srgb,var(--zen-text, #fff) 22%,transparent);outline-offset:-1px}.zbc.tool-brush[data-v-657d6f53],.zbc.tool-erase[data-v-657d6f53]{cursor:none}.zbc-backdrop[data-v-657d6f53]{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none}.zbc-grid[data-v-657d6f53]{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(to right,color-mix(in srgb,var(--zen-text, #fff) 8%,transparent) 1px,transparent 1px),linear-gradient(to bottom,color-mix(in srgb,var(--zen-text, #fff) 8%,transparent) 1px,transparent 1px)}.zbc-box[data-v-657d6f53]{position:absolute;box-sizing:border-box;border:1.5px solid var(--zbc-color);border-radius:3px;cursor:move;transition:box-shadow .12s ease}.zbc-box.masked[data-v-657d6f53]{border-style:dashed}.zbc-box.locked[data-v-657d6f53]{cursor:default}.zbc-box.sel[data-v-657d6f53]{box-shadow:0 0 0 1px color-mix(in srgb,var(--zbc-color) 70%,transparent),0 0 14px color-mix(in srgb,var(--zbc-color) 40%,transparent)}.zbc-fill[data-v-657d6f53]{position:absolute;inset:0;background:color-mix(in srgb,var(--zbc-color) 22%,transparent);-webkit-mask-size:100% 100%;mask-size:100% 100%;pointer-events:none}.zbc-content[data-v-657d6f53]{position:absolute;inset:0;overflow:hidden;container-type:size;pointer-events:none}.zbc-box.painting .zbc-content[data-v-657d6f53]{opacity:.35}.zbc-box.masked .zbc-fill[data-v-657d6f53]{background:color-mix(in srgb,var(--zbc-color) 45%,transparent)}.zbc-box.painting .zbc-fill[data-v-657d6f53]{visibility:hidden}.zbc-paint[data-v-657d6f53]{position:absolute;opacity:.5;pointer-events:none}.zbc-tag[data-v-657d6f53]{position:absolute;left:-1px;top:-1px;display:flex;align-items:center;gap:4px;max-width:calc(100% + 2px);padding:1px 6px 1px 4px;border-radius:3px 0 4px;background:var(--zbc-color);color:#fff;font-size:10px;line-height:15px;white-space:nowrap;overflow:hidden;text-shadow:0 1px 1px rgb(0 0 0 / 35%);pointer-events:none}.zbc-n[data-v-657d6f53]{font-weight:700}.zbc-label[data-v-657d6f53]{overflow:hidden;text-overflow:ellipsis}.zbc-h[data-v-657d6f53]{position:absolute;width:9px;height:9px;margin:-5px 0 0 -5px;border:1.5px solid #fff;border-radius:2px;background:var(--zbc-color, var(--zen-accent, #6366f1));box-shadow:0 0 0 1px #0006}.h-nw[data-v-657d6f53]{left:0;top:0;cursor:nwse-resize}.h-n[data-v-657d6f53]{left:50%;top:0;cursor:ns-resize}.h-ne[data-v-657d6f53]{left:100%;top:0;cursor:nesw-resize}.h-e[data-v-657d6f53]{left:100%;top:50%;cursor:ew-resize}.h-se[data-v-657d6f53]{left:100%;top:100%;cursor:nwse-resize}.h-s[data-v-657d6f53]{left:50%;top:100%;cursor:ns-resize}.h-sw[data-v-657d6f53]{left:0;top:100%;cursor:nesw-resize}.h-w[data-v-657d6f53]{left:0;top:50%;cursor:ew-resize}.zbc-selframe[data-v-657d6f53]{position:absolute;box-sizing:border-box;outline:1.5px dashed var(--zbc-color);outline-offset:-1px;pointer-events:none}.zbc-selframe .zbc-h[data-v-657d6f53]{pointer-events:auto}.zbc-group[data-v-657d6f53]{position:absolute;box-sizing:border-box;border:1px dashed var(--zen-accent, #6366f1);pointer-events:none}.zbc-group .zbc-h[data-v-657d6f53]{pointer-events:auto;background:var(--zen-accent, #6366f1)}.zbc-draft[data-v-657d6f53],.zbc-marquee[data-v-657d6f53]{position:absolute;box-sizing:border-box;pointer-events:none}.zbc-draft[data-v-657d6f53]{border:1.5px dashed var(--zen-text, #e5e5ea);background:color-mix(in srgb,var(--zen-text, #fff) 8%,transparent)}.zbc-marquee[data-v-657d6f53]{border:1px solid var(--zen-accent, #6366f1);background:color-mix(in srgb,var(--zen-accent, #6366f1) 12%,transparent)}.zbc-ring[data-v-657d6f53]{position:absolute;box-sizing:border-box;border:1.5px solid #fff;border-radius:50%;box-shadow:0 0 0 1px #0000007f;pointer-events:none}.zbc-ring.erase[data-v-657d6f53]{border-style:dashed}.zbc-empty[data-v-657d6f53]{position:absolute;inset:0;display:grid;place-items:center;color:var(--zen-muted, #9aa0aa);font-size:12px;pointer-events:none}.zll[data-v-6dd767a3]{display:flex;flex-direction:column;gap:2px}.zll-row[data-v-6dd767a3]{position:relative;display:flex;align-items:center;gap:6px;min-height:30px;padding:2px 4px;border-radius:var(--zen-radius, 7px);border:1px solid transparent;color:var(--zen-text, #e5e5ea);cursor:pointer;transition:transform .15s ease,background .12s ease}.zll-row[data-v-6dd767a3]:hover{background:color-mix(in srgb,var(--zen-text, #fff) 5%,transparent)}.zll-row.sel[data-v-6dd767a3]{border-color:color-mix(in srgb,var(--zen-accent, #6366f1) 60%,transparent);background:color-mix(in srgb,var(--zen-accent, #6366f1) 14%,transparent)}.zll-row.hidden .zll-text[data-v-6dd767a3],.zll-row.hidden .zll-swatch[data-v-6dd767a3]{opacity:.45}.zll.settling .zll-row[data-v-6dd767a3]{transition:background .12s ease}.zll-row.dragging[data-v-6dd767a3]{z-index:1;transition:none;background:var(--zen-surface-2, #26262d);box-shadow:0 6px 18px #00000059}.zll-grip[data-v-6dd767a3]{display:grid;place-items:center;width:14px;color:var(--zen-muted, #9aa0aa);cursor:grab;touch-action:none}.zll-grip.pin[data-v-6dd767a3]{cursor:default;opacity:.6}.zll-swatch[data-v-6dd767a3]{flex:none;width:22px;height:22px;border-radius:5px;overflow:hidden;box-shadow:inset 0 0 0 1px #00000040}.zll-swatch img[data-v-6dd767a3]{width:100%;height:100%;object-fit:cover}.zll-text[data-v-6dd767a3]{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2}.zll-label[data-v-6dd767a3]{font-size:12px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.zll-sub[data-v-6dd767a3]{font-size:10px;color:var(--zen-muted, #9aa0aa);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.zll-btn[data-v-6dd767a3]{display:grid;place-items:center;width:22px;height:22px;padding:0;border:0;border-radius:5px;background:transparent;color:var(--zen-muted, #9aa0aa);cursor:pointer;opacity:.55}.zll-row:hover .zll-btn[data-v-6dd767a3],.zll-btn.on[data-v-6dd767a3]{opacity:1}.zll-btn[data-v-6dd767a3]:hover{background:color-mix(in srgb,var(--zen-text, #fff) 8%,transparent);color:var(--zen-text, #e5e5ea)}.lpk[data-v-9a639d76]{position:fixed;z-index:100400;pointer-events:none;display:flex;flex-direction:column;max-height:480px;overflow:hidden;background:var(--zen-chrome-bg, var(--zen-surface, #202026));color:var(--zen-text, #e5e5ea);border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:calc(var(--zen-radius-surface, var(--zen-radius, 7px)) + 2px);box-shadow:0 16px 48px #0000008c;font-family:var(--p-font-family, system-ui, sans-serif)}.lpk-media[data-v-9a639d76]{flex:1 1 auto;min-height:0;display:flex;justify-content:center;background:var(--zen-input, #1b1b20)}.lpk-media img[data-v-9a639d76],.lpk-media video[data-v-9a639d76]{display:block;max-width:100%;max-height:360px;object-fit:contain}.lpk-body[data-v-9a639d76]{flex:none;display:flex;flex-direction:column;gap:5px;padding:8px 10px 9px}.lpk-title[data-v-9a639d76]{font-size:12.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lpk-chips[data-v-9a639d76]{display:flex;flex-wrap:wrap;gap:4px}.lpk-chips[data-v-9a639d76]:empty{display:none}.lpk-chip[data-v-9a639d76]{font-size:10.5px;padding:1px 6px;border-radius:999px;background:color-mix(in srgb,var(--zen-accent, #6366f1) 18%,transparent);color:var(--zen-text, #e5e5ea)}.lpk-words[data-v-9a639d76]{font-size:11px;color:var(--zen-muted, #9aa0aa);display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.lpk-hint[data-v-9a639d76]{font-size:10px;color:var(--zen-muted, #9aa0aa);opacity:.8}.ld[data-v-a9e6a30b]{height:100%;box-sizing:border-box;overflow:auto;padding:12px 14px 16px;display:flex;flex-direction:column;gap:14px;color:var(--zen-text, #e5e5ea);font-size:12px}.ld-head[data-v-a9e6a30b]{display:flex;gap:12px;align-items:flex-start}.ld-cover[data-v-a9e6a30b]{flex:none;width:104px;height:136px;padding:0;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-input, #1b1b20);overflow:hidden;cursor:zoom-in;display:flex;align-items:center;justify-content:center}.ld-cover[data-v-a9e6a30b]:disabled{cursor:default}.ld-cover img[data-v-a9e6a30b],.ld-cover video[data-v-a9e6a30b]{width:100%;height:100%;object-fit:contain;display:block}.ld-cover>.mdi[data-v-a9e6a30b]{font-size:32px;color:var(--zen-muted, #9aa0aa)}.ld-id[data-v-a9e6a30b]{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}.ld-title[data-v-a9e6a30b]{font-size:14px;font-weight:600;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.ld-file[data-v-a9e6a30b]{font-size:10.5px;color:var(--zen-muted, #9aa0aa);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ld-chips[data-v-a9e6a30b]{display:flex;flex-wrap:wrap;gap:4px}.ld-chip[data-v-a9e6a30b]{display:inline-flex;align-items:center;gap:3px;font:inherit;font-size:11px;padding:2px 8px;border:1px solid var(--zen-border, #34343c);border-radius:999px;background:var(--zen-input, #1b1b20);color:var(--zen-text, #e5e5ea)}.ld-chip.accent[data-v-a9e6a30b]{border-color:transparent;background:color-mix(in srgb,var(--zen-accent, #6366f1) 22%,transparent)}.ld-chip.word[data-v-a9e6a30b]{cursor:pointer}.ld-chip.word[data-v-a9e6a30b]:hover{border-color:var(--zen-accent, #6366f1)}.ld-actions[data-v-a9e6a30b]{display:flex;align-items:center;gap:6px;margin-top:2px}.ld-link[data-v-a9e6a30b]{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;color:var(--zen-accent, #6366f1);text-decoration:none}.ld-link[data-v-a9e6a30b]:hover{text-decoration:underline}.ld-sec[data-v-a9e6a30b]{display:flex;flex-direction:column;gap:7px}.ld-sec h4[data-v-a9e6a30b]{margin:0;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--zen-muted, #9aa0aa)}.ld-count[data-v-a9e6a30b]{font-weight:400}.ld-copy[data-v-a9e6a30b],.ld-toggle[data-v-a9e6a30b],.ld-more[data-v-a9e6a30b]{border:none;background:none;padding:0 2px;font:inherit;cursor:pointer;color:var(--zen-muted, #9aa0aa);display:inline-flex;align-items:center;gap:3px;text-transform:none;letter-spacing:0}.ld-copy[data-v-a9e6a30b]:hover,.ld-toggle[data-v-a9e6a30b]:hover,.ld-more[data-v-a9e6a30b]:hover,.ld-toggle.on[data-v-a9e6a30b]{color:var(--zen-text, #e5e5ea)}.ld-toggle[data-v-a9e6a30b]{margin-left:auto;font-size:11px}.ld-more[data-v-a9e6a30b]{align-self:flex-start;font-size:11px;color:var(--zen-accent, #6366f1)}.ld-examples[data-v-a9e6a30b]{container:ld-examples / inline-size}.ld-viewer[data-v-a9e6a30b]{display:flex;flex-direction:column;gap:12px;outline:none}.ld-look[data-v-a9e6a30b]{display:flex;flex-direction:column;gap:6px;min-width:0}@container ld-examples (min-width: 560px){.ld-viewer[data-v-a9e6a30b]{display:grid;grid-template-columns:minmax(0,1fr) minmax(200px,38%);align-items:start}}.ld-stage[data-v-a9e6a30b]{position:relative;display:flex;height:340px;overflow:hidden;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-media-bg, #0b0b0e)}.ld-stage-media[data-v-a9e6a30b]{flex:1;display:flex;align-items:center;justify-content:center;min-width:0;padding:0;border:0;background:none;cursor:zoom-in}.ld-stage-media img[data-v-a9e6a30b],.ld-stage-media video[data-v-a9e6a30b]{display:block;max-width:100%;max-height:100%;object-fit:contain}.ld-nav[data-v-a9e6a30b]{position:absolute;top:50%;display:grid;place-items:center;width:30px;height:44px;padding:0;border:0;border-radius:var(--zen-radius, 7px);background:#00000073;color:#fff;font-size:22px;opacity:0;transform:translateY(-50%);cursor:pointer;transition:opacity var(--zen-dur-fast, .12s) ease}.ld-nav.prev[data-v-a9e6a30b]{left:6px}.ld-nav.next[data-v-a9e6a30b]{right:6px}.ld-stage:hover .ld-nav[data-v-a9e6a30b],.ld-nav[data-v-a9e6a30b]:focus-visible{opacity:1}.ld-nav[data-v-a9e6a30b]:hover{background:#000000a6}.ld-counter[data-v-a9e6a30b]{position:absolute;right:8px;bottom:8px;padding:2px 7px;border-radius:999px;background:#0000008c;color:#fff;font-size:10.5px;font-variant-numeric:tabular-nums;pointer-events:none}.ld-strip[data-v-a9e6a30b]{display:flex;gap:4px;overflow-x:auto;overflow-y:hidden;padding-bottom:4px}.ld-thumb[data-v-a9e6a30b]{position:relative;flex:none;height:64px;padding:0;overflow:hidden;border:1px solid var(--zen-border, #34343c);border-radius:calc(var(--zen-radius, 7px) - 2px);background:var(--zen-media-bg, #0b0b0e);opacity:.7;cursor:pointer;transition:opacity var(--zen-dur-fast, .12s) ease}.ld-thumb[data-v-a9e6a30b]:hover,.ld-thumb.sel[data-v-a9e6a30b]{opacity:1}.ld-thumb.sel[data-v-a9e6a30b]{border-color:var(--zen-accent, #6366f1);box-shadow:inset 0 0 0 1px var(--zen-accent, #6366f1)}.ld-thumb img[data-v-a9e6a30b],.ld-thumb video[data-v-a9e6a30b]{display:block;width:100%;height:100%;object-fit:cover}.ld-badge[data-v-a9e6a30b]{position:absolute;right:3px;bottom:3px;font-size:14px;color:#fff;text-shadow:0 1px 3px rgb(0 0 0 / 70%)}.blur img[data-v-a9e6a30b],.blur video[data-v-a9e6a30b]{filter:blur(14px)}.ld-params[data-v-a9e6a30b]{min-width:0;display:flex;flex-direction:column;gap:8px}.ld-k[data-v-a9e6a30b]{display:flex;align-items:center;gap:4px;font-size:10.5px;font-weight:600;color:var(--zen-muted, #9aa0aa)}.ld-text[data-v-a9e6a30b]{max-height:140px;overflow:auto;padding:6px 8px;border-radius:var(--zen-radius, 7px);background:var(--zen-input, #1b1b20);white-space:pre-wrap;word-break:break-word;line-height:1.45;user-select:text}.ld-kv[data-v-a9e6a30b]{margin:0;display:grid;grid-template-columns:max-content minmax(0,1fr);gap:3px 10px;font-size:11.5px}.ld-kv dt[data-v-a9e6a30b]{color:var(--zen-muted, #9aa0aa)}.ld-kv dd[data-v-a9e6a30b]{margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;user-select:text}.ld-desc[data-v-a9e6a30b]{white-space:pre-wrap;line-height:1.5;user-select:text;display:-webkit-box;-webkit-line-clamp:8;line-clamp:8;-webkit-box-orient:vertical;overflow:hidden}.ld-desc.open[data-v-a9e6a30b]{display:block}.ld-muted[data-v-a9e6a30b]{margin:0;color:var(--zen-muted, #9aa0aa);font-size:11.5px}.lt[data-v-40f2868d]{flex:none;box-sizing:border-box;width:40px;height:40px;object-fit:cover;border-radius:var(--zen-radius, 7px);background:var(--zen-input, #1b1b20);border:1px solid var(--zen-border, #34343c)}.lt.sm[data-v-40f2868d]{width:18px;height:18px;border-radius:var(--zen-radius, 7px)}.lt.ph[data-v-40f2868d]{display:inline-flex;align-items:center;justify-content:center;color:var(--zen-muted, #9aa0aa);font-size:20px}.lt.sm.ph[data-v-40f2868d]{font-size:11px}.lt.warn[data-v-40f2868d]{display:inline-flex;align-items:center;justify-content:center;color:var(--zen-danger, #dc2626);background:color-mix(in srgb,var(--zen-danger, #dc2626) 14%,transparent);border-color:color-mix(in srgb,var(--zen-danger, #dc2626) 45%,transparent);font-size:20px}.lt.sm.warn[data-v-40f2868d]{font-size:12px}.lp-sel[data-v-ba2b3a49]{display:flex;align-items:center;gap:7px;min-width:0}.lp-sel-name[data-v-ba2b3a49]{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lp-sel.missing .lp-sel-name[data-v-ba2b3a49]{color:var(--zen-danger, #dc2626)}.lp-opt[data-v-ba2b3a49]{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;line-height:1.25}.lp-opt-name[data-v-ba2b3a49]{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12.5px}.lp-opt-dir[data-v-ba2b3a49]{font-size:10px;color:var(--zen-muted, #9aa0aa);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lp-star[data-v-ba2b3a49]{flex:none;border:none;background:none;cursor:pointer;color:var(--zen-muted, #9aa0aa);font-size:15px;padding:2px;display:inline-flex}.lp-star.on[data-v-ba2b3a49],.lp-star[data-v-ba2b3a49]:hover{color:var(--zen-star, #f5b301)}.lp-browse[data-v-ba2b3a49]{border:none;background:none;cursor:pointer;color:var(--zen-muted, #9aa0aa);font-size:16px;padding:0 2px;display:inline-flex}.lp-browse[data-v-ba2b3a49]:hover{color:var(--zen-text, #e5e5ea)}.lp-crumbs[data-v-ba2b3a49]{display:flex;align-items:center;gap:2px;min-width:0;padding:4px 8px;overflow:hidden;white-space:nowrap}.lp-crumbs>.mdi[data-v-ba2b3a49]{flex:none;font-size:13px;color:var(--zen-muted, #9aa0aa)}.lp-up[data-v-ba2b3a49],.lp-crumb[data-v-ba2b3a49]{flex:none;border:none;background:none;cursor:pointer;font:inherit;font-size:11.5px;padding:2px 5px;border-radius:var(--zen-radius, 7px);color:var(--zen-muted, #9aa0aa)}.lp-crumb.on[data-v-ba2b3a49]{color:var(--zen-text, #e5e5ea);font-weight:600}.lp-up[data-v-ba2b3a49]:hover:not(:disabled),.lp-crumb[data-v-ba2b3a49]:hover{color:var(--zen-text, #e5e5ea);background:color-mix(in srgb,var(--zen-text, #e5e5ea) 6%,transparent)}.lp-up[data-v-ba2b3a49]:disabled{opacity:.35;cursor:default}.lp-folder[data-v-ba2b3a49]{flex:none;box-sizing:border-box;width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;font-size:22px;color:var(--zen-accent, #6366f1);border-radius:var(--zen-radius, 7px);background:color-mix(in srgb,var(--zen-accent, #6366f1) 10%,var(--zen-input, #1b1b20));border:1px solid var(--zen-border, #34343c)}.lp-chev[data-v-ba2b3a49]{flex:none;color:var(--zen-muted, #9aa0aa);font-size:16px}.lb[data-v-e37dd837]{display:grid;grid-template-columns:210px minmax(0,1fr) 360px;height:calc(100% + 28px);margin:-14px;font-size:12px}.lb-search[data-v-e37dd837]{display:flex;flex:1;max-width:340px}.lb-grow[data-v-e37dd837]{flex:1}.lb-soft[data-v-e37dd837]{color:var(--zen-muted, #9aa0aa)}.lb-folders[data-v-e37dd837]{display:flex;flex-direction:column;gap:1px;min-height:0;overflow-y:auto;padding:10px 8px;border-right:1px solid var(--zen-border, #34343c)}.lb-folder[data-v-e37dd837]{display:flex;align-items:center;gap:6px;width:100%;padding:5px 8px;border:0;border-radius:var(--zen-radius, 7px);background:none;color:var(--zen-muted, #9aa0aa);font:inherit;text-align:left;cursor:pointer}.lb-folder[data-v-e37dd837]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 6%,transparent);color:var(--zen-text, #e5e5ea)}.lb-folder.on[data-v-e37dd837]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 20%,transparent);color:var(--zen-text, #e5e5ea)}.lb-folder .mdi[data-v-e37dd837]{flex:none;font-size:15px}.lb-folder .mdi-star[data-v-e37dd837]{color:var(--zen-star, #f5b301)}.lb-fname[data-v-e37dd837]{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.lb-count[data-v-e37dd837]{flex:none;font-size:10.5px;font-variant-numeric:tabular-nums}.lb-sep[data-v-e37dd837]{margin:6px 4px;border-top:1px solid var(--zen-border, #34343c)}.lb-main[data-v-e37dd837]{display:flex;flex-direction:column;min-width:0;min-height:0}.lb-filters[data-v-e37dd837]{display:flex;flex:none;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--zen-border, #34343c)}.lb-scope[data-v-e37dd837]{display:inline-flex;align-items:center;gap:5px;font-weight:600}.lb-grid[data-v-e37dd837]{display:grid;flex:1;align-content:start;gap:10px;min-height:0;overflow-y:auto;padding:12px;outline:none}.lb-card[data-v-e37dd837]{display:flex;flex-direction:column;gap:3px;min-width:0;padding:4px;border:1px solid transparent;border-radius:calc(var(--zen-radius, 7px) + 2px);background:none;color:var(--zen-text, #e5e5ea);font:inherit;text-align:left;cursor:pointer}.lb-card[data-v-e37dd837]:focus{outline:none}.lb-card[data-v-e37dd837]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 5%,transparent)}.lb-card.focus .lb-img[data-v-e37dd837]{outline:2px solid var(--zen-accent, #6366f1);outline-offset:1px}.lb-img[data-v-e37dd837]{position:relative;display:grid;place-items:center;aspect-ratio:3 / 4;overflow:hidden;border-radius:var(--zen-radius, 7px);background:var(--zen-media-bg, #0b0b0e)}.lb-img img[data-v-e37dd837],.lb-img video[data-v-e37dd837]{width:100%;height:100%;object-fit:cover}.lb-noimg[data-v-e37dd837]{color:var(--zen-muted, #9aa0aa);font-size:30px;opacity:.5}.lb-badge[data-v-e37dd837],.lb-star[data-v-e37dd837],.lb-inuse[data-v-e37dd837]{position:absolute;display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#0009;color:#fff;font-size:13px}.lb-badge[data-v-e37dd837]{bottom:5px;left:5px}.lb-star[data-v-e37dd837]{top:5px;right:5px;opacity:0;transition:opacity var(--zen-dur-fast, .12s)}.lb-card:hover .lb-star[data-v-e37dd837],.lb-star.on[data-v-e37dd837]{opacity:1}.lb-star.on[data-v-e37dd837]{color:var(--zen-star, #f5b301)}.lb-inuse[data-v-e37dd837]{top:5px;left:5px;background:var(--zen-accent, #6366f1);color:var(--zen-accent-text, #fff)}.lb-name[data-v-e37dd837],.lb-dir[data-v-e37dd837]{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.lb-name[data-v-e37dd837]{font-size:11.5px}.lb-dir[data-v-e37dd837]{margin-top:-2px;color:var(--zen-muted, #9aa0aa);font-size:10.5px}.lb-empty[data-v-e37dd837]{display:flex;flex-direction:column;grid-column:1 / -1;align-items:center;gap:6px;padding:48px 12px;color:var(--zen-muted, #9aa0aa);text-align:center}.lb-empty .mdi[data-v-e37dd837]{font-size:28px}.lb-list[data-v-e37dd837]{display:flex;flex:1;flex-direction:column;min-height:0}.lb-lhead[data-v-e37dd837],.lb-row[data-v-e37dd837]{display:grid;grid-template-columns:34px minmax(0,2.4fr) minmax(0,1.2fr) 72px 104px 28px;align-items:center;gap:10px;padding:0 12px}.lb-lhead[data-v-e37dd837]{flex:none;height:28px;border-bottom:1px solid var(--zen-border, #34343c);color:var(--zen-muted, #9aa0aa);font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase}.lb-lrows[data-v-e37dd837]{display:grid;flex:1;align-content:start;min-height:0;overflow-y:auto;outline:none}.lb-row[data-v-e37dd837]{height:34px;border-bottom:1px solid color-mix(in srgb,var(--zen-border, #34343c) 50%,transparent);cursor:pointer}.lb-row[data-v-e37dd837]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 5%,transparent)}.lb-row.focus[data-v-e37dd837]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 18%,transparent)}.lb-rthumb[data-v-e37dd837]{display:grid;place-items:center;width:26px;height:26px;overflow:hidden;border-radius:5px;background:var(--zen-media-bg, #0b0b0e);color:var(--zen-muted, #9aa0aa)}.lb-rthumb img[data-v-e37dd837]{width:100%;height:100%;object-fit:cover}.lb-rname[data-v-e37dd837],.lb-rdir[data-v-e37dd837]{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.lb-rname .mdi[data-v-e37dd837]{margin-left:4px;color:var(--zen-muted, #9aa0aa)}.lb-rname .lb-rcur[data-v-e37dd837]{color:var(--zen-accent, #6366f1)}.lb-rdir[data-v-e37dd837]{color:var(--zen-muted, #9aa0aa)}.num[data-v-e37dd837]{color:var(--zen-muted, #9aa0aa);font-variant-numeric:tabular-nums;text-align:right}.lb-rstar[data-v-e37dd837]{display:grid;place-items:center;color:var(--zen-muted, #9aa0aa);opacity:0}.lb-row:hover .lb-rstar[data-v-e37dd837],.lb-rstar.on[data-v-e37dd837]{opacity:1}.lb-rstar.on[data-v-e37dd837]{color:var(--zen-star, #f5b301)}.lb-detail[data-v-e37dd837]{min-height:0;overflow-y:auto;padding:12px;border-left:1px solid var(--zen-border, #34343c)}.lb-hint[data-v-e37dd837]{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:40%;color:var(--zen-muted, #9aa0aa);line-height:1.5;text-align:center}.lb-hint .mdi[data-v-e37dd837]{font-size:26px}.lb-foot[data-v-e37dd837]{display:flex;align-items:center;gap:8px}.lb-foot-name[data-v-e37dd837]{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.jt[data-v-e4670a8d]{font-family:var(--zen-mono, ui-monospace, \"SF Mono\", Menlo, Consolas, monospace);font-size:11.5px;line-height:1.6}.jt-row[data-v-e4670a8d]{display:flex;align-items:center;gap:3px;cursor:pointer;white-space:nowrap;border-radius:var(--zen-radius, 7px)}.jt-row[data-v-e4670a8d]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 7%,transparent)}.jt-row.leaf[data-v-e4670a8d]{cursor:default}.jt-caret[data-v-e4670a8d]{font-size:14px;color:var(--zen-muted, #9aa0aa);margin-left:-2px}.jt-key[data-v-e4670a8d]{color:var(--zen-accent, #6366f1)}.jt-key[data-v-e4670a8d]:after{content:\":\";color:var(--zen-muted, #9aa0aa);margin:0 2px 0 1px}.jt-brace[data-v-e4670a8d]{color:var(--zen-muted, #9aa0aa)}.jt-close[data-v-e4670a8d]{cursor:default}.jt-collapsed[data-v-e4670a8d]{color:var(--zen-muted, #9aa0aa);font-style:italic;margin:0 4px;opacity:.8}.jt-children[data-v-e4670a8d]{border-left:1px solid var(--zen-border, #34343c)}.jt-val[data-v-e4670a8d]{white-space:pre-wrap;word-break:break-word}.t-string[data-v-e4670a8d]{color:color-mix(in srgb,#4caf50 70%,var(--zen-text, #e5e5ea))}.t-number[data-v-e4670a8d]{color:color-mix(in srgb,#d4a017 70%,var(--zen-text, #e5e5ea))}.t-boolean[data-v-e4670a8d]{color:color-mix(in srgb,#b16ce8 70%,var(--zen-text, #e5e5ea))}.t-null[data-v-e4670a8d]{color:#9aa0aa;font-style:italic}\n/* ZenKit ↔ ComfyUI theme bridge — the runtime-free way to theme @nynxz/zenkit-ui.\n *\n * @nynxz/zenkit-ui components read --zen-* tokens. WITH the ZenKit runtime installed,\n * @nynxz/zenkit-core sets those from the active theme pack (the derivation in @nynxz/zenkit-theme's\n * zen.ts → zenAliases). Consumers that use @nynxz/zenkit-ui WITHOUT the runtime import this file\n * instead: it maps the same --zen-* set straight onto ComfyUI's native theme variables, so\n * the components follow the user's selected ComfyUI theme with zero JS.\n *\n * Declared at :root so teleported overlays (ZenPopover / ZenCombo menus, ZenModal) — which\n * mount outside any component subtree — pick the tokens up too. The right-hand fallbacks keep\n * every token sane if ComfyUI renames or drops a variable. Kept in lockstep with zen.ts:\n * the same core and status tokens, sourced from the host instead of a pack. (The other\n * --zen-* tokens the components use — glass, scrollbar, switch-radius — resolve through\n * inline fallbacks that chain back to these.)\n *\n * Import once, near your extension entry:  import '@nynxz/zenkit-ui/comfy-bridge.css'\n */\n:root {\n  --zen-bg: var(--comfy-menu-bg, #1a1a1f);\n  --zen-surface: var(--comfy-menu-secondary-bg, #202026);\n  --zen-surface-2: var(--comfy-menu-secondary-bg, #26262d);\n  --zen-input: var(--comfy-input-bg, #1b1b20);\n  --zen-border: var(--border-color, #34343c);\n  --zen-text: var(--input-text, var(--fg-color, #e5e5ea));\n  --zen-muted: var(--descrip-text, #9aa0aa);\n  --zen-accent: var(--p-primary-color, #6366f1);\n  --zen-accent-text: var(--p-button-text-primary-color, #fff);\n  --zen-radius: var(--border-radius-base, 7px);\n  --zen-danger: var(--color-destructive-background, #dc2626);\n  --zen-danger-text: #fff;\n  --zen-warn: var(--color-warning-background, #d97706);\n  --zen-warn-text: var(--color-warning-on-background, #15151a);\n  --zen-ok: var(--color-success-background, #16a34a);\n  --zen-ok-text: #fff;\n  --zen-info: var(--zen-accent);\n  --zen-info-text: var(--zen-accent-text);\n  --zen-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;\n  /* keyboard-focus outline colour shared by every control's :focus-visible */\n  --zen-focus-ring: color-mix(in srgb, var(--zen-accent) 60%, transparent);\n}\n\n.gs-head[data-v-e2a0d204] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  /* lines the master switch up with the cards' switches below it */\n  padding-right: 7px;\n}\n.gs-colors[data-v-e2a0d204] {\n  flex: 1;\n  min-width: 0;\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  gap: 4px;\n}\n.gs-all[data-v-e2a0d204] {\n  height: 18px;\n  padding: 0 7px;\n  border: 1px solid var(--zen-control-border, var(--zen-border, #34343c));\n  border-radius: 999px;\n  background: var(--zen-control-bg, transparent);\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 10px;\n  cursor: pointer;\n}\n.gs-all.on[data-v-e2a0d204] {\n  color: var(--zen-text, #e5e5ea);\n  border-color: var(--zen-accent, #6366f1);\n}\n/* A colour chip: the group colour itself, ringed in the accent while selected. */\n.gs-color[data-v-e2a0d204] {\n  width: 16px;\n  height: 16px;\n  padding: 0;\n  border: 2px solid transparent;\n  border-radius: 50%;\n  background: var(--gs-c) padding-box;\n  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 12%);\n  cursor: pointer;\n  opacity: 0.55;\n}\n.gs-color.on[data-v-e2a0d204] {\n  opacity: 1;\n  border-color: var(--zen-accent, #6366f1);\n}\n.gs-color.none[data-v-e2a0d204] {\n  background: transparent;\n  box-shadow: inset 0 0 0 1px var(--zen-muted, #9aa0aa);\n}\n.gs-rows[data-v-e2a0d204] {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n}\n\n/* One card per group: its own outline, a lift on hover, and the group's colour as a stripe down\n   the left edge so the card still reads as that group without a separate swatch. */\n.gs-card[data-v-e2a0d204] {\n  display: flex;\n  flex-direction: column;\n  border: 1px solid var(--zen-surface-border, var(--zen-border, #34343c));\n  border-left: 3px solid var(--gs-c, var(--zen-surface-border, var(--zen-border, #34343c)));\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);\n  transition:\n    background 0.12s ease,\n    border-color 0.12s ease;\n}\n.gs-card[data-v-e2a0d204]:hover {\n  background: color-mix(in srgb, var(--zen-text, #fff) 5%, transparent);\n}\n.gs-card-head[data-v-e2a0d204] {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  min-height: 32px;\n  padding: 3px 6px 3px 8px;\n}\n.gs-card.off .gs-name[data-v-e2a0d204],\n.gs-node.off .gs-name[data-v-e2a0d204] {\n  opacity: 0.5;\n}\n.gs-card.empty .gs-name[data-v-e2a0d204] {\n  opacity: 0.45;\n}\n\n/* The name is a button so the whole label toggles — a far bigger target than the switch. */\n.gs-name[data-v-e2a0d204] {\n  flex: 1;\n  min-width: 0;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  padding: 2px 0;\n  border: none;\n  background: none;\n  color: var(--zen-text, #e5e5ea);\n  font: inherit;\n  text-align: left;\n  cursor: pointer;\n}\n.gs-name[data-v-e2a0d204]:disabled {\n  cursor: default;\n}\n.gs-title[data-v-e2a0d204] {\n  min-width: 0;\n  font-size: 12px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.gs-count[data-v-e2a0d204] {\n  flex: none;\n  padding: 0 5px;\n  border-radius: 999px;\n  background: color-mix(in srgb, var(--zen-text, #fff) 7%, transparent);\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  line-height: 16px;\n  font-variant-numeric: tabular-nums;\n}\n/* Some nodes running, some not: the badge carries it, in the accent. */\n.gs-count.mixed[data-v-e2a0d204] {\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 20%, transparent);\n  color: var(--zen-text, #e5e5ea);\n}\n.gs-nodes[data-v-e2a0d204] {\n  display: flex;\n  flex-direction: column;\n  gap: 2px;\n  padding: 4px 6px 6px 8px;\n  border-top: 1px solid var(--zen-surface-border, var(--zen-border, #34343c));\n}\n.gs-node[data-v-e2a0d204] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  min-height: 24px;\n}\n.gs-node .gs-title[data-v-e2a0d204] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.gs-node-switch[data-v-e2a0d204] {\n  zoom: 0.75;\n}\n.gs-empty[data-v-e2a0d204] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 5px;\n  padding: 14px 8px;\n  text-align: center;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);\n}\n.gs-empty > .mdi[data-v-e2a0d204] {\n  font-size: 24px;\n  opacity: 0.8;\n}\n.gs-empty > span[data-v-e2a0d204] {\n  font-size: 11px;\n}\n/*$vite$:1*/";document.head.appendChild(s);})();import { ComfyApp, app } from "../../../scripts/app.js";
 import { api } from "../../../scripts/api.js";
 //#region \0rolldown/runtime.js
 var __defProp = Object.defineProperty;
@@ -12249,21 +12249,21 @@ function patternCss(id, color = "#9aa0aa") {
 }
 //#endregion
 //#region frontend/widgets/BgConfig.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$39 = { class: "bp-row" };
-var _hoisted_2$35 = {
+var _hoisted_1$40 = { class: "bp-row" };
+var _hoisted_2$36 = {
 	key: 0,
 	class: "bp-row"
 };
-var _hoisted_3$32 = { class: "bp-row" };
-var _hoisted_4$29 = { class: "bp-pair" };
-var _hoisted_5$26 = { class: "bp-row" };
-var _hoisted_6$22 = { class: "bp-row" };
-var _hoisted_7$19 = { class: "bp-pair" };
-var _hoisted_8$18 = { class: "bp-patterns" };
-var _hoisted_9$15 = ["title", "onClick"];
-var _hoisted_10$13 = { class: "bp-row" };
-var _hoisted_11$13 = { class: "bp-row" };
-var _hoisted_12$12 = {
+var _hoisted_3$33 = { class: "bp-row" };
+var _hoisted_4$30 = { class: "bp-pair" };
+var _hoisted_5$27 = { class: "bp-row" };
+var _hoisted_6$23 = { class: "bp-row" };
+var _hoisted_7$20 = { class: "bp-pair" };
+var _hoisted_8$19 = { class: "bp-patterns" };
+var _hoisted_9$16 = ["title", "onClick"];
+var _hoisted_10$14 = { class: "bp-row" };
+var _hoisted_11$14 = { class: "bp-row" };
+var _hoisted_12$13 = {
 	key: 3,
 	class: "bp-hint"
 };
@@ -12276,9 +12276,9 @@ var _hoisted_15$11 = {
 var _hoisted_16$10 = { class: "bp-row" };
 var _hoisted_17$10 = { class: "bp-row" };
 var _hoisted_18$10 = { class: "bp-row" };
-var _hoisted_19$7 = { class: "bp-row" };
-var _hoisted_20$7 = { class: "bp-row" };
-var _hoisted_21$6 = { class: "bp-row" };
+var _hoisted_19$8 = { class: "bp-row" };
+var _hoisted_20$8 = { class: "bp-row" };
+var _hoisted_21$7 = { class: "bp-row" };
 var widgetOptions$15 = {
 	name: "config",
 	minHeight: 220,
@@ -12347,20 +12347,20 @@ var BgConfig_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defineC
 				pad: "6px 4px",
 				class: "bp"
 			}, {
-				default: withCtx(() => [createBaseVNode("div", _hoisted_1$39, [_cache[18] || (_cache[18] = createBaseVNode("label", { class: "bp-lbl" }, "Type", -1)), createVNode(unref(Tt), {
+				default: withCtx(() => [createBaseVNode("div", _hoisted_1$40, [_cache[18] || (_cache[18] = createBaseVNode("label", { class: "bp-lbl" }, "Type", -1)), createVNode(unref(Tt), {
 					"model-value": cfg.value.bg_mode,
 					options: MODE_OPTS,
 					"onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => set("bg_mode", String($event)))
-				}, null, 8, ["model-value"])]), cfg.value.bg_mode === "solid" ? (openBlock(), createElementBlock("div", _hoisted_2$35, [_cache[19] || (_cache[19] = createBaseVNode("label", { class: "bp-lbl" }, "Color", -1)), createVNode(unref(Yf), {
+				}, null, 8, ["model-value"])]), cfg.value.bg_mode === "solid" ? (openBlock(), createElementBlock("div", _hoisted_2$36, [_cache[19] || (_cache[19] = createBaseVNode("label", { class: "bp-lbl" }, "Color", -1)), createVNode(unref(Yf), {
 					"model-value": cfg.value.bg_color,
 					"onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => set("bg_color", String($event)))
-				}, null, 8, ["model-value"])])) : cfg.value.bg_mode === "gradient" ? (openBlock(), createElementBlock(Fragment, { key: 1 }, [createBaseVNode("div", _hoisted_3$32, [_cache[20] || (_cache[20] = createBaseVNode("label", { class: "bp-lbl" }, "From → To", -1)), createBaseVNode("div", _hoisted_4$29, [createVNode(unref(Yf), {
+				}, null, 8, ["model-value"])])) : cfg.value.bg_mode === "gradient" ? (openBlock(), createElementBlock(Fragment, { key: 1 }, [createBaseVNode("div", _hoisted_3$33, [_cache[20] || (_cache[20] = createBaseVNode("label", { class: "bp-lbl" }, "From → To", -1)), createBaseVNode("div", _hoisted_4$30, [createVNode(unref(Yf), {
 					"model-value": cfg.value.bg_color,
 					"onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => set("bg_color", String($event)))
 				}, null, 8, ["model-value"]), createVNode(unref(Yf), {
 					"model-value": cfg.value.bg_color2,
 					"onUpdate:modelValue": _cache[3] || (_cache[3] = ($event) => set("bg_color2", String($event)))
-				}, null, 8, ["model-value"])])]), createBaseVNode("div", _hoisted_5$26, [_cache[21] || (_cache[21] = createBaseVNode("label", { class: "bp-lbl" }, "Angle", -1)), createVNode(unref(un), {
+				}, null, 8, ["model-value"])])]), createBaseVNode("div", _hoisted_5$27, [_cache[21] || (_cache[21] = createBaseVNode("label", { class: "bp-lbl" }, "Angle", -1)), createVNode(unref(un), {
 					"model-value": cfg.value.bg_angle,
 					min: 0,
 					max: 360,
@@ -12368,14 +12368,14 @@ var BgConfig_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defineC
 					precision: 0,
 					"onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => set("bg_angle", Number($event)))
 				}, null, 8, ["model-value"])])], 64)) : cfg.value.bg_mode === "pattern" ? (openBlock(), createElementBlock(Fragment, { key: 2 }, [
-					createBaseVNode("div", _hoisted_6$22, [_cache[22] || (_cache[22] = createBaseVNode("label", { class: "bp-lbl" }, "Base / Tint", -1)), createBaseVNode("div", _hoisted_7$19, [createVNode(unref(Yf), {
+					createBaseVNode("div", _hoisted_6$23, [_cache[22] || (_cache[22] = createBaseVNode("label", { class: "bp-lbl" }, "Base / Tint", -1)), createBaseVNode("div", _hoisted_7$20, [createVNode(unref(Yf), {
 						"model-value": cfg.value.bg_color,
 						"onUpdate:modelValue": _cache[5] || (_cache[5] = ($event) => set("bg_color", String($event)))
 					}, null, 8, ["model-value"]), createVNode(unref(Yf), {
 						"model-value": cfg.value.pattern_color,
 						"onUpdate:modelValue": _cache[6] || (_cache[6] = ($event) => set("pattern_color", String($event)))
 					}, null, 8, ["model-value"])])]),
-					createBaseVNode("div", _hoisted_8$18, [(openBlock(true), createElementBlock(Fragment, null, renderList(unref(PATTERNS), (p) => {
+					createBaseVNode("div", _hoisted_8$19, [(openBlock(true), createElementBlock(Fragment, null, renderList(unref(PATTERNS), (p) => {
 						return openBlock(), createElementBlock("button", {
 							key: p,
 							class: normalizeClass(["bp-sw", { on: cfg.value.pattern === p }]),
@@ -12385,9 +12385,9 @@ var BgConfig_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defineC
 						}, [createBaseVNode("span", {
 							class: "bp-sw-fill",
 							style: normalizeStyle({ backgroundImage: unref(patternCss)(p, cfg.value.pattern_color) })
-						}, null, 4)], 14, _hoisted_9$15);
+						}, null, 4)], 14, _hoisted_9$16);
 					}), 128))]),
-					createBaseVNode("div", _hoisted_10$13, [_cache[23] || (_cache[23] = createBaseVNode("label", { class: "bp-lbl" }, "Scale", -1)), createVNode(unref(un), {
+					createBaseVNode("div", _hoisted_10$14, [_cache[23] || (_cache[23] = createBaseVNode("label", { class: "bp-lbl" }, "Scale", -1)), createVNode(unref(un), {
 						"model-value": cfg.value.pattern_scale,
 						min: 6,
 						max: 96,
@@ -12395,7 +12395,7 @@ var BgConfig_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defineC
 						precision: 0,
 						"onUpdate:modelValue": _cache[7] || (_cache[7] = ($event) => set("pattern_scale", Number($event)))
 					}, null, 8, ["model-value"])]),
-					createBaseVNode("div", _hoisted_11$13, [_cache[24] || (_cache[24] = createBaseVNode("label", { class: "bp-lbl" }, "Opacity", -1)), createVNode(unref(un), {
+					createBaseVNode("div", _hoisted_11$14, [_cache[24] || (_cache[24] = createBaseVNode("label", { class: "bp-lbl" }, "Opacity", -1)), createVNode(unref(un), {
 						"model-value": cfg.value.pattern_opacity,
 						min: 0,
 						max: 1,
@@ -12403,7 +12403,7 @@ var BgConfig_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defineC
 						precision: 2,
 						"onUpdate:modelValue": _cache[8] || (_cache[8] = ($event) => set("pattern_opacity", Number($event)))
 					}, null, 8, ["model-value"])])
-				], 64)) : cfg.value.bg_mode === "transparent" ? (openBlock(), createElementBlock("p", _hoisted_12$12, [..._cache[25] || (_cache[25] = [createBaseVNode("i", { class: "mdi mdi-checkerboard" }, null, -1), createTextVNode(" See-through ground — saves a PNG/WebP with real transparency. For a glowing border, give each cell a coloured drop shadow on the Grid Style node (big blur, offset 0) so it blooms as a halo. ", -1)])])) : (openBlock(), createElementBlock(Fragment, { key: 4 }, [
+				], 64)) : cfg.value.bg_mode === "transparent" ? (openBlock(), createElementBlock("p", _hoisted_12$13, [..._cache[25] || (_cache[25] = [createBaseVNode("i", { class: "mdi mdi-checkerboard" }, null, -1), createTextVNode(" See-through ground — saves a PNG/WebP with real transparency. For a glowing border, give each cell a coloured drop shadow on the Grid Style node (big blur, offset 0) so it blooms as a halo. ", -1)])])) : (openBlock(), createElementBlock(Fragment, { key: 4 }, [
 					_cache[35] || (_cache[35] = createBaseVNode("p", { class: "bp-hint" }, [createBaseVNode("i", { class: "mdi mdi-information-outline" }), createTextVNode(" Wire icon image(s) into the node — one tiles evenly, a batch shuffles by seed. ")], -1)),
 					createBaseVNode("div", _hoisted_13$11, [_cache[26] || (_cache[26] = createBaseVNode("label", { class: "bp-lbl" }, "Base", -1)), createVNode(unref(Yf), {
 						"model-value": cfg.value.bg_color,
@@ -12445,7 +12445,7 @@ var BgConfig_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defineC
 						precision: 2,
 						"onUpdate:modelValue": _cache[14] || (_cache[14] = ($event) => set("scale", Number($event)))
 					}, null, 8, ["model-value"])]),
-					createBaseVNode("div", _hoisted_19$7, [_cache[32] || (_cache[32] = createBaseVNode("label", { class: "bp-lbl" }, "Opacity", -1)), createVNode(unref(un), {
+					createBaseVNode("div", _hoisted_19$8, [_cache[32] || (_cache[32] = createBaseVNode("label", { class: "bp-lbl" }, "Opacity", -1)), createVNode(unref(un), {
 						"model-value": cfg.value.opacity,
 						min: 0,
 						max: 1,
@@ -12453,7 +12453,7 @@ var BgConfig_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defineC
 						precision: 2,
 						"onUpdate:modelValue": _cache[15] || (_cache[15] = ($event) => set("opacity", Number($event)))
 					}, null, 8, ["model-value"])]),
-					createBaseVNode("div", _hoisted_20$7, [_cache[33] || (_cache[33] = createBaseVNode("label", { class: "bp-lbl" }, "Rotate ±", -1)), createVNode(unref(un), {
+					createBaseVNode("div", _hoisted_20$8, [_cache[33] || (_cache[33] = createBaseVNode("label", { class: "bp-lbl" }, "Rotate ±", -1)), createVNode(unref(un), {
 						"model-value": cfg.value.rotate_jitter,
 						min: 0,
 						max: 180,
@@ -12461,7 +12461,7 @@ var BgConfig_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defineC
 						precision: 0,
 						"onUpdate:modelValue": _cache[16] || (_cache[16] = ($event) => set("rotate_jitter", Number($event)))
 					}, null, 8, ["model-value"])]),
-					createBaseVNode("div", _hoisted_21$6, [_cache[34] || (_cache[34] = createBaseVNode("label", { class: "bp-lbl" }, "Size jitter", -1)), createVNode(unref(un), {
+					createBaseVNode("div", _hoisted_21$7, [_cache[34] || (_cache[34] = createBaseVNode("label", { class: "bp-lbl" }, "Size jitter", -1)), createVNode(unref(un), {
 						"model-value": cfg.value.scale_jitter,
 						min: 0,
 						max: 1,
@@ -13403,9 +13403,9 @@ function Je(e, t, n) {
 }
 //#endregion
 //#region frontend/components/WidgetActions.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$38 = ["title"];
-var _hoisted_2$34 = { class: "wa-label" };
-var _hoisted_3$31 = {
+var _hoisted_1$39 = ["title"];
+var _hoisted_2$35 = { class: "wa-label" };
+var _hoisted_3$32 = {
 	key: 1,
 	class: "wa-count"
 };
@@ -13436,9 +13436,9 @@ var WidgetActions_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @
 					key: 0,
 					class: normalizeClass(["mdi", __props.icon])
 				}, null, 2)) : createCommentVNode("", true),
-				createBaseVNode("span", _hoisted_2$34, toDisplayString(__props.label), 1),
-				__props.count ? (openBlock(), createElementBlock("span", _hoisted_3$31, toDisplayString(__props.count), 1)) : createCommentVNode("", true)
-			], 8, _hoisted_1$38), renderSlot(_ctx.$slots, "default", {}, void 0, true)], 2);
+				createBaseVNode("span", _hoisted_2$35, toDisplayString(__props.label), 1),
+				__props.count ? (openBlock(), createElementBlock("span", _hoisted_3$32, toDisplayString(__props.count), 1)) : createCommentVNode("", true)
+			], 8, _hoisted_1$39), renderSlot(_ctx.$slots, "default", {}, void 0, true)], 2);
 		};
 	}
 }), [["__scopeId", "data-v-0d8685b2"]]);
@@ -13664,7 +13664,7 @@ app.registerExtension({
 });
 //#endregion
 //#region frontend/widgets/ChoiceList.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$37 = [
+var _hoisted_1$38 = [
 	"value",
 	"onInput",
 	"onKeydown"
@@ -13960,7 +13960,7 @@ var ChoiceList_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defin
 							spellcheck: "false",
 							onInput: ($event) => setText(row, $event.target.value),
 							onKeydown: withKeys(withModifiers(($event) => addAfter(row), ["prevent"]), ["enter"])
-						}, null, 40, _hoisted_1$37),
+						}, null, 40, _hoisted_1$38),
 						createVNode(unref(je$1), {
 							size: "sm",
 							icon: "mdi mdi-close",
@@ -14027,14 +14027,14 @@ var ChoiceList_exports = /* @__PURE__ */ __exportAll({
 var ChoiceList_default = /*#__PURE__*/ _plugin_vue_export_helper_default(ChoiceList_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-299b8ff3"]]);
 //#endregion
 //#region frontend/widgets/ColorField.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$36 = { class: "cf" };
-var _hoisted_2$33 = { class: "cf-label" };
-var _hoisted_3$30 = {
+var _hoisted_1$37 = { class: "cf" };
+var _hoisted_2$34 = { class: "cf-label" };
+var _hoisted_3$31 = {
 	key: 0,
 	class: "cf-field"
 };
-var _hoisted_4$28 = ["value"];
-var _hoisted_5$25 = {
+var _hoisted_4$29 = ["value"];
+var _hoisted_5$26 = {
 	key: 1,
 	class: "cf-field cf-linked"
 };
@@ -14090,7 +14090,7 @@ var ColorField_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defin
 			});
 		});
 		return (_ctx, _cache) => {
-			return openBlock(), createElementBlock("div", _hoisted_1$36, [createBaseVNode("span", _hoisted_2$33, toDisplayString(label.value), 1), !linked.value ? (openBlock(), createElementBlock("div", _hoisted_3$30, [createVNode(unref(Yf), {
+			return openBlock(), createElementBlock("div", _hoisted_1$37, [createBaseVNode("span", _hoisted_2$34, toDisplayString(label.value), 1), !linked.value ? (openBlock(), createElementBlock("div", _hoisted_3$31, [createVNode(unref(Yf), {
 				compact: "",
 				"model-value": swatch.value,
 				"onUpdate:modelValue": set
@@ -14101,7 +14101,7 @@ var ColorField_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defin
 				title: "Any CSS colour: #hex, rgb(…), hsl(…) or a name",
 				onChange: _cache[0] || (_cache[0] = ($event) => set($event.target.value.trim())),
 				onKeydown: _cache[1] || (_cache[1] = withKeys(($event) => $event.target.blur(), ["enter"]))
-			}, null, 42, _hoisted_4$28)])) : (openBlock(), createElementBlock("span", _hoisted_5$25, "linked"))]);
+			}, null, 42, _hoisted_4$29)])) : (openBlock(), createElementBlock("span", _hoisted_5$26, "linked"))]);
 		};
 	}
 });
@@ -14700,14 +14700,14 @@ function growMask(url, fx, fy) {
 }
 //#endregion
 //#region frontend/components/fresco/FrescoBoxFace.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$35 = ["src"];
-var _hoisted_2$32 = ["src"];
-var _hoisted_3$29 = {
+var _hoisted_1$36 = ["src"];
+var _hoisted_2$33 = ["src"];
+var _hoisted_3$30 = {
 	key: 0,
 	class: "fbf-plus"
 };
-var _hoisted_4$27 = ["title"];
-var _hoisted_5$24 = {
+var _hoisted_4$28 = ["title"];
+var _hoisted_5$25 = {
 	key: 3,
 	class: "fbf-text"
 };
@@ -14746,7 +14746,7 @@ var FrescoBoxFace_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @
 					src: unref(thumbUrl)(main.value.ref, main.value.type),
 					alt: "",
 					draggable: "false"
-				}, null, 8, _hoisted_1$35)], 4)) : createCommentVNode("", true),
+				}, null, 8, _hoisted_1$36)], 4)) : createCommentVNode("", true),
 				more.value.length ? (openBlock(), createElementBlock("div", {
 					key: 1,
 					class: normalizeClass(["fbf-more", { big: !main.value }])
@@ -14756,21 +14756,21 @@ var FrescoBoxFace_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @
 						src: unref(thumbUrl)(r.ref, r.type),
 						alt: "",
 						draggable: "false"
-					}, null, 8, _hoisted_2$32);
-				}), 128)), more.value.length > 3 ? (openBlock(), createElementBlock("span", _hoisted_3$29, "+" + toDisplayString(more.value.length - 3), 1)) : createCommentVNode("", true)], 2)) : createCommentVNode("", true),
+					}, null, 8, _hoisted_2$33);
+				}), 128)), more.value.length > 3 ? (openBlock(), createElementBlock("span", _hoisted_3$30, "+" + toDisplayString(more.value.length - 3), 1)) : createCommentVNode("", true)], 2)) : createCommentVNode("", true),
 				loras.value ? (openBlock(), createElementBlock("span", {
 					key: 2,
 					class: "fbf-lora",
 					title: `${loras.value} LoRA${loras.value > 1 ? "s" : ""}`
-				}, [_cache[0] || (_cache[0] = createBaseVNode("i", { class: "mdi mdi-puzzle-outline" }, null, -1)), createTextVNode(toDisplayString(loras.value), 1)], 8, _hoisted_4$27)) : createCommentVNode("", true),
-				__props.layer.prompt.trim() ? (openBlock(), createElementBlock("p", _hoisted_5$24, toDisplayString(__props.layer.prompt.trim()), 1)) : createCommentVNode("", true)
+				}, [_cache[0] || (_cache[0] = createBaseVNode("i", { class: "mdi mdi-puzzle-outline" }, null, -1)), createTextVNode(toDisplayString(loras.value), 1)], 8, _hoisted_4$28)) : createCommentVNode("", true),
+				__props.layer.prompt.trim() ? (openBlock(), createElementBlock("p", _hoisted_5$25, toDisplayString(__props.layer.prompt.trim()), 1)) : createCommentVNode("", true)
 			], 2);
 		};
 	}
 }), [["__scopeId", "data-v-163982f0"]]);
 //#endregion
 //#region frontend/components/fresco/FrescoLoras.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$34 = { class: "fl" };
+var _hoisted_1$35 = { class: "fl" };
 //#endregion
 //#region frontend/components/fresco/FrescoLoras.vue
 var FrescoLoras_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
@@ -14804,7 +14804,7 @@ var FrescoLoras_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__
 			browse.value = false;
 		}
 		return (_ctx, _cache) => {
-			return openBlock(), createElementBlock("div", _hoisted_1$34, [(openBlock(true), createElementBlock(Fragment, null, renderList(loras.value, (row, i) => {
+			return openBlock(), createElementBlock("div", _hoisted_1$35, [(openBlock(true), createElementBlock(Fragment, null, renderList(loras.value, (row, i) => {
 				return openBlock(), createElementBlock("div", {
 					key: row.id,
 					class: normalizeClass(["fl-row", { off: !row.on }])
@@ -14850,11 +14850,11 @@ var FrescoLoras_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__
 }), [["__scopeId", "data-v-71f8bdb9"]]);
 //#endregion
 //#region frontend/components/fresco/FrescoPills.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$33 = {
+var _hoisted_1$34 = {
 	class: "fp",
 	role: "radiogroup"
 };
-var _hoisted_2$31 = [
+var _hoisted_2$32 = [
 	"aria-checked",
 	"disabled",
 	"title",
@@ -14874,7 +14874,7 @@ var FrescoPills_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__
 		/** A choice between a few options as free-standing pills — no enclosing frame. */
 		const emit = __emit;
 		return (_ctx, _cache) => {
-			return openBlock(), createElementBlock("div", _hoisted_1$33, [(openBlock(true), createElementBlock(Fragment, null, renderList(__props.options, (o) => {
+			return openBlock(), createElementBlock("div", _hoisted_1$34, [(openBlock(true), createElementBlock(Fragment, null, renderList(__props.options, (o) => {
 				return openBlock(), createElementBlock("button", {
 					key: o.value,
 					type: "button",
@@ -14884,20 +14884,20 @@ var FrescoPills_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__
 					disabled: __props.disabled,
 					title: o.title,
 					onClick: ($event) => emit("update:modelValue", o.value)
-				}, toDisplayString(o.label), 11, _hoisted_2$31);
+				}, toDisplayString(o.label), 11, _hoisted_2$32);
 			}), 128))]);
 		};
 	}
 }), [["__scopeId", "data-v-744c36c6"]]);
 //#endregion
 //#region frontend/components/fresco/FrescoRefs.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$32 = ["title"];
-var _hoisted_2$30 = ["src"];
-var _hoisted_3$28 = { class: "fr-acts" };
-var _hoisted_4$26 = ["title", "onClick"];
-var _hoisted_5$23 = ["title", "onClick"];
-var _hoisted_6$21 = ["onClick"];
-var _hoisted_7$18 = ["disabled"];
+var _hoisted_1$33 = ["title"];
+var _hoisted_2$31 = ["src"];
+var _hoisted_3$29 = { class: "fr-acts" };
+var _hoisted_4$27 = ["title", "onClick"];
+var _hoisted_5$24 = ["title", "onClick"];
+var _hoisted_6$22 = ["onClick"];
+var _hoisted_7$19 = ["disabled"];
 //#endregion
 //#region frontend/components/fresco/FrescoRefs.vue
 var FrescoRefs_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
@@ -15023,26 +15023,26 @@ var FrescoRefs_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__P
 						"data-peek": "",
 						loading: "lazy",
 						draggable: "false"
-					}, null, 12, _hoisted_2$30), createBaseVNode("div", _hoisted_3$28, [
+					}, null, 12, _hoisted_2$31), createBaseVNode("div", _hoisted_3$29, [
 						createBaseVNode("button", {
 							type: "button",
 							class: "fr-act",
 							title: FIT_LABEL[r.fit],
 							onClick: ($event) => cycleFit(i)
-						}, [createBaseVNode("i", { class: normalizeClass(["mdi", FIT_ICON[r.fit]]) }, null, 2)], 8, _hoisted_4$26),
+						}, [createBaseVNode("i", { class: normalizeClass(["mdi", FIT_ICON[r.fit]]) }, null, 2)], 8, _hoisted_4$27),
 						createBaseVNode("button", {
 							type: "button",
 							class: "fr-act",
 							title: r.on ? "Mute" : "Unmute",
 							onClick: ($event) => patch(i, { on: !r.on })
-						}, [createBaseVNode("i", { class: normalizeClass(["mdi", r.on ? "mdi-eye-outline" : "mdi-eye-off-outline"]) }, null, 2)], 8, _hoisted_5$23),
+						}, [createBaseVNode("i", { class: normalizeClass(["mdi", r.on ? "mdi-eye-outline" : "mdi-eye-off-outline"]) }, null, 2)], 8, _hoisted_5$24),
 						createBaseVNode("button", {
 							type: "button",
 							class: "fr-act danger",
 							title: "Remove",
 							onClick: ($event) => remove(i)
-						}, [..._cache[3] || (_cache[3] = [createBaseVNode("i", { class: "mdi mdi-close" }, null, -1)])], 8, _hoisted_6$21)
-					])], 8, _hoisted_1$32), createVNode(unref(un), {
+						}, [..._cache[3] || (_cache[3] = [createBaseVNode("i", { class: "mdi mdi-close" }, null, -1)])], 8, _hoisted_6$22)
+					])], 8, _hoisted_1$33), createVNode(unref(un), {
 						class: "fr-str",
 						bare: "",
 						"model-value": r.strength,
@@ -15060,7 +15060,7 @@ var FrescoRefs_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__P
 					disabled: busy.value,
 					title: "Browse images — or drop them here",
 					onClick: _cache[0] || (_cache[0] = ($event) => browse.value = true)
-				}, [createBaseVNode("i", { class: normalizeClass(["mdi", busy.value ? "mdi-loading mdi-spin" : "mdi-image-plus-outline"]) }, null, 2), _cache[4] || (_cache[4] = createTextVNode(" Drop images, or browse ", -1))], 8, _hoisted_7$18)) : createCommentVNode("", true),
+				}, [createBaseVNode("i", { class: normalizeClass(["mdi", busy.value ? "mdi-loading mdi-spin" : "mdi-image-plus-outline"]) }, null, 2), _cache[4] || (_cache[4] = createTextVNode(" Drop images, or browse ", -1))], 8, _hoisted_7$19)) : createCommentVNode("", true),
 				createBaseVNode("input", {
 					ref_key: "fileInput",
 					ref: fileInput,
@@ -15086,14 +15086,14 @@ var FrescoRefs_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__P
 }), [["__scopeId", "data-v-f6094846"]]);
 //#endregion
 //#region frontend/components/fresco/FrescoSection.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$31 = { class: "fsec" };
-var _hoisted_2$29 = { class: "fsec-head" };
-var _hoisted_3$27 = { class: "fsec-label" };
-var _hoisted_4$25 = {
+var _hoisted_1$32 = { class: "fsec" };
+var _hoisted_2$30 = { class: "fsec-head" };
+var _hoisted_3$28 = { class: "fsec-label" };
+var _hoisted_4$26 = {
 	key: 0,
 	class: "fsec-note"
 };
-var _hoisted_5$22 = { class: "fsec-acts" };
+var _hoisted_5$23 = { class: "fsec-acts" };
 //#endregion
 //#region frontend/components/fresco/FrescoSection.vue
 var FrescoSection_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
@@ -15105,28 +15105,28 @@ var FrescoSection_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @
 	setup(__props) {
 		/** One block of the inspector: a small caps label, a note, and its actions as icons at the end. */
 		return (_ctx, _cache) => {
-			return openBlock(), createElementBlock("section", _hoisted_1$31, [createBaseVNode("header", _hoisted_2$29, [
-				createBaseVNode("span", _hoisted_3$27, toDisplayString(__props.label), 1),
-				__props.note ? (openBlock(), createElementBlock("span", _hoisted_4$25, toDisplayString(__props.note), 1)) : createCommentVNode("", true),
-				createBaseVNode("span", _hoisted_5$22, [renderSlot(_ctx.$slots, "actions", {}, void 0, true)])
+			return openBlock(), createElementBlock("section", _hoisted_1$32, [createBaseVNode("header", _hoisted_2$30, [
+				createBaseVNode("span", _hoisted_3$28, toDisplayString(__props.label), 1),
+				__props.note ? (openBlock(), createElementBlock("span", _hoisted_4$26, toDisplayString(__props.note), 1)) : createCommentVNode("", true),
+				createBaseVNode("span", _hoisted_5$23, [renderSlot(_ctx.$slots, "actions", {}, void 0, true)])
 			]), renderSlot(_ctx.$slots, "default", {}, void 0, true)]);
 		};
 	}
 }), [["__scopeId", "data-v-3701245b"]]);
 //#endregion
 //#region frontend/components/fresco/FrescoContentForm.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$30 = { class: "fcf" };
-var _hoisted_2$28 = {
+var _hoisted_1$31 = { class: "fcf" };
+var _hoisted_2$29 = {
 	key: 0,
 	class: "fcf-read"
 };
-var _hoisted_3$26 = {
+var _hoisted_3$27 = {
 	key: 1,
 	class: "fcf-row"
 };
-var _hoisted_4$24 = { class: "fcf-pairs" };
-var _hoisted_5$21 = { class: "fcf-pair" };
-var _hoisted_6$20 = { class: "fcf-pair" };
+var _hoisted_4$25 = { class: "fcf-pairs" };
+var _hoisted_5$22 = { class: "fcf-pair" };
+var _hoisted_6$21 = { class: "fcf-pair" };
 var BLEND_TIP$1 = "How several references combine: Mix interleaves them evenly, Weighted gives a stronger reference more of the reading, Tiled gives each one part to itself, Salient lets each part take from whichever reference shows something there. The number is the softness between them.";
 var INFLUENCE_TIP$1 = "How strongly this area follows its own prompt and references against the rest of the picture. Raise it when they aren't coming through; too high and the area stops fitting in. Below 1 also weakens the LoRAs — their text side reads the same prompt.";
 var READ_TIP = "Meaning: the references' vision tokens inside this area's prompt — what they are, not their exact look. Look: the images themselves as clean tokens only this area sees, plus the prompt read with them — the in-context edit recipe, for an edit LoRA like Krea 2 Identity Edit (add it to this layer's LoRAs). Needs the VAE.";
@@ -15173,7 +15173,7 @@ var FrescoContentForm_default = /*#__PURE__*/ _plugin_vue_export_helper_default(
 		}
 		__expose({ focusPrompt: () => promptInput.value?.$el?.querySelector?.("textarea")?.focus() });
 		return (_ctx, _cache) => {
-			return openBlock(), createElementBlock("div", _hoisted_1$30, [
+			return openBlock(), createElementBlock("div", _hoisted_1$31, [
 				createVNode(FrescoSection_default, { label: "Prompt" }, {
 					default: withCtx(() => [createVNode(unref(Zl), {
 						ref_key: "promptInput",
@@ -15214,12 +15214,12 @@ var FrescoContentForm_default = /*#__PURE__*/ _plugin_vue_export_helper_default(
 							"model-value": __props.content.refs,
 							"onUpdate:modelValue": _cache[3] || (_cache[3] = ($event) => emit("patch", { refs: $event }))
 						}, null, 8, ["model-value"]),
-						activeRefs.value ? (openBlock(), createElementBlock("div", _hoisted_2$28, [createBaseVNode("span", { title: READ_TIP }, "read as"), createVNode(FrescoPills_default, {
+						activeRefs.value ? (openBlock(), createElementBlock("div", _hoisted_2$29, [createBaseVNode("span", { title: READ_TIP }, "read as"), createVNode(FrescoPills_default, {
 							"model-value": __props.content.read,
 							options: READS,
 							"onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => emit("patch", { read: $event }))
 						}, null, 8, ["model-value"])])) : createCommentVNode("", true),
-						activeRefs.value > 1 && __props.content.read === "meaning" ? (openBlock(), createElementBlock("div", _hoisted_3$26, [
+						activeRefs.value > 1 && __props.content.read === "meaning" ? (openBlock(), createElementBlock("div", _hoisted_3$27, [
 							createBaseVNode("span", { title: BLEND_TIP$1 }, "blend"),
 							createVNode(unref(Zf), {
 								size: "sm",
@@ -15262,7 +15262,7 @@ var FrescoContentForm_default = /*#__PURE__*/ _plugin_vue_export_helper_default(
 				}, 8, ["note"]),
 				renderSlot(_ctx.$slots, "default", {}, void 0, true),
 				createVNode(FrescoSection_default, { label: "Strength" }, {
-					default: withCtx(() => [createBaseVNode("div", _hoisted_4$24, [createBaseVNode("label", _hoisted_5$21, [createBaseVNode("span", { title: INFLUENCE_TIP$1 }, "influence"), createVNode(unref(un), {
+					default: withCtx(() => [createBaseVNode("div", _hoisted_4$25, [createBaseVNode("label", _hoisted_5$22, [createBaseVNode("span", { title: INFLUENCE_TIP$1 }, "influence"), createVNode(unref(un), {
 						size: "sm",
 						"model-value": __props.content.influence,
 						min: 0,
@@ -15271,7 +15271,7 @@ var FrescoContentForm_default = /*#__PURE__*/ _plugin_vue_export_helper_default(
 						precision: 2,
 						title: INFLUENCE_TIP$1,
 						"onUpdate:modelValue": _cache[8] || (_cache[8] = ($event) => emit("patch", { influence: $event }))
-					}, null, 8, ["model-value"])]), createBaseVNode("label", _hoisted_6$20, [createBaseVNode("span", { title: DENOISE_TIP$1 }, "denoise"), createVNode(unref(un), {
+					}, null, 8, ["model-value"])]), createBaseVNode("label", _hoisted_6$21, [createBaseVNode("span", { title: DENOISE_TIP$1 }, "denoise"), createVNode(unref(un), {
 						size: "sm",
 						"model-value": __props.content.denoise,
 						min: 0,
@@ -15374,9 +15374,9 @@ function importLayout(mode, text, current) {
 }
 //#endregion
 //#region frontend/components/layout/LayoutThumb.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$29 = ["viewBox"];
-var _hoisted_2$27 = ["width", "height"];
-var _hoisted_3$25 = [
+var _hoisted_1$30 = ["viewBox"];
+var _hoisted_2$28 = ["width", "height"];
+var _hoisted_3$26 = [
 	"x",
 	"y",
 	"width",
@@ -15384,7 +15384,7 @@ var _hoisted_3$25 = [
 	"fill",
 	"stroke"
 ];
-var _hoisted_4$23 = ["x", "y"];
+var _hoisted_4$24 = ["x", "y"];
 var SIDE = 240;
 //#endregion
 //#region frontend/components/layout/LayoutThumb.vue
@@ -15412,7 +15412,7 @@ var LayoutThumb_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__
 				width: w.value,
 				height: h.value,
 				rx: "3"
-			}, null, 8, _hoisted_2$27), (openBlock(true), createElementBlock(Fragment, null, renderList(__props.preview?.boxes ?? [], (b, i) => {
+			}, null, 8, _hoisted_2$28), (openBlock(true), createElementBlock(Fragment, null, renderList(__props.preview?.boxes ?? [], (b, i) => {
 				return openBlock(), createElementBlock("g", { key: i }, [createBaseVNode("rect", {
 					x: b.x * w.value,
 					y: b.y * h.value,
@@ -15422,13 +15422,13 @@ var LayoutThumb_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__
 					"fill-opacity": "0.28",
 					stroke: b.color,
 					"stroke-width": "1.5"
-				}, null, 8, _hoisted_3$25), __props.labels && b.name ? (openBlock(), createElementBlock("text", {
+				}, null, 8, _hoisted_3$26), __props.labels && b.name ? (openBlock(), createElementBlock("text", {
 					key: 0,
 					x: b.x * w.value + 4,
 					y: b.y * h.value + 12,
 					class: "lt-label"
-				}, toDisplayString(b.name), 9, _hoisted_4$23)) : createCommentVNode("", true)]);
-			}), 128))], 8, _hoisted_1$29);
+				}, toDisplayString(b.name), 9, _hoisted_4$24)) : createCommentVNode("", true)]);
+			}), 128))], 8, _hoisted_1$30);
 		};
 	}
 }), [["__scopeId", "data-v-863b189a"]]);
@@ -15509,26 +15509,32 @@ async function saveMixinPreset(name, mixin) {
 async function deleteMixinPreset(name) {
 	await post$2("layouts/mixins/delete", { name });
 }
+async function renameMixinPreset(name, to) {
+	return (await post$2("layouts/mixins/rename", {
+		name,
+		to
+	})).name;
+}
 //#endregion
 //#region frontend/components/layout/LayoutBrowser.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$28 = { class: "lb-search" };
-var _hoisted_2$26 = { class: "lb-save" };
-var _hoisted_3$24 = { class: "lb" };
-var _hoisted_4$22 = { class: "lb-modes" };
-var _hoisted_5$20 = ["onClick"];
-var _hoisted_6$19 = { class: "lb-mname" };
-var _hoisted_7$17 = { class: "lb-count" };
-var _hoisted_8$17 = { class: "lb-main" };
-var _hoisted_9$14 = {
+var _hoisted_1$29 = { class: "lb-search" };
+var _hoisted_2$27 = { class: "lb-save" };
+var _hoisted_3$25 = { class: "lb" };
+var _hoisted_4$23 = { class: "lb-modes" };
+var _hoisted_5$21 = ["onClick"];
+var _hoisted_6$20 = { class: "lb-mname" };
+var _hoisted_7$18 = { class: "lb-count" };
+var _hoisted_8$18 = { class: "lb-main" };
+var _hoisted_9$15 = {
 	key: 0,
 	class: "lb-note"
 };
-var _hoisted_10$12 = {
+var _hoisted_10$13 = {
 	key: 0,
 	class: "lb-empty"
 };
-var _hoisted_11$12 = { class: "lb-grid" };
-var _hoisted_12$11 = [
+var _hoisted_11$13 = { class: "lb-grid" };
+var _hoisted_12$12 = [
 	"title",
 	"onClick",
 	"onDblclick"
@@ -15539,18 +15545,18 @@ var _hoisted_15$10 = { class: "lb-cmeta" };
 var _hoisted_16$9 = { class: "lb-detail" };
 var _hoisted_17$9 = { class: "lb-big" };
 var _hoisted_18$9 = { class: "lb-row" };
-var _hoisted_19$6 = { class: "lb-facts" };
-var _hoisted_20$6 = {
+var _hoisted_19$7 = { class: "lb-facts" };
+var _hoisted_20$7 = {
 	key: 0,
 	class: "lb-prompt"
 };
-var _hoisted_21$5 = { class: "lb-names" };
-var _hoisted_22$2 = {
+var _hoisted_21$6 = { class: "lb-names" };
+var _hoisted_22$3 = {
 	key: 1,
 	class: "lb-note"
 };
-var _hoisted_23$2 = { class: "lb-row" };
-var _hoisted_24$2 = {
+var _hoisted_23$3 = { class: "lb-row" };
+var _hoisted_24$3 = {
 	key: 1,
 	class: "lb-empty"
 };
@@ -15683,14 +15689,14 @@ var LayoutBrowser_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @
 				"onUpdate:open": setOpen
 			}, {
 				header: withCtx(() => [
-					createBaseVNode("span", _hoisted_1$28, [createVNode(unref(Zl), {
+					createBaseVNode("span", _hoisted_1$29, [createVNode(unref(Zl), {
 						modelValue: query.value,
 						"onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => query.value = $event),
 						sm: "",
 						placeholder: "Search names and prompts…"
 					}, null, 8, ["modelValue"])]),
 					_cache[5] || (_cache[5] = createBaseVNode("span", { class: "lb-grow" }, null, -1)),
-					createBaseVNode("span", _hoisted_2$26, [createVNode(unref(Zl), {
+					createBaseVNode("span", _hoisted_2$27, [createVNode(unref(Zl), {
 						modelValue: saveName.value,
 						"onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => saveName.value = $event),
 						sm: "",
@@ -15711,8 +15717,8 @@ var LayoutBrowser_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @
 						onClick: refresh
 					})
 				]),
-				default: withCtx(() => [createBaseVNode("div", _hoisted_3$24, [
-					createBaseVNode("nav", _hoisted_4$22, [(openBlock(true), createElementBlock(Fragment, null, renderList(scopes.value, (s) => {
+				default: withCtx(() => [createBaseVNode("div", _hoisted_3$25, [
+					createBaseVNode("nav", _hoisted_4$23, [(openBlock(true), createElementBlock(Fragment, null, renderList(scopes.value, (s) => {
 						return openBlock(), createElementBlock("button", {
 							key: s.id,
 							type: "button",
@@ -15720,12 +15726,12 @@ var LayoutBrowser_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @
 							onClick: ($event) => scope.value = s.id
 						}, [
 							createBaseVNode("i", { class: normalizeClass(s.icon) }, null, 2),
-							createBaseVNode("span", _hoisted_6$19, toDisplayString(s.label), 1),
-							createBaseVNode("span", _hoisted_7$17, toDisplayString(s.count), 1)
-						], 10, _hoisted_5$20);
+							createBaseVNode("span", _hoisted_6$20, toDisplayString(s.label), 1),
+							createBaseVNode("span", _hoisted_7$18, toDisplayString(s.count), 1)
+						], 10, _hoisted_5$21);
 					}), 128))]),
-					createBaseVNode("section", _hoisted_8$17, [note.value ? (openBlock(), createElementBlock("p", _hoisted_9$14, toDisplayString(note.value), 1)) : createCommentVNode("", true), createVNode(unref(tl), { class: "lb-gridwrap" }, {
-						default: withCtx(() => [!visible.value.length ? (openBlock(), createElementBlock("div", _hoisted_10$12, [_cache[6] || (_cache[6] = createBaseVNode("i", { class: "mdi mdi-bookshelf" }, null, -1)), createBaseVNode("span", null, toDisplayString(all.value.length ? "Nothing matches." : "Nothing saved yet — name this layout above."), 1)])) : createCommentVNode("", true), createBaseVNode("div", _hoisted_11$12, [(openBlock(true), createElementBlock(Fragment, null, renderList(visible.value, (item) => {
+					createBaseVNode("section", _hoisted_8$18, [note.value ? (openBlock(), createElementBlock("p", _hoisted_9$15, toDisplayString(note.value), 1)) : createCommentVNode("", true), createVNode(unref(tl), { class: "lb-gridwrap" }, {
+						default: withCtx(() => [!visible.value.length ? (openBlock(), createElementBlock("div", _hoisted_10$13, [_cache[6] || (_cache[6] = createBaseVNode("i", { class: "mdi mdi-bookshelf" }, null, -1)), createBaseVNode("span", null, toDisplayString(all.value.length ? "Nothing matches." : "Nothing saved yet — name this layout above."), 1)])) : createCommentVNode("", true), createBaseVNode("div", _hoisted_11$13, [(openBlock(true), createElementBlock(Fragment, null, renderList(visible.value, (item) => {
 							return openBlock(), createElementBlock("button", {
 								key: keyOf(item),
 								type: "button",
@@ -15737,7 +15743,7 @@ var LayoutBrowser_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @
 								createBaseVNode("span", _hoisted_13$10, [createVNode(LayoutThumb_default, { preview: item.preview }, null, 8, ["preview"])]),
 								createBaseVNode("span", _hoisted_14$10, toDisplayString(item.name), 1),
 								createBaseVNode("span", _hoisted_15$10, [createBaseVNode("i", { class: normalizeClass(modeOf(item.mode)?.icon ?? "mdi mdi-shape-outline") }, null, 2), createTextVNode(" " + toDisplayString(modeOf(item.mode)?.label ?? item.mode) + " · " + toDisplayString(item.preview?.boxes.length ?? 0) + " boxes ", 1)])
-							], 42, _hoisted_12$11);
+							], 42, _hoisted_12$12);
 						}), 128))])]),
 						_: 1
 					})]),
@@ -15755,23 +15761,23 @@ var LayoutBrowser_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @
 							onKeydown: withKeys(rename, ["enter"]),
 							onBlur: rename
 						}, null, 8, ["modelValue"])]),
-						createBaseVNode("dl", _hoisted_19$6, [
+						createBaseVNode("dl", _hoisted_19$7, [
 							_cache[8] || (_cache[8] = createBaseVNode("dt", null, "Mode", -1)),
 							createBaseVNode("dd", null, toDisplayString(modeOf(picked.value.mode)?.label ?? picked.value.mode), 1),
 							picked.value.preview?.width ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [_cache[7] || (_cache[7] = createBaseVNode("dt", null, "Canvas", -1)), createBaseVNode("dd", null, toDisplayString(picked.value.preview.width) + "×" + toDisplayString(picked.value.preview.height), 1)], 64)) : createCommentVNode("", true),
 							_cache[9] || (_cache[9] = createBaseVNode("dt", null, "Saved", -1)),
 							createBaseVNode("dd", null, toDisplayString(when(picked.value.saved)), 1)
 						]),
-						picked.value.preview?.prompt ? (openBlock(), createElementBlock("p", _hoisted_20$6, toDisplayString(picked.value.preview.prompt), 1)) : createCommentVNode("", true),
-						createBaseVNode("ul", _hoisted_21$5, [(openBlock(true), createElementBlock(Fragment, null, renderList(picked.value.preview?.boxes ?? [], (b, i) => {
+						picked.value.preview?.prompt ? (openBlock(), createElementBlock("p", _hoisted_20$7, toDisplayString(picked.value.preview.prompt), 1)) : createCommentVNode("", true),
+						createBaseVNode("ul", _hoisted_21$6, [(openBlock(true), createElementBlock(Fragment, null, renderList(picked.value.preview?.boxes ?? [], (b, i) => {
 							return openBlock(), createElementBlock("li", { key: i }, [createBaseVNode("span", {
 								class: "lb-dot",
 								style: normalizeStyle({ background: b.color })
 							}, null, 4), createTextVNode(toDisplayString(b.name || `Box ${i + 1}`), 1)]);
 						}), 128))]),
 						_cache[12] || (_cache[12] = createBaseVNode("span", { class: "lb-grow" }, null, -1)),
-						!loadsNatively(picked.value.mode) ? (openBlock(), createElementBlock("p", _hoisted_22$2, " Saved in " + toDisplayString(modeOf(picked.value.mode)?.label ?? picked.value.mode) + " — loading keeps its boxes, names and prompts, and leaves the rest. ", 1)) : createCommentVNode("", true),
-						createBaseVNode("div", _hoisted_23$2, [
+						!loadsNatively(picked.value.mode) ? (openBlock(), createElementBlock("p", _hoisted_22$3, " Saved in " + toDisplayString(modeOf(picked.value.mode)?.label ?? picked.value.mode) + " — loading keeps its boxes, names and prompts, and leaves the rest. ", 1)) : createCommentVNode("", true),
+						createBaseVNode("div", _hoisted_23$3, [
 							createVNode(unref(Yt), {
 								sm: "",
 								variant: confirmDelete.value ? "danger" : "default",
@@ -15792,7 +15798,7 @@ var LayoutBrowser_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @
 								_: 1
 							})
 						])
-					], 64)) : (openBlock(), createElementBlock("div", _hoisted_24$2, [..._cache[13] || (_cache[13] = [createBaseVNode("span", null, "Pick a layout to see it.", -1)])]))])
+					], 64)) : (openBlock(), createElementBlock("div", _hoisted_24$3, [..._cache[13] || (_cache[13] = [createBaseVNode("span", null, "Pick a layout to see it.", -1)])]))])
 				])]),
 				_: 1
 			}, 8, ["open"]);
@@ -15801,28 +15807,28 @@ var LayoutBrowser_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @
 }), [["__scopeId", "data-v-38d9a54a"]]);
 //#endregion
 //#region frontend/components/layout/LayoutEditor.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$27 = { class: "le-canvascol" };
-var _hoisted_2$25 = {
+var _hoisted_1$28 = { class: "le-canvascol" };
+var _hoisted_2$26 = {
 	class: "le-toolbar",
 	"aria-label": "Canvas tools"
 };
-var _hoisted_3$23 = { class: "le-menu" };
-var _hoisted_4$21 = { class: "le-opacity" };
-var _hoisted_5$19 = {
+var _hoisted_3$24 = { class: "le-menu" };
+var _hoisted_4$22 = { class: "le-opacity" };
+var _hoisted_5$20 = {
 	key: 1,
 	class: "le-ctl",
 	title: "Brush size in canvas pixels — [ and ]"
 };
-var _hoisted_6$18 = {
+var _hoisted_6$19 = {
 	key: 2,
 	class: "le-tip"
 };
-var _hoisted_7$16 = ["onClick"];
-var _hoisted_8$16 = { class: "le-pane" };
-var _hoisted_9$13 = { class: "le-head" };
-var _hoisted_10$11 = { class: "le-count" };
-var _hoisted_11$11 = { class: "le-pane" };
-var _hoisted_12$10 = {
+var _hoisted_7$17 = ["onClick"];
+var _hoisted_8$17 = { class: "le-pane" };
+var _hoisted_9$14 = { class: "le-head" };
+var _hoisted_10$12 = { class: "le-count" };
+var _hoisted_11$12 = { class: "le-pane" };
+var _hoisted_12$11 = {
 	key: 0,
 	class: "le-tabs"
 };
@@ -15841,12 +15847,12 @@ var _hoisted_18$8 = {
 	key: 2,
 	class: "le-title"
 };
-var _hoisted_19$5 = { class: "le-foot" };
-var _hoisted_20$5 = { class: "le-help" };
-var _hoisted_21$4 = { class: "le-json" };
-var _hoisted_22$1 = { class: "le-row" };
-var _hoisted_23$1 = { class: "le-row" };
-var _hoisted_24$1 = { class: "le-note le-grow" };
+var _hoisted_19$6 = { class: "le-foot" };
+var _hoisted_20$6 = { class: "le-help" };
+var _hoisted_21$5 = { class: "le-json" };
+var _hoisted_22$2 = { class: "le-row" };
+var _hoisted_23$2 = { class: "le-row" };
+var _hoisted_24$2 = { class: "le-note le-grow" };
 var SCENE_ROW = "background";
 //#endregion
 //#region frontend/components/layout/LayoutEditor.vue
@@ -16459,7 +16465,7 @@ var LayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 					gutter: "gap",
 					"onUpdate:sizes": _cache[19] || (_cache[19] = ($event) => saveSplit("columns", $event))
 				}, {
-					"pane-0": withCtx(() => [createBaseVNode("div", _hoisted_1$27, [createBaseVNode("header", _hoisted_2$25, [
+					"pane-0": withCtx(() => [createBaseVNode("div", _hoisted_1$28, [createBaseVNode("header", _hoisted_2$26, [
 						tools.value.length > 1 ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [(openBlock(true), createElementBlock(Fragment, null, renderList(tools.value, (t) => {
 							return openBlock(), createBlock(unref(je$1), {
 								key: t.value,
@@ -16507,7 +16513,7 @@ var LayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 								"title",
 								"onClick"
 							])]),
-							default: withCtx(() => [createBaseVNode("div", _hoisted_3$23, [
+							default: withCtx(() => [createBaseVNode("div", _hoisted_3$24, [
 								_cache[32] || (_cache[32] = createBaseVNode("span", { class: "le-menu-title" }, "Trace image", -1)),
 								createVNode(unref(Yt), {
 									sm: "",
@@ -16518,7 +16524,7 @@ var LayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 									_: 1
 								}),
 								backdropUrl.value ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
-									createBaseVNode("label", _hoisted_4$21, [
+									createBaseVNode("label", _hoisted_4$22, [
 										_cache[30] || (_cache[30] = createTextVNode(" Opacity ", -1)),
 										createVNode(unref(Qs), {
 											"model-value": Math.round(backdropOpacity.value * 100),
@@ -16554,7 +16560,7 @@ var LayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 							_: 1
 						}),
 						renderSlot(_ctx.$slots, "rail", {}, void 0, true),
-						__props.mode.paints && tool.value !== "select" ? (openBlock(), createElementBlock("label", _hoisted_5$19, [_cache[33] || (_cache[33] = createBaseVNode("i", { class: "mdi mdi-brush" }, null, -1)), createVNode(unref(un), {
+						__props.mode.paints && tool.value !== "select" ? (openBlock(), createElementBlock("label", _hoisted_5$20, [_cache[33] || (_cache[33] = createBaseVNode("i", { class: "mdi mdi-brush" }, null, -1)), createVNode(unref(un), {
 							size: "sm",
 							"model-value": Math.round(brushSize.value * size.value.width),
 							min: 4,
@@ -16564,7 +16570,7 @@ var LayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 							"onUpdate:modelValue": _cache[5] || (_cache[5] = ($event) => brushSize.value = Math.max(4, $event) / size.value.width)
 						}, null, 8, ["model-value", "max"])])) : createCommentVNode("", true),
 						_cache[37] || (_cache[37] = createBaseVNode("span", { class: "le-grow" }, null, -1)),
-						mismatch.value ? (openBlock(), createElementBlock("span", _hoisted_6$18, [createTextVNode(" Source is " + toDisplayString(sourceSize.value[0]) + "×" + toDisplayString(sourceSize.value[1]) + " ", 1), createBaseVNode("button", {
+						mismatch.value ? (openBlock(), createElementBlock("span", _hoisted_6$19, [createTextVNode(" Source is " + toDisplayString(sourceSize.value[0]) + "×" + toDisplayString(sourceSize.value[1]) + " ", 1), createBaseVNode("button", {
 							type: "button",
 							class: "le-link",
 							onClick: matchSource
@@ -16582,7 +16588,7 @@ var LayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 								_cache[34] || (_cache[34] = createBaseVNode("i", { class: "mdi mdi-aspect-ratio" }, null, -1)),
 								createTextVNode(" " + toDisplayString(size.value.width) + "×" + toDisplayString(size.value.height) + " ", 1),
 								_cache[35] || (_cache[35] = createBaseVNode("i", { class: "mdi mdi-chevron-down" }, null, -1))
-							], 8, _hoisted_7$16)]),
+							], 8, _hoisted_7$17)]),
 							default: withCtx(() => [createVNode(unref(Nf), {
 								width: size.value.width,
 								height: size.value.height,
@@ -16658,7 +16664,7 @@ var LayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 						gutter: "gap",
 						"onUpdate:sizes": _cache[18] || (_cache[18] = ($event) => saveSplit("rows", $event))
 					}, {
-						"pane-0": withCtx(() => [createBaseVNode("section", _hoisted_8$16, [createBaseVNode("header", _hoisted_9$13, [_cache[39] || (_cache[39] = createBaseVNode("span", { class: "le-title" }, "Layers", -1)), createBaseVNode("span", _hoisted_10$11, toDisplayString(layoutBoxes.value.length), 1)]), createVNode(unref(tl), { class: "le-body" }, {
+						"pane-0": withCtx(() => [createBaseVNode("section", _hoisted_8$17, [createBaseVNode("header", _hoisted_9$14, [_cache[39] || (_cache[39] = createBaseVNode("span", { class: "le-title" }, "Layers", -1)), createBaseVNode("span", _hoisted_10$12, toDisplayString(layoutBoxes.value.length), 1)]), createVNode(unref(tl), { class: "le-body" }, {
 							default: withCtx(() => [createVNode(unref(cm), {
 								selected: listSelection.value,
 								items: layerItems.value,
@@ -16669,8 +16675,8 @@ var LayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 							}, null, 8, ["selected", "items"])]),
 							_: 1
 						})])]),
-						"pane-1": withCtx(() => [createBaseVNode("section", _hoisted_11$11, [
-							tabbed.value ? (openBlock(), createElementBlock("nav", _hoisted_12$10, [
+						"pane-1": withCtx(() => [createBaseVNode("section", _hoisted_11$12, [
+							tabbed.value ? (openBlock(), createElementBlock("nav", _hoisted_12$11, [
 								createBaseVNode("button", {
 									type: "button",
 									class: normalizeClass(["le-tab", { on: tab.value === "box" }]),
@@ -16727,7 +16733,7 @@ var LayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 					}, 8, ["sizes"])]),
 					_: 3
 				}, 8, ["sizes"]),
-				createBaseVNode("footer", _hoisted_19$5, [
+				createBaseVNode("footer", _hoisted_19$6, [
 					createVNode(unref(je$1), {
 						size: "sm",
 						icon: "mdi mdi-undo",
@@ -16754,7 +16760,7 @@ var LayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 							title: "Controls and shortcuts",
 							onClick: toggle
 						}, null, 8, ["onClick"])]),
-						default: withCtx(() => [createBaseVNode("dl", _hoisted_20$5, [(openBlock(true), createElementBlock(Fragment, null, renderList(helpRows.value, (row) => {
+						default: withCtx(() => [createBaseVNode("dl", _hoisted_20$6, [(openBlock(true), createElementBlock(Fragment, null, renderList(helpRows.value, (row) => {
 							return openBlock(), createElementBlock(Fragment, { key: row[0] }, [createBaseVNode("dt", null, toDisplayString(row[0]), 1), createBaseVNode("dd", null, toDisplayString(row[1]), 1)], 64);
 						}), 128))])]),
 						_: 1
@@ -16787,9 +16793,9 @@ var LayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 							default: withCtx(() => [..._cache[42] || (_cache[42] = [createTextVNode(" JSON ", -1)])]),
 							_: 1
 						}, 8, ["onClick"])]),
-						default: withCtx(() => [createBaseVNode("div", _hoisted_21$4, [
+						default: withCtx(() => [createBaseVNode("div", _hoisted_21$5, [
 							_cache[46] || (_cache[46] = createBaseVNode("span", { class: "le-menu-title" }, "JSON", -1)),
-							createBaseVNode("div", _hoisted_22$1, [createVNode(unref(Yt), {
+							createBaseVNode("div", _hoisted_22$2, [createVNode(unref(Yt), {
 								sm: "",
 								icon: "mdi mdi-content-copy",
 								onClick: _cache[21] || (_cache[21] = ($event) => copyText(unref(exportLayout)(__props.mode, unref(scene))))
@@ -16813,7 +16819,7 @@ var LayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 								sm: "",
 								placeholder: `Paste a layout${__props.mode.importText ? " or the model's own JSON" : ""} here`
 							}, null, 8, ["modelValue", "placeholder"]),
-							createBaseVNode("div", _hoisted_23$1, [createBaseVNode("span", _hoisted_24$1, toDisplayString(jsonNote.value), 1), createVNode(unref(Yt), {
+							createBaseVNode("div", _hoisted_23$2, [createBaseVNode("span", _hoisted_24$2, toDisplayString(jsonNote.value), 1), createVNode(unref(Yt), {
 								sm: "",
 								icon: "mdi mdi-import",
 								disabled: !jsonText.value.trim(),
@@ -16893,25 +16899,25 @@ function useSentBack(key, nodeId, take) {
 }
 //#endregion
 //#region frontend/components/fresco/FrescoEditor.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$26 = [
+var _hoisted_1$27 = [
 	"title",
 	"onPointerdown",
 	"onPointerup"
 ];
-var _hoisted_2$24 = { class: "fs-menu" };
-var _hoisted_3$22 = { class: "fs-pairs" };
-var _hoisted_4$20 = { class: "fs-pair" };
-var _hoisted_5$18 = { class: "fs-pair" };
-var _hoisted_6$17 = {
+var _hoisted_2$25 = { class: "fs-menu" };
+var _hoisted_3$23 = { class: "fs-pairs" };
+var _hoisted_4$21 = { class: "fs-pair" };
+var _hoisted_5$19 = { class: "fs-pair" };
+var _hoisted_6$18 = {
 	key: 0,
 	class: "fs-grid"
 };
-var _hoisted_7$15 = { class: "fs-form" };
-var _hoisted_8$15 = {
+var _hoisted_7$16 = { class: "fs-form" };
+var _hoisted_8$16 = {
 	class: "fs-grid",
 	title: "How overlapping layers share the pixels they both cover"
 };
-var _hoisted_9$12 = {
+var _hoisted_9$13 = {
 	class: "fs-grid",
 	title: "Resolution reference images are read at. Higher reads more detail and costs more tokens in every layer's copy of the prompt."
 };
@@ -17302,7 +17308,7 @@ var FrescoEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 						onPointermove: onPointMove,
 						onPointerup: ($event) => onPointUp($event, i),
 						onPointercancel: _cache[2] || (_cache[2] = ($event) => pointDrag.value = null)
-					}, null, 46, _hoisted_1$26);
+					}, null, 46, _hoisted_1$27);
 				}), 128)) : createCommentVNode("", true)]),
 				"element-actions": withCtx(() => [unref(scene).layers.length > 1 ? (openBlock(), createBlock(unref(cl), {
 					key: 0,
@@ -17315,7 +17321,7 @@ var FrescoEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 						title: "Swap content with another layer — prompt, references and LoRAs trade places; each keeps its own box and shape",
 						onClick: toggle
 					}, null, 8, ["onClick"])]),
-					default: withCtx(({ close }) => [createBaseVNode("div", _hoisted_2$24, [_cache[17] || (_cache[17] = createBaseVNode("span", { class: "fs-menu-title" }, "Swap content with", -1)), (openBlock(true), createElementBlock(Fragment, null, renderList(unref(scene).layers.filter((l) => l.id !== currentLayer.value.id), (other) => {
+					default: withCtx(({ close }) => [createBaseVNode("div", _hoisted_2$25, [_cache[17] || (_cache[17] = createBaseVNode("span", { class: "fs-menu-title" }, "Swap content with", -1)), (openBlock(true), createElementBlock(Fragment, null, renderList(unref(scene).layers.filter((l) => l.id !== currentLayer.value.id), (other) => {
 						return openBlock(), createBlock(unref(Yt), {
 							key: other.id,
 							sm: "",
@@ -17374,7 +17380,7 @@ var FrescoEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 							title: "Clear the shape — the layer becomes its whole box",
 							onClick: _cache[5] || (_cache[5] = ($event) => setMask(currentLayer.value.id, null))
 						})) : createCommentVNode("", true)]),
-						default: withCtx(() => [createBaseVNode("div", _hoisted_3$22, [createBaseVNode("label", _hoisted_4$20, [createBaseVNode("span", { title: GROW_TIP$1 }, "grow"), createVNode(unref(un), {
+						default: withCtx(() => [createBaseVNode("div", _hoisted_3$23, [createBaseVNode("label", _hoisted_4$21, [createBaseVNode("span", { title: GROW_TIP$1 }, "grow"), createVNode(unref(un), {
 							size: "sm",
 							"model-value": currentLayer.value.grow,
 							min: -256,
@@ -17383,7 +17389,7 @@ var FrescoEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 							precision: 0,
 							title: GROW_TIP$1,
 							"onUpdate:modelValue": _cache[6] || (_cache[6] = ($event) => patchCurrent({ grow: Math.round($event) }))
-						}, null, 8, ["model-value"])]), createBaseVNode("label", _hoisted_5$18, [_cache[18] || (_cache[18] = createBaseVNode("span", { title: "Soften the edge, in canvas pixels" }, "feather", -1)), createVNode(unref(un), {
+						}, null, 8, ["model-value"])]), createBaseVNode("label", _hoisted_5$19, [_cache[18] || (_cache[18] = createBaseVNode("span", { title: "Soften the edge, in canvas pixels" }, "feather", -1)), createVNode(unref(un), {
 							size: "sm",
 							"model-value": currentLayer.value.feather,
 							min: 0,
@@ -17392,7 +17398,7 @@ var FrescoEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 							precision: 0,
 							title: "Soften the edge, in canvas pixels",
 							"onUpdate:modelValue": _cache[7] || (_cache[7] = ($event) => patchCurrent({ feather: Math.round($event) }))
-						}, null, 8, ["model-value"])])]), currentLayer.value.mask ? (openBlock(), createElementBlock("div", _hoisted_6$17, [createBaseVNode("span", { title: SHAPE_TIP$1 }, "shape for"), createVNode(FrescoPills_default, {
+						}, null, 8, ["model-value"])])]), currentLayer.value.mask ? (openBlock(), createElementBlock("div", _hoisted_6$18, [createBaseVNode("span", { title: SHAPE_TIP$1 }, "shape for"), createVNode(FrescoPills_default, {
 							"model-value": currentLayer.value.shapeFor,
 							options: SHAPE_FOR,
 							"onUpdate:modelValue": _cache[8] || (_cache[8] = ($event) => patchCurrent({ shapeFor: $event }))
@@ -17401,7 +17407,7 @@ var FrescoEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 					}, 8, ["note"])]),
 					_: 1
 				}, 8, ["content"])) : createCommentVNode("", true)]),
-				scene: withCtx(() => [createBaseVNode("div", _hoisted_7$15, [
+				scene: withCtx(() => [createBaseVNode("div", _hoisted_7$16, [
 					createVNode(FrescoSection_default, { label: "Scene prompt" }, {
 						default: withCtx(() => [createVNode(unref(Zl), {
 							type: "textarea",
@@ -17415,12 +17421,12 @@ var FrescoEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 					}),
 					createVNode(FrescoSection_default, { label: "Settings" }, {
 						default: withCtx(() => [
-							createBaseVNode("div", _hoisted_8$15, [_cache[19] || (_cache[19] = createBaseVNode("span", null, "overlap", -1)), createVNode(FrescoPills_default, {
+							createBaseVNode("div", _hoisted_8$16, [_cache[19] || (_cache[19] = createBaseVNode("span", null, "overlap", -1)), createVNode(FrescoPills_default, {
 								"model-value": unref(scene).settings.overlap,
 								options: OVERLAPS,
 								"onUpdate:modelValue": _cache[10] || (_cache[10] = ($event) => patchSettings({ overlap: $event }))
 							}, null, 8, ["model-value"])]),
-							createBaseVNode("div", _hoisted_9$12, [_cache[20] || (_cache[20] = createBaseVNode("span", null, "ref detail", -1)), createVNode(unref(un), {
+							createBaseVNode("div", _hoisted_9$13, [_cache[20] || (_cache[20] = createBaseVNode("span", null, "ref detail", -1)), createVNode(unref(un), {
 								size: "sm",
 								"model-value": unref(scene).settings.visual_size,
 								min: 128,
@@ -17470,10 +17476,10 @@ var FrescoEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 }), [["__scopeId", "data-v-6418226b"]]);
 //#endregion
 //#region frontend/components/fresco/FrescoSummary.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$25 = { class: "fsum" };
-var _hoisted_2$23 = { class: "fsum-stage" };
-var _hoisted_3$21 = { class: "fsum-bar" };
-var _hoisted_4$19 = { class: "fsum-text" };
+var _hoisted_1$26 = { class: "fsum" };
+var _hoisted_2$24 = { class: "fsum-stage" };
+var _hoisted_3$22 = { class: "fsum-bar" };
+var _hoisted_4$20 = { class: "fsum-text" };
 //#endregion
 //#region frontend/components/fresco/FrescoSummary.vue
 var FrescoSummary_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
@@ -17501,7 +17507,7 @@ var FrescoSummary_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @
 			mask: l.mask
 		})));
 		return (_ctx, _cache) => {
-			return openBlock(), createElementBlock("div", _hoisted_1$25, [createBaseVNode("div", _hoisted_2$23, [createVNode(unref(rm), {
+			return openBlock(), createElementBlock("div", _hoisted_1$26, [createBaseVNode("div", _hoisted_2$24, [createVNode(unref(rm), {
 				boxes: boxes.value,
 				selected: [],
 				aspect: __props.scene.width / __props.scene.height,
@@ -17514,7 +17520,7 @@ var FrescoSummary_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @
 				}, null, 8, ["layer", "mask-style"])) : createCommentVNode("", true)]),
 				empty: withCtx(() => [..._cache[1] || (_cache[1] = [createBaseVNode("span", null, "No layers yet", -1)])]),
 				_: 1
-			}, 8, ["boxes", "aspect"])]), createBaseVNode("div", _hoisted_3$21, [createBaseVNode("span", _hoisted_4$19, toDisplayString(__props.scene.layers.length) + " layer" + toDisplayString(__props.scene.layers.length === 1 ? "" : "s") + " · " + toDisplayString(__props.scene.width) + "×" + toDisplayString(__props.scene.height) + " · editing in a panel ", 1), createVNode(unref(Yt), {
+			}, 8, ["boxes", "aspect"])]), createBaseVNode("div", _hoisted_3$22, [createBaseVNode("span", _hoisted_4$20, toDisplayString(__props.scene.layers.length) + " layer" + toDisplayString(__props.scene.layers.length === 1 ? "" : "s") + " · " + toDisplayString(__props.scene.width) + "×" + toDisplayString(__props.scene.height) + " · editing in a panel ", 1), createVNode(unref(Yt), {
 				sm: "",
 				icon: "mdi mdi-open-in-new",
 				onClick: _cache[0] || (_cache[0] = ($event) => emit("focus"))
@@ -18178,12 +18184,12 @@ function usePopOut(props, options) {
 }
 //#endregion
 //#region frontend/widgets/FrescoScene.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$24 = { class: "fhost" };
-var _hoisted_2$22 = {
+var _hoisted_1$25 = { class: "fhost" };
+var _hoisted_2$23 = {
 	key: 0,
 	class: "fhost-dep"
 };
-var _hoisted_3$20 = { class: "fhost-body" };
+var _hoisted_3$21 = { class: "fhost-body" };
 /** The body is the node's, and nothing in it changes size as you work. */
 var widgetOptions$12 = {
 	minHeight: 520,
@@ -18236,7 +18242,7 @@ var FrescoScene_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defi
 			}
 		});
 		return (_ctx, _cache) => {
-			return openBlock(), createElementBlock("div", _hoisted_1$24, [!__props.panel ? (openBlock(), createElementBlock("div", _hoisted_2$22, [_cache[2] || (_cache[2] = createBaseVNode("span", null, [
+			return openBlock(), createElementBlock("div", _hoisted_1$25, [!__props.panel ? (openBlock(), createElementBlock("div", _hoisted_2$23, [_cache[2] || (_cache[2] = createBaseVNode("span", null, [
 				createTextVNode("Fresco moved into "),
 				createBaseVNode("strong", null, "Layout"),
 				createTextVNode(" (Regions mode).")
@@ -18248,7 +18254,7 @@ var FrescoScene_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defi
 			}, {
 				default: withCtx(() => [createTextVNode(toDisplayString(copied.value ? "Copied — paste in Layout JSON" : "Copy for Layout"), 1)]),
 				_: 1
-			})])) : createCommentVNode("", true), createBaseVNode("div", _hoisted_3$20, [!__props.panel && unref(poppedOut) ? (openBlock(), createBlock(FrescoSummary_default, {
+			})])) : createCommentVNode("", true), createBaseVNode("div", _hoisted_3$21, [!__props.panel && unref(poppedOut) ? (openBlock(), createBlock(FrescoSummary_default, {
 				key: 0,
 				scene: unref(scene),
 				onFocus: _cache[0] || (_cache[0] = ($event) => unref(popOut)(true))
@@ -18276,28 +18282,28 @@ var FrescoScene_exports = /* @__PURE__ */ __exportAll({
 var FrescoScene_default = /*#__PURE__*/ _plugin_vue_export_helper_default(FrescoScene_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-4623400c"]]);
 //#endregion
 //#region frontend/widgets/FusionGrid.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$23 = {
+var _hoisted_1$24 = {
 	key: 0,
 	class: "fg-dropmask"
 };
-var _hoisted_2$21 = {
+var _hoisted_2$22 = {
 	key: 0,
 	class: "fg-grid"
 };
-var _hoisted_3$19 = ["onDragover", "onDrop"];
-var _hoisted_4$18 = ["onDragstart"];
-var _hoisted_5$17 = ["src", "onError"];
-var _hoisted_6$16 = {
+var _hoisted_3$20 = ["onDragover", "onDrop"];
+var _hoisted_4$19 = ["onDragstart"];
+var _hoisted_5$18 = ["src", "onError"];
+var _hoisted_6$17 = {
 	key: 1,
 	class: "mdi mdi-image-broken-variant fg-ph warn",
 	title: "This file is gone from the folder"
 };
-var _hoisted_7$14 = ["title"];
-var _hoisted_8$14 = { class: "fg-acts" };
-var _hoisted_9$11 = ["title", "onClick"];
-var _hoisted_10$10 = ["title", "onClick"];
-var _hoisted_11$10 = ["onClick"];
-var _hoisted_12$9 = {
+var _hoisted_7$15 = ["title"];
+var _hoisted_8$15 = { class: "fg-acts" };
+var _hoisted_9$12 = ["title", "onClick"];
+var _hoisted_10$11 = ["title", "onClick"];
+var _hoisted_11$11 = ["onClick"];
+var _hoisted_12$10 = {
 	key: 2,
 	class: "fg-mutemark"
 };
@@ -18313,8 +18319,8 @@ var _hoisted_17$7 = {
 	class: "fg-warn"
 };
 var _hoisted_18$7 = { class: "fg-bar" };
-var _hoisted_19$4 = ["disabled"];
-var _hoisted_20$4 = {
+var _hoisted_19$5 = ["disabled"];
+var _hoisted_20$5 = {
 	key: 0,
 	class: "fg-add-n"
 };
@@ -18650,7 +18656,7 @@ var FusionGrid_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defin
 				onDragleave: onDragLeave,
 				onDrop: withModifiers(onDrop, ["prevent"])
 			}, [
-				dragOver.value ? (openBlock(), createElementBlock("div", _hoisted_1$23, [..._cache[1] || (_cache[1] = [createBaseVNode("i", { class: "mdi mdi-tray-arrow-down" }, null, -1), createBaseVNode("span", null, "Drop images to add", -1)])])) : createCommentVNode("", true),
+				dragOver.value ? (openBlock(), createElementBlock("div", _hoisted_1$24, [..._cache[1] || (_cache[1] = [createBaseVNode("i", { class: "mdi mdi-tray-arrow-down" }, null, -1), createBaseVNode("span", null, "Drop images to add", -1)])])) : createCommentVNode("", true),
 				createVNode(unref(tl), {
 					ref_key: "scrollEl",
 					ref: scrollEl,
@@ -18660,7 +18666,7 @@ var FusionGrid_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defin
 					onPointerenter: armScroll,
 					onPointerleave: disarmScroll
 				}, {
-					default: withCtx(() => [rows.value.length ? (openBlock(), createElementBlock("div", _hoisted_2$21, [(openBlock(true), createElementBlock(Fragment, null, renderList(rows.value, (row, i) => {
+					default: withCtx(() => [rows.value.length ? (openBlock(), createElementBlock("div", _hoisted_2$22, [(openBlock(true), createElementBlock(Fragment, null, renderList(rows.value, (row, i) => {
 						return openBlock(), createElementBlock("div", {
 							key: row.id,
 							class: normalizeClass(["fg-card", {
@@ -18682,29 +18688,29 @@ var FusionGrid_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defin
 								style: normalizeStyle({ objectFit: fitCss(row.fit) }),
 								loading: "lazy",
 								onError: ($event) => onImgError(row)
-							}, null, 44, _hoisted_5$17)) : (openBlock(), createElementBlock("i", _hoisted_6$16)),
+							}, null, 44, _hoisted_5$18)) : (openBlock(), createElementBlock("i", _hoisted_6$17)),
 							createBaseVNode("span", {
 								class: "fg-idx",
 								title: `Source ${i + 1} — drag to reorder`
-							}, toDisplayString(i + 1), 9, _hoisted_7$14),
-							createBaseVNode("div", _hoisted_8$14, [
+							}, toDisplayString(i + 1), 9, _hoisted_7$15),
+							createBaseVNode("div", _hoisted_8$15, [
 								createBaseVNode("button", {
 									class: "fg-act",
 									title: FIT_META[row.fit].label + " (click to change)",
 									onClick: withModifiers(($event) => cycleFit(i), ["stop"])
-								}, [createBaseVNode("i", { class: normalizeClass(["mdi", FIT_META[row.fit].icon]) }, null, 2)], 8, _hoisted_9$11),
+								}, [createBaseVNode("i", { class: normalizeClass(["mdi", FIT_META[row.fit].icon]) }, null, 2)], 8, _hoisted_9$12),
 								createBaseVNode("button", {
 									class: "fg-act",
 									title: row.on ? "Mute this image" : "Unmute this image",
 									onClick: withModifiers(($event) => toggleOn(i), ["stop"])
-								}, [createBaseVNode("i", { class: normalizeClass(["mdi", row.on ? "mdi-eye-outline" : "mdi-eye-off-outline"]) }, null, 2)], 8, _hoisted_10$10),
+								}, [createBaseVNode("i", { class: normalizeClass(["mdi", row.on ? "mdi-eye-outline" : "mdi-eye-off-outline"]) }, null, 2)], 8, _hoisted_10$11),
 								createBaseVNode("button", {
 									class: "fg-act danger",
 									title: "Remove",
 									onClick: withModifiers(($event) => removeRow(i), ["stop"])
-								}, [..._cache[2] || (_cache[2] = [createBaseVNode("i", { class: "mdi mdi-close" }, null, -1)])], 8, _hoisted_11$10)
+								}, [..._cache[2] || (_cache[2] = [createBaseVNode("i", { class: "mdi mdi-close" }, null, -1)])], 8, _hoisted_11$11)
 							]),
-							!row.on ? (openBlock(), createElementBlock("span", _hoisted_12$9, [..._cache[3] || (_cache[3] = [createBaseVNode("i", { class: "mdi mdi-eye-off" }, null, -1)])])) : createCommentVNode("", true),
+							!row.on ? (openBlock(), createElementBlock("span", _hoisted_12$10, [..._cache[3] || (_cache[3] = [createBaseVNode("i", { class: "mdi mdi-eye-off" }, null, -1)])])) : createCommentVNode("", true),
 							createBaseVNode("div", _hoisted_13$8, [createBaseVNode("span", {
 								class: "fg-name",
 								title: row.ref
@@ -18713,7 +18719,7 @@ var FusionGrid_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defin
 								class: "fg-share",
 								style: normalizeStyle({ width: share(row) + "%" })
 							}, null, 4)
-						], 40, _hoisted_4$18), createBaseVNode("div", _hoisted_15$8, [createVNode(unref(Qs), {
+						], 40, _hoisted_4$19), createBaseVNode("div", _hoisted_15$8, [createVNode(unref(Qs), {
 							class: "fg-slider",
 							"model-value": row.strength,
 							min: 0,
@@ -18738,7 +18744,7 @@ var FusionGrid_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defin
 							"model-value",
 							"disabled",
 							"onUpdate:modelValue"
-						])])], 42, _hoisted_3$19);
+						])])], 42, _hoisted_3$20);
 					}), 128))])) : (openBlock(), createElementBlock("div", _hoisted_16$7, [..._cache[4] || (_cache[4] = [
 						createBaseVNode("i", { class: "mdi mdi-image-multiple-outline" }, null, -1),
 						createBaseVNode("span", null, "Drop images here", -1),
@@ -18755,8 +18761,8 @@ var FusionGrid_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defin
 					}, [
 						createBaseVNode("i", { class: normalizeClass(["mdi", busy.value ? "mdi-loading mdi-spin" : "mdi-plus"]) }, null, 2),
 						createTextVNode(" " + toDisplayString(busy.value ? "Uploading…" : "Add images") + " ", 1),
-						rows.value.length ? (openBlock(), createElementBlock("span", _hoisted_20$4, toDisplayString(rows.value.length), 1)) : createCommentVNode("", true)
-					], 8, _hoisted_19$4),
+						rows.value.length ? (openBlock(), createElementBlock("span", _hoisted_20$5, toDisplayString(rows.value.length), 1)) : createCommentVNode("", true)
+					], 8, _hoisted_19$5),
 					createVNode(unref(je$1), {
 						icon: "mdi mdi-view-grid-outline",
 						title: "Browse images",
@@ -18809,39 +18815,39 @@ var FusionGrid_exports = /* @__PURE__ */ __exportAll({
 var FusionGrid_default = /*#__PURE__*/ _plugin_vue_export_helper_default(FusionGrid_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-bbb08a38"]]);
 //#endregion
 //#region frontend/widgets/FusionInspector.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$22 = { class: "fi" };
-var _hoisted_2$20 = {
+var _hoisted_1$23 = { class: "fi" };
+var _hoisted_2$21 = {
 	key: 0,
 	class: "fi-empty"
 };
-var _hoisted_3$18 = { class: "fi-main" };
-var _hoisted_4$17 = {
+var _hoisted_3$19 = { class: "fi-main" };
+var _hoisted_4$18 = {
 	key: 0,
 	class: "fi-caption"
 };
-var _hoisted_5$16 = { class: "fi-side-tabs" };
-var _hoisted_6$15 = {
+var _hoisted_5$17 = { class: "fi-side-tabs" };
+var _hoisted_6$16 = {
 	key: 0,
 	class: "fi-settings"
 };
-var _hoisted_7$13 = { class: "fi-sgroup-h" };
-var _hoisted_8$13 = { class: "fi-sk" };
-var _hoisted_9$10 = { class: "fi-svv" };
-var _hoisted_10$9 = { class: "fi-side-head" };
-var _hoisted_11$9 = { class: "fi-bars" };
-var _hoisted_12$8 = ["src"];
+var _hoisted_7$14 = { class: "fi-sgroup-h" };
+var _hoisted_8$14 = { class: "fi-sk" };
+var _hoisted_9$11 = { class: "fi-svv" };
+var _hoisted_10$10 = { class: "fi-side-head" };
+var _hoisted_11$10 = { class: "fi-bars" };
+var _hoisted_12$9 = ["src"];
 var _hoisted_13$7 = ["title"];
 var _hoisted_14$7 = { class: "fi-btrack" };
 var _hoisted_15$7 = { class: "fi-bval" };
 var _hoisted_16$6 = { class: "fi-legend" };
 var _hoisted_17$6 = ["title", "onClick"];
 var _hoisted_18$6 = ["src"];
-var _hoisted_19$3 = ["title"];
-var _hoisted_20$3 = {
+var _hoisted_19$4 = ["title"];
+var _hoisted_20$4 = {
 	class: "fi-lstr",
 	title: "strength you set on the slider"
 };
-var _hoisted_21$3 = {
+var _hoisted_21$4 = {
 	class: "fi-lmeta",
 	title: "this source's share of the grid"
 };
@@ -19464,7 +19470,7 @@ var FusionInspector_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ 
 			} catch {}
 		});
 		return (_ctx, _cache) => {
-			return openBlock(), createElementBlock("div", _hoisted_1$22, [!payload.value || !payload.value.num_sources ? (openBlock(), createElementBlock("div", _hoisted_2$20, [..._cache[7] || (_cache[7] = [
+			return openBlock(), createElementBlock("div", _hoisted_1$23, [!payload.value || !payload.value.num_sources ? (openBlock(), createElementBlock("div", _hoisted_2$21, [..._cache[7] || (_cache[7] = [
 				createBaseVNode("i", { class: "mdi mdi-chart-scatter-plot" }, null, -1),
 				createBaseVNode("span", null, "Run the fusion to inspect it", -1),
 				createBaseVNode("small", null, [
@@ -19479,7 +19485,7 @@ var FusionInspector_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ 
 				"model-value": view.value,
 				options: VIEW_OPTS,
 				"onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => setView($event))
-			}, null, 8, ["model-value"])], 32), createBaseVNode("div", _hoisted_3$18, [createBaseVNode("div", {
+			}, null, 8, ["model-value"])], 32), createBaseVNode("div", _hoisted_3$19, [createBaseVNode("div", {
 				ref_key: "wrapEl",
 				ref: wrapEl,
 				class: "fi-gridwrap"
@@ -19494,26 +19500,26 @@ var FusionInspector_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ 
 				onPointermove: onHover,
 				onPointerleave: _cache[2] || (_cache[2] = ($event) => hovered.value = -1),
 				onPointerdown: _cache[3] || (_cache[3] = withModifiers(() => {}, ["stop"]))
-			}, null, 36), view.value === "contest" ? (openBlock(), createElementBlock("div", _hoisted_4$17, " bright = contested (strength · feather · blend act here) · dark = one source owns it ")) : createCommentVNode("", true)], 512), createBaseVNode("div", {
+			}, null, 36), view.value === "contest" ? (openBlock(), createElementBlock("div", _hoisted_4$18, " bright = contested (strength · feather · blend act here) · dark = one source owns it ")) : createCommentVNode("", true)], 512), createBaseVNode("div", {
 				class: "fi-side",
 				onPointerdown: _cache[6] || (_cache[6] = withModifiers(() => {}, ["stop"]))
-			}, [createBaseVNode("div", _hoisted_5$16, [createBaseVNode("button", {
+			}, [createBaseVNode("div", _hoisted_5$17, [createBaseVNode("button", {
 				class: normalizeClass(["fi-tab", { on: sideTab.value === "legend" }]),
 				onClick: _cache[4] || (_cache[4] = ($event) => sideTab.value = "legend")
 			}, " Sources ", 2), createBaseVNode("button", {
 				class: normalizeClass(["fi-tab", { on: sideTab.value === "settings" }]),
 				onClick: _cache[5] || (_cache[5] = ($event) => sideTab.value = "settings")
-			}, " Settings ", 2)]), sideTab.value === "settings" ? (openBlock(), createElementBlock("div", _hoisted_6$15, [(openBlock(true), createElementBlock(Fragment, null, renderList(settingGroups.value, (g) => {
+			}, " Settings ", 2)]), sideTab.value === "settings" ? (openBlock(), createElementBlock("div", _hoisted_6$16, [(openBlock(true), createElementBlock(Fragment, null, renderList(settingGroups.value, (g) => {
 				return openBlock(), createElementBlock("div", {
 					key: g.title,
 					class: "fi-sgroup"
-				}, [createBaseVNode("div", _hoisted_7$13, toDisplayString(g.title), 1), (openBlock(true), createElementBlock(Fragment, null, renderList(g.rows, (r) => {
+				}, [createBaseVNode("div", _hoisted_7$14, toDisplayString(g.title), 1), (openBlock(true), createElementBlock(Fragment, null, renderList(g.rows, (r) => {
 					return openBlock(), createElementBlock("div", {
 						key: r.k,
 						class: normalizeClass(["fi-srow", { dim: r.dim }])
-					}, [createBaseVNode("span", _hoisted_8$13, toDisplayString(r.k), 1), createBaseVNode("span", _hoisted_9$10, toDisplayString(r.v), 1)], 2);
+					}, [createBaseVNode("span", _hoisted_8$14, toDisplayString(r.k), 1), createBaseVNode("span", _hoisted_9$11, toDisplayString(r.v), 1)], 2);
 				}), 128))]);
-			}), 128))])) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [hovered.value >= 0 ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [createBaseVNode("div", _hoisted_10$9, "Cell " + toDisplayString(cellRow.value) + "," + toDisplayString(cellCol.value), 1), createBaseVNode("div", _hoisted_11$9, [(openBlock(true), createElementBlock(Fragment, null, renderList(cellBreakdown.value, (r) => {
+			}), 128))])) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [hovered.value >= 0 ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [createBaseVNode("div", _hoisted_10$10, "Cell " + toDisplayString(cellRow.value) + "," + toDisplayString(cellCol.value), 1), createBaseVNode("div", _hoisted_11$10, [(openBlock(true), createElementBlock(Fragment, null, renderList(cellBreakdown.value, (r) => {
 				return openBlock(), createElementBlock("div", {
 					key: r.i,
 					class: "fi-brow"
@@ -19525,7 +19531,7 @@ var FusionInspector_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ 
 						key: 0,
 						src: r.thumb,
 						alt: ""
-					}, null, 8, _hoisted_12$8)) : (openBlock(), createElementBlock("span", {
+					}, null, 8, _hoisted_12$9)) : (openBlock(), createElementBlock("span", {
 						key: 1,
 						class: "fi-thumb-fill",
 						style: normalizeStyle({ background: r.color })
@@ -19565,9 +19571,9 @@ var FusionInspector_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ 
 					createBaseVNode("span", {
 						class: "fi-blabel",
 						title: s.label
-					}, toDisplayString(s.label), 9, _hoisted_19$3),
-					createBaseVNode("span", _hoisted_20$3, "×" + toDisplayString(s.strength.toFixed(1)), 1),
-					createBaseVNode("span", _hoisted_21$3, toDisplayString(Math.round(s.share * 100)) + "%", 1)
+					}, toDisplayString(s.label), 9, _hoisted_19$4),
+					createBaseVNode("span", _hoisted_20$4, "×" + toDisplayString(s.strength.toFixed(1)), 1),
+					createBaseVNode("span", _hoisted_21$4, toDisplayString(Math.round(s.share * 100)) + "%", 1)
 				], 10, _hoisted_17$6);
 			}), 128))]), _cache[8] || (_cache[8] = createBaseVNode("p", { class: "fi-lhint" }, [
 				createBaseVNode("b", null, "×"),
@@ -19675,33 +19681,33 @@ function normalizeGridStyle(v) {
 }
 //#endregion
 //#region frontend/widgets/GridStyleConfig.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$21 = {
+var _hoisted_1$22 = {
 	key: 0,
 	class: "gs-badge"
 };
-var _hoisted_2$19 = {
+var _hoisted_2$20 = {
 	key: 0,
 	class: "gs-body"
 };
-var _hoisted_3$17 = { class: "gs-row" };
-var _hoisted_4$16 = { class: "gs-row" };
-var _hoisted_5$15 = {
+var _hoisted_3$18 = { class: "gs-row" };
+var _hoisted_4$17 = { class: "gs-row" };
+var _hoisted_5$16 = {
 	key: 0,
 	class: "gs-row"
 };
-var _hoisted_6$14 = { class: "gs-row" };
-var _hoisted_7$12 = { class: "gs-pair" };
-var _hoisted_8$12 = { class: "gs-row" };
-var _hoisted_9$9 = {
+var _hoisted_6$15 = { class: "gs-row" };
+var _hoisted_7$13 = { class: "gs-pair" };
+var _hoisted_8$13 = { class: "gs-row" };
+var _hoisted_9$10 = {
 	key: 2,
 	class: "gs-hint"
 };
-var _hoisted_10$8 = { class: "gs-row" };
-var _hoisted_11$8 = {
+var _hoisted_10$9 = { class: "gs-row" };
+var _hoisted_11$9 = {
 	key: 0,
 	class: "gs-badge"
 };
-var _hoisted_12$7 = {
+var _hoisted_12$8 = {
 	key: 1,
 	class: "gs-body"
 };
@@ -19714,15 +19720,15 @@ var _hoisted_17$5 = {
 	class: "gs-row"
 };
 var _hoisted_18$5 = { class: "gs-pair" };
-var _hoisted_19$2 = {
+var _hoisted_19$3 = {
 	key: 1,
 	class: "gs-row"
 };
-var _hoisted_20$2 = {
+var _hoisted_20$3 = {
 	key: 2,
 	class: "gs-row"
 };
-var _hoisted_21$2 = { class: "gs-row" };
+var _hoisted_21$3 = { class: "gs-row" };
 var widgetOptions$9 = {
 	name: "config",
 	minHeight: 220,
@@ -19810,10 +19816,10 @@ var GridStyleConfig_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ 
 						createBaseVNode("i", { class: normalizeClass(["mdi", open.value.border ? "mdi-chevron-down" : "mdi-chevron-right"]) }, null, 2),
 						_cache[17] || (_cache[17] = createBaseVNode("i", { class: "mdi mdi-border-all-variant" }, null, -1)),
 						_cache[18] || (_cache[18] = createBaseVNode("span", null, "Border", -1)),
-						cfg.value.border_width > 0 ? (openBlock(), createElementBlock("span", _hoisted_1$21, toDisplayString(cfg.value.border_width) + "px", 1)) : createCommentVNode("", true)
+						cfg.value.border_width > 0 ? (openBlock(), createElementBlock("span", _hoisted_1$22, toDisplayString(cfg.value.border_width) + "px", 1)) : createCommentVNode("", true)
 					]),
-					open.value.border ? (openBlock(), createElementBlock("div", _hoisted_2$19, [
-						createBaseVNode("div", _hoisted_3$17, [_cache[19] || (_cache[19] = createBaseVNode("label", { class: "gs-lbl" }, "Width", -1)), createVNode(unref(un), {
+					open.value.border ? (openBlock(), createElementBlock("div", _hoisted_2$20, [
+						createBaseVNode("div", _hoisted_3$18, [_cache[19] || (_cache[19] = createBaseVNode("label", { class: "gs-lbl" }, "Width", -1)), createVNode(unref(un), {
 							"model-value": cfg.value.border_width,
 							min: 0,
 							max: 40,
@@ -19821,28 +19827,28 @@ var GridStyleConfig_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ 
 							precision: 0,
 							"onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => set("border_width", Number($event)))
 						}, null, 8, ["model-value"])]),
-						cfg.value.border_width > 0 ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [createBaseVNode("div", _hoisted_4$16, [_cache[20] || (_cache[20] = createBaseVNode("label", { class: "gs-lbl" }, "Style", -1)), createVNode(unref(Tt), {
+						cfg.value.border_width > 0 ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [createBaseVNode("div", _hoisted_4$17, [_cache[20] || (_cache[20] = createBaseVNode("label", { class: "gs-lbl" }, "Style", -1)), createVNode(unref(Tt), {
 							"model-value": cfg.value.border_mode,
 							options: BORDER_OPTS,
 							"onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => set("border_mode", String($event)))
-						}, null, 8, ["model-value"])]), cfg.value.border_mode === "solid" ? (openBlock(), createElementBlock("div", _hoisted_5$15, [_cache[21] || (_cache[21] = createBaseVNode("label", { class: "gs-lbl" }, "Color", -1)), createVNode(unref(Yf), {
+						}, null, 8, ["model-value"])]), cfg.value.border_mode === "solid" ? (openBlock(), createElementBlock("div", _hoisted_5$16, [_cache[21] || (_cache[21] = createBaseVNode("label", { class: "gs-lbl" }, "Color", -1)), createVNode(unref(Yf), {
 							"model-value": cfg.value.border_color,
 							"onUpdate:modelValue": _cache[3] || (_cache[3] = ($event) => set("border_color", String($event)))
-						}, null, 8, ["model-value"])])) : cfg.value.border_mode === "gradient" ? (openBlock(), createElementBlock(Fragment, { key: 1 }, [createBaseVNode("div", _hoisted_6$14, [_cache[22] || (_cache[22] = createBaseVNode("label", { class: "gs-lbl" }, "From → To", -1)), createBaseVNode("div", _hoisted_7$12, [createVNode(unref(Yf), {
+						}, null, 8, ["model-value"])])) : cfg.value.border_mode === "gradient" ? (openBlock(), createElementBlock(Fragment, { key: 1 }, [createBaseVNode("div", _hoisted_6$15, [_cache[22] || (_cache[22] = createBaseVNode("label", { class: "gs-lbl" }, "From → To", -1)), createBaseVNode("div", _hoisted_7$13, [createVNode(unref(Yf), {
 							"model-value": cfg.value.border_color,
 							"onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => set("border_color", String($event)))
 						}, null, 8, ["model-value"]), createVNode(unref(Yf), {
 							"model-value": cfg.value.border_color2,
 							"onUpdate:modelValue": _cache[5] || (_cache[5] = ($event) => set("border_color2", String($event)))
-						}, null, 8, ["model-value"])])]), createBaseVNode("div", _hoisted_8$12, [_cache[23] || (_cache[23] = createBaseVNode("label", { class: "gs-lbl" }, "Angle", -1)), createVNode(unref(un), {
+						}, null, 8, ["model-value"])])]), createBaseVNode("div", _hoisted_8$13, [_cache[23] || (_cache[23] = createBaseVNode("label", { class: "gs-lbl" }, "Angle", -1)), createVNode(unref(un), {
 							"model-value": cfg.value.border_angle,
 							min: 0,
 							max: 360,
 							step: 1,
 							precision: 0,
 							"onUpdate:modelValue": _cache[6] || (_cache[6] = ($event) => set("border_angle", Number($event)))
-						}, null, 8, ["model-value"])])], 64)) : (openBlock(), createElementBlock("p", _hoisted_9$9, [..._cache[24] || (_cache[24] = [createBaseVNode("i", { class: "mdi mdi-palette-outline" }, null, -1), createTextVNode(" Each cell's border is sampled from its own image — a vivid colour that matches the content. ", -1)])]))], 64)) : createCommentVNode("", true),
-						createBaseVNode("div", _hoisted_10$8, [_cache[25] || (_cache[25] = createBaseVNode("label", { class: "gs-lbl" }, "Radius", -1)), createVNode(unref(un), {
+						}, null, 8, ["model-value"])])], 64)) : (openBlock(), createElementBlock("p", _hoisted_9$10, [..._cache[24] || (_cache[24] = [createBaseVNode("i", { class: "mdi mdi-palette-outline" }, null, -1), createTextVNode(" Each cell's border is sampled from its own image — a vivid colour that matches the content. ", -1)])]))], 64)) : createCommentVNode("", true),
+						createBaseVNode("div", _hoisted_10$9, [_cache[25] || (_cache[25] = createBaseVNode("label", { class: "gs-lbl" }, "Radius", -1)), createVNode(unref(un), {
 							"model-value": cfg.value.border_radius,
 							min: 0,
 							max: 120,
@@ -19858,9 +19864,9 @@ var GridStyleConfig_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ 
 						createBaseVNode("i", { class: normalizeClass(["mdi", open.value.shadow ? "mdi-chevron-down" : "mdi-chevron-right"]) }, null, 2),
 						createBaseVNode("i", { class: normalizeClass(["mdi", cfg.value.shadow_mode === "glow" ? "mdi-blur-radial" : "mdi-box-shadow"]) }, null, 2),
 						createBaseVNode("span", null, toDisplayString(cfg.value.shadow_mode === "glow" ? "Glow" : "Shadow"), 1),
-						cfg.value.shadow ? (openBlock(), createElementBlock("span", _hoisted_11$8, "on")) : createCommentVNode("", true)
+						cfg.value.shadow ? (openBlock(), createElementBlock("span", _hoisted_11$9, "on")) : createCommentVNode("", true)
 					]),
-					open.value.shadow ? (openBlock(), createElementBlock("div", _hoisted_12$7, [createBaseVNode("div", _hoisted_13$6, [_cache[26] || (_cache[26] = createBaseVNode("label", { class: "gs-lbl" }, "Enable", -1)), createVNode(unref(yl), {
+					open.value.shadow ? (openBlock(), createElementBlock("div", _hoisted_12$8, [createBaseVNode("div", _hoisted_13$6, [_cache[26] || (_cache[26] = createBaseVNode("label", { class: "gs-lbl" }, "Enable", -1)), createVNode(unref(yl), {
 						"model-value": cfg.value.shadow,
 						"on-icon": "mdi mdi-check",
 						"onUpdate:modelValue": _cache[9] || (_cache[9] = ($event) => set("shadow", !!$event))
@@ -19897,7 +19903,7 @@ var GridStyleConfig_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ 
 								"onUpdate:modelValue": _cache[13] || (_cache[13] = ($event) => set("shadow_offset_y", Number($event)))
 							}, null, 8, ["model-value"])
 						])])) : createCommentVNode("", true),
-						borderIsAuto.value ? (openBlock(), createElementBlock("div", _hoisted_19$2, [_cache[30] || (_cache[30] = createBaseVNode("label", {
+						borderIsAuto.value ? (openBlock(), createElementBlock("div", _hoisted_19$3, [_cache[30] || (_cache[30] = createBaseVNode("label", {
 							class: "gs-lbl",
 							title: "Tint the glow with each cell's own auto-border colour"
 						}, "Match border", -1)), createVNode(unref(yl), {
@@ -19905,11 +19911,11 @@ var GridStyleConfig_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ 
 							"on-icon": "mdi mdi-check",
 							"onUpdate:modelValue": _cache[14] || (_cache[14] = ($event) => set("shadow_match", !!$event))
 						}, null, 8, ["model-value"])])) : createCommentVNode("", true),
-						!(cfg.value.shadow_match && borderIsAuto.value) ? (openBlock(), createElementBlock("div", _hoisted_20$2, [_cache[31] || (_cache[31] = createBaseVNode("label", { class: "gs-lbl" }, "Color", -1)), createVNode(unref(Yf), {
+						!(cfg.value.shadow_match && borderIsAuto.value) ? (openBlock(), createElementBlock("div", _hoisted_20$3, [_cache[31] || (_cache[31] = createBaseVNode("label", { class: "gs-lbl" }, "Color", -1)), createVNode(unref(Yf), {
 							"model-value": cfg.value.shadow_color,
 							"onUpdate:modelValue": _cache[15] || (_cache[15] = ($event) => set("shadow_color", String($event)))
 						}, null, 8, ["model-value"])])) : createCommentVNode("", true),
-						createBaseVNode("div", _hoisted_21$2, [_cache[32] || (_cache[32] = createBaseVNode("label", { class: "gs-lbl" }, "Opacity", -1)), createVNode(unref(un), {
+						createBaseVNode("div", _hoisted_21$3, [_cache[32] || (_cache[32] = createBaseVNode("label", { class: "gs-lbl" }, "Opacity", -1)), createVNode(unref(un), {
 							"model-value": cfg.value.shadow_opacity,
 							min: 0,
 							max: 1,
@@ -20071,17 +20077,17 @@ function centreBox(b, p) {
 }
 //#endregion
 //#region frontend/widgets/ImageCompare.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$20 = {
+var _hoisted_1$21 = {
 	key: 0,
 	class: "ic-head"
 };
-var _hoisted_2$18 = { class: "ic-head-nav" };
-var _hoisted_3$16 = { class: "ic-nav-lbl" };
-var _hoisted_4$15 = { class: "ic-nav-lbl" };
-var _hoisted_5$14 = ["src"];
-var _hoisted_6$13 = ["src"];
-var _hoisted_7$11 = { class: "ic-box-tag" };
-var _hoisted_8$11 = {
+var _hoisted_2$19 = { class: "ic-head-nav" };
+var _hoisted_3$17 = { class: "ic-nav-lbl" };
+var _hoisted_4$16 = { class: "ic-nav-lbl" };
+var _hoisted_5$15 = ["src"];
+var _hoisted_6$14 = ["src"];
+var _hoisted_7$12 = { class: "ic-box-tag" };
+var _hoisted_8$12 = {
 	key: 2,
 	class: "ic-empty"
 };
@@ -20413,14 +20419,14 @@ var ImageCompare_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ def
 				ref: rootEl
 			}, {
 				default: withCtx(() => [
-					showBatchNav.value ? (openBlock(), createElementBlock("div", _hoisted_1$20, [createBaseVNode("div", _hoisted_2$18, [
+					showBatchNav.value ? (openBlock(), createElementBlock("div", _hoisted_1$21, [createBaseVNode("div", _hoisted_2$19, [
 						createVNode(unref(je$1), {
 							icon: "mdi mdi-chevron-left",
 							title: "Previous A",
 							disabled: beforeCount.value <= 1,
 							onClick: _cache[0] || (_cache[0] = ($event) => bumpBefore(-1))
 						}, null, 8, ["disabled"]),
-						createBaseVNode("span", _hoisted_3$16, "A " + toDisplayString(beforeCount.value ? beforeIndex.value + 1 : 0) + "/" + toDisplayString(beforeCount.value), 1),
+						createBaseVNode("span", _hoisted_3$17, "A " + toDisplayString(beforeCount.value ? beforeIndex.value + 1 : 0) + "/" + toDisplayString(beforeCount.value), 1),
 						createVNode(unref(je$1), {
 							icon: "mdi mdi-chevron-right",
 							title: "Next A",
@@ -20434,7 +20440,7 @@ var ImageCompare_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ def
 							disabled: afterCount.value <= 1,
 							onClick: _cache[2] || (_cache[2] = ($event) => bumpAfter(-1))
 						}, null, 8, ["disabled"]),
-						createBaseVNode("span", _hoisted_4$15, "B " + toDisplayString(afterCount.value ? afterIndex.value + 1 : 0) + "/" + toDisplayString(afterCount.value), 1),
+						createBaseVNode("span", _hoisted_4$16, "B " + toDisplayString(afterCount.value ? afterIndex.value + 1 : 0) + "/" + toDisplayString(afterCount.value), 1),
 						createVNode(unref(je$1), {
 							icon: "mdi mdi-chevron-right",
 							title: "Next B",
@@ -20464,7 +20470,7 @@ var ImageCompare_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ def
 							draggable: "false",
 							class: "ic-img",
 							onLoad: readNatural
-						}, null, 40, _hoisted_5$14)) : createCommentVNode("", true),
+						}, null, 40, _hoisted_5$15)) : createCommentVNode("", true),
 						beforeImage.value ? (openBlock(), createElementBlock("img", {
 							key: 1,
 							src: beforeImage.value,
@@ -20472,7 +20478,7 @@ var ImageCompare_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ def
 							draggable: "false",
 							class: "ic-img",
 							style: normalizeStyle(beforeStyle.value)
-						}, null, 12, _hoisted_6$13)) : createCommentVNode("", true),
+						}, null, 12, _hoisted_6$14)) : createCommentVNode("", true),
 						hasBoth.value && mode.value === "slider" ? (openBlock(), createElementBlock("div", {
 							key: 2,
 							class: "ic-handle",
@@ -20482,8 +20488,8 @@ var ImageCompare_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ def
 							key: 3,
 							class: "ic-box",
 							style: normalizeStyle(boxStyle.value)
-						}, [createBaseVNode("span", _hoisted_7$11, toDisplayString(swapped.value ? "B" : "A"), 1)], 4)) : createCommentVNode("", true)
-					], 38)) : (openBlock(), createElementBlock("div", _hoisted_8$11, [..._cache[6] || (_cache[6] = [createBaseVNode("i", { class: "mdi mdi-image-multiple-outline" }, null, -1)])])),
+						}, [createBaseVNode("span", _hoisted_7$12, toDisplayString(swapped.value ? "B" : "A"), 1)], 4)) : createCommentVNode("", true)
+					], 38)) : (openBlock(), createElementBlock("div", _hoisted_8$12, [..._cache[6] || (_cache[6] = [createBaseVNode("i", { class: "mdi mdi-image-multiple-outline" }, null, -1)])])),
 					createVNode(unref(cl), {
 						open: optsOpen.value,
 						"onUpdate:open": _cache[4] || (_cache[4] = ($event) => optsOpen.value = $event),
@@ -20728,28 +20734,28 @@ app.registerExtension({
 });
 //#endregion
 //#region frontend/widgets/ImagePick.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$19 = {
+var _hoisted_1$20 = {
 	key: 0,
 	class: "li-dropmask"
 };
-var _hoisted_2$17 = { class: "li-row" };
-var _hoisted_3$15 = { class: "li-sel" };
-var _hoisted_4$14 = { class: "li-sel-name" };
-var _hoisted_5$13 = ["data-peek", "data-peek-label"];
-var _hoisted_6$12 = ["src"];
-var _hoisted_7$10 = ["title"];
-var _hoisted_8$10 = [
+var _hoisted_2$18 = { class: "li-row" };
+var _hoisted_3$16 = { class: "li-sel" };
+var _hoisted_4$15 = { class: "li-sel-name" };
+var _hoisted_5$14 = ["data-peek", "data-peek-label"];
+var _hoisted_6$13 = ["src"];
+var _hoisted_7$11 = ["title"];
+var _hoisted_8$11 = [
 	"src",
 	"data-peek",
 	"data-peek-label"
 ];
-var _hoisted_9$8 = ["title"];
-var _hoisted_10$7 = { class: "li-foot" };
-var _hoisted_11$7 = {
+var _hoisted_9$9 = ["title"];
+var _hoisted_10$8 = { class: "li-foot" };
+var _hoisted_11$8 = {
 	key: 1,
 	class: "li-preview"
 };
-var _hoisted_12$6 = ["src"];
+var _hoisted_12$7 = ["src"];
 var _hoisted_13$5 = {
 	key: 1,
 	class: "li-loading"
@@ -20765,15 +20771,15 @@ var _hoisted_17$4 = {
 	title: "File"
 };
 var _hoisted_18$4 = ["title"];
-var _hoisted_19$1 = {
+var _hoisted_19$2 = {
 	class: "li-info-row",
 	title: "File size"
 };
-var _hoisted_20$1 = {
+var _hoisted_20$2 = {
 	class: "li-info-row",
 	title: "Modified"
 };
-var _hoisted_21$1 = {
+var _hoisted_21$2 = {
 	key: 2,
 	class: "li-preview li-none"
 };
@@ -21195,8 +21201,8 @@ var ImagePick_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 				onDrop: withModifiers(onDrop, ["prevent"])
 			}, {
 				default: withCtx(() => [
-					dragOver.value ? (openBlock(), createElementBlock("div", _hoisted_1$19, [..._cache[12] || (_cache[12] = [createBaseVNode("i", { class: "mdi mdi-tray-arrow-down" }, null, -1), createBaseVNode("span", null, "Drop image to load", -1)])])) : createCommentVNode("", true),
-					createBaseVNode("div", _hoisted_2$17, [
+					dragOver.value ? (openBlock(), createElementBlock("div", _hoisted_1$20, [..._cache[12] || (_cache[12] = [createBaseVNode("i", { class: "mdi mdi-tray-arrow-down" }, null, -1), createBaseVNode("span", null, "Drop image to load", -1)])])) : createCommentVNode("", true),
+					createBaseVNode("div", _hoisted_2$18, [
 						createVNode(unref($s), {
 							class: "li-pick",
 							grid: viewMode.value === "grid",
@@ -21216,7 +21222,7 @@ var ImagePick_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 								options: SRC_OPTS,
 								"onUpdate:modelValue": setSrc
 							}, null, 8, ["model-value"])]),
-							selected: withCtx(() => [createBaseVNode("span", _hoisted_3$15, [_cache[13] || (_cache[13] = createBaseVNode("i", { class: "mdi mdi-image-outline li-sel-ic" }, null, -1)), createBaseVNode("span", _hoisted_4$14, toDisplayString(selected.value ? short(selected.value) : "Select an image…"), 1)])]),
+							selected: withCtx(() => [createBaseVNode("span", _hoisted_3$16, [_cache[13] || (_cache[13] = createBaseVNode("i", { class: "mdi mdi-image-outline li-sel-ic" }, null, -1)), createBaseVNode("span", _hoisted_4$15, toDisplayString(selected.value ? short(selected.value) : "Select an image…"), 1)])]),
 							option: withCtx(({ item }) => [viewMode.value === "grid" ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [createBaseVNode("span", {
 								class: "li-gthumb",
 								"data-peek": thumbByName(String(item.value)),
@@ -21225,21 +21231,21 @@ var ImagePick_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 							}, [createBaseVNode("img", {
 								src: thumbByName(String(item.value)),
 								loading: "lazy"
-							}, null, 8, _hoisted_6$12)], 8, _hoisted_5$13), createBaseVNode("span", {
+							}, null, 8, _hoisted_6$13)], 8, _hoisted_5$14), createBaseVNode("span", {
 								class: "li-gname",
 								title: String(item.value)
-							}, toDisplayString(short(String(item.value))), 9, _hoisted_7$10)], 64)) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [createBaseVNode("img", {
+							}, toDisplayString(short(String(item.value))), 9, _hoisted_7$11)], 64)) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [createBaseVNode("img", {
 								class: "li-thumb",
 								src: thumbByName(String(item.value)),
 								"data-peek": thumbByName(String(item.value)),
 								"data-peek-kind": "image",
 								"data-peek-label": short(String(item.value)),
 								loading: "lazy"
-							}, null, 8, _hoisted_8$10), createBaseVNode("span", {
+							}, null, 8, _hoisted_8$11), createBaseVNode("span", {
 								class: "li-lname",
 								title: String(item.value)
-							}, toDisplayString(short(String(item.value))), 9, _hoisted_9$8)], 64))]),
-							footer: withCtx(({ close }) => [createBaseVNode("div", _hoisted_10$7, [
+							}, toDisplayString(short(String(item.value))), 9, _hoisted_9$9)], 64))]),
+							footer: withCtx(({ close }) => [createBaseVNode("div", _hoisted_10$8, [
 								createVNode(unref(Tt), {
 									"model-value": viewMode.value,
 									options: VIEW_OPTS,
@@ -21289,11 +21295,11 @@ var ImagePick_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 							onClick: triggerUpload
 						})
 					]),
-					selected.value ? (openBlock(), createElementBlock("div", _hoisted_11$7, [previewUrl.value ? (openBlock(), createElementBlock("img", {
+					selected.value ? (openBlock(), createElementBlock("div", _hoisted_11$8, [previewUrl.value ? (openBlock(), createElementBlock("img", {
 						key: 0,
 						src: previewUrl.value,
 						onLoad: onPreviewLoad
-					}, null, 40, _hoisted_12$6)) : (openBlock(), createElementBlock("span", _hoisted_13$5, "Loading…")), createBaseVNode("div", _hoisted_14$5, [
+					}, null, 40, _hoisted_12$7)) : (openBlock(), createElementBlock("span", _hoisted_13$5, "Loading…")), createBaseVNode("div", _hoisted_14$5, [
 						createBaseVNode("div", _hoisted_15$5, [createVNode(unref(je$1), {
 							class: "li-ov-btn",
 							icon: "mdi mdi-draw",
@@ -21321,10 +21327,10 @@ var ImagePick_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 						}, [
 							createBaseVNode("div", _hoisted_16$4, [_cache[15] || (_cache[15] = createBaseVNode("i", { class: "mdi mdi-resize" }, null, -1)), createBaseVNode("b", null, toDisplayString(infoDims.value), 1)]),
 							createBaseVNode("div", _hoisted_17$4, [_cache[16] || (_cache[16] = createBaseVNode("i", { class: "mdi mdi-file-image-outline" }, null, -1)), createBaseVNode("b", { title: infoName.value }, toDisplayString(infoName.value), 9, _hoisted_18$4)]),
-							createBaseVNode("div", _hoisted_19$1, [_cache[17] || (_cache[17] = createBaseVNode("i", { class: "mdi mdi-harddisk" }, null, -1)), createBaseVNode("b", null, toDisplayString(infoSize.value), 1)]),
-							createBaseVNode("div", _hoisted_20$1, [_cache[18] || (_cache[18] = createBaseVNode("i", { class: "mdi mdi-clock-outline" }, null, -1)), createBaseVNode("b", null, toDisplayString(infoDate.value), 1)])
+							createBaseVNode("div", _hoisted_19$2, [_cache[17] || (_cache[17] = createBaseVNode("i", { class: "mdi mdi-harddisk" }, null, -1)), createBaseVNode("b", null, toDisplayString(infoSize.value), 1)]),
+							createBaseVNode("div", _hoisted_20$2, [_cache[18] || (_cache[18] = createBaseVNode("i", { class: "mdi mdi-clock-outline" }, null, -1)), createBaseVNode("b", null, toDisplayString(infoDate.value), 1)])
 						], 4)) : createCommentVNode("", true)]))
-					])])) : (openBlock(), createElementBlock("div", _hoisted_21$1, [..._cache[19] || (_cache[19] = [createBaseVNode("i", { class: "mdi mdi-image-outline" }, null, -1), createBaseVNode("span", null, "No image — pick, browse, or drop one here", -1)])])),
+					])])) : (openBlock(), createElementBlock("div", _hoisted_21$2, [..._cache[19] || (_cache[19] = [createBaseVNode("i", { class: "mdi mdi-image-outline" }, null, -1), createBaseVNode("span", null, "No image — pick, browse, or drop one here", -1)])])),
 					lightbox.value && selected.value ? (openBlock(), createBlock(unref(Ou), {
 						key: 3,
 						items: lbItems.value,
@@ -21389,8 +21395,8 @@ var ImagePick_exports = /* @__PURE__ */ __exportAll({
 var ImagePick_default = /*#__PURE__*/ _plugin_vue_export_helper_default(ImagePick_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-b38870a5"]]);
 //#endregion
 //#region frontend/components/layout/MixinAvatar.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$18 = ["title"];
-var _hoisted_2$16 = ["src"];
+var _hoisted_1$19 = ["title"];
+var _hoisted_2$17 = ["src"];
 //#endregion
 //#region frontend/components/layout/MixinAvatar.vue
 var MixinAvatar_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
@@ -21419,28 +21425,28 @@ var MixinAvatar_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__
 				src: unref(thumbUrl)(look.value.ref, look.value.type),
 				alt: "",
 				draggable: "false"
-			}, null, 8, _hoisted_2$16)) : (openBlock(), createElementBlock("span", {
+			}, null, 8, _hoisted_2$17)) : (openBlock(), createElementBlock("span", {
 				key: 1,
 				class: "ma-letter",
 				style: normalizeStyle({ fontSize: `${Math.round(__props.size * .45)}px` })
-			}, toDisplayString(letter.value), 5))], 12, _hoisted_1$18);
+			}, toDisplayString(letter.value), 5))], 12, _hoisted_1$19);
 		};
 	}
 }), [["__scopeId", "data-v-294512d9"]]);
 //#endregion
 //#region frontend/components/layout/LayoutBoxFace.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$17 = ["src"];
-var _hoisted_2$15 = {
+var _hoisted_1$18 = ["src"];
+var _hoisted_2$16 = {
 	key: 1,
 	class: "lbf-top"
 };
-var _hoisted_3$14 = ["src"];
-var _hoisted_4$13 = {
+var _hoisted_3$15 = ["src"];
+var _hoisted_4$14 = {
 	key: 0,
 	class: "lbf-plus"
 };
-var _hoisted_5$12 = ["title"];
-var _hoisted_6$11 = {
+var _hoisted_5$13 = ["title"];
+var _hoisted_6$12 = {
 	key: 3,
 	class: "lbf-text"
 };
@@ -21488,8 +21494,8 @@ var LayoutBoxFace_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @
 					src: unref(thumbUrl)(main.value.ref, main.value.type),
 					alt: "",
 					draggable: "false"
-				}, null, 8, _hoisted_1$17)], 4)) : createCommentVNode("", true),
-				mixins.value.length || more.value.length ? (openBlock(), createElementBlock("div", _hoisted_2$15, [(openBlock(true), createElementBlock(Fragment, null, renderList(mixins.value.slice(0, 3), (m) => {
+				}, null, 8, _hoisted_1$18)], 4)) : createCommentVNode("", true),
+				mixins.value.length || more.value.length ? (openBlock(), createElementBlock("div", _hoisted_2$16, [(openBlock(true), createElementBlock(Fragment, null, renderList(mixins.value.slice(0, 3), (m) => {
 					return openBlock(), createBlock(MixinAvatar_default, {
 						key: m.id,
 						mixin: m,
@@ -21505,24 +21511,24 @@ var LayoutBoxFace_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @
 						src: unref(thumbUrl)(r.ref, r.type),
 						alt: "",
 						draggable: "false"
-					}, null, 8, _hoisted_3$14);
-				}), 128)), more.value.length > 3 ? (openBlock(), createElementBlock("span", _hoisted_4$13, "+" + toDisplayString(more.value.length - 3), 1)) : createCommentVNode("", true)], 2)) : createCommentVNode("", true)])) : createCommentVNode("", true),
+					}, null, 8, _hoisted_3$15);
+				}), 128)), more.value.length > 3 ? (openBlock(), createElementBlock("span", _hoisted_4$14, "+" + toDisplayString(more.value.length - 3), 1)) : createCommentVNode("", true)], 2)) : createCommentVNode("", true)])) : createCommentVNode("", true),
 				loras.value.length ? (openBlock(), createElementBlock("span", {
 					key: 2,
 					class: "lbf-lora",
 					title: loraTitle.value
-				}, [_cache[0] || (_cache[0] = createBaseVNode("i", { class: "mdi mdi-puzzle-outline" }, null, -1)), createTextVNode(toDisplayString(loras.value.length), 1)], 8, _hoisted_5$12)) : createCommentVNode("", true),
-				caption.value ? (openBlock(), createElementBlock("p", _hoisted_6$11, toDisplayString(caption.value), 1)) : createCommentVNode("", true)
+				}, [_cache[0] || (_cache[0] = createBaseVNode("i", { class: "mdi mdi-puzzle-outline" }, null, -1)), createTextVNode(toDisplayString(loras.value.length), 1)], 8, _hoisted_5$13)) : createCommentVNode("", true),
+				caption.value ? (openBlock(), createElementBlock("p", _hoisted_6$12, toDisplayString(caption.value), 1)) : createCommentVNode("", true)
 			], 2);
 		};
 	}
 }), [["__scopeId", "data-v-77740021"]]);
 //#endregion
 //#region frontend/components/layout/LayoutSummary.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$16 = { class: "lsum" };
-var _hoisted_2$14 = { class: "lsum-stage" };
-var _hoisted_3$13 = { class: "lsum-bar" };
-var _hoisted_4$12 = { class: "lsum-text" };
+var _hoisted_1$17 = { class: "lsum" };
+var _hoisted_2$15 = { class: "lsum-stage" };
+var _hoisted_3$14 = { class: "lsum-bar" };
+var _hoisted_4$13 = { class: "lsum-text" };
 //#endregion
 //#region frontend/components/layout/LayoutSummary.vue
 var LayoutSummary_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
@@ -21545,7 +21551,7 @@ var LayoutSummary_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @
 			locked: true
 		})));
 		return (_ctx, _cache) => {
-			return openBlock(), createElementBlock("div", _hoisted_1$16, [createBaseVNode("div", _hoisted_2$14, [createVNode(unref(rm), {
+			return openBlock(), createElementBlock("div", _hoisted_1$17, [createBaseVNode("div", _hoisted_2$15, [createVNode(unref(rm), {
 				boxes: boxes.value,
 				selected: [],
 				aspect: __props.aspect,
@@ -21566,7 +21572,7 @@ var LayoutSummary_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @
 					"mask-style"
 				])) : createCommentVNode("", true)]),
 				key: "0"
-			} : void 0]), 1032, ["boxes", "aspect"])]), createBaseVNode("div", _hoisted_3$13, [createBaseVNode("span", _hoisted_4$12, toDisplayString(__props.line) + " · editing in a panel", 1), createVNode(unref(Yt), {
+			} : void 0]), 1032, ["boxes", "aspect"])]), createBaseVNode("div", _hoisted_3$14, [createBaseVNode("span", _hoisted_4$13, toDisplayString(__props.line) + " · editing in a panel", 1), createVNode(unref(Yt), {
 				sm: "",
 				icon: "mdi mdi-open-in-new",
 				onClick: _cache[0] || (_cache[0] = ($event) => emit("focus"))
@@ -21738,30 +21744,30 @@ async function askAgent(ask, signal) {
 }
 //#endregion
 //#region frontend/components/layout/LayoutAgent.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$15 = { class: "la" };
-var _hoisted_2$13 = { class: "la-ask" };
-var _hoisted_3$12 = { class: "la-source" };
-var _hoisted_4$11 = ["src"];
-var _hoisted_5$11 = {
+var _hoisted_1$16 = { class: "la" };
+var _hoisted_2$14 = { class: "la-ask" };
+var _hoisted_3$13 = { class: "la-source" };
+var _hoisted_4$12 = ["src"];
+var _hoisted_5$12 = {
 	key: 1,
 	class: "la-none"
 };
-var _hoisted_6$10 = { class: "la-chips" };
-var _hoisted_7$9 = ["onClick"];
-var _hoisted_8$9 = { class: "la-row" };
-var _hoisted_9$7 = {
+var _hoisted_6$11 = { class: "la-chips" };
+var _hoisted_7$10 = ["onClick"];
+var _hoisted_8$10 = { class: "la-row" };
+var _hoisted_9$8 = {
 	class: "la-ctl",
 	title: "Higher is freer, lower sticks closer to the request"
 };
-var _hoisted_10$6 = {
+var _hoisted_10$7 = {
 	key: 0,
 	class: "la-note"
 };
-var _hoisted_11$6 = {
+var _hoisted_11$7 = {
 	key: 1,
 	class: "la-error"
 };
-var _hoisted_12$5 = { class: "la-result" };
+var _hoisted_12$6 = { class: "la-result" };
 var _hoisted_13$4 = { class: "la-thumb" };
 var _hoisted_14$4 = {
 	key: 0,
@@ -21856,13 +21862,13 @@ var LayoutAgent_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__
 				height: "min(720px, 86vh)",
 				"onUpdate:open": _cache[6] || (_cache[6] = ($event) => emit("update:open", $event))
 			}, {
-				default: withCtx(() => [createBaseVNode("div", _hoisted_1$15, [createBaseVNode("section", _hoisted_2$13, [
-					createBaseVNode("div", _hoisted_3$12, [
+				default: withCtx(() => [createBaseVNode("div", _hoisted_1$16, [createBaseVNode("section", _hoisted_2$14, [
+					createBaseVNode("div", _hoisted_3$13, [
 						createBaseVNode("div", { class: normalizeClass(["la-pic", { off: !useImage.value }]) }, [imageUrl.value ? (openBlock(), createElementBlock("img", {
 							key: 0,
 							src: imageUrl.value,
 							alt: ""
-						}, null, 8, _hoisted_4$11)) : (openBlock(), createElementBlock("span", _hoisted_5$11, [..._cache[7] || (_cache[7] = [createBaseVNode("i", { class: "mdi mdi-image-off-outline" }, null, -1), createTextVNode(" No trace image. Pick one with the image button on the rail, or wire a photo into Layout Inputs and run. ", -1)])]))], 2),
+						}, null, 8, _hoisted_4$12)) : (openBlock(), createElementBlock("span", _hoisted_5$12, [..._cache[7] || (_cache[7] = [createBaseVNode("i", { class: "mdi mdi-image-off-outline" }, null, -1), createTextVNode(" No trace image. Pick one with the image button on the rail, or wire a photo into Layout Inputs and run. ", -1)])]))], 2),
 						createBaseVNode("label", { class: normalizeClass(["la-toggle", { dim: !__props.image }]) }, [createVNode(unref(yl), {
 							"model-value": useImage.value && !!__props.image,
 							disabled: !__props.image,
@@ -21887,16 +21893,16 @@ var LayoutAgent_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__
 						"placeholder",
 						"onKeydown"
 					]),
-					createBaseVNode("div", _hoisted_6$10, [(openBlock(), createElementBlock(Fragment, null, renderList(CHIPS, (c) => {
+					createBaseVNode("div", _hoisted_6$11, [(openBlock(), createElementBlock(Fragment, null, renderList(CHIPS, (c) => {
 						return createBaseVNode("button", {
 							key: c,
 							type: "button",
 							class: "la-chip",
 							onClick: ($event) => request.value = c
-						}, toDisplayString(c), 9, _hoisted_7$9);
+						}, toDisplayString(c), 9, _hoisted_7$10);
 					}), 64))]),
-					createBaseVNode("div", _hoisted_8$9, [
-						createBaseVNode("label", _hoisted_9$7, [_cache[10] || (_cache[10] = createTextVNode(" Creativity ", -1)), createVNode(unref(un), {
+					createBaseVNode("div", _hoisted_8$10, [
+						createBaseVNode("label", _hoisted_9$8, [_cache[10] || (_cache[10] = createTextVNode(" Creativity ", -1)), createVNode(unref(un), {
 							size: "sm",
 							"model-value": temperature.value,
 							min: .1,
@@ -21926,9 +21932,9 @@ var LayoutAgent_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__
 							_: 1
 						}))
 					]),
-					busy.value ? (openBlock(), createElementBlock("p", _hoisted_10$6, [..._cache[13] || (_cache[13] = [createBaseVNode("i", { class: "mdi mdi-loading mdi-spin" }, null, -1), createTextVNode(" Asking… the first time loads the model, which takes a while. ", -1)])])) : createCommentVNode("", true),
-					error.value ? (openBlock(), createElementBlock("p", _hoisted_11$6, toDisplayString(error.value), 1)) : createCommentVNode("", true)
-				]), createBaseVNode("section", _hoisted_12$5, [result.value ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
+					busy.value ? (openBlock(), createElementBlock("p", _hoisted_10$7, [..._cache[13] || (_cache[13] = [createBaseVNode("i", { class: "mdi mdi-loading mdi-spin" }, null, -1), createTextVNode(" Asking… the first time loads the model, which takes a while. ", -1)])])) : createCommentVNode("", true),
+					error.value ? (openBlock(), createElementBlock("p", _hoisted_11$7, toDisplayString(error.value), 1)) : createCommentVNode("", true)
+				]), createBaseVNode("section", _hoisted_12$6, [result.value ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
 					createBaseVNode("div", _hoisted_13$4, [createVNode(LayoutThumb_default, {
 						preview: resultPreview.value,
 						labels: ""
@@ -21974,36 +21980,28 @@ var LayoutAgent_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__
 }), [["__scopeId", "data-v-18a7e0c3"]]);
 //#endregion
 //#region frontend/components/layout/LayoutMixins.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$14 = { class: "lm" };
-var _hoisted_2$12 = { class: "lm-bar" };
-var _hoisted_3$11 = { class: "lm-lib" };
-var _hoisted_4$10 = { class: "lm-lib-head" };
-var _hoisted_5$10 = {
+var _hoisted_1$15 = { class: "lm" };
+var _hoisted_2$13 = { class: "lm-bar" };
+var _hoisted_3$12 = { class: "lm-grid" };
+var _hoisted_4$11 = [
+	"title",
+	"onClick",
+	"onContextmenu"
+];
+var _hoisted_5$11 = { class: "lm-tile-name" };
+var _hoisted_6$10 = { class: "lm-tile-meta" };
+var _hoisted_7$9 = ["title"];
+var _hoisted_8$9 = ["title"];
+var _hoisted_9$7 = {
 	key: 0,
 	class: "lm-empty"
 };
-var _hoisted_6$9 = {
-	key: 1,
-	class: "lm-lib-list"
-};
-var _hoisted_7$8 = ["onClick"];
-var _hoisted_8$8 = { class: "lm-lib-name" };
-var _hoisted_9$6 = { class: "lm-grid" };
-var _hoisted_10$5 = ["title", "onClick"];
-var _hoisted_11$5 = { class: "lm-tile-name" };
-var _hoisted_12$4 = { class: "lm-tile-meta" };
-var _hoisted_13$3 = ["title"];
-var _hoisted_14$3 = ["title"];
-var _hoisted_15$3 = {
-	key: 0,
-	class: "lm-empty"
-};
-var _hoisted_16$2 = {
+var _hoisted_10$6 = {
 	key: 1,
 	class: "lm-edit"
 };
-var _hoisted_17$2 = { class: "lm-head" };
-var _hoisted_18$2 = ["value"];
+var _hoisted_11$6 = { class: "lm-head" };
+var _hoisted_12$5 = ["value"];
 //#endregion
 //#region frontend/components/layout/LayoutMixins.vue
 var LayoutMixins_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
@@ -22020,12 +22018,15 @@ var LayoutMixins_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 	emits: /*@__PURE__*/ mergeModels([
 		"create",
 		"selectBoxes",
-		"assignSelected"
+		"assignSelected",
+		"openLibrary",
+		"swapFromLibrary",
+		"swapBoxes"
 	], ["update:modelValue", "update:open"]),
 	setup(__props, { emit: __emit }) {
 		/**
-		* The layout's Mixins tab: every mixin as a tile, a reusable preset library, and the open mixin's
-		* editor — what several boxes share, with its reference images, LoRAs and trigger words given once.
+		* The layout's Mixins tab: every mixin as a tile (right-click to swap, inspect, duplicate, save or
+		* delete), a button for the full Mixin Library modal, and the open mixin's inline editor.
 		*/
 		const props = __props;
 		const mixins = useModel(__props, "modelValue");
@@ -22034,51 +22035,37 @@ var LayoutMixins_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 		const emit = __emit;
 		const refsPanel = /* @__PURE__ */ ref(null);
 		const current = computed(() => mixins.value.find((m) => m.id === openId.value) ?? mixins.value[0] ?? null);
-		const libOpen = /* @__PURE__ */ ref(false);
-		const savedMixins = /* @__PURE__ */ ref([]);
 		const saving = /* @__PURE__ */ ref(false);
-		const savedNote = /* @__PURE__ */ ref("");
-		async function refreshLibrary() {
-			savedMixins.value = await listSavedMixins();
-		}
-		function openLib(toggle) {
-			toggle();
-			if (libOpen.value) refreshLibrary();
-		}
-		async function saveCurrent() {
-			const m = current.value;
-			if (!m || !m.name.trim()) return;
+		const savedId = /* @__PURE__ */ ref(null);
+		async function saveToLibrary(mixin) {
+			if (!mixin.name.trim()) return;
 			saving.value = true;
 			try {
-				await saveMixinPreset(m.name.trim(), JSON.parse(JSON.stringify(m)));
-				savedNote.value = "Saved";
-				setTimeout(() => savedNote.value = "", 1500);
-				await refreshLibrary();
+				await saveMixinPreset(mixin.name.trim(), JSON.parse(JSON.stringify(mixin)));
+				savedId.value = mixin.id;
+				setTimeout(() => {
+					if (savedId.value === mixin.id) savedId.value = null;
+				}, 1500);
 			} finally {
 				saving.value = false;
 			}
 		}
-		function addFromLibrary(item) {
-			const loaded = readMixin(item.mixin, mixins.value.length);
+		function duplicateMixin(source) {
 			const copy = {
-				...loaded,
+				...JSON.parse(JSON.stringify(source)),
 				id: uid("c"),
-				refs: loaded.refs.map((r) => ({
+				name: `${source.name || "Mixin"} copy`,
+				refs: source.refs.map((r) => ({
 					...r,
 					id: uid("r")
 				})),
-				loras: loaded.loras.map((l) => ({
+				loras: source.loras.map((l) => ({
 					...l,
 					id: uid("o")
 				}))
 			};
 			mixins.value = [...mixins.value, copy];
 			openId.value = copy.id;
-			libOpen.value = false;
-		}
-		async function removeSaved(name) {
-			await deleteMixinPreset(name);
-			await refreshLibrary();
 		}
 		function open(id) {
 			openId.value = id;
@@ -22104,6 +22091,17 @@ var LayoutMixins_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 		function loraCount(mixin) {
 			return mixin.loras.filter((l) => l.on && l.name).length;
 		}
+		function tileTooltip(mixin) {
+			const parts = [`${mixin.name || "Mixin"} (${boxCount(mixin.id)} box(es))`];
+			if (mixin.desc.trim()) parts.push(mixin.desc.trim().slice(0, 110));
+			if (mixin.trigger.trim()) parts.push(`Trigger: ${mixin.trigger.trim()}`);
+			const refs = refCount(mixin);
+			const loras = mixin.loras.filter((l) => l.on && l.name);
+			if (refs) parts.push(`${refs} reference image(s)`);
+			if (loras.length) parts.push(`LoRAs: ${loras.map((l) => `${l.name.split(/[\\/]/).pop()?.replace(/\.[^.]+$/, "")} (${l.strength.toFixed(2)})`).join(", ")}`);
+			parts.push("Right-click to swap, inspect or delete");
+			return parts.join("\n");
+		}
 		function newLora() {
 			return {
 				id: uid("o"),
@@ -22112,92 +22110,111 @@ var LayoutMixins_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 				on: true
 			};
 		}
+		const tileMenu = /* @__PURE__ */ ref(null);
+		const menuMixin = /* @__PURE__ */ ref(null);
+		function openTileMenu(e, mixin) {
+			menuMixin.value = mixin;
+			openId.value = mixin.id;
+			tileMenu.value?.show(e);
+		}
+		const tileMenuItems = computed(() => {
+			const m = menuMixin.value;
+			if (!m) return [];
+			const others = mixins.value.filter((x) => x.id !== m.id);
+			const items = [{
+				label: "Inspect in Library dialog…",
+				icon: "mdi mdi-eye-outline",
+				run: () => emit("openLibrary", m)
+			}, {
+				label: "Swap from Library…",
+				icon: "mdi mdi-swap-horizontal",
+				run: () => emit("swapFromLibrary", m)
+			}];
+			if (others.length) {
+				items.push("-");
+				for (const other of others.slice(0, 6)) items.push({
+					label: `Swap places with "${other.name}"`,
+					icon: "mdi mdi-swap-horizontal-variant",
+					run: () => emit("swapBoxes", m.id, other.id)
+				});
+			}
+			items.push("-");
+			if (props.selectedBoxes.length) items.push({
+				label: `Assign to ${props.selectedBoxes.length} selected box(es)`,
+				icon: "mdi mdi-checkbox-marked-circle-plus-outline",
+				run: () => emit("assignSelected", m.id)
+			});
+			if (boxCount(m.id)) items.push({
+				label: `Select ${boxCount(m.id)} box(es) using this`,
+				icon: "mdi mdi-select-group",
+				run: () => emit("selectBoxes", m.id)
+			});
+			items.push({
+				label: "Duplicate",
+				icon: "mdi mdi-content-copy",
+				run: () => duplicateMixin(m)
+			}, {
+				label: "Save to Library",
+				icon: "mdi mdi-content-save-outline",
+				disabled: !m.name.trim(),
+				run: () => void saveToLibrary(m)
+			}, "-", {
+				label: "Delete mixin",
+				icon: "mdi mdi-delete-outline",
+				danger: true,
+				run: () => remove(m.id)
+			});
+			return items;
+		});
 		return (_ctx, _cache) => {
-			return openBlock(), createElementBlock("div", _hoisted_1$14, [
-				createBaseVNode("div", _hoisted_2$12, [_cache[16] || (_cache[16] = createBaseVNode("span", { class: "lm-bar-note" }, "Shared across boxes — refs, LoRAs & triggers", -1)), createVNode(unref(cl), {
-					open: libOpen.value,
-					"onUpdate:open": _cache[0] || (_cache[0] = ($event) => libOpen.value = $event),
-					placement: "bottom-end",
-					role: "dialog"
+			return openBlock(), createElementBlock("div", _hoisted_1$15, [
+				createBaseVNode("div", _hoisted_2$13, [_cache[17] || (_cache[17] = createBaseVNode("span", { class: "lm-bar-note" }, "Shared across boxes — right-click to swap or manage", -1)), createVNode(unref(Yt), {
+					sm: "",
+					variant: "ghost",
+					icon: "mdi mdi-bookshelf",
+					title: "Open Mixin Library — browse, inspect, create, and swap saved mixins",
+					onClick: _cache[0] || (_cache[0] = ($event) => emit("openLibrary"))
 				}, {
-					trigger: withCtx(({ toggle }) => [createVNode(unref(Yt), {
-						sm: "",
-						variant: "ghost",
-						icon: "mdi mdi-bookshelf",
-						title: "Saved mixin presets — reuse characters, props or styles across layouts",
-						onClick: ($event) => openLib(toggle)
-					}, {
-						default: withCtx(() => [..._cache[14] || (_cache[14] = [createTextVNode(" Library ", -1)])]),
-						_: 1
-					}, 8, ["onClick"])]),
-					default: withCtx(() => [createBaseVNode("div", _hoisted_3$11, [createBaseVNode("div", _hoisted_4$10, [_cache[15] || (_cache[15] = createBaseVNode("span", { class: "lm-lib-title" }, "Mixin library", -1)), current.value ? (openBlock(), createBlock(unref(Yt), {
-						key: 0,
-						sm: "",
-						icon: "mdi mdi-content-save-outline",
-						disabled: !current.value.name.trim() || saving.value,
-						title: "Save the open mixin to your library",
-						onClick: saveCurrent
-					}, {
-						default: withCtx(() => [createTextVNode(toDisplayString(savedNote.value || `Save "${current.value.name}"`), 1)]),
-						_: 1
-					}, 8, ["disabled"])) : createCommentVNode("", true)]), !savedMixins.value.length ? (openBlock(), createElementBlock("p", _hoisted_5$10, " No saved mixins yet. Save a character, prop or style here to drop it into any layout. ")) : (openBlock(), createElementBlock("div", _hoisted_6$9, [(openBlock(true), createElementBlock(Fragment, null, renderList(savedMixins.value, (item) => {
-						return openBlock(), createElementBlock("div", {
-							key: item.name,
-							class: "lm-lib-row"
-						}, [createBaseVNode("button", {
-							type: "button",
-							class: "lm-lib-pick",
-							title: "Add this mixin to the layout",
-							onClick: ($event) => addFromLibrary(item)
-						}, [createVNode(MixinAvatar_default, {
-							mixin: unref(readMixin)(item.mixin, 0),
-							size: 24
-						}, null, 8, ["mixin"]), createBaseVNode("span", _hoisted_8$8, toDisplayString(item.name), 1)], 8, _hoisted_7$8), createVNode(unref(je$1), {
-							size: "sm",
-							danger: "",
-							icon: "mdi mdi-delete-outline",
-							title: "Delete from library",
-							onClick: ($event) => removeSaved(item.name)
-						}, null, 8, ["onClick"])]);
-					}), 128))]))])]),
+					default: withCtx(() => [..._cache[16] || (_cache[16] = [createTextVNode(" Library ", -1)])]),
 					_: 1
-				}, 8, ["open"])]),
-				createBaseVNode("div", _hoisted_9$6, [(openBlock(true), createElementBlock(Fragment, null, renderList(mixins.value, (mixin) => {
+				})]),
+				createBaseVNode("div", _hoisted_3$12, [(openBlock(true), createElementBlock(Fragment, null, renderList(mixins.value, (mixin) => {
 					return openBlock(), createElementBlock("button", {
 						key: mixin.id,
 						type: "button",
 						class: normalizeClass(["lm-tile", { on: mixin.id === openId.value }]),
-						title: `${mixin.name} — in ${boxCount(mixin.id)} box(es)`,
-						onClick: ($event) => open(mixin.id)
+						title: tileTooltip(mixin),
+						onClick: ($event) => open(mixin.id),
+						onContextmenu: withModifiers(($event) => openTileMenu($event, mixin), ["prevent", "stop"])
 					}, [
 						createVNode(MixinAvatar_default, {
 							mixin,
 							size: 40
 						}, null, 8, ["mixin"]),
-						createBaseVNode("span", _hoisted_11$5, toDisplayString(mixin.name), 1),
-						createBaseVNode("span", _hoisted_12$4, [
+						createBaseVNode("span", _hoisted_5$11, toDisplayString(mixin.name), 1),
+						createBaseVNode("span", _hoisted_6$10, [
 							createBaseVNode("span", null, toDisplayString(boxCount(mixin.id)) + " box" + toDisplayString(boxCount(mixin.id) === 1 ? "" : "es"), 1),
 							refCount(mixin) ? (openBlock(), createElementBlock("i", {
 								key: 0,
 								class: "mdi mdi-image-outline",
 								title: `${refCount(mixin)} reference(s)`
-							}, null, 8, _hoisted_13$3)) : createCommentVNode("", true),
+							}, null, 8, _hoisted_7$9)) : createCommentVNode("", true),
 							loraCount(mixin) ? (openBlock(), createElementBlock("i", {
 								key: 1,
 								class: "mdi mdi-puzzle-outline",
 								title: `${loraCount(mixin)} LoRA(s)`
-							}, null, 8, _hoisted_14$3)) : createCommentVNode("", true)
+							}, null, 8, _hoisted_8$9)) : createCommentVNode("", true)
 						])
-					], 10, _hoisted_10$5);
+					], 42, _hoisted_4$11);
 				}), 128)), createBaseVNode("button", {
 					type: "button",
 					class: "lm-tile lm-new",
 					title: "New mixin",
 					onClick: _cache[1] || (_cache[1] = ($event) => emit("create"))
-				}, [..._cache[17] || (_cache[17] = [createBaseVNode("i", { class: "mdi mdi-plus" }, null, -1), createBaseVNode("span", { class: "lm-tile-name" }, "New", -1)])])]),
-				!mixins.value.length ? (openBlock(), createElementBlock("p", _hoisted_15$3, " A mixin is something several boxes share — a character, a prop, a style: reference images, LoRAs and trigger words given once, then ticked in any box. ")) : createCommentVNode("", true),
-				current.value ? (openBlock(), createElementBlock("div", _hoisted_16$2, [
-					createBaseVNode("div", _hoisted_17$2, [
+				}, [..._cache[18] || (_cache[18] = [createBaseVNode("i", { class: "mdi mdi-plus" }, null, -1), createBaseVNode("span", { class: "lm-tile-name" }, "New", -1)])])]),
+				!mixins.value.length ? (openBlock(), createElementBlock("p", _hoisted_9$7, " A mixin is something several boxes share — a character, a prop, a style: reference images, LoRAs and trigger words given once, then ticked in any box. ")) : createCommentVNode("", true),
+				current.value ? (openBlock(), createElementBlock("div", _hoisted_10$6, [
+					createBaseVNode("div", _hoisted_11$6, [
 						createVNode(MixinAvatar_default, {
 							mixin: current.value,
 							size: 28
@@ -22215,27 +22232,44 @@ var LayoutMixins_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 							value: current.value.color,
 							title: "Its colour",
 							onInput: _cache[3] || (_cache[3] = ($event) => patch({ color: $event.target.value }))
-						}, null, 40, _hoisted_18$2),
+						}, null, 40, _hoisted_12$5),
+						createVNode(unref(je$1), {
+							size: "sm",
+							icon: "mdi mdi-swap-horizontal",
+							title: `Swap ${current.value.name} with another mixin from the library`,
+							onClick: _cache[4] || (_cache[4] = ($event) => emit("swapFromLibrary", current.value))
+						}, null, 8, ["title"]),
+						createVNode(unref(je$1), {
+							size: "sm",
+							icon: savedId.value === current.value.id ? "mdi mdi-check" : "mdi mdi-content-save-outline",
+							disabled: !current.value.name.trim() || saving.value,
+							title: savedId.value === current.value.id ? "Saved to library" : `Save ${current.value.name} to library`,
+							onClick: _cache[5] || (_cache[5] = ($event) => saveToLibrary(current.value))
+						}, null, 8, [
+							"icon",
+							"disabled",
+							"title"
+						]),
 						__props.selectedBoxes.length ? (openBlock(), createBlock(unref(je$1), {
 							key: 0,
 							size: "sm",
 							icon: "mdi mdi-checkbox-marked-circle-plus-outline",
 							title: `Assign ${current.value.name} to the ${__props.selectedBoxes.length} selected box(es)`,
-							onClick: _cache[4] || (_cache[4] = ($event) => emit("assignSelected", current.value.id))
+							onClick: _cache[6] || (_cache[6] = ($event) => emit("assignSelected", current.value.id))
 						}, null, 8, ["title"])) : createCommentVNode("", true),
 						createVNode(unref(je$1), {
 							size: "sm",
 							icon: "mdi mdi-select-group",
 							title: `Select the ${boxCount(current.value.id)} box(es) it's in`,
 							disabled: !boxCount(current.value.id),
-							onClick: _cache[5] || (_cache[5] = ($event) => emit("selectBoxes", current.value.id))
+							onClick: _cache[7] || (_cache[7] = ($event) => emit("selectBoxes", current.value.id))
 						}, null, 8, ["title", "disabled"]),
 						createVNode(unref(je$1), {
 							size: "sm",
 							danger: "",
 							icon: "mdi mdi-delete-outline",
 							title: `Delete ${current.value.name} (and take it out of every box)`,
-							onClick: _cache[6] || (_cache[6] = ($event) => remove(current.value.id))
+							onClick: _cache[8] || (_cache[8] = ($event) => remove(current.value.id))
 						}, null, 8, ["title"])
 					]),
 					createVNode(FrescoSection_default, {
@@ -22248,7 +22282,7 @@ var LayoutMixins_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 							sm: "",
 							"model-value": current.value.desc,
 							placeholder: "e.g. Amber, a teenage girl with a short copper-red bob, green eyes and freckles",
-							"onUpdate:modelValue": _cache[7] || (_cache[7] = ($event) => patch({ desc: String($event ?? "") }))
+							"onUpdate:modelValue": _cache[9] || (_cache[9] = ($event) => patch({ desc: String($event ?? "") }))
 						}, null, 8, ["model-value"])]),
 						_: 1
 					}),
@@ -22260,7 +22294,7 @@ var LayoutMixins_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 							sm: "",
 							"model-value": current.value.trigger,
 							placeholder: "e.g. amb3r",
-							"onUpdate:modelValue": _cache[8] || (_cache[8] = ($event) => patch({ trigger: String($event ?? "") }))
+							"onUpdate:modelValue": _cache[10] || (_cache[10] = ($event) => patch({ trigger: String($event ?? "") }))
 						}, null, 8, ["model-value"])]),
 						_: 1
 					}),
@@ -22273,18 +22307,18 @@ var LayoutMixins_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 							icon: "mdi mdi-upload-outline",
 							title: "Upload images",
 							disabled: refsPanel.value?.busy,
-							onClick: _cache[9] || (_cache[9] = ($event) => refsPanel.value?.upload())
+							onClick: _cache[11] || (_cache[11] = ($event) => refsPanel.value?.upload())
 						}, null, 8, ["disabled"]), createVNode(unref(je$1), {
 							size: "sm",
 							icon: "mdi mdi-view-grid-plus-outline",
 							title: "Browse images",
-							onClick: _cache[10] || (_cache[10] = ($event) => refsPanel.value?.openBrowse())
+							onClick: _cache[12] || (_cache[12] = ($event) => refsPanel.value?.openBrowse())
 						})]),
 						default: withCtx(() => [createVNode(FrescoRefs_default, {
 							ref_key: "refsPanel",
 							ref: refsPanel,
 							"model-value": current.value.refs,
-							"onUpdate:modelValue": _cache[11] || (_cache[11] = ($event) => patch({ refs: $event }))
+							"onUpdate:modelValue": _cache[13] || (_cache[13] = ($event) => patch({ refs: $event }))
 						}, null, 8, ["model-value"])]),
 						_: 1
 					}, 8, ["note"]),
@@ -22296,33 +22330,38 @@ var LayoutMixins_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @_
 							size: "sm",
 							icon: "mdi mdi-plus",
 							title: "Add a LoRA",
-							onClick: _cache[12] || (_cache[12] = ($event) => patch({ loras: [...current.value.loras, newLora()] }))
+							onClick: _cache[14] || (_cache[14] = ($event) => patch({ loras: [...current.value.loras, newLora()] }))
 						})]),
 						default: withCtx(() => [current.value.loras.length ? (openBlock(), createBlock(FrescoLoras_default, {
 							key: 0,
 							"model-value": current.value.loras,
-							"onUpdate:modelValue": _cache[13] || (_cache[13] = ($event) => patch({ loras: $event }))
+							"onUpdate:modelValue": _cache[15] || (_cache[15] = ($event) => patch({ loras: $event }))
 						}, null, 8, ["model-value"])) : createCommentVNode("", true)]),
 						_: 1
 					}, 8, ["note"])
-				])) : createCommentVNode("", true)
+				])) : createCommentVNode("", true),
+				createVNode(unref(lm), {
+					ref_key: "tileMenu",
+					ref: tileMenu,
+					items: tileMenuItems.value
+				}, null, 8, ["items"])
 			]);
 		};
 	}
-}), [["__scopeId", "data-v-ede01aa2"]]);
+}), [["__scopeId", "data-v-a5e3cb24"]]);
 //#endregion
 //#region frontend/layout/modes/index.ts
 for (const mode of PROMPT_MODES) registerMode(mode);
 //#endregion
 //#region frontend/components/layout/ModeCards.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$13 = {
+var _hoisted_1$14 = {
 	class: "mc",
 	role: "radiogroup"
 };
-var _hoisted_2$11 = ["aria-checked", "onClick"];
-var _hoisted_3$10 = { class: "mc-label" };
-var _hoisted_4$9 = { class: "mc-model" };
-var _hoisted_5$9 = { class: "mc-what" };
+var _hoisted_2$12 = ["aria-checked", "onClick"];
+var _hoisted_3$11 = { class: "mc-label" };
+var _hoisted_4$10 = { class: "mc-model" };
+var _hoisted_5$10 = { class: "mc-what" };
 //#endregion
 //#region frontend/components/layout/ModeCards.vue
 var ModeCards_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
@@ -22357,7 +22396,7 @@ var ModeCards_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PU
 			...ABOUT[m.id]
 		}));
 		return (_ctx, _cache) => {
-			return openBlock(), createElementBlock("div", _hoisted_1$13, [(openBlock(true), createElementBlock(Fragment, null, renderList(unref(MODES), (m) => {
+			return openBlock(), createElementBlock("div", _hoisted_1$14, [(openBlock(true), createElementBlock(Fragment, null, renderList(unref(MODES), (m) => {
 				return openBlock(), createElementBlock("button", {
 					key: m.id,
 					type: "button",
@@ -22367,17 +22406,17 @@ var ModeCards_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PU
 					onClick: ($event) => emit("update:modelValue", m.id)
 				}, [
 					createBaseVNode("i", { class: normalizeClass(["mc-icon", m.icon]) }, null, 2),
-					createBaseVNode("span", _hoisted_3$10, toDisplayString(m.label), 1),
-					createBaseVNode("span", _hoisted_4$9, toDisplayString(m.model), 1),
-					createBaseVNode("span", _hoisted_5$9, toDisplayString(m.what), 1)
-				], 10, _hoisted_2$11);
+					createBaseVNode("span", _hoisted_3$11, toDisplayString(m.label), 1),
+					createBaseVNode("span", _hoisted_4$10, toDisplayString(m.model), 1),
+					createBaseVNode("span", _hoisted_5$10, toDisplayString(m.what), 1)
+				], 10, _hoisted_2$12);
 			}), 128))]);
 		};
 	}
 }), [["__scopeId", "data-v-f481af91"]]);
 //#endregion
 //#region frontend/components/layout/LayoutSettings.vue?vue&type=script&setup=true&lang.ts
-var _hoisted_1$12 = { class: "ls" };
+var _hoisted_1$13 = { class: "ls" };
 //#endregion
 //#region frontend/components/layout/LayoutSettings.vue
 var LayoutSettings_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
@@ -22398,7 +22437,7 @@ var LayoutSettings_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* 
 				height: "auto",
 				"onUpdate:open": _cache[1] || (_cache[1] = ($event) => emit("update:open", $event))
 			}, {
-				default: withCtx(() => [createBaseVNode("div", _hoisted_1$12, [_cache[2] || (_cache[2] = createBaseVNode("p", { class: "ls-note" }, " The model the prompt is written for. The boxes stay; what each mode reads is in the sidebar. ", -1)), createVNode(ModeCards_default, {
+				default: withCtx(() => [createBaseVNode("div", _hoisted_1$13, [_cache[2] || (_cache[2] = createBaseVNode("p", { class: "ls-note" }, " The model the prompt is written for. The boxes stay; what each mode reads is in the sidebar. ", -1)), createVNode(ModeCards_default, {
 					"model-value": __props.mode,
 					"onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => {
 						emit("pick", $event);
@@ -22410,6 +22449,754 @@ var LayoutSettings_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* 
 		};
 	}
 }), [["__scopeId", "data-v-5978b710"]]);
+//#endregion
+//#region frontend/components/layout/MixinLibraryDialog.vue?vue&type=script&setup=true&lang.ts
+var _hoisted_1$12 = { class: "ml-search" };
+var _hoisted_2$11 = { class: "ml" };
+var _hoisted_3$10 = { class: "ml-nav" };
+var _hoisted_4$9 = ["onClick"];
+var _hoisted_5$9 = { class: "ml-sname" };
+var _hoisted_6$9 = { class: "ml-count" };
+var _hoisted_7$8 = { class: "ml-main" };
+var _hoisted_8$8 = {
+	key: 0,
+	class: "ml-note"
+};
+var _hoisted_9$6 = {
+	key: 0,
+	class: "ml-empty"
+};
+var _hoisted_10$5 = {
+	key: 1,
+	class: "ml-grid"
+};
+var _hoisted_11$5 = [
+	"title",
+	"onClick",
+	"onDblclick",
+	"onContextmenu"
+];
+var _hoisted_12$4 = ["src"];
+var _hoisted_13$3 = {
+	key: 2,
+	class: "ml-badge"
+};
+var _hoisted_14$3 = {
+	key: 3,
+	class: "ml-origin"
+};
+var _hoisted_15$3 = { class: "ml-cname" };
+var _hoisted_16$2 = { class: "ml-cmeta" };
+var _hoisted_17$2 = {
+	key: 0,
+	class: "ml-chip"
+};
+var _hoisted_18$2 = {
+	key: 1,
+	class: "ml-chip"
+};
+var _hoisted_19$1 = {
+	key: 2,
+	class: "ml-trigger"
+};
+var _hoisted_20$1 = {
+	key: 3,
+	class: "ml-muted"
+};
+var _hoisted_21$1 = { class: "ml-detail" };
+var _hoisted_22$1 = { class: "ml-dhead" };
+var _hoisted_23$1 = ["value"];
+var _hoisted_24$1 = { class: "ml-dsub" };
+var _hoisted_25$1 = { class: "ml-dtag" };
+var _hoisted_26$1 = {
+	key: 0,
+	class: "ml-dtime"
+};
+var _hoisted_27$1 = {
+	key: 1,
+	class: "ml-dirty"
+};
+var _hoisted_28$1 = { class: "ml-form" };
+var _hoisted_29$1 = {
+	key: 1,
+	class: "ml-hint"
+};
+var _hoisted_30$1 = { class: "ml-dfoot" };
+var _hoisted_31$1 = { class: "ml-drow" };
+var _hoisted_32$1 = { class: "ml-drow ml-primary-row" };
+var _hoisted_33$1 = {
+	key: 1,
+	class: "ml-empty"
+};
+//#endregion
+//#region frontend/components/layout/MixinLibraryDialog.vue
+var MixinLibraryDialog_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
+	__name: "MixinLibraryDialog",
+	props: {
+		open: { type: Boolean },
+		layoutMixins: {},
+		selectedBoxes: { default: () => [] },
+		swapTarget: { default: null },
+		initialMixin: { default: null }
+	},
+	emits: [
+		"update:open",
+		"add",
+		"swap",
+		"updateLayoutMixin"
+	],
+	setup(__props, { emit: __emit }) {
+		const props = __props;
+		const emit = __emit;
+		const saved = /* @__PURE__ */ ref([]);
+		const scope = /* @__PURE__ */ ref("all");
+		const query = /* @__PURE__ */ ref("");
+		const note = /* @__PURE__ */ ref("");
+		const saving = /* @__PURE__ */ ref(false);
+		const confirmDelete = /* @__PURE__ */ ref(false);
+		const refsPanel = /* @__PURE__ */ ref(null);
+		const activeKey = /* @__PURE__ */ ref(null);
+		const draft = /* @__PURE__ */ ref(null);
+		const draftSource = /* @__PURE__ */ ref("new");
+		const savedOriginName = /* @__PURE__ */ ref(null);
+		const activeSavedTime = /* @__PURE__ */ ref(null);
+		const baselineJson = /* @__PURE__ */ ref("");
+		const modalTitle = computed(() => props.swapTarget ? `Swap "${props.swapTarget.name || "Mixin"}" with…` : "Mixin Library");
+		const savedCards = computed(() => saved.value.map((item, i) => ({
+			key: `saved:${item.name}`,
+			source: "saved",
+			savedName: item.name,
+			savedTime: item.saved,
+			mixin: readMixin({
+				...item.mixin,
+				name: item.name
+			}, i)
+		})));
+		const layoutCards = computed(() => props.layoutMixins.map((m) => ({
+			key: `layout:${m.id}`,
+			source: "layout",
+			mixin: cloneMixin(m)
+		})));
+		const scopes = computed(() => [
+			{
+				id: "all",
+				label: "All saved",
+				icon: "mdi mdi-bookshelf",
+				count: savedCards.value.length
+			},
+			{
+				id: "refs",
+				label: "With references",
+				icon: "mdi mdi-image-multiple-outline",
+				count: savedCards.value.filter((c) => activeRefs(c.mixin).length > 0).length
+			},
+			{
+				id: "loras",
+				label: "With LoRAs",
+				icon: "mdi mdi-puzzle-outline",
+				count: savedCards.value.filter((c) => activeLoras(c.mixin).length > 0).length
+			},
+			{
+				id: "layout",
+				label: "In this layout",
+				icon: "mdi mdi-layers-outline",
+				count: layoutCards.value.length,
+				sep: true
+			}
+		]);
+		const visible = computed(() => {
+			const pool = scope.value === "layout" ? layoutCards.value : scope.value === "refs" ? savedCards.value.filter((c) => activeRefs(c.mixin).length > 0) : scope.value === "loras" ? savedCards.value.filter((c) => activeLoras(c.mixin).length > 0) : savedCards.value;
+			const q = query.value.trim().toLowerCase();
+			if (!q) return pool;
+			return pool.filter(({ mixin }) => {
+				return [
+					mixin.name,
+					mixin.desc,
+					mixin.trigger,
+					...mixin.loras.map((l) => l.name),
+					...mixin.refs.map((r) => r.ref)
+				].join("\n").toLowerCase().includes(q);
+			});
+		});
+		const emptyText = computed(() => {
+			if (query.value.trim()) return "No mixins match that search.";
+			if (scope.value === "layout") return "No mixins in this layout yet.";
+			if (scope.value === "refs") return "No saved mixins with reference images yet.";
+			if (scope.value === "loras") return "No saved mixins with LoRAs yet.";
+			return "No saved mixins yet — create one here or save one from this layout.";
+		});
+		const draftDirty = computed(() => !!draft.value && JSON.stringify(draft.value) !== baselineJson.value);
+		const draftBadge = computed(() => draftSource.value === "new" ? "New library preset" : draftSource.value === "layout" ? "In this layout" : "Library preset");
+		const saveLabel = computed(() => {
+			if (saving.value) return "Saving…";
+			if (draftSource.value === "saved") return draftDirty.value ? "Save changes" : "Saved";
+			return "Save to library";
+		});
+		const isSelfSwap = computed(() => !!props.swapTarget && draftSource.value === "layout" && draft.value?.id === props.swapTarget.id);
+		function cloneMixin(m) {
+			return JSON.parse(JSON.stringify(m));
+		}
+		function activeRefs(m) {
+			return m.refs.filter((r) => r.on);
+		}
+		function activeLoras(m) {
+			return m.loras.filter((l) => l.on && l.name);
+		}
+		function firstRef(m) {
+			return activeRefs(m)[0] ?? null;
+		}
+		function heroStyle(m) {
+			return { background: `color-mix(in srgb, ${m.color} 18%, var(--zen-surface-2, #26262d))` };
+		}
+		function cardTitle(card) {
+			const action = props.swapTarget ? `double-click to swap "${props.swapTarget.name}" with this` : card.source === "layout" ? "click to inspect or save to library" : "double-click to add to layout";
+			return `${card.mixin.name || "Untitled"} — ${action}`;
+		}
+		function newLora() {
+			return {
+				id: uid("o"),
+				name: "",
+				strength: 1,
+				on: true
+			};
+		}
+		function setOpen(v) {
+			emit("update:open", v);
+		}
+		async function refresh() {
+			saved.value = await listSavedMixins();
+			if (draftSource.value === "saved" && savedOriginName.value) {
+				const found = savedCards.value.find((c) => c.savedName === savedOriginName.value);
+				if (found && !draftDirty.value) pickCard(found);
+				else if (!found) {
+					activeKey.value = null;
+					draft.value = null;
+				}
+			}
+		}
+		watch(() => props.open, async (open) => {
+			if (!open) return;
+			note.value = "";
+			query.value = "";
+			confirmDelete.value = false;
+			await refresh();
+			if (props.initialMixin) {
+				scope.value = "layout";
+				const match = layoutCards.value.find((c) => c.mixin.id === props.initialMixin?.id);
+				if (match) pickCard(match);
+			} else if (savedCards.value.length) {
+				scope.value = "all";
+				pickCard(savedCards.value[0]);
+			} else if (layoutCards.value.length) {
+				scope.value = "layout";
+				pickCard(layoutCards.value[0]);
+			} else {
+				scope.value = "all";
+				activeKey.value = null;
+				draft.value = null;
+			}
+		});
+		function pickCard(card) {
+			activeKey.value = card.key;
+			draft.value = cloneMixin(card.mixin);
+			draftSource.value = card.source;
+			savedOriginName.value = card.savedName ?? null;
+			activeSavedTime.value = card.savedTime ?? null;
+			baselineJson.value = JSON.stringify(draft.value);
+			confirmDelete.value = false;
+			note.value = "";
+		}
+		function startNew(from) {
+			const index = savedCards.value.length + props.layoutMixins.length;
+			const fresh = from ? {
+				...cloneMixin(from),
+				id: uid("c"),
+				name: `${from.name || "Mixin"} copy`,
+				refs: from.refs.map((r) => ({
+					...r,
+					id: uid("r")
+				})),
+				loras: from.loras.map((l) => ({
+					...l,
+					id: uid("o")
+				}))
+			} : {
+				...readMixin({}, index),
+				id: uid("c"),
+				name: `Mixin ${index + 1}`
+			};
+			activeKey.value = null;
+			draft.value = fresh;
+			draftSource.value = "new";
+			savedOriginName.value = null;
+			activeSavedTime.value = null;
+			baselineJson.value = "";
+			confirmDelete.value = false;
+			note.value = "";
+		}
+		function duplicateDraft() {
+			if (draft.value) startNew(draft.value);
+		}
+		function patchDraft(change) {
+			if (!draft.value) return;
+			draft.value = {
+				...draft.value,
+				...change
+			};
+		}
+		async function saveDraft() {
+			const current = draft.value;
+			const name = current?.name.trim() ?? "";
+			if (!current || !name) return;
+			saving.value = true;
+			note.value = "";
+			try {
+				let savedAs;
+				if (draftSource.value === "saved" && savedOriginName.value && savedOriginName.value !== name) {
+					await renameMixinPreset(savedOriginName.value, name);
+					savedAs = await saveMixinPreset(name, {
+						...current,
+						name
+					});
+				} else savedAs = await saveMixinPreset(name, {
+					...current,
+					name
+				});
+				await refresh();
+				const card = savedCards.value.find((c) => c.savedName === savedAs);
+				if (card) {
+					if (draftSource.value !== "layout") {
+						scope.value = "all";
+						pickCard(card);
+					} else note.value = `Saved "${savedAs}" to library.`;
+				}
+				if (draftSource.value !== "layout") note.value = `Saved "${savedAs}".`;
+			} catch (e) {
+				note.value = `Couldn't save: ${e.message}`;
+			} finally {
+				saving.value = false;
+			}
+		}
+		function applyLayoutEdits() {
+			if (!draft.value || draftSource.value !== "layout") return;
+			emit("updateLayoutMixin", cloneMixin(draft.value));
+			baselineJson.value = JSON.stringify(draft.value);
+			note.value = `Updated "${draft.value.name}" in layout.`;
+		}
+		async function removeCurrentSaved() {
+			if (!savedOriginName.value) return;
+			if (!confirmDelete.value) {
+				confirmDelete.value = true;
+				return;
+			}
+			const target = savedOriginName.value;
+			await deleteMixinPreset(target).catch(() => void 0);
+			activeKey.value = null;
+			draft.value = null;
+			savedOriginName.value = null;
+			confirmDelete.value = false;
+			await refresh();
+			note.value = `Deleted "${target}".`;
+		}
+		function freshCopy(source) {
+			const copy = cloneMixin(source);
+			return {
+				...copy,
+				id: uid("c"),
+				refs: copy.refs.map((r) => ({
+					...r,
+					id: uid("r")
+				})),
+				loras: copy.loras.map((l) => ({
+					...l,
+					id: uid("o")
+				}))
+			};
+		}
+		function commitAdd(source, assignSelected) {
+			emit("add", freshCopy(source), assignSelected);
+			setOpen(false);
+		}
+		function commitSwap(source) {
+			if (!props.swapTarget) return;
+			emit("swap", props.swapTarget.id, freshCopy(source));
+			setOpen(false);
+		}
+		function applyCard(card) {
+			if (props.swapTarget) {
+				if (card.source === "layout" && card.mixin.id === props.swapTarget.id) return;
+				commitSwap(card.mixin);
+				return;
+			}
+			if (card.source === "saved") commitAdd(card.mixin, props.selectedBoxes.length > 0);
+		}
+		const ctxMenu = /* @__PURE__ */ ref(null);
+		const ctxCard = /* @__PURE__ */ ref(null);
+		function openCardMenu(e, card) {
+			ctxCard.value = card;
+			pickCard(card);
+			ctxMenu.value?.show(e);
+		}
+		const ctxItems = computed(() => {
+			const card = ctxCard.value;
+			if (!card) return [];
+			const items = [];
+			if (props.swapTarget) {
+				const self = card.source === "layout" && card.mixin.id === props.swapTarget.id;
+				items.push({
+					label: `Swap "${props.swapTarget.name}" with this`,
+					icon: "mdi mdi-swap-horizontal",
+					disabled: self,
+					run: () => commitSwap(card.mixin)
+				});
+			} else if (card.source === "saved") {
+				items.push({
+					label: "Add to layout",
+					icon: "mdi mdi-plus",
+					run: () => commitAdd(card.mixin, false)
+				});
+				if (props.selectedBoxes.length) items.push({
+					label: `Add & assign to ${props.selectedBoxes.length} box(es)`,
+					icon: "mdi mdi-checkbox-marked-circle-plus-outline",
+					run: () => commitAdd(card.mixin, true)
+				});
+			}
+			items.push({
+				label: "Duplicate as new preset",
+				icon: "mdi mdi-content-copy",
+				run: () => startNew(card.mixin)
+			});
+			if (card.source === "layout") items.push({
+				label: "Save to library",
+				icon: "mdi mdi-content-save-outline",
+				run: () => {
+					pickCard(card);
+					saveDraft();
+				}
+			});
+			else if (card.savedName) {
+				const name = card.savedName;
+				items.push("-", {
+					label: "Delete from library",
+					icon: "mdi mdi-delete-outline",
+					danger: true,
+					run: async () => {
+						await deleteMixinPreset(name).catch(() => void 0);
+						if (savedOriginName.value === name) {
+							activeKey.value = null;
+							draft.value = null;
+							savedOriginName.value = null;
+						}
+						await refresh();
+					}
+				});
+			}
+			return items;
+		});
+		function when(t) {
+			return (/* @__PURE__ */ new Date(t * 1e3)).toLocaleString(void 0, {
+				dateStyle: "medium",
+				timeStyle: "short"
+			});
+		}
+		return (_ctx, _cache) => {
+			return openBlock(), createBlock(unref(dl), {
+				open: __props.open,
+				title: modalTitle.value,
+				width: "1180px",
+				height: "82vh",
+				"onUpdate:open": setOpen
+			}, {
+				header: withCtx(() => [
+					createBaseVNode("span", _hoisted_1$12, [createVNode(unref(Zl), {
+						modelValue: query.value,
+						"onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => query.value = $event),
+						sm: "",
+						placeholder: "Search names, descriptions, triggers, LoRAs…"
+					}, null, 8, ["modelValue"])]),
+					_cache[18] || (_cache[18] = createBaseVNode("span", { class: "ml-grow" }, null, -1)),
+					createVNode(unref(Yt), {
+						sm: "",
+						icon: "mdi mdi-plus",
+						title: "Create a new mixin preset",
+						onClick: _cache[1] || (_cache[1] = ($event) => startNew())
+					}, {
+						default: withCtx(() => [..._cache[17] || (_cache[17] = [createTextVNode(" New mixin ", -1)])]),
+						_: 1
+					}),
+					createVNode(unref(je$1), {
+						icon: "mdi mdi-refresh",
+						title: "Refresh library",
+						onClick: refresh
+					})
+				]),
+				default: withCtx(() => [createBaseVNode("div", _hoisted_2$11, [
+					createBaseVNode("nav", _hoisted_3$10, [(openBlock(true), createElementBlock(Fragment, null, renderList(scopes.value, (s) => {
+						return openBlock(), createElementBlock("button", {
+							key: s.id,
+							type: "button",
+							class: normalizeClass(["ml-scope", {
+								on: scope.value === s.id,
+								sep: s.sep
+							}]),
+							onClick: ($event) => scope.value = s.id
+						}, [
+							createBaseVNode("i", { class: normalizeClass(s.icon) }, null, 2),
+							createBaseVNode("span", _hoisted_5$9, toDisplayString(s.label), 1),
+							createBaseVNode("span", _hoisted_6$9, toDisplayString(s.count), 1)
+						], 10, _hoisted_4$9);
+					}), 128))]),
+					createBaseVNode("section", _hoisted_7$8, [note.value ? (openBlock(), createElementBlock("p", _hoisted_8$8, toDisplayString(note.value), 1)) : createCommentVNode("", true), createVNode(unref(tl), { class: "ml-gridwrap" }, {
+						default: withCtx(() => [!visible.value.length ? (openBlock(), createElementBlock("div", _hoisted_9$6, [
+							_cache[20] || (_cache[20] = createBaseVNode("i", { class: "mdi mdi-account-box-multiple-outline" }, null, -1)),
+							createBaseVNode("span", null, toDisplayString(emptyText.value), 1),
+							scope.value !== "layout" && !query.value.trim() ? (openBlock(), createBlock(unref(Yt), {
+								key: 0,
+								sm: "",
+								icon: "mdi mdi-plus",
+								onClick: _cache[2] || (_cache[2] = ($event) => startNew())
+							}, {
+								default: withCtx(() => [..._cache[19] || (_cache[19] = [createTextVNode(" Create first mixin ", -1)])]),
+								_: 1
+							})) : createCommentVNode("", true)
+						])) : (openBlock(), createElementBlock("div", _hoisted_10$5, [(openBlock(true), createElementBlock(Fragment, null, renderList(visible.value, (card) => {
+							return openBlock(), createElementBlock("button", {
+								key: card.key,
+								type: "button",
+								class: normalizeClass(["ml-card", {
+									on: activeKey.value === card.key,
+									target: __props.swapTarget && card.source === "layout" && card.mixin.id === __props.swapTarget.id
+								}]),
+								title: cardTitle(card),
+								onClick: ($event) => pickCard(card),
+								onDblclick: ($event) => applyCard(card),
+								onContextmenu: withModifiers(($event) => openCardMenu($event, card), ["prevent", "stop"])
+							}, [
+								createBaseVNode("span", {
+									class: "ml-hero",
+									style: normalizeStyle(heroStyle(card.mixin))
+								}, [
+									firstRef(card.mixin) ? (openBlock(), createElementBlock("img", {
+										key: 0,
+										class: "ml-hero-img",
+										src: unref(thumbUrl)(firstRef(card.mixin).ref, firstRef(card.mixin).type),
+										alt: ""
+									}, null, 8, _hoisted_12$4)) : (openBlock(), createBlock(MixinAvatar_default, {
+										key: 1,
+										mixin: card.mixin,
+										size: 48
+									}, null, 8, ["mixin"])),
+									createBaseVNode("span", {
+										class: "ml-dot",
+										style: normalizeStyle({ background: card.mixin.color })
+									}, null, 4),
+									activeRefs(card.mixin).length > 1 ? (openBlock(), createElementBlock("span", _hoisted_13$3, " +" + toDisplayString(activeRefs(card.mixin).length - 1), 1)) : createCommentVNode("", true),
+									card.source === "layout" ? (openBlock(), createElementBlock("span", _hoisted_14$3, "Layout")) : createCommentVNode("", true)
+								], 4),
+								createBaseVNode("span", _hoisted_15$3, toDisplayString(card.mixin.name || "Untitled"), 1),
+								createBaseVNode("span", _hoisted_16$2, [
+									activeRefs(card.mixin).length ? (openBlock(), createElementBlock("span", _hoisted_17$2, [_cache[21] || (_cache[21] = createBaseVNode("i", { class: "mdi mdi-image-outline" }, null, -1)), createTextVNode(toDisplayString(activeRefs(card.mixin).length), 1)])) : createCommentVNode("", true),
+									activeLoras(card.mixin).length ? (openBlock(), createElementBlock("span", _hoisted_18$2, [_cache[22] || (_cache[22] = createBaseVNode("i", { class: "mdi mdi-puzzle-outline" }, null, -1)), createTextVNode(toDisplayString(activeLoras(card.mixin).length), 1)])) : createCommentVNode("", true),
+									card.mixin.trigger ? (openBlock(), createElementBlock("span", _hoisted_19$1, toDisplayString(card.mixin.trigger), 1)) : createCommentVNode("", true),
+									!activeRefs(card.mixin).length && !activeLoras(card.mixin).length && !card.mixin.trigger ? (openBlock(), createElementBlock("span", _hoisted_20$1, toDisplayString(card.mixin.desc ? "Description only" : "Empty"), 1)) : createCommentVNode("", true)
+								])
+							], 42, _hoisted_11$5);
+						}), 128))]))]),
+						_: 1
+					})]),
+					createBaseVNode("aside", _hoisted_21$1, [draft.value ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
+						createBaseVNode("div", _hoisted_22$1, [
+							createVNode(MixinAvatar_default, {
+								mixin: draft.value,
+								size: 36
+							}, null, 8, ["mixin"]),
+							createVNode(unref(Zl), {
+								sm: "",
+								class: "ml-grow",
+								"model-value": draft.value.name,
+								placeholder: "Mixin name",
+								"onUpdate:modelValue": _cache[3] || (_cache[3] = ($event) => patchDraft({ name: String($event ?? "") }))
+							}, null, 8, ["model-value"]),
+							createBaseVNode("input", {
+								class: "ml-color",
+								type: "color",
+								value: draft.value.color,
+								title: "Mixin colour",
+								onInput: _cache[4] || (_cache[4] = ($event) => patchDraft({ color: $event.target.value }))
+							}, null, 40, _hoisted_23$1)
+						]),
+						createBaseVNode("div", _hoisted_24$1, [
+							createBaseVNode("span", _hoisted_25$1, toDisplayString(draftBadge.value), 1),
+							activeSavedTime.value ? (openBlock(), createElementBlock("span", _hoisted_26$1, toDisplayString(when(activeSavedTime.value)), 1)) : createCommentVNode("", true),
+							draftDirty.value ? (openBlock(), createElementBlock("span", _hoisted_27$1, "unsaved")) : createCommentVNode("", true)
+						]),
+						createVNode(unref(tl), { class: "ml-dbody" }, {
+							default: withCtx(() => [createBaseVNode("div", _hoisted_28$1, [
+								createVNode(FrescoSection_default, {
+									label: "Description",
+									note: "in every box that uses it"
+								}, {
+									default: withCtx(() => [createVNode(unref(Zl), {
+										type: "textarea",
+										rows: 3,
+										sm: "",
+										"model-value": draft.value.desc,
+										placeholder: "Who or what this mixin is (appearance, outfit, style…)",
+										"onUpdate:modelValue": _cache[5] || (_cache[5] = ($event) => patchDraft({ desc: String($event ?? "") }))
+									}, null, 8, ["model-value"])]),
+									_: 1
+								}),
+								createVNode(FrescoSection_default, {
+									label: "Trigger words",
+									note: "added to box prompt"
+								}, {
+									default: withCtx(() => [createVNode(unref(Zl), {
+										sm: "",
+										"model-value": draft.value.trigger,
+										placeholder: "e.g. amb3r",
+										"onUpdate:modelValue": _cache[6] || (_cache[6] = ($event) => patchDraft({ trigger: String($event ?? "") }))
+									}, null, 8, ["model-value"])]),
+									_: 1
+								}),
+								createVNode(FrescoSection_default, {
+									label: "References",
+									note: draft.value.refs.length ? String(draft.value.refs.length) : "visual refs"
+								}, {
+									actions: withCtx(() => [createVNode(unref(je$1), {
+										size: "sm",
+										icon: "mdi mdi-upload-outline",
+										title: "Upload reference images",
+										disabled: refsPanel.value?.busy,
+										onClick: _cache[7] || (_cache[7] = ($event) => refsPanel.value?.upload())
+									}, null, 8, ["disabled"]), createVNode(unref(je$1), {
+										size: "sm",
+										icon: "mdi mdi-view-grid-plus-outline",
+										title: "Browse images",
+										onClick: _cache[8] || (_cache[8] = ($event) => refsPanel.value?.openBrowse())
+									})]),
+									default: withCtx(() => [createVNode(FrescoRefs_default, {
+										ref_key: "refsPanel",
+										ref: refsPanel,
+										"model-value": draft.value.refs,
+										"onUpdate:modelValue": _cache[9] || (_cache[9] = ($event) => patchDraft({ refs: $event }))
+									}, null, 8, ["model-value"])]),
+									_: 1
+								}, 8, ["note"]),
+								createVNode(FrescoSection_default, {
+									label: "LoRAs",
+									note: draft.value.loras.length ? String(draft.value.loras.length) : "regional LoRAs"
+								}, {
+									actions: withCtx(() => [createVNode(unref(je$1), {
+										size: "sm",
+										icon: "mdi mdi-plus",
+										title: "Add a LoRA",
+										onClick: _cache[10] || (_cache[10] = ($event) => patchDraft({ loras: [...draft.value.loras, newLora()] }))
+									})]),
+									default: withCtx(() => [draft.value.loras.length ? (openBlock(), createBlock(FrescoLoras_default, {
+										key: 0,
+										"model-value": draft.value.loras,
+										"onUpdate:modelValue": _cache[11] || (_cache[11] = ($event) => patchDraft({ loras: $event }))
+									}, null, 8, ["model-value"])) : (openBlock(), createElementBlock("p", _hoisted_29$1, "No LoRAs yet — click + to attach one."))]),
+									_: 1
+								}, 8, ["note"])
+							])]),
+							_: 1
+						}),
+						createBaseVNode("footer", _hoisted_30$1, [createBaseVNode("div", _hoisted_31$1, [
+							draftSource.value === "saved" && savedOriginName.value ? (openBlock(), createBlock(unref(Yt), {
+								key: 0,
+								sm: "",
+								variant: confirmDelete.value ? "danger" : "default",
+								icon: confirmDelete.value ? "mdi mdi-check" : "mdi mdi-delete-outline",
+								onClick: removeCurrentSaved
+							}, {
+								default: withCtx(() => [createTextVNode(toDisplayString(confirmDelete.value ? "Delete it" : "Delete"), 1)]),
+								_: 1
+							}, 8, ["variant", "icon"])) : createCommentVNode("", true),
+							draftSource.value !== "new" ? (openBlock(), createBlock(unref(je$1), {
+								key: 1,
+								size: "sm",
+								icon: "mdi mdi-content-copy",
+								title: "Duplicate as a new library preset",
+								onClick: _cache[12] || (_cache[12] = ($event) => duplicateDraft())
+							})) : createCommentVNode("", true),
+							_cache[24] || (_cache[24] = createBaseVNode("span", { class: "ml-grow" }, null, -1)),
+							draftSource.value === "layout" && draftDirty.value ? (openBlock(), createBlock(unref(Yt), {
+								key: 2,
+								sm: "",
+								icon: "mdi mdi-check",
+								disabled: !draft.value.name.trim(),
+								title: "Apply edits to this mixin in the layout",
+								onClick: applyLayoutEdits
+							}, {
+								default: withCtx(() => [..._cache[23] || (_cache[23] = [createTextVNode(" Update in layout ", -1)])]),
+								_: 1
+							}, 8, ["disabled"])) : createCommentVNode("", true),
+							createVNode(unref(Yt), {
+								sm: "",
+								icon: "mdi mdi-content-save-outline",
+								disabled: !draft.value.name.trim() || saving.value,
+								title: draftSource.value === "saved" ? "Save changes to library preset" : "Save to reusable mixin library",
+								onClick: saveDraft
+							}, {
+								default: withCtx(() => [createTextVNode(toDisplayString(saveLabel.value), 1)]),
+								_: 1
+							}, 8, ["disabled", "title"])
+						]), createBaseVNode("div", _hoisted_32$1, [__props.swapTarget ? (openBlock(), createBlock(unref(Yt), {
+							key: 0,
+							sm: "",
+							variant: "primary",
+							class: "ml-grow",
+							icon: "mdi mdi-swap-horizontal",
+							disabled: isSelfSwap.value || !draft.value.name.trim(),
+							onClick: _cache[13] || (_cache[13] = ($event) => commitSwap(draft.value))
+						}, {
+							default: withCtx(() => [createTextVNode(toDisplayString(isSelfSwap.value ? "Same mixin" : `Swap "${__props.swapTarget.name}" with this`), 1)]),
+							_: 1
+						}, 8, ["disabled"])) : draftSource.value !== "layout" ? (openBlock(), createElementBlock(Fragment, { key: 1 }, [createVNode(unref(Yt), {
+							sm: "",
+							variant: __props.selectedBoxes.length ? "default" : "primary",
+							class: "ml-grow",
+							icon: "mdi mdi-plus",
+							disabled: !draft.value.name.trim(),
+							onClick: _cache[14] || (_cache[14] = ($event) => commitAdd(draft.value, false))
+						}, {
+							default: withCtx(() => [..._cache[25] || (_cache[25] = [createTextVNode(" Add to layout ", -1)])]),
+							_: 1
+						}, 8, ["variant", "disabled"]), __props.selectedBoxes.length ? (openBlock(), createBlock(unref(Yt), {
+							key: 0,
+							sm: "",
+							variant: "primary",
+							class: "ml-grow",
+							icon: "mdi mdi-checkbox-marked-circle-plus-outline",
+							disabled: !draft.value.name.trim(),
+							onClick: _cache[15] || (_cache[15] = ($event) => commitAdd(draft.value, true))
+						}, {
+							default: withCtx(() => [createTextVNode(" Add & assign (" + toDisplayString(__props.selectedBoxes.length) + ") ", 1)]),
+							_: 1
+						}, 8, ["disabled"])) : createCommentVNode("", true)], 64)) : createCommentVNode("", true)])])
+					], 64)) : (openBlock(), createElementBlock("div", _hoisted_33$1, [
+						_cache[27] || (_cache[27] = createBaseVNode("i", { class: "mdi mdi-account-details-outline" }, null, -1)),
+						_cache[28] || (_cache[28] = createBaseVNode("span", null, "Pick a mixin to inspect its references, LoRAs and prompt — or create a new one.", -1)),
+						createVNode(unref(Yt), {
+							sm: "",
+							icon: "mdi mdi-plus",
+							onClick: _cache[16] || (_cache[16] = ($event) => startNew())
+						}, {
+							default: withCtx(() => [..._cache[26] || (_cache[26] = [createTextVNode("New mixin", -1)])]),
+							_: 1
+						})
+					]))])
+				]), createVNode(unref(lm), {
+					ref_key: "ctxMenu",
+					ref: ctxMenu,
+					items: ctxItems.value
+				}, null, 8, ["items"])]),
+				_: 1
+			}, 8, ["open", "title"]);
+		};
+	}
+}), [["__scopeId", "data-v-87e37a4e"]]);
 //#endregion
 //#region frontend/components/layout/PaletteEdit.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$11 = { class: "pal" };
@@ -22613,7 +23400,8 @@ var _hoisted_12$3 = {
 var _hoisted_13$2 = [
 	"title",
 	"onClick",
-	"onDblclick"
+	"onDblclick",
+	"onContextmenu"
 ];
 var _hoisted_14$2 = {
 	key: 1,
@@ -23084,6 +23872,129 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 			const named = box.value?.mixins.length ?? 0;
 			return named ? `${named} here` : "";
 		});
+		const mixinLibOpen = /* @__PURE__ */ ref(false);
+		const mixinSwapTarget = /* @__PURE__ */ ref(null);
+		const mixinLibInitial = /* @__PURE__ */ ref(null);
+		function openMixinLibrary(initial) {
+			mixinSwapTarget.value = null;
+			mixinLibInitial.value = initial ?? null;
+			mixinLibOpen.value = true;
+		}
+		function openMixinSwap(target) {
+			mixinSwapTarget.value = target;
+			mixinLibInitial.value = null;
+			mixinLibOpen.value = true;
+		}
+		function addMixinFromLibrary(mixin, assignSelected) {
+			const want = assignSelected ? new Set(selected.value) : null;
+			patchScene({
+				mixins: [...scene.value.mixins, mixin],
+				boxes: want && want.size ? scene.value.boxes.map((b) => want.has(b.id) ? {
+					...b,
+					mixins: [...b.mixins, mixin.id]
+				} : b) : scene.value.boxes
+			});
+			openMixin.value = mixin.id;
+		}
+		function swapMixinFromLibrary(targetId, replacement) {
+			patchScene({ mixins: scene.value.mixins.map((m) => m.id === targetId ? {
+				...replacement,
+				id: targetId
+			} : m) });
+			openMixin.value = targetId;
+		}
+		function updateLayoutMixin(updated) {
+			patchScene({ mixins: scene.value.mixins.map((m) => m.id === updated.id ? updated : m) });
+		}
+		function swapMixinBoxes(idA, idB) {
+			if (idA === idB) return;
+			patchScene({ boxes: scene.value.boxes.map((b) => {
+				const hasA = b.mixins.includes(idA);
+				const hasB = b.mixins.includes(idB);
+				if (!hasA && !hasB) return b;
+				const next = b.mixins.map((id) => id === idA ? idB : id === idB ? idA : id);
+				return {
+					...b,
+					mixins: [...new Set(next)]
+				};
+			}) });
+		}
+		function replaceBoxMixin(boxId, oldId, newId) {
+			patchScene({ boxes: scene.value.boxes.map((b) => {
+				if (b.id !== boxId) return b;
+				const next = b.mixins.map((id) => id === oldId ? newId : id);
+				return {
+					...b,
+					mixins: [...new Set(next)]
+				};
+			}) });
+		}
+		function chipTooltip(mixin, active) {
+			const lines = [active ? `${mixin.name} (active in this box — click to remove, right-click for options)` : `${mixin.name} (click to add to this box, right-click for options)`];
+			if (mixin.desc.trim()) lines.push(mixin.desc.trim().slice(0, 120));
+			if (mixin.trigger.trim()) lines.push(`Trigger: ${mixin.trigger.trim()}`);
+			const refs = mixin.refs.filter((r) => r.on).length;
+			const loras = mixin.loras.filter((l) => l.on && l.name);
+			if (refs) lines.push(`${refs} reference image(s)`);
+			if (loras.length) lines.push(`LoRAs: ${loras.map((l) => `${shortLora(l.name)} (${l.strength.toFixed(2)})`).join(", ")}`);
+			return lines.join("\n");
+		}
+		const chipMenu = /* @__PURE__ */ ref(null);
+		const chipMenuTarget = /* @__PURE__ */ ref(null);
+		function openChipMenu(e, mixin) {
+			chipMenuTarget.value = mixin;
+			chipMenu.value?.show(e);
+		}
+		const chipMenuItems = computed(() => {
+			const m = chipMenuTarget.value;
+			const currentBox = box.value;
+			if (!m) return [];
+			const active = !!currentBox?.mixins.includes(m.id);
+			const others = scene.value.mixins.filter((x) => x.id !== m.id);
+			const items = [
+				{
+					label: "Inspect in Library dialog…",
+					icon: "mdi mdi-eye-outline",
+					run: () => openMixinLibrary(m)
+				},
+				{
+					label: "Edit in Mixins tab",
+					icon: "mdi mdi-pencil-outline",
+					run: () => editMixin(m.id)
+				},
+				{
+					label: "Swap from Library…",
+					icon: "mdi mdi-swap-horizontal",
+					run: () => openMixinSwap(m)
+				}
+			];
+			if (currentBox && active && others.length) {
+				items.push("-");
+				for (const other of others.slice(0, 5)) items.push({
+					label: `Swap in this box → ${other.name}`,
+					icon: "mdi mdi-swap-horizontal-variant",
+					run: () => replaceBoxMixin(currentBox.id, m.id, other.id)
+				});
+			}
+			items.push("-");
+			if (currentBox) items.push({
+				label: active ? "Remove from this box" : "Add to this box",
+				icon: active ? "mdi mdi-minus-circle-outline" : "mdi mdi-plus-circle-outline",
+				run: () => toggleMixin(m.id)
+			});
+			items.push({
+				label: "Save to Library",
+				icon: "mdi mdi-content-save-outline",
+				disabled: !m.name.trim(),
+				run: () => void saveMixinPreset(m.name.trim(), JSON.parse(JSON.stringify(m)))
+			}, "-", {
+				label: "Delete mixin from layout",
+				icon: "mdi mdi-delete-outline",
+				danger: true,
+				run: () => setMixins(scene.value.mixins.filter((x) => x.id !== m.id))
+			});
+			return items;
+		});
 		const kindOptions = computed(() => [
 			{
 				value: "object",
@@ -23365,15 +24276,15 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 			return openBlock(), createElementBlock("div", {
 				class: "pl-host",
 				onKeydown: onKey,
-				onContextmenu: _cache[51] || (_cache[51] = (...args) => unref(keepContextMenu) && unref(keepContextMenu)(...args))
+				onContextmenu: _cache[55] || (_cache[55] = (...args) => unref(keepContextMenu) && unref(keepContextMenu)(...args))
 			}, [
 				createVNode(LayoutEditor_default, {
 					ref_key: "editor",
 					ref: editor,
 					selected: selected.value,
-					"onUpdate:selected": _cache[44] || (_cache[44] = ($event) => selected.value = $event),
+					"onUpdate:selected": _cache[47] || (_cache[47] = ($event) => selected.value = $event),
 					tool: tool.value,
-					"onUpdate:tool": _cache[45] || (_cache[45] = ($event) => tool.value = $event),
+					"onUpdate:tool": _cache[48] || (_cache[48] = ($event) => tool.value = $event),
 					mode: mode.value,
 					modes: unref(PROMPT_MODES),
 					layout: __props.layout,
@@ -23390,8 +24301,8 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 						label: "Mixins",
 						count: unref(scene).mixins.length
 					}],
-					onPickTool: _cache[46] || (_cache[46] = ($event) => wand.value = false),
-					onPopOut: _cache[47] || (_cache[47] = ($event) => emit("popOut")),
+					onPickTool: _cache[49] || (_cache[49] = ($event) => wand.value = false),
+					onPopOut: _cache[50] || (_cache[50] = ($event) => emit("popOut")),
 					onOpen: openBox,
 					onDrop
 				}, {
@@ -23440,7 +24351,10 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 						"onUpdate:modelValue": setMixins,
 						onCreate: _cache[2] || (_cache[2] = ($event) => addMixin()),
 						onSelectBoxes: selectMixinBoxes,
-						onAssignSelected: assignMixinToSelected
+						onAssignSelected: assignMixinToSelected,
+						onOpenLibrary: _cache[3] || (_cache[3] = ($event) => openMixinLibrary($event)),
+						onSwapFromLibrary: _cache[4] || (_cache[4] = ($event) => openMixinSwap($event)),
+						onSwapBoxes: swapMixinBoxes
 					}, null, 8, [
 						"open",
 						"boxes",
@@ -23455,7 +24369,7 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 						title: "Add a text box — words the picture renders",
 						onClick: addText
 					}, {
-						default: withCtx(() => [..._cache[52] || (_cache[52] = [createTextVNode(" Text ", -1)])]),
+						default: withCtx(() => [..._cache[56] || (_cache[56] = [createTextVNode(" Text ", -1)])]),
 						_: 1
 					})) : createCommentVNode("", true)]),
 					rail: withCtx(() => [
@@ -23464,23 +24378,23 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 							icon: "mdi mdi-auto-fix",
 							active: wand.value,
 							title: "Select with SAM3 — click what to capture, Alt+click what to leave out (W). Needs a photo and SAM3 on Layout Inputs.",
-							onClick: _cache[3] || (_cache[3] = ($event) => setWand(!wand.value))
+							onClick: _cache[5] || (_cache[5] = ($event) => setWand(!wand.value))
 						}, null, 8, ["active"]),
 						createVNode(unref(je$1), {
 							size: "sm",
 							icon: showFaces.value ? "mdi mdi-card-text-outline" : "mdi mdi-card-off-outline",
 							active: showFaces.value,
 							title: "Show each box's references, LoRAs and prompt on the canvas",
-							onClick: _cache[4] || (_cache[4] = ($event) => setShowFaces(!showFaces.value))
+							onClick: _cache[6] || (_cache[6] = ($event) => setShowFaces(!showFaces.value))
 						}, null, 8, ["icon", "active"]),
 						createVNode(unref(Yt), {
 							sm: "",
 							variant: "ghost",
 							icon: "mdi mdi-creation-outline",
 							title: "Layout agent — a model draws the boxes from the trace image or your words (needs Layout Inputs)",
-							onClick: _cache[5] || (_cache[5] = ($event) => agentOpen.value = true)
+							onClick: _cache[7] || (_cache[7] = ($event) => agentOpen.value = true)
 						}, {
-							default: withCtx(() => [..._cache[53] || (_cache[53] = [createTextVNode(" Agent ", -1)])]),
+							default: withCtx(() => [..._cache[57] || (_cache[57] = [createTextVNode(" Agent ", -1)])]),
 							_: 1
 						})
 					]),
@@ -23520,9 +24434,9 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 						variant: "ghost",
 						icon: mode.value.icon,
 						title: "The mode this layout is for — click to change it",
-						onClick: _cache[6] || (_cache[6] = ($event) => settingsOpen.value = true)
+						onClick: _cache[8] || (_cache[8] = ($event) => settingsOpen.value = true)
 					}, {
-						default: withCtx(() => [createTextVNode(toDisplayString(mode.value.label) + " ", 1), _cache[54] || (_cache[54] = createBaseVNode("i", { class: "mdi mdi-chevron-up pl-cog" }, null, -1))]),
+						default: withCtx(() => [createTextVNode(toDisplayString(mode.value.label) + " ", 1), _cache[58] || (_cache[58] = createBaseVNode("i", { class: "mdi mdi-chevron-up pl-cog" }, null, -1))]),
 						_: 1
 					}, 8, ["icon"])]),
 					"element-actions": withCtx(() => [unref(scene).boxes.length > 1 && box.value ? (openBlock(), createBlock(unref(cl), {
@@ -23536,7 +24450,7 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 							title: "Swap content with another box — description, mixins, references and LoRAs trade places; each keeps its position and shape",
 							onClick: toggle
 						}, null, 8, ["onClick"])]),
-						default: withCtx(({ close }) => [createBaseVNode("div", _hoisted_10$4, [_cache[55] || (_cache[55] = createBaseVNode("span", { class: "pl-menu-title" }, "Swap content with", -1)), (openBlock(true), createElementBlock(Fragment, null, renderList(unref(scene).boxes.filter((b) => b.id !== box.value.id), (other) => {
+						default: withCtx(({ close }) => [createBaseVNode("div", _hoisted_10$4, [_cache[59] || (_cache[59] = createBaseVNode("span", { class: "pl-menu-title" }, "Swap content with", -1)), (openBlock(true), createElementBlock(Fragment, null, renderList(unref(scene).boxes.filter((b) => b.id !== box.value.id), (other) => {
 							return openBlock(), createBlock(unref(Yt), {
 								key: other.id,
 								sm: "",
@@ -23566,15 +24480,21 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 								})) : createCommentVNode("", true),
 								createVNode(unref(je$1), {
 									size: "sm",
+									icon: "mdi mdi-bookshelf",
+									title: "Open Mixin Library — browse, create or add a saved mixin",
+									onClick: _cache[9] || (_cache[9] = ($event) => openMixinLibrary())
+								}),
+								createVNode(unref(je$1), {
+									size: "sm",
 									icon: "mdi mdi-plus",
 									title: "New mixin, in this box",
-									onClick: _cache[7] || (_cache[7] = ($event) => addMixin(box.value.name))
+									onClick: _cache[10] || (_cache[10] = ($event) => addMixin(box.value.name))
 								}),
 								createVNode(unref(je$1), {
 									size: "sm",
 									icon: "mdi mdi-pencil-outline",
 									title: "Edit mixins",
-									onClick: _cache[8] || (_cache[8] = ($event) => editMixin(box.value.mixins[0]))
+									onClick: _cache[11] || (_cache[11] = ($event) => editMixin(box.value.mixins[0]))
 								})
 							]),
 							default: withCtx(() => [unref(scene).mixins.length ? (openBlock(), createElementBlock("div", _hoisted_12$3, [(openBlock(true), createElementBlock(Fragment, null, renderList(unref(scene).mixins, (mixin) => {
@@ -23582,9 +24502,10 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 									key: mixin.id,
 									type: "button",
 									class: normalizeClass(["pl-chip", { on: box.value.mixins.includes(mixin.id) }]),
-									title: box.value.mixins.includes(mixin.id) ? `Take ${mixin.name} out of this box (double-click to edit)` : `Put ${mixin.name} in this box: its refs, LoRAs and trigger words apply here`,
+									title: chipTooltip(mixin, box.value.mixins.includes(mixin.id)),
 									onClick: ($event) => toggleMixin(mixin.id),
-									onDblclick: ($event) => editMixin(mixin.id)
+									onDblclick: ($event) => editMixin(mixin.id),
+									onContextmenu: withModifiers(($event) => openChipMenu($event, mixin), ["prevent", "stop"])
 								}, [createVNode(MixinAvatar_default, {
 									mixin,
 									size: 18
@@ -23601,7 +24522,7 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 								size: "sm",
 								"model-value": box.value.kind,
 								options: kindOptions.value,
-								"onUpdate:modelValue": _cache[9] || (_cache[9] = ($event) => patchBox({ kind: $event }))
+								"onUpdate:modelValue": _cache[12] || (_cache[12] = ($event) => patchBox({ kind: $event }))
 							}, null, 8, ["model-value", "options"])]),
 							_: 1
 						})) : createCommentVNode("", true),
@@ -23614,7 +24535,7 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 								sm: "",
 								"model-value": box.value.text,
 								placeholder: "The words to render",
-								"onUpdate:modelValue": _cache[10] || (_cache[10] = ($event) => patchBox({ text: String($event ?? "") }))
+								"onUpdate:modelValue": _cache[13] || (_cache[13] = ($event) => patchBox({ text: String($event ?? "") }))
 							}, null, 8, ["model-value"])]),
 							_: 1
 						})) : createCommentVNode("", true),
@@ -23630,7 +24551,7 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 								sm: "",
 								"model-value": box.value.desc,
 								placeholder: descPlaceholder.value,
-								"onUpdate:modelValue": _cache[12] || (_cache[12] = ($event) => patchBox({ desc: String($event ?? "") }))
+								"onUpdate:modelValue": _cache[15] || (_cache[15] = ($event) => patchBox({ desc: String($event ?? "") }))
 							}, null, 8, ["model-value", "placeholder"])]),
 							_: 2
 						}, [citeId.value ? {
@@ -23639,7 +24560,7 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 								size: "sm",
 								icon: "mdi mdi-at",
 								title: `Add <${citeId.value}> to the end of the prompt`,
-								onClick: _cache[11] || (_cache[11] = ($event) => cite(citeId.value))
+								onClick: _cache[14] || (_cache[14] = ($event) => cite(citeId.value))
 							}, null, 8, ["title"])]),
 							key: "0"
 						} : void 0]), 1032, ["note"]),
@@ -23652,12 +24573,12 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 								icon: "mdi mdi-upload-outline",
 								title: "Upload reference images for this box",
 								disabled: boxRefsPanel.value?.busy,
-								onClick: _cache[13] || (_cache[13] = ($event) => boxRefsPanel.value?.upload())
+								onClick: _cache[16] || (_cache[16] = ($event) => boxRefsPanel.value?.upload())
 							}, null, 8, ["disabled"]), createVNode(unref(je$1), {
 								size: "sm",
 								icon: "mdi mdi-view-grid-plus-outline",
 								title: "Browse images for this box",
-								onClick: _cache[14] || (_cache[14] = ($event) => boxRefsPanel.value?.openBrowse())
+								onClick: _cache[17] || (_cache[17] = ($event) => boxRefsPanel.value?.openBrowse())
 							})]),
 							default: withCtx(() => [
 								inheritedRefs.value.length ? (openBlock(), createElementBlock("div", _hoisted_15$2, [(openBlock(true), createElementBlock(Fragment, null, renderList(inheritedRefs.value, (item) => {
@@ -23676,7 +24597,7 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 									ref_key: "boxRefsPanel",
 									ref: boxRefsPanel,
 									"model-value": box.value.refs,
-									"onUpdate:modelValue": _cache[15] || (_cache[15] = ($event) => patchBox({ refs: $event }))
+									"onUpdate:modelValue": _cache[18] || (_cache[18] = ($event) => patchBox({ refs: $event }))
 								}, null, 8, ["model-value"]),
 								totalActiveRefs.value > 1 ? (openBlock(), createElementBlock("div", _hoisted_18$1, [
 									createBaseVNode("span", { title: BLEND_TIP }, "blend"),
@@ -23685,7 +24606,7 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 										"model-value": box.value.blend,
 										options: unref(BLENDS),
 										title: BLEND_TIP,
-										"onUpdate:modelValue": _cache[16] || (_cache[16] = ($event) => patchBox({ blend: $event }))
+										"onUpdate:modelValue": _cache[19] || (_cache[19] = ($event) => patchBox({ blend: $event }))
 									}, null, 8, ["model-value", "options"]),
 									createVNode(unref(un), {
 										class: "pl-soft",
@@ -23696,7 +24617,7 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 										step: .05,
 										precision: 2,
 										title: "Softness between references — 0 hard cells, 1 fully feathered",
-										"onUpdate:modelValue": _cache[17] || (_cache[17] = ($event) => patchBox({ softness: $event }))
+										"onUpdate:modelValue": _cache[20] || (_cache[20] = ($event) => patchBox({ softness: $event }))
 									}, null, 8, ["model-value"])
 								])) : createCommentVNode("", true)
 							]),
@@ -23720,14 +24641,14 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 									title: `From mixin ${item.mixin.name} — click to edit mixin`,
 									onClick: ($event) => editMixin(item.mixin.id)
 								}, [
-									_cache[56] || (_cache[56] = createBaseVNode("i", { class: "mdi mdi-puzzle-outline" }, null, -1)),
+									_cache[60] || (_cache[60] = createBaseVNode("i", { class: "mdi mdi-puzzle-outline" }, null, -1)),
 									createBaseVNode("span", _hoisted_21, toDisplayString(shortLora(item.lora.name)), 1),
 									createBaseVNode("span", _hoisted_22, toDisplayString(item.lora.strength.toFixed(2)), 1)
 								], 8, _hoisted_20);
 							}), 128))])) : createCommentVNode("", true), box.value.loras.length ? (openBlock(), createBlock(FrescoLoras_default, {
 								key: 1,
 								"model-value": box.value.loras,
-								"onUpdate:modelValue": _cache[18] || (_cache[18] = ($event) => patchBox({ loras: $event }))
+								"onUpdate:modelValue": _cache[21] || (_cache[21] = ($event) => patchBox({ loras: $event }))
 							}, null, 8, ["model-value"])) : createCommentVNode("", true)]),
 							_: 1
 						}, 8, ["note"]),
@@ -23740,7 +24661,7 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 								size: "sm",
 								icon: "mdi mdi-close-circle-outline",
 								title: "Clear the click points",
-								onClick: _cache[19] || (_cache[19] = ($event) => patchBox({ points: [] }))
+								onClick: _cache[22] || (_cache[22] = ($event) => patchBox({ points: [] }))
 							})) : createCommentVNode("", true), createVNode(unref(je$1), {
 								size: "sm",
 								icon: "mdi mdi-auto-fix",
@@ -23752,7 +24673,7 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 								sm: "",
 								"model-value": box.value.capture,
 								placeholder: "e.g. jacket, -hands — or click with the wand (W)",
-								"onUpdate:modelValue": _cache[20] || (_cache[20] = ($event) => patchBox({ capture: String($event ?? "") })),
+								"onUpdate:modelValue": _cache[23] || (_cache[23] = ($event) => patchBox({ capture: String($event ?? "") })),
 								onKeydown: withKeys(segment, ["enter"])
 							}, null, 8, ["model-value"])]),
 							_: 1
@@ -23766,7 +24687,7 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 								size: "sm",
 								icon: "mdi mdi-crop-square",
 								title: "Clear the shape — the box becomes its whole rectangle",
-								onClick: _cache[21] || (_cache[21] = ($event) => patchBox({ mask: null }))
+								onClick: _cache[24] || (_cache[24] = ($event) => patchBox({ mask: null }))
 							})) : createCommentVNode("", true)]),
 							default: withCtx(() => [createBaseVNode("div", _hoisted_23, [createBaseVNode("label", _hoisted_24, [createBaseVNode("span", { title: GROW_TIP }, "grow"), createVNode(unref(un), {
 								size: "sm",
@@ -23776,8 +24697,8 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 								step: 1,
 								precision: 0,
 								title: GROW_TIP,
-								"onUpdate:modelValue": _cache[22] || (_cache[22] = ($event) => patchBox({ grow: Math.round($event) }))
-							}, null, 8, ["model-value"])]), createBaseVNode("label", _hoisted_25, [_cache[57] || (_cache[57] = createBaseVNode("span", { title: "Soften the edge, in canvas pixels" }, "feather", -1)), createVNode(unref(un), {
+								"onUpdate:modelValue": _cache[25] || (_cache[25] = ($event) => patchBox({ grow: Math.round($event) }))
+							}, null, 8, ["model-value"])]), createBaseVNode("label", _hoisted_25, [_cache[61] || (_cache[61] = createBaseVNode("span", { title: "Soften the edge, in canvas pixels" }, "feather", -1)), createVNode(unref(un), {
 								size: "sm",
 								"model-value": box.value.feather,
 								min: 0,
@@ -23785,11 +24706,11 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 								step: 1,
 								precision: 0,
 								title: "Soften the edge, in canvas pixels",
-								"onUpdate:modelValue": _cache[23] || (_cache[23] = ($event) => patchBox({ feather: Math.round($event) }))
+								"onUpdate:modelValue": _cache[26] || (_cache[26] = ($event) => patchBox({ feather: Math.round($event) }))
 							}, null, 8, ["model-value"])])]), box.value.mask ? (openBlock(), createElementBlock("div", _hoisted_26, [createBaseVNode("span", { title: SHAPE_TIP }, "shape for"), createVNode(FrescoPills_default, {
 								"model-value": box.value.shapeFor,
 								options: SHAPE_FOR,
-								"onUpdate:modelValue": _cache[24] || (_cache[24] = ($event) => patchBox({ shapeFor: $event }))
+								"onUpdate:modelValue": _cache[27] || (_cache[27] = ($event) => patchBox({ shapeFor: $event }))
 							}, null, 8, ["model-value"])])) : createCommentVNode("", true)]),
 							_: 1
 						}, 8, ["note"]),
@@ -23802,7 +24723,7 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 								step: .05,
 								precision: 2,
 								title: INFLUENCE_TIP,
-								"onUpdate:modelValue": _cache[25] || (_cache[25] = ($event) => patchBox({ influence: $event }))
+								"onUpdate:modelValue": _cache[28] || (_cache[28] = ($event) => patchBox({ influence: $event }))
 							}, null, 8, ["model-value"])]), createBaseVNode("label", _hoisted_29, [createBaseVNode("span", { title: DENOISE_TIP }, "denoise"), createVNode(unref(un), {
 								size: "sm",
 								"model-value": box.value.denoise,
@@ -23811,7 +24732,7 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 								step: .05,
 								precision: 2,
 								title: DENOISE_TIP,
-								"onUpdate:modelValue": _cache[26] || (_cache[26] = ($event) => patchBox({ denoise: $event }))
+								"onUpdate:modelValue": _cache[29] || (_cache[29] = ($event) => patchBox({ denoise: $event }))
 							}, null, 8, ["model-value"])])])]),
 							_: 1
 						}),
@@ -23822,7 +24743,7 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 						}, {
 							default: withCtx(() => [createVNode(PaletteEdit_default, {
 								"model-value": box.value.palette,
-								"onUpdate:modelValue": _cache[27] || (_cache[27] = ($event) => patchBox({ palette: $event }))
+								"onUpdate:modelValue": _cache[30] || (_cache[30] = ($event) => patchBox({ palette: $event }))
 							}, null, 8, ["model-value"])]),
 							_: 1
 						})) : createCommentVNode("", true),
@@ -23835,13 +24756,13 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 								sm: "",
 								"model-value": box.value.tags.join(", "),
 								placeholder: "e.g. 1girl, red scarf",
-								"onUpdate:modelValue": _cache[28] || (_cache[28] = ($event) => patchBox({ tags: splitList($event) }))
+								"onUpdate:modelValue": _cache[31] || (_cache[31] = ($event) => patchBox({ tags: splitList($event) }))
 							}, null, 8, ["model-value"])]),
 							_: 1
 						})) : createCommentVNode("", true)
 					])) : createCommentVNode("", true)]),
 					multi: withCtx(({ ids }) => [createBaseVNode("div", _hoisted_30, [
-						_cache[58] || (_cache[58] = createBaseVNode("p", { class: "pl-hint" }, " Drag any of them on the canvas to move them together; the frame's handles scale them. ", -1)),
+						_cache[62] || (_cache[62] = createBaseVNode("p", { class: "pl-hint" }, " Drag any of them on the canvas to move them together; the frame's handles scale them. ", -1)),
 						createVNode(FrescoSection_default, {
 							label: "Mixins",
 							note: `apply to all ${ids.length} boxes`
@@ -23898,7 +24819,7 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 								sm: "",
 								"model-value": unref(scene).prompt,
 								placeholder: "The whole picture",
-								"onUpdate:modelValue": _cache[29] || (_cache[29] = ($event) => patchScene({ prompt: String($event ?? "") }))
+								"onUpdate:modelValue": _cache[32] || (_cache[32] = ($event) => patchScene({ prompt: String($event ?? "") }))
 							}, null, 8, ["model-value"])]),
 							_: 1
 						}, 8, ["label", "note"]),
@@ -23913,7 +24834,7 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 								sm: "",
 								"model-value": unref(scene).background,
 								placeholder: "What's behind every box",
-								"onUpdate:modelValue": _cache[30] || (_cache[30] = ($event) => patchScene({ background: String($event ?? "") }))
+								"onUpdate:modelValue": _cache[33] || (_cache[33] = ($event) => patchScene({ background: String($event ?? "") }))
 							}, null, 8, ["model-value"])]),
 							_: 1
 						})) : createCommentVNode("", true),
@@ -23927,7 +24848,7 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 								size: "sm",
 								"model-value": unref(scene).style.on ? unref(scene).style.kind : "off",
 								options: STYLE_KINDS,
-								"onUpdate:modelValue": _cache[31] || (_cache[31] = ($event) => setStyleKind(String($event)))
+								"onUpdate:modelValue": _cache[34] || (_cache[34] = ($event) => setStyleKind(String($event)))
 							}, null, 8, ["model-value"]), unref(scene).style.on ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [(openBlock(true), createElementBlock(Fragment, null, renderList(styleFields.value, (f) => {
 								return openBlock(), createBlock(unref(Bf), {
 									key: f.key,
@@ -23955,7 +24876,7 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 								default: withCtx(() => [createVNode(PaletteEdit_default, {
 									"model-value": unref(scene).style.palette,
 									max: 16,
-									"onUpdate:modelValue": _cache[32] || (_cache[32] = ($event) => patchStyle({ palette: $event }))
+									"onUpdate:modelValue": _cache[35] || (_cache[35] = ($event) => patchStyle({ palette: $event }))
 								}, null, 8, ["model-value"])]),
 								_: 1
 							})], 64)) : createCommentVNode("", true)]),
@@ -23970,7 +24891,7 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 									sm: "",
 									"model-value": unref(scene).meta.join(", "),
 									placeholder: "poster, illustration",
-									"onUpdate:modelValue": _cache[33] || (_cache[33] = ($event) => patchScene({ meta: splitList($event) }))
+									"onUpdate:modelValue": _cache[36] || (_cache[36] = ($event) => patchScene({ meta: splitList($event) }))
 								}, null, 8, ["model-value"])]),
 								_: 1
 							}),
@@ -23982,7 +24903,7 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 									size: "sm",
 									"model-value": unref(scene).canvas,
 									options: CANVAS_OPTIONS,
-									"onUpdate:modelValue": _cache[34] || (_cache[34] = ($event) => patchScene({ canvas: $event }))
+									"onUpdate:modelValue": _cache[37] || (_cache[37] = ($event) => patchScene({ canvas: $event }))
 								}, null, 8, ["model-value"])]),
 								_: 1
 							}),
@@ -23993,24 +24914,24 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 								default: withCtx(() => [createVNode(PaletteEdit_default, {
 									"model-value": unref(scene).palette,
 									max: 16,
-									"onUpdate:modelValue": _cache[35] || (_cache[35] = ($event) => patchScene({ palette: $event }))
+									"onUpdate:modelValue": _cache[38] || (_cache[38] = ($event) => patchScene({ palette: $event }))
 								}, null, 8, ["model-value"])]),
 								_: 1
 							})
 						], 64)) : createCommentVNode("", true),
 						unref(scene).mode === "klein" ? (openBlock(), createElementBlock("p", _hoisted_38, " Klein reads only the caption and each box's description, so colours go in the words. Cite every box in the caption as <obj_N>. ")) : createCommentVNode("", true),
 						createVNode(FrescoSection_default, { label: "Regions & references" }, {
-							default: withCtx(() => [createBaseVNode("div", _hoisted_39, [_cache[59] || (_cache[59] = createBaseVNode("span", null, "overlap", -1)), createVNode(FrescoPills_default, {
+							default: withCtx(() => [createBaseVNode("div", _hoisted_39, [_cache[63] || (_cache[63] = createBaseVNode("span", null, "overlap", -1)), createVNode(FrescoPills_default, {
 								"model-value": unref(scene).settings.overlap,
 								options: OVERLAPS,
-								"onUpdate:modelValue": _cache[36] || (_cache[36] = ($event) => patchSettings({ overlap: $event }))
-							}, null, 8, ["model-value"])]), createBaseVNode("div", _hoisted_40, [_cache[60] || (_cache[60] = createBaseVNode("span", null, "ref detail", -1)), createVNode(unref(un), {
+								"onUpdate:modelValue": _cache[39] || (_cache[39] = ($event) => patchSettings({ overlap: $event }))
+							}, null, 8, ["model-value"])]), createBaseVNode("div", _hoisted_40, [_cache[64] || (_cache[64] = createBaseVNode("span", null, "ref detail", -1)), createVNode(unref(un), {
 								size: "sm",
 								"model-value": unref(scene).settings.visual_size,
 								min: 128,
 								max: 1024,
 								step: 32,
-								"onUpdate:modelValue": _cache[37] || (_cache[37] = ($event) => patchSettings({ visual_size: $event }))
+								"onUpdate:modelValue": _cache[40] || (_cache[40] = ($event) => patchSettings({ visual_size: $event }))
 							}, null, 8, ["model-value"])])]),
 							_: 1
 						}),
@@ -24021,7 +24942,7 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 							actions: withCtx(() => [createVNode(unref(Uf), {
 								"model-value": unref(scene).backdrop.on,
 								title: "Enable background region (for edits or regional backdrop prompt/LoRAs)",
-								"onUpdate:modelValue": _cache[38] || (_cache[38] = ($event) => patchBackdrop({ on: $event }))
+								"onUpdate:modelValue": _cache[41] || (_cache[41] = ($event) => patchBackdrop({ on: $event }))
 							}, null, 8, ["model-value"])]),
 							default: withCtx(() => [unref(scene).backdrop.on ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
 								createVNode(unref(Zl), {
@@ -24030,13 +24951,13 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 									sm: "",
 									"model-value": unref(scene).backdrop.prompt,
 									placeholder: "Optional — what fills the area outside every box",
-									"onUpdate:modelValue": _cache[39] || (_cache[39] = ($event) => patchBackdrop({ prompt: String($event ?? "") }))
+									"onUpdate:modelValue": _cache[42] || (_cache[42] = ($event) => patchBackdrop({ prompt: String($event ?? "") }))
 								}, null, 8, ["model-value"]),
 								createVNode(FrescoRefs_default, {
 									"model-value": unref(scene).backdrop.refs,
-									"onUpdate:modelValue": _cache[40] || (_cache[40] = ($event) => patchBackdrop({ refs: $event }))
+									"onUpdate:modelValue": _cache[43] || (_cache[43] = ($event) => patchBackdrop({ refs: $event }))
 								}, null, 8, ["model-value"]),
-								createBaseVNode("div", _hoisted_41, [_cache[61] || (_cache[61] = createBaseVNode("span", { class: "pl-sub" }, "Background LoRAs", -1)), createVNode(unref(je$1), {
+								createBaseVNode("div", _hoisted_41, [_cache[65] || (_cache[65] = createBaseVNode("span", { class: "pl-sub" }, "Background LoRAs", -1)), createVNode(unref(je$1), {
 									size: "sm",
 									icon: "mdi mdi-plus",
 									title: "Add a LoRA for the background",
@@ -24045,7 +24966,7 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 								unref(scene).backdrop.loras.length ? (openBlock(), createBlock(FrescoLoras_default, {
 									key: 0,
 									"model-value": unref(scene).backdrop.loras,
-									"onUpdate:modelValue": _cache[41] || (_cache[41] = ($event) => patchBackdrop({ loras: $event }))
+									"onUpdate:modelValue": _cache[44] || (_cache[44] = ($event) => patchBackdrop({ loras: $event }))
 								}, null, 8, ["model-value"])) : createCommentVNode("", true),
 								createBaseVNode("div", _hoisted_42, [createBaseVNode("label", _hoisted_43, [createBaseVNode("span", { title: INFLUENCE_TIP }, "influence"), createVNode(unref(un), {
 									size: "sm",
@@ -24054,7 +24975,7 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 									max: 4,
 									step: .05,
 									precision: 2,
-									"onUpdate:modelValue": _cache[42] || (_cache[42] = ($event) => patchBackdrop({ influence: $event }))
+									"onUpdate:modelValue": _cache[45] || (_cache[45] = ($event) => patchBackdrop({ influence: $event }))
 								}, null, 8, ["model-value"])]), createBaseVNode("label", _hoisted_44, [createBaseVNode("span", { title: DENOISE_TIP }, "denoise"), createVNode(unref(un), {
 									size: "sm",
 									"model-value": unref(scene).backdrop.denoise,
@@ -24062,7 +24983,7 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 									max: 1,
 									step: .05,
 									precision: 2,
-									"onUpdate:modelValue": _cache[43] || (_cache[43] = ($event) => patchBackdrop({ denoise: $event }))
+									"onUpdate:modelValue": _cache[46] || (_cache[46] = ($event) => patchBackdrop({ denoise: $event }))
 								}, null, 8, ["model-value"])])])
 							], 64)) : createCommentVNode("", true)]),
 							_: 1
@@ -24082,7 +25003,7 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 				]),
 				createVNode(LayoutAgent_default, {
 					open: agentOpen.value,
-					"onUpdate:open": _cache[48] || (_cache[48] = ($event) => agentOpen.value = $event),
+					"onUpdate:open": _cache[51] || (_cache[51] = ($event) => agentOpen.value = $event),
 					scene: unref(scene),
 					"node-id": String(__props.node?.id ?? ""),
 					image: editor.value?.backdrop ?? null,
@@ -24095,13 +25016,35 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 				]),
 				createVNode(LayoutSettings_default, {
 					open: settingsOpen.value,
-					"onUpdate:open": _cache[49] || (_cache[49] = ($event) => settingsOpen.value = $event),
+					"onUpdate:open": _cache[52] || (_cache[52] = ($event) => settingsOpen.value = $event),
 					mode: unref(scene).mode,
-					onPick: _cache[50] || (_cache[50] = ($event) => patchScene({ mode: $event }))
+					onPick: _cache[53] || (_cache[53] = ($event) => patchScene({ mode: $event }))
 				}, null, 8, ["open", "mode"]),
+				createVNode(MixinLibraryDialog_default, {
+					open: mixinLibOpen.value,
+					"onUpdate:open": _cache[54] || (_cache[54] = ($event) => mixinLibOpen.value = $event),
+					"layout-mixins": unref(scene).mixins,
+					"selected-boxes": selected.value,
+					"swap-target": mixinSwapTarget.value,
+					"initial-mixin": mixinLibInitial.value,
+					onAdd: addMixinFromLibrary,
+					onSwap: swapMixinFromLibrary,
+					onUpdateLayoutMixin: updateLayoutMixin
+				}, null, 8, [
+					"open",
+					"layout-mixins",
+					"selected-boxes",
+					"swap-target",
+					"initial-mixin"
+				]),
+				createVNode(unref(lm), {
+					ref_key: "chipMenu",
+					ref: chipMenu,
+					items: chipMenuItems.value
+				}, null, 8, ["items"]),
 				choosing.value ? (openBlock(), createElementBlock("div", _hoisted_45, [createBaseVNode("div", _hoisted_46, [
-					_cache[62] || (_cache[62] = createBaseVNode("span", { class: "pl-choose-title" }, "What is this layout for?", -1)),
-					_cache[63] || (_cache[63] = createBaseVNode("span", { class: "pl-choose-note" }, " Pick a starting mode. The mode button at the bottom left switches any time — every box, painted shape, mixin, reference and LoRA stays. ", -1)),
+					_cache[66] || (_cache[66] = createBaseVNode("span", { class: "pl-choose-title" }, "What is this layout for?", -1)),
+					_cache[67] || (_cache[67] = createBaseVNode("span", { class: "pl-choose-note" }, " Pick a starting mode. The mode button at the bottom left switches any time — every box, painted shape, mixin, reference and LoRA stays. ", -1)),
 					createVNode(ModeCards_default, {
 						"model-value": null,
 						"onUpdate:modelValue": pickMode
@@ -24110,7 +25053,7 @@ var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default
 			], 32);
 		};
 	}
-}), [["__scopeId", "data-v-5346ca44"]]);
+}), [["__scopeId", "data-v-7372a834"]]);
 //#endregion
 //#region frontend/layout/promptStore.ts
 var anyMode = {

@@ -101,3 +101,7 @@ export async function saveMixinPreset(name: string, mixin: unknown): Promise<str
 export async function deleteMixinPreset(name: string): Promise<void> {
   await post("layouts/mixins/delete", { name });
 }
+
+export async function renameMixinPreset(name: string, to: string): Promise<string> {
+  return ((await post("layouts/mixins/rename", { name, to })) as { name: string }).name;
+}
