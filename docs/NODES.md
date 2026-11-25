@@ -124,8 +124,9 @@ character B's delta never touches character A's tokens. The gate comes from a ma
 `LoraLoader` for a global style. A region can also have a **prompt of its own**, which replaces the
 main prompt there, in the same single pass.
 
-> **Krea 2 only, and experimental.** The routing map is read out of that DiT's per-block attention
-> hooks; `Regions Apply` fails loudly on any other architecture rather than silently gating nothing.
+> **Krea 2, Z-Image and MOSS-Image, and experimental.** Tracking is not on Z-Image and the layout
+> lock is Krea 2 only. `Regions Apply` fails loudly on any other architecture rather than silently
+> gating nothing.
 
 ```
 Regions from Masks ──> Region LoRAs ──> Regions Apply ──> MODEL ──> KSampler
@@ -146,6 +147,8 @@ Regions from Masks ──> Region LoRAs ──> Regions Apply ──> MODEL ─�
   cover, or the whole frame. Chain it last. A LoRA on `everything` is a global one that still rides
   the commit schedule, which a stock `LoraLoader` can't.
 - **Region Denoise** — how much of one region may be rewritten.
+- **Region Boxes** — bounding boxes as regions, kept where they were drawn and in their own order
+  (`1, 2` skips scenery boxes). Wire MOSS-Image Prompt Builder KJ's `bboxes`, `width` and `height`.
 - **Region Latent** — encodes the source image and grades the denoise per region, so the background
   survives while the characters are rebuilt. Needs core's **Differential Diffusion** on the model,
   or the SoftPaint Sampler below.
