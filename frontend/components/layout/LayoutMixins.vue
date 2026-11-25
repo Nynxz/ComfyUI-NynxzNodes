@@ -31,6 +31,7 @@
             class="lm-hero-img"
             :src="thumbUrl(firstRef(mixin)!.ref, firstRef(mixin)!.type)"
             alt=""
+            data-peek
             draggable="false"
           />
           <span v-else class="lm-hero-mono">{{ initial(mixin) }}</span>
@@ -512,7 +513,7 @@ const tileMenuItems = computed<ContextMenuItem[]>(() => {
   display: flex;
   flex-direction: column;
   min-width: 0;
-  min-height: 96px;
+  min-height: 106px;
   padding: 0;
   overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 75%, transparent);
@@ -552,19 +553,19 @@ const tileMenuItems = computed<ContextMenuItem[]>(() => {
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 54px;
+  height: 64px;
   flex: none;
   overflow: hidden;
   background: linear-gradient(
     155deg,
-    color-mix(in srgb, var(--lm-c, #6366f1) 34%, #18181f),
-    color-mix(in srgb, var(--lm-c, #6366f1) 12%, #18181f)
+    color-mix(in srgb, var(--lm-c, #6366f1) 30%, #15151b),
+    color-mix(in srgb, var(--lm-c, #6366f1) 10%, #15151b)
   );
 }
 .lm-hero-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
 }
 .lm-hero-mono {
