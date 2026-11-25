@@ -28,6 +28,11 @@
         <span class="lm-tile-meta">
           <span>{{ boxCount(mixin.id) }} box{{ boxCount(mixin.id) === 1 ? "" : "es" }}</span>
           <i
+            v-if="mixin.libraryId"
+            class="mdi mdi-link-variant lm-linked-ico"
+            title="Linked to Mixin Library preset"
+          />
+          <i
             v-if="refCount(mixin)"
             class="mdi mdi-image-outline"
             :title="`${refCount(mixin)} reference(s)`"
@@ -75,9 +80,21 @@
         />
         <ZenIconButton
           size="sm"
-          :icon="savedId === current.id ? 'mdi mdi-check' : 'mdi mdi-content-save-outline'"
+          :icon="
+            savedId === current.id
+              ? 'mdi mdi-check'
+              : current.libraryId
+                ? 'mdi mdi-cloud-upload-outline'
+                : 'mdi mdi-content-save-outline'
+          "
           :disabled="!current.name.trim() || saving"
-          :title="savedId === current.id ? 'Saved to library' : `Save ${current.name} to library`"
+          :title="
+            savedId === current.id
+              ? 'Saved & synced with library'
+              : current.libraryId
+                ? `Update linked library preset (${current.name})`
+                : `Save ${current.name} to library & link`
+          "
           @click="saveToLibrary(current)"
         />
         <ZenIconButton
@@ -212,11 +229,22 @@ const current = computed(
 const saving = ref(false);
 const savedId = ref<string | null>(null);
 
-async function saveToLibrary(mixin: Mixin) {
+async function saveToLibrary(mixin: Mixin, asNew = false) {
   if (!mixin.name.trim()) return;
   saving.value = true;
   try {
-    await saveMixinPreset(mixin.name.trim(), JSON.parse(JSON.stringify(mixin)));
+    const clean = JSON.parse(JSON.stringify(mixin)) as Mixin;
+    delete clean.libraryId;
+    const saved = await saveMixinPreset({
+      id: asNew ? undefined : mixin.libraryId,
+      name: mixin.name.trim(),
+      mixin: clean,
+    });
+    if (mixin.libraryId !== saved.id) {
+      mixins.value = mixins.value.map((m) =>
+        m.id === mixin.id ? { ...m, libraryId: saved.id } : m,
+      );
+    }
     savedId.value = mixin.id;
     setTimeout(() => {
       if (savedId.value === mixin.id) savedId.value = null;
@@ -224,6 +252,15 @@ async function saveToLibrary(mixin: Mixin) {
   } finally {
     saving.value = false;
   }
+}
+
+function unlinkMixin(id: string) {
+  mixins.value = mixins.value.map((m) => {
+    if (m.id !== id) return m;
+    const next = { ...m };
+    delete next.libraryId;
+    return next;
+  });
 }
 
 function duplicateMixin(source: Mixin) {
@@ -234,6 +271,7 @@ function duplicateMixin(source: Mixin) {
     refs: source.refs.map((r) => ({ ...r, id: uid("r") })),
     loras: source.loras.map((l) => ({ ...l, id: uid("o") })),
   };
+  delete copy.libraryId;
   mixins.value = [...mixins.value, copy];
   openId.value = copy.id;
 }
@@ -344,11 +382,26 @@ const tileMenuItems = computed<ContextMenuItem[]>(() => {
       run: () => duplicateMixin(m),
     },
     {
-      label: "Save to Library",
-      icon: "mdi mdi-content-save-outline",
+      label: m.libraryId ? "Update linked Library preset" : "Save to Library & link",
+      icon: m.libraryId ? "mdi mdi-cloud-upload-outline" : "mdi mdi-content-save-outline",
       disabled: !m.name.trim(),
-      run: () => void saveToLibrary(m),
+      run: () => void saveToLibrary(m, false),
     },
+    ...(m.libraryId
+      ? [
+          {
+            label: "Save as new Library preset",
+            icon: "mdi mdi-content-save-plus-outline",
+            disabled: !m.name.trim(),
+            run: () => void saveToLibrary(m, true),
+          },
+          {
+            label: "Unlink from Library",
+            icon: "mdi mdi-link-variant-off",
+            run: () => unlinkMixin(m.id),
+          },
+        ]
+      : []),
     "-",
     {
       label: "Delete mixin",
@@ -415,6 +468,9 @@ const tileMenuItems = computed<ContextMenuItem[]>(() => {
   gap: 3px;
   font-size: 10px;
   color: var(--zen-muted, #9aa0aa);
+}
+.lm-linked-ico {
+  color: var(--zen-accent, #6366f1);
 }
 .lm-new {
   justify-content: center;

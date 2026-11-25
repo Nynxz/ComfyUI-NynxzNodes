@@ -756,7 +756,9 @@
       :initial-mixin="mixinLibInitial"
       @add="addMixinFromLibrary"
       @swap="swapMixinFromLibrary"
-      @update-layout-mixin="updateLayoutMixin"
+      @assign-existing="assignMixinToSelected"
+      @sync-from-library="syncMixinFromLibrary"
+      @link-layout-mixin="linkLayoutMixin"
     />
     <ZenContextMenu ref="chipMenu" :items="chipMenuItems" />
     <div v-if="choosing" class="pl-choose">
@@ -1244,10 +1246,42 @@ function swapMixinFromLibrary(targetId: string, replacement: Mixin) {
   });
   openMixin.value = targetId;
 }
-function updateLayoutMixin(updated: Mixin) {
+function syncMixinFromLibrary(libraryId: string, updated: Mixin) {
   patchScene({
-    mixins: scene.value.mixins.map((m) => (m.id === updated.id ? updated : m)),
+    mixins: scene.value.mixins.map((m) =>
+      m.libraryId === libraryId
+        ? {
+            ...updated,
+            id: m.id,
+            libraryId,
+            refs: updated.refs.map((r) => ({ ...r, id: uid("r") })),
+            loras: updated.loras.map((l) => ({ ...l, id: uid("o") })),
+          }
+        : m,
+    ),
   });
+}
+function linkLayoutMixin(layoutMixinId: string, libraryId: string | undefined, updated?: Mixin) {
+  patchScene({
+    mixins: scene.value.mixins.map((m) => {
+      if (m.id !== layoutMixinId) return m;
+      const base = updated ? { ...updated, id: m.id } : { ...m };
+      if (libraryId) base.libraryId = libraryId;
+      else delete base.libraryId;
+      return base;
+    }),
+  });
+}
+async function saveChipMixinToLibrary(mixin: Mixin) {
+  if (!mixin.name.trim()) return;
+  const clean = JSON.parse(JSON.stringify(mixin)) as Mixin;
+  delete clean.libraryId;
+  const saved = await saveMixinPreset({
+    id: mixin.libraryId,
+    name: mixin.name.trim(),
+    mixin: clean,
+  });
+  linkLayoutMixin(mixin.id, saved.id);
 }
 function swapMixinBoxes(idA: string, idB: string) {
   if (idA === idB) return;
@@ -1338,10 +1372,10 @@ const chipMenuItems = computed<ContextMenuItem[]>(() => {
   }
   items.push(
     {
-      label: "Save to Library",
-      icon: "mdi mdi-content-save-outline",
+      label: m.libraryId ? "Update linked Library preset" : "Save to Library & link",
+      icon: m.libraryId ? "mdi mdi-cloud-upload-outline" : "mdi mdi-content-save-outline",
       disabled: !m.name.trim(),
-      run: () => void saveMixinPreset(m.name.trim(), JSON.parse(JSON.stringify(m))),
+      run: () => void saveChipMixinToLibrary(m),
     },
     "-",
     {

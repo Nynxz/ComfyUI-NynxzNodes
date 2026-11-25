@@ -1,11 +1,12 @@
-<!-- Mixin Library modal: browse, inspect, create, edit and swap reusable mixins in the same
-     3-column browser layout as LayoutBrowser and ZenMediaPicker (scopes on the left, visual card
-     grid in the middle, full inspector + live editor sidebar on the right). -->
+<!-- Mixin Library modal: ID-keyed, linked 3-column browser (scopes & categories on the left,
+     visual card grid in the middle, full inspector + live editor sidebar on the right).
+     Layout mixins linked via `libraryId` stay synced with their library presets rather than
+     feeling like disconnected copies. -->
 <template>
   <ZenModal :open="open" :title="modalTitle" width="1180px" height="82vh" @update:open="setOpen">
     <template #header>
       <span class="ml-search">
-        <ZenInput v-model="query" sm placeholder="Search names, descriptions, triggers, LoRAs…" />
+        <ZenInput v-model="query" sm placeholder="Search names, categories, triggers, LoRAs…" />
       </span>
       <span class="ml-grow" />
       <ZenButton sm icon="mdi mdi-plus" title="Create a new mixin preset" @click="startNew()">
@@ -53,7 +54,7 @@
               class="ml-card"
               :class="{
                 on: activeKey === card.key,
-                target: swapTarget && card.source === 'layout' && card.mixin.id === swapTarget.id,
+                target: swapTarget && card.layoutId === swapTarget.id,
               }"
               :title="cardTitle(card)"
               @click="pickCard(card)"
@@ -72,10 +73,31 @@
                 <span v-if="activeRefs(card.mixin).length > 1" class="ml-badge">
                   +{{ activeRefs(card.mixin).length - 1 }}
                 </span>
-                <span v-if="card.source === 'layout'" class="ml-origin">Layout</span>
+                <span
+                  v-if="card.state === 'linked'"
+                  class="ml-pill linked"
+                  title="In this layout and synced with the library"
+                >
+                  <i class="mdi mdi-check" /> In layout
+                </span>
+                <span
+                  v-else-if="card.state === 'diverged'"
+                  class="ml-pill diverged"
+                  title="In this layout, with local changes not yet synced"
+                >
+                  <i class="mdi mdi-sync-alert" /> Modified
+                </span>
+                <span
+                  v-else-if="card.state === 'local'"
+                  class="ml-pill local"
+                  title="Only in this layout — save to library to reuse across layouts"
+                >
+                  Local only
+                </span>
               </span>
               <span class="ml-cname">{{ card.mixin.name || "Untitled" }}</span>
               <span class="ml-cmeta">
+                <span v-if="card.category" class="ml-cat">{{ card.category }}</span>
                 <span v-if="activeRefs(card.mixin).length" class="ml-chip">
                   <i class="mdi mdi-image-outline" />{{ activeRefs(card.mixin).length }}
                 </span>
@@ -85,6 +107,7 @@
                 <span v-if="card.mixin.trigger" class="ml-trigger">{{ card.mixin.trigger }}</span>
                 <span
                   v-if="
+                    !card.category &&
                     !activeRefs(card.mixin).length &&
                     !activeLoras(card.mixin).length &&
                     !card.mixin.trigger
@@ -120,13 +143,51 @@
           </div>
 
           <div class="ml-dsub">
-            <span class="ml-dtag">{{ draftBadge }}</span>
+            <span class="ml-dtag" :class="activeLinkState">{{ draftBadge }}</span>
             <span v-if="activeSavedTime" class="ml-dtime">{{ when(activeSavedTime) }}</span>
             <span v-if="draftDirty" class="ml-dirty">unsaved</span>
           </div>
 
+          <div v-if="divergedPair" class="ml-sync-bar">
+            <span class="ml-sync-text">
+              <i class="mdi mdi-sync-alert" />
+              Layout copy differs from the saved library preset.
+            </span>
+            <div class="ml-drow">
+              <ZenButton
+                sm
+                icon="mdi mdi-cloud-upload-outline"
+                title="Update the library preset with the layout's edits"
+                @click="pushLayoutToLibrary"
+              >
+                Push layout → library
+              </ZenButton>
+              <ZenButton
+                sm
+                icon="mdi mdi-cloud-download-outline"
+                title="Update the layout mixin with the library preset"
+                @click="pullLibraryToLayout"
+              >
+                Pull library → layout
+              </ZenButton>
+            </div>
+          </div>
+
           <ZenScroll class="ml-dbody">
             <div class="ml-form">
+              <FrescoSection label="Category" note="optional folder/group">
+                <input
+                  v-model="draftCategory"
+                  class="ml-cat-input"
+                  list="nynxz-mixin-categories"
+                  placeholder="Characters, Styles, Props…"
+                  spellcheck="false"
+                />
+                <datalist id="nynxz-mixin-categories">
+                  <option v-for="c in allCategories" :key="c" :value="c" />
+                </datalist>
+              </FrescoSection>
+
               <FrescoSection label="Description" note="in every box that uses it">
                 <ZenInput
                   type="textarea"
@@ -198,7 +259,7 @@
           <footer class="ml-dfoot">
             <div class="ml-drow">
               <ZenButton
-                v-if="draftSource === 'saved' && savedOriginName"
+                v-if="activePresetId"
                 sm
                 :variant="confirmDelete ? 'danger' : 'default'"
                 :icon="confirmDelete ? 'mdi mdi-check' : 'mdi mdi-delete-outline'"
@@ -210,29 +271,22 @@
                 v-if="draftSource !== 'new'"
                 size="sm"
                 icon="mdi mdi-content-copy"
-                title="Duplicate as a new library preset"
+                title="Save a separate copy as a new library preset"
                 @click="duplicateDraft()"
               />
+              <ZenIconButton
+                v-if="activeLayoutId && activePresetId"
+                size="sm"
+                icon="mdi mdi-link-variant-off"
+                title="Unlink this layout mixin from the library preset"
+                @click="unlinkCurrent"
+              />
               <span class="ml-grow" />
-              <ZenButton
-                v-if="draftSource === 'layout' && draftDirty"
-                sm
-                icon="mdi mdi-check"
-                :disabled="!draft.name.trim()"
-                title="Apply edits to this mixin in the layout"
-                @click="applyLayoutEdits"
-              >
-                Update in layout
-              </ZenButton>
               <ZenButton
                 sm
                 icon="mdi mdi-content-save-outline"
                 :disabled="!draft.name.trim() || saving"
-                :title="
-                  draftSource === 'saved'
-                    ? 'Save changes to library preset'
-                    : 'Save to reusable mixin library'
-                "
+                :title="saveTitle"
                 @click="saveDraft"
               >
                 {{ saveLabel }}
@@ -247,19 +301,19 @@
                   class="ml-grow"
                   icon="mdi mdi-swap-horizontal"
                   :disabled="isSelfSwap || !draft.name.trim()"
-                  @click="commitSwap(draft)"
+                  @click="commitSwap(draft, activePresetId ?? undefined)"
                 >
                   {{ isSelfSwap ? "Same mixin" : `Swap "${swapTarget.name}" with this` }}
                 </ZenButton>
               </template>
-              <template v-else-if="draftSource !== 'layout'">
+              <template v-else-if="!alreadyInLayout">
                 <ZenButton
                   sm
                   :variant="selectedBoxes.length ? 'default' : 'primary'"
                   class="ml-grow"
                   icon="mdi mdi-plus"
                   :disabled="!draft.name.trim()"
-                  @click="commitAdd(draft, false)"
+                  @click="commitAdd(draft, activePresetId ?? undefined, false)"
                 >
                   Add to layout
                 </ZenButton>
@@ -270,9 +324,20 @@
                   class="ml-grow"
                   icon="mdi mdi-checkbox-marked-circle-plus-outline"
                   :disabled="!draft.name.trim()"
-                  @click="commitAdd(draft, true)"
+                  @click="commitAdd(draft, activePresetId ?? undefined, true)"
                 >
                   Add &amp; assign ({{ selectedBoxes.length }})
+                </ZenButton>
+              </template>
+              <template v-else-if="selectedBoxes.length && activeLayoutId">
+                <ZenButton
+                  sm
+                  variant="primary"
+                  class="ml-grow"
+                  icon="mdi mdi-checkbox-marked-circle-plus-outline"
+                  @click="assignExisting"
+                >
+                  Assign to selected box(es) ({{ selectedBoxes.length }})
                 </ZenButton>
               </template>
             </div>
@@ -280,9 +345,9 @@
         </template>
         <div v-else class="ml-empty">
           <i class="mdi mdi-account-details-outline" />
-          <span
-            >Pick a mixin to inspect its references, LoRAs and prompt — or create a new one.</span
-          >
+          <span>
+            Pick a mixin to inspect its references, LoRAs and prompt — or create a new one.
+          </span>
           <ZenButton sm icon="mdi mdi-plus" @click="startNew()">New mixin</ZenButton>
         </div>
       </aside>
@@ -311,25 +376,28 @@ import MixinAvatar from "@/components/layout/MixinAvatar.vue";
 import {
   deleteMixinPreset,
   listSavedMixins,
-  renameMixinPreset,
   saveMixinPreset,
   type SavedMixin,
 } from "@/layout/library";
-import { readMixin, type Mixin } from "@/layout/promptScene";
+import { mixinContentKey, readMixin, type Mixin } from "@/layout/promptScene";
 import type { FrescoLora, FrescoRef } from "@/lib/frescoScene";
 import { thumbUrl } from "@/lib/mediaRefs";
 import { uid } from "@/lib/sceneUtil";
 
-type ScopeId = "all" | "refs" | "loras" | "layout";
-type DraftSource = "saved" | "layout" | "new";
+type LinkState = "library" | "linked" | "diverged" | "local";
+type DraftSource = "saved" | "local" | "new";
 
 interface MixinCard {
   key: string;
-  source: "saved" | "layout";
-  savedName?: string;
+  presetId: string | null;
+  layoutId: string | null;
+  category: string;
   savedTime?: number;
+  state: LinkState;
   mixin: Mixin;
 }
+
+const DEFAULT_CATEGORIES = ["Characters", "Styles", "Props", "Settings"];
 
 const props = withDefaults(
   defineProps<{
@@ -352,11 +420,15 @@ const emit = defineEmits<{
   "update:open": [boolean];
   add: [mixin: Mixin, assignSelected: boolean];
   swap: [targetId: string, replacement: Mixin];
-  updateLayoutMixin: [mixin: Mixin];
+  assignExisting: [layoutMixinId: string];
+  /** Sync edits from a saved library preset to any layout mixin linked via `libraryId`. */
+  syncFromLibrary: [libraryId: string, mixin: Mixin];
+  /** Link or unlink a layout mixin to/from a library preset ID. */
+  linkLayoutMixin: [layoutMixinId: string, libraryId: string | undefined, updated?: Mixin];
 }>();
 
 const saved = ref<SavedMixin[]>([]);
-const scope = ref<ScopeId>("all");
+const scope = ref<string>("all");
 const query = ref("");
 const note = ref("");
 const saving = ref(false);
@@ -365,72 +437,137 @@ const refsPanel = ref<{ upload: () => void; openBrowse: () => void; busy: boolea
 
 const activeKey = ref<string | null>(null);
 const draft = ref<Mixin | null>(null);
+const draftCategory = ref("");
 const draftSource = ref<DraftSource>("new");
-const savedOriginName = ref<string | null>(null);
+const activePresetId = ref<string | null>(null);
+const activeLayoutId = ref<string | null>(null);
 const activeSavedTime = ref<number | null>(null);
-const baselineJson = ref("");
+const baselineKey = ref("");
 
 const modalTitle = computed(() =>
   props.swapTarget ? `Swap "${props.swapTarget.name || "Mixin"}" with…` : "Mixin Library",
 );
 
-const savedCards = computed<MixinCard[]>(() =>
-  saved.value.map((item, i) => ({
-    key: `saved:${item.name}`,
-    source: "saved",
-    savedName: item.name,
-    savedTime: item.saved,
-    mixin: readMixin({ ...item.mixin, name: item.name }, i),
-  })),
+const savedById = computed(() => new Map(saved.value.map((s) => [s.id, s])));
+const layoutByLibraryId = computed(() => {
+  const map = new Map<string, Mixin>();
+  for (const m of props.layoutMixins) {
+    if (m.libraryId && !map.has(m.libraryId)) map.set(m.libraryId, m);
+  }
+  return map;
+});
+
+function presetAsMixin(item: SavedMixin, index = 0): Mixin {
+  return readMixin({ ...item.mixin, id: item.id, libraryId: item.id, name: item.name }, index);
+}
+
+const libraryCards = computed<MixinCard[]>(() =>
+  saved.value.map((item, i) => {
+    const mixin = presetAsMixin(item, i);
+    const linked = layoutByLibraryId.value.get(item.id) ?? null;
+    const state: LinkState = !linked
+      ? "library"
+      : mixinContentKey(linked) === mixinContentKey(mixin)
+        ? "linked"
+        : "diverged";
+    return {
+      key: `lib:${item.id}`,
+      presetId: item.id,
+      layoutId: linked?.id ?? null,
+      category: item.category || "",
+      savedTime: item.saved,
+      state,
+      mixin,
+    };
+  }),
 );
 
 const layoutCards = computed<MixinCard[]>(() =>
-  props.layoutMixins.map((m) => ({
-    key: `layout:${m.id}`,
-    source: "layout",
-    mixin: cloneMixin(m),
-  })),
+  props.layoutMixins.map((m) => {
+    const preset = m.libraryId ? (savedById.value.get(m.libraryId) ?? null) : null;
+    if (preset) {
+      const savedMixin = presetAsMixin(preset);
+      const synced = mixinContentKey(m) === mixinContentKey(savedMixin);
+      return {
+        key: `lib:${preset.id}`,
+        presetId: preset.id,
+        layoutId: m.id,
+        category: preset.category || "",
+        savedTime: preset.saved,
+        state: synced ? "linked" : "diverged",
+        mixin: cloneMixin(m),
+      };
+    }
+    return {
+      key: `local:${m.id}`,
+      presetId: null,
+      layoutId: m.id,
+      category: "",
+      state: "local",
+      mixin: cloneMixin(m),
+    };
+  }),
 );
 
+const savedCategories = computed(() =>
+  [...new Set(saved.value.map((s) => s.category.trim()).filter(Boolean))].sort((a, b) =>
+    a.localeCompare(b),
+  ),
+);
+const allCategories = computed(() => [
+  ...new Set([...savedCategories.value, ...DEFAULT_CATEGORIES]),
+]);
+
 const scopes = computed<
-  { id: ScopeId; label: string; icon: string; count: number; sep?: boolean }[]
+  { id: string; label: string; icon: string; count: number; sep?: boolean }[]
 >(() => [
-  { id: "all", label: "All saved", icon: "mdi mdi-bookshelf", count: savedCards.value.length },
-  {
-    id: "refs",
-    label: "With references",
-    icon: "mdi mdi-image-multiple-outline",
-    count: savedCards.value.filter((c) => activeRefs(c.mixin).length > 0).length,
-  },
-  {
-    id: "loras",
-    label: "With LoRAs",
-    icon: "mdi mdi-puzzle-outline",
-    count: savedCards.value.filter((c) => activeLoras(c.mixin).length > 0).length,
-  },
+  { id: "all", label: "All library", icon: "mdi mdi-bookshelf", count: libraryCards.value.length },
   {
     id: "layout",
     label: "In this layout",
     icon: "mdi mdi-layers-outline",
     count: layoutCards.value.length,
-    sep: true,
   },
+  {
+    id: "refs",
+    label: "With references",
+    icon: "mdi mdi-image-multiple-outline",
+    count: libraryCards.value.filter((c) => activeRefs(c.mixin).length > 0).length,
+  },
+  {
+    id: "loras",
+    label: "With LoRAs",
+    icon: "mdi mdi-puzzle-outline",
+    count: libraryCards.value.filter((c) => activeLoras(c.mixin).length > 0).length,
+  },
+  ...savedCategories.value.map((cat, idx) => ({
+    id: `cat:${cat}`,
+    label: cat,
+    icon: "mdi mdi-folder-outline",
+    count: libraryCards.value.filter((c) => c.category === cat).length,
+    sep: idx === 0,
+  })),
 ]);
 
 const visible = computed<MixinCard[]>(() => {
-  const pool =
-    scope.value === "layout"
-      ? layoutCards.value
-      : scope.value === "refs"
-        ? savedCards.value.filter((c) => activeRefs(c.mixin).length > 0)
-        : scope.value === "loras"
-          ? savedCards.value.filter((c) => activeLoras(c.mixin).length > 0)
-          : savedCards.value;
+  let pool: MixinCard[];
+  if (scope.value === "layout") pool = layoutCards.value;
+  else if (scope.value === "refs")
+    pool = libraryCards.value.filter((c) => activeRefs(c.mixin).length > 0);
+  else if (scope.value === "loras")
+    pool = libraryCards.value.filter((c) => activeLoras(c.mixin).length > 0);
+  else if (scope.value.startsWith("cat:")) {
+    const cat = scope.value.slice(4);
+    pool = libraryCards.value.filter((c) => c.category === cat);
+  } else {
+    pool = libraryCards.value;
+  }
   const q = query.value.trim().toLowerCase();
   if (!q) return pool;
-  return pool.filter(({ mixin }) => {
+  return pool.filter(({ mixin, category }) => {
     const hay = [
       mixin.name,
+      category,
       mixin.desc,
       mixin.trigger,
       ...mixin.loras.map((l) => l.name),
@@ -450,24 +587,61 @@ const emptyText = computed(() => {
   return "No saved mixins yet — create one here or save one from this layout.";
 });
 
-const draftDirty = computed(
-  () => !!draft.value && JSON.stringify(draft.value) !== baselineJson.value,
+const currentEditKey = computed(() =>
+  draft.value ? `${draftCategory.value.trim()}\n${mixinContentKey(draft.value)}` : "",
 );
-const draftBadge = computed(() =>
-  draftSource.value === "new"
-    ? "New library preset"
-    : draftSource.value === "layout"
-      ? "In this layout"
-      : "Library preset",
+const draftDirty = computed(() => !!draft.value && currentEditKey.value !== baselineKey.value);
+
+const activeLayoutMixin = computed(() =>
+  activeLayoutId.value
+    ? (props.layoutMixins.find((m) => m.id === activeLayoutId.value) ?? null)
+    : activePresetId.value
+      ? (layoutByLibraryId.value.get(activePresetId.value) ?? null)
+      : null,
 );
+const activeSavedPreset = computed(() =>
+  activePresetId.value ? (savedById.value.get(activePresetId.value) ?? null) : null,
+);
+const divergedPair = computed(() => {
+  if (!activeLayoutMixin.value || !activeSavedPreset.value) return null;
+  const savedM = presetAsMixin(activeSavedPreset.value);
+  return mixinContentKey(activeLayoutMixin.value) !== mixinContentKey(savedM)
+    ? { layout: activeLayoutMixin.value, preset: activeSavedPreset.value, savedMixin: savedM }
+    : null;
+});
+const activeLinkState = computed<LinkState>(() => {
+  if (divergedPair.value) return "diverged";
+  if (activePresetId.value && activeLayoutMixin.value) return "linked";
+  if (!activePresetId.value && activeLayoutMixin.value) return "local";
+  return "library";
+});
+const draftBadge = computed(() => {
+  if (draftSource.value === "new") return "New library preset";
+  if (activeLinkState.value === "linked") return "Linked · synced with layout";
+  if (activeLinkState.value === "diverged") return "Linked · modified in layout";
+  if (activeLinkState.value === "local") return "Local to this layout";
+  return "Library preset";
+});
+const alreadyInLayout = computed(() => !!activeLayoutMixin.value);
+
 const saveLabel = computed(() => {
   if (saving.value) return "Saving…";
-  if (draftSource.value === "saved") return draftDirty.value ? "Save changes" : "Saved";
-  return "Save to library";
+  if (activePresetId.value) {
+    if (draftDirty.value) return alreadyInLayout.value ? "Save & sync" : "Save changes";
+    return "Saved";
+  }
+  return activeLayoutId.value ? "Save & link" : "Save to library";
+});
+const saveTitle = computed(() => {
+  if (activePresetId.value && alreadyInLayout.value) {
+    return "Save changes to the library preset and sync them into this layout";
+  }
+  if (activePresetId.value) return "Update this library preset (renaming keeps its link intact)";
+  if (activeLayoutId.value) return "Save to the Mixin Library and link this layout mixin to it";
+  return "Save as a new preset in the Mixin Library";
 });
 const isSelfSwap = computed(
-  () =>
-    !!props.swapTarget && draftSource.value === "layout" && draft.value?.id === props.swapTarget.id,
+  () => !!props.swapTarget && activeLayoutMixin.value?.id === props.swapTarget.id,
 );
 
 function cloneMixin(m: Mixin): Mixin {
@@ -488,25 +662,23 @@ function heroStyle(m: Mixin): Record<string, string> {
 function cardTitle(card: MixinCard): string {
   const action = props.swapTarget
     ? `double-click to swap "${props.swapTarget.name}" with this`
-    : card.source === "layout"
-      ? "click to inspect or save to library"
+    : card.layoutId
+      ? "in this layout — click to inspect or edit"
       : "double-click to add to layout";
   return `${card.mixin.name || "Untitled"} — ${action}`;
 }
 function newLora(): FrescoLora {
   return { id: uid("o"), name: "", strength: 1, on: true };
 }
-
 function setOpen(v: boolean) {
   emit("update:open", v);
 }
 
 async function refresh() {
   saved.value = await listSavedMixins();
-  if (draftSource.value === "saved" && savedOriginName.value) {
-    const found = savedCards.value.find((c) => c.savedName === savedOriginName.value);
-    if (found && !draftDirty.value) pickCard(found);
-    else if (!found) {
+  if (activePresetId.value && !savedById.value.has(activePresetId.value)) {
+    activePresetId.value = null;
+    if (!activeLayoutId.value) {
       activeKey.value = null;
       draft.value = null;
     }
@@ -522,12 +694,16 @@ watch(
     confirmDelete.value = false;
     await refresh();
     if (props.initialMixin) {
-      scope.value = "layout";
-      const match = layoutCards.value.find((c) => c.mixin.id === props.initialMixin?.id);
-      if (match) pickCard(match);
-    } else if (savedCards.value.length) {
+      const linked = props.initialMixin.libraryId
+        ? libraryCards.value.find((c) => c.presetId === props.initialMixin?.libraryId)
+        : null;
+      const inLayout = layoutCards.value.find((c) => c.layoutId === props.initialMixin?.id);
+      scope.value = linked ? "all" : "layout";
+      if (inLayout) pickCard(inLayout);
+      else if (linked) pickCard(linked);
+    } else if (libraryCards.value.length) {
       scope.value = "all";
-      pickCard(savedCards.value[0]!);
+      pickCard(libraryCards.value[0]!);
     } else if (layoutCards.value.length) {
       scope.value = "layout";
       pickCard(layoutCards.value[0]!);
@@ -542,20 +718,23 @@ watch(
 function pickCard(card: MixinCard) {
   activeKey.value = card.key;
   draft.value = cloneMixin(card.mixin);
-  draftSource.value = card.source;
-  savedOriginName.value = card.savedName ?? null;
+  draftCategory.value = card.category;
+  draftSource.value = card.presetId ? "saved" : "local";
+  activePresetId.value = card.presetId;
+  activeLayoutId.value = card.layoutId;
   activeSavedTime.value = card.savedTime ?? null;
-  baselineJson.value = JSON.stringify(draft.value);
+  baselineKey.value = `${draftCategory.value.trim()}\n${mixinContentKey(draft.value)}`;
   confirmDelete.value = false;
   note.value = "";
 }
 
-function startNew(from?: Mixin) {
-  const index = savedCards.value.length + props.layoutMixins.length;
-  const fresh = from
+function startNew(from?: Mixin, category = "") {
+  const index = libraryCards.value.length + props.layoutMixins.length;
+  const fresh: Mixin = from
     ? {
         ...cloneMixin(from),
         id: uid("c"),
+        libraryId: undefined,
         name: `${from.name || "Mixin"} copy`,
         refs: from.refs.map((r) => ({ ...r, id: uid("r") })),
         loras: from.loras.map((l) => ({ ...l, id: uid("o") })),
@@ -563,16 +742,18 @@ function startNew(from?: Mixin) {
     : { ...readMixin({}, index), id: uid("c"), name: `Mixin ${index + 1}` };
   activeKey.value = null;
   draft.value = fresh;
+  draftCategory.value = category;
   draftSource.value = "new";
-  savedOriginName.value = null;
+  activePresetId.value = null;
+  activeLayoutId.value = null;
   activeSavedTime.value = null;
-  baselineJson.value = "";
+  baselineKey.value = "";
   confirmDelete.value = false;
   note.value = "";
 }
 
 function duplicateDraft() {
-  if (draft.value) startNew(draft.value);
+  if (draft.value) startNew(draft.value, draftCategory.value);
 }
 
 function patchDraft(change: Partial<Mixin>) {
@@ -587,24 +768,32 @@ async function saveDraft() {
   saving.value = true;
   note.value = "";
   try {
-    let savedAs: string;
-    if (draftSource.value === "saved" && savedOriginName.value && savedOriginName.value !== name) {
-      await renameMixinPreset(savedOriginName.value, name);
-      savedAs = await saveMixinPreset(name, { ...current, name });
-    } else {
-      savedAs = await saveMixinPreset(name, { ...current, name });
+    const clean = { ...cloneMixin(current), name };
+    delete clean.libraryId;
+    const savedRecord = await saveMixinPreset({
+      id: activePresetId.value ?? undefined,
+      name,
+      category: draftCategory.value.trim(),
+      mixin: clean,
+    });
+    const linkedMixin: Mixin = { ...clean, libraryId: savedRecord.id };
+    if (activeLayoutId.value && !activePresetId.value) {
+      emit("linkLayoutMixin", activeLayoutId.value, savedRecord.id, linkedMixin);
+    } else if (layoutByLibraryId.value.has(savedRecord.id)) {
+      emit("syncFromLibrary", savedRecord.id, linkedMixin);
     }
     await refresh();
-    const card = savedCards.value.find((c) => c.savedName === savedAs);
-    if (card) {
-      if (draftSource.value !== "layout") {
-        scope.value = "all";
-        pickCard(card);
-      } else {
-        note.value = `Saved "${savedAs}" to library.`;
-      }
-    }
-    if (draftSource.value !== "layout") note.value = `Saved "${savedAs}".`;
+    activePresetId.value = savedRecord.id;
+    activeKey.value = `lib:${savedRecord.id}`;
+    activeSavedTime.value = savedRecord.saved;
+    draftSource.value = "saved";
+    draft.value = { ...linkedMixin, id: activeLayoutId.value ?? savedRecord.id };
+    draftCategory.value = savedRecord.category;
+    baselineKey.value = `${draftCategory.value.trim()}\n${mixinContentKey(draft.value)}`;
+    note.value =
+      activeLayoutId.value || layoutByLibraryId.value.has(savedRecord.id)
+        ? `Saved "${savedRecord.name}" and synced with layout.`
+        : `Saved "${savedRecord.name}" to library.`;
   } catch (e) {
     note.value = `Couldn't save: ${(e as Error).message}`;
   } finally {
@@ -612,57 +801,104 @@ async function saveDraft() {
   }
 }
 
-function applyLayoutEdits() {
-  if (!draft.value || draftSource.value !== "layout") return;
-  emit("updateLayoutMixin", cloneMixin(draft.value));
-  baselineJson.value = JSON.stringify(draft.value);
-  note.value = `Updated "${draft.value.name}" in layout.`;
+async function pushLayoutToLibrary() {
+  const pair = divergedPair.value;
+  if (!pair) return;
+  const clean = cloneMixin(pair.layout);
+  delete clean.libraryId;
+  const savedRecord = await saveMixinPreset({
+    id: pair.preset.id,
+    name: clean.name.trim() || pair.preset.name,
+    category: pair.preset.category,
+    mixin: clean,
+  });
+  await refresh();
+  const card = libraryCards.value.find((c) => c.presetId === savedRecord.id);
+  if (card) pickCard(card);
+  note.value = `Updated library preset "${savedRecord.name}" from layout.`;
+}
+
+function pullLibraryToLayout() {
+  const pair = divergedPair.value;
+  if (!pair) return;
+  emit("syncFromLibrary", pair.preset.id, {
+    ...cloneMixin(pair.savedMixin),
+    libraryId: pair.preset.id,
+  });
+  const card = libraryCards.value.find((c) => c.presetId === pair.preset.id);
+  if (card) pickCard(card);
+  note.value = `Pulled library preset "${pair.preset.name}" into layout.`;
+}
+
+function unlinkCurrent() {
+  if (!activeLayoutId.value) return;
+  emit("linkLayoutMixin", activeLayoutId.value, undefined);
+  activePresetId.value = null;
+  draftSource.value = "local";
+  activeKey.value = `local:${activeLayoutId.value}`;
+  note.value = "Unlinked from library — edits here will stay local to this layout.";
 }
 
 async function removeCurrentSaved() {
-  if (!savedOriginName.value) return;
+  if (!activePresetId.value) return;
   if (!confirmDelete.value) {
     confirmDelete.value = true;
     return;
   }
-  const target = savedOriginName.value;
-  await deleteMixinPreset(target).catch(() => undefined);
-  activeKey.value = null;
-  draft.value = null;
-  savedOriginName.value = null;
+  const targetId = activePresetId.value;
+  const targetName = draft.value?.name || "mixin";
+  if (activeLayoutId.value) emit("linkLayoutMixin", activeLayoutId.value, undefined);
+  await deleteMixinPreset(targetId).catch(() => undefined);
+  activePresetId.value = null;
+  activeSavedTime.value = null;
   confirmDelete.value = false;
+  if (!activeLayoutId.value) {
+    activeKey.value = null;
+    draft.value = null;
+  } else {
+    draftSource.value = "local";
+    activeKey.value = `local:${activeLayoutId.value}`;
+  }
   await refresh();
-  note.value = `Deleted "${target}".`;
+  note.value = `Deleted "${targetName}" from library.`;
 }
 
-function freshCopy(source: Mixin): Mixin {
+function freshCopy(source: Mixin, libraryId?: string): Mixin {
   const copy = cloneMixin(source);
   return {
     ...copy,
     id: uid("c"),
+    ...(libraryId ? { libraryId } : {}),
     refs: copy.refs.map((r) => ({ ...r, id: uid("r") })),
     loras: copy.loras.map((l) => ({ ...l, id: uid("o") })),
   };
 }
 
-function commitAdd(source: Mixin, assignSelected: boolean) {
-  emit("add", freshCopy(source), assignSelected);
+function commitAdd(source: Mixin, libraryId: string | undefined, assignSelected: boolean) {
+  emit("add", freshCopy(source, libraryId), assignSelected);
   setOpen(false);
 }
 
-function commitSwap(source: Mixin) {
+function commitSwap(source: Mixin, libraryId: string | undefined) {
   if (!props.swapTarget) return;
-  emit("swap", props.swapTarget.id, freshCopy(source));
+  emit("swap", props.swapTarget.id, freshCopy(source, libraryId));
+  setOpen(false);
+}
+
+function assignExisting() {
+  if (!activeLayoutId.value) return;
+  emit("assignExisting", activeLayoutId.value);
   setOpen(false);
 }
 
 function applyCard(card: MixinCard) {
   if (props.swapTarget) {
-    if (card.source === "layout" && card.mixin.id === props.swapTarget.id) return;
-    commitSwap(card.mixin);
+    if (card.layoutId === props.swapTarget.id) return;
+    commitSwap(card.mixin, card.presetId ?? undefined);
     return;
   }
-  if (card.source === "saved") commitAdd(card.mixin, props.selectedBoxes.length > 0);
+  if (!card.layoutId)
+    commitAdd(card.mixin, card.presetId ?? undefined, props.selectedBoxes.length > 0);
 }
 
 // --- card right-click context menu --------------------------------------------------------------
@@ -680,53 +916,62 @@ const ctxItems = computed<ContextMenuItem[]>(() => {
   if (!card) return [];
   const items: ContextMenuItem[] = [];
   if (props.swapTarget) {
-    const self = card.source === "layout" && card.mixin.id === props.swapTarget.id;
+    const self = card.layoutId === props.swapTarget.id;
     items.push({
       label: `Swap "${props.swapTarget.name}" with this`,
       icon: "mdi mdi-swap-horizontal",
       disabled: self,
-      run: () => commitSwap(card.mixin),
+      run: () => commitSwap(card.mixin, card.presetId ?? undefined),
     });
-  } else if (card.source === "saved") {
+  } else if (!card.layoutId) {
     items.push({
       label: "Add to layout",
       icon: "mdi mdi-plus",
-      run: () => commitAdd(card.mixin, false),
+      run: () => commitAdd(card.mixin, card.presetId ?? undefined, false),
     });
     if (props.selectedBoxes.length) {
       items.push({
         label: `Add & assign to ${props.selectedBoxes.length} box(es)`,
         icon: "mdi mdi-checkbox-marked-circle-plus-outline",
-        run: () => commitAdd(card.mixin, true),
+        run: () => commitAdd(card.mixin, card.presetId ?? undefined, true),
       });
     }
+  } else if (props.selectedBoxes.length) {
+    items.push({
+      label: `Assign to ${props.selectedBoxes.length} selected box(es)`,
+      icon: "mdi mdi-checkbox-marked-circle-plus-outline",
+      run: () => assignExisting(),
+    });
   }
   items.push({
     label: "Duplicate as new preset",
     icon: "mdi mdi-content-copy",
-    run: () => startNew(card.mixin),
+    run: () => startNew(card.mixin, card.category),
   });
-  if (card.source === "layout") {
+  if (!card.presetId) {
     items.push({
-      label: "Save to library",
+      label: "Save to library & link",
       icon: "mdi mdi-content-save-outline",
       run: () => {
         pickCard(card);
         void saveDraft();
       },
     });
-  } else if (card.savedName) {
-    const name = card.savedName;
+  } else {
+    const presetId = card.presetId;
     items.push("-", {
       label: "Delete from library",
       icon: "mdi mdi-delete-outline",
       danger: true,
       run: async () => {
-        await deleteMixinPreset(name).catch(() => undefined);
-        if (savedOriginName.value === name) {
-          activeKey.value = null;
-          draft.value = null;
-          savedOriginName.value = null;
+        if (card.layoutId) emit("linkLayoutMixin", card.layoutId, undefined);
+        await deleteMixinPreset(presetId).catch(() => undefined);
+        if (activePresetId.value === presetId) {
+          activePresetId.value = null;
+          if (!activeLayoutId.value) {
+            activeKey.value = null;
+            draft.value = null;
+          }
         }
         await refresh();
       },
@@ -746,7 +991,7 @@ function when(t: number) {
 <style scoped>
 .ml {
   display: grid;
-  grid-template-columns: 180px minmax(0, 1fr) 340px;
+  grid-template-columns: 184px minmax(0, 1fr) 352px;
   gap: 12px;
   height: 100%;
   min-height: 0;
@@ -764,6 +1009,7 @@ function when(t: number) {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  overflow-y: auto;
 }
 .ml-scope {
   display: flex;
@@ -797,6 +1043,9 @@ function when(t: number) {
 }
 .ml-sname {
   flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .ml-count {
   font-size: 10px;
@@ -865,22 +1114,37 @@ function when(t: number) {
   box-shadow: 0 0 0 1.5px rgb(0 0 0 / 55%);
 }
 .ml-badge,
-.ml-origin {
+.ml-pill {
   position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
   padding: 1px 6px;
   border-radius: 999px;
-  background: rgb(0 0 0 / 68%);
-  color: #fff;
   font-size: 10px;
   font-weight: 600;
 }
 .ml-badge {
   right: 6px;
   bottom: 6px;
+  background: rgb(0 0 0 / 70%);
+  color: #fff;
 }
-.ml-origin {
+.ml-pill {
   top: 6px;
   right: 6px;
+}
+.ml-pill.linked {
+  background: color-mix(in srgb, var(--zen-accent, #6366f1) 88%, #000);
+  color: #fff;
+}
+.ml-pill.diverged {
+  background: color-mix(in srgb, var(--zen-warning, #f5b041) 88%, #000);
+  color: #141418;
+}
+.ml-pill.local {
+  background: rgb(0 0 0 / 68%);
+  color: #e5e5ea;
 }
 .ml-cname {
   font-weight: 600;
@@ -895,6 +1159,13 @@ function when(t: number) {
   gap: 5px;
   font-size: 10.5px;
   color: var(--zen-muted, #9aa0aa);
+}
+.ml-cat {
+  padding: 0 5px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--zen-accent, #6366f1) 14%, transparent);
+  color: var(--zen-text, #e5e5ea);
+  font-size: 10px;
 }
 .ml-chip {
   display: inline-flex;
@@ -948,9 +1219,17 @@ function when(t: number) {
   color: var(--zen-muted, #9aa0aa);
 }
 .ml-dtag {
-  padding: 1px 6px;
+  padding: 1px 7px;
   border-radius: 999px;
   background: color-mix(in srgb, var(--zen-text, #fff) 8%, transparent);
+}
+.ml-dtag.linked {
+  background: color-mix(in srgb, var(--zen-accent, #6366f1) 20%, transparent);
+  color: var(--zen-text, #e5e5ea);
+}
+.ml-dtag.diverged {
+  background: color-mix(in srgb, var(--zen-warning, #f5b041) 20%, transparent);
+  color: var(--zen-warning, #f5b041);
 }
 .ml-dtime {
   margin-left: auto;
@@ -958,6 +1237,23 @@ function when(t: number) {
 .ml-dirty {
   color: var(--zen-warning, #f5b041);
   font-weight: 600;
+}
+.ml-sync-bar {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid color-mix(in srgb, var(--zen-warning, #f5b041) 45%, transparent);
+  border-radius: var(--zen-radius, 7px);
+  background: color-mix(in srgb, var(--zen-warning, #f5b041) 10%, transparent);
+}
+.ml-sync-text {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--zen-warning, #f5b041);
 }
 .ml-dbody {
   flex: 1;
@@ -968,6 +1264,22 @@ function when(t: number) {
   flex-direction: column;
   gap: 10px;
   padding-right: 4px;
+}
+.ml-cat-input {
+  width: 100%;
+  box-sizing: border-box;
+  height: 24px;
+  padding: 0 8px;
+  font: inherit;
+  font-size: 11.5px;
+  color: var(--zen-text, #e5e5ea);
+  background: var(--zen-input, #1b1b20);
+  border: 1px solid var(--zen-border, #34343c);
+  border-radius: var(--zen-radius, 7px);
+  outline: none;
+}
+.ml-cat-input:focus {
+  border-color: var(--zen-accent, #6366f1);
 }
 .ml-hint {
   margin: 0;

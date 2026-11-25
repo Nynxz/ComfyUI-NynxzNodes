@@ -128,26 +128,23 @@ if _routes is not None and folder_paths is not None:
         if (denied := request_allowed(request)) is not None:
             return denied
         body = await _body(request)
-        saved = library.save_mixin(_root(), body.get("name", ""), body.get("mixin"))
+        saved = library.save_mixin(
+            _root(),
+            body.get("name", ""),
+            body.get("mixin"),
+            mixin_id=str(body.get("id") or ""),
+            category=str(body.get("category") or ""),
+        )
         if saved is None:
-            return web.json_response({"error": "can't save mixin under that name"}, status=400)
-        return web.json_response({"name": saved})
+            return web.json_response({"error": "can't save mixin"}, status=400)
+        return web.json_response(saved)
 
     @_routes.post("/nynxz/layouts/mixins/delete")
     async def nynxz_layouts_mixins_delete(request):
         if (denied := request_allowed(request)) is not None:
             return denied
         body = await _body(request)
-        if not library.delete_mixin(_root(), body.get("name", "")):
+        target = str(body.get("id") or body.get("name") or "")
+        if not library.delete_mixin(_root(), target):
             return web.json_response({"error": "not found"}, status=404)
         return web.json_response({"ok": True})
-
-    @_routes.post("/nynxz/layouts/mixins/rename")
-    async def nynxz_layouts_mixins_rename(request):
-        if (denied := request_allowed(request)) is not None:
-            return denied
-        body = await _body(request)
-        renamed = library.rename_mixin(_root(), body.get("name", ""), body.get("to", ""))
-        if renamed is None:
-            return web.json_response({"error": "can't rename mixin to that"}, status=400)
-        return web.json_response({"name": renamed})

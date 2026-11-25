@@ -47,7 +47,8 @@ Layout Inputs ──> Layout ──> Layout Apply (+ model, clip) ──> model 
 
 - **Layout** — the unified editor: canvas with toggleable box-face previews, brush/erase paint tools,
   SAM3 wand (`W`), Box / Scene / Mixins inspector tabs, multi-box mixin & strength editing, saved
-  layouts & saved mixins libraries, agent, and ZenKit pop-out panel.
+  layouts & ID-keyed linked Mixin Library (with categories, right-click swap, and two-way sync),
+  agent, and ZenKit pop-out panel.
 - **Layout Inputs** _(optional)_ — a photo to trace, segment with SAM3, remix or edit; its VAE
   (carried to Layout Apply); a SAM3 checkpoint (lazy-loaded only when segmenting); and a Qwen3-VL
   CLIP for the editor's agent (lazy-loaded only when asked).

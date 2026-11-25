@@ -13,6 +13,7 @@ import json
 import os
 import re
 import time
+import uuid
 
 FOLDER = "nynxz_layouts"
 _MODE = re.compile(r"^[a-z][a-z0-9_-]{0,31}$")
@@ -153,20 +154,31 @@ def rename_layout(root: str, mode: str, name: str, new_name: str) -> str | None:
     return stem
 
 
-# --- Saved Mixins (reusable character/prop/style presets across layouts) -------------------------
+# --- Saved Mixins (ID-keyed reusable character/prop/style presets across layouts) ----------------
 
 MIXINS_FOLDER = "_mixins"
+_MIXIN_ID = re.compile(r"^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$")
+MAX_CATEGORY = 40
 
 
-def _mixin_file(root: str, name: str) -> str | None:
-    stem = clean_name(name)
-    if stem is None:
+def valid_mixin_id(mixin_id: object) -> bool:
+    return isinstance(mixin_id, str) and bool(_MIXIN_ID.match(mixin_id))
+
+
+def _mixin_path(root: str, mixin_id: str) -> str | None:
+    if not valid_mixin_id(mixin_id):
         return None
-    return os.path.join(root, FOLDER, MIXINS_FOLDER, f"{stem}.json")
+    return os.path.join(root, FOLDER, MIXINS_FOLDER, f"{mixin_id}.json")
+
+
+def _clean_label(value: object, limit: int = MAX_NAME) -> str:
+    if not isinstance(value, str):
+        return ""
+    return " ".join(value.split())[:limit]
 
 
 def list_mixins(root: str) -> list[dict]:
-    """Every saved mixin preset, newest first."""
+    """Every saved mixin preset, newest first. Reads both ID-keyed and legacy name-keyed files."""
     folder = os.path.join(root, FOLDER, MIXINS_FOLDER)
     if not os.path.isdir(folder):
         return []
@@ -181,9 +193,15 @@ def list_mixins(root: str) -> list[dict]:
             continue
         if not isinstance(data, dict) or not isinstance(data.get("mixin"), dict):
             continue
+        stem = entry.name[: -len(".json")]
+        mid = data.get("id") if valid_mixin_id(data.get("id")) else stem
+        name = _clean_label(data.get("name")) or stem
+        category = _clean_label(data.get("category"), MAX_CATEGORY)
         found.append(
             {
-                "name": entry.name[: -len(".json")],
+                "id": mid,
+                "name": name,
+                "category": category,
                 "saved": data.get("saved") or entry.stat().st_mtime,
                 "mixin": data["mixin"],
             }
@@ -192,13 +210,40 @@ def list_mixins(root: str) -> list[dict]:
     return found
 
 
-def save_mixin(root: str, name: str, mixin: object) -> str | None:
-    """Save a mixin preset and return its clean name, or None on invalid name/payload."""
-    path = _mixin_file(root, name)
-    if path is None or not isinstance(mixin, dict):
+def save_mixin(
+    root: str,
+    name: str,
+    mixin: object,
+    mixin_id: str = "",
+    category: str = "",
+) -> dict | None:
+    """Save a mixin preset by stable ID (generating one when omitted) and return the saved record.
+
+    Keying by ID means two presets may share a display name without overwriting each other, and
+    layout mixins can stay linked to their library preset across renames and edits.
+    """
+    label = _clean_label(name)
+    if not label or not isinstance(mixin, dict):
         return None
-    stem = os.path.basename(path)[: -len(".json")]
-    body = json.dumps({"name": stem, "mixin": mixin, "saved": time.time()}, ensure_ascii=False)
+    if mixin_id:
+        if not valid_mixin_id(mixin_id):
+            return None
+        mid = mixin_id
+    else:
+        mid = f"mx_{uuid.uuid4().hex[:10]}"
+    path = _mixin_path(root, mid)
+    if path is None:
+        return None
+    cat = _clean_label(category, MAX_CATEGORY)
+    saved_at = time.time()
+    payload = {
+        "id": mid,
+        "name": label,
+        "category": cat,
+        "mixin": {**mixin, "name": label},
+        "saved": saved_at,
+    }
+    body = json.dumps(payload, ensure_ascii=False)
     if len(body.encode("utf-8")) > MAX_BYTES:
         return None
     os.makedirs(os.path.dirname(path), exist_ok=True)
@@ -206,40 +251,19 @@ def save_mixin(root: str, name: str, mixin: object) -> str | None:
     with open(temp, "w", encoding="utf-8") as f:
         f.write(body)
     os.replace(temp, path)
-    return stem
+    return payload
 
 
-def delete_mixin(root: str, name: str) -> bool:
-    path = _mixin_file(root, name)
-    if path is None or not os.path.isfile(path):
-        return False
-    os.remove(path)
-    return True
-
-
-def rename_mixin(root: str, name: str, new_name: str) -> str | None:
-    """Rename a saved mixin preset and return its clean name, or None on conflict/invalid name."""
-    old = _mixin_file(root, name)
-    new = _mixin_file(root, new_name)
-    if old is None or new is None or not os.path.isfile(old):
-        return None
-    stem = os.path.basename(new)[: -len(".json")]
-    if os.path.exists(new) and os.path.normcase(new) != os.path.normcase(old):
-        return None
-    try:
-        with open(old, encoding="utf-8") as f:
-            data = json.load(f)
-    except (OSError, ValueError):
-        return None
-    if not isinstance(data, dict):
-        return None
-    data["name"] = stem
-    if isinstance(data.get("mixin"), dict):
-        data["mixin"] = {**data["mixin"], "name": stem}
-    temp = f"{new}.tmp"
-    with open(temp, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False)
-    os.replace(temp, new)
-    if os.path.normcase(new) != os.path.normcase(old):
-        os.remove(old)
-    return stem
+def delete_mixin(root: str, mixin_id: str) -> bool:
+    """Delete a saved mixin by ID (also cleans up legacy `<name>.json` files)."""
+    path = _mixin_path(root, mixin_id)
+    if path is not None and os.path.isfile(path):
+        os.remove(path)
+        return True
+    legacy = clean_name(mixin_id)
+    if legacy is not None:
+        legacy_path = os.path.join(root, FOLDER, MIXINS_FOLDER, f"{legacy}.json")
+        if os.path.isfile(legacy_path):
+            os.remove(legacy_path)
+            return True
+    return False

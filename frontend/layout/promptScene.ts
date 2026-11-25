@@ -64,6 +64,8 @@ export interface PromptBox extends BoxRect {
  *  images are read into its prompt. */
 export interface Mixin {
   id: string;
+  /** Stable ID of the linked preset in the Mixin Library, when saved/loaded from it. */
+  libraryId?: string;
   name: string;
   /** Its avatar's colour where it has no image, and its badge on the canvas. */
   color: string;
@@ -240,8 +242,10 @@ export function readBox(raw: unknown, index = 0, fromFresco = false): PromptBox 
 
 export function readMixin(raw: unknown, index = 0): Mixin {
   const m = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
+  const libraryId = str(m.libraryId ?? m.library_id).trim();
   return {
     id: str(m.id) || uid("c"),
+    ...(libraryId ? { libraryId } : {}),
     name: str(m.name) || `Mixin ${index + 1}`,
     color: str(m.color) || BOX_COLORS[(index + 3) % BOX_COLORS.length]!,
     desc: str(m.desc),
@@ -249,6 +253,18 @@ export function readMixin(raw: unknown, index = 0): Mixin {
     refs: readRefs(m.refs),
     loras: readLoras(m.loras),
   };
+}
+
+/** Whether two mixins carry the same content (ignoring ephemeral layout/item IDs). */
+export function mixinContentKey(m: Mixin): string {
+  return JSON.stringify({
+    name: m.name.trim(),
+    color: m.color.toLowerCase(),
+    desc: m.desc.trim(),
+    trigger: m.trigger.trim(),
+    refs: m.refs.map(({ ref, type, strength, fit, on }) => ({ ref, type, strength, fit, on })),
+    loras: m.loras.map(({ name, strength, on }) => ({ name, strength, on })),
+  });
 }
 
 export function isFrescoRaw(v: unknown): boolean {
