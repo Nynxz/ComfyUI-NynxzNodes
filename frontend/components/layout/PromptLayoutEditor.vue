@@ -15,7 +15,9 @@
       :mask-view="maskView"
       :mask-clips="maskClips"
       accepts-drops
+      :size-snap="scene.settings.snap"
       :tabs="[{ id: 'mixins', label: 'Mixins', count: scene.mixins.length }]"
+      @update:size-snap="patchSettings({ snap: $event })"
       @pick-tool="wand = false"
       @pop-out="emit('popOut')"
       @open="openBox"

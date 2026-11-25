@@ -113,16 +113,27 @@
                   <i class="mdi mdi-chevron-down" />
                 </button>
               </template>
-              <ZenResolution
-                :width="size.width"
-                :height="size.height"
-                :snap="sizeSnap"
-                :presets="[0.5, 1, 1.5, 2]"
-                :max-side="maxSide"
-                :max-mp="4"
-                @update:width="setSize($event, size.height)"
-                @update:height="setSize(size.width, $event)"
-              />
+              <div class="le-res-pop">
+                <ZenResolution
+                  :width="size.width"
+                  :height="size.height"
+                  :snap="activeSnap"
+                  :presets="[0.5, 1, 1.5, 2]"
+                  :max-side="maxSide"
+                  :max-mp="4"
+                  @update:width="setSize($event, size.height)"
+                  @update:height="setSize(size.width, $event)"
+                />
+                <div class="le-res-snap">
+                  <span>Snap to</span>
+                  <ZenToggleGroup
+                    size="sm"
+                    :model-value="String(activeSnap)"
+                    :options="SNAP_OPTIONS"
+                    @update:model-value="setSnap(Number($event))"
+                  />
+                </div>
+              </div>
             </ZenPopover>
           </header>
 
@@ -418,6 +429,7 @@ import {
   ZenScroll,
   ZenSlider,
   ZenSplit,
+  ZenToggleGroup,
   boxAt,
   placeRects,
   useWheelClaim,
@@ -502,7 +514,33 @@ const emit = defineEmits<{
   pickTool: [tool: BoxTool];
   /** Media dropped at `x`,`y` (0..1), over box `hit` if any. */
   drop: [event: DragEvent, at: { x: number; y: number }, hit: string | null];
+  /** Canvas width/height snap multiple changed (8, 16, 32, or 64). */
+  "update:sizeSnap": [snap: number];
 }>();
+
+const SNAP_OPTIONS = ["8", "16", "32", "64"].map((v) => ({
+  value: v,
+  label: v,
+  title: `Snap canvas width and height to multiples of ${v}px`,
+}));
+const localSnap = ref<number | null>(null);
+const activeSnap = computed(() => localSnap.value ?? props.sizeSnap);
+watch(
+  () => props.sizeSnap,
+  (v) => {
+    localSnap.value = v;
+  },
+);
+function setSnap(next: number) {
+  if (![8, 16, 32, 64].includes(next)) return;
+  localSnap.value = next;
+  emit("update:sizeSnap", next);
+  const snapVal = (v: number) =>
+    Math.min(props.maxSide, Math.max(next, Math.round(v / next) * next));
+  const w = snapVal(size.value.width);
+  const h = snapVal(size.value.height);
+  if (w !== size.value.width || h !== size.value.height) setSize(w, h);
+}
 
 const selected = defineModel<string[]>("selected", { default: () => [] });
 const tool = defineModel<BoxTool>("tool", { default: "select" });
@@ -1246,12 +1284,27 @@ defineExpose({ addBox, update, offerBackdrop, backdrop, showTab });
   height: 22px;
   padding: 0 8px;
   border: 1px solid var(--zen-border, #34343c);
-  border-radius: 999px;
+  border-radius: var(--zen-radius, 7px);
   background: var(--zen-input, #1b1b20);
   color: var(--zen-text, #e5e5ea);
   font-size: 11px;
   font-variant-numeric: tabular-nums;
   cursor: pointer;
+}
+.le-res-pop {
+  display: flex;
+  flex-direction: column;
+}
+.le-res-snap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 6px 6px;
+  padding-top: 8px;
+  border-top: 1px solid var(--zen-border, #34343c);
+  color: var(--zen-muted, #9aa0aa);
+  font-size: 11px;
 }
 .le-side {
   height: 100%;
@@ -1320,7 +1373,7 @@ defineExpose({ addBox, update, offerBackdrop, backdrop, showTab });
 }
 .le-count {
   padding: 0 6px;
-  border-radius: 999px;
+  border-radius: var(--zen-radius, 7px);
   background: color-mix(in srgb, var(--zen-text, #fff) 8%, transparent);
   color: var(--zen-muted, #9aa0aa);
   font-size: 10px;
@@ -1329,7 +1382,7 @@ defineExpose({ addBox, update, offerBackdrop, backdrop, showTab });
   flex: none;
   width: 12px;
   height: 12px;
-  border-radius: 3px;
+  border-radius: min(var(--zen-radius, 7px), 3px);
 }
 .le-body {
   flex: 1 1 0;

@@ -64,6 +64,7 @@ DEFAULT_VISUAL_SIZE = 384
 BACKGROUND_DENOISE = 0.05
 GRID = 1000
 SNAP = 16
+SNAPS = (8, 16, 32, 64)
 MAX_SIDE = 16384
 
 _HEX = re.compile(r"^#[0-9A-F]{6}$")
@@ -79,9 +80,14 @@ def _strings(value) -> list[str]:
     return [s.strip() for s in value if isinstance(s, str) and s.strip()]
 
 
-def _side(value) -> int:
-    snapped = round(num(value, 1024) / SNAP) * SNAP
-    return int(max(SNAP, min(MAX_SIDE, snapped)))
+def _snap(value) -> int:
+    n = round(num(value, SNAP))
+    return n if n in SNAPS else SNAP
+
+
+def _side(value, snap: int = SNAP) -> int:
+    snapped = round(num(value, 1024) / snap) * snap
+    return int(max(snap, min(MAX_SIDE, snapped)))
 
 
 def hex_color(raw) -> str | None:
@@ -153,10 +159,14 @@ def _settings(raw) -> dict:
         logging.info(
             "Nynxz Layout: 'photo: look' (Krea edit mode) is retired; loading as plain photo edit."
         )
-    return {
+    out = {
         "overlap": data.get("overlap") if data.get("overlap") in OVERLAPS else DEFAULT_OVERLAP,
         "visual_size": min(1024, max(128, int(num(data.get("visual_size"), DEFAULT_VISUAL_SIZE)))),
     }
+    snap = _snap(data.get("snap"))
+    if snap != SNAP:
+        out["snap"] = snap
+    return out
 
 
 def _box(raw: dict, index: int, *, from_fresco: bool = False) -> dict:
@@ -294,12 +304,14 @@ def parse(raw) -> dict:
     raw_backdrop = raw.get("backdrop")
     if not isinstance(raw_backdrop, dict) and isinstance(raw_bg, dict):
         raw_backdrop = raw_bg
+    settings = _settings(raw.get("settings"))
+    snap = settings.get("snap", SNAP)
     refs_scope = raw.get("refsScope", raw.get("refs_scope"))
     style_mode = raw.get("styleMode", raw.get("style_mode"))
     return {
         "mode": mode if mode in MODES else "ideogram",
-        "width": _side(raw.get("width")),
-        "height": _side(raw.get("height")),
+        "width": _side(raw.get("width"), snap),
+        "height": _side(raw.get("height"), snap),
         "prompt": _str(raw.get("prompt")).strip(),
         "refs": read_refs(raw.get("refs")),
         "refs_scope": refs_scope if refs_scope in REFS_SCOPES else DEFAULT_REFS_SCOPE,
@@ -316,7 +328,7 @@ def parse(raw) -> dict:
         "palette": _palette(raw.get("palette"), 16),
         "mixins": [_mixin(m, i) for i, m in enumerate(mixins) if isinstance(m, dict)],
         "backdrop": _backdrop(raw_backdrop, default_on=fresco),
-        "settings": _settings(raw.get("settings")),
+        "settings": settings,
         "boxes": [
             _box(b, i, from_fresco=fresco) for i, b in enumerate(boxes) if isinstance(b, dict)
         ],

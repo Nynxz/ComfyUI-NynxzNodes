@@ -138,6 +138,18 @@ class Moss(unittest.TestCase):
         parsed = prompt.parse({"mode": "moss", "width": 1000, "height": 7})
         self.assertEqual((parsed["width"], parsed["height"]), (992, 16))
 
+    def test_canvas_respects_custom_snap_multiple(self):
+        p8 = prompt.parse({"mode": "moss", "width": 1000, "height": 7, "settings": {"snap": 8}})
+        self.assertEqual((p8["width"], p8["height"]), (1000, 8))
+        p32 = prompt.parse(
+            {"mode": "moss", "width": 1000, "height": 1000, "settings": {"snap": 32}}
+        )
+        self.assertEqual((p32["width"], p32["height"]), (992, 992))
+        p64 = prompt.parse(
+            {"mode": "moss", "width": 1000, "height": 1000, "settings": {"snap": 64}}
+        )
+        self.assertEqual((p64["width"], p64["height"]), (1024, 1024))
+
 
 class Elements(unittest.TestCase):
     def test_elements_match_core_create_bounding_boxes(self):

@@ -37,7 +37,7 @@ const emit = defineEmits<{ "update:modelValue": [string] }>();
   height: 24px;
   padding: 0 12px;
   border: 1px solid var(--zen-border, #34343c);
-  border-radius: 999px;
+  border-radius: var(--zen-radius, 7px);
   background: transparent;
   color: var(--zen-muted, #9aa0aa);
   font: inherit;

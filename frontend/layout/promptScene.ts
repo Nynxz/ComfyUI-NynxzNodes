@@ -138,6 +138,8 @@ export interface LayoutBackdrop {
 export interface LayoutRegionSettings {
   overlap: Overlap;
   visual_size: number;
+  /** Canvas width/height snap multiple (8, 16, 32, or 64; default 16). */
+  snap: number;
 }
 
 export interface IdeogramStyle {
@@ -197,6 +199,7 @@ const MODES: PromptModeId[] = ["regions", "ideogram", "klein", "moss"];
 const KINDS: BoxKind[] = ["object", "character", "text"];
 const CANVASES: MossCanvas[] = ["", "single", "multi_panel", "collage"];
 const SNAP = 16;
+const SNAPS = [8, 16, 32, 64] as const;
 const GRID = 1000;
 
 export const boxId = () => uid("b");
@@ -206,8 +209,12 @@ export const nextColor = (boxes: { color: string }[]) => nextColorOf(boxes, BOX_
 const str = (v: unknown) => (typeof v === "string" ? v : "");
 const strings = (v: unknown) =>
   Array.isArray(v) ? v.filter((s): s is string => typeof s === "string" && !!s.trim()) : [];
-const side = (v: unknown) =>
-  Math.max(SNAP, Math.min(16384, Math.round(num(v, 1024) / SNAP) * SNAP));
+const readSnap = (v: unknown): number => {
+  const n = Math.round(num(v, SNAP));
+  return (SNAPS as readonly number[]).includes(n) ? n : SNAP;
+};
+const side = (v: unknown, snap = SNAP) =>
+  Math.max(snap, Math.min(16384, Math.round(num(v, 1024) / snap) * snap));
 const readBlend = (v: unknown): Blend => (BLENDS.some((b) => b.value === v) ? (v as Blend) : "mix");
 const readStyleMode = (v: unknown): RefStyleMode =>
   STYLE_MODES.some((s) => s.value === v) ? (v as RefStyleMode) : "none";
@@ -369,14 +376,15 @@ export function readPromptScene(raw: unknown): PromptScene {
       : rawBg && typeof rawBg === "object"
         ? rawBg
         : undefined;
+  const snap = readSnap(settings.snap);
   return {
     mode: fresco
       ? "regions"
       : MODES.includes(s.mode as PromptModeId)
         ? (s.mode as PromptModeId)
         : "ideogram",
-    width: side(s.width),
-    height: side(s.height),
+    width: side(s.width, snap),
+    height: side(s.height, snap),
     prompt: str(s.prompt),
     refs: readRefs(s.refs),
     refsScope: readRefsScope(s.refsScope ?? s.refs_scope),
@@ -403,6 +411,7 @@ export function readPromptScene(raw: unknown): PromptScene {
     settings: {
       overlap: settings.overlap === "share" ? "share" : "top",
       visual_size: Math.min(1024, Math.max(128, Math.round(num(settings.visual_size, 384)))),
+      snap,
     },
     boxes: Array.isArray(rawBoxes) ? rawBoxes.map((b, i) => readBox(b, i, fresco)) : [],
   };

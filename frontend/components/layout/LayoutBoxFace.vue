@@ -135,7 +135,7 @@ const caption = computed(() => {
   align-items: center;
   gap: 2px;
   padding: 0 5px;
-  border-radius: 999px;
+  border-radius: var(--zen-radius, 7px);
   background: rgb(0 0 0 / 65%);
   color: #fff;
   font-size: 10px;
