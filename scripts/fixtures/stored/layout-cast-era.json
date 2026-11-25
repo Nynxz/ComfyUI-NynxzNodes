@@ -1,0 +1,60 @@
+{
+ "kind": "layout",
+ "value": {
+  "mode": "moss",
+  "width": 1024,
+  "height": 768,
+  "prompt": "Anime style",
+  "background": "",
+  "style": {
+   "on": false,
+   "kind": "photo",
+   "aesthetics": "",
+   "lighting": "",
+   "medium": "photograph",
+   "photo": "",
+   "art_style": "",
+   "palette": []
+  },
+  "meta": [],
+  "canvas": "",
+  "palette": [],
+  "boxes": [
+   {
+    "id": "b1",
+    "name": "Amber",
+    "color": "#3B82F6",
+    "x": 0.1,
+    "y": 0.1,
+    "w": 0.3,
+    "h": 0.3,
+    "hidden": false,
+    "locked": false,
+    "kind": "object",
+    "desc": "she waves",
+    "text": "",
+    "palette": [],
+    "tags": [],
+    "cast": [
+     "amber"
+    ]
+   }
+  ],
+  "cast": [
+   {
+    "id": "amber",
+    "name": "Amber",
+    "trigger": "amb3r",
+    "refs": [],
+    "loras": [
+     {
+      "id": "oamber",
+      "name": "amber.safetensors",
+      "strength": 0.8,
+      "on": true
+     }
+    ]
+   }
+  ]
+ }
+}

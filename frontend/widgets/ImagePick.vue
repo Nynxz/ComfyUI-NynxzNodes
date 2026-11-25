@@ -112,49 +112,64 @@
     <div v-if="selected" class="li-preview">
       <img v-if="previewUrl" :src="previewUrl" @load="onPreviewLoad" />
       <span v-else class="li-loading">Loading…</span>
-      <!-- hover overlay: info popover + open mask editor -->
+      <!-- hover overlay: mask editor + viewer (top right), image details (bottom right) -->
       <div class="li-ov">
         <div class="li-ov-actions">
           <ZenIconButton
             class="li-ov-btn"
             icon="mdi mdi-draw"
             title="Edit mask"
-            @click="openMaskEditor"
+            @click="(unfocus($event), openMaskEditor())"
           />
-          <div
-            ref="infoBtn"
-            class="li-ov-btn li-ov-info"
-            title="Image details"
-            @pointerenter="openInfo"
-            @pointerleave="infoOpen = false"
-          >
-            <i class="mdi mdi-information-outline" />
-          </div>
-          <!-- teleported to body + fixed so it floats over the node instead of
-                         being clipped by the preview's overflow:hidden -->
-          <Teleport to="body">
-            <div v-if="infoOpen" class="li-info-pop" :style="infoStyle">
-              <div class="li-info-row" title="Dimensions">
-                <i class="mdi mdi-resize" /><b>{{ infoDims }}</b>
-              </div>
-              <div class="li-info-row" title="File">
-                <i class="mdi mdi-file-image-outline" /><b :title="infoName">{{ infoName }}</b>
-              </div>
-              <div class="li-info-row" title="File size">
-                <i class="mdi mdi-harddisk" /><b>{{ infoSize }}</b>
-              </div>
-              <div class="li-info-row" title="Modified">
-                <i class="mdi mdi-clock-outline" /><b>{{ infoDate }}</b>
-              </div>
-            </div>
-          </Teleport>
+          <ZenIconButton
+            class="li-ov-btn"
+            icon="mdi mdi-fullscreen"
+            title="Open in viewer"
+            @click="(unfocus($event), (lightbox = true))"
+          />
         </div>
+        <!-- Details sit in the bottom corner, so the top-right one is the viewer button here as
+             it is on Save Image and Preview Image. -->
+        <ZenIconButton
+          ref="infoBtn"
+          class="li-ov-btn li-ov-info li-ov-corner"
+          icon="mdi mdi-information-outline"
+          title="Image details"
+          @pointerenter="openInfo"
+          @pointerleave="infoOpen = false"
+        />
+        <!-- teleported to body + fixed so it floats over the node instead of
+                       being clipped by the preview's overflow:hidden -->
+        <Teleport to="body">
+          <div v-if="infoOpen" class="li-info-pop" :style="infoStyle">
+            <div class="li-info-row" title="Dimensions">
+              <i class="mdi mdi-resize" /><b>{{ infoDims }}</b>
+            </div>
+            <div class="li-info-row" title="File">
+              <i class="mdi mdi-file-image-outline" /><b :title="infoName">{{ infoName }}</b>
+            </div>
+            <div class="li-info-row" title="File size">
+              <i class="mdi mdi-harddisk" /><b>{{ infoSize }}</b>
+            </div>
+            <div class="li-info-row" title="Modified">
+              <i class="mdi mdi-clock-outline" /><b>{{ infoDate }}</b>
+            </div>
+          </div>
+        </Teleport>
       </div>
     </div>
     <div v-else class="li-preview li-none">
       <i class="mdi mdi-image-outline" />
       <span>No image — pick, browse, or drop one here</span>
     </div>
+
+    <!-- Fullscreen viewer, as on Save Image and Preview Image. -->
+    <ZenLightbox
+      v-if="lightbox && selected"
+      :items="lbItems"
+      :index="0"
+      @close="lightbox = false"
+    />
 
     <input ref="fileInput" type="file" accept="image/*" style="display: none" @change="onUpload" />
 
@@ -217,21 +232,24 @@ import {
   ZenCombo,
   ZenIconButton,
   ZenDot,
+  ZenLightbox,
   ZenMediaPicker,
   ZenMenuItem,
   ZenPopover,
   ZenToggleGroup,
   ZenWidget,
   type ComboItem,
+  type LightboxItem,
 } from "@nynxz/zenkit-ui";
 import {
   listImages,
+  fileThumbUrl,
   thumbUrl,
   uploadImage,
   fmtSize,
   type ImageItem,
   type SourceType,
-} from "@/lib/imagePickApi";
+} from "@/lib/mediaRefs";
 import { annotatedValue, uploadSidecarAsClipspaceImage } from "@/lib/maskUpload";
 import {
   addNodeHeaderButton,
@@ -436,18 +454,26 @@ function short(name: string) {
 function thumbByName(value: string) {
   if (!value) return "";
   const it = byName.value.get(value);
-  if (it) return thumbUrl(it);
-  // List not loaded yet — derive filename/subfolder/type from the (possibly annotated)
-  // value so an already-selected image still previews without fetching the whole list.
+  if (it) return fileThumbUrl(it);
   const { name, type } = parseVal(value);
-  const i = name.lastIndexOf("/");
-  return thumbUrl({
-    filename: i >= 0 ? name.slice(i + 1) : name,
-    subfolder: i >= 0 ? name.slice(0, i) : "",
-    type,
-  });
+  return thumbUrl(name, type);
 }
 const previewUrl = computed(() => thumbByName(selected.value));
+
+// --- fullscreen viewer: the image itself, not the preview's thumbnail ---
+const lightbox = ref(false);
+/** Let go of a hover button once it is clicked. It would otherwise keep the keyboard focus,
+ *  and show the focus ring as if selected once the viewer or editor it opened is closed. */
+function unfocus(e: Event) {
+  (e.currentTarget as HTMLElement | null)?.blur();
+}
+const lbItems = computed<LightboxItem[]>(() => {
+  const { name, type } = parseVal(selected.value);
+  const parts = name.split("/");
+  const filename = parts.pop() ?? "";
+  const query = new URLSearchParams({ filename, type, subfolder: parts.join("/") });
+  return [{ src: `/view?${query}`, kind: "image", label: filename, meta: type }];
+});
 const imgW = ref(0);
 const imgH = ref(0);
 function onPreviewLoad(e: Event) {
@@ -460,17 +486,18 @@ function onPreviewLoad(e: Event) {
 
 // --- preview info popover (dimensions / filename / size / date) ---
 const infoOpen = ref(false);
-const infoBtn = ref<HTMLElement | null>(null);
+const infoBtn = ref<{ $el?: HTMLElement } | null>(null);
 const infoStyle = ref<Record<string, string>>({});
-// Position the (teleported, fixed) info card just under its button, clamped to the viewport.
+// Position the (teleported, fixed) info card just above its button, clamped to the viewport.
 function openInfo() {
-  const el = infoBtn.value;
+  const el = infoBtn.value?.$el;
   if (el) {
     const r = el.getBoundingClientRect();
     const W = 210;
     infoStyle.value = {
       position: "fixed",
-      top: `${r.bottom + 6}px`,
+      top: `${r.top - 6}px`,
+      transform: "translateY(-100%)",
       left: `${Math.max(8, Math.min(r.right - W, window.innerWidth - W - 8))}px`,
       zIndex: "100001",
     };
@@ -630,7 +657,7 @@ async function uploadAndSelect(file: File) {
   if (!it) return;
   srcType.value = "input"; // uploads always land in the input dir
   images.value = await listImages("input", true);
-  pick(it.name);
+  pick(it.ref);
 }
 async function onUpload(e: Event) {
   const input = e.target as HTMLInputElement;
@@ -814,18 +841,15 @@ onBeforeUnmount(() => {
   gap: 4px;
   max-width: calc(100% - 12px);
 }
+/* A dark chip with a white icon, so the buttons read over any picture; the same as
+   Save Image's and Preview Image's (SavePreview.vue's .sp-act). ZenIconButton's own look (no background, muted icon) is for a toolbar, hence
+   the !important. Pointing at one fills it with the accent. */
 .li-ov-btn {
-  position: relative;
-  flex: 0 0 24px;
-  width: 24px;
-  height: 24px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--zen-radius, 6px);
-  background: rgba(0, 0, 0, 0.42);
-  color: #fff;
+  width: 26px !important;
+  height: 26px !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  background: rgba(0, 0, 0, 0.46) !important;
+  color: #fff !important;
   backdrop-filter: blur(4px);
 }
 .li-ov-btn:hover {
@@ -836,8 +860,11 @@ onBeforeUnmount(() => {
 .li-ov-info {
   cursor: help;
 }
-.li-ov-info > .mdi {
-  font-size: 16px;
+.li-ov-corner {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  z-index: 2;
 }
 .li-info-pop {
   /* position/top/left/z-index come from the inline fixed style (teleported to body) */
@@ -905,11 +932,13 @@ onBeforeUnmount(() => {
   border-radius: var(--zen-radius, 6px);
   overflow: hidden;
   background: var(--zen-surface, #202026);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: relative;
 }
+/* Pinned to the square: its height comes from aspect-ratio, which `height: 100%` can't measure
+   against, so a portrait picture would grow past it and be cropped. */
 .li-gthumb img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: contain;

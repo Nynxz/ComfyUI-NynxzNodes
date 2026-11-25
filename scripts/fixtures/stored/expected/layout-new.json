@@ -1,0 +1,51 @@
+{
+ "parsed": {
+  "mode": "ideogram",
+  "width": 1024,
+  "height": 1024,
+  "prompt": "",
+  "refs": [],
+  "refs_scope": "all",
+  "blend": "mix",
+  "softness": 0.5,
+  "style_mode": "none",
+  "style_strength": 0.0,
+  "background": "",
+  "style": {
+   "on": false,
+   "kind": "photo",
+   "aesthetics": "",
+   "lighting": "",
+   "medium": "",
+   "photo": "",
+   "art_style": "",
+   "palette": []
+  },
+  "meta": [],
+  "canvas": "",
+  "palette": [],
+  "mixins": [],
+  "backdrop": {
+   "on": false,
+   "prompt": "",
+   "refs": [],
+   "loras": [],
+   "denoise": 0.05,
+   "influence": 1.0,
+   "blend": "mix",
+   "softness": 0.5
+  },
+  "settings": {
+   "overlap": "top",
+   "visual_size": 384
+  },
+  "boxes": []
+ },
+ "prompt": "{\"compositional_deconstruction\":{\"background\":\"\",\"elements\":[]}}",
+ "warnings": [
+  "The prompt is empty.",
+  "Ideogram expects a background."
+ ],
+ "elements": [],
+ "region_prompts": []
+}

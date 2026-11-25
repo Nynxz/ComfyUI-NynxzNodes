@@ -128,7 +128,8 @@ import FrescoLoras from "@/components/fresco/FrescoLoras.vue";
 import FrescoPills from "@/components/fresco/FrescoPills.vue";
 import FrescoRefs from "@/components/fresco/FrescoRefs.vue";
 import FrescoSection from "@/components/fresco/FrescoSection.vue";
-import { BLENDS, uid, type Blend, type FrescoContent, type RefRead } from "@/lib/frescoScene";
+import { BLENDS, type Blend, type FrescoContent, type RefRead } from "@/lib/frescoScene";
+import { uid } from "@/lib/sceneUtil";
 
 const props = withDefaults(
   defineProps<{ content: FrescoContent; promptPlaceholder?: string; promptRows?: number }>(),

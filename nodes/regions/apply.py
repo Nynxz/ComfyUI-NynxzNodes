@@ -1,11 +1,10 @@
-"""Regions Apply — patch the model so each region's LoRA fires only on that region's tokens.
+"""Regions Apply — patch the model so each region's LoRA and prompt reach only that region's tokens.
 
 Model in, model out. Nothing else changes: the CONDITIONING goes to the sampler untouched, a stock
 `LoraLoader` upstream still merges an overall style into the weights as usual, and the branches
 added here sit on top of it additively.
 
-Three mechanisms, and each one has an off position that recovers a baseline you can compare
-against. That is deliberate — this was resolved by bisection and never by tuning:
+Every knob has an off position that recovers a baseline you can compare against. That is deliberate — this was resolved by bisection and never by tuning:
 
     track = 0        the mask is a cage. Exactly "regional LoRA with the mask you drew" — the
                      behaviour everything else has to beat.
@@ -20,7 +19,8 @@ against. That is deliberate — this was resolved by bisection and never by tuni
 
 Set them all and this is the plain, obvious implementation — which is exactly why they exist.
 
-The order things happen in one step:
+The order things happen in one step, on Krea 2 (Z-Image and MOSS-Image add the prompt copies in a
+`DIFFUSION_MODEL` wrapper and route them in the attention override instead; see `_zimage`, `_moss`):
 
     post_input   grid known -> masks projected -> each region's prompt copy added after the canvas
                  -> map in force -> gates built -> LoRAs live
@@ -35,17 +35,13 @@ it and averaging is cheap insurance against guessing wrong.
 
 from __future__ import annotations
 
-import logging
-
-import comfy.patcher_extension
 from comfy_api.latest import io
 
 from .._zenkit.io_types import advanced
-from . import _branch, _capture, _lock, _moss, _patches, _schedule, _state, _text, _zimage
+from ._apply import apply_regions
 from ._base import RegionNode
 from ._io_types import Regions
-from ._krea import check_krea2
-from ._lora import load_branches
+from ._settings import RegionSettings
 
 
 class NynxzRegionsApply(RegionNode):
@@ -58,8 +54,8 @@ class NynxzRegionsApply(RegionNode):
                 "Runs each region's LoRA as a live per-token branch gated to that region's tokens, "
                 "instead of merging every delta into the weights where they collide, and gives "
                 "each region its own prompt when it has one. Composes with ordinary merged "
-                "LoRAs. Krea 2, Z-Image and MOSS-Image; tracking is not on Z-Image and layout "
-                "lock is Krea 2 only for now."
+                "LoRAs. Krea 2, Z-Image and MOSS-Image; tracking is on Krea 2 and MOSS-Image, "
+                "layout lock is Krea 2 only for now."
             ),
             is_experimental=True,
             inputs=[
@@ -146,8 +142,8 @@ class NynxzRegionsApply(RegionNode):
                     "clip",
                     optional=True,
                     tooltip="The text encoder, for regions given a prompt of their own in "
-                    "Region LoRAs. A region's prompt replaces the main prompt there. Not needed "
-                    "otherwise.",
+                    "Region LoRAs. On Z-Image a region's prompt appends to the main prompt; on "
+                    "MOSS-Image it replaces the main prompt for that region. Not needed otherwise.",
                 ),
                 advanced(
                     io.Float.Input(
@@ -239,283 +235,20 @@ class NynxzRegionsApply(RegionNode):
         route_blocks=3,
         sharpness=2.0,
         layout_lock=0.0,
-        prompt_follows_schedule=True,
-        layout_isolation=0.0,
-        sources=(),
     ) -> io.NodeOutput:
-        backend = _moss if _moss.is_moss(model) else _zimage if _zimage.is_zimage(model) else None
-        total_blocks = (
-            backend.block_count(model) if backend else check_krea2(model, "Regions Apply")
-        )
-        entries = list(regions or [])
-        if not entries:
-            raise ValueError("No regions arrived on the wire — there is nothing to gate.")
-        # A region may arrive with its prompt already encoded (Fresco does, with its references'
-        # vision tokens in it); only the plain prompts are left for `clip`.
-        conditioned = {
-            i: r["conditioning"] for i, r in enumerate(entries) if r.get("conditioning") is not None
-        }
-        prompted = {
-            i: r["prompt"]
-            for i, r in enumerate(entries)
-            if r.get("prompt") and i not in conditioned
-        }
-        if not any(r.get("loras") for r in entries) and not prompted and not conditioned:
-            raise ValueError(
-                "No region has a LoRA or a prompt, so there is nothing for this node to do. Put a "
-                "Region LoRAs node between the regions and this one, and give the regions a LoRA "
-                "or a prompt."
-            )
-        if (prompted or conditioned) and not region_prompt:
-            raise ValueError(
-                "Some regions have a prompt of their own, which needs region_prompt on — turn it "
-                "on, or clear those prompts."
-            )
-        if prompted and clip is None:
-            raise ValueError(
-                "Some regions have a prompt of their own: wire the text encoder (the CLIP "
-                "you encode the main prompt with) into Regions Apply's `clip`."
-            )
-
-        if backend:
-            return _apply_routed(
-                backend,
-                model,
-                entries,
-                prompted,
-                conditioned,
-                clip,
-                _schedule.Schedule(
-                    commit_at=commit_at, preheat=preheat, ramp=ramp, release=release
-                ),
-                _patches.TrackConfig(
-                    track=track if backend.TRACKS else 0.0,
-                    refine=refine,
-                    route_at=route_at,
-                    route_blocks=route_blocks,
-                    sharpness=sharpness,
-                    smooth=smooth,
-                    isolation=isolation,
-                    layout_isolation=layout_isolation,
-                ),
-                copy_full=True,
-                track=track,
-                layout_lock=layout_lock,
-                sources=sources,
-            )
-
-        if _already_regioned(model):
-            raise ValueError(
-                "This model already has regions on it — from Fresco Apply or another Regions "
-                "Apply upstream. Applying them twice breaks both (each inserts its own prompt "
-                "copies, and the other's gates stop lining up), so use one. Fresco Apply has the "
-                "schedule and tracking settings too."
-            )
-        patched = model.clone()
-        loaded, text_loaded, report = _load(patched, entries, region_prompt)
-
-        schedule = _schedule.Schedule(
-            commit_at=commit_at, preheat=preheat, ramp=ramp, release=release
-        )
-        # A region's `ref_latents` and these `sources` are only routed here (see `_refs`): the
-        # caller puts the same latents on the positive, in `_refs.latents` order.
-        state = _state.GateState(entries, schedule, track, sources)
-        # Not a widget: callers that build regions themselves (Fresco Apply) can read the prompt
-        # copies at full weight while the LoRAs still follow the schedule.
-        state.copy_full = not prompt_follows_schedule
-        text = None
-        if region_prompt:
-            text = _text.TextCopies(
-                sorted({index for index, _ in loaded} | set(prompted) | set(conditioned)),
-                text_loaded,
-                {**{i: _encode(clip, prompt) for i, prompt in prompted.items()}, **conditioned},
-            )
-        config = _patches.TrackConfig(
+        settings = RegionSettings(
             track=track,
+            commit_at=commit_at,
+            preheat=preheat,
+            release=release,
+            smooth=smooth,
+            isolation=isolation,
+            region_prompt=region_prompt,
+            ramp=ramp,
             refine=refine,
             route_at=route_at,
             route_blocks=route_blocks,
             sharpness=sharpness,
-            smooth=smooth,
-            isolation=isolation,
-            layout_isolation=layout_isolation,
+            layout_lock=layout_lock,
         )
-
-        patched.set_model_patch(_patches.post_input_patch(state, text), "post_input")
-        patched.set_model_patch(_patches.attn1_patch(state, config), "attn1_patch")
-        _branch.attach(patched, loaded, state, text)
-        if layout_lock > 0.0:
-            patched.add_wrapper_with_key(
-                comfy.patcher_extension.WrappersMP.DIFFUSION_MODEL,
-                _lock.WRAPPER_KEY,
-                _lock.LayoutLock(state, layout_lock),
-            )
-        _capture.clear()
-
-        # To the log rather than to a socket. What loaded and what will run where is worth
-        # having when something is wrong and worth nothing the rest of the time, which is exactly
-        # a log line and not an output every graph has to route somewhere. Region Inspect shows
-        # the bindings before the run and Regions Preview shows the map after it.
-        logging.info(
-            "Nynxz Regions: %s",
-            _summary(report, config, schedule, total_blocks, text, layout_lock),
-        )
-        return io.NodeOutput(patched)
-
-
-def _apply_routed(
-    backend,
-    model,
-    entries,
-    prompted,
-    conditioned,
-    clip,
-    schedule,
-    config,
-    copy_full,
-    track,
-    layout_lock,
-    sources,
-):
-    """Regions Apply on a model routed by attention override (see `_zimage` and `_moss`)."""
-    has_lora = any(r.get("loras") for r in entries)
-    if not prompted and not conditioned and not has_lora:
-        raise ValueError(
-            f"On {backend.LABEL}, Regions Apply routes each region's own prompt and its LoRAs, and "
-            "no region has either. Give the regions a prompt or a LoRA."
-        )
-    if backend.already_regioned(model):
-        raise ValueError(
-            "This model already has regions on it from another Regions Apply upstream. Use one."
-        )
-    patched = model.clone()
-    state = _zimage.ZGateState(entries, schedule, config.track, sources)
-    # The prompts read at full weight (the schedule is for ramping LoRAs in, and a prompt is not a
-    # LoRA); the LoRA branches follow the schedule through the gate. `copy_full` carries this.
-    state.copy_full = copy_full
-    prompts = dict(conditioned)
-    for index, prompt in prompted.items():
-        encoded, extra = clip.encode_from_tokens_scheduled(clip.tokenize(prompt))[0]
-        prompts[index] = _zimage.trim(encoded, extra)
-    loaded = backend.load_region_loras(patched, entries)
-    # Every region with a LoRA or a prompt of its own gets a copy of the prompt, so a LoRA's trigger
-    # word is read through the LoRA there (see `_zimage`).
-    copied = sorted(set(prompts) | {region for region, _ in loaded})
-    backend.install(patched, state, copied, prompts, config)
-    if loaded:
-        _branch.attach(patched, loaded, state)
-    _capture.clear()
-
-    def _line(i: int) -> str:
-        parts = []
-        if i in prompts:
-            parts.append("own prompt")
-        layers = sum(len(b) for region, b in loaded if region == i)
-        if layers:
-            parts.append(f"{layers} LoRA layers")
-        return f"region {i + 1}: " + (", ".join(parts) or "holds territory only")
-
-    lines = [_line(i) for i in range(len(entries))]
-    lines.append("")
-    lines.append(
-        f"{backend.LABEL}: {len(copied)} region copy(ies) of the prompt routed by attention"
-        + (f", {sum(len(b) for _, b in loaded)} LoRA branch(es)" if loaded else "")
-    )
-    lines.append(f"schedule: {schedule.describe()}")
-    lines.append(f"isolation: {config.isolation:.2f}")
-    if config.tracking:
-        lines.append(f"tracking: {config.track:.2f} toward the image, {config.refine} rounds")
-    elif track > 0.0:
-        lines.append(f"tracking: not on {backend.LABEL} yet — the masks are used exactly as given")
-    if layout_lock > 0.0:
-        lines.append(f"layout lock: not on {backend.LABEL} yet — ignored")
-    logging.info("Nynxz Regions: %s", "\n".join(lines))
-    return io.NodeOutput(patched)
-
-
-def _already_regioned(model) -> bool:
-    """Whether `model` already carries this pack's region patches."""
-    get = getattr(model, "get_injections", None)
-    return bool(get and get(_branch.INJECTION_KEY))
-
-
-def _encode(clip, prompt: str):
-    """`[1, seq, features]` — one region's prompt, encoded as CLIP Text Encode would."""
-    return clip.encode_from_tokens_scheduled(clip.tokenize(prompt))[0][0]
-
-
-def _load(patcher, entries, text: bool = True):
-    """`([(region_index, branches)], {region_index: {path: [text branch]}}, [report line])` — every
-    LoRA on every region, in region order.
-
-    Pairs and not one entry per region, because a region may carry several. Each LoRA's own
-    strength is applied when it LOADS rather than to the region's gate: the gate is per REGION and
-    several LoRAs share it, so a per-LoRA strength has nowhere else to live.
-
-    The report line is built here, where the name, the strength and the branches that came back are
-    all in hand. `_summary` used to re-derive it by zipping the loaded list against each region's
-    bound specs by position, which silently skewed the moment a spec was skipped for having no
-    `lora_name` — every line after it then named the wrong LoRA.
-    """
-    loaded, text_loaded, report = [], {}, []
-    for index, region in enumerate(entries):
-        bound = region.get("loras") or []
-        if not bound:
-            what = "its own prompt" if region.get("prompt") else "holds territory only"
-            report.append(f"region {index + 1}: no LoRA — {what}")
-            continue
-        for spec in bound:
-            name = spec.get("lora_name")
-            if not name:
-                continue
-            strength = float(spec.get("strength", 1.0))
-            branches, text_branches = load_branches(patcher, name, strength, text)
-            loaded.append((index, branches))
-            for path, branch in text_branches.items():
-                text_loaded.setdefault(index, {}).setdefault(path, []).append(branch)
-            mlp = sum(1 for path in branches if ".mlp." in path)
-            report.append(
-                f"region {index + 1}: {name} @ {strength:.2f} — "
-                f"{len(branches)} layers ({len(branches) - mlp} attn, {mlp} mlp)"
-                + (f", {len(text_branches)} text" if text_branches else "")
-            )
-    return loaded, text_loaded, report
-
-
-def _summary(report, config, schedule, total_blocks, text=None, layout_lock=0.0) -> str:
-    """What will actually run. Deliberately states the mechanism state, not just the settings."""
-    lines = list(report)
-
-    blocks = _patches.route_block(config.route_at, total_blocks, config.route_blocks)
-    lines.append("")
-    if config.tracking:
-        lines.append(
-            f"tracking: {config.track:.2f} toward the image, {config.refine} rounds, "
-            f"smooth {config.smooth}, read at blocks {blocks} of {total_blocks}"
-        )
-    else:
-        reason = "track = 0" if config.track <= 0 else "refine = 0"
-        lines.append(f"tracking: OFF ({reason}) — the masks are used exactly as given")
-    lines.append(f"schedule: {schedule.describe()}")
-    if layout_lock > 0.0:
-        lines.append(
-            f"layout lock: the base model's layout for the first {min(layout_lock, 1.0):.0%} of "
-            "steps, each run twice"
-        )
-    if config.layout_isolation > config.isolation:
-        lines.append(
-            f"layout isolation: {config.layout_isolation:.2f} until the commit, easing to "
-            f"{config.isolation:.2f}"
-        )
-    lines.append(
-        f"isolation: {config.isolation:.2f}"
-        + (" — attention untouched" if config.isolation <= 0 and text is None else "")
-    )
-    if text is None:
-        lines.append("region prompt: OFF — the prompt is everyone's, LoRAs' text side not applied")
-    else:
-        regions = ", ".join(
-            f"{r + 1}" + (" (own prompt)" if r in text.prompts else "") for r in text.regions
-        )
-        lines.append(f"region prompt: a copy of the prompt each for region(s) {regions}")
-    return "\n".join(lines)
+        return io.NodeOutput(apply_regions(model, regions, settings, clip))

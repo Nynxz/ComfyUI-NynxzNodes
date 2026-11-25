@@ -13,13 +13,27 @@ from PIL import Image
 
 from .. import _categories
 from .._base import NynxzNode
-from . import _overlay, _prompt
+from ..fusion._fusion import PROMPT_MODES
+from ..fusion._sources import open_image, resolve_path
+from ..regions._io_types import Regions
+from . import _overlay, _prompt, _regions, _sheet
 from .layout import Layout
 
 
 def _to_tensor(image: Image.Image) -> tuple[torch.Tensor, torch.Tensor]:
     rgba = np.asarray(image, dtype=np.float32) / 255.0
     return torch.from_numpy(rgba[..., :3]).unsqueeze(0), torch.from_numpy(rgba[..., 3]).unsqueeze(0)
+
+
+def _open_ref(ref: dict) -> Image.Image | None:
+    """A mixin's reference image, from ComfyUI's input, output or temp folder; None if it can't be
+    read."""
+    path = resolve_path(ref["ref"], ref["type"])
+    image = open_image(path) if path else None
+    try:
+        return image.convert("RGB") if image else None
+    except OSError:
+        return None
 
 
 def _over(image: torch.Tensor, overlay: Image.Image) -> torch.Tensor:
@@ -40,7 +54,8 @@ class NynxzLayoutExtras(NynxzNode):
             display_name="Layout Extras",
             description=(
                 "Break a layout out: its prompt, core's elements and bounding boxes, the canvas "
-                "size, and an overlay of the boxes to check a generation against."
+                "size, an overlay of the boxes to check a generation against, and the boxes as "
+                "regions, each with its own prompt, for Regions Apply."
             ),
             is_experimental=True,
             inputs=[
@@ -58,6 +73,42 @@ class NynxzLayoutExtras(NynxzNode):
                 io.Int.Input("label_size", default=16, min=6, max=96, advanced=True),
                 io.Boolean.Input("show_index", default=True, advanced=True),
                 io.Boolean.Input("show_text", default=True, advanced=True),
+                io.Clip.Input(
+                    "clip",
+                    optional=True,
+                    tooltip="Only for mixins with reference images: the text encoder reads "
+                    "each such box's prompt with its mixins' images. It must see images (Qwen3-VL, "
+                    "or Qwen3.5 for MOSS-Image) — the same CLIP as the main prompt.",
+                ),
+                io.Int.Input(
+                    "reference_size",
+                    default=384,
+                    min=128,
+                    max=1024,
+                    step=32,
+                    advanced=True,
+                    tooltip="How finely the mixins' reference images are read (the side of the "
+                    "visual grid, as Text Encode (Fusion)'s visual_size).",
+                ),
+                io.Combo.Input(
+                    "reference_prompt",
+                    options=PROMPT_MODES,
+                    default=_regions.DEFAULT_PROMPT_MODE,
+                    tooltip="How a box's words hold up next to its mixins' reference images, which "
+                    "can drown them out. 'blend clean' mixes in a reading of the box's prompt that "
+                    "never saw the images, by reference_blend; 'append clean' adds that reading "
+                    "after, the strongest push; 'with reference' is the images' reading alone.",
+                ),
+                io.Float.Input(
+                    "reference_blend",
+                    default=0.5,
+                    min=0.0,
+                    max=1.0,
+                    step=0.05,
+                    tooltip="For 'blend clean': 0 is the prompt as read with the images, 1 the "
+                    "prompt read on its own (the images then only reach the box through attention "
+                    "to their tokens).",
+                ),
             ],
             outputs=[
                 io.String.Output(display_name="prompt", tooltip="Into your text encoder."),
@@ -70,6 +121,20 @@ class NynxzLayoutExtras(NynxzNode):
                 io.Int.Output(display_name="height"),
                 io.Image.Output(display_name="overlay"),
                 io.Mask.Output(display_name="alpha", tooltip="The overlay's coverage."),
+                Regions.Output(
+                    display_name="regions",
+                    tooltip="Each box as a region for Regions Apply (wire its clip too): the box's "
+                    "mask, the upper box owning any overlap, and its own prompt, the scene's "
+                    "caption, its mixins' trigger words, then the box's description. Its mixins' "
+                    "LoRAs ride on it, and their reference images are read into its prompt (wire "
+                    "the clip here for that). Keep the prompt above as the positive: Regions Apply "
+                    "then makes each part of the picture read its own box.",
+                ),
+                io.Image.Output(
+                    display_name="mixin_sheet",
+                    tooltip="Every mixin on one sheet: its reference images beside its name, "
+                    "description, trigger words and LoRAs.",
+                ),
             ],
         )
 
@@ -83,14 +148,18 @@ class NynxzLayoutExtras(NynxzNode):
         label_size=16,
         show_index=True,
         show_text=True,
+        clip=None,
+        reference_size=384,
+        reference_prompt=_regions.DEFAULT_PROMPT_MODE,
+        reference_blend=0.5,
     ) -> io.NodeOutput:
         parsed = _prompt.parse(layout)
-        for warning in _prompt.warnings(parsed):
+        for warning in _prompt.warnings(layout):
             logging.info("Nynxz Layout (%s): %s", parsed["mode"], warning)
         width, height = parsed["width"], parsed["height"]
         size = (width, height) if image is None else (image.shape[2], image.shape[1])
         drawn = _overlay.render(
-            {**parsed, "boxes": [{**b, "color": c} for b, c in _colors(layout, parsed)]},
+            parsed,
             size,
             line_width,
             fill_alpha,
@@ -109,12 +178,6 @@ class NynxzLayoutExtras(NynxzNode):
             height,
             overlay,
             alpha,
+            _regions.regions(parsed, clip, reference_size, reference_prompt, reference_blend),
+            _to_tensor(_sheet.render(parsed, _open_ref).convert("RGBA"))[0],
         )
-
-
-def _colors(raw, parsed: dict):
-    """Each parsed box with the colour the editor shows it in (parse keeps only what prompts
-    read)."""
-    stored = raw.get("boxes", []) if isinstance(raw, dict) else []
-    by_id = {b.get("id"): b.get("color", "") for b in stored if isinstance(b, dict)}
-    return [(box, by_id.get(box["id"], "")) for box in parsed["boxes"]]

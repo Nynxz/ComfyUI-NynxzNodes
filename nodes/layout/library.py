@@ -13,6 +13,7 @@ import json
 import os
 import re
 import time
+import uuid
 
 FOLDER = "nynxz_layouts"
 _MODE = re.compile(r"^[a-z][a-z0-9_-]{0,31}$")
@@ -151,3 +152,118 @@ def rename_layout(root: str, mode: str, name: str, new_name: str) -> str | None:
     if os.path.normcase(new) != os.path.normcase(old):
         os.remove(old)
     return stem
+
+
+# --- Saved Mixins (ID-keyed reusable character/prop/style presets across layouts) ----------------
+
+MIXINS_FOLDER = "_mixins"
+_MIXIN_ID = re.compile(r"^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$")
+MAX_CATEGORY = 40
+
+
+def valid_mixin_id(mixin_id: object) -> bool:
+    return isinstance(mixin_id, str) and bool(_MIXIN_ID.match(mixin_id))
+
+
+def _mixin_path(root: str, mixin_id: str) -> str | None:
+    if not valid_mixin_id(mixin_id):
+        return None
+    return os.path.join(root, FOLDER, MIXINS_FOLDER, f"{mixin_id}.json")
+
+
+def _clean_label(value: object, limit: int = MAX_NAME) -> str:
+    if not isinstance(value, str):
+        return ""
+    return " ".join(value.split())[:limit]
+
+
+def list_mixins(root: str) -> list[dict]:
+    """Every saved mixin preset, newest first. Reads both ID-keyed and legacy name-keyed files."""
+    folder = os.path.join(root, FOLDER, MIXINS_FOLDER)
+    if not os.path.isdir(folder):
+        return []
+    found = []
+    for entry in os.scandir(folder):
+        if not entry.is_file() or not entry.name.endswith(".json"):
+            continue
+        try:
+            with open(entry.path, encoding="utf-8") as f:
+                data = json.load(f)
+        except (OSError, ValueError):
+            continue
+        if not isinstance(data, dict) or not isinstance(data.get("mixin"), dict):
+            continue
+        stem = entry.name[: -len(".json")]
+        mid = data.get("id") if valid_mixin_id(data.get("id")) else stem
+        name = _clean_label(data.get("name")) or stem
+        category = _clean_label(data.get("category"), MAX_CATEGORY)
+        found.append(
+            {
+                "id": mid,
+                "name": name,
+                "category": category,
+                "saved": data.get("saved") or entry.stat().st_mtime,
+                "mixin": data["mixin"],
+            }
+        )
+    found.sort(key=lambda item: item["saved"], reverse=True)
+    return found
+
+
+def save_mixin(
+    root: str,
+    name: str,
+    mixin: object,
+    mixin_id: str = "",
+    category: str = "",
+) -> dict | None:
+    """Save a mixin preset by stable ID (generating one when omitted) and return the saved record.
+
+    Keying by ID means two presets may share a display name without overwriting each other, and
+    layout mixins can stay linked to their library preset across renames and edits.
+    """
+    label = _clean_label(name)
+    if not label or not isinstance(mixin, dict):
+        return None
+    if mixin_id:
+        if not valid_mixin_id(mixin_id):
+            return None
+        mid = mixin_id
+    else:
+        mid = f"mx_{uuid.uuid4().hex[:10]}"
+    path = _mixin_path(root, mid)
+    if path is None:
+        return None
+    cat = _clean_label(category, MAX_CATEGORY)
+    saved_at = time.time()
+    payload = {
+        "id": mid,
+        "name": label,
+        "category": cat,
+        "mixin": {**mixin, "name": label},
+        "saved": saved_at,
+    }
+    body = json.dumps(payload, ensure_ascii=False)
+    if len(body.encode("utf-8")) > MAX_BYTES:
+        return None
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    temp = f"{path}.tmp"
+    with open(temp, "w", encoding="utf-8") as f:
+        f.write(body)
+    os.replace(temp, path)
+    return payload
+
+
+def delete_mixin(root: str, mixin_id: str) -> bool:
+    """Delete a saved mixin by ID (also cleans up legacy `<name>.json` files)."""
+    path = _mixin_path(root, mixin_id)
+    if path is not None and os.path.isfile(path):
+        os.remove(path)
+        return True
+    legacy = clean_name(mixin_id)
+    if legacy is not None:
+        legacy_path = os.path.join(root, FOLDER, MIXINS_FOLDER, f"{legacy}.json")
+        if os.path.isfile(legacy_path):
+            os.remove(legacy_path)
+            return True
+    return False

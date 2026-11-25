@@ -24,6 +24,7 @@ from __future__ import annotations
 import torch
 from comfy_api.latest import io
 
+from ..regions._mask import bbox, grown_box
 from ._base import FusionNode
 from ._fusion import DEFAULT_FIT, FIT_MODES, fit_image
 from ._io_types import FusionInput, FusionLayout
@@ -44,8 +45,6 @@ PROMPT_READS = ["the layout", "one copy"]
 #: The frame is resampled again by the encode node's own sizing, so there is nothing to gain from
 #: building it larger than this.
 MAX_SIDE = 1536
-#: Below this a mask counts as outside its region.
-THRESHOLD = 0.5
 
 
 def _boxes(masks: torch.Tensor, pad: float) -> list[tuple[int, int, int, int]]:
@@ -53,20 +52,9 @@ def _boxes(masks: torch.Tensor, pad: float) -> list[tuple[int, int, int, int]]:
     height, width = masks.shape[-2], masks.shape[-1]
     boxes = []
     for mask in masks:
-        rows = torch.nonzero(mask.amax(dim=1) >= THRESHOLD).flatten()
-        cols = torch.nonzero(mask.amax(dim=0) >= THRESHOLD).flatten()
-        if rows.numel() == 0 or cols.numel() == 0:
-            continue
-        box = (int(rows[0]), int(cols[0]), int(rows[-1]) + 1, int(cols[-1]) + 1)
-        boxes.append(_grown(box, pad, height, width))
+        if (box := bbox(mask)) is not None:
+            boxes.append(grown_box(box, pad, height, width))
     return boxes
-
-
-def _grown(box, pad: float, height: int, width: int) -> tuple[int, int, int, int]:
-    """`box` padded by `pad` of its own size, clamped to the frame."""
-    top, left, bottom, right = (int(v) for v in box)
-    dy, dx = round((bottom - top) * pad), round((right - left) * pad)
-    return (max(0, top - dy), max(0, left - dx), min(height, bottom + dy), min(width, right + dx))
 
 
 def _scaled(box: tuple[int, int, int, int], scale: float) -> tuple[int, int, int, int]:
@@ -261,7 +249,7 @@ class NynxzFusionRegions(FusionNode):
             raise ValueError("Fusion Regions has no references — wire a Fusion Input or Images.")
         if layout:
             width, height = (int(v) for v in layout["canvas"])
-            boxes = [_grown(box, float(padding), height, width) for box in layout["boxes"]]
+            boxes = [grown_box(box, float(padding), height, width) for box in layout["boxes"]]
             flips = [bool(f) for f in layout["flipped"]]
             mirror = "per cell"
         elif masks is not None:

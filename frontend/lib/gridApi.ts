@@ -1,6 +1,8 @@
 // Grid Style contract (frontend mirror of nodes/grid/config.py) — layout/border/shadow.
 // Backgrounds live entirely in the Background Maker now (see src/background/api.ts).
 
+import { num, pick } from "@/lib/sceneUtil";
+
 export interface GridStyle {
   // layout
   columns: number;
@@ -90,10 +92,7 @@ export function gridDecoOnly(s: GridStyle): GridDeco {
 /** Default panel value: decoration only (geometry defaults live on the native widgets). */
 export const DEFAULT_GRID_DECO: GridDeco = gridDecoOnly(DEFAULT_GRID_STYLE);
 
-const num = (v: unknown, d: number) => (Number.isFinite(Number(v)) ? Number(v) : d);
 const str = (v: unknown, d: string) => (typeof v === "string" && v ? v : d);
-const pick = <T extends string>(v: unknown, opts: T[], d: T): T =>
-  (opts as string[]).includes(v as string) ? (v as T) : d;
 
 export function normalizeGridStyle(v: unknown): GridStyle {
   const o = (v && typeof v === "object" ? v : {}) as Record<string, unknown>;

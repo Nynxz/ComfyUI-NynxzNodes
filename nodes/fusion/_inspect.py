@@ -7,7 +7,7 @@ to its Vue widget (via the `ui` channel). The frontend recolours the grid and re
 breakdowns from the raw weights — nothing is re-encoded.
 
 Pure numpy, no torch/comfy, so it's offline-testable by path. Each source gets a colour from
-`PALETTE`, the same order the Fusion Regions Preview uses.
+`PALETTE`, in source order.
 """
 
 from __future__ import annotations

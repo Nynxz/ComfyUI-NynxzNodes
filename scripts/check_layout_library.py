@@ -90,6 +90,31 @@ class Browsing(unittest.TestCase):
         self.assertIsNone(library.rename_layout(self.root, "moss", "A", "../x"))
         self.assertEqual(library.load_layout(self.root, "moss", "B")["layout"], {"b": 1})
 
+    def test_saved_mixins_are_id_keyed_and_never_clobber_same_names(self):
+        amber = {"id": "c1", "name": "Amber", "trigger": "amb3r", "refs": [], "loras": []}
+        first = library.save_mixin(self.root, "  Amber ", amber, category="Characters")
+        self.assertIsNotNone(first)
+        self.assertEqual(first["name"], "Amber")
+        self.assertEqual(first["category"], "Characters")
+        # Saving a second preset with the same display name gets a distinct ID instead of overwriting.
+        second = library.save_mixin(self.root, "Amber", {**amber, "trigger": "v2"}, category="Alt")
+        self.assertIsNotNone(second)
+        self.assertNotEqual(first["id"], second["id"])
+        self.assertIsNone(library.save_mixin(self.root, "Bad", amber, mixin_id="../escape"))
+        self.assertEqual(library.list_all(self.root), [])
+        listed = library.list_mixins(self.root)
+        self.assertEqual(len(listed), 2)
+        # Updating by ID renames in place without creating a third preset.
+        updated = library.save_mixin(
+            self.root, "Amber V2", amber, mixin_id=first["id"], category="Characters"
+        )
+        self.assertEqual(updated["id"], first["id"])
+        self.assertEqual(updated["name"], "Amber V2")
+        self.assertEqual(len(library.list_mixins(self.root)), 2)
+        self.assertTrue(library.delete_mixin(self.root, first["id"]))
+        self.assertTrue(library.delete_mixin(self.root, second["id"]))
+        self.assertEqual(library.list_mixins(self.root), [])
+
 
 if __name__ == "__main__":
     unittest.main()

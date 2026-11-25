@@ -28,6 +28,15 @@ def _load_pack(comfy: str):
     sys.path.insert(0, comfy)
     import utils.install_util  # noqa: F401
 
+    # Schemas need no GPU: parse ComfyUI's args as `--cpu` so a CPU-only run imports every node.
+    argv, sys.argv = sys.argv, [sys.argv[0], "--cpu"]
+    import comfy.options as comfy_options
+
+    comfy_options.enable_args_parsing()
+    import comfy.cli_args as _  # noqa: F401
+
+    sys.argv = argv
+
     spec = importlib.util.spec_from_file_location(
         "nynxz_pack", PACK / "__init__.py", submodule_search_locations=[str(PACK)]
     )

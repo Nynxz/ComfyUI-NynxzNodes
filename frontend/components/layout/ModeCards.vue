@@ -27,6 +27,14 @@ defineProps<{ modelValue: PromptModeId | null }>();
 const emit = defineEmits<{ "update:modelValue": [PromptModeId] }>();
 
 const ABOUT: Record<PromptModeId, { model: string; what: string }> = {
+  regions: {
+    model: "Krea 2 · Z-Image · MOSS",
+    what: "Regional prompting, visual references, painted shapes, SAM3 & per-box LoRAs. Plain scene prompt.",
+  },
+  moss: {
+    model: "MOSS-Image",
+    what: "Layout JSON in pixels (objects, characters, text, tags & palettes) + mixins, refs & regional LoRAs.",
+  },
   ideogram: {
     model: "Ideogram 4",
     what: "A JSON caption: description, style, background, then each box with its colours.",
@@ -34,10 +42,6 @@ const ABOUT: Record<PromptModeId, { model: string; what: string }> = {
   klein: {
     model: "FLUX 3 Image Klein",
     what: "A caption that cites each box as <obj_N>, followed by the box table.",
-  },
-  moss: {
-    model: "MOSS-Image",
-    what: "A layout JSON in pixels: objects, characters and text, with tags and palettes.",
   },
 };
 const MODES = PROMPT_MODES.map((m) => ({
@@ -51,7 +55,7 @@ const MODES = PROMPT_MODES.map((m) => ({
 <style scoped>
 .mc {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
 }
 .mc-card {

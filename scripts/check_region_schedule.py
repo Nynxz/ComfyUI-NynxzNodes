@@ -12,18 +12,13 @@ fallback fires LATER, and a note in the preview used to say the opposite.
 
 from __future__ import annotations
 
-import importlib.util
 import sys
-import types
 import unittest
-from pathlib import Path
 
 import torch
+from _harness import load
 
-NODES = Path(__file__).resolve().parents[1] / "nodes"
-spec = importlib.util.spec_from_file_location("schedule", NODES / "regions" / "_schedule.py")
-schedule = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(schedule)
+schedule = load("regions._schedule")
 
 #: 8 steps of a flow schedule at shift 1 (even) and shift 3 (front-loaded), from
 #: `comfy.samplers.simple_scheduler`. A schedule of N steps is N+1 sigmas.
@@ -176,20 +171,8 @@ class ScaleAndFloor(unittest.TestCase):
 
 
 def _load_state():
-    """The real GateState + post_input patch, with only their siblings stubbed in."""
-    package = types.ModuleType("rg")
-    package.__path__ = [str(NODES / "regions")]
-    sys.modules["rg"] = package
-    loaded = {}
-    for name in ("_mask", "_schedule", "_track", "_state", "_patches"):
-        found = importlib.util.spec_from_file_location(
-            f"rg.{name}", NODES / "regions" / f"{name}.py"
-        )
-        module = importlib.util.module_from_spec(found)
-        sys.modules[f"rg.{name}"] = module
-        found.loader.exec_module(module)
-        loaded[name] = module
-    return loaded["_state"], loaded["_patches"]
+    """The real GateState + post_input patch."""
+    return load("regions._state"), load("regions._patches")
 
 
 class TheGateActuallyMoves(unittest.TestCase):
@@ -275,6 +258,35 @@ class TheGateActuallyMoves(unittest.TestCase):
         _, values = self.gates(0.0, self.fallback)
         self.assertEqual(values[:5], [0.0] * 5)  # later than the exact path's 3
         self.assertEqual(values[-1], 1.0)  # but it does get there
+
+    def test_release_stays_local_when_tracked_map_has_background_tail(self):
+        """Tracking softmax leaves a small non-zero probability everywhere; `_near` must still keep
+        `release` within RELEASE_REACH of the actual region rather than lifting the whole canvas."""
+        grid = (20, 20)
+        mask = torch.zeros(grid)
+        mask[2:6, 2:6] = 1.0
+        state = self.state_mod.GateState(
+            [{"mask": mask, "loras": [{"lora_name": "a.safetensors", "strength": 1.0}]}],
+            schedule.Schedule(commit_at=0.0, preheat=1.0, ramp=0.0, release=0.25),
+            track=0.25,
+        )
+        state.grid = grid
+        state.canvas_tokens = grid[0] * grid[1]
+        state.ensure_anchor(torch.device("cpu"))
+        state.note_step(1.0, SHIFTED)
+        # Simulate a tracked map with a 0.10 softmax tail across the whole background.
+        tail = state.anchor.clone()
+        outside = tail[:, 0] < 0.5
+        tail[outside, 0] = 0.10
+        tail[outside, 1] = 0.90
+        state.map = tail
+        gates = state.build_gates(1, state.canvas_tokens, torch.device("cpu"))[0, :, 0].reshape(
+            grid
+        )
+        # Far corner (row 19, col 19) is well outside RELEASE_REACH: release must add 0.0 there.
+        self.assertAlmostEqual(float(gates[19, 19]), 0.10, places=5)
+        # Just outside the region edge (row 6, col 3): release lifts it above the 0.10 tail.
+        self.assertGreater(float(gates[6, 3]), 0.15)
 
 
 class SecondOrderSamplers(unittest.TestCase):

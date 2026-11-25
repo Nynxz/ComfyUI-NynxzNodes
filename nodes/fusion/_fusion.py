@@ -1,16 +1,14 @@
 """Spatial visual-token fusion for Qwen3-VL image editing — the shared engine.
 
 Encodes several source images independently through a Qwen3-VL text encoder and
-combines their *visual* conditioning tokens on a shared spatial grid. The legacy
-approach hard-picked one source per grid cell (a checkerboard/block mosaic). This
-version generalizes that into a soft weight field so cell boundaries can feather
-and multiple sources can contribute to the same token.
+combines their *visual* conditioning tokens on a shared spatial grid: a soft weight
+field over the grid decides how much each source contributes to each token, from a
+hard mosaic (one source per cell) to feathered boundaries.
 
 Every fusion node in this pack drives `encode_fusion` — there is exactly one copy of
 the math. The pipeline is split into reusable pieces so we can grow it later:
   * `_fusion_weights(...) -> [sources, tokens]`  — where the blend weights come
-    from. Today: geometric patterns, optionally feathered. Future: content
-    saliency / cross-source attention plug in here.
+    from: geometric patterns, optionally feathered.
   * `_content_weights(...)`                      — data-driven weights from the tokens.
   * `_coverage_weights(...)`                     — alpha as coverage: a transparent area stops
     contributing and its share goes to whoever is still opaque there.
@@ -82,7 +80,7 @@ CONTENT_MODES = ["none", "saliency", "energy", "cross-attention"]
 STYLE_MODES = ["none", "gist", "whiten"]
 FIT_MODES = ["cover", "contain", "stretch"]
 # The encode node's fit override. "per image" honours each source's own fit; the rest force
-# every source to one mode (e.g. "cover" to reproduce the legacy node in one dropdown).
+# every source to one mode.
 FIT_OVERRIDE = "per image"
 FIT_OVERRIDE_OPTIONS = [FIT_OVERRIDE, *FIT_MODES]
 
@@ -123,6 +121,12 @@ DEFAULT_ALPHA_MODE = "exclude"
 REFERENCE_MODES = ["auto", "visual tokens", "reference latents"]
 DEFAULT_REFERENCE_MODE = "auto"
 TOKEN_MODE, LATENT_MODE = "visual tokens", "reference latents"
+
+# How the prompt reaches the conditioning. The prompt tokens sit after the visual block, so the
+# language model reads the prompt as a description of the reference; these let a reading that never
+# saw the reference in alongside it.
+PROMPT_WITH_REFERENCE, PROMPT_BLEND, PROMPT_APPEND = "with reference", "blend clean", "append clean"
+PROMPT_MODES = [PROMPT_WITH_REFERENCE, PROMPT_BLEND, PROMPT_APPEND]
 
 # Reference-latent mode splits into two channels, because on Qwen Image 2.1 they carry different
 # things: the spliced latent is the reference's PIXELS, and the text conditioning is the vision
@@ -189,6 +193,9 @@ class FusionSettings:
     reference_mode: str = DEFAULT_REFERENCE_MODE
     structure_source: str = DEFAULT_STRUCTURE_SOURCE
     semantic_strength: float = 1.0
+    prompt_mode: str = PROMPT_WITH_REFERENCE
+    #: How far "blend clean" moves the prompt tokens toward the reading without the reference.
+    prompt_blend: float = 0.5
     #: Fusion Regions' layout: `((top, left, bottom, right), flipped)` per region, the box as
     #: fractions of the frame. Empty = the sources weren't laid out over regions.
     regions: tuple = ()
@@ -314,7 +321,7 @@ def _shuffle_mask(mask, num_sources, amount, seed):
     return out.reshape(mask.shape)
 
 
-def _gaussian_blur2d(x, sigma, radius):
+def gaussian_blur2d(x, sigma, radius):
     """Separable gaussian blur over the spatial grid. x: [sources, 1, H, W]."""
     coords = torch.arange(-radius, radius + 1, device=x.device, dtype=x.dtype)
     kernel = torch.exp(-(coords**2) / (2.0 * sigma * sigma))
@@ -342,10 +349,9 @@ def _fusion_weights(
 ):
     """Per-source blend weights over the visual grid: [num_sources, tokens], columns sum to 1.
 
-    `blend_strength` interpolates between the hard mosaic (0.0 == legacy behavior)
-    and the feathered field (1.0). `feather` is the gaussian sigma, in grid cells,
-    used to soften each source's territory. This is the seam where content-aware or
-    cross-source-attention weighting will slot in later.
+    `blend_strength` interpolates between the hard mosaic (0.0) and the feathered field
+    (1.0). `feather` is the gaussian sigma, in grid cells, used to soften each source's
+    territory. Content weighting (`_content_weights`) is mixed in afterwards.
     """
     tokens = height * width
     assignment = _spatial_fusion_mask(
@@ -368,7 +374,7 @@ def _fusion_weights(
     if blend_strength <= 0.0 or feather <= 0.0 or radius < 1:
         return onehot
 
-    soft = _gaussian_blur2d(onehot.view(num_sources, 1, height, width), feather, radius).view(
+    soft = gaussian_blur2d(onehot.view(num_sources, 1, height, width), feather, radius).view(
         num_sources, tokens
     )
     soft = soft / soft.sum(dim=0, keepdim=True).clamp_min(1e-6)
@@ -763,7 +769,7 @@ def _fuse_conditionings(
             coverage,
         )
         if debug is not None:
-            # Hand the exact field back for the Fusion Weight Map (last schedule wins; normally one).
+            # Hand the exact field back for the Fusion Inspector (last schedule wins; normally one).
             debug["weights"] = weights.detach().to("cpu", torch.float32)
             debug["grid"] = (visual_height, visual_width)
         blended_visual = _blend(visuals, weights.to(visuals.dtype), settings.preserve_norm)
@@ -991,11 +997,6 @@ def _reference_latents(vae, sources, profile=QWEN3VL, alpha_mode=DEFAULT_ALPHA_M
         # sampler, so hand out a copy and keep the cached tensor pristine for the next run.
         ref_latents.append(latent.clone() if hasattr(latent, "clone") else latent)
     return ref_latents
-
-
-# PROMPT_TEMPLATE lives in `_encoders.py` now: which chat template to encode with is a property
-# of the encoder on the wire, not a constant of the engine. Read it from there
-# (`_encoders.PROMPT_TEMPLATE`, or `profile.template` for whichever encoder is loaded).
 
 
 @dataclass
@@ -1407,14 +1408,75 @@ def encode_fusion(
         debug["pixels"] = (prepared.width, prepared.height)
 
     encode = _encode_latent_fusion if mode == LATENT_MODE else _encode_token_fusion
-    return encode(
+    conditioning = encode(
         clip, prompt, sources, prepared, settings, strengths, profile, vae, debug, text_prepared
+    )
+    if settings.prompt_mode == PROMPT_WITH_REFERENCE:
+        return conditioning
+    reading = text_prepared or prepared
+    tail = _prompt_tokens(
+        profile.tokenize(clip, prompt, reading.rgb[0], keep_vision=mode == TOKEN_MODE)
+    )
+    clean_tokens, clean = _encode_clean_prompt(clip, prompt, profile)
+    return _apply_prompt_mode(
+        conditioning, tail, clean_tokens, clean, settings.prompt_mode, settings.prompt_blend
     )
 
 
+def _prompt_tokens(tokens):
+    """The token ids after the image's closing `<|vision_end|>`: the prompt and the turn's close,
+    which is what a reading with no image ends in too."""
+    _, pairs = token_pairs(tokens)
+    return [pair[0] for pair in pairs[_image_position(pairs) + 2 :]]
+
+
+def _encode_clean_prompt(clip, prompt, profile):
+    """The prompt read with no image, cached like the source encodes."""
+    tokens = profile.tokenize_text(clip, prompt)
+    _cache_scope(_COND_CACHE, "clip", clip)
+    key = (profile.name, prompt, "clean prompt")
+    conditioning = _cache_take(_COND_CACHE, key)
+    if conditioning is None:
+        conditioning = clip.encode_from_tokens_scheduled(tokens)
+        _cache_store(_COND_CACHE, key, conditioning)
+    return tokens, conditioning
+
+
+def _apply_prompt_mode(conditioning, tail, clean_tokens, clean, mode, blend):
+    """Bring the reading of the prompt that never saw a reference into the fused conditioning.
+
+    The prompt tokens are the last `len(tail)` positions of both conditionings, whatever each
+    encoder trimmed from the front, so "blend clean" mixes them position for position. "append
+    clean" adds the clean reading after the fused one and publishes where it went.
+    """
+    if mode not in (PROMPT_BLEND, PROMPT_APPEND):
+        raise ValueError(f"Unsupported prompt mode: {mode}")
+    _, clean_pairs = token_pairs(clean_tokens)
+    count = len(tail)
+    if [pair[0] for pair in clean_pairs[-count:]] != tail:
+        raise ValueError(
+            "The prompt read without an image doesn't end in the same tokens as the prompt read "
+            "with one, so the two readings can't be lined up. Use prompt_mode 'with reference'."
+        )
+    if len(clean) != len(conditioning):
+        raise ValueError("The clean prompt and the fused conditioning use different schedules.")
+    out = []
+    for (cond, meta), (clean_cond, _) in zip(conditioning, clean, strict=True):
+        clean_cond = clean_cond.to(cond.device, cond.dtype)
+        meta = meta.copy()
+        if mode == PROMPT_BLEND:
+            cond = cond.clone()
+            cond[:, -count:] = torch.lerp(cond[:, -count:], clean_cond[:, -count:], float(blend))
+        else:
+            length = cond.shape[1]
+            meta["nynxz_clean_prompt_span"] = [length, length + clean_cond.shape[1]]
+            cond = torch.cat([cond, clean_cond], dim=1)
+        out.append([cond, meta])
+    return out
+
+
 def style_inputs() -> list[io.Input]:
-    """Style-release knobs. Separate from `tuning_inputs` so the original autogrow node keeps
-    the widget layout its docstring promises — only the newer nodes opt in."""
+    """Style-release knobs."""
     return [
         advanced(
             io.Combo.Input(
@@ -1446,7 +1508,8 @@ def style_inputs() -> list[io.Input]:
 def tuning_inputs() -> list[io.Input]:
     """The fusion encode node's core tuning knobs (geometry + content).
 
-    style_inputs / variation_inputs are kept separate so each stays a self-contained group.
+    Text Encode (Fusion) lays its widgets out from these builders in a fixed order; saved
+    workflows store widget values by position, so the order of every builder's inputs must stay.
     """
     inputs = {
         "fusion_method": advanced(
@@ -1556,8 +1619,7 @@ def seed_input() -> io.Input:
 
 
 def alpha_input() -> io.Input:
-    """The alpha knob. Its own function rather than part of `tuning_inputs` so the legacy autogrow
-    node's widget layout stays frozen, same as style_inputs / variation_inputs."""
+    """The alpha knob."""
     return advanced(
         io.Combo.Input(
             "alpha_mode",
@@ -1593,6 +1655,31 @@ def reference_mode_input() -> io.Input:
             "experimenting but not what the model was trained on. 'auto' picks correctly for you.",
         )
     )
+
+
+def prompt_inputs() -> list[io.Input]:
+    """How strongly the prompt itself comes through, next to the references."""
+    return [
+        io.Combo.Input(
+            "prompt_mode",
+            options=PROMPT_MODES,
+            default=PROMPT_WITH_REFERENCE,
+            tooltip="The prompt is read after the references, so the model takes it as a "
+            "description of them and it can get lost. 'with reference' is that reading alone "
+            "(what this node always did). 'blend clean' mixes in a reading of the prompt with "
+            "no image, by prompt_blend. 'append clean' adds that reading after the fused one, "
+            "so the model sees the prompt twice: the strongest push, on a longer conditioning.",
+        ),
+        io.Float.Input(
+            "prompt_blend",
+            default=0.5,
+            min=0.0,
+            max=1.0,
+            step=0.05,
+            tooltip="For 'blend clean': 0 is the prompt as read with the references, 1 is the "
+            "prompt read on its own.",
+        ),
+    ]
 
 
 def structure_inputs() -> list[io.Input]:
@@ -1654,8 +1741,7 @@ def empty_latent(width, height, vae=None):
 
 
 def variation_inputs() -> list[io.Input]:
-    """The 'more variety from the same inputs' knobs. Both seed-driven and off at 0. Kept off
-    tuning_inputs so the legacy autogrow node's widget layout stays frozen."""
+    """The 'more variety from the same inputs' knobs. Both seed-driven and off at 0."""
     return [
         advanced(
             io.Float.Input(

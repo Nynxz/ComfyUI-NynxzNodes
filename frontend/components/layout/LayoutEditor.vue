@@ -113,16 +113,27 @@
                   <i class="mdi mdi-chevron-down" />
                 </button>
               </template>
-              <ZenResolution
-                :width="size.width"
-                :height="size.height"
-                :snap="sizeSnap"
-                :presets="[0.5, 1, 1.5, 2]"
-                :max-side="maxSide"
-                :max-mp="4"
-                @update:width="setSize($event, size.height)"
-                @update:height="setSize(size.width, $event)"
-              />
+              <div class="le-res-pop">
+                <ZenResolution
+                  :width="size.width"
+                  :height="size.height"
+                  :snap="activeSnap"
+                  :presets="[0.5, 1, 1.5, 2]"
+                  :max-side="maxSide"
+                  :max-mp="4"
+                  @update:width="setSize($event, size.height)"
+                  @update:height="setSize(size.width, $event)"
+                />
+                <div class="le-res-snap">
+                  <span>Snap to</span>
+                  <ZenToggleGroup
+                    size="sm"
+                    :model-value="String(activeSnap)"
+                    :options="SNAP_OPTIONS"
+                    @update:model-value="setSnap(Number($event))"
+                  />
+                </div>
+              </div>
             </ZenPopover>
           </header>
 
@@ -186,21 +197,52 @@
                 <span class="le-count">{{ layoutBoxes.length }}</span>
               </header>
               <ZenScroll class="le-body">
-                <ZenLayerList
-                  :selected="listSelection"
-                  :items="layerItems"
-                  @update:selected="selectFromList"
-                  @reorder="reorder"
-                  @toggle-hidden="toggleHidden"
-                  @toggle-locked="(id: string) => patchBoxes([id], (b) => ({ locked: !b.locked }))"
-                />
+                <div ref="layersEl">
+                  <ZenLayerList
+                    :selected="listSelection"
+                    :items="layerItems"
+                    @update:selected="selectFromList"
+                    @reorder="reorder"
+                    @toggle-hidden="toggleHidden"
+                    @toggle-locked="
+                      (id: string) => patchBoxes([id], (b) => ({ locked: !b.locked }))
+                    "
+                  />
+                </div>
               </ZenScroll>
             </section>
           </template>
           <template #pane-1>
             <section class="le-pane">
-              <header class="le-head">
-                <template v-if="current">
+              <nav v-if="tabbed" class="le-tabs">
+                <button
+                  type="button"
+                  :class="['le-tab', { on: tab === 'box' }]"
+                  :disabled="!selected.length"
+                  :title="selected.length ? 'The selected box' : 'Select a box on the canvas'"
+                  @click="tab = 'box'"
+                >
+                  {{ selected.length > 1 ? `${selected.length} boxes` : "Box" }}
+                </button>
+                <button
+                  type="button"
+                  :class="['le-tab', { on: tab === 'scene' }]"
+                  @click="selectScene"
+                >
+                  Scene
+                </button>
+                <button
+                  v-for="t in tabs"
+                  :key="t.id"
+                  type="button"
+                  :class="['le-tab', { on: tab === t.id }]"
+                  @click="tab = t.id"
+                >
+                  {{ t.label }}<span v-if="t.count" class="le-count">{{ t.count }}</span>
+                </button>
+              </nav>
+              <header v-if="view === 'element' || view === 'multi' || !tabbed" class="le-head">
+                <template v-if="view === 'element' && current">
                   <span class="le-swatch" :style="{ background: current.color }" />
                   <ZenInput
                     class="le-grow"
@@ -219,7 +261,7 @@
                     @click="removeBoxes([current.id])"
                   />
                 </template>
-                <template v-else-if="selected.length > 1">
+                <template v-else-if="view === 'multi'">
                   <span class="le-title">{{ selected.length }} boxes</span>
                   <ZenIconButton
                     size="sm"
@@ -233,14 +275,15 @@
               </header>
 
               <ZenScroll class="le-body">
-                <slot v-if="current" name="element" :id="current.id" />
-                <slot v-else-if="selected.length > 1" name="multi" :ids="selected">
+                <slot v-if="view === 'element' && current" name="element" :id="current.id" />
+                <slot v-else-if="view === 'multi'" name="multi" :ids="selected">
                   <p class="le-note">
                     Drag any of them on the canvas to move them together; the frame's handles scale
                     them.
                   </p>
                 </slot>
-                <slot v-else name="scene" />
+                <slot v-else-if="view === 'scene'" name="scene" />
+                <slot v-else :name="`tab-${tab}`" />
               </ZenScroll>
             </section>
           </template>
@@ -386,6 +429,7 @@ import {
   ZenScroll,
   ZenSlider,
   ZenSplit,
+  ZenToggleGroup,
   boxAt,
   placeRects,
   useWheelClaim,
@@ -398,7 +442,7 @@ import {
 
 import { hasMediaDrop, hasZenPanels, mediaLibrary } from "@/framework";
 import { keepContextMenu } from "@/lib/ownContextMenu";
-import { thumbUrl, type SourceType } from "@/lib/fusionApi";
+import { thumbUrl, type SourceType } from "@/lib/mediaRefs";
 import { copiedFor, copyBoxes } from "@/layout/clipboard";
 import { exportLayout, importLayout } from "@/layout/jsonIo";
 import LayoutBrowser from "@/components/layout/LayoutBrowser.vue";
@@ -443,6 +487,9 @@ const props = withDefaults(
     backdropTitle?: string;
     sizeSnap?: number;
     maxSide?: number;
+    /** More inspector tabs after Box and Scene; each fills its `tab-<id>` slot. Without any, the
+     *  inspector shows the selection or the scene, untabbed. */
+    tabs?: { id: string; label: string; count?: number }[];
   }>(),
   {
     node: undefined,
@@ -457,6 +504,7 @@ const props = withDefaults(
     backdropTitle: "Trace image — something to draw over",
     sizeSnap: 16,
     maxSide: 2048,
+    tabs: () => [],
   },
 );
 const emit = defineEmits<{
@@ -466,10 +514,64 @@ const emit = defineEmits<{
   pickTool: [tool: BoxTool];
   /** Media dropped at `x`,`y` (0..1), over box `hit` if any. */
   drop: [event: DragEvent, at: { x: number; y: number }, hit: string | null];
+  /** Canvas width/height snap multiple changed (8, 16, 32, or 64). */
+  "update:sizeSnap": [snap: number];
 }>();
+
+const SNAP_OPTIONS = ["8", "16", "32", "64"].map((v) => ({
+  value: v,
+  label: v,
+  title: `Snap canvas width and height to multiples of ${v}px`,
+}));
+const localSnap = ref<number | null>(null);
+const activeSnap = computed(() => localSnap.value ?? props.sizeSnap);
+watch(
+  () => props.sizeSnap,
+  (v) => {
+    localSnap.value = v;
+  },
+);
+function setSnap(next: number) {
+  if (![8, 16, 32, 64].includes(next)) return;
+  localSnap.value = next;
+  emit("update:sizeSnap", next);
+  const snapVal = (v: number) =>
+    Math.min(props.maxSide, Math.max(next, Math.round(v / next) * next));
+  const w = snapVal(size.value.width);
+  const h = snapVal(size.value.height);
+  if (w !== size.value.width || h !== size.value.height) setSize(w, h);
+}
 
 const selected = defineModel<string[]>("selected", { default: () => [] });
 const tool = defineModel<BoxTool>("tool", { default: "select" });
+
+// --- the inspector's tabs ------------------------------------------------------------------------
+
+const tabbed = computed(() => props.tabs.length > 0);
+const tab = ref<string>(selected.value.length ? "box" : "scene");
+// Picking boxes shows them; clearing the selection leaves the box tab for the scene. A host tab
+// stays put until a box is picked.
+watch(
+  () => selected.value.join("\n"),
+  (ids) => {
+    if (ids) tab.value = "box";
+    else if (tab.value === "box") tab.value = "scene";
+  },
+);
+/** What the inspector shows: the selected box, several, the scene, or a host tab. */
+const view = computed<"element" | "multi" | "scene" | "extra">(() => {
+  const picked =
+    selected.value.length === 1 ? "element" : selected.value.length ? "multi" : "scene";
+  if (!tabbed.value || tab.value === "box") return picked;
+  return tab.value === "scene" ? "scene" : "extra";
+});
+function showTab(id: string) {
+  tab.value = id;
+}
+function selectScene() {
+  selected.value = [];
+  tab.value = "scene";
+}
 
 const canPopOut = !props.inPanel && hasZenPanels();
 const hostModes = computed(() => props.modes ?? [props.mode]);
@@ -509,7 +611,7 @@ const HELP: [string, string][] = [
   ["Shift / Ctrl + click", "add to the selection"],
   ["Shift + drag on empty", "select several"],
   ["Double-click a box", "edit it"],
-  ["Right-click", "copy, paste, order, hide, lock, delete"],
+  ["Right-click", "copy, paste, order, mute, lock, delete"],
   ["Ctrl+Z · Ctrl+Shift+Z", "undo · redo"],
   ["Ctrl+C · X · V · D", "copy · cut · paste at the pointer · duplicate"],
   ["Arrows", "nudge — Shift for more"],
@@ -758,7 +860,7 @@ const menuItems = computed<ContextMenuItem[]>(() => {
     },
     "-",
     {
-      label: allHidden ? "Show" : "Hide",
+      label: allHidden ? "Unmute" : "Mute",
       icon: allHidden ? "mdi mdi-eye-outline" : "mdi mdi-eye-off-outline",
       run: () => patchBoxes(ids, () => ({ hidden: !allHidden })),
     },
@@ -853,14 +955,18 @@ function saveSplit(which: "columns" | "rows", sizes: number[] | undefined) {
 
 const SCENE_ROW = "background";
 const layerItems = computed<LayerItem[]>(() => [
-  ...[...layoutBoxes.value].reverse().map((b) => ({
-    id: b.id,
-    label: b.name,
-    color: b.color,
-    ...props.mode.describe?.(scene.value, b.id),
-    hidden: b.hidden,
-    locked: b.locked,
-  })),
+  ...[...layoutBoxes.value].reverse().map((b) => {
+    const info = props.mode.describe?.(scene.value, b.id);
+    return {
+      id: b.id,
+      label: b.name,
+      color: b.color,
+      ...info,
+      sub: b.hidden ? (info?.sub ? `Muted · ${info.sub}` : "Muted") : info?.sub,
+      hidden: b.hidden,
+      locked: b.locked,
+    };
+  }),
   {
     id: SCENE_ROW,
     label: "Scene",
@@ -871,8 +977,23 @@ const layerItems = computed<LayerItem[]>(() => [
   },
 ]);
 const listSelection = computed(() => (selected.value.length ? selected.value : [SCENE_ROW]));
+const layersEl = ref<HTMLElement | null>(null);
+watch(
+  [layerItems, layersEl],
+  () => {
+    const root = layersEl.value;
+    if (!root) return;
+    for (const btn of root.querySelectorAll<HTMLButtonElement>("button.zll-btn")) {
+      if (btn.title === "Hide") btn.title = "Mute (skip on run)";
+      else if (btn.title === "Show") btn.title = "Unmute";
+    }
+  },
+  { flush: "post", immediate: true },
+);
 function selectFromList(ids: string[]) {
-  selected.value = ids.filter((id) => id !== SCENE_ROW);
+  const next = ids.filter((id) => id !== SCENE_ROW);
+  selected.value = next;
+  tab.value = next.length ? "box" : "scene";
 }
 /** `index` is a display position, top-first; boxes are stored bottom-first. */
 function reorder(id: string, index: number) {
@@ -999,7 +1120,7 @@ function matchSource() {
   if (s) setSize(s[0], s[1]);
 }
 
-defineExpose({ addBox, update, patchBoxes, stagePoint, offerBackdrop, backdrop });
+defineExpose({ addBox, update, offerBackdrop, backdrop, showTab });
 </script>
 
 <style scoped>
@@ -1155,9 +1276,6 @@ defineExpose({ addBox, update, patchBoxes, stagePoint, offerBackdrop, backdrop }
   width: 104px;
   transition: opacity 0.12s ease;
 }
-.le-ctl.dim {
-  opacity: 0.4;
-}
 .le-chip {
   flex: none;
   display: inline-flex;
@@ -1166,12 +1284,27 @@ defineExpose({ addBox, update, patchBoxes, stagePoint, offerBackdrop, backdrop }
   height: 22px;
   padding: 0 8px;
   border: 1px solid var(--zen-border, #34343c);
-  border-radius: 999px;
+  border-radius: var(--zen-radius, 7px);
   background: var(--zen-input, #1b1b20);
   color: var(--zen-text, #e5e5ea);
   font-size: 11px;
   font-variant-numeric: tabular-nums;
   cursor: pointer;
+}
+.le-res-pop {
+  display: flex;
+  flex-direction: column;
+}
+.le-res-snap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 6px 6px;
+  padding-top: 8px;
+  border-top: 1px solid var(--zen-border, #34343c);
+  color: var(--zen-muted, #9aa0aa);
+  font-size: 11px;
 }
 .le-side {
   height: 100%;
@@ -1186,6 +1319,40 @@ defineExpose({ addBox, update, patchBoxes, stagePoint, offerBackdrop, backdrop }
   border-radius: var(--zen-radius, 7px);
   background: color-mix(in srgb, var(--zen-text, #fff) 2%, transparent);
   overflow: hidden;
+}
+.le-tabs {
+  flex: none;
+  display: flex;
+  gap: 2px;
+  padding: 4px 4px 0;
+  border-bottom: 1px solid var(--zen-border, #34343c);
+}
+.le-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 28px;
+  padding: 0 10px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--zen-muted, #9aa0aa);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.le-tab:hover:not(:disabled) {
+  color: var(--zen-text, #e5e5ea);
+}
+.le-tab.on {
+  border-bottom-color: var(--zen-accent, #3b82f6);
+  color: var(--zen-text, #e5e5ea);
+}
+.le-tab:disabled {
+  opacity: 0.4;
+  cursor: default;
 }
 .le-head {
   flex: none;
@@ -1206,7 +1373,7 @@ defineExpose({ addBox, update, patchBoxes, stagePoint, offerBackdrop, backdrop }
 }
 .le-count {
   padding: 0 6px;
-  border-radius: 999px;
+  border-radius: var(--zen-radius, 7px);
   background: color-mix(in srgb, var(--zen-text, #fff) 8%, transparent);
   color: var(--zen-muted, #9aa0aa);
   font-size: 10px;
@@ -1215,7 +1382,7 @@ defineExpose({ addBox, update, patchBoxes, stagePoint, offerBackdrop, backdrop }
   flex: none;
   width: 12px;
   height: 12px;
-  border-radius: 3px;
+  border-radius: min(var(--zen-radius, 7px), 3px);
 }
 .le-body {
   flex: 1 1 0;

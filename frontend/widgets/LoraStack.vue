@@ -4,65 +4,167 @@
       <!-- The rows container is the drag surface: pointer capture has to live on an element that
            survives the whole gesture, and the grips are just the part of it you may grab. -->
       <div
-        v-if="rows.length"
+        v-if="items.length"
         :ref="(el) => (reorder.el.value = el as HTMLElement | null)"
         class="ls-rows"
         :class="{ settling }"
         v-bind="reorder.handlers"
       >
-        <div
-          v-for="(row, i) in rows"
-          :key="row.id"
-          class="ls-row"
-          :class="{ off: !row.on, dragging: dragIndex === i }"
-          :style="
-            dragIndex === i
-              ? { transform: `translateY(${dragOffset}px)` }
-              : settle?.index === i
-                ? { transform: `translateY(${settle.y}px)` }
-                : shiftStyle(sortShift(i, dragIndex, dropIndex), stride)
-          "
-        >
-          <!-- Reorder and enable stay SEPARATE controls — one grabbed, one clicked, both always
-               visible. They're paired into a tight gutter instead: the grip is 12px (the glyph
-               is all the affordance it needs) and sits 2px from the dot, which reclaims the row
-               width without either control changing what it does or hiding what it says.
-               `data-zen-drag` is what stops the press reaching the node: the grip isn't a
-               control, so mountWidget's INTERACTIVE guard needs telling — otherwise grabbing it
-               drags the NODE under Nodes 2.0. Only the grip starts a reorder; making the whole
-               row grabbable would swallow the slider and combo drags. -->
-          <div class="ls-gutter">
-            <div class="ls-grip" data-zen-drag title="Drag to reorder">
-              <i class="mdi mdi-drag-vertical" />
-            </div>
-            <!-- ZenDot, not ZenSwitch: a per-row enable only needs to read as on/off, and the
-                 switch spent 42px of the row on saying it. -->
-            <ZenDot :model-value="row.on" title="Enable" @update:model-value="setOn(i, $event)" />
+        <!-- Group headers and rows are siblings in ONE list, so a row dragged past a header
+             changes group: a row belongs to the header above it, and to no group above the
+             first one. -->
+        <template v-for="(item, i) in items" :key="item.key">
+          <div
+            v-if="item.group"
+            class="ls-group"
+            :class="{ muted: item.group.muted, closed: !item.group.open }"
+            :style="itemStyle(i)"
+          >
+            <button
+              class="ls-fold"
+              :title="item.group.open ? 'Fold' : 'Unfold'"
+              @click="toggleOpen(item.group)"
+            >
+              <i class="mdi" :class="item.group.open ? 'mdi-chevron-down' : 'mdi-chevron-right'" />
+            </button>
+            <ZenDot
+              :model-value="!item.group.muted"
+              :title="item.group.muted ? 'Muted: none of these apply' : 'Mute the whole group'"
+              @update:model-value="setMuted(item.group, !$event)"
+            />
+            <input
+              v-if="renaming === item.group.id"
+              v-model="renameText"
+              v-focus
+              class="ls-gname-edit"
+              spellcheck="false"
+              @keydown.enter.prevent="endRename(true)"
+              @keydown.esc.prevent.stop="endRename(false)"
+              @blur="endRename(true)"
+            />
+            <button
+              v-else
+              class="ls-gname"
+              title="Click to fold · double-click to rename"
+              @click="toggleOpen(item.group)"
+              @dblclick.stop="startRename(item.group)"
+            >
+              {{ item.group.name }}
+            </button>
+            <i
+              v-if="driven"
+              class="mdi mdi-connection ls-driven"
+              :title="`The select input can choose from this group: '${item.group.name}: 0' uses its first LoRA, '${item.group.name}: off' none`"
+            />
+            <i
+              v-if="item.group.solo"
+              class="mdi mdi-radiobox-marked ls-solo"
+              title="Solo: only one of these is on at a time"
+            />
+            <span class="ls-gcount" :title="`${item.on} of ${item.count} on`">
+              {{ summary(item) }}
+            </span>
+            <ZenIconButton
+              size="sm"
+              icon="mdi mdi-plus"
+              title="Add a LoRA to this group"
+              @click="addRow('', item.group.id)"
+            />
+            <ZenIconButton
+              size="sm"
+              icon="mdi mdi-dots-horizontal"
+              title="Group options"
+              :active="menuGroup?.id === item.group.id"
+              @click="openGroupMenu($event, item.group)"
+            />
           </div>
 
-          <LoraPicker
-            class="ls-pick"
-            :model-value="row.name"
-            @update:model-value="setName(i, $event)"
-            @browse="openBrowse(i)"
-          />
+          <div
+            v-else
+            class="ls-row"
+            :class="{
+              off: !item.row.on || mutedBy(item.row),
+              grouped: !!item.row.group,
+              dragging: dragIndex === i,
+            }"
+            :style="itemStyle(i)"
+          >
+            <!-- Reorder and enable stay SEPARATE controls — one grabbed, one clicked, both always
+                 visible. They're paired into a tight gutter instead: the grip is 12px (the glyph
+                 is all the affordance it needs) and sits 2px from the dot, which reclaims the row
+                 width without either control changing what it does or hiding what it says.
+                 `data-zen-drag` is what stops the press reaching the node: the grip isn't a
+                 control, so mountWidget's INTERACTIVE guard needs telling — otherwise grabbing it
+                 drags the NODE under Nodes 2.0. Only the grip starts a reorder; making the whole
+                 row grabbable would swallow the slider and combo drags. -->
+            <div class="ls-gutter">
+              <div class="ls-grip" data-zen-drag title="Drag to reorder, or into a group">
+                <i class="mdi mdi-drag-vertical" />
+              </div>
+              <!-- ZenDot, not ZenSwitch: a per-row enable only needs to read as on/off, and the
+                   switch spent 42px of the row on saying it. -->
+              <ZenDot
+                :model-value="item.row.on"
+                title="Enable"
+                @update:model-value="edit(item.row, { on: $event })"
+              />
+            </div>
 
-          <ZenNumber
-            class="ls-str"
-            :model-value="row.strength"
-            :step="0.05"
-            :min="-10"
-            :max="10"
-            @update:model-value="setStrength(i, $event)"
-          />
-          <ZenIconButton icon="mdi mdi-close" title="Remove" @click="removeRow(i)" />
-        </div>
+            <LoraPicker
+              class="ls-pick"
+              :model-value="item.row.name"
+              @update:model-value="edit(item.row, { name: $event })"
+              @browse="openBrowse(item.row)"
+            />
+
+            <ZenNumber
+              class="ls-str"
+              :model-value="item.row.strength"
+              :step="0.05"
+              :min="-10"
+              :max="10"
+              @update:model-value="edit(item.row, { strength: $event })"
+            />
+            <ZenIconButton icon="mdi mdi-close" title="Remove" @click="removeRow(item.row)" />
+          </div>
+        </template>
       </div>
       <div v-else class="ls-empty">
         <i class="mdi mdi-layers-triple-outline" />
         <span>No LoRAs in this stack yet</span>
       </div>
     </div>
+
+    <ZenPopover v-model:open="menuOpen" :anchor="menuAnchor" placement="bottom-end">
+      <template v-if="menuGroup">
+        <ZenMenuItem icon="mdi mdi-pencil-outline" @select="menuDo(startRename)">
+          Rename
+        </ZenMenuItem>
+        <ZenMenuItem
+          :icon="menuGroup.muted ? 'mdi mdi-volume-high' : 'mdi mdi-volume-off'"
+          @select="menuDo((g) => setMuted(g, !g.muted))"
+        >
+          {{ menuGroup.muted ? "Unmute" : "Mute" }}
+        </ZenMenuItem>
+        <ZenMenuItem icon="mdi mdi-radiobox-marked" @select="menuDo((g) => setSolo(g, !g.solo))">
+          Solo: one at a time
+          <template #lead><ZenDot :model-value="menuGroup.solo" /></template>
+        </ZenMenuItem>
+        <ZenMenuItem icon="mdi mdi-arrow-up" :disabled="!canMove(-1)" @select="menuDo(moveUp)">
+          Move up
+        </ZenMenuItem>
+        <ZenMenuItem icon="mdi mdi-arrow-down" :disabled="!canMove(1)" @select="menuDo(moveDown)">
+          Move down
+        </ZenMenuItem>
+        <ZenMenuSeparator />
+        <ZenMenuItem icon="mdi mdi-folder-open-outline" @select="menuDo(ungroup)">
+          Ungroup, keep the LoRAs
+        </ZenMenuItem>
+        <ZenMenuItem icon="mdi mdi-delete-outline" danger @select="menuDo(deleteGroup)">
+          Delete group and its LoRAs
+        </ZenMenuItem>
+      </template>
+    </ZenPopover>
 
     <ZenPopover
       v-if="mode"
@@ -81,30 +183,51 @@
         {{ m.label }}
         <template #lead><ZenDot :model-value="m.value === mode" /></template>
       </ZenMenuItem>
+      <ZenMenuSeparator />
+      <div class="ls-pop-head">Inputs</div>
+      <ZenMenuItem icon="mdi mdi-connection" @select="toggleSelect">
+        Select: choose a group's LoRAs from the graph
+        <template #lead><ZenDot :model-value="selectOn" /></template>
+      </ZenMenuItem>
+    </ZenPopover>
+
+    <!-- Clearing takes every row and group with it and can't be undone from the node, so it asks. -->
+    <ZenPopover v-model:open="clearOpen" :anchor="clearAnchor" placement="top-end" role="dialog">
+      <div class="ls-confirm">
+        <div class="ls-confirm-text">{{ clearQuestion }}</div>
+        <div class="ls-confirm-actions">
+          <ZenButton size="sm" variant="ghost" @click="clearOpen = false">Cancel</ZenButton>
+          <ZenButton size="sm" variant="danger" icon="mdi mdi-broom" @click="clearAll">
+            Clear
+          </ZenButton>
+        </div>
+      </div>
     </ZenPopover>
 
     <template #footer>
       <WidgetActions label="Add LoRA" :count="rows.length" @primary="addRow()">
         <ZenIconButton
-          icon="mdi mdi-view-grid-outline"
-          title="Browse library"
-          @click="openBrowse(-1)"
+          icon="mdi mdi-folder-plus-outline"
+          title="New group: LoRAs you can fold away or mute together"
+          @click="addGroup"
         />
         <ZenIconButton
-          v-if="rows.length"
+          icon="mdi mdi-view-grid-outline"
+          title="Browse library"
+          @click="openBrowse(null)"
+        />
+        <ZenIconButton
+          v-if="items.length"
           icon="mdi mdi-broom"
           danger
           title="Clear all"
-          @click="clearAll"
+          :active="clearOpen"
+          @click="askClear"
         />
       </WidgetActions>
     </template>
 
-    <LoraBrowser
-      v-model:open="browse"
-      :selected="rows[browseTarget]?.name"
-      @pick="pickFromBrowse"
-    />
+    <LoraBrowser v-model:open="browse" :selected="browseRow?.name" @pick="pickFromBrowse" />
   </ZenWidget>
 </template>
 
@@ -123,7 +246,7 @@ export const widgetOptions: WidgetOptions = {
 </script>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch, type Directive } from "vue";
 import { useDragSurface } from "@nynxz/zenkit-nodekit";
 import {
   insertionIndex,
@@ -131,9 +254,11 @@ import {
   rowStride,
   shiftStyle,
   sortShift,
+  ZenButton,
   ZenDot,
   ZenIconButton,
   ZenMenuItem,
+  ZenMenuSeparator,
   ZenNumber,
   ZenPopover,
   ZenWidget,
@@ -141,7 +266,7 @@ import {
 
 import WidgetActions from "@/components/WidgetActions.vue";
 import { loraLibrary as lib, LoraBrowser, LoraPicker } from "@nynxz/zenkit-ui";
-import { rowsFrom } from "@/lib/widgetRows";
+import { rowsFrom, type RowStore } from "@/lib/widgetRows";
 import {
   addNodeHeaderButton,
   type HeaderButtonAnchor,
@@ -150,7 +275,9 @@ import {
 import {
   LORA_MODES,
   loraMode,
+  selectShown,
   setLoraMode,
+  setSelectShown,
   type LoraMode,
   type LoraNodeLike,
 } from "@/lib/loraMode";
@@ -160,7 +287,21 @@ interface LoraRow {
   on: boolean;
   name: string;
   strength: number;
+  /** The group it sits in, or 0 for none. */
+  group: number;
 }
+/** A named set of rows that folds away and mutes as one: speed-up LoRAs, a style pack. */
+interface LoraGroup {
+  id: number;
+  name: string;
+  open: boolean;
+  muted: boolean;
+  /** Only one of its rows is on at a time: alternatives to pick between, not a set to combine. */
+  solo: boolean;
+}
+type Item =
+  | { key: string; group: LoraGroup; row?: undefined; count: number; on: number }
+  | { key: string; row: LoraRow; group?: undefined };
 
 const props = defineProps<{
   widget?: { value: unknown; callback?: (v: unknown) => void };
@@ -175,18 +316,87 @@ const props = defineProps<{
 // drag order lives in node.properties instead: it serialises with the graph but is NOT a hashed
 // input. Each row carries a stable id so the two stay linked across reloads. LoRA merges are
 // additive, so the backend applying them name-sorted gives the same result regardless of order.
-const store = rowsFrom<LoraRow>(props, {
+//
+// Groups are display too, and live beside the order in node.properties: folding or renaming one
+// changes nothing the backend sees. Muting one does, and reaches the value as its rows being off,
+// so the backend needs to know nothing about groups at all.
+const GROUPS_KEY = "nynxzLoraGroups";
+// ComfyUI's node, not Vue state: its properties are where a node body keeps what it draws.
+const saved = props.node?.properties;
+const savedGroups = saved?.[GROUPS_KEY];
+const groups = ref<LoraGroup[]>(
+  (Array.isArray(savedGroups) ? (savedGroups as Record<string, unknown>[]) : [])
+    .filter((g) => g && Number.isFinite(+(g.id as number)))
+    .map((g) => ({
+      id: +(g.id as number),
+      name: String(g.name ?? "Group"),
+      open: g.open !== false,
+      muted: g.muted === true,
+      solo: g.solo === true,
+    })),
+);
+const groupById = (id: number) => groups.value.find((g) => g.id === id);
+
+// The node's `select` input chooses a group's LoRAs from the graph (nodes/lora/_select.py), by
+// group name and place. Only while it is connected do rows carry those to the backend: the rest
+// of the time renaming a group or reordering inside one still changes nothing that is hashed.
+interface DrivableNode {
+  inputs?: { name: string; link?: number | null }[];
+  onConnectionsChange?: (...args: unknown[]) => void;
+  onConfigure?: (...args: unknown[]) => void;
+}
+const hostNode = props.node as DrivableNode | undefined;
+const selectLinked = () => hostNode?.inputs?.find((slot) => slot.name === "select")?.link != null;
+const driven = ref(selectLinked());
+const mutedBy = (row: LoraRow) => !!groupById(row.group)?.muted;
+
+const store: RowStore<LoraRow> = rowsFrom<LoraRow>(props, {
   orderKey: "nynxzLoraOrder",
   make: (raw, id) => ({
     id,
     on: raw.on !== false,
     name: String(raw.name ?? ""),
     strength: Number.isFinite(+(raw.strength as number)) ? +(raw.strength as number) : 1,
+    group: Number.isFinite(+(raw.group as number)) ? +(raw.group as number) : 0,
   }),
-  project: (r) => ({ on: r.on, name: r.name, strength: r.strength }),
+  project: (r) => {
+    const row = { on: r.on && !mutedBy(r), name: r.name, strength: r.strength };
+    const group = driven.value ? groupById(r.group) : undefined;
+    if (!group) return row;
+    // Its place in the group, from 0: what the select text counts in.
+    const slot = rows.value.filter((other) => other.group === r.group).indexOf(r);
+    return { ...row, group: group.name, slot };
+  },
   sort: (a, b) => a.name.localeCompare(b.name) || a.strength - b.strength || +a.on - +b.on,
 });
-const { rows, commit } = store;
+const { rows } = store;
+// A row whose group is gone (an older graph, a hand-edited one) is simply ungrouped.
+for (const row of rows.value) if (row.group && !groupById(row.group)) row.group = 0;
+
+/** Write the groups, then the rows and the value. */
+function commit() {
+  if (saved) saved[GROUPS_KEY] = groups.value.map((g) => ({ ...g }));
+  store.commit();
+}
+
+// What is drawn, top to bottom: the ungrouped rows, then each group's header and, unfolded, its
+// rows. The drag below works on this list.
+const items = computed<Item[]>(() => {
+  const out: Item[] = rows.value
+    .filter((row) => !row.group)
+    .map((row) => ({ key: `r${row.id}`, row }));
+  for (const group of groups.value) {
+    const mine = rows.value.filter((row) => row.group === group.id);
+    out.push({
+      key: `g${group.id}`,
+      group,
+      count: mine.length,
+      on: mine.filter((row) => row.on).length,
+    });
+    if (group.open) for (const row of mine) out.push({ key: `r${row.id}`, row });
+  }
+  return out;
+});
 
 // Only LoRA Loader has an "apply to" setting; the deprecated CLIP loader shares this widget.
 const loraNode = props.node as LoraNodeLike | undefined;
@@ -199,6 +409,47 @@ function pickMode(next: LoraMode) {
   setLoraMode(loraNode, next);
   mode.value = next;
 }
+// Connecting or disconnecting `select` changes what the rows must carry, so the value is
+// written again whenever the node's links change (and once a loaded graph has restored them).
+function syncDriven() {
+  if (loraNode) selectOn.value = selectShown(loraNode);
+  const now = selectLinked();
+  if (now === driven.value) return;
+  driven.value = now;
+  commit();
+}
+let unhook = () => {};
+onMounted(() => {
+  if (!hostNode) return;
+  const prevLinks = hostNode.onConnectionsChange;
+  const prevConfigure = hostNode.onConfigure;
+  const onLinks = function (this: unknown, ...args: unknown[]) {
+    prevLinks?.apply(this, args);
+    syncDriven();
+  };
+  const onConfigure = function (this: unknown, ...args: unknown[]) {
+    prevConfigure?.apply(this, args);
+    syncDriven();
+  };
+  hostNode.onConnectionsChange = onLinks;
+  hostNode.onConfigure = onConfigure;
+  syncDriven();
+  unhook = () => {
+    if (hostNode.onConnectionsChange === onLinks) hostNode.onConnectionsChange = prevLinks;
+    if (hostNode.onConfigure === onConfigure) hostNode.onConfigure = prevConfigure;
+  };
+});
+onBeforeUnmount(() => unhook());
+
+const selectOn = ref(loraNode ? selectShown(loraNode) : false);
+function toggleSelect() {
+  modeOpen.value = false;
+  if (!loraNode) return;
+  setSelectShown(loraNode, !selectOn.value);
+  selectOn.value = selectShown(loraNode);
+  syncDriven();
+}
+
 const rootEl = ref<{ el: HTMLElement | null } | null>(null);
 let modeCog: NodeHeaderButtonHandle | null = null;
 onMounted(() => {
@@ -220,32 +471,153 @@ const dragIndex = ref(-1); // row being dragged, or -1
 const dropIndex = ref(-1); // index the dragged row would land at, or -1
 const dragOffset = ref(0); // how far the grabbed row has moved, element-space px
 const browse = ref(false);
-const browseTarget = ref(-1); // row index to pick into, or -1 = append a new row
+const browseRow = ref<LoraRow | null>(null); // the row to pick into, or null = add a new one
 
 // A node that opens with saved LoRAs fetches the list once (cached across nodes) so a deleted or
 // renamed one is flagged without opening the picker; empty nodes stay lazy.
 if (rows.value.some((r) => r.name)) void lib.ensure();
 
-function setOn(i: number, on: boolean) {
-  store.patch(i, { on });
-}
-function setName(i: number, name: string) {
-  store.patch(i, { name });
-}
-function setStrength(i: number, strength: number) {
-  store.patch(i, { strength });
-}
-function addRow(name = "") {
-  rows.value.push({ id: store.nextId(), on: true, name, strength: 1 });
+function edit(row: LoraRow, fields: Partial<LoraRow>) {
+  Object.assign(row, fields);
+  if (fields.on) onlyOne(groupById(row.group), row);
   commit();
 }
-function removeRow(i: number) {
-  rows.value.splice(i, 1);
+/** In a solo group, leave on just `keep` (or the first row that is on). */
+function onlyOne(group: LoraGroup | undefined, keep?: LoraRow) {
+  if (!group?.solo) return;
+  const mine = rows.value.filter((row) => row.group === group.id);
+  const chosen = keep?.on ? keep : mine.find((row) => row.on);
+  for (const row of mine) if (row !== chosen) row.on = false;
+}
+function addRow(name = "", group = 0) {
+  const target = groupById(group);
+  // A solo group that already has its one keeps it: the new row waits its turn, switched off.
+  const taken = !!target?.solo && rows.value.some((r) => r.group === group && r.on);
+  const row: LoraRow = { id: store.nextId(), on: !taken, name, strength: 1, group };
+  // After the last row of its group, so the list keeps reading group by group.
+  const last = rows.value.map((r) => r.group).lastIndexOf(group);
+  if (last < 0) rows.value.push(row);
+  else rows.value.splice(last + 1, 0, row);
+  if (target) target.open = true;
   commit();
+}
+function removeRow(row: LoraRow) {
+  rows.value = rows.value.filter((r) => r !== row);
+  commit();
+}
+const clearOpen = ref(false);
+const clearAnchor = ref<HTMLElement | null>(null);
+const clearQuestion = computed(() => {
+  const count = (n: number, one: string) => `${n} ${one}${n === 1 ? "" : "s"}`;
+  const parts = [count(rows.value.length, "LoRA")];
+  if (groups.value.length) parts.push(count(groups.value.length, "group"));
+  return `Remove ${parts.join(" and ")} from this node?`;
+});
+function askClear(e: MouseEvent) {
+  clearAnchor.value = e.currentTarget as HTMLElement;
+  clearOpen.value = true;
 }
 function clearAll() {
+  clearOpen.value = false;
   rows.value = [];
+  groups.value = [];
   commit();
+}
+
+// --- groups ---------------------------------------------------------------------------
+const nextGroupId = () => Math.max(0, ...groups.value.map((g) => g.id)) + 1;
+function addGroup() {
+  const group: LoraGroup = {
+    id: nextGroupId(),
+    name: `Group ${groups.value.length + 1}`,
+    open: true,
+    muted: false,
+    solo: false,
+  };
+  groups.value.push(group);
+  commit();
+  startRename(group);
+}
+function toggleOpen(group: LoraGroup) {
+  group.open = !group.open;
+  commit();
+}
+function setMuted(group: LoraGroup, muted: boolean) {
+  group.muted = muted;
+  commit();
+}
+function setSolo(group: LoraGroup, solo: boolean) {
+  group.solo = solo;
+  onlyOne(group);
+  commit();
+}
+/** What a group's header says about its rows: the one in use for a solo group, else a tally. */
+function summary(item: { group: LoraGroup; count: number; on: number }) {
+  if (item.group.muted) return "muted";
+  if (!item.group.solo) return `${item.on}/${item.count}`;
+  const active = rows.value.find((row) => row.group === item.group.id && row.on);
+  return active ? lib.short(active.name) || "unnamed" : "none on";
+}
+function ungroup(group: LoraGroup) {
+  for (const row of rows.value) if (row.group === group.id) row.group = 0;
+  groups.value = groups.value.filter((g) => g !== group);
+  commit();
+}
+function deleteGroup(group: LoraGroup) {
+  rows.value = rows.value.filter((row) => row.group !== group.id);
+  groups.value = groups.value.filter((g) => g !== group);
+  commit();
+}
+function move(group: LoraGroup, by: number) {
+  const from = groups.value.indexOf(group);
+  const to = from + by;
+  if (from < 0 || to < 0 || to >= groups.value.length) return;
+  groups.value.splice(to, 0, groups.value.splice(from, 1)[0]!);
+  commit();
+}
+const moveUp = (group: LoraGroup) => move(group, -1);
+const moveDown = (group: LoraGroup) => move(group, 1);
+
+const renaming = ref(0); // id of the group whose name is being typed, or 0
+const renameText = ref("");
+const vFocus: Directive<HTMLInputElement> = {
+  mounted(el) {
+    el.focus();
+    el.select();
+  },
+};
+function startRename(group: LoraGroup) {
+  renameText.value = group.name;
+  renaming.value = group.id;
+}
+function endRename(keep: boolean) {
+  const group = groupById(renaming.value);
+  renaming.value = 0;
+  const name = renameText.value.trim();
+  if (!keep || !group || !name || name === group.name) return;
+  group.name = name;
+  commit();
+}
+
+const menuOpen = ref(false);
+const menuAnchor = ref<HTMLElement | null>(null);
+const menuGroup = ref<LoraGroup | null>(null);
+function openGroupMenu(e: MouseEvent, group: LoraGroup) {
+  menuAnchor.value = e.currentTarget as HTMLElement;
+  menuGroup.value = group;
+  menuOpen.value = true;
+}
+watch(menuOpen, (open) => {
+  if (!open) menuGroup.value = null;
+});
+function canMove(by: number) {
+  const at = menuGroup.value ? groups.value.indexOf(menuGroup.value) : -1;
+  return at >= 0 && at + by >= 0 && at + by < groups.value.length;
+}
+function menuDo(action: (group: LoraGroup) => void) {
+  const group = menuGroup.value;
+  menuOpen.value = false;
+  if (group) action(group);
 }
 
 // --- reorder (stack order = apply order, so dragging beats delete-and-re-add) ---------
@@ -272,6 +644,7 @@ const reorder = useDragSurface({
     const kids = Array.from(host.children) as HTMLElement[];
     const i = kids.indexOf(grip.closest(".ls-row") as HTMLElement);
     if (i < 0) return false;
+    renaming.value = 0;
     // offsetTop/offsetHeight are pre-transform, which is the space ctx.delta already lands in
     // (the helper divides the canvas zoom out), so the two add up without a second correction.
     rowMids = kids.map((k) => k.offsetTop + k.offsetHeight / 2);
@@ -301,13 +674,7 @@ const reorder = useDragSurface({
       index: to,
       y: (rowTops[from] ?? 0) + offset - landingTop(rowTops, rowHeights, from, to),
     };
-    if (from !== to) {
-      const moved = rows.value.splice(from, 1)[0];
-      if (moved) {
-        rows.value.splice(to, 0, moved);
-        commit();
-      }
-    }
+    if (from !== to) dropAt(from, to);
     requestAnimationFrame(() =>
       requestAnimationFrame(() => {
         settling.value = false;
@@ -316,6 +683,48 @@ const reorder = useDragSurface({
     );
   },
 });
+/** Move the item at `from` to `to`, then read each row's group off the header now above it. */
+function dropAt(from: number, to: number) {
+  const list = [...items.value];
+  const moved = list.splice(from, 1)[0];
+  if (!moved?.row) return;
+  list.splice(to, 0, moved);
+  const shown = new Map<number, LoraRow[]>([[0, []]]);
+  let current = 0;
+  for (const item of list) {
+    if (item.group) {
+      current = item.group.id;
+      shown.set(current, []);
+    } else {
+      item.row.group = current;
+      shown.get(current)!.push(item.row);
+    }
+  }
+  // A folded group's rows weren't in the list: they keep their place, ahead of anything just
+  // dropped under the folded header.
+  const next = [...shown.get(0)!];
+  for (const group of groups.value) {
+    const dropped = shown.get(group.id) ?? [];
+    const hidden = group.open
+      ? []
+      : rows.value.filter((row) => row.group === group.id && !dropped.includes(row));
+    next.push(...hidden, ...dropped);
+  }
+  rows.value = next;
+  // Dropped into a solo group that already has its one: the newcomer is the one switched off.
+  const joined = groupById(moved.row.group);
+  if (joined?.solo) {
+    const holder = next.find((row) => row.group === joined.id && row.on && row !== moved.row);
+    onlyOne(joined, holder ?? moved.row);
+  }
+  commit();
+}
+/** Where item `i` is drawn: with the pointer if it is the grabbed one, aside if it is passed. */
+function itemStyle(i: number) {
+  if (dragIndex.value === i) return { transform: `translateY(${dragOffset.value}px)` };
+  if (settle.value?.index === i) return { transform: `translateY(${settle.value.y}px)` };
+  return shiftStyle(sortShift(i, dragIndex.value, dropIndex.value), stride.value);
+}
 function endReorder() {
   dragIndex.value = -1;
   dropIndex.value = -1;
@@ -323,13 +732,13 @@ function endReorder() {
   rowMids = [];
 }
 
-function openBrowse(target: number) {
-  browseTarget.value = target;
+function openBrowse(row: LoraRow | null) {
+  browseRow.value = row;
   browse.value = true;
 }
 function pickFromBrowse(name: string) {
-  if (browseTarget.value < 0) addRow(name);
-  else setName(browseTarget.value, name);
+  if (browseRow.value) edit(browseRow.value, { name });
+  else addRow(name);
   browse.value = false;
 }
 </script>
@@ -376,6 +785,92 @@ function pickFromBrowse(name: string) {
 }
 .ls-row.off {
   opacity: 0.5;
+}
+/* A group's rows step in under its header, joined by a rule down the side. */
+.ls-row.grouped {
+  margin-left: 6px;
+  padding-left: 6px;
+  border-left: 2px solid color-mix(in srgb, var(--zen-accent, #6366f1) 45%, transparent);
+}
+.ls-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 26px;
+  padding: 0 2px 0 0;
+  border-radius: var(--zen-radius, 6px);
+  background: color-mix(in srgb, var(--zen-text, #fff) 6%, transparent);
+  transition: transform 0.15s ease;
+}
+.ls-rows.settling .ls-group {
+  transition: none;
+}
+.ls-group.muted .ls-gname {
+  text-decoration: line-through;
+  color: var(--zen-muted, #9aa0aa);
+}
+.ls-fold,
+.ls-gname {
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+.ls-fold {
+  flex: none;
+  width: 20px;
+  height: 24px;
+  color: var(--zen-muted, #9aa0aa);
+  font-size: 16px;
+  line-height: 1;
+}
+.ls-fold:hover {
+  color: var(--zen-text, #e5e5ea);
+}
+.ls-gname {
+  flex: 1;
+  min-width: 0;
+  height: 24px;
+  overflow: hidden;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 600;
+}
+.ls-gname-edit {
+  flex: 1;
+  min-width: 0;
+  height: 22px;
+  padding: 0 5px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--zen-text, #e5e5ea);
+  background: var(--zen-bg, #1a1a1f);
+  border: 1px solid var(--zen-accent, #6366f1);
+  border-radius: var(--zen-radius, 6px);
+  outline: none;
+}
+.ls-driven,
+.ls-solo {
+  flex: none;
+  font-size: 13px;
+  color: var(--zen-accent, #6366f1);
+}
+.ls-gcount {
+  flex: 0 1 auto;
+  max-width: 45%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 4px;
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--zen-muted, #9aa0aa);
 }
 /* The grabbed row is lifted, not ghosted — it's the real row, translated, so it stays exactly
    its own size at any canvas zoom. z-index carries it over its neighbours as it passes them. */
@@ -435,6 +930,23 @@ function pickFromBrowse(name: string) {
    hardcode was two pixels short of "-10.00". */
 .ls-str {
   flex: none;
+}
+.ls-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 230px;
+  padding: 6px 6px 4px;
+}
+.ls-confirm-text {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--zen-text, #e5e5ea);
+}
+.ls-confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
 }
 .ls-pop-head {
   padding: 4px 8px 6px;

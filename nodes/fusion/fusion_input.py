@@ -1,6 +1,6 @@
 """Fusion Input — collect images for a fusion pass and weight them, from one node.
 
-The node body is a Vue grid (src/fusion/FusionGrid.vue) you drop images onto: each image
+The node body is a Vue grid (frontend/widgets/FusionGrid.vue) you drop images onto: each image
 carries its own strength, fit and mute, and they reorder by dragging (order matters — the
 spatial patterns assign grid cells by source index).
 
@@ -26,26 +26,12 @@ from __future__ import annotations
 import json
 import os
 
-import numpy as np
-import torch
 from comfy_api.latest import io
-from PIL import Image, ImageOps
 
-from .._paths import media_file
 from ._base import FusionNode
 from ._fusion import DEFAULT_FIT, FIT_MODES
 from ._io_types import FusionGridType, FusionInput
-
-try:
-    import node_helpers
-except ImportError:  # pragma: no cover - outside ComfyUI
-    node_helpers = None
-
-FOLDER_TYPES = ("input", "temp", "output")
-
-
-def _pillow(fn, *args):
-    return node_helpers.pillow(fn, *args) if node_helpers else fn(*args)
+from ._sources import load_image, resolve_path
 
 
 def normalize_grid(grid) -> list[dict]:
@@ -68,32 +54,6 @@ def _row_strength(row) -> float:
         return max(0.0, float(row.get("strength", 1.0)))
     except (TypeError, ValueError):
         return 1.0
-
-
-def _resolve_path(ref, folder_type="input") -> str | None:
-    """Map a row's ref to a real path, keeping ComfyUI's traversal guard in play."""
-    if not ref:
-        return None
-    annotated = f"{ref} [{folder_type}]" if folder_type in FOLDER_TYPES else str(ref)
-    return media_file(annotated)
-
-
-def _load_image(path) -> torch.Tensor | None:
-    """Load a file as a single [1, H, W, C] source (first frame, EXIF-corrected).
-
-    RGBA when the file carries transparency, RGB otherwise — the same detection core's Load Image
-    uses. Keeping the alpha is what lets a cut-out PNG dropped on the grid exclude its masked area
-    from the blend instead of contributing whatever is hiding underneath.
-    """
-    try:
-        img = _pillow(Image.open, path)
-        img = _pillow(ImageOps.exif_transpose, img)
-        transparent = "A" in img.getbands() or (img.mode == "P" and "transparency" in img.info)
-        arr = np.array(img.convert("RGBA" if transparent else "RGB")).astype(np.float32) / 255.0
-        return torch.from_numpy(arr)[None,]
-    except Exception as exc:  # noqa: BLE001 - unreadable image, skip the row
-        print(f"[NynxzNodes] fusion input could not read {path}: {exc}")
-        return None
 
 
 class NynxzFusionInput(FusionNode):
@@ -122,7 +82,7 @@ class NynxzFusionInput(FusionNode):
         stamps = []
         for row in normalize_grid(grid):
             ref = row.get("ref")
-            path = _resolve_path(ref, row.get("type", "input"))
+            path = resolve_path(ref, row.get("type", "input"))
             if not path:
                 stamps.append(f"{ref}:missing")
                 continue
@@ -145,11 +105,11 @@ class NynxzFusionInput(FusionNode):
             strength = _row_strength(row)
             if strength <= 0.0:
                 continue
-            path = _resolve_path(row.get("ref"), row.get("type", "input"))
+            path = resolve_path(row.get("ref"), row.get("type", "input"))
             if not path:
                 print(f"[NynxzNodes] fusion input skipping missing image: {row.get('ref')}")
                 continue
-            image = _load_image(path)
+            image = load_image(path)
             if image is None:
                 continue
             fit = row.get("fit")

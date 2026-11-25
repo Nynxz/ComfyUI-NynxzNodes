@@ -260,6 +260,7 @@ const settingGroups = computed(() => {
   const method = str("fusion_method", "spatial-checkerboard");
   const cMode = str("content_mode", "none");
   const yMode = str("style_mode", "none");
+  const pMode = str("prompt_mode", "with reference");
   const f2 = (k: string) => num(k).toFixed(2);
   return [
     {
@@ -318,6 +319,13 @@ const settingGroups = computed(() => {
           v: `${num("alpha_sources")}/${p.num_sources}`,
           dim: num("alpha_sources") <= 0,
         },
+      ],
+    },
+    {
+      title: "Prompt",
+      rows: [
+        { k: "mode", v: str("prompt_mode", "with reference"), dim: pMode === "with reference" },
+        { k: "blend", v: f2("prompt_blend"), dim: pMode !== "blend clean" },
       ],
     },
     {
@@ -723,8 +731,6 @@ onBeforeUnmount(() => {
   box-sizing: border-box;
   font-size: 12px;
   color: var(--zen-text, #e5e5ea);
-  /* same radius hierarchy as Fusion Studio (panels vs controls). */
-  --fs-r: var(--zen-radius, 8px);
   --fs-rs: var(--radius-sm, 5px);
 }
 .fi-empty {

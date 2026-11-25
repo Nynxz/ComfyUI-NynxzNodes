@@ -20,6 +20,7 @@ from . import _prompt
 LABELS = ("object", "character", "text")
 
 _MODE_NOTES = {
+    "regions": "The caption describes the whole scene and its style.",
     "ideogram": "The caption is a high-level description of the whole picture.",
     "klein": (
         "The caption is one flowing paragraph (medium first, then scene, lighting and layout) that "

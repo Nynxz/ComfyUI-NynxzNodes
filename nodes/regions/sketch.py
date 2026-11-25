@@ -26,12 +26,12 @@ from comfy_api.latest import io
 
 from .._widgets import color_input
 from ..background.config import hex_to_rgb
-from ..fusion._fusion import FIT_MODES, _gaussian_blur2d
+from ..fusion._fusion import FIT_MODES, gaussian_blur2d
 from ..fusion._io_types import FusionLayout
-from ..fusion.fusion_regions import _grown, lay_out
+from ..fusion.fusion_regions import lay_out
 from ._base import RegionNode
+from ._mask import THRESHOLD, grown_box
 
-THRESHOLD = 0.5
 OVAL_SIDE = 256
 
 
@@ -77,7 +77,7 @@ def soften(frame: torch.Tensor, blur: int) -> torch.Tensor:
     premultiplied = torch.cat([frame[..., :3] * alpha, alpha], dim=-1)
     radius = min(blur, frame.shape[1] - 1, frame.shape[2] - 1)
     channels = premultiplied[0].movedim(-1, 0)[:, None]
-    blurred = _gaussian_blur2d(channels, blur / 2, radius)[:, 0].movedim(0, -1)[None]
+    blurred = gaussian_blur2d(channels, blur / 2, radius)[:, 0].movedim(0, -1)[None]
     out_alpha = blurred[..., 3:]
     return torch.cat([blurred[..., :3] / out_alpha.clamp_min(1e-6), out_alpha], dim=-1)
 
@@ -174,7 +174,7 @@ class NynxzRegionSketch(RegionNode):
         if not boxes:
             raise ValueError("Every region is empty, so there is nowhere to put the copies.")
 
-        boxes = [_grown(box, float(padding), height, width) for box in boxes]
+        boxes = [grown_box(box, float(padding), height, width) for box in boxes]
         boxes = [
             (top, left, max(bottom, top + 1), max(right, left + 1))
             for top, left, bottom, right in boxes

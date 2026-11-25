@@ -29,7 +29,7 @@
  */
 import { computed } from "vue";
 
-import { thumbUrl } from "@/lib/fusionApi";
+import { thumbUrl } from "@/lib/mediaRefs";
 import type { FrescoLayer } from "@/lib/frescoScene";
 
 const props = defineProps<{

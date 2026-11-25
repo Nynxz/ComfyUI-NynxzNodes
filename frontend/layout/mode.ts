@@ -23,7 +23,14 @@ export interface CommonLayout {
   width: number;
   height: number;
   prompt: string;
-  boxes: (BoxRect & { name: string; color: string; prompt: string; mask: string | null })[];
+  boxes: (BoxRect & {
+    name: string;
+    color: string;
+    prompt: string;
+    mask: string | null;
+    hidden?: boolean;
+    locked?: boolean;
+  })[];
 }
 
 export interface LayoutMode<S> {

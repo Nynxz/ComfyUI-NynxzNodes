@@ -25,7 +25,9 @@ the patched model does.
 
 from __future__ import annotations
 
+import contextlib
 import logging
+import os
 
 import comfy.utils
 import torch
@@ -38,7 +40,7 @@ INJECTION_KEY = "nynxz_regions"
 def _hook(entries, state):
     """Forward hook adding every region's gated branch to one Linear's output.
 
-    `entries` is `[(region_index, Branch), ...]` — only the regions whose LoRA actually touches this
+    `entries` is `[(regions, Branch), ...]` — only the regions whose LoRA actually touches this
     module, so a layer that only one LoRA trains costs only that one branch.
 
     Accumulated with `addcmul` into a single tensor we own, because everything here is
@@ -50,13 +52,21 @@ def _hook(entries, state):
     """
 
     def hook(module, args, output):
+        with outside_compiled_memory(), profiled("nynxz/lora"):
+            return add(module, args, output)
+
+    def add(module, args, output):
         x = args[0]
         if x.ndim != 3:
             return output
         batch, seqlen, _ = x.shape
         out = None
-        for region, branch in entries:
-            gate = state.for_tokens(batch, seqlen, region, x.device, x.dtype)
+        for regions, branch in entries:
+            gate = None
+            for region in regions:
+                part = state.for_tokens(batch, seqlen, region, x.device, x.dtype)
+                if part is not None:
+                    gate = part if gate is None else gate + part
             if gate is None:
                 continue
             if out is None:
@@ -68,8 +78,54 @@ def _hook(entries, state):
     return hook
 
 
-def _by_module(loaded) -> dict[str, list[tuple[int, object]]]:
-    """Invert `[(region, {module: Branch})]` into `module -> [(region, Branch)]`.
+def outside_compiled_memory():
+    """Allocate outside ComfyUI's memory compiler while in here.
+
+    With dynamic VRAM, a model's blocks run inside a recorded allocation plan that is replayed every
+    step. An allocation the plan doesn't have — any of a hook's — breaks it, and the whole forward
+    then allocates the slow way, thousands of driver calls a step. Core's own extra kernels step out
+    of the plan for their scratch memory the same way. Nothing on a ComfyUI without the compiler.
+    """
+    pause = _pause_malloc_graph()
+    return pause() if pause else contextlib.nullcontext()
+
+
+_PAUSE = None
+
+
+def _pause_malloc_graph():
+    """Core's `pause_malloc_graph`, looked up once; False on a ComfyUI without it."""
+    global _PAUSE
+    if _PAUSE is None:
+        try:
+            import comfy.model_prefetch
+
+            _PAUSE = getattr(comfy.model_prefetch, "pause_malloc_graph", None) or False
+        except ImportError:
+            _PAUSE = False
+    return _PAUSE
+
+
+#: `NYNXZ_REGIONS_PROFILE=1` in ComfyUI's environment logs each regioned forward's time and peak
+#: memory, and one forward's profile (where the time went, by op, with this pack's hooks labelled).
+#: Only the MOSS-Image path times its forwards so far.
+PROFILE = os.environ.get("NYNXZ_REGIONS_PROFILE", "") not in ("", "0")
+#: The forward profiled in full: a few in, past the first step's setup and the uncond's first run.
+PROFILE_AT = 4
+
+
+def profiled(label: str):
+    """A profiler label for `label` when profiling, else nothing."""
+    return torch.profiler.record_function(label) if PROFILE else contextlib.nullcontext()
+
+
+def by_module(loaded) -> dict[str, list[tuple[tuple[int, ...], object]]]:
+    """Invert `[(region, {module: Branch})]` into `module -> [(regions, Branch)]`.
+
+    A branch several regions share (the same LoRA at the same strength, loaded once) is one entry
+    with all of them: its delta is computed once per forward and gated by their summed gates,
+    instead of once per region. Regions own disjoint tokens after overlap is resolved, so the sum
+    is each token's own region's gate.
 
     Pairs rather than one entry per region, because a region may carry several LoRAs — they share
     its gate and their deltas simply add, which is what stacking LoRAs means anyway, except confined
@@ -78,18 +134,23 @@ def _by_module(loaded) -> dict[str, list[tuple[int, object]]]:
     One hook per module rather than one per (module, region): a hook is a Python call on every
     forward of every block, and 28 blocks x 5 projections is already 140 of them.
     """
-    per_module: dict[str, list[tuple[int, object]]] = {}
+    grouped: dict[str, dict[int, tuple[list[int], object]]] = {}
     for index, branches in loaded:
         for path, branch in (branches or {}).items():
-            per_module.setdefault(path, []).append((index, branch))
-    return per_module
+            regions, _ = grouped.setdefault(path, {}).setdefault(id(branch), ([], branch))
+            if index not in regions:
+                regions.append(index)
+    return {
+        path: [(tuple(regions), branch) for regions, branch in by_branch.values()]
+        for path, by_branch in grouped.items()
+    }
 
 
 class Injection:
     """Attaches the branch hooks when the model goes live and removes them when it comes back."""
 
     def __init__(self, loaded, state, text=None):
-        self.per_module = _by_module(loaded)
+        self.per_module = by_module(loaded)
         self.state = state
         self.text = text
         self.handles: list = []

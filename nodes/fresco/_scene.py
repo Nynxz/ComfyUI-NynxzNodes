@@ -27,6 +27,7 @@ import numpy as np
 import torch
 from PIL import Image
 
+from .._content import num, read_loras, read_refs
 from ..regions import _mask
 
 #: Long side of the working masks, in pixels.
@@ -34,20 +35,11 @@ WORKING = 512
 OVERLAP = ("top", "share")
 DEFAULT_OVERLAP = "top"
 DEFAULT_VISUAL_SIZE = 384
-FITS = ("contain", "cover", "stretch")
 #: How a layer blends several references — names for the fusion engine's patterns (see
 #: `fresco._fusion_settings`). One reference ignores it.
 BLENDS = ("mix", "weighted", "tiled", "salient")
 DEFAULT_BLEND = "mix"
 _DATA_URL = re.compile(r"^data:image/[a-z+]+;base64,(.*)$", re.DOTALL)
-
-
-def _num(value, fallback: float) -> float:
-    try:
-        out = float(value)
-    except (TypeError, ValueError):
-        return fallback
-    return out if np.isfinite(out) else fallback
 
 
 def parse(value) -> dict:
@@ -60,8 +52,8 @@ def parse(value) -> dict:
             scene = {}
     if not isinstance(scene, dict):
         scene = {}
-    width = max(64, int(_num(scene.get("width"), 1024)))
-    height = max(64, int(_num(scene.get("height"), 1024)))
+    width = max(64, int(num(scene.get("width"), 1024)))
+    height = max(64, int(num(scene.get("height"), 1024)))
     layers = [
         _layer(raw, index)
         for index, raw in enumerate(scene.get("layers") or [])
@@ -78,7 +70,7 @@ def parse(value) -> dict:
         if raw_settings.get("overlap") in OVERLAP
         else DEFAULT_OVERLAP,
         "visual_size": min(
-            1024, max(128, int(_num(raw_settings.get("visual_size"), DEFAULT_VISUAL_SIZE)))
+            1024, max(128, int(num(raw_settings.get("visual_size"), DEFAULT_VISUAL_SIZE)))
         ),
         #: How the photo being edited is read: "plain" — only as the latent it edits; "look" —
         #: also the in-context edit recipe for the whole picture: the scene prompt read with the
@@ -102,30 +94,15 @@ BACKGROUND_DENOISE = 0.05
 
 def _content(raw: dict, denoise: float = 1.0) -> dict:
     """What a layer carries, box aside: prompt, references, LoRAs, denoise, on."""
-    refs = [
-        {
-            "ref": str(r.get("ref")),
-            "type": str(r.get("type") or "input"),
-            "strength": max(0.0, _num(r.get("strength"), 1.0)),
-            "fit": r.get("fit") if r.get("fit") in FITS else "contain",
-        }
-        for r in raw.get("refs") or []
-        if isinstance(r, dict) and r.get("ref") and r.get("on", True) is not False
-    ]
-    loras = [
-        {"lora_name": str(r.get("name")), "strength": _num(r.get("strength"), 1.0)}
-        for r in raw.get("loras") or []
-        if isinstance(r, dict) and r.get("name") and r.get("on", True) is not False
-    ]
     return {
         "on": raw.get("on", True) is not False,
         "prompt": str(raw.get("prompt") or "").strip(),
-        "refs": [r for r in refs if r["strength"] > 0.0],
-        "loras": loras,
-        "denoise": min(1.0, max(0.0, _num(raw.get("denoise"), denoise))),
-        "influence": min(4.0, max(0.0, _num(raw.get("influence"), 1.0))),
+        "refs": read_refs(raw.get("refs")),
+        "loras": read_loras(raw.get("loras")),
+        "denoise": min(1.0, max(0.0, num(raw.get("denoise"), denoise))),
+        "influence": min(4.0, max(0.0, num(raw.get("influence"), 1.0))),
         "blend": raw.get("blend") if raw.get("blend") in BLENDS else DEFAULT_BLEND,
-        "softness": min(1.0, max(0.0, _num(raw.get("softness"), 0.5))),
+        "softness": min(1.0, max(0.0, num(raw.get("softness"), 0.5))),
         #: How its references are read: "meaning" — their vision tokens inside its prompt copy
         #: (Fusion); "look" — clean latent tokens of the images themselves plus a prompt encoded
         #: with them, the in-context edit recipe (see `_look`).
@@ -134,18 +111,18 @@ def _content(raw: dict, denoise: float = 1.0) -> dict:
 
 
 def _layer(raw: dict, index: int) -> dict:
-    x = min(1.0, max(0.0, _num(raw.get("x"), 0.0)))
-    y = min(1.0, max(0.0, _num(raw.get("y"), 0.0)))
+    x = min(1.0, max(0.0, num(raw.get("x"), 0.0)))
+    y = min(1.0, max(0.0, num(raw.get("y"), 0.0)))
     return {
         **_content(raw),
         "name": str(raw.get("name") or f"layer {index + 1}"),
         "x": x,
         "y": y,
-        "w": min(1.0 - x, max(0.0, _num(raw.get("w"), 0.0))),
-        "h": min(1.0 - y, max(0.0, _num(raw.get("h"), 0.0))),
+        "w": min(1.0 - x, max(0.0, num(raw.get("w"), 0.0))),
+        "h": min(1.0 - y, max(0.0, num(raw.get("h"), 0.0))),
         "mask": raw.get("mask") if isinstance(raw.get("mask"), str) else None,
-        "feather": max(0, int(_num(raw.get("feather"), 0))),
-        "grow": int(_num(raw.get("grow"), 0)),
+        "feather": max(0, int(num(raw.get("feather"), 0))),
+        "grow": int(num(raw.get("grow"), 0)),
         "id": str(raw.get("id") or f"layer{index}"),
         "color": str(raw.get("color") or ""),
         #: What a painted shape limits: "layer" — the whole layer is the shape; "refs" — the
@@ -156,8 +133,8 @@ def _layer(raw: dict, index: int) -> dict:
         "capture": str(raw.get("capture") or "").strip(),
         "points": [
             {
-                "x": min(1.0, max(0.0, _num(p.get("x"), 0.0))),
-                "y": min(1.0, max(0.0, _num(p.get("y"), 0.0))),
+                "x": min(1.0, max(0.0, num(p.get("x"), 0.0))),
+                "y": min(1.0, max(0.0, num(p.get("y"), 0.0))),
                 "include": p.get("include", True) is not False,
             }
             for p in raw.get("points") or []

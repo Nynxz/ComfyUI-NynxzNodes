@@ -17,6 +17,8 @@ import torch.nn.functional as F
 from comfy_api.latest import io, ui
 from PIL import Image, ImageDraw, ImageFont
 
+from .._sent_back import sent_back
+from ..regions._mask import bbox
 from ._base import FrescoNode
 from ._io_types import Fresco
 
@@ -65,9 +67,8 @@ def draw(image: torch.Tensor, outlines: list[dict]) -> torch.Tensor:
         color = torch.tensor(_rgb(outline.get("color", ""), index), dtype=out.dtype) / 255.0
         out[shape] = out[shape] * (1.0 - FILL) + color * FILL
         out[_edge(shape, thickness)] = color
-        rows = torch.nonzero(shape.any(dim=1)).flatten()
-        cols = torch.nonzero(shape.any(dim=0)).flatten()
-        tags.append((int(cols[0]), int(rows[0]), f"{index + 1} {outline.get('label', '')}", color))
+        top, left, _, _ = bbox(shape)
+        tags.append((left, top, f"{index + 1} {outline.get('label', '')}", color))
 
     picture = Image.fromarray((out.clamp(0, 1).cpu().numpy() * 255).astype(np.uint8))
     pen = ImageDraw.Draw(picture)
@@ -91,9 +92,10 @@ class NynxzFrescoOverlay(FrescoNode):
             node_id="Fresco.Overlay",
             display_name="Fresco Overlay",
             description=(
-                "Draws the Fresco layout over a render, to check it followed the boxes, and sends "
-                "the render back to the Fresco editor as its trace image."
+                "Deprecated — use Layout Overlay instead. Kept registered so saved workflows keep "
+                "loading."
             ),
+            is_deprecated=True,
             is_experimental=True,
             inputs=[
                 io.Image.Input("image", tooltip="The render — VAE Decode's output."),
@@ -116,11 +118,5 @@ class NynxzFrescoOverlay(FrescoNode):
             )
         }
         if fresco.get("image") is None:
-            shown |= {
-                "fresco_source": ui.ImageSaveHelper.save_images(
-                    image[:1], "nynxz.fresco.render", io.FolderType.temp, cls, compress_level=1
-                ),
-                "fresco_node": [fresco.get("node", "")],
-                "fresco_size": [int(image.shape[2]), int(image.shape[1])],
-            }
+            shown |= sent_back("fresco", fresco.get("node", ""), image, cls, "nynxz.fresco.render")
         return io.NodeOutput(overlay, ui=shown)

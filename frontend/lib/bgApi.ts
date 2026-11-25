@@ -1,6 +1,8 @@
 // Background Maker style contract (mirror of nodes/background/config.py). No canvas size —
 // the spec is resolution-independent; the grid renders it at its own size.
 
+import { num, pick } from "@/lib/sceneUtil";
+
 export interface BgStyle {
   bg_mode: "solid" | "gradient" | "pattern" | "icons" | "transparent";
   bg_color: string;
@@ -40,10 +42,6 @@ export const DEFAULT_BG: BgStyle = {
   scale_jitter: 0,
   opacity: 0.16,
 };
-
-const num = (v: unknown, d: number) => (Number.isFinite(Number(v)) ? Number(v) : d);
-const pick = <T extends string>(v: unknown, opts: T[], d: T): T =>
-  (opts as string[]).includes(v as string) ? (v as T) : d;
 
 // A colour from a workflow goes into CSS (`background`, a gradient): only a hex, rgb()/hsl() of
 // numbers, or a colour name gets through, so a shared workflow can't slip in a url() that the

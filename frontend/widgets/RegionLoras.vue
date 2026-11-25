@@ -60,7 +60,7 @@
           sm
           :model-value="prompts[group.region] ?? ''"
           placeholder="Prompt for this region (optional)"
-          title="Replaces the main prompt in this region. Needs Regions Apply's clip wired."
+          title="Read in this region where the main prompt would be (after it, on Z-Image). Needs Regions Apply's clip wired."
           @update:model-value="setPrompt(group.region, String($event ?? ''))"
         />
 
@@ -181,7 +181,7 @@ export const widgetOptions: WidgetOptions = {
  * doing the whole thing again for the LoRA coming the other way. Dragging a row onto a region's
  * box moves it there; dropping on "+ Region" moves it into a new one.
  */
-import { computed, ref } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useDragSurface } from "@nynxz/zenkit-nodekit";
 import { ZenDot, ZenIconButton, ZenInput, ZenNumber, ZenWidget } from "@nynxz/zenkit-ui";
 
@@ -288,6 +288,52 @@ function setPrompt(region: number, prompt: string) {
   prompts.value = { ...prompts.value, [region]: prompt };
   store.commit();
 }
+
+/**
+ * Re-fit every autosized prompt textarea once it is laid out in the DOM. ComfyUI attaches DOM
+ * widgets on the next frame after Vue mounts, so ZenInput's own onMounted autosize sees
+ * `scrollHeight === 0` and locks the textarea to `2px`. Observing the container catches both
+ * initial attachment and node width resizes.
+ */
+function fitPrompts() {
+  const host = drag.el.value;
+  if (!host || !host.isConnected || host.offsetWidth === 0) return;
+  for (const el of host.querySelectorAll<HTMLTextAreaElement>("textarea.rg-prompt")) {
+    el.style.height = "auto";
+    if (el.scrollHeight > 0) el.style.height = `${el.scrollHeight + 2}px`;
+  }
+}
+
+let promptResizeObserver: ResizeObserver | null = null;
+let fitFrame = 0;
+let lastPromptWidth = -1;
+function scheduleFitPrompts() {
+  if (fitFrame) cancelAnimationFrame(fitFrame);
+  fitFrame = requestAnimationFrame(() => {
+    fitFrame = 0;
+    fitPrompts();
+  });
+}
+onMounted(() => {
+  fitPrompts();
+  if (typeof ResizeObserver !== "undefined" && drag.el.value) {
+    promptResizeObserver = new ResizeObserver((entries) => {
+      const width = Math.round(entries[0]?.contentRect.width ?? 0);
+      if (width <= 0 || width === lastPromptWidth) return;
+      lastPromptWidth = width;
+      scheduleFitPrompts();
+    });
+    promptResizeObserver.observe(drag.el.value);
+  }
+});
+onBeforeUnmount(() => {
+  if (fitFrame) cancelAnimationFrame(fitFrame);
+  promptResizeObserver?.disconnect();
+  promptResizeObserver = null;
+});
+watch(regionCount, () => {
+  void nextTick(fitPrompts);
+});
 
 function ordinal(n: number): string {
   const suffix =
@@ -487,8 +533,10 @@ const drag = useDragSurface({
   border-style: dashed;
 }
 
-.rg-prompt {
+textarea.rg-prompt.rg-prompt {
   width: 100%;
+  min-height: 28px;
+  padding: 5px 8px;
 }
 .rg-groups.settling .rg-group,
 .rg-groups.settling .rg-row {

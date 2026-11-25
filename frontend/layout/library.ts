@@ -76,3 +76,40 @@ export async function compileLayout(layout: unknown): Promise<CompiledPrompt> {
   const body = (await post("layouts/compile", { layout })) as Partial<CompiledPrompt>;
   return { prompt: body.prompt ?? "", warnings: body.warnings ?? [] };
 }
+
+// --- Saved Mixin library (ID-keyed so presets link cleanly to layout mixins) --------------------
+
+export interface SavedMixin {
+  id: string;
+  name: string;
+  category: string;
+  saved: number;
+  mixin: Record<string, unknown>;
+}
+
+export async function listSavedMixins(): Promise<SavedMixin[]> {
+  try {
+    const body = (await call("layouts/mixins")) as { mixins?: SavedMixin[] };
+    return Array.isArray(body.mixins) ? body.mixins : [];
+  } catch {
+    return [];
+  }
+}
+
+export async function saveMixinPreset(entry: {
+  id?: string;
+  name: string;
+  category?: string;
+  mixin: unknown;
+}): Promise<SavedMixin> {
+  return (await post("layouts/mixins", {
+    id: entry.id ?? "",
+    name: entry.name,
+    category: entry.category ?? "",
+    mixin: entry.mixin,
+  })) as SavedMixin;
+}
+
+export async function deleteMixinPreset(id: string): Promise<void> {
+  await post("layouts/mixins/delete", { id });
+}

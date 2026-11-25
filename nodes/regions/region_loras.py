@@ -19,9 +19,9 @@ stacking in weight space — except confined to the region instead of applied to
 a character LoRA and a clothing LoRA can sit on one person while a different character sits
 untouched beside them.
 
-A region may also have a prompt of its own, written in its group. It replaces the main prompt for
-that region (Regions Apply, with `clip` wired, encodes it), so a region needs no LoRA to be worth
-having. In the value it is a row with `prompt` and no `name`.
+A region may also have a prompt of its own, written in its group. The region reads it where it
+would read the main prompt (on Z-Image, after the main prompt; Regions Apply, with `clip` wired,
+encodes it), so a region needs no LoRA to be worth having. In the value it is a row with `prompt` and no `name`.
 
 Rows are bound in the order the widget serializes them, which is region-major. That order does not
 matter to the result — the branches are additive — and the value is sorted so that rearranging the

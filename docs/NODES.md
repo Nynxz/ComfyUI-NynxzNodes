@@ -6,8 +6,71 @@ The full reference. The [README](../README.md) has the short tour.
 
 - **LoRA Loader** — a whole LoRA stack on one node: an on/off dot, a searchable picker with
   bookmarks and previews, and a strength per row. Set it to apply to `MODEL`, `CLIP` or both.
+  **Groups** keep a long stack readable: add one from the folder button, name it, and drag rows
+  under its header (or use the group's `+`). A group folds down to its header, and its dot mutes
+  every LoRA in it at once, so a set of speed-up LoRAs can sit folded and off until you want it.
+  Folding and renaming don't re-run anything; muting does, since it changes what is applied.
+  Set a group to **Solo** from its menu when its LoRAs are alternatives: switching one on
+  switches the others off, and the folded header shows which one is in use.
+  The **`select`** input chooses a group's LoRAs from the graph. It is off by default: turn it
+  on from the node's settings button, under Inputs. One group per line, places counting from 0:
+  `Styles: 0` uses only the first LoRA in Styles, `Styles: 1@0.6` the second at that strength,
+  `Styles: 0, 2@0.5` several,
+  `Styles: film@0.8` picks by name, `Speed-ups: off` uses none and `Speed-ups: all` every one.
+  Groups the text doesn't name stay as they are set on the node. Anything it can't make sense of
+  is reported in the console.
+- **LoRA Select** — writes that choice for one group, so you don't have to: type the group's name
+  and what to use. Chain several, each `select` output into the next `select` input, to choose
+  from several groups at once. Any text works in its place, a Saved Text included.
+- **Load LoRA (Bypass, Low Memory)** — runs one LoRA beside the model's weights instead of merging
+  it in, like ComfyUI's own Load LoRA (Bypass), but adds it into each layer's output in place. The
+  stock bypass holds three copies of that output at once and runs out of memory on long video
+  sequences (MiniMax H3 with the Viggle Remake LoRAs, for one); this holds one. Model only.
 
-## Fresco — paint ideas into places
+## Layout — boxes, shapes, references and regional LoRAs on one canvas
+
+Compose a picture as boxes or painted shapes on a canvas, with four modes you can switch between at
+any time without losing a thing: **Regions** (plain regional prompting, visual references and LoRAs
+for Krea 2, Z-Image or MOSS-Image), **MOSS-Image**, **Ideogram 4** and **FLUX 3 Image Klein**.
+
+Each box can have its own description, direct reference images, direct LoRAs, painted/SAM3 shape,
+influence and denoise — and in the **Mixins** tab you define recurring characters, props or styles
+once (with a saved Mixin Library across layouts) and tick them on any box or multi-selection. Drop
+images straight onto a box on the canvas to attach references, or onto empty canvas for a new box.
+
+```
+Layout Inputs ──> Layout ──> Layout Apply (+ model, clip) ──> model / positive / latent ──> KSampler
+                    │                                    └──> regions ──> Regions Preview
+                    ├──> Layout Overlay (+ render) ──> overlay (and sends render back to trace)
+                    └──> Layout Extras ──> prompt / elements / bboxes / overlay / regions / mixin_sheet
+```
+
+- **Layout** — the unified editor: canvas with toggleable box-face previews, brush/erase paint tools,
+  SAM3 wand (`W`), Box / Scene / Mixins inspector tabs, multi-box mixin & strength editing, saved
+  layouts & ID-keyed linked Mixin Library (with categories, right-click swap, and two-way sync),
+  agent, and ZenKit pop-out panel.
+- **Layout Inputs** _(optional)_ — a photo to trace, segment with SAM3, remix or edit; its VAE
+  (carried to Layout Apply); a SAM3 checkpoint (lazy-loaded only when segmenting); and a Qwen3-VL
+  CLIP for the editor's agent (lazy-loaded only when asked).
+- **Layout Apply** — the one-wire node into KSampler: encodes the compiled prompt as `positive`,
+  routes each box's prompt, references, mixins and LoRAs through `Regions Apply` (`model`), builds
+  the `latent` (empty at canvas size, source image with per-box denoise mask, or blurred
+  `layout_start`), and outputs `regions` and the compiled `prompt` text.
+- **Layout Overlay** — draws the boxes and painted shapes over a rendered image to verify placement,
+  and sends the render back to the Layout editor as its trace image.
+- **Layout Extras** — breaks the layout out for manual wiring: `prompt`, core's `elements` and
+  `bboxes`, `width`/`height`, `overlay`/`alpha`, `regions`, and the `mixin_sheet`.
+- **Layout Reference Cutout** — segments a subject out of any reference image with SAM3 (signed
+  text or click points), fills or removes the background, crops tight, and saves the reusable
+  cutout into `input/fresco/cutouts/` (also invoked directly from the wand icon on any Mixin or Box
+  reference tile).
+
+## Fresco _(deprecated — moved into Layout)_
+
+Fresco's painted shapes, SAM3 wand, drag-drop references, per-box LoRAs, background region, editing
+and one-wire apply are now built into **Layout** (Regions mode) and **Layout Apply**. The Fresco
+nodes stay registered (`is_deprecated=True`) so existing workflows keep loading and running, and
+Fresco shows a one-click **Copy for Layout** button to move a scene into a Layout node.
 
 _Experimental, Krea 2._ Compose a scene as layers on a canvas instead of wiring regions together.
 Drag on the canvas to draw a layer, then give it what belongs there:
@@ -124,9 +187,30 @@ character B's delta never touches character A's tokens. The gate comes from a ma
 `LoraLoader` for a global style. A region can also have a **prompt of its own**, which replaces the
 main prompt there, in the same single pass.
 
-> **Krea 2, Z-Image and MOSS-Image, and experimental.** Tracking is not on Z-Image and the layout
-> lock is Krea 2 only. `Regions Apply` fails loudly on any other architecture rather than silently
-> gating nothing.
+> **Krea 2, Z-Image and MOSS-Image, and experimental.** Tracking works on Krea 2 and MOSS-Image;
+> the layout lock is Krea 2 only. `Regions Apply` fails loudly on any other architecture rather than
+> silently gating nothing.
+>
+> **From a layout:** Layout Extras' `regions` output turns each box into a region with the box's
+> mask (the upper box owning any overlap) and its own prompt (the scene's caption, then the box's
+> description). Keep Layout Extras' `prompt` as the positive and wire `regions` and the CLIP into
+> Regions Apply: on MOSS-Image the layout JSON says where things go, and the routing makes each
+> part of the picture read its own box.
+>
+> **Mixins:** something several boxes share (a character across comic panels, a product, a style)
+> is added once in the layout's scene settings, with reference images, LoRAs and trigger words,
+> and picked in each box that uses it. Each such box's region then carries its LoRAs, its prompt
+> gets the trigger words, and with the CLIP wired into Layout Extras its images are read into the
+> box's prompt (as Text Encode (Fusion) does; the encoder must see images: Qwen3-VL, or Qwen3.5 for
+> MOSS-Image).
+>
+> **Slow regioned runs?** Launch ComfyUI with `NYNXZ_REGIONS_PROFILE=1`: each regioned MOSS-Image
+> forward then logs its time, and one forward logs a profile of where the time went, with the region
+> hooks labelled. Turn it off again afterwards; it waits for the GPU after every step.
+>
+> Layout Extras' **mixin_sheet** shows what was used where: a map of the layout with each mixin's
+> reference image in every box that uses it, then a row per mixin with its images, description,
+> trigger words, LoRAs and the boxes it's in.
 
 ```
 Regions from Masks ──> Region LoRAs ──> Regions Apply ──> MODEL ──> KSampler
@@ -201,6 +285,21 @@ report socket:
 - **Regions Preview** — the gate map that actually ran, against the mask it started from, so a bad
   mask, a subject that moved, and a LoRA bleeding for some other reason stop looking alike. Wire the
   sampler's `LATENT` in to sequence it after the run. The _post_-sampling view.
+
+Four more build regions without drawing a mask, and check them:
+
+- **Region Grid** — an even (or weighted, `column_sizes`/`row_sizes`) grid of rectangle regions.
+  `masks` are the LoRA regions for Regions from Masks, one per cell or joined like `1+4, 2+3`;
+  `fusion_layout` places the fusion references (`2~` mirrors one) for Fusion Regions. Cells count
+  left to right, then down.
+- **Region Split** — one clean rectangle per detected subject, split halfway between neighbours
+  and ordered left to right, for a second pass with proper regions. Feed SAM3's per-object masks,
+  a union mask or its bboxes. `fusion_layout` and `subject_masks` come out in the same order.
+- **Region Sketch** — a colour-blocked start image: a tile (or a soft oval) in every region over a
+  background colour. Encode it and sample at denoise ~0.6–0.8 so each subject starts where its
+  region is.
+- **Region Overlay** — draws the setup over an image: LoRA regions tinted, numbered and named,
+  fusion cells outlined with a ghost of their copy. Every input is optional.
 
 ## SAM3 — segmentation with subtraction
 
@@ -314,6 +413,10 @@ Fusion Images ┘             ├────────────> latent �
 - **Fusion Inspector** — hover the token grid to see which source won which cell, the per-source
   shares, and the settings that produced them. It shows the field that actually ran, captured
   inside the encode.
+- **Fusion Regions** — lays every reference out over region masks, so each subject gets a whole
+  copy of its reference where it stands instead of its slice of one full-frame reference. Wire it
+  on the `fusion_input` pipe before the encode; use the same masks as Regions from Masks, or Region
+  Grid's `fusion_layout`.
 
 **Masking a source with alpha.** An image with an alpha channel only contributes where it is
 opaque. Cut an element out and it is _absent_ from the blend rather than dimmed — its share of
@@ -384,6 +487,36 @@ clamped or wrapped index is visible rather than guessed at.
 - Wipe Compare Video
 
 ![Create Fade Compare Video](../.github/assets/create_compare_video.png)
+
+## Saved Text
+
+- **Saved Text** — outputs a piece of text from your own library: a system prompt, a style
+  line, a negative prompt. Pick one on the node; press the preview or the pencil to open the
+  editor, where texts are written, renamed, filed under a category, duplicated and deleted. The
+  library is shared by every workflow (it lives in ComfyUI's user folder), and an edit reaches
+  every node holding that text. The node also keeps its own copy, so a workflow opened on another
+  machine still outputs the same text, and offers to save it into the library there.
+
+## Float and Int
+
+- **Float**, **Int** — a number on a node, with a slider under it. The number itself is
+  ComfyUI's own widget, so it can be promoted into a subgraph, linked and scripted like any
+  other. The node's settings button sets the **minimum**, **maximum** and **step** the slider
+  and the number keep to, with a few common ranges one click away. The range is saved with the
+  workflow; changing it re-runs nothing, and a value left outside a new range is brought inside
+  it.
+
+## Choice
+
+- **Choice** — a dropdown whose options you write on the node, like core's Custom Combo. The
+  dropdown is ComfyUI's own combo widget, so it can be promoted into a subgraph, linked and
+  scripted like any other. "Edit options" opens the list it offers: type options (Enter starts
+  the next one), drag them into order, and pick one with its dot. Its outputs are switched from
+  the node's settings button: `text` (the chosen option, on to begin with), `index`, `count` and
+  `options` (the whole list, one per line). Any of them can be off, `text` included, as long as
+  one is left. With `index` on, the same menu sets how it is given: counted from 0 or from 1, as
+  a number or as text. Rewording or reordering options re-runs nothing unless `index`, `count`
+  or `options` is on.
 
 ## String Template Parser
 

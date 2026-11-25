@@ -3,7 +3,7 @@
 // loads the original RGB and this separate mask. Saved into temp/clipspace (wiped on restart) with
 // ONE stable name per source image, OVERWRITTEN each save (`overwrite=true`) so nothing piles up.
 // `baseKey` strips our own prefixes so re-editing reuses the same file instead of growing the name.
-import { thumbUrl, type SourceType } from "@/lib/imagePickApi";
+import { fileThumbUrl, type SourceType } from "@/lib/mediaRefs";
 
 export interface OriginalRef {
   filename: string; // bare filename (no subfolder)
@@ -114,7 +114,7 @@ export async function uploadSidecarAsClipspaceImage(
   originalRef: OriginalRef,
 ): Promise<MaskUploadResult | null> {
   try {
-    const maskImg = await loadImage(thumbUrl(maskRef));
+    const maskImg = await loadImage(fileThumbUrl(maskRef));
     const canvas = document.createElement("canvas");
     canvas.width = maskImg.naturalWidth || maskImg.width;
     canvas.height = maskImg.naturalHeight || maskImg.height;

@@ -14,10 +14,14 @@ from __future__ import annotations
 import torch
 import torch.nn.functional as F
 
+from ..regions._mask import bbox
+
 #: Mid-grey, the least assertive start where nothing is said.
 BACKGROUND = 0.5
 #: A layer with no reference is a slightly lighter shape: "something is here", no colour.
 BLOB = 0.62
+#: A layer's box reaches as far as its shape does at this value, feathered edge included.
+PRESENT = 0.05
 #: Blur radius as a share of the canvas's short side.
 BLUR = 1 / 24
 
@@ -36,14 +40,6 @@ def _cover(image: torch.Tensor, height: int, width: int) -> torch.Tensor:
     top = (resized.shape[1] - height) // 2
     left = (resized.shape[2] - width) // 2
     return resized[:, top : top + height, left : left + width]
-
-
-def _box(mask: torch.Tensor) -> tuple[int, int, int, int] | None:
-    rows = torch.nonzero(mask.amax(dim=1) > 0.05).flatten()
-    cols = torch.nonzero(mask.amax(dim=0) > 0.05).flatten()
-    if rows.numel() == 0 or cols.numel() == 0:
-        return None
-    return int(rows[0]), int(cols[0]), int(rows[-1]) + 1, int(cols[-1]) + 1
 
 
 def _blur(image: torch.Tensor, radius: int) -> torch.Tensor:
@@ -81,7 +77,7 @@ def compose(
         shape = F.interpolate(
             mask.float()[None, None], size=(height, width), mode="bilinear", align_corners=False
         )[0, 0].clamp(0.0, 1.0)
-        box = _box(shape)
+        box = bbox(shape, PRESENT)
         if box is None:
             continue
         top, left, bottom, right = box

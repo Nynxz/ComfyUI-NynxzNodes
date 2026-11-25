@@ -1,0 +1,834 @@
+{
+  "id": "a7f3e201-4a5b-4c6d-8e9f-102030405001",
+  "revision": 1,
+  "last_node_id": 13,
+  "last_link_id": 16,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "UNETLoader",
+      "pos": [
+        40,
+        80
+      ],
+      "size": [
+        280,
+        90
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            1
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UNETLoader"
+      },
+      "widgets_values": [
+        "moss_image_base_int8_convrot.safetensors",
+        "default"
+      ]
+    },
+    {
+      "id": 2,
+      "type": "CLIPLoader",
+      "pos": [
+        40,
+        210
+      ],
+      "size": [
+        280,
+        110
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            2,
+            3
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPLoader"
+      },
+      "widgets_values": [
+        "qwen3.5_9b_int8_convrot.safetensors",
+        "moss_image",
+        "default"
+      ]
+    },
+    {
+      "id": 3,
+      "type": "VAELoader",
+      "pos": [
+        40,
+        360
+      ],
+      "size": [
+        280,
+        60
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            4,
+            5
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "flux2-vae.safetensors"
+      ]
+    },
+    {
+      "id": 4,
+      "type": "SkipLayerGuidanceDiTSimple",
+      "pos": [
+        370,
+        80
+      ],
+      "size": [
+        310,
+        130
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            6
+          ]
+        }
+      ],
+      "title": "SkipLayerGuidanceDiTSimple (uncond skips block 22)",
+      "properties": {
+        "Node name for S&R": "SkipLayerGuidanceDiTSimple"
+      },
+      "widgets_values": [
+        "",
+        "22",
+        0,
+        0.5
+      ]
+    },
+    {
+      "id": 5,
+      "type": "CLIPTextEncode",
+      "pos": [
+        370,
+        250
+      ],
+      "size": [
+        310,
+        130
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            7
+          ]
+        }
+      ],
+      "title": "Negative Prompt",
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "bad quality, malformed, blurry, deformed, panels"
+      ]
+    },
+    {
+      "id": 6,
+      "type": "nynxz.Layout",
+      "pos": [
+        40,
+        470
+      ],
+      "size": [
+        640,
+        500
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "inputs",
+          "type": "NYNXZ_LAYOUT_INPUTS",
+          "shape": 7,
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "layout",
+          "type": "NYNXZ_LAYOUT",
+          "links": [
+            8,
+            13
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "nynxz.Layout"
+      },
+      "widgets_values": [
+        {
+          "mode": "moss",
+          "width": 1216,
+          "height": 800,
+          "prompt": "Two young women walking down a sunlit sidewalk in a green city park, candid cinematic medium-format photograph, 35mm lens, shallow depth of field with soft park bokeh.",
+          "background": "",
+          "style": {
+            "presets": [],
+            "color": "",
+            "lighting": "",
+            "mood": "",
+            "composition": ""
+          },
+          "meta": [
+            "cinematic photo",
+            "35mm",
+            "natural daylight"
+          ],
+          "canvas": "single",
+          "palette": [],
+          "mixins": [
+            {
+              "id": "mx_left",
+              "name": "Left Woman",
+              "color": "#3B82F6",
+              "desc": "young woman with light brunette hair, jean shorts, t-shirt, small necklace and bracelet, head turned slightly talking",
+              "trigger": "",
+              "refs": [],
+              "loras": []
+            },
+            {
+              "id": "mx_right",
+              "name": "Right Woman",
+              "color": "#F59E0B",
+              "desc": "young woman with long dark brunette hair, tank top, short shorts, hands in her pockets walking as she listens",
+              "trigger": "",
+              "refs": [],
+              "loras": []
+            }
+          ],
+          "backdrop": {
+            "on": true,
+            "prompt": "sunlit green city park sidewalk with out-of-focus rhododendron shrubs and oak trees, soft natural bokeh",
+            "refs": [],
+            "loras": [],
+            "denoise": 0.05,
+            "influence": 1.0,
+            "blend": "mix",
+            "softness": 0.5
+          },
+          "settings": {
+            "overlap": "top",
+            "visual_size": 384
+          },
+          "boxes": [
+            {
+              "id": "bx_shrubs",
+              "name": "Park Shrubs",
+              "color": "#10B981",
+              "x": 0.0,
+              "y": 0.14,
+              "w": 0.38,
+              "h": 0.6,
+              "hidden": false,
+              "locked": false,
+              "kind": "object",
+              "desc": "out-of-focus rhododendron shrubs with purple flowers in the background",
+              "text": "",
+              "palette": [],
+              "tags": [],
+              "mixins": [],
+              "refs": [],
+              "loras": [],
+              "denoise": 1.0,
+              "influence": 1.0,
+              "blend": "mix",
+              "softness": 0.5,
+              "mask": null,
+              "shapeFor": "layer",
+              "grow": 0,
+              "feather": 0,
+              "capture": "",
+              "points": [],
+              "maskSource": ""
+            },
+            {
+              "id": "bx_left",
+              "name": "Left Woman",
+              "color": "#3B82F6",
+              "x": 0.15,
+              "y": 0.06,
+              "w": 0.32,
+              "h": 0.82,
+              "hidden": false,
+              "locked": false,
+              "kind": "character",
+              "desc": "walking along the left side of the sidewalk, hair gently adrift in the breeze",
+              "text": "",
+              "palette": [],
+              "tags": [],
+              "mixins": [
+                "mx_left"
+              ],
+              "refs": [],
+              "loras": [],
+              "denoise": 1.0,
+              "influence": 1.0,
+              "blend": "mix",
+              "softness": 0.5,
+              "mask": null,
+              "shapeFor": "layer",
+              "grow": 16,
+              "feather": 8,
+              "capture": "",
+              "points": [],
+              "maskSource": ""
+            },
+            {
+              "id": "bx_right",
+              "name": "Right Woman",
+              "color": "#F59E0B",
+              "x": 0.58,
+              "y": 0.07,
+              "w": 0.33,
+              "h": 0.8,
+              "hidden": false,
+              "locked": false,
+              "kind": "character",
+              "desc": "walking beside her on the right, listening with a relaxed smile",
+              "text": "",
+              "palette": [],
+              "tags": [],
+              "mixins": [
+                "mx_right"
+              ],
+              "refs": [],
+              "loras": [],
+              "denoise": 1.0,
+              "influence": 1.0,
+              "blend": "mix",
+              "softness": 0.5,
+              "mask": null,
+              "shapeFor": "layer",
+              "grow": 16,
+              "feather": 8,
+              "capture": "",
+              "points": [],
+              "maskSource": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "type": "nynxz.Layout.Apply",
+      "pos": [
+        740,
+        80
+      ],
+      "size": [
+        300,
+        320
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 6
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 2
+        },
+        {
+          "name": "layout",
+          "type": "NYNXZ_LAYOUT",
+          "link": 8
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "shape": 7,
+          "link": null
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "shape": 7,
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "links": [
+            9
+          ]
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [
+            10
+          ]
+        },
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "links": [
+            11
+          ]
+        },
+        {
+          "name": "regions",
+          "type": "NYNXZ_REGIONS",
+          "links": []
+        },
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "nynxz.Layout.Apply"
+      },
+      "widgets_values": [
+        true,
+        0.0,
+        0.0,
+        1.0,
+        0.3,
+        0.0,
+        0.0,
+        1.5,
+        0.0,
+        0,
+        "blend clean",
+        0.5
+      ]
+    },
+    {
+      "id": 8,
+      "type": "KSampler",
+      "pos": [
+        1100,
+        80
+      ],
+      "size": [
+        280,
+        270
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 9
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 10
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 7
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 11
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            12,
+            15
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        486,
+        "fixed",
+        35,
+        3.5,
+        "res_multistep",
+        "bong_tangent",
+        1
+      ]
+    },
+    {
+      "id": 9,
+      "type": "VAEDecode",
+      "pos": [
+        1100,
+        390
+      ],
+      "size": [
+        190,
+        50
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 12
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 5
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            14,
+            16
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      }
+    },
+    {
+      "id": 10,
+      "type": "SaveImage",
+      "pos": [
+        1440,
+        80
+      ],
+      "size": [
+        420,
+        460
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 14
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "moss-layout"
+      ]
+    },
+    {
+      "id": 11,
+      "type": "nynxz.Layout.Overlay",
+      "pos": [
+        1440,
+        590
+      ],
+      "size": [
+        420,
+        380
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 16
+        },
+        {
+          "name": "layout",
+          "type": "NYNXZ_LAYOUT",
+          "link": 13
+        }
+      ],
+      "outputs": [
+        {
+          "name": "overlay",
+          "type": "IMAGE",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "nynxz.Layout.Overlay"
+      }
+    },
+    {
+      "id": 12,
+      "type": "nynxz.Regions.Preview",
+      "pos": [
+        1100,
+        490
+      ],
+      "size": [
+        280,
+        120
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "link": 15
+        }
+      ],
+      "outputs": [
+        {
+          "name": "maps",
+          "type": "IMAGE",
+          "links": []
+        },
+        {
+          "name": "report",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "drift",
+          "type": "FLOAT",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "nynxz.Regions.Preview"
+      },
+      "widgets_values": [
+        12
+      ]
+    },
+    {
+      "id": 13,
+      "type": "MarkdownNote",
+      "pos": [
+        740,
+        450
+      ],
+      "size": [
+        300,
+        360
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "MOSS-Image Layout Guide",
+      "properties": {},
+      "widgets_values": [
+        "## Unified Layout on MOSS-Image\n\nOpen **Layout** to edit boxes, mixins, visual references, and per-box / per-mixin LoRAs in one place:\n\n- **Mixins**: attach LoRAs, trigger words, or reference images to *Left Woman* or *Right Woman* (and save reusable mixins to the library).\n- **Per-box LoRAs & refs**: attach a style LoRA directly to one box \u2014 `Backdrop` is enabled so `isolation` keeps it from bleeding into the park.\n- **Painted shapes**: switch any box to Paint or SAM3 capture when you want a silhouette instead of a rectangle.\n- **Layout Overlay**: draws the boxes over the render and sends the result back to Layout as a trace image.\n- **Speed tip**: when you don't need `isolation` (e.g. character LoRAs or pure regional prompts), set `isolation = 0` on Layout Apply to use MOSS's fast unmasked split attention."
+      ]
+    }
+  ],
+  "links": [
+    [
+      1,
+      1,
+      0,
+      4,
+      0,
+      "MODEL"
+    ],
+    [
+      2,
+      2,
+      0,
+      7,
+      1,
+      "CLIP"
+    ],
+    [
+      3,
+      2,
+      0,
+      5,
+      0,
+      "CLIP"
+    ],
+    [
+      4,
+      3,
+      0,
+      7,
+      4,
+      "VAE"
+    ],
+    [
+      5,
+      3,
+      0,
+      9,
+      1,
+      "VAE"
+    ],
+    [
+      6,
+      4,
+      0,
+      7,
+      0,
+      "MODEL"
+    ],
+    [
+      7,
+      5,
+      0,
+      8,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      8,
+      6,
+      0,
+      7,
+      2,
+      "NYNXZ_LAYOUT"
+    ],
+    [
+      9,
+      7,
+      0,
+      8,
+      0,
+      "MODEL"
+    ],
+    [
+      10,
+      7,
+      1,
+      8,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      11,
+      7,
+      2,
+      8,
+      3,
+      "LATENT"
+    ],
+    [
+      12,
+      8,
+      0,
+      9,
+      0,
+      "LATENT"
+    ],
+    [
+      13,
+      6,
+      0,
+      11,
+      1,
+      "NYNXZ_LAYOUT"
+    ],
+    [
+      14,
+      9,
+      0,
+      10,
+      0,
+      "IMAGE"
+    ],
+    [
+      15,
+      8,
+      0,
+      12,
+      0,
+      "LATENT"
+    ],
+    [
+      16,
+      9,
+      0,
+      11,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}

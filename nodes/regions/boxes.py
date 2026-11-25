@@ -25,9 +25,12 @@ def box_masks(frame: list[dict], width: int, height: int) -> torch.Tensor:
     """`[boxes, height, width]` rectangles, in order. A box may overhang the frame."""
     masks = torch.zeros((len(frame), height, width), dtype=torch.float32)
     for index, box in enumerate(frame):
-        left, top = max(0, round(box["x"])), max(0, round(box["y"]))
-        right, bottom = round(box["x"] + box["width"]), round(box["y"] + box["height"])
-        masks[index, top:bottom, left:right] = 1.0
+        left = max(0, min(width, round(box["x"])))
+        top = max(0, min(height, round(box["y"])))
+        right = max(left, min(width, round(box["x"] + box["width"])))
+        bottom = max(top, min(height, round(box["y"] + box["height"])))
+        if right > left and bottom > top:
+            masks[index, top:bottom, left:right] = 1.0
     return masks
 
 
@@ -71,6 +74,8 @@ class NynxzRegionBoxes(RegionNode):
         if not bboxes:
             raise ValueError("No boxes arrived on the wire. Draw some in the prompt builder.")
         frame = bboxes[0] if isinstance(bboxes[0], list) else bboxes
+        if not frame:
+            raise ValueError("No boxes arrived on the wire. Draw some in the prompt builder.")
         masks = box_masks(frame, int(width), int(height))
         groups = parse_groups(regions, masks.shape[0])
         if not groups:

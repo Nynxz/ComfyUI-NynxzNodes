@@ -1,0 +1,60 @@
+{
+ "kind": "layout",
+ "value": {
+  "mode": "klein",
+  "width": 1024,
+  "height": 768,
+  "prompt": "A desk with <obj_1> and <obj_2>",
+  "background": "",
+  "style": {
+   "on": false,
+   "kind": "photo",
+   "aesthetics": "",
+   "lighting": "",
+   "medium": "photograph",
+   "photo": "",
+   "art_style": "",
+   "palette": []
+  },
+  "meta": [],
+  "canvas": "",
+  "palette": [],
+  "mixins": [],
+  "boxes": [
+   {
+    "id": "b1",
+    "name": "Box 1",
+    "color": "#3B82F6",
+    "x": 0.1,
+    "y": 0.1,
+    "w": 0.3,
+    "h": 0.3,
+    "hidden": false,
+    "locked": false,
+    "kind": "object",
+    "desc": "a laptop",
+    "text": "",
+    "palette": [],
+    "tags": [],
+    "mixins": []
+   },
+   {
+    "id": "b2",
+    "name": "Box 2",
+    "color": "#3B82F6",
+    "x": 0.6,
+    "y": 0.1,
+    "w": 0.3,
+    "h": 0.3,
+    "hidden": false,
+    "locked": false,
+    "kind": "object",
+    "desc": "a coffee mug",
+    "text": "",
+    "palette": [],
+    "tags": [],
+    "mixins": []
+   }
+  ]
+ }
+}

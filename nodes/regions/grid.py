@@ -26,6 +26,7 @@ from comfy_api.latest import io
 
 from ..fusion._io_types import FusionLayout
 from ._base import RegionNode
+from ._mask import bbox
 
 
 def parse_fusion(spec: str, columns: int, rows: int) -> list[tuple[list[int], bool]]:
@@ -105,13 +106,6 @@ def parse_groups(spec: str, count: int) -> list[list[int]]:
             cells.append(cell)
         groups.append(cells)
     return groups
-
-
-def _box(mask: torch.Tensor) -> list[int]:
-    """A mask's bounding box as [top, left, bottom, right]."""
-    rows = torch.nonzero(mask.amax(dim=1) > 0.5).flatten()
-    cols = torch.nonzero(mask.amax(dim=0) > 0.5).flatten()
-    return [int(rows[0]), int(cols[0]), int(rows[-1]) + 1, int(cols[-1]) + 1]
 
 
 def parse_sizes(spec: str, count: int, what: str) -> list[float]:
@@ -276,7 +270,7 @@ class NynxzRegionGrid(RegionNode):
         fusion_masks = torch.stack(copy_masks) if copy_masks else torch.zeros_like(masks[:1])
         layout = {
             "canvas": [int(width), int(height)],
-            "boxes": [_box(mask) for mask in copy_masks],
+            "boxes": [list(bbox(mask)) for mask in copy_masks],
             "flipped": [mirrored for _, mirrored in copies],
         }
         return io.NodeOutput(masks, fusion_masks, layout)

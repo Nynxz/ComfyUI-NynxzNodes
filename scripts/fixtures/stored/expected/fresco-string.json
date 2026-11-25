@@ -1,0 +1,152 @@
+{
+ "parsed": {
+  "settings": {
+   "overlap": "share",
+   "visual_size": 512,
+   "photo": "look"
+  },
+  "width": 1344,
+  "height": 768,
+  "prompt": "A rainy street at night, cinematic photo",
+  "background": {
+   "on": true,
+   "prompt": "wet asphalt, neon reflections",
+   "refs": [],
+   "loras": [],
+   "denoise": 0.05,
+   "influence": 1.0,
+   "blend": "mix",
+   "softness": 0.5,
+   "read": "meaning",
+   "name": "background"
+  },
+  "layers": [
+   {
+    "on": true,
+    "prompt": "a woman in a yellow raincoat",
+    "refs": [
+     {
+      "ref": "fresco/amber.png",
+      "type": "input",
+      "strength": 1.0,
+      "fit": "contain"
+     }
+    ],
+    "loras": [
+     {
+      "lora_name": "amber.safetensors",
+      "strength": 0.8
+     }
+    ],
+    "denoise": 1.0,
+    "influence": 1.0,
+    "blend": "mix",
+    "softness": 0.5,
+    "read": "meaning",
+    "name": "Amber",
+    "x": 0.1,
+    "y": 0.2,
+    "w": 0.3,
+    "h": 0.7,
+    "mask": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAEUlEQVR4nGNgYGD4j4ZJFQAABloP8SzApEkAAAAASUVORK5CYII=",
+    "feather": 16,
+    "grow": 4,
+    "id": "l1",
+    "color": "#4f8cff",
+    "shape_for": "layer",
+    "capture": "woman",
+    "points": [
+     {
+      "x": 0.2,
+      "y": 0.4,
+      "include": true
+     },
+     {
+      "x": 0.25,
+      "y": 0.9,
+      "include": false
+     }
+    ],
+    "mask_source": "sig1"
+   },
+   {
+    "on": true,
+    "prompt": "a red umbrella",
+    "refs": [
+     {
+      "ref": "fresco/umbrella.png",
+      "type": "input",
+      "strength": 2.0,
+      "fit": "cover"
+     }
+    ],
+    "loras": [],
+    "denoise": 0.7,
+    "influence": 1.5,
+    "blend": "weighted",
+    "softness": 0.2,
+    "read": "look",
+    "name": "Umbrella",
+    "x": 0.5,
+    "y": 0.1,
+    "w": 0.3,
+    "h": 0.4,
+    "mask": null,
+    "feather": 0,
+    "grow": 0,
+    "id": "l2",
+    "color": "#ff9a4f",
+    "shape_for": "refs",
+    "capture": "",
+    "points": [],
+    "mask_source": ""
+   },
+   {
+    "on": false,
+    "prompt": "a hidden lamp",
+    "refs": [],
+    "loras": [],
+    "denoise": 1.0,
+    "influence": 1.0,
+    "blend": "mix",
+    "softness": 0.5,
+    "read": "meaning",
+    "name": "Lamp",
+    "x": 0.8,
+    "y": 0.05,
+    "w": 0.15,
+    "h": 0.3,
+    "mask": null,
+    "feather": 0,
+    "grow": 0,
+    "id": "l3",
+    "color": "#c47dff",
+    "shape_for": "layer",
+    "capture": "",
+    "points": [],
+    "mask_source": ""
+   }
+  ]
+ },
+ "parts": [
+  {
+   "name": "Amber",
+   "group": "l1",
+   "part": "layer"
+  },
+  {
+   "name": "Umbrella",
+   "group": "l2",
+   "part": "layer"
+  }
+ ],
+ "working_size": [
+  293,
+  512
+ ],
+ "mask_sums": [
+  31570.0,
+  18018.0
+ ],
+ "background_sum": 100428.0
+}

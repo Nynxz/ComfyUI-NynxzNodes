@@ -1,0 +1,32 @@
+{
+ "parsed": {
+  "settings": {
+   "overlap": "top",
+   "visual_size": 384,
+   "photo": "plain"
+  },
+  "width": 1024,
+  "height": 1024,
+  "prompt": "",
+  "background": {
+   "on": true,
+   "prompt": "",
+   "refs": [],
+   "loras": [],
+   "denoise": 0.05,
+   "influence": 1.0,
+   "blend": "mix",
+   "softness": 0.5,
+   "read": "meaning",
+   "name": "background"
+  },
+  "layers": []
+ },
+ "parts": [],
+ "working_size": [
+  512,
+  512
+ ],
+ "mask_sums": [],
+ "background_sum": 262144.0
+}

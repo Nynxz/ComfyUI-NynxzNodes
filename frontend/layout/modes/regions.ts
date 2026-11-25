@@ -1,23 +1,18 @@
 // Regions — Fresco's mode: each box is a layer with a prompt, references, LoRAs and a painted
 // shape, and the scene goes to Fresco, which turns it into the Regions wire.
 
-import { thumbUrl } from "@/lib/fusionApi";
+import { thumbUrl } from "@/lib/mediaRefs";
+import { nextColor, uid } from "@/lib/sceneUtil";
 import {
   PALETTE,
   newLayer,
   parseScene,
   summarize,
-  uid,
   type FrescoLayer,
   type FrescoScene,
 } from "@/lib/frescoScene";
 
 import type { LayoutBox, LayoutMode } from "../mode";
-
-function nextColor(layers: FrescoLayer[]): string {
-  const used = new Set(layers.map((l) => l.color));
-  return PALETTE.find((c) => !used.has(c)) ?? PALETTE[layers.length % PALETTE.length]!;
-}
 
 export const regionsMode: LayoutMode<FrescoScene> = {
   id: "regions",
@@ -69,7 +64,7 @@ export const regionsMode: LayoutMode<FrescoScene> = {
         ...rect,
         id: uid(),
         name: `${item.name} copy`,
-        color: nextColor(layers),
+        color: nextColor(layers, PALETTE),
         points: item.points.map((p) => ({
           ...p,
           x: rect.x + (p.x - item.x),
@@ -107,6 +102,8 @@ export const regionsMode: LayoutMode<FrescoScene> = {
       color: l.color,
       prompt: l.prompt,
       mask: l.mask,
+      hidden: !l.on,
+      locked: l.locked,
     })),
   }),
   fromCommon: (c) =>
@@ -114,6 +111,11 @@ export const regionsMode: LayoutMode<FrescoScene> = {
       width: c.width,
       height: c.height,
       prompt: c.prompt,
-      layers: c.boxes.map((b) => ({ ...b, id: uid() })),
+      layers: c.boxes.map((b) => ({
+        ...b,
+        id: uid(),
+        on: !b.hidden,
+        locked: !!b.locked,
+      })),
     }),
 };

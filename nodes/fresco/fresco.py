@@ -28,14 +28,16 @@ from __future__ import annotations
 import logging
 
 import torch
-from comfy_api.latest import io, ui
+from comfy_api.latest import io
 
+from .._sent_back import sent_back
 from .._zenkit.io_types import advanced
 from ..fusion._fusion import FusionSettings, empty_latent, encode_fusion
-from ..fusion.fusion_input import _load_image, _resolve_path
+from ..fusion._sources import load_refs
 from ..regions import _refs
+from ..regions._apply import apply_regions
 from ..regions._io_types import Regions
-from ..regions.apply import NynxzRegionsApply
+from ..regions._settings import RegionSettings
 from ..regions.latent import NynxzRegionLatent
 from . import _layout, _look, _scene, _segment
 from ._base import FrescoNode
@@ -45,21 +47,6 @@ from ._io_types import Fresco, FrescoInputs, FrescoSceneType
 def _encode_text(clip, prompt: str) -> torch.Tensor:
     """`[1, seq, features]` — a prompt encoded as CLIP Text Encode would."""
     return clip.encode_from_tokens_scheduled(clip.tokenize(prompt))[0][0]
-
-
-def _references(refs: list[dict], where: str) -> tuple[list, list, list]:
-    """The images, strengths and fits of a layer's references that load."""
-    images, strengths, fits = [], [], []
-    for ref in refs:
-        path = _resolve_path(ref["ref"], ref["type"])
-        image = _load_image(path) if path else None
-        if image is None:
-            logging.warning("Nynxz Fresco: %s skips a missing reference: %s", where, ref["ref"])
-            continue
-        images.append(image)
-        strengths.append(ref["strength"])
-        fits.append(ref["fit"])
-    return images, strengths, fits
 
 
 def _fusion_settings(layer: dict, visual_size: int) -> FusionSettings:
@@ -85,7 +72,7 @@ def _fusion_settings(layer: dict, visual_size: int) -> FusionSettings:
 
 def _conditioning(clip, layer: dict, scene_prompt: str, visual_size: int, where: str, images=None):
     """A layer's own conditioning, or None when it has nothing to say."""
-    images, strengths, fits = images or _references(layer["refs"], where)
+    images, strengths, fits = images or load_refs(layer["refs"], f"Fresco: {where}")
     prompt = layer["prompt"]
     if images:
         encoded = encode_fusion(
@@ -119,7 +106,7 @@ def _region(
     }
     if layer["prompt"]:
         region["prompt"] = layer["prompt"]
-    loaded = _references(layer["refs"], where)
+    loaded = load_refs(layer["refs"], f"Fresco: {where}")
     if layer.get("read") == "look" and loaded[0]:
         region["look"] = loaded[0]
         shown = ([photo] if photo is not None else []) + loaded[0]
@@ -139,10 +126,10 @@ class NynxzFrescoInputs(FrescoNode):
             node_id="Fresco.Inputs",
             display_name="Fresco Inputs",
             description=(
-                "Everything Fresco works with, in one wire: the text encoder, and optionally a "
-                "photo to trace, segment and edit, its VAE, and the SAM3 checkpoint for "
-                "segmenting layers."
+                "Deprecated — use Layout Inputs instead. Kept registered so saved workflows keep "
+                "loading."
             ),
+            is_deprecated=True,
             is_experimental=True,
             inputs=[
                 io.Clip.Input("clip", tooltip="The text encoder — Krea 2's."),
@@ -187,9 +174,10 @@ class NynxzFresco(FrescoNode):
             node_id="Fresco",
             display_name="Fresco",
             description=(
-                "Compose a scene as layers on a canvas: draw a box (and paint a shape in it), then "
-                "give it a prompt, reference images and LoRAs. Wire it into Fresco Apply."
+                "Deprecated — Fresco has been unified into Layout (Regions mode). Kept registered "
+                "so saved workflows keep loading."
             ),
+            is_deprecated=True,
             is_experimental=True,
             inputs=[
                 FrescoSceneType.Input("scene", default={}),
@@ -322,11 +310,7 @@ class NynxzFresco(FrescoNode):
         if image is None:
             return None
         return {
-            "fresco_node": [node],
-            "fresco_source": ui.ImageSaveHelper.save_images(
-                image[:1], "nynxz.fresco.source", io.FolderType.temp, cls, compress_level=1
-            ),
-            "fresco_size": [int(image.shape[2]), int(image.shape[1])],
+            **sent_back("fresco", node, image, cls, "nynxz.fresco.source"),
             "fresco_masks": segmented,
         }
 
@@ -343,10 +327,10 @@ class NynxzFrescoApply(FrescoNode):
             node_id="Fresco.Apply",
             display_name="Fresco Apply",
             description=(
-                "Puts a Fresco scene on the model: each layer's LoRAs and prompt act only where "
-                "the layer is. Gives the sampler its model, positive and latent. Wire a source "
-                "image and a VAE to edit an image instead of generating one. Krea 2 only."
+                "Deprecated — use Layout Apply instead. Kept registered so saved workflows keep "
+                "loading."
             ),
+            is_deprecated=True,
             is_experimental=True,
             inputs=[
                 io.Model.Input("model", tooltip="A Krea 2 model."),
@@ -518,9 +502,7 @@ class NynxzFrescoApply(FrescoNode):
         if _active(regions):
             # The layers' prompt copies at full weight all run: in Fresco the copy IS the content
             # (prompt and references), and the early steps are where it lands.
-            patched = NynxzRegionsApply.execute(
-                model,
-                regions,
+            settings = RegionSettings(
                 isolation=isolation,
                 layout_lock=layout_lock,
                 preheat=lora_warmup,
@@ -529,8 +511,10 @@ class NynxzFrescoApply(FrescoNode):
                 release=release,
                 prompt_follows_schedule=False,
                 layout_isolation=layout_isolation,
-                sources=sources,
-            ).result[0]
+            )
+            patched = apply_regions(
+                model, regions, settings, sources=sources, node_name="Fresco Apply"
+            )
         else:
             logging.info(
                 "Nynxz Fresco: no layer has a prompt, references or LoRAs — the model is passed "
@@ -551,13 +535,7 @@ class NynxzFrescoApply(FrescoNode):
             latent = NynxzRegionLatent.execute(
                 vae, image, regions, background=float(fresco.get("background_denoise", 0.0))
             ).result[0]
-            shown = {
-                "fresco_source": ui.ImageSaveHelper.save_images(
-                    image[:1], "nynxz.fresco.source", io.FolderType.temp, cls, compress_level=1
-                ),
-                "fresco_node": [fresco.get("node", "")],
-                "fresco_size": [int(image.shape[2]), int(image.shape[1])],
-            }
+            shown = sent_back("fresco", fresco.get("node", ""), image, cls, "nynxz.fresco.source")
         elif layout_start > 0.0 and vae is not None:
             latent = _layout_latent(fresco, vae, width, height, layout_start)
         else:

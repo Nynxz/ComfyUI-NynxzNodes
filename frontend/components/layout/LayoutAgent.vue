@@ -129,7 +129,7 @@ import LayoutThumb from "@/components/layout/LayoutThumb.vue";
 import { askAgent, type AgentImage, type AgentLayout } from "@/layout/agent";
 import type { SavedLayoutPreview } from "@/layout/library";
 import { BOX_COLORS, type PromptScene } from "@/layout/promptScene";
-import { thumbUrl } from "@/lib/fusionApi";
+import { thumbUrl } from "@/lib/mediaRefs";
 
 const props = defineProps<{
   open: boolean;

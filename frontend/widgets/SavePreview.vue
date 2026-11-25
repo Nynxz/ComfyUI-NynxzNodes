@@ -26,12 +26,18 @@
 
       <!-- hover actions (top-right): download + open in lightbox -->
       <div v-if="!isBroken" class="sp-actions">
-        <button class="sp-act" title="Download" @click="download">
-          <i class="mdi mdi-download" />
-        </button>
-        <button class="sp-act" title="Open in viewer" @click="lightbox = true">
-          <i class="mdi mdi-fullscreen" />
-        </button>
+        <ZenIconButton
+          class="sp-act"
+          icon="mdi mdi-download"
+          title="Download"
+          @click="(unfocus($event), download())"
+        />
+        <ZenIconButton
+          class="sp-act"
+          icon="mdi mdi-fullscreen"
+          title="Open in viewer"
+          @click="(unfocus($event), (lightbox = true))"
+        />
       </div>
     </div>
 
@@ -114,9 +120,17 @@ const index = ref(0);
 const broken = ref<Set<string>>(new Set());
 const bust = ref(0);
 const lightbox = ref(false);
+/** Let go of a hover button once it is clicked. It would otherwise keep the keyboard focus,
+ *  and show the focus ring as if selected once the viewer or editor it opened is closed. */
+function unfocus(e: Event) {
+  (e.currentTarget as HTMLElement | null)?.blur();
+}
 
 // The body is drag-through (pointer-events: none), so CSS :hover never fires on it. Track the
-// pointer against the preview's box instead, on both renderers.
+// pointer against the preview's box instead, on both renderers. Listened for on the window as
+// the event goes down, not as it comes back up: ComfyUI's wrapper around a widget stops pointer
+// moves from bubbling, and a listener that waited for them there would never hear of the pointer
+// being over the preview.
 const previewEl = ref<HTMLElement | null>(null);
 const pointerOver = ref(false);
 function trackPointer(e: PointerEvent) {
@@ -188,7 +202,7 @@ function download() {
 }
 
 onMounted(() => {
-  document.addEventListener("pointermove", trackPointer, { passive: true });
+  window.addEventListener("pointermove", trackPointer, { capture: true, passive: true });
   document.documentElement.addEventListener("pointerleave", dropPointer);
   applyValue(props.widget?.value);
   const prev = props.widget?.callback;
@@ -207,7 +221,7 @@ onMounted(() => {
   }
 });
 onUnmounted(() => {
-  document.removeEventListener("pointermove", trackPointer);
+  window.removeEventListener("pointermove", trackPointer, { capture: true });
   document.documentElement.removeEventListener("pointerleave", dropPointer);
 });
 </script>
@@ -291,27 +305,20 @@ onUnmounted(() => {
   opacity: 1;
   pointer-events: auto;
 }
+/* A dark chip with a white icon, so the buttons read over any picture; the same as
+   Load Image's (ImagePick.vue's .li-ov-btn). ZenIconButton's own look (no background, muted icon) is for a toolbar, hence
+   the !important. Pointing at one fills it with the accent. */
 .sp-act {
-  width: 26px;
-  height: 26px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: var(--zen-radius, 6px);
-  background: rgba(0, 0, 0, 0.46);
-  color: #fff;
-  cursor: pointer;
+  width: 26px !important;
+  height: 26px !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  background: rgba(0, 0, 0, 0.46) !important;
+  color: #fff !important;
   backdrop-filter: blur(4px);
-  transition:
-    background 0.12s ease,
-    border-color 0.12s ease;
 }
 .sp-act:hover {
-  background: var(--zen-accent, #6366f1);
-  border-color: var(--zen-accent, #6366f1);
-}
-.sp-act .mdi {
-  font-size: 16px;
+  background: var(--zen-accent, #6366f1) !important;
+  border-color: var(--zen-accent, #6366f1) !important;
+  color: var(--zen-accent-text, #fff) !important;
 }
 </style>

@@ -1,7 +1,8 @@
 // The Fresco scene: what the editor edits and what the backend reads (nodes/fresco/_io_types.py).
 // Pure — parsing a saved value, defaults, and the shapes — so the widget only deals in state.
 
-import type { SourceType } from "@/lib/fusionApi";
+import type { SourceType } from "@/lib/mediaRefs";
+import { clamp01, nextColor, num, uid } from "@/lib/sceneUtil";
 
 export type RefFit = "contain" | "cover" | "stretch";
 export const REF_FITS: RefFit[] = ["contain", "cover", "stretch"];
@@ -138,7 +139,6 @@ export interface FrescoScene {
   settings: FrescoSettings;
 }
 
-export const BACKGROUND_ID = "background";
 /** Mirrors nodes/fresco/_scene.py: an edit keeps the scene unless asked. */
 export const BACKGROUND_DENOISE = 0.05;
 
@@ -154,16 +154,6 @@ export const PALETTE = [
   "#ff9a4f",
 ];
 
-let seq = 0;
-export function uid(prefix = "l"): string {
-  return `${prefix}${Date.now().toString(36)}${(seq++).toString(36)}`;
-}
-
-function num(v: unknown, fallback: number): number {
-  const n = +(v as number);
-  return Number.isFinite(n) ? n : fallback;
-}
-const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 const obj = (v: unknown): Record<string, unknown> =>
   v && typeof v === "object" && !Array.isArray(v) ? (v as Record<string, unknown>) : {};
 const list = (v: unknown): Record<string, unknown>[] =>
@@ -171,28 +161,38 @@ const list = (v: unknown): Record<string, unknown>[] =>
     ? v.filter((x): x is Record<string, unknown> => !!x && typeof x === "object")
     : [];
 
+/** Stored references, as a layer (or a layout's mixin) keeps them. */
+export function readRefs(raw: unknown): FrescoRef[] {
+  return list(raw)
+    .filter((r) => r.ref)
+    .map((r) => ({
+      id: String(r.id ?? uid("r")),
+      ref: String(r.ref),
+      type: (["input", "temp", "output"].includes(r.type as string)
+        ? r.type
+        : "input") as SourceType,
+      strength: Math.max(0, num(r.strength, 1)),
+      fit: (REF_FITS.includes(r.fit as RefFit) ? r.fit : "contain") as RefFit,
+      on: r.on !== false,
+    }));
+}
+
+/** Stored LoRAs, as a layer (or a layout's mixin) keeps them. */
+export function readLoras(raw: unknown): FrescoLora[] {
+  return list(raw).map((r) => ({
+    id: String(r.id ?? uid("o")),
+    name: String(r.name ?? ""),
+    strength: num(r.strength, 1),
+    on: r.on !== false,
+  }));
+}
+
 function parseContent(raw: Record<string, unknown>, denoise = 1): FrescoContent {
   return {
     on: raw.on !== false,
     prompt: String(raw.prompt ?? ""),
-    refs: list(raw.refs)
-      .filter((r) => r.ref)
-      .map((r) => ({
-        id: String(r.id ?? uid("r")),
-        ref: String(r.ref),
-        type: (["input", "temp", "output"].includes(r.type as string)
-          ? r.type
-          : "input") as SourceType,
-        strength: Math.max(0, num(r.strength, 1)),
-        fit: (REF_FITS.includes(r.fit as RefFit) ? r.fit : "contain") as RefFit,
-        on: r.on !== false,
-      })),
-    loras: list(raw.loras).map((r) => ({
-      id: String(r.id ?? uid("o")),
-      name: String(r.name ?? ""),
-      strength: num(r.strength, 1),
-      on: r.on !== false,
-    })),
+    refs: readRefs(raw.refs),
+    loras: readLoras(raw.loras),
     denoise: clamp01(num(raw.denoise, denoise)),
     influence: Math.min(4, Math.max(0, num(raw.influence, 1))),
     blend: (BLENDS.some((b) => b.value === raw.blend) ? raw.blend : "mix") as Blend,
@@ -272,8 +272,7 @@ export function newLayer(
   rect: { x: number; y: number; w: number; h: number },
   existing: FrescoLayer[],
 ): FrescoLayer {
-  const used = new Set(existing.map((l) => l.color));
-  const color = PALETTE.find((c) => !used.has(c)) ?? PALETTE[existing.length % PALETTE.length]!;
+  const color = nextColor(existing, PALETTE);
   let n = existing.length + 1;
   const names = new Set(existing.map((l) => l.name));
   while (names.has(`Layer ${n}`)) n++;

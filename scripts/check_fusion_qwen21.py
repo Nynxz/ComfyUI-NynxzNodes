@@ -12,22 +12,15 @@ counted forwards, so the checks here stub a text encoder that trims *exactly* th
 The token ids below are not invented — they were read off a real `QwenImage21Tokenizer` for the
 prompt "a red fox" with one image, so the layout this pins is the layout core produces.
 
-`_fusion.py` reaches for `comfy.utils`, `comfy.model_management`, `node_helpers` and `comfy_api`
-at import time; those are stubbed the same way `check_fusion_alpha.py` stubs them.
+ComfyUI is stubbed by `_harness.stub_comfy`, as for every fusion check.
 """
 
 from __future__ import annotations
 
-import importlib.util
-import sys
-import types
 import unittest
-from pathlib import Path
 
 import torch
-import torch.nn.functional as F
-
-NODES = Path(__file__).resolve().parents[1] / "nodes"
+from _harness import load, stub_comfy
 
 # --- the real layout, measured ---------------------------------------------------------------
 # QwenImage21Tokenizer("a red fox", images=[img]) -> 32 pairs, the image embed at index 22.
@@ -42,96 +35,22 @@ TAIL_IDS = [151653, 64, 2518, 38835, 151645, 198, 151644, 77091, 198]
 TRIM_AT = 14
 
 
-def _stub_comfy():
-    def common_upscale(samples, width, height, upscale_method, crop):
-        if crop == "center":
-            old_width, old_height = samples.shape[-1], samples.shape[-2]
-            old_aspect, new_aspect = old_width / old_height, width / height
-            x = y = 0
-            if old_aspect > new_aspect:
-                x = round((old_width - old_width * (new_aspect / old_aspect)) / 2)
-            elif old_aspect < new_aspect:
-                y = round((old_height - old_height * (old_aspect / new_aspect)) / 2)
-            samples = samples.narrow(-2, y, old_height - y * 2).narrow(-1, x, old_width - x * 2)
-        return F.interpolate(samples, size=(height, width), mode=upscale_method)
-
-    def conditioning_set_values(conditioning, values, append=False):
-        out = []
-        for cond, meta in conditioning:
-            meta = meta.copy()
-            for key, value in values.items():
-                if append and key in meta:
-                    meta[key] = list(meta[key]) + list(value)
-                else:
-                    meta[key] = value
-            out.append([cond, meta])
-        return out
-
-    utils = types.ModuleType("comfy.utils")
-    utils.common_upscale = common_upscale
-    management = types.ModuleType("comfy.model_management")
-    management.intermediate_device = lambda: torch.device("cpu")
-    comfy = types.ModuleType("comfy")
-    comfy.__path__ = []
-    comfy.utils = utils
-    comfy.model_management = management
-    helpers = types.ModuleType("node_helpers")
-    helpers.conditioning_set_values = conditioning_set_values
-    sys.modules.setdefault("comfy", comfy)
-    sys.modules.setdefault("comfy.utils", utils)
-    sys.modules.setdefault("comfy.model_management", management)
-    sys.modules.setdefault("node_helpers", helpers)
-
-    class _Any:
-        def __getattr__(self, name):
-            return _Any()
-
-        def __call__(self, *args, **kwargs):
-            return _Any()
-
-    latest = types.ModuleType("comfy_api.latest")
-    latest.io = _Any()
-    api = types.ModuleType("comfy_api")
-    api.latest = latest
-    sys.modules.setdefault("comfy_api", api)
-    sys.modules.setdefault("comfy_api.latest", latest)
-
-
-def _load(name):
-    """Import nodes/fusion/<name>.py under enough package scaffolding for its relative imports."""
-    if "nynxz_check" not in sys.modules:
-        pack = types.ModuleType("nynxz_check")
-        pack.__path__ = [str(NODES)]
-        lib = types.ModuleType("nynxz_check._zenkit")
-        lib.__path__ = [str(NODES / "_zenkit")]
-        io_types = types.ModuleType("nynxz_check._zenkit.io_types")
-        io_types.advanced = lambda widget: widget
-        group = types.ModuleType("nynxz_check.fusion")
-        group.__path__ = [str(NODES / "fusion")]
-        sys.modules.update(
-            {
-                "nynxz_check": pack,
-                "nynxz_check._zenkit": lib,
-                "nynxz_check._zenkit.io_types": io_types,
-                "nynxz_check.fusion": group,
-            }
-        )
-    full = f"nynxz_check.fusion.{name}"
-    if full in sys.modules:
-        return sys.modules[full]
-    spec = importlib.util.spec_from_file_location(full, NODES / "fusion" / f"{name}.py")
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[full] = module
-    spec.loader.exec_module(module)
-    return module
-
-
-_stub_comfy()
-encoders = _load("_encoders")
-fusion = _load("_fusion")
+stub_comfy()
+encoders = load("fusion._encoders")
+fusion = load("fusion._fusion")
 
 
 # --- stubs standing in for the real encoders ---------------------------------------------------
+def _layout(images):
+    """The measured layout, with one image embed per image. With none, the vision markers go too,
+    as the real templates drop the whole vision block."""
+    if not images:
+        return [(i, 1.0) for i in HEAD_IDS[:-1] + TAIL_IDS[1:]]
+    pairs = [(i, 1.0) for i in HEAD_IDS]
+    pairs += [({"type": "image", "data": img, "original_type": "image"}, 1.0) for img in images]
+    return pairs + [(i, 1.0) for i in TAIL_IDS]
+
+
 class QwenImage21Tokenizer:
     """The 2.1 tokenizer's contract: the measured id layout, plus `keep_vision` in the dict."""
 
@@ -144,9 +63,7 @@ class QwenImage21Tokenizer:
         prevent_empty_text=False,
         **kwargs,
     ):
-        pairs = [(i, 1.0) for i in HEAD_IDS]
-        pairs += [({"type": "image", "data": img, "original_type": "image"}, 1.0) for img in images]
-        pairs += [(i, 1.0) for i in TAIL_IDS]
+        pairs = _layout(images)
         return {"qwen3vl_8b": [pairs], "keep_vision": keep_vision}
 
 
@@ -154,9 +71,7 @@ class Qwen3VLTokenizer:
     """A plain Qwen3-VL tokenizer: one key, no keep_vision, template passed through verbatim."""
 
     def tokenize_with_weights(self, text, return_word_ids=False, images=(), **kwargs):
-        pairs = [(i, 1.0) for i in HEAD_IDS]
-        pairs += [({"type": "image", "data": img, "original_type": "image"}, 1.0) for img in images]
-        pairs += [(i, 1.0) for i in TAIL_IDS]
+        pairs = _layout(images)
         return {"qwen3vl_4b": [pairs]}
 
 
@@ -676,6 +591,93 @@ class StructureAndSemanticSplit(LatentFusionHarness, unittest.TestCase):
         )
         self.assertEqual(debug["reference_mode"], fusion.TOKEN_MODE)
         self.assertNotIn("structure_anchor", debug)
+
+
+class ShiftedTailTokenizer(Qwen3VLTokenizer):
+    """Reads the prompt alone with a different close, so the two readings can't line up."""
+
+    def tokenize_with_weights(self, text, return_word_ids=False, images=(), **kwargs):
+        tokens = super().tokenize_with_weights(text, images=images)
+        if not images:
+            tokens["qwen3vl_4b"][0].append((198, 1.0))
+        return tokens
+
+
+# Everything after the image's closing <|vision_end|>: what a reading with no image ends in too.
+PROMPT_IDS = TAIL_IDS[1:]
+
+
+class PromptMode(unittest.TestCase):
+    """The prompt read with no image, blended into or appended after the fused conditioning."""
+
+    def setUp(self):
+        fusion._COND_CACHE.clear()
+        fusion._LATENT_CACHE.clear()
+
+    def run_fusion(self, tokenizer=None, vae=None, **kwargs):
+        clip = FakeClip(tokenizer or QwenImage21Tokenizer(), visual_tokens=16)
+        cond = fusion.encode_fusion(
+            clip,
+            "a red fox",
+            sources=[image(0.2), image(0.8)],
+            settings=settings(visual_size=128, **kwargs),
+            strengths=[1.0, 1.0],
+            fits=["stretch", "stretch"],
+            vae=vae,
+        )
+        fusion._COND_CACHE.clear()
+        return cond[0]
+
+    def tail_shift(self, **kwargs):
+        base, _ = self.run_fusion()
+        moved, _ = self.run_fusion(prompt_mode=fusion.PROMPT_BLEND, **kwargs)
+        count = len(PROMPT_IDS)
+        self.assertTrue(torch.equal(base[:, :-count], moved[:, :-count]))
+        return (moved[0, -count:, 0] - base[0, -count:, 0]).tolist()
+
+    def test_with_reference_is_the_default_and_changes_nothing(self):
+        self.assertEqual(fusion.FusionSettings().prompt_mode, fusion.PROMPT_WITH_REFERENCE)
+        base, _ = self.run_fusion()
+        same, _ = self.run_fusion(prompt_mode=fusion.PROMPT_WITH_REFERENCE)
+        self.assertTrue(torch.equal(base, same))
+
+    def test_blend_zero_is_the_reading_with_the_reference(self):
+        self.assertEqual(set(self.tail_shift(prompt_blend=0.0)), {0.0})
+
+    def test_blend_moves_only_the_prompt_tokens_position_for_position(self):
+        full = self.tail_shift(prompt_blend=1.0)
+        half = self.tail_shift(prompt_blend=0.5)
+        # Each text position carries its own id plus a per-encode offset, so a reading lined up
+        # position for position differs from the other by one constant; a misaligned one doesn't.
+        self.assertEqual(len(set(full)), 1)
+        self.assertNotEqual(full[0], 0.0)
+        self.assertEqual([round(v * 2, 6) for v in half], [round(v, 6) for v in full])
+
+    def test_append_adds_the_clean_reading_after_the_fused_one(self):
+        base, _ = self.run_fusion()
+        cond, meta = self.run_fusion(prompt_mode=fusion.PROMPT_APPEND)
+        length = base.shape[1]
+        start, end = meta["nynxz_clean_prompt_span"]
+        self.assertEqual((start, end), (length, cond.shape[1]))
+        self.assertTrue(torch.equal(cond[:, :length], base))
+        self.assertEqual(meta["nynxz_tail_ids"], TAIL_IDS)
+        self.assertTrue(torch.all(cond[0, start:, 0] < FakeClip.VISUAL_BASE))
+
+    def test_full_blend_in_reference_latent_mode_is_the_clean_reading(self):
+        base, _ = self.run_fusion(vae=FakeVae())
+        moved, meta = self.run_fusion(
+            vae=FakeVae(), prompt_mode=fusion.PROMPT_BLEND, prompt_blend=1.0
+        )
+        count = len(PROMPT_IDS)
+        self.assertEqual(len(meta["image_slots"]), 1)
+        self.assertTrue(torch.equal(base[:, :-count], moved[:, :-count]))
+        # Two source encodes come first (offsets 0 and 1), so the clean reading carries offset 2.
+        clean = [float(i % 97) + 2.0 for i in PROMPT_IDS]
+        self.assertEqual(moved[0, -count:, 0].tolist(), clean)
+
+    def test_readings_that_do_not_line_up_are_refused(self):
+        with self.assertRaisesRegex(ValueError, "can't be lined up"):
+            self.run_fusion(ShiftedTailTokenizer(), prompt_mode=fusion.PROMPT_BLEND)
 
 
 if __name__ == "__main__":

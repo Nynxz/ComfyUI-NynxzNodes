@@ -1,14 +1,10 @@
-"""Text Encode Qwen Image Edit (Fusion) — the Fusion Input consumer.
+"""Text Encode (Fusion) — encode a prompt with several images blended into one conditioning.
 
-Same engine as the original visual-fusion node (`_fusion.encode_fusion`), but it takes its
-sources from a Fusion Input node instead of its own autogrow sockets. That moves per-image
-concerns (strength, fit, mute, order) onto the grid where you can see them, and leaves this
-node holding only the prompt and the fusion tuning. Chain Fusion Input nodes together to
-group more sources into the one input.
-
-Beyond the original: sources carry a per-image strength (relative prevalence in the blend)
-and fit mode, and the visual grid's size/aspect is explicit rather than inherited from
-whichever image happened to be first.
+Runs the fusion engine (`_fusion.encode_fusion`) on the sources a Fusion Input (or Fusion Images,
+or Fusion Regions) node collects: per-image concerns (strength, fit, mute, order) live on that
+grid where you can see them, and this node holds the prompt and the fusion tuning. Sources carry
+a per-image strength (relative prevalence in the blend) and fit mode; the visual grid's size and
+aspect are explicit (or follow a wired latent).
 """
 
 import base64
@@ -27,11 +23,13 @@ from ._fusion import (
     DEFAULT_STRUCTURE_SOURCE,
     FIT_OVERRIDE,
     FIT_OVERRIDE_OPTIONS,
+    PROMPT_WITH_REFERENCE,
     FusionSettings,
     alpha_input,
     empty_latent,
     encode_fusion,
     flatten_alpha,
+    prompt_inputs,
     reference_mode_input,
     seed_input,
     split_alpha,
@@ -149,6 +147,7 @@ class NynxzFusionEncode(FusionNode):
                 alpha_input(),
                 reference_mode_input(),
                 *structure_inputs(),
+                *prompt_inputs(),
                 io.Vae.Input("vae", optional=True),
                 io.Latent.Input(
                     "latent",
@@ -207,6 +206,8 @@ class NynxzFusionEncode(FusionNode):
         reference_mode=DEFAULT_REFERENCE_MODE,
         structure_source=DEFAULT_STRUCTURE_SOURCE,
         semantic_strength=1.0,
+        prompt_mode=PROMPT_WITH_REFERENCE,
+        prompt_blend=0.5,
         latent=None,
     ) -> io.NodeOutput:
         # One image is fine: the blend is a passthrough, which is what you want when this node
@@ -241,6 +242,8 @@ class NynxzFusionEncode(FusionNode):
             reference_mode=reference_mode,
             structure_source=structure_source,
             semantic_strength=semantic_strength,
+            prompt_mode=prompt_mode,
+            prompt_blend=prompt_blend,
             **_region_settings(entries),
         )
         # "per image" keeps each source's own fit; any other value forces all of them.
@@ -314,6 +317,8 @@ class NynxzFusionEncode(FusionNode):
                     "structure_source": debug.get("structure_source", ""),
                     "structure_anchor": debug.get("structure_anchor", -1),
                     "semantic_strength": settings.semantic_strength,
+                    "prompt_mode": settings.prompt_mode,
+                    "prompt_blend": settings.prompt_blend,
                     # How many sources actually carry a mask — the inspector dims the alpha row
                     # when it's none, so the knob reads as inert rather than ignored.
                     "alpha_sources": sum(1 for entry in entries if entry["image"].shape[-1] >= 4),
