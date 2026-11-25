@@ -391,9 +391,16 @@
               sm
               :model-value="box.capture"
               placeholder="e.g. jacket, -hands — or click with the wand (W)"
-              @update:model-value="patchBox({ capture: String($event ?? '') })"
+              @update:model-value="
+                segmentError = '';
+                patchBox({ capture: String($event ?? '') });
+              "
               @keydown.enter="segment"
             />
+            <p v-if="segmentError" class="pl-seg-err">
+              <i class="mdi mdi-alert-circle-outline" />
+              {{ segmentError }}
+            </p>
           </FrescoSection>
 
           <FrescoSection
@@ -780,6 +787,7 @@
  * plain Regions mode, reusable Mixins, direct per-box references & LoRAs, painted shapes, SAM3
  * wand/capture, drag-and-drop images on canvas, box-face previews, and background regions.
  */
+import { api } from "@comfy/api";
 import { app } from "@comfy/app";
 import {
   ZenButton,
@@ -797,7 +805,7 @@ import {
   type BoxTool,
   type ContextMenuItem,
 } from "@nynxz/zenkit-ui";
-import { computed, nextTick, onBeforeUnmount, ref, watch, watchEffect } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch, watchEffect } from "vue";
 
 import FrescoLoras from "@/components/fresco/FrescoLoras.vue";
 import FrescoPills from "@/components/fresco/FrescoPills.vue";
@@ -1555,6 +1563,7 @@ function onPointUp(e: PointerEvent, index: number) {
 }
 
 const segmenting = ref(false);
+const segmentError = ref("");
 const captureNote = computed(() => {
   if (segmenting.value) return "segmenting…";
   const n = box.value?.points.length ?? 0;
@@ -1562,21 +1571,58 @@ const captureNote = computed(() => {
 });
 let segmentTimer: ReturnType<typeof setTimeout> | undefined;
 let segmentWatchdog: ReturnType<typeof setTimeout> | undefined;
+function finishSegment(error = "") {
+  segmenting.value = false;
+  clearTimeout(segmentWatchdog);
+  segmentWatchdog = undefined;
+  segmentError.value = error;
+}
 function scheduleSegment() {
   clearTimeout(segmentTimer);
+  segmentError.value = "";
   segmentTimer = setTimeout(() => void segment(), 700);
 }
 async function segment() {
   clearTimeout(segmentTimer);
   if (segmenting.value || props.node?.id == null) return;
   segmenting.value = true;
-  segmentWatchdog = setTimeout(() => (segmenting.value = false), 120_000);
+  segmentError.value = "";
+  clearTimeout(segmentWatchdog);
+  segmentWatchdog = setTimeout(() => finishSegment("Segmentation timed out."), 60_000);
   try {
     await app.queuePrompt(0, 1, [String(props.node.id)]);
-  } catch {
-    segmenting.value = false;
+  } catch (e) {
+    finishSegment((e as Error)?.message || "Could not queue segmentation.");
   }
 }
+const apiEvents = api as unknown as {
+  addEventListener(t: string, f: (e: Event) => void): void;
+  removeEventListener(t: string, f: (e: Event) => void): void;
+};
+function onExecutionError(e: Event) {
+  if (!segmenting.value) return;
+  const detail = (e as CustomEvent<{ exception_message?: string }>).detail;
+  finishSegment(detail?.exception_message?.trim() || "Segmentation failed.");
+}
+function onExecutionInterrupted() {
+  if (!segmenting.value) return;
+  finishSegment("Segmentation interrupted.");
+}
+function onExecutionSuccess() {
+  if (!segmenting.value) return;
+  finishSegment("");
+}
+onMounted(() => {
+  apiEvents.addEventListener("execution_error", onExecutionError);
+  apiEvents.addEventListener("execution_interrupted", onExecutionInterrupted);
+  apiEvents.addEventListener("execution_success", onExecutionSuccess);
+});
+watch(
+  () => box.value?.id,
+  () => {
+    segmentError.value = "";
+  },
+);
 function takeMasks(masks: { id: string; mask: string; source: string }[]) {
   const byId = new Map(masks.map((m) => [m.id, m]));
   if (byId.size)
@@ -1625,9 +1671,11 @@ useSentBack(
   (outputData, image) => {
     if (Array.isArray(outputData.layout_masks)) {
       takeMasks(outputData.layout_masks as { id: string; mask: string; source: string }[]);
-      segmenting.value = false;
-      clearTimeout(segmentWatchdog);
     }
+    const err = Array.isArray(outputData.layout_segment_error)
+      ? String(outputData.layout_segment_error[0] ?? "")
+      : "";
+    if (segmenting.value || err) finishSegment(err);
     if (image) editor.value?.offerBackdrop(image);
   },
 );
@@ -1665,6 +1713,9 @@ onBeforeUnmount(() => {
   clearTimeout(timer);
   clearTimeout(segmentTimer);
   clearTimeout(segmentWatchdog);
+  apiEvents.removeEventListener("execution_error", onExecutionError);
+  apiEvents.removeEventListener("execution_interrupted", onExecutionInterrupted);
+  apiEvents.removeEventListener("execution_success", onExecutionSuccess);
 });
 const copied = ref(false);
 async function copyOutput() {
@@ -1823,6 +1874,18 @@ async function copyOutput() {
   margin: 0;
   font-size: 11px;
   color: var(--zen-muted, #9aa0aa);
+}
+.pl-seg-err {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  margin: 0;
+  padding: 5px 7px;
+  border-radius: var(--zen-radius, 6px);
+  background: color-mix(in srgb, var(--zen-warning, #f5b041) 14%, transparent);
+  color: var(--zen-warning, #f5b041);
+  font-size: 11px;
+  line-height: 1.35;
 }
 .pl-grid {
   display: grid;

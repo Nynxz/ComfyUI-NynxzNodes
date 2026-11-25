@@ -73,7 +73,7 @@ class NynxzLayout(NynxzNode):
         vae = sources.get("vae")
         sam3 = sources.get("sam3")
 
-        segmented = cls._segment(raw, image, sam3)
+        segmented, segment_error = cls._segment(raw, image, sam3)
         if segmented:
             by_id = {m["id"]: m for m in segmented}
             boxes = raw.get("boxes")
@@ -93,29 +93,38 @@ class NynxzLayout(NynxzNode):
                 "vae": vae,
             },
         }
-        if image is None:
-            return io.NodeOutput(out)
-        ui_out = sent_back("layout", node_id, image, cls, "nynxz.layout.source")
-        if segmented:
-            ui_out["layout_masks"] = segmented
-        return io.NodeOutput(out, ui=ui_out)
+        ui_out: dict | None = None
+        if image is not None:
+            ui_out = sent_back("layout", node_id, image, cls, "nynxz.layout.source")
+        elif segment_error:
+            ui_out = {"layout_node": [node_id]}
+        if ui_out is not None:
+            if segmented:
+                ui_out["layout_masks"] = segmented
+            if segment_error:
+                ui_out["layout_segment_error"] = [segment_error]
+            return io.NodeOutput(out, ui=ui_out)
+        return io.NodeOutput(out)
 
     @staticmethod
-    def _segment(raw: dict, image, checkpoint: str | None) -> list[dict]:
+    def _segment(raw: dict, image, checkpoint: str | None) -> tuple[list[dict], str | None]:
         """Segment any shown box whose `capture` or `points` changed; SAM3 loads lazily."""
-        if image is None:
-            return []
         parsed = _prompt.parse(raw)
         boxes = _prompt.shown(parsed)
-        stale = [(box, src) for box in boxes if (src := _segment.stale(box, image))]
+        wanting = [box for box in boxes if _segment.wants(box)]
+        if not wanting:
+            return [], None
+        if image is None:
+            return [], "Wire a photo into Layout Inputs to segment."
+        stale = [(box, src) for box in wanting if (src := _segment.stale(box, image))]
         if not stale:
-            return []
+            return [], None
         if checkpoint is None:
             logging.warning(
                 "Nynxz Layout: some boxes capture something — pick the SAM3 checkpoint on "
                 "Layout Inputs."
             )
-            return []
+            return [], "Pick a SAM3 checkpoint on Layout Inputs."
         model, sam_clip = _segment.load(checkpoint)
         changed = []
         for box, source in stale:
@@ -129,4 +138,6 @@ class NynxzLayout(NynxzNode):
                     "source": source,
                 }
             )
-        return changed
+        if not changed:
+            return [], "SAM3 found nothing inside the box."
+        return changed, None
