@@ -186,14 +186,18 @@
                 <span class="le-count">{{ layoutBoxes.length }}</span>
               </header>
               <ZenScroll class="le-body">
-                <ZenLayerList
-                  :selected="listSelection"
-                  :items="layerItems"
-                  @update:selected="selectFromList"
-                  @reorder="reorder"
-                  @toggle-hidden="toggleHidden"
-                  @toggle-locked="(id: string) => patchBoxes([id], (b) => ({ locked: !b.locked }))"
-                />
+                <div ref="layersEl">
+                  <ZenLayerList
+                    :selected="listSelection"
+                    :items="layerItems"
+                    @update:selected="selectFromList"
+                    @reorder="reorder"
+                    @toggle-hidden="toggleHidden"
+                    @toggle-locked="
+                      (id: string) => patchBoxes([id], (b) => ({ locked: !b.locked }))
+                    "
+                  />
+                </div>
               </ZenScroll>
             </section>
           </template>
@@ -935,6 +939,19 @@ const layerItems = computed<LayerItem[]>(() => [
   },
 ]);
 const listSelection = computed(() => (selected.value.length ? selected.value : [SCENE_ROW]));
+const layersEl = ref<HTMLElement | null>(null);
+watch(
+  [layerItems, layersEl],
+  () => {
+    const root = layersEl.value;
+    if (!root) return;
+    for (const btn of root.querySelectorAll<HTMLButtonElement>("button.zll-btn")) {
+      if (btn.title === "Hide") btn.title = "Mute (skip on run)";
+      else if (btn.title === "Show") btn.title = "Unmute";
+    }
+  },
+  { flush: "post", immediate: true },
+);
 function selectFromList(ids: string[]) {
   const next = ids.filter((id) => id !== SCENE_ROW);
   selected.value = next;
