@@ -19,7 +19,9 @@
         </slot>
       </InfoHover>
       <span v-if="note" class="fsec-note">{{ note }}</span>
-      <span v-if="!collapsible || isOpen" class="fsec-acts"><slot name="actions" /></span>
+      <span class="fsec-acts" :class="{ hidden: collapsible && !isOpen }">
+        <slot name="actions" />
+      </span>
     </header>
     <template v-if="!collapsible || isOpen">
       <slot />
@@ -75,7 +77,7 @@ watch(
   display: flex;
   align-items: center;
   gap: 5px;
-  min-height: 22px;
+  min-height: 24px;
 }
 .fsec-toggle {
   display: inline-flex;
@@ -116,6 +118,10 @@ watch(
   display: flex;
   gap: 2px;
   margin-left: auto;
+}
+.fsec-acts.hidden {
+  visibility: hidden;
+  pointer-events: none;
 }
 .fsec-tip-title {
   margin: 0 0 4px;
