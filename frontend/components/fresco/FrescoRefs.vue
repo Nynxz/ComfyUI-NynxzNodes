@@ -364,7 +364,7 @@ function addPicked(picked: string[]) {
   gap: 6px;
   padding: 4px 5px;
   border: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 55%, transparent);
-  border-radius: 6px;
+  border-radius: var(--zen-radius, 7px);
   background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);
   transition: transform 0.14s ease;
 }
@@ -412,7 +412,7 @@ function addPicked(picked: string[]) {
   flex: none;
   width: 42px;
   height: 42px;
-  border-radius: 5px;
+  border-radius: min(var(--zen-radius, 7px), 5px);
   overflow: hidden;
   background-color: #18181d;
   background-image:
@@ -456,7 +456,7 @@ function addPicked(picked: string[]) {
   gap: 3px;
   padding: 1px 6px;
   border: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 70%, transparent);
-  border-radius: 999px;
+  border-radius: var(--zen-radius, 7px);
   background: transparent;
   color: var(--zen-muted, #9aa0aa);
   font: inherit;
@@ -487,7 +487,7 @@ function addPicked(picked: string[]) {
   height: 32px;
   padding: 0 8px;
   border: 1.5px dashed var(--zen-border, #34343c);
-  border-radius: 6px;
+  border-radius: var(--zen-radius, 7px);
   background: transparent;
   color: var(--zen-muted, #9aa0aa);
   font: inherit;

@@ -1837,7 +1837,7 @@ async function copyOutput() {
   height: 24px;
   padding: 0 9px 0 3px;
   border: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 80%, transparent);
-  border-radius: 11px;
+  border-radius: var(--zen-radius, 7px);
   background: transparent;
   color: var(--zen-muted, #9aa0aa);
   font-size: 11px;
@@ -1870,7 +1870,7 @@ async function copyOutput() {
   max-width: 100%;
   padding: 2px 6px 2px 3px;
   border: 1px dashed color-mix(in srgb, var(--zen-border, #34343c) 90%, transparent);
-  border-radius: 5px;
+  border-radius: min(var(--zen-radius, 7px), 5px);
   background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);
   color: var(--zen-muted, #9aa0aa);
   font: inherit;
@@ -1885,7 +1885,7 @@ async function copyOutput() {
 .pl-inh-ref img {
   width: 18px;
   height: 18px;
-  border-radius: 3px;
+  border-radius: min(var(--zen-radius, 7px), 3px);
   object-fit: cover;
 }
 .pl-inh-name {

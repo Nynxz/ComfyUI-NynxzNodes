@@ -517,7 +517,7 @@ const tileMenuItems = computed<ContextMenuItem[]>(() => {
   padding: 0;
   overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 75%, transparent);
-  border-radius: 8px;
+  border-radius: var(--zen-radius, 7px);
   background: var(--zen-surface-2, #222229);
   color: var(--zen-text, #e5e5ea);
   font: inherit;
@@ -573,7 +573,7 @@ const tileMenuItems = computed<ContextMenuItem[]>(() => {
   place-items: center;
   width: 32px;
   height: 32px;
-  border-radius: 50%;
+  border-radius: var(--zen-radius, 7px);
   border: 1.5px solid color-mix(in srgb, var(--lm-c, #6366f1) 80%, #fff);
   background: color-mix(in srgb, var(--lm-c, #6366f1) 28%, rgb(0 0 0 / 35%));
   color: #fff;
@@ -587,7 +587,7 @@ const tileMenuItems = computed<ContextMenuItem[]>(() => {
   left: 5px;
   width: 8px;
   height: 8px;
-  border-radius: 50%;
+  border-radius: min(var(--zen-radius, 7px), 4px);
   background: var(--lm-c, #6366f1);
   box-shadow: 0 0 0 1.5px rgb(0 0 0 / 55%);
 }
@@ -599,7 +599,7 @@ const tileMenuItems = computed<ContextMenuItem[]>(() => {
   align-items: center;
   gap: 3px;
   padding: 1px 4px;
-  border-radius: 999px;
+  border-radius: min(var(--zen-radius, 7px), 4px);
   background: rgb(0 0 0 / 62%);
   color: #fff;
   font-size: 9.5px;
@@ -702,7 +702,7 @@ const tileMenuItems = computed<ContextMenuItem[]>(() => {
   height: 22px;
   padding: 0;
   border: 0;
-  border-radius: 4px;
+  border-radius: min(var(--zen-radius, 7px), 4px);
   background: transparent;
   cursor: pointer;
 }

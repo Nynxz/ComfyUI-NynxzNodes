@@ -1108,7 +1108,7 @@ function when(t: number) {
   display: grid;
   place-items: center;
   height: 118px;
-  border-radius: 5px;
+  border-radius: min(var(--zen-radius, 7px), 5px);
   overflow: hidden;
 }
 .ml-hero-img {
@@ -1122,7 +1122,7 @@ function when(t: number) {
   left: 6px;
   width: 10px;
   height: 10px;
-  border-radius: 50%;
+  border-radius: min(var(--zen-radius, 7px), 5px);
   box-shadow: 0 0 0 1.5px rgb(0 0 0 / 55%);
 }
 .ml-badge,
@@ -1132,7 +1132,7 @@ function when(t: number) {
   align-items: center;
   gap: 3px;
   padding: 1px 6px;
-  border-radius: 999px;
+  border-radius: min(var(--zen-radius, 7px), 4px);
   font-size: 10px;
   font-weight: 600;
 }
@@ -1174,7 +1174,7 @@ function when(t: number) {
 }
 .ml-cat {
   padding: 0 5px;
-  border-radius: 4px;
+  border-radius: min(var(--zen-radius, 7px), 4px);
   background: color-mix(in srgb, var(--zen-accent, #6366f1) 14%, transparent);
   color: var(--zen-text, #e5e5ea);
   font-size: 10px;
@@ -1187,7 +1187,7 @@ function when(t: number) {
 .ml-trigger {
   max-width: 100%;
   padding: 0 5px;
-  border-radius: 4px;
+  border-radius: min(var(--zen-radius, 7px), 4px);
   background: color-mix(in srgb, var(--zen-text, #fff) 7%, transparent);
   font-family: var(--zen-mono, ui-monospace, monospace);
   font-size: 10px;
@@ -1218,7 +1218,7 @@ function when(t: number) {
   height: 24px;
   padding: 0;
   border: 0;
-  border-radius: 5px;
+  border-radius: min(var(--zen-radius, 7px), 4px);
   background: transparent;
   cursor: pointer;
 }
@@ -1232,7 +1232,7 @@ function when(t: number) {
 }
 .ml-dtag {
   padding: 1px 7px;
-  border-radius: 999px;
+  border-radius: var(--zen-radius, 7px);
   background: color-mix(in srgb, var(--zen-text, #fff) 8%, transparent);
 }
 .ml-dtag.linked {

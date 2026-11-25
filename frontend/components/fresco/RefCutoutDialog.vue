@@ -369,7 +369,7 @@ onBeforeUnmount(() => stop());
   max-width: 100%;
   max-height: 290px;
   object-fit: contain;
-  border-radius: 4px;
+  border-radius: min(var(--zen-radius, 7px), 4px);
 }
 .rc-pt {
   position: absolute;
@@ -403,7 +403,7 @@ onBeforeUnmount(() => stop());
 .rc-chip {
   padding: 2px 8px;
   border: 1px solid var(--zen-border, #34343c);
-  border-radius: 999px;
+  border-radius: var(--zen-radius, 7px);
   background: none;
   color: var(--zen-muted, #9aa0aa);
   font: inherit;
@@ -496,14 +496,14 @@ onBeforeUnmount(() => stop());
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  border-radius: 4px;
+  border-radius: min(var(--zen-radius, 7px), 4px);
 }
 .rc-dims {
   position: absolute;
   right: 8px;
   bottom: 8px;
   padding: 2px 7px;
-  border-radius: 999px;
+  border-radius: min(var(--zen-radius, 7px), 4px);
   background: rgb(0 0 0 / 68%);
   color: #fff;
   font-size: 10px;

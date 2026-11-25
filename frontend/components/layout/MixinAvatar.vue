@@ -39,7 +39,7 @@ const letter = computed(() => (mixin.name.trim()[0] ?? "?").toUpperCase());
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border-radius: 50%;
+  border-radius: var(--zen-radius, 7px);
   border: 2px solid var(--ma-color);
   background: color-mix(in srgb, var(--ma-color) 35%, var(--zen-bg, #141418));
 }
