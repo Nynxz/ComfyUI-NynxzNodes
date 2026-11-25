@@ -2,7 +2,8 @@
 
 Like ComfyUI's Preview Image, but it shows the clean Nynxz preview (batch pager + a
 fullscreen lightbox) instead of the default bottom strip. Accepts a batch OR a list, so a
-dataset/folder loader feeds it directly and you can page/lightbox the whole set.
+dataset/folder loader feeds it directly and you can page/lightbox the whole set. The images
+are passed on unchanged from its output, so it can sit in the middle of a chain.
 """
 
 from __future__ import annotations
@@ -44,13 +45,22 @@ class NynxzPreviewImage(NynxzNode):
             display_name="Preview Image",
             description=(
                 "Preview images on the node with a clean custom preview (batch pager + "
-                "fullscreen lightbox). Takes a batch or a list."
+                "fullscreen lightbox). Takes a batch or a list, and passes the images on "
+                "unchanged."
             ),
             inputs=[
                 io.Image.Input("images", tooltip="Images to preview (a batch or a list)."),
                 NynxzSavePreviewType.Input("preview", optional=True),
             ],
-            outputs=[],
+            # A list out because a list comes in (is_input_list): what arrives is handed on as it
+            # came, a single batch as a single batch and a list as that list.
+            outputs=[
+                io.Image.Output(
+                    "images",
+                    is_output_list=True,
+                    tooltip="The same images, unchanged.",
+                )
+            ],
             is_output_node=True,
             is_input_list=True,
         )
@@ -69,4 +79,5 @@ class NynxzPreviewImage(NynxzNode):
                 cls,
                 compress_level=2,
             )
-        return io.NodeOutput(ui={"preview": records})
+        passed = images if isinstance(images, list) else [images]
+        return io.NodeOutput(passed, ui={"preview": records})

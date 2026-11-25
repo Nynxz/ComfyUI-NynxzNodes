@@ -25,6 +25,7 @@ const SLOTS: Record<LoraMode, Slot[]> = {
 };
 const TYPES: Record<Slot, string> = { model: "MODEL", clip: "CLIP" };
 const MODE_WIDGET = "apply_to";
+const SELECT = "select";
 
 const LOADER_TYPE = nodeId("Lora.Loader");
 
@@ -47,6 +48,7 @@ interface LGWidget {
   callback?: (v: unknown) => void;
 }
 export interface LoraNodeLike {
+  properties?: Record<string, unknown>;
   inputs?: LGSlot[];
   outputs?: LGSlot[];
   widgets?: LGWidget[];
@@ -91,6 +93,21 @@ function rebuild(node: LoraNodeLike, want: Slot[]) {
   for (let i = (node.outputs?.length ?? 0) - 1; i >= 0; i--) node.removeOutput(i);
   for (const name of want) node.addInput(name, TYPES[name]);
   for (const name of want) node.addOutput(name, TYPES[name]);
+  keepLast(node, "select");
+}
+
+/** Put the input called `name` back below the model/clip sockets, which were just re-added after
+ *  it. Only while nothing is wired to it: a linked input stays where its link points. */
+function keepLast(node: LoraNodeLike, name: string) {
+  const at = node.inputs?.findIndex((s) => s.name === name) ?? -1;
+  if (at < 0 || at === node.inputs!.length - 1) return;
+  const old = node.inputs![at]!;
+  if (old.link != null) return;
+  node.removeInput(at);
+  node.addInput(name, old.type);
+  // The re-added slot is a bare one: give it back what the definition had put on it (its
+  // tooltip, its label, that it is an input only).
+  Object.assign(node.inputs![node.inputs!.length - 1]!, { ...old, link: null });
 }
 
 /** Lay the node's model/clip sockets out for `mode`, keeping every link a kept slot had. */
@@ -136,11 +153,41 @@ function syncSlots(node: LoraNodeLike, mode: LoraMode) {
 }
 
 /** Name the sockets for `want` without moving any links. On load ComfyUI lays a node's sockets
- *  out in its definition's order (model, clip) while each link keeps the slot index it was saved
- *  at, so a CLIP-only node's clip link sits under a socket called "model". The links are already
- *  where the saved layout put them; only the names are wrong, so rename in place and drop the
- *  unlinked extras from the end. */
-function relabelSlots(node: LoraNodeLike, want: Slot[]) {
+ *  out in its definition's order (model, clip, select) while each link keeps the slot index it
+ *  was saved at, so a CLIP-only node's clip link sits under a socket called "model" and its
+ *  select link under one called "clip". The links are already where the saved layout put them;
+ *  only the names are wrong, so rename in place and drop the unlinked extras.
+ *
+ *  Inputs are named from `saved`, the node as it was stored, which says what each link was wired
+ *  to. Outputs have no select among them, so their order alone tells. */
+function relabelSlots(node: LoraNodeLike, want: Slot[], saved: unknown) {
+  const savedName = new Map<number, string>();
+  for (const s of (saved as { inputs?: LGSlot[] } | undefined)?.inputs ?? []) {
+    if (s?.link != null && (isSocket(s) || s.name === SELECT)) savedName.set(s.link, s.name);
+  }
+  const ours = (s: LGSlot) => isSocket(s) || s.name === SELECT;
+  const linkedAs = new Set<string>();
+  for (const slot of node.inputs?.filter(ours) ?? []) {
+    if (slot.link == null) continue;
+    const name = savedName.get(slot.link);
+    if (name && name !== slot.name) {
+      slot.name = name;
+      slot.type = name === SELECT ? "STRING" : TYPES[name as Slot];
+      Object.assign(slot, { localized_name: name, label: undefined, tooltip: undefined });
+    }
+    linkedAs.add(slot.name);
+  }
+  // An unlinked socket that a linked one now stands for, or that this mode doesn't have, goes.
+  for (let i = (node.inputs?.length ?? 0) - 1; i >= 0; i--) {
+    const slot = node.inputs![i]!;
+    if (!ours(slot) || slot.link != null) continue;
+    const spare = linkedAs.has(slot.name) || (isSocket(slot) && !want.includes(slot.name));
+    if (spare) node.removeInput(i);
+  }
+  for (const name of want) {
+    if (!node.inputs?.some((s) => s.name === name)) node.addInput(name, TYPES[name]);
+  }
+
   const rename = (
     slots: () => LGSlot[] | undefined,
     linked: (s: LGSlot) => boolean,
@@ -164,18 +211,39 @@ function relabelSlots(node: LoraNodeLike, want: Slot[]) {
     for (const name of want.slice(sockets().length)) add(name);
   };
   rename(
-    () => node.inputs,
-    (s) => s.link != null,
-    (i) => node.removeInput(i),
-    (name) => node.addInput(name, TYPES[name]),
-  );
-  rename(
     () => node.outputs,
     (s) => !!s.links?.length,
     (i) => node.removeOutput(i),
     (name) => node.addOutput(name, TYPES[name]),
   );
   node.setDirtyCanvas?.(true, true);
+}
+
+// The `select` input (choose a group's LoRAs from the graph) is off until asked for: most
+// loaders never use it, and a socket nobody wired is a row of the node spent on nothing. Whether
+// it is on is a node property; a graph saved with it wired keeps it either way.
+const SELECT_KEY = "nynxzLoraSelect";
+
+export const selectShown = (node: LoraNodeLike) => !!node.inputs?.some((s) => s.name === SELECT);
+
+function syncSelect(node: LoraNodeLike) {
+  const at = node.inputs?.findIndex((s) => s.name === SELECT) ?? -1;
+  const linked = at >= 0 && node.inputs![at]!.link != null;
+  const want = node.properties?.[SELECT_KEY] === true || linked;
+  if (want && at < 0) node.addInput(SELECT, "STRING");
+  else if (!want && at >= 0) node.removeInput(at);
+  if (want) keepLast(node, SELECT);
+  node.setDirtyCanvas?.(true, true);
+}
+
+/** Show or hide the `select` input. Hiding it drops whatever was wired to it. */
+export function setSelectShown(node: LoraNodeLike, shown: boolean) {
+  const at = node.inputs?.findIndex((s) => s.name === SELECT) ?? -1;
+  node.graph?.beforeChange?.();
+  if (!shown && at >= 0) node.removeInput(at);
+  if (node.properties) node.properties[SELECT_KEY] = shown;
+  syncSelect(node);
+  node.graph?.afterChange?.();
 }
 
 export function setLoraMode(node: LoraNodeLike, mode: LoraMode) {
@@ -204,12 +272,14 @@ app.registerExtension({
     // A new node lays out its default mode now; a loaded one gets its saved socket names back
     // once configure has restored the mode and the links.
     syncSlots(node, loraMode(node) ?? "both");
+    syncSelect(node);
     const prev = node.onConfigure;
     node.onConfigure = function (this: unknown, ...args: unknown[]) {
       prev?.apply(this, args);
       const mode = loraMode(node) ?? "both";
-      relabelSlots(node, SLOTS[mode]);
+      relabelSlots(node, SLOTS[mode], args[0]);
       syncSlots(node, mode);
+      syncSelect(node);
     };
   },
 } as never);

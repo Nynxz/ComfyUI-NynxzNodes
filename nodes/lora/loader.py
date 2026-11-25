@@ -12,9 +12,10 @@ from __future__ import annotations
 
 from comfy_api.latest import io
 
+from . import _select
 from ._base import LoraNode
 from .io_types import LoraStackType
-from .stack import apply_lora_stack
+from .stack import LOG_PREFIX, apply_lora_stack, normalize_stack
 
 MODES = ["model", "clip", "both"]
 
@@ -45,6 +46,21 @@ class NynxzLoraLoader(LoraNode):
                 ),
                 # Set from the stack widget's settings menu; the frontend hides this widget.
                 io.Combo.Input("apply_to", options=MODES, default="both", socketless=True),
+                io.String.Input(
+                    "select",
+                    optional=True,
+                    force_input=True,
+                    tooltip=(
+                        "Off until switched on from the node's settings button. "
+                        "Choose a group's LoRAs from the graph (a LoRA Select node writes "
+                        "this), one group per line, places counting from 0: "
+                        "'Styles: 0' uses only the first LoRA in Styles, 'Styles: 1@0.6' the "
+                        "second at that strength, 'Styles: 0, 2@0.5' several, 'Styles: film@0.8' "
+                        "picks by name, 'Speed-ups: off' uses none and 'Speed-ups: all' every "
+                        "one. "
+                        "Groups not named stay as set on the node."
+                    ),
+                ),
             ],
             outputs=[
                 ModelOrClip.Output("out_0", display_name="model"),
@@ -53,7 +69,13 @@ class NynxzLoraLoader(LoraNode):
         )
 
     @classmethod
-    def execute(cls, stack=None, apply_to="both", model=None, clip=None) -> io.NodeOutput:
+    def execute(
+        cls, stack=None, apply_to="both", model=None, clip=None, select=None
+    ) -> io.NodeOutput:
+        if select:
+            stack, problems = _select.apply(normalize_stack(stack), select)
+            for problem in problems:
+                print(f"{LOG_PREFIX} LoRA Loader select: {problem}")
         slots = SLOTS.get(apply_to, SLOTS["both"])
         given = {"model": model, "clip": clip}
         # "both" is the default so a CLIP wire has a socket to land on; either input may be left

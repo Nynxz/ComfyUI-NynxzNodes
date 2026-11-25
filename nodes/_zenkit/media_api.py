@@ -9,8 +9,10 @@ all a pack has to add. `setup()` in this package registers them; importing this 
 
 Routes (`<ns>` is the pack namespace, dots as slashes)
 ------------------------------------------------------
-GET /<ns>/media?type=input               {"type", "items": [{name, filename, subfolder, type, kind,
-                                         size, mtime}], "truncated"}
+GET /<ns>/media?type=input[&fresh=1]     {"type", "items": [{name, filename, subfolder, type, kind,
+                                         size, mtime}], "truncated"}, with an ETag (304 while the
+                                         listing is unchanged). Only folders that changed are read
+                                         again; `fresh=1` reads every file again
 GET /<ns>/media/thumb?type=&name=&size=[&t=]
                                          a JPEG poster: an image, or a video's frame at `t`
                                          seconds (default its first); answers with
@@ -34,6 +36,8 @@ import asyncio
 import hashlib
 import math
 import os
+import threading
+import time
 
 from .identity import DISPLAY_NAME, NAMESPACE, route
 from .server import request_allowed
@@ -53,6 +57,7 @@ __all__ = [
     "KINDS",
     "find_input",
     "list_media",
+    "listing",
     "media_info",
     "media_kind",
     "path_of",
@@ -115,37 +120,97 @@ def path_of(ref: str) -> str:
     return path
 
 
-def list_media(folder: str) -> list[dict]:
-    base = _base(folder)
-    if not base or not os.path.isdir(base):
-        return []
+#: A folder changed this recently (against the clock when it was read) is read again next time: a
+#: file written in the same clock tick as the read would otherwise never be noticed.
+_SETTLE_NS = 2_000_000_000
+#: What each listed folder held when last read: {root: {subfolder: (mtime_ns, settled, dirs, items)}}.
+_TREES: dict[str, dict[str, tuple[int, bool, list[str], list[dict]]]] = {}
+#: Counts a root's changes; with `_BOOT` it is the listing's ETag.
+_VERSIONS: dict[str, int] = {}
+_BOOT = os.urandom(4).hex()
+_LISTING = threading.Lock()
+
+
+def _read_dir(base: str, rel: str, folder: str) -> tuple[list[str], list[dict]]:
+    """One folder's subfolders and media files (each stat'ed), both sorted by name."""
+    dirs: list[str] = []
     items: list[dict] = []
-    for root, dirs, files in os.walk(base):
-        dirs[:] = sorted(d for d in dirs if not d.startswith("."))
-        for name in files:
-            kind = media_kind(name)
-            if not kind or name.startswith("."):
+    with os.scandir(os.path.join(base, rel)) as entries:
+        for entry in entries:
+            name = entry.name
+            if name.startswith("."):
                 continue
-            full = os.path.join(root, name)
-            rel = os.path.relpath(full, base).replace("\\", "/")
             try:
-                stat = os.stat(full)
+                if entry.is_dir(follow_symlinks=False):
+                    dirs.append(name)
+                    continue
+                kind = media_kind(name)
+                if not kind or entry.is_dir():
+                    continue
+                stat = entry.stat()
             except OSError:
                 continue
             items.append(
                 {
-                    "name": rel,
+                    "name": f"{rel}/{name}" if rel else name,
                     "filename": name,
-                    "subfolder": os.path.dirname(rel),
+                    "subfolder": rel,
                     "type": folder,
                     "kind": kind,
                     "size": stat.st_size,
                     "mtime": int(stat.st_mtime),
                 }
             )
-            if len(items) >= MAX_ITEMS:
-                return items
-    return items
+    dirs.sort()
+    items.sort(key=lambda item: item["filename"])
+    return dirs, items
+
+
+def listing(folder: str, fresh: bool = False) -> tuple[list[dict], str]:
+    """A root's media files and the listing's ETag, which changes only when the listing does.
+
+    Only folders whose own modification time moved since the last call are read again, so a call
+    costs one stat per folder rather than one per file. A folder's time moves when a file is added,
+    removed or renamed, not when one is rewritten in place: `fresh` reads everything again."""
+    base = _base(folder)
+    if not base or not os.path.isdir(base):
+        return [], f'"{_BOOT}-{folder}-none"'
+    with _LISTING:
+        before = _TREES.get(folder, {})
+        known = {} if fresh else before
+        tree: dict[str, tuple[int, bool, list[str], list[dict]]] = {}
+        items: list[dict] = []
+        todo = [""]
+        while todo and len(items) < MAX_ITEMS:
+            rel = todo.pop()
+            now = time.time_ns()
+            try:
+                mtime = os.stat(os.path.join(base, rel)).st_mtime_ns
+                node = known.get(rel)
+                if not (node and node[1] and node[0] == mtime):
+                    node = (mtime, now - mtime > _SETTLE_NS, *_read_dir(base, rel, folder))
+            except OSError:
+                continue
+            tree[rel] = node
+            items.extend(node[3])
+            todo.extend(f"{rel}/{d}" if rel else d for d in reversed(node[2]))
+        del items[MAX_ITEMS:]
+        if (
+            folder not in _VERSIONS
+            or tree.keys() != before.keys()
+            or any(
+                node is not before[rel] and node[2:] != before[rel][2:]
+                for rel, node in tree.items()
+            )
+        ):
+            _VERSIONS[folder] = _VERSIONS.get(folder, 0) + 1
+        _TREES[folder] = tree
+        return items, f'"{_BOOT}-{folder}-{_VERSIONS[folder]}"'
+
+
+def list_media(folder: str, fresh: bool = False) -> list[dict]:
+    """A root's media files, every subfolder (see `listing`). The dicts are shared: don't edit them."""
+    return listing(folder, fresh)[0]
 
 
 _HASHES: dict[str, tuple[int, int, str]] = {}
@@ -316,9 +381,16 @@ def register(routes) -> None:
             return web.json_response(
                 {"error": f"unknown folder: {folder}", "items": []}, status=400
             )
-        items = await asyncio.to_thread(list_media, folder)
+        fresh = request.query.get("fresh") == "1"
+        items, etag = await asyncio.to_thread(listing, folder, fresh)
+        # `no-cache`: the browser keeps the listing but asks each time, and is told 304 (no body)
+        # while nothing changed, also after a page reload.
+        headers = {"ETag": etag, "Cache-Control": "no-cache"}
+        if request.headers.get("If-None-Match") == etag:
+            return web.Response(status=304, headers=headers)
         return web.json_response(
-            {"type": folder, "items": items, "truncated": len(items) >= MAX_ITEMS}
+            {"type": folder, "items": items, "truncated": len(items) >= MAX_ITEMS},
+            headers=headers,
         )
 
     @routes.get(route("media/info"))

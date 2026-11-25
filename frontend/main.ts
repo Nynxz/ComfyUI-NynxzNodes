@@ -31,6 +31,8 @@ registerNodes([...discoverWidgets(widgets), ...discoverNodes(extraNodes)]);
 import "@/groupSwitcher/register";
 // LoRA Loader's "apply to" setting reshapes its sockets.
 import "@/lib/loadImageOutputs";
+// Choice shows only the outputs switched on from its settings button.
+import "@/lib/choiceOutputs";
 import "@/lib/loraMode";
 // LoRA picker user settings (folder browsing).
 import "@/lib/loraSettings";

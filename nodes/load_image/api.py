@@ -10,16 +10,12 @@ Self-contained so the group drops cleanly into other packs. Routes register on i
 
 from __future__ import annotations
 
-import os
+import asyncio
 
 from aiohttp import web
 
+from .._zenkit.media_api import list_media
 from .._zenkit.server import request_allowed
-
-try:
-    import folder_paths
-except ImportError:  # outside ComfyUI (e.g. syntax checks)
-    folder_paths = None
 
 try:
     from server import PromptServer
@@ -31,45 +27,14 @@ except Exception:  # noqa: BLE001 - no server / module absent outside ComfyUI (t
 _IMAGE_EXTS = (".png", ".jpg", ".jpeg", ".webp", ".gif", ".bmp")
 
 
-def _base_dir(folder_type: str):
-    """Resolve the ComfyUI directory for a folder type (input/temp/output)."""
-    if not folder_paths:
-        return None
-    if folder_type == "temp":
-        return folder_paths.get_temp_directory()
-    if folder_type == "output":
-        return folder_paths.get_output_directory()
-    return folder_paths.get_input_directory()
-
-
 def _list_images(folder_type: str = "input") -> list[dict]:
-    items: list[dict] = []
-    base = _base_dir(folder_type)
-    if not base or not os.path.isdir(base):
-        return items
-    for root, _dirs, files in os.walk(base):
-        for f in files:
-            if not f.lower().endswith(_IMAGE_EXTS):
-                continue
-            full = os.path.join(root, f)
-            rel = os.path.relpath(full, base).replace("\\", "/")
-            # size + mtime are cheap (os.stat, no image decode); dimensions are read
-            # client-side off the already-loaded preview, so we don't open files here.
-            try:
-                st = os.stat(full)
-                size, mtime = st.st_size, int(st.st_mtime)
-            except OSError:
-                size, mtime = 0, 0
-            items.append(
-                {
-                    "name": rel,
-                    "filename": f,
-                    "subfolder": os.path.dirname(rel),
-                    "type": folder_type,
-                    "size": size,
-                    "mtime": mtime,
-                }
-            )
+    """The folder's images, every subfolder, by name. Comes from the shared media listing, which
+    reads only folders that changed since the last call."""
+    items = [
+        {key: item[key] for key in ("name", "filename", "subfolder", "type", "size", "mtime")}
+        for item in list_media(folder_type)
+        if item["filename"].lower().endswith(_IMAGE_EXTS)
+    ]
     items.sort(key=lambda x: x["name"].lower())
     return items
 
@@ -83,4 +48,5 @@ if _routes is not None:
         ft = request.rel_url.query.get("type", "input")
         if ft not in ("input", "temp", "output"):
             ft = "input"
-        return web.json_response({"images": _list_images(ft), "type": ft})
+        images = await asyncio.to_thread(_list_images, ft)
+        return web.json_response({"images": images, "type": ft})
