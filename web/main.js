@@ -1,4 +1,4 @@
-(function(){var s=document.createElement('style');s.setAttribute('data-extension',"comfyui-nynxznodes");s.textContent="\n.bp-row[data-v-32c9ebc0] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n  min-height: 24px;\n}\n.bp-lbl[data-v-32c9ebc0] {\n  flex: none;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n  font-weight: 600;\n}\n.bp-pair[data-v-32c9ebc0] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  justify-content: flex-end;\n}\n.bp-hint[data-v-32c9ebc0] {\n  display: flex;\n  align-items: flex-start;\n  gap: 5px;\n  margin: 0;\n  padding: 5px 7px;\n  border-radius: var(--zen-radius, 6px);\n  background: var(--zen-input, #1b1b20);\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  line-height: 1.35;\n}\n.bp-hint .mdi[data-v-32c9ebc0] {\n  flex: none;\n  font-size: 13px;\n  color: var(--zen-accent, #6366f1);\n}\n.bp-patterns[data-v-32c9ebc0] {\n  display: grid;\n  grid-template-columns: repeat(6, 1fr);\n  gap: 5px;\n  padding: 2px 0;\n}\n.bp-sw[data-v-32c9ebc0] {\n  position: relative;\n  aspect-ratio: 1;\n  padding: 0;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 6px);\n  cursor: pointer;\n  overflow: hidden;\n}\n.bp-sw[data-v-32c9ebc0]:hover {\n  border-color: var(--zen-accent, #6366f1);\n}\n.bp-sw.on[data-v-32c9ebc0] {\n  border-color: var(--zen-accent, #6366f1);\n  box-shadow: 0 0 0 1px var(--zen-accent, #6366f1) inset;\n}\n.bp-sw-fill[data-v-32c9ebc0] {\n  position: absolute;\n  inset: 0;\n  background-repeat: repeat;\n}\n\n.wa[data-v-0d8685b2] {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  padding: 3px;\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  transition:\n    border-color 0.12s ease,\n    background 0.12s ease;\n}\n.wa.active[data-v-0d8685b2] {\n  border-color: var(--zen-accent, #6366f1);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 10%, transparent);\n}\n/* the slotted icon buttons keep their own size; only the primary button flexes */\n.wa[data-v-0d8685b2] > :not(.wa-main) {\n  flex: none;\n}\n.wa-main[data-v-0d8685b2] {\n  flex: 1;\n  min-width: 0;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  height: 26px; /* matches ZenIconButton, so the row is one height whatever it contains */\n  border: none;\n  border-radius: var(--zen-radius, 5px);\n  background: transparent;\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 11px;\n  font-weight: 600;\n  /* A label that can change (a drag hint, a growing count) must never WRAP: in a widget whose\n     drop zones were measured once, a second line moves everything below it. */\n  white-space: nowrap;\n  overflow: hidden;\n  cursor: pointer;\n  transition:\n    color 0.12s ease,\n    background 0.12s ease;\n}\n.wa-main[data-v-0d8685b2]:hover {\n  color: var(--zen-text, #e5e5ea);\n  background: color-mix(in srgb, var(--zen-text, #fff) 8%, transparent);\n}\n.wa-main .mdi[data-v-0d8685b2] {\n  font-size: 15px;\n}\n.wa-label[data-v-0d8685b2] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.wa-count[data-v-0d8685b2] {\n  padding: 0 5px;\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 22%, transparent);\n  color: var(--zen-text, #e5e5ea);\n  font-size: 10px;\n  font-weight: 700;\n}\n\n.cl-rows[data-v-299b8ff3] {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n}\n.cl-row[data-v-299b8ff3] {\n  position: relative;\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  transition: transform 0.15s ease;\n}\n.cl-rows.settling .cl-row[data-v-299b8ff3] {\n  transition: none;\n}\n.cl-row.dragging[data-v-299b8ff3] {\n  z-index: 5;\n  transition: none;\n  box-shadow: 0 6px 16px rgb(0 0 0 / 45%);\n  border-radius: var(--zen-radius, 6px);\n  cursor: grabbing;\n}\n.cl-grip[data-v-299b8ff3] {\n  flex: none;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: 12px;\n  cursor: grab;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 14px;\n  line-height: 1;\n  touch-action: none;\n  -webkit-user-select: none;\n  user-select: none;\n}\n.cl-grip[data-v-299b8ff3] > * {\n  pointer-events: none;\n}\n.cl-grip[data-v-299b8ff3]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.cl-text[data-v-299b8ff3] {\n  flex: 1;\n  min-width: 0;\n  height: 24px;\n  padding: 0 7px;\n  font: inherit;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n  background: var(--zen-surface, #202026);\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 6px);\n  outline: none;\n}\n.cl-text[data-v-299b8ff3]:focus {\n  border-color: var(--zen-accent, #6366f1);\n}\n.cl-row.on .cl-text[data-v-299b8ff3] {\n  border-color: color-mix(in srgb, var(--zen-accent, #6366f1) 55%, transparent);\n}\n.cl-pop-head[data-v-299b8ff3] {\n  padding: 4px 8px 6px;\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.06em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.cf[data-v-22d311f2] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  height: 28px;\n  padding: 0 2px;\n  font-size: 12px;\n}\n.cf-label[data-v-22d311f2] {\n  flex: 0 1 40%;\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  color: var(--zen-muted, #9aa0aa);\n}\n.cf-field[data-v-22d311f2] {\n  flex: 1;\n  min-width: 0;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  height: 26px;\n  padding: 0 6px;\n  box-sizing: border-box;\n  border: 1px solid var(--zen-control-border, var(--zen-border, #34343c));\n  border-radius: var(--zen-radius, 6px);\n  background: var(--zen-field-bg, var(--zen-input, #15151a));\n}\n.cf-field[data-v-22d311f2]:focus-within {\n  border-color: var(--zen-accent, #6366f1);\n}\n.cf-text[data-v-22d311f2] {\n  flex: 1;\n  min-width: 0;\n  padding: 0;\n  border: none;\n  outline: none;\n  background: none;\n  color: var(--zen-text, #e5e5ea);\n  font: inherit;\n  font-family: var(--zen-mono, ui-monospace, monospace);\n  font-size: 11px;\n}\n.cf-text.invalid[data-v-22d311f2] {\n  color: var(--zen-danger, #f87171);\n}\n.cf-linked[data-v-22d311f2] {\n  font-size: 11px;\n  font-style: italic;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.fbf[data-v-163982f0] {\n  position: absolute;\n  inset: 0;\n}\n.fbf-pic[data-v-163982f0] {\n  position: absolute;\n  inset: 0;\n  -webkit-mask-size: 100% 100%;\n  mask-size: 100% 100%;\n}\n.fbf-img[data-v-163982f0] {\n  position: absolute;\n  inset: 0;\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n  opacity: 0.8;\n}\n.fbf-more[data-v-163982f0] {\n  position: absolute;\n  right: 4px;\n  top: 4px;\n  display: flex;\n  gap: 3px;\n}\n.fbf-more img[data-v-163982f0],\n.fbf-plus[data-v-163982f0] {\n  width: 22px;\n  height: 22px;\n  border-radius: 4px;\n  object-fit: cover;\n  box-shadow: 0 0 0 1px rgb(0 0 0 / 50%);\n}\n.fbf-more.big img[data-v-163982f0],\n.fbf-more.big .fbf-plus[data-v-163982f0] {\n  width: 34px;\n  height: 34px;\n}\n.fbf-plus[data-v-163982f0] {\n  display: grid;\n  place-items: center;\n  background: rgb(0 0 0 / 65%);\n  color: #fff;\n  font-size: 10px;\n}\n.fbf-lora[data-v-163982f0] {\n  position: absolute;\n  left: 4px;\n  top: 20px;\n  display: inline-flex;\n  align-items: center;\n  gap: 2px;\n  padding: 0 5px;\n  border-radius: 999px;\n  background: rgb(0 0 0 / 60%);\n  color: #fff;\n  font-size: 10px;\n  line-height: 16px;\n}\n.fbf-text[data-v-163982f0] {\n  position: absolute;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  margin: 0;\n  padding: 14px 6px 4px;\n  background: linear-gradient(to top, rgb(0 0 0 / 75%), transparent);\n  color: #fff;\n  font-size: 11px;\n  line-height: 1.3;\n  text-shadow: 0 1px 2px rgb(0 0 0 / 60%);\n  display: -webkit-box;\n  -webkit-line-clamp: 2;\n  -webkit-box-orient: vertical;\n  overflow: hidden;\n}\n.fbf.bare .fbf-text[data-v-163982f0] {\n  background: none;\n  color: color-mix(in srgb, #fff 85%, transparent);\n}\n@container (max-height: 70px) {\n.fbf-text[data-v-163982f0],\n  .fbf-lora[data-v-163982f0] {\n    display: none;\n}\n}\n@container (max-width: 90px) {\n.fbf-more[data-v-163982f0] {\n    display: none;\n}\n}\n@container (min-height: 160px) {\n.fbf-text[data-v-163982f0] {\n    -webkit-line-clamp: 3;\n}\n}\n\n.fl[data-v-71f8bdb9] {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n  align-items: stretch;\n}\n.fl-row[data-v-71f8bdb9] {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n}\n.fl-row.off .fl-pick[data-v-71f8bdb9] {\n  opacity: 0.5;\n}\n.fl-pick[data-v-71f8bdb9] {\n  flex: 1;\n  min-width: 0;\n}\n.fl-str[data-v-71f8bdb9] {\n  width: 64px;\n  flex: none;\n}\n\n.fp[data-v-744c36c6] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n}\n.fp-pill[data-v-744c36c6] {\n  height: 24px;\n  padding: 0 12px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: 999px;\n  background: transparent;\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 11px;\n  cursor: pointer;\n  transition:\n    background 0.12s ease,\n    color 0.12s ease,\n    border-color 0.12s ease;\n}\n.fp-pill[data-v-744c36c6]:hover:not(:disabled) {\n  color: var(--zen-text, #e5e5ea);\n  border-color: color-mix(in srgb, var(--zen-text, #fff) 25%, transparent);\n}\n.fp-pill.on[data-v-744c36c6] {\n  border-color: color-mix(in srgb, var(--zen-accent, #6366f1) 70%, transparent);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 18%, transparent);\n  color: var(--zen-text, #e5e5ea);\n}\n.fp-pill[data-v-744c36c6]:disabled {\n  opacity: 0.45;\n  cursor: default;\n}\n\n.fr[data-v-f6094846] {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, 64px);\n  gap: 8px;\n  padding: 2px;\n  border-radius: var(--zen-radius, 7px);\n  outline: 1px dashed transparent;\n  transition: outline-color 0.12s ease;\n}\n.fr.dropping[data-v-f6094846] {\n  outline-color: var(--zen-accent, #6366f1);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 8%, transparent);\n}\n.fr-tile[data-v-f6094846] {\n  display: flex;\n  flex-direction: column;\n  gap: 3px;\n  width: 64px;\n}\n.fr-tile.off .fr-thumb[data-v-f6094846] {\n  opacity: 0.4;\n}\n.fr-thumb[data-v-f6094846] {\n  position: relative;\n  width: 64px;\n  height: 64px;\n  border-radius: 6px;\n  overflow: hidden;\n  background: #000;\n  box-shadow: inset 0 0 0 1px var(--zen-border, #34343c);\n}\n.fr-thumb img[data-v-f6094846] {\n  width: 100%;\n  height: 100%;\n  display: block;\n}\n.fr-acts[data-v-f6094846] {\n  position: absolute;\n  inset: auto 2px 2px 2px;\n  display: flex;\n  justify-content: flex-end;\n  gap: 2px;\n  opacity: 0;\n  transition: opacity 0.12s ease;\n}\n.fr-thumb:hover .fr-acts[data-v-f6094846] {\n  opacity: 1;\n}\n.fr-act[data-v-f6094846] {\n  display: grid;\n  place-items: center;\n  width: 18px;\n  height: 18px;\n  padding: 0;\n  border: 0;\n  border-radius: 4px;\n  background: rgb(0 0 0 / 70%);\n  color: #fff;\n  cursor: pointer;\n  font-size: 11px;\n}\n.fr-act.danger[data-v-f6094846]:hover {\n  background: var(--zen-danger, #dc2626);\n}\n.fr-str[data-v-f6094846] {\n  width: 64px;\n}\n.fr-empty[data-v-f6094846] {\n  grid-column: 1 / -1;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  height: 30px;\n  padding: 0;\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: 6px;\n  background: transparent;\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 11px;\n  cursor: pointer;\n  transition:\n    border-color 0.12s ease,\n    color 0.12s ease;\n}\n.fr-empty[data-v-f6094846]:hover {\n  border-color: var(--zen-accent, #6366f1);\n  color: var(--zen-text, #e5e5ea);\n}\n.fr-empty .mdi[data-v-f6094846] {\n  font-size: 15px;\n}\n\n.fsec[data-v-3701245b] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  padding-top: 10px;\n  border-top: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 60%, transparent);\n}\n.fsec[data-v-3701245b]:first-child {\n  padding-top: 0;\n  border-top: 0;\n}\n.fsec-head[data-v-3701245b] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  min-height: 22px;\n}\n.fsec-label[data-v-3701245b] {\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fsec-note[data-v-3701245b] {\n  overflow: hidden;\n  min-width: 0;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  font-size: 10px;\n  color: color-mix(in srgb, var(--zen-muted, #9aa0aa) 75%, transparent);\n}\n.fsec-acts[data-v-3701245b] {\n  display: flex;\n  gap: 2px;\n  margin-left: auto;\n}\n\n.fcf[data-v-73b750b4] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n}\n.fcf[data-v-73b750b4] > * {\n  flex: none;\n}\n.fcf-row[data-v-73b750b4] {\n  display: grid;\n  grid-template-columns: 52px minmax(0, 1fr) 92px;\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fcf-read[data-v-73b750b4] {\n  display: grid;\n  grid-template-columns: 52px minmax(0, 1fr);\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fcf-pairs[data-v-73b750b4] {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));\n  gap: 6px 10px;\n}\n.fcf-pair[data-v-73b750b4] {\n  display: grid;\n  grid-template-columns: 52px minmax(0, 1fr);\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.lt[data-v-863b189a] {\n  display: block;\n  width: 100%;\n  height: 100%;\n}\n.lt-canvas[data-v-863b189a] {\n  fill: var(--zen-surface-2, #26262d);\n  stroke: var(--zen-border, #34343c);\n}\n.lt-label[data-v-863b189a] {\n  font-size: 10px;\n  fill: var(--zen-text, #e5e5ea);\n  paint-order: stroke;\n  stroke: rgb(0 0 0 / 0.6);\n  stroke-width: 2px;\n}\n\n.lb[data-v-38d9a54a] {\n  display: grid;\n  grid-template-columns: 180px minmax(0, 1fr) 280px;\n  gap: 12px;\n  height: 100%;\n  min-height: 0;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n}\n.lb-search[data-v-38d9a54a] {\n  width: 260px;\n}\n.lb-save[data-v-38d9a54a] {\n  display: flex;\n  gap: 6px;\n  width: 340px;\n}\n.lb-save[data-v-38d9a54a] > :first-child {\n  flex: 1;\n}\n.lb-grow[data-v-38d9a54a] {\n  flex: 1;\n}\n.lb-modes[data-v-38d9a54a] {\n  display: flex;\n  flex-direction: column;\n  gap: 2px;\n}\n.lb-mode[data-v-38d9a54a] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  padding: 7px 9px;\n  border: 0;\n  border-radius: var(--zen-radius, 7px);\n  background: none;\n  color: inherit;\n  font: inherit;\n  text-align: left;\n  cursor: pointer;\n}\n.lb-mode[data-v-38d9a54a]:hover {\n  background: color-mix(in srgb, var(--zen-text, #e5e5ea) 8%, transparent);\n}\n.lb-mode.on[data-v-38d9a54a] {\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 22%, transparent);\n}\n.lb-mode i[data-v-38d9a54a] {\n  font-size: 15px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lb-mname[data-v-38d9a54a] {\n  flex: 1;\n}\n.lb-count[data-v-38d9a54a] {\n  font-size: 10px;\n  color: var(--zen-muted, #9aa0aa);\n  font-variant-numeric: tabular-nums;\n}\n.lb-main[data-v-38d9a54a] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  min-height: 0;\n}\n.lb-gridwrap[data-v-38d9a54a] {\n  flex: 1;\n  min-height: 0;\n}\n.lb-grid[data-v-38d9a54a] {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));\n  gap: 10px;\n  padding: 2px;\n}\n.lb-card[data-v-38d9a54a] {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n  padding: 6px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-surface, #1e1e24);\n  color: inherit;\n  font: inherit;\n  text-align: left;\n  cursor: pointer;\n}\n.lb-card[data-v-38d9a54a]:hover {\n  border-color: color-mix(in srgb, var(--zen-accent, #6366f1) 50%, var(--zen-border, #34343c));\n}\n.lb-card.on[data-v-38d9a54a] {\n  border-color: var(--zen-accent, #6366f1);\n  box-shadow: 0 0 0 1px var(--zen-accent, #6366f1);\n}\n.lb-thumb[data-v-38d9a54a] {\n  display: block;\n  height: 120px;\n}\n.lb-cname[data-v-38d9a54a] {\n  font-weight: 600;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.lb-cmeta[data-v-38d9a54a] {\n  font-size: 10.5px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lb-detail[data-v-38d9a54a] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  min-height: 0;\n  overflow: auto;\n  padding-left: 12px;\n  border-left: 1px solid var(--zen-border, #34343c);\n}\n.lb-big[data-v-38d9a54a] {\n  height: 200px;\n  flex: none;\n}\n.lb-row[data-v-38d9a54a] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.lb-facts[data-v-38d9a54a] {\n  display: grid;\n  grid-template-columns: auto 1fr;\n  gap: 2px 10px;\n  margin: 0;\n}\n.lb-facts dt[data-v-38d9a54a] {\n  color: var(--zen-muted, #9aa0aa);\n}\n.lb-facts dd[data-v-38d9a54a] {\n  margin: 0;\n}\n.lb-prompt[data-v-38d9a54a] {\n  margin: 0;\n  padding: 6px 8px;\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-surface-2, #26262d);\n  font-size: 11px;\n  line-height: 1.45;\n  max-height: 110px;\n  overflow: auto;\n  white-space: pre-wrap;\n}\n.lb-names[data-v-38d9a54a] {\n  margin: 0;\n  padding: 0;\n  list-style: none;\n  display: flex;\n  flex-direction: column;\n  gap: 2px;\n}\n.lb-dot[data-v-38d9a54a] {\n  display: inline-block;\n  width: 8px;\n  height: 8px;\n  margin-right: 6px;\n  border-radius: 2px;\n}\n.lb-note[data-v-38d9a54a] {\n  margin: 0;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lb-empty[data-v-38d9a54a] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  height: 100%;\n  min-height: 160px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lb-empty i[data-v-38d9a54a] {\n  font-size: 28px;\n}\n\n/* rail | canvas | side, with the status bar over the canvas so all three end on one line. Every\n   track is a fixed size or a share of the node, never its content, so selecting or typing can't\n   move anything. */\n.le[data-v-6959136d] {\n  display: grid;\n  grid-template-rows: minmax(0, 1fr) auto;\n  gap: 6px;\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n  color: var(--zen-text, #e5e5ea);\n  font-size: 12px;\n}\n/* In a ZenKit panel the window draws its own frame; inset so the rail and the panes don't sit on\n   it and double its border. On the node, the node body already pads. */\n.le.in-panel[data-v-6959136d] {\n  box-sizing: border-box;\n  padding: 8px;\n}\n.le-main[data-v-6959136d] {\n  min-width: 0;\n  min-height: 0;\n}\n.le-canvascol[data-v-6959136d] {\n  display: grid;\n  grid-template-rows: 28px minmax(0, 1fr);\n  gap: 6px;\n  height: 100%;\n  min-width: 0;\n  min-height: 0;\n}\n.le-toolbar[data-v-6959136d],\n.le-foot[data-v-6959136d] {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  min-width: 0;\n}\n.le-foot[data-v-6959136d] {\n  padding: 4px 6px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 2%, transparent);\n}\n.le-sep[data-v-6959136d] {\n  width: 1px;\n  height: 16px;\n  margin: 0 4px;\n  background: var(--zen-border, #34343c);\n}\n.le-opacity[data-v-6959136d] {\n  display: grid;\n  grid-template-columns: auto 1fr 34px;\n  align-items: center;\n  gap: 8px;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.le-menu[data-v-6959136d] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  padding: 8px;\n}\n.le-menu-title[data-v-6959136d] {\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n}\n.le-menu .zen-btn[data-v-6959136d] {\n  justify-content: flex-start;\n}\n.le-json[data-v-6959136d] {\n  color: var(--zen-text, #e5e5ea);\n  font-size: 12px;\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  width: 300px;\n  padding: 10px;\n}\n.le-row[data-v-6959136d] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.le-grow[data-v-6959136d] {\n  flex: 1;\n  min-width: 0;\n}\n.le-stage.dropping[data-v-6959136d] {\n  outline: 2px dashed var(--zen-accent, #6366f1);\n  outline-offset: -2px;\n  border-radius: var(--zen-radius, 7px);\n}\n.le-stage[data-v-6959136d] {\n  min-width: 0;\n  min-height: 0;\n}\n.le-hint-empty[data-v-6959136d] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 4px;\n}\n.le-hint-empty i[data-v-6959136d] {\n  font-size: 28px;\n  opacity: 0.6;\n}\n.le-help[data-v-6959136d] {\n  display: grid;\n  grid-template-columns: auto auto;\n  gap: 4px 14px;\n  margin: 0;\n  padding: 10px 12px;\n  font-size: 11px;\n}\n.le-help dt[data-v-6959136d] {\n  color: var(--zen-text, #e5e5ea);\n  white-space: nowrap;\n}\n.le-help dd[data-v-6959136d] {\n  margin: 0;\n  color: var(--zen-muted, #9aa0aa);\n}\n.le-tip[data-v-6959136d] {\n  flex: 0 1 auto;\n  min-width: 0;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n  overflow: hidden;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n}\n.le-link[data-v-6959136d] {\n  padding: 0;\n  border: 0;\n  background: none;\n  color: var(--zen-accent, #6366f1);\n  font: inherit;\n  cursor: pointer;\n}\n.le-ctl[data-v-6959136d] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  width: 104px;\n  transition: opacity 0.12s ease;\n}\n.le-chip[data-v-6959136d] {\n  flex: none;\n  display: inline-flex;\n  align-items: center;\n  gap: 4px;\n  height: 22px;\n  padding: 0 8px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: 999px;\n  background: var(--zen-input, #1b1b20);\n  color: var(--zen-text, #e5e5ea);\n  font-size: 11px;\n  font-variant-numeric: tabular-nums;\n  cursor: pointer;\n}\n.le-side[data-v-6959136d] {\n  height: 100%;\n  min-height: 0;\n}\n.le-pane[data-v-6959136d] {\n  display: flex;\n  flex-direction: column;\n  height: 100%;\n  min-height: 0;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 2%, transparent);\n  overflow: hidden;\n}\n.le-tabs[data-v-6959136d] {\n  flex: none;\n  display: flex;\n  gap: 2px;\n  padding: 4px 4px 0;\n  border-bottom: 1px solid var(--zen-border, #34343c);\n}\n.le-tab[data-v-6959136d] {\n  display: inline-flex;\n  align-items: center;\n  gap: 5px;\n  height: 28px;\n  padding: 0 10px;\n  border: 0;\n  border-bottom: 2px solid transparent;\n  background: transparent;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  cursor: pointer;\n}\n.le-tab[data-v-6959136d]:hover:not(:disabled) {\n  color: var(--zen-text, #e5e5ea);\n}\n.le-tab.on[data-v-6959136d] {\n  border-bottom-color: var(--zen-accent, #3b82f6);\n  color: var(--zen-text, #e5e5ea);\n}\n.le-tab[data-v-6959136d]:disabled {\n  opacity: 0.4;\n  cursor: default;\n}\n.le-head[data-v-6959136d] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  height: 34px;\n  padding: 0 8px;\n  border-bottom: 1px solid var(--zen-border, #34343c);\n}\n.le-title[data-v-6959136d] {\n  flex: 1;\n  font-size: 11px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n.le-count[data-v-6959136d] {\n  padding: 0 6px;\n  border-radius: 999px;\n  background: color-mix(in srgb, var(--zen-text, #fff) 8%, transparent);\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n}\n.le-swatch[data-v-6959136d] {\n  flex: none;\n  width: 12px;\n  height: 12px;\n  border-radius: 3px;\n}\n.le-body[data-v-6959136d] {\n  flex: 1 1 0;\n  min-height: 0;\n  padding: 6px;\n}\n.le-note[data-v-6959136d] {\n  margin: 0;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.fresco[data-v-6418226b] {\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n}\n.fs-menu[data-v-6418226b] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  padding: 8px;\n}\n.fs-menu-title[data-v-6418226b] {\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n}\n.fs-menu .zen-btn[data-v-6418226b] {\n  justify-content: flex-start;\n}\n.fs-swatch[data-v-6418226b] {\n  flex: none;\n  width: 12px;\n  height: 12px;\n  border-radius: 3px;\n}\n.fs-wand[data-v-6418226b] {\n  position: absolute;\n  inset: 0;\n  cursor: crosshair;\n}\n.fs-point[data-v-6418226b] {\n  position: absolute;\n  width: 10px;\n  height: 10px;\n  margin: -5px 0 0 -5px;\n  border: 2px solid #fff;\n  border-radius: 50%;\n  background: #22c55e;\n  box-shadow: 0 0 0 1px rgb(0 0 0 / 50%);\n  pointer-events: none;\n}\n.fs-point.live[data-v-6418226b] {\n  pointer-events: auto;\n  cursor: grab;\n  touch-action: none;\n}\n.fs-point.live[data-v-6418226b]:hover {\n  transform: scale(1.3);\n}\n.fs-point.out[data-v-6418226b] {\n  background: #ef4444;\n}\n.fs-form[data-v-6418226b] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n}\n.fs-form[data-v-6418226b] > * {\n  flex: none;\n}\n.fs-grid[data-v-6418226b] {\n  display: grid;\n  grid-template-columns: 62px minmax(0, 1fr);\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fs-pairs[data-v-6418226b] {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));\n  gap: 6px 10px;\n}\n.fs-pair[data-v-6418226b] {\n  display: grid;\n  grid-template-columns: 52px minmax(0, 1fr);\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fs-group[data-v-6418226b] {\n  margin-top: 6px;\n  padding: 6px 0 0;\n  border-top: 1px solid var(--zen-border, #34343c);\n  font-size: 12px;\n  font-weight: 600;\n  color: var(--zen-text, #e5e5ea);\n}\n.fs-group-note[data-v-6418226b] {\n  font-size: 11px;\n  font-weight: 400;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.fsum[data-v-71527fdd] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n}\n.fsum-stage[data-v-71527fdd] {\n  flex: 1;\n  min-height: 0;\n  pointer-events: none;\n}\n.fsum-bar[data-v-71527fdd] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fsum-text[data-v-71527fdd] {\n  overflow: hidden;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n}\n\n.fhost[data-v-4623400c] {\n  display: flex;\n  flex-direction: column;\n  box-sizing: border-box;\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n}\n.fhost-dep[data-v-4623400c] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n  padding: 4px 8px;\n  border-bottom: 1px solid color-mix(in srgb, var(--zen-warning, #f5b041) 35%, transparent);\n  background: color-mix(in srgb, var(--zen-warning, #f5b041) 10%, transparent);\n  color: var(--zen-text, #e5e5ea);\n  font-size: 11px;\n}\n.fhost-body[data-v-4623400c] {\n  position: relative;\n  flex: 1;\n  min-height: 0;\n}\n.fhost-body[data-v-4623400c] > * {\n  position: absolute;\n  inset: 0;\n}\n\n/* Fill layout (see mountWidget's `fill`): the widget takes the node body, the image grid\n   takes whatever height is left and scrolls, and the toolbar is pinned under it. Resizing\n   the node therefore shows more images, never more padding. */\n.fg[data-v-bbb08a38] {\n  position: relative;\n  display: flex;\n  flex-direction: column;\n  gap: 7px;\n  height: 100%;\n  min-height: 0;\n  padding: 2px;\n  box-sizing: border-box;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n}\n\n/* flex-basis 0 (not auto) so the grid's content can't push the toolbar off the node */\n/* focused programmatically on hover (see armScroll) — never show a ring for it */\n.fg-scroll[data-v-bbb08a38] {\n  flex: 1 1 0;\n  min-height: 0;\n  outline: none;\n}\n.fg-grid[data-v-bbb08a38] {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(124px, 1fr));\n  gap: 6px;\n  align-items: start;\n  padding-right: 2px;\n}\n.fg-card[data-v-bbb08a38] {\n  display: flex;\n  flex-direction: column;\n  gap: 3px;\n  padding: 4px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 9px);\n  background: var(--zen-input, #1b1b20);\n  transition:\n    border-color 0.12s ease,\n    opacity 0.12s ease;\n}\n.fg-card.off[data-v-bbb08a38] {\n  opacity: 0.5;\n}\n.fg-card.dragging[data-v-bbb08a38] {\n  opacity: 0.35;\n}\n.fg-card.over[data-v-bbb08a38] {\n  border-color: var(--zen-accent, #6366f1);\n  box-shadow: 0 0 0 1px var(--zen-accent, #6366f1) inset;\n}\n.fg-thumb[data-v-bbb08a38] {\n  position: relative;\n  width: 100%;\n  aspect-ratio: 1;\n  border-radius: var(--zen-radius, 6px);\n  background: var(--zen-surface, #202026);\n  overflow: hidden;\n  cursor: grab;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.fg-thumb[data-v-bbb08a38]:active {\n  cursor: grabbing;\n}\n/* contain on black: the encoder letterboxes with real black pixels, so the card shows the\n   actual frame it gets rather than flattering it with a themed backdrop */\n.fg-thumb img[data-v-bbb08a38] {\n  width: 100%;\n  height: 100%;\n  display: block;\n  object-fit: contain;\n  background: #000;\n}\n.fg-ph[data-v-bbb08a38] {\n  font-size: 30px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fg-ph.warn[data-v-bbb08a38] {\n  color: #e0a33a;\n}\n.fg-idx[data-v-bbb08a38] {\n  position: absolute;\n  top: 4px;\n  left: 4px;\n  min-width: 16px;\n  height: 16px;\n  padding: 0 4px;\n  border-radius: var(--zen-radius, 5px);\n  background: rgba(0, 0, 0, 0.62);\n  color: #fff;\n  font-size: 10px;\n  font-weight: 700;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n}\n.fg-acts[data-v-bbb08a38] {\n  position: absolute;\n  top: 4px;\n  right: 4px;\n  display: flex;\n  gap: 3px;\n  opacity: 0;\n  transition: opacity 0.12s ease;\n}\n.fg-card:hover .fg-acts[data-v-bbb08a38] {\n  opacity: 1;\n}\n.fg-act[data-v-bbb08a38] {\n  width: 19px;\n  height: 19px;\n  padding: 0;\n  border: none;\n  border-radius: var(--zen-radius, 5px);\n  background: rgba(0, 0, 0, 0.62);\n  color: #fff;\n  font-size: 12px;\n  cursor: pointer;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n}\n.fg-act[data-v-bbb08a38]:hover {\n  background: var(--zen-accent, #6366f1);\n}\n.fg-act.danger[data-v-bbb08a38]:hover {\n  background: #d9534f;\n}\n.fg-mutemark[data-v-bbb08a38] {\n  position: absolute;\n  inset: 0;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background: rgba(0, 0, 0, 0.45);\n  color: #fff;\n  font-size: 22px;\n  pointer-events: none;\n}\n\n/* name + share ride in the thumb's bottom strip rather than costing the card its own rows */\n.fg-meta[data-v-bbb08a38] {\n  position: absolute;\n  left: 0;\n  right: 0;\n  bottom: 3px;\n  display: flex;\n  align-items: flex-end;\n  gap: 4px;\n  padding: 10px 5px 1px;\n  background: linear-gradient(transparent, rgba(0, 0, 0, 0.78));\n  pointer-events: none;\n}\n.fg-name[data-v-bbb08a38] {\n  flex: 1;\n  min-width: 0;\n  font-size: 9.5px;\n  color: #fff;\n  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.fg-pct[data-v-bbb08a38] {\n  flex: none;\n  font-size: 9.5px;\n  font-weight: 700;\n  line-height: 1.25;\n  color: #fff;\n  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);\n}\n.fg-pct.dim[data-v-bbb08a38] {\n  font-weight: 500;\n  color: var(--zen-muted, #9aa0aa);\n}\n/* the live share of the blend this source claims */\n.fg-share[data-v-bbb08a38] {\n  position: absolute;\n  left: 0;\n  bottom: 0;\n  height: 3px;\n  background: var(--zen-accent, #6366f1);\n  transition: width 0.12s ease;\n  pointer-events: none;\n}\n.fg-foot[data-v-bbb08a38] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n}\n.fg-slider[data-v-bbb08a38] {\n  flex: 1;\n  min-width: 0;\n}\n.fg-num[data-v-bbb08a38] {\n  flex: none;\n  width: 46px;\n}\n\n/* fills the scroll area so the empty node reads as one big drop target */\n.fg-empty[data-v-bbb08a38] {\n  height: 100%;\n  min-height: 96px;\n  box-sizing: border-box;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 4px;\n  padding: 18px 8px;\n  text-align: center;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);\n}\n.fg-empty > .mdi[data-v-bbb08a38] {\n  font-size: 26px;\n  opacity: 0.8;\n}\n.fg-empty > span[data-v-bbb08a38] {\n  font-size: 11px;\n}\n.fg-empty > small[data-v-bbb08a38] {\n  font-size: 10px;\n  opacity: 0.7;\n}\n.fg-warn[data-v-bbb08a38] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  padding: 5px 8px;\n  border-radius: var(--zen-radius, 7px);\n  background: color-mix(in srgb, #e0a33a 14%, transparent);\n  color: #e0a33a;\n  font-size: 10.5px;\n}\n.fg-bar[data-v-bbb08a38] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.fg-add[data-v-bbb08a38] {\n  flex: 1;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  padding: 7px;\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  background: transparent;\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 11px;\n  font-weight: 600;\n  cursor: pointer;\n  transition:\n    border-color 0.12s ease,\n    color 0.12s ease,\n    background 0.12s ease;\n}\n.fg-add[data-v-bbb08a38]:hover:not(:disabled) {\n  border-color: var(--zen-accent, #6366f1);\n  color: var(--zen-text, #e5e5ea);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 8%, transparent);\n}\n.fg-add[data-v-bbb08a38]:disabled {\n  opacity: 0.6;\n  cursor: default;\n}\n.fg-add .mdi[data-v-bbb08a38] {\n  font-size: 15px;\n}\n.fg-add-n[data-v-bbb08a38] {\n  margin-left: 2px;\n  padding: 0 5px;\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 22%, transparent);\n  color: var(--zen-text, #e5e5ea);\n  font-size: 10px;\n  font-weight: 700;\n}\n.fg-dropmask[data-v-bbb08a38] {\n  position: absolute;\n  inset: 0;\n  z-index: 5;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  border: 2px dashed var(--zen-accent, #6366f1);\n  border-radius: var(--zen-radius, 9px);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 16%, rgba(0, 0, 0, 0.55));\n  color: var(--zen-text, #e5e5ea);\n  font-size: 11px;\n  font-weight: 600;\n  pointer-events: none;\n}\n.fg-dropmask .mdi[data-v-bbb08a38] {\n  font-size: 28px;\n}\n\n.fi[data-v-dec39350] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  height: 100%;\n  min-height: 0;\n  padding: 2px;\n  box-sizing: border-box;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n  --fs-rs: var(--radius-sm, 5px);\n}\n.fi-empty[data-v-dec39350] {\n  height: 100%;\n  min-height: 120px;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 5px;\n  color: var(--zen-muted, #9aa0aa);\n  text-align: center;\n}\n.fi-empty > .mdi[data-v-dec39350] {\n  font-size: 30px;\n  opacity: 0.8;\n}\n.fi-empty small[data-v-dec39350] {\n  font-size: 10px;\n  opacity: 0.75;\n}\n.fi-bar[data-v-dec39350] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  flex-wrap: wrap;\n  gap: 6px;\n}\n.fi-main[data-v-dec39350] {\n  flex: 1 1 auto;\n  min-height: 0;\n  display: flex;\n  gap: 6px;\n}\n.fi-gridwrap[data-v-dec39350] {\n  position: relative;\n  flex: 1 1 auto;\n  min-width: 0;\n  min-height: 0;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  overflow: hidden;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n  background: #0e0e12;\n}\n.fi-caption[data-v-dec39350] {\n  position: absolute;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  padding: 3px 6px;\n  font-size: 9px;\n  line-height: 1.25;\n  text-align: center;\n  color: var(--zen-text, #e5e5ea);\n  background: linear-gradient(transparent, rgba(0, 0, 0, 0.72));\n  pointer-events: none;\n}\n.fi-canvas[data-v-dec39350] {\n  display: block;\n  image-rendering: pixelated;\n}\n.fi-side[data-v-dec39350] {\n  flex: none;\n  width: 190px;\n  display: flex;\n  flex-direction: column;\n  min-height: 0;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 2%, transparent);\n  overflow: hidden;\n}\n.fi-side-head[data-v-dec39350] {\n  flex: none;\n  padding: 5px 8px;\n  font-size: 10px;\n  font-weight: 700;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n  border-bottom: 1px solid var(--zen-border, #34343c);\n}\n.fi-bars[data-v-dec39350],\n.fi-legend[data-v-dec39350] {\n  flex: 1 1 0;\n  min-height: 0;\n  overflow-y: auto;\n  padding: 5px;\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n}\n.fi-brow[data-v-dec39350],\n.fi-lrow[data-v-dec39350] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  font-size: 10.5px;\n}\n.fi-lrow[data-v-dec39350] {\n  padding: 3px;\n  border: 1px solid transparent;\n  border-radius: var(--fs-rs);\n  background: none;\n  color: inherit;\n  font: inherit;\n  cursor: pointer;\n  text-align: left;\n}\n.fi-lrow[data-v-dec39350]:hover {\n  border-color: color-mix(in srgb, var(--zen-accent, #6366f1) 50%, transparent);\n}\n.fi-lrow.on[data-v-dec39350] {\n  border-color: var(--zen-accent, #6366f1);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 16%, transparent);\n}\n.fi-thumb[data-v-dec39350] {\n  flex: none;\n  width: 24px;\n  height: 24px;\n  border-radius: 4px;\n  border: 1.5px solid;\n  overflow: hidden;\n  background: var(--zen-surface, #202026);\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.fi-thumb.sm[data-v-dec39350] {\n  width: 17px;\n  height: 17px;\n  border-radius: 3px;\n}\n.fi-thumb img[data-v-dec39350] {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n  display: block;\n}\n.fi-thumb-fill[data-v-dec39350] {\n  width: 100%;\n  height: 100%;\n}\n.fi-blabel[data-v-dec39350] {\n  flex: 1;\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.fi-btrack[data-v-dec39350] {\n  flex: 1.4;\n  height: 6px;\n  border-radius: 3px;\n  background: color-mix(in srgb, var(--zen-text, #fff) 10%, transparent);\n  overflow: hidden;\n}\n.fi-bfill[data-v-dec39350] {\n  display: block;\n  height: 100%;\n  border-radius: 3px;\n}\n.fi-bval[data-v-dec39350] {\n  flex: none;\n  width: 26px;\n  text-align: right;\n  font-variant-numeric: tabular-nums;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fi-lstr[data-v-dec39350] {\n  flex: none;\n  font-variant-numeric: tabular-nums;\n  font-size: 10px;\n  color: var(--zen-text, #e5e5ea);\n}\n.fi-lmeta[data-v-dec39350] {\n  flex: none;\n  min-width: 30px;\n  text-align: right;\n  font-variant-numeric: tabular-nums;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fi-lhint[data-v-dec39350] {\n  flex: none;\n  margin: 0;\n  padding: 5px 7px;\n  font-size: 9.5px;\n  line-height: 1.3;\n  color: var(--zen-muted, #9aa0aa);\n  border-top: 1px solid var(--zen-border, #34343c);\n}\n.fi-lhint b[data-v-dec39350] {\n  color: var(--zen-text, #e5e5ea);\n}\n\n/* side-panel tabs */\n.fi-side-tabs[data-v-dec39350] {\n  flex: none;\n  display: flex;\n  gap: 3px;\n  padding: 4px;\n  border-bottom: 1px solid var(--zen-border, #34343c);\n}\n.fi-tab[data-v-dec39350] {\n  flex: 1;\n  padding: 3px 6px;\n  border: 1px solid transparent;\n  border-radius: var(--zen-radius, 5px);\n  background: none;\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 10px;\n  font-weight: 700;\n  letter-spacing: 0.03em;\n  text-transform: uppercase;\n  cursor: pointer;\n}\n.fi-tab[data-v-dec39350]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.fi-tab.on[data-v-dec39350] {\n  color: var(--zen-text, #e5e5ea);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 16%, transparent);\n}\n\n/* settings tab */\n.fi-settings[data-v-dec39350] {\n  flex: 1 1 0;\n  min-height: 0;\n  overflow-y: auto;\n  padding: 4px 6px 6px;\n}\n.fi-sgroup[data-v-dec39350] {\n  margin-top: 5px;\n}\n.fi-sgroup-h[data-v-dec39350] {\n  font-size: 9px;\n  font-weight: 700;\n  letter-spacing: 0.05em;\n  text-transform: uppercase;\n  color: var(--zen-accent, #6366f1);\n  margin-bottom: 2px;\n}\n.fi-srow[data-v-dec39350] {\n  display: flex;\n  justify-content: space-between;\n  gap: 6px;\n  font-size: 10.5px;\n  padding: 1px 0;\n}\n.fi-srow.dim[data-v-dec39350] {\n  opacity: 0.4;\n}\n.fi-sk[data-v-dec39350] {\n  color: var(--zen-muted, #9aa0aa);\n}\n.fi-svv[data-v-dec39350] {\n  color: var(--zen-text, #e5e5ea);\n  font-variant-numeric: tabular-nums;\n  text-align: right;\n}\n\n/* section header */\n.gs-head[data-v-b38d9f08] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  width: 100%;\n  padding: 5px 2px;\n  background: none;\n  border: none;\n  cursor: pointer;\n  font: inherit;\n  font-size: 11px;\n  font-weight: 700;\n  letter-spacing: 0.02em;\n  color: var(--zen-muted, #9aa0aa);\n  text-align: left;\n}\n.gs-head[data-v-b38d9f08]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.gs-head .mdi[data-v-b38d9f08] {\n  font-size: 14px;\n}\n.gs-badge[data-v-b38d9f08] {\n  margin-left: auto;\n  padding: 1px 6px;\n  border-radius: 999px;\n  font-size: 9px;\n  font-weight: 700;\n  color: var(--zen-accent-text, #fff);\n  background: var(--zen-accent, #6366f1);\n}\n.gs-body[data-v-b38d9f08] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  padding: 2px 2px 8px 6px;\n}\n.gs-row[data-v-b38d9f08] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n  min-height: 24px;\n}\n.gs-lbl[data-v-b38d9f08] {\n  flex: none;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n  font-weight: 600;\n}\n.gs-pair[data-v-b38d9f08] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  justify-content: flex-end;\n}\n.gs-x[data-v-b38d9f08] {\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n}\n.gs-hint[data-v-b38d9f08] {\n  display: flex;\n  align-items: flex-start;\n  gap: 5px;\n  margin: 0;\n  padding: 5px 7px;\n  border-radius: var(--zen-radius, 6px);\n  background: var(--zen-input, #1b1b20);\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  line-height: 1.35;\n}\n.gs-hint .mdi[data-v-b38d9f08] {\n  flex: none;\n  font-size: 13px;\n  color: var(--zen-accent, #6366f1);\n}\n\n/* content-driven: the viewport sizes to the image aspect; the node grows to fit it */\n.ic-head[data-v-dd66395d] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 6px;\n  min-height: 26px;\n}\n.ic-head-nav[data-v-dd66395d] {\n  display: flex;\n  align-items: center;\n  gap: 2px;\n}\n.ic-nav-lbl[data-v-dd66395d] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n  font-variant-numeric: tabular-nums;\n  min-width: 30px;\n  text-align: center;\n}\n.ic-nav-gap[data-v-dd66395d] {\n  width: 8px;\n}\n/* fills the node body; the image is contained inside, so the box never drives the node size */\n.ic-view[data-v-dd66395d] {\n  position: relative;\n  flex: 1 1 0;\n  min-height: 0;\n  width: 100%;\n  overflow: hidden;\n  border-radius: var(--zen-radius, 8px);\n  background: var(--zen-input, #1b1b20);\n  border: 1px solid var(--zen-border, #34343c);\n  user-select: none;\n  touch-action: none;\n}\n.ic-view.dragging[data-v-dd66395d] {\n  cursor: grabbing !important;\n}\n.ic-img[data-v-dd66395d] {\n  position: absolute;\n  inset: 0;\n  width: 100%;\n  height: 100%;\n  object-fit: contain;\n  pointer-events: none;\n  transition: opacity 80ms ease;\n}\n.ic-handle[data-v-dd66395d] {\n  position: absolute;\n  width: 22px;\n  height: 22px;\n  border-radius: 50%;\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 35%, transparent);\n  border: 2px solid var(--zen-accent, #6366f1);\n  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);\n  pointer-events: none;\n  transform: translate(-50%, -50%);\n  z-index: 2;\n}\n/* box mode: A shows through this frame over B; the frame itself only draws the outline */\n.ic-box[data-v-dd66395d] {\n  position: absolute;\n  box-sizing: border-box;\n  border: 2px solid var(--zen-accent, #6366f1);\n  border-radius: 2px;\n  box-shadow:\n    0 0 0 1px rgba(0, 0, 0, 0.45),\n    0 2px 10px rgba(0, 0, 0, 0.35);\n  pointer-events: none;\n  z-index: 2;\n}\n.ic-box-tag[data-v-dd66395d] {\n  position: absolute;\n  top: 4px;\n  left: 4px;\n  padding: 0 5px;\n  border-radius: 4px;\n  font-size: 10px;\n  font-weight: 700;\n  line-height: 16px;\n  color: #fff;\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 80%, transparent);\n}\n/* fills the same body space the viewport will — so swapping empty↔image doesn't resize the node */\n.ic-empty[data-v-dd66395d] {\n  flex: 1 1 0;\n  min-height: 0;\n  width: 100%;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n}\n.ic-empty .mdi[data-v-dd66395d] {\n  font-size: 30px;\n  opacity: 0.5;\n}\n.ic-pop-head[data-v-dd66395d] {\n  padding: 4px 8px 6px;\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.06em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n/* fill mode: the panel fills the node body so the preview fits the current size (it doesn't\n   resize the node when the image changes); the picker row is fixed, the preview takes the rest */\n.li[data-v-b38870a5] {\n  position: relative;\n}\n.li-row[data-v-b38870a5] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  flex: none;\n}\n.li-preview[data-v-b38870a5] {\n  position: relative;\n  flex: 1 1 0;\n  min-height: 0;\n  width: 100%;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: var(--zen-radius, 8px);\n}\n.li-preview img[data-v-b38870a5] {\n  display: block;\n  border-radius: var(--zen-radius, 8px);\n  max-width: 100%;\n  max-height: 100%;\n  width: auto;\n  height: auto;\n  object-fit: contain;\n}\n.li-none[data-v-b38870a5] {\n  flex-direction: column;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  text-align: center;\n  padding: 8px;\n}\n.li-none .mdi[data-v-b38870a5] {\n  font-size: 26px;\n  opacity: 0.8;\n}\n.li-loading[data-v-b38870a5] {\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n}\n\n/* drag-and-drop overlay */\n.li-dropmask[data-v-b38870a5] {\n  position: absolute;\n  inset: 0;\n  z-index: 5;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 8px;\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 16%, var(--zen-bg, #1a1a1f) 78%);\n  border: 2px dashed var(--zen-accent, #6366f1);\n  border-radius: var(--zen-radius, 8px);\n  color: var(--zen-text, #e5e5ea);\n  pointer-events: none;\n}\n.li-dropmask .mdi[data-v-b38870a5] {\n  font-size: 32px;\n  color: var(--zen-accent, #6366f1);\n}\n.li-pick[data-v-b38870a5] {\n  flex: 1;\n  min-width: 0;\n}\n.li-sel[data-v-b38870a5] {\n  display: flex;\n  align-items: center;\n  gap: 7px;\n  min-width: 0;\n}\n.li-sel-ic[data-v-b38870a5] {\n  flex: none;\n  font-size: 15px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.li-sel-name[data-v-b38870a5] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n\n/* preview hover tools: lightweight corner actions; no full-image darkening */\n.li-ov[data-v-b38870a5] {\n  position: absolute;\n  inset: 0;\n  opacity: 0;\n  pointer-events: none;\n  transition: opacity 0.12s ease;\n}\n.li-preview:hover .li-ov[data-v-b38870a5] {\n  opacity: 1;\n  pointer-events: auto;\n}\n.li-ov-actions[data-v-b38870a5] {\n  position: absolute;\n  top: 6px;\n  right: 6px;\n  z-index: 2;\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  max-width: calc(100% - 12px);\n}\n/* A dark chip with a white icon, so the buttons read over any picture; the same as\n   Save Image's and Preview Image's (SavePreview.vue's .sp-act). ZenIconButton's own look (no background, muted icon) is for a toolbar, hence\n   the !important. Pointing at one fills it with the accent. */\n.li-ov-btn[data-v-b38870a5] {\n  width: 26px !important;\n  height: 26px !important;\n  border: 1px solid rgba(255, 255, 255, 0.14) !important;\n  background: rgba(0, 0, 0, 0.46) !important;\n  color: #fff !important;\n  backdrop-filter: blur(4px);\n}\n.li-ov-btn[data-v-b38870a5]:hover {\n  background: var(--zen-accent, #6366f1) !important;\n  border-color: var(--zen-accent, #6366f1) !important;\n  color: var(--zen-accent-text, #fff) !important;\n}\n.li-ov-info[data-v-b38870a5] {\n  cursor: help;\n}\n.li-ov-corner[data-v-b38870a5] {\n  position: absolute;\n  right: 6px;\n  bottom: 6px;\n  z-index: 2;\n}\n.li-info-pop[data-v-b38870a5] {\n  /* position/top/left/z-index come from the inline fixed style (teleported to body) */\n  box-sizing: border-box;\n  width: 210px;\n  max-width: calc(100vw - 24px);\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n  padding: 8px;\n  background: color-mix(in srgb, var(--zen-surface, #202026) 94%, #000 6%);\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);\n  cursor: default;\n}\n.li-info-row[data-v-b38870a5] {\n  display: grid;\n  grid-template-columns: 18px minmax(0, 1fr);\n  align-items: center;\n  min-width: 0;\n  gap: 7px;\n  min-height: 19px;\n  font-size: 11px;\n}\n.li-info-row > .mdi[data-v-b38870a5] {\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 14px;\n  text-align: center;\n}\n.li-info-row b[data-v-b38870a5] {\n  display: block;\n  min-width: 0;\n  color: var(--zen-text, #e5e5ea);\n  font-weight: 600;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.li-thumb[data-v-b38870a5] {\n  flex: none;\n  box-sizing: border-box;\n  width: 40px;\n  height: 40px;\n  object-fit: cover;\n  border-radius: var(--zen-radius, 6px);\n  background: var(--zen-input, #1b1b20);\n  border: 1px solid var(--zen-border, #34343c);\n}\n.li-thumb.sm[data-v-b38870a5] {\n  width: 18px;\n  height: 18px;\n  border-radius: var(--zen-radius, 5px);\n}\n.li-thumb.ph[data-v-b38870a5] {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  color: var(--zen-muted, #9aa0aa);\n}\n/* grid-combo cell (contain square + name) */\n.li-gthumb[data-v-b38870a5] {\n  width: 100%;\n  aspect-ratio: 1;\n  border-radius: var(--zen-radius, 6px);\n  overflow: hidden;\n  background: var(--zen-surface, #202026);\n  position: relative;\n}\n/* Pinned to the square: its height comes from aspect-ratio, which `height: 100%` can't measure\n   against, so a portrait picture would grow past it and be cropped. */\n.li-gthumb img[data-v-b38870a5] {\n  position: absolute;\n  inset: 0;\n  width: 100%;\n  height: 100%;\n  object-fit: contain;\n  display: block;\n}\n.li-gname[data-v-b38870a5] {\n  font-size: 10px;\n  color: var(--zen-text, #e5e5ea);\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  text-align: center;\n}\n.li-lname[data-v-b38870a5] {\n  flex: 1;\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.li-foot[data-v-b38870a5] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  width: 100%;\n}\n.li-foot-browse[data-v-b38870a5] {\n  margin-left: auto;\n}\n/* compact source switcher inside the combo search row */\n.li-src[data-v-b38870a5] .zen-tg-b {\n  padding: 2px 7px;\n  font-size: 10px;\n}\n.li-pop-head[data-v-b38870a5] {\n  padding: 4px 8px 6px;\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.06em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.ma[data-v-294512d9] {\n  flex: none;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  overflow: hidden;\n  border-radius: 50%;\n  border: 2px solid var(--ma-color);\n  background: color-mix(in srgb, var(--ma-color) 35%, var(--zen-bg, #141418));\n}\n.ma-img[data-v-294512d9] {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n}\n.ma-letter[data-v-294512d9] {\n  font-weight: 700;\n  line-height: 1;\n  color: var(--zen-text, #e5e5ea);\n}\n\n.lbf[data-v-77740021] {\n  position: absolute;\n  inset: 0;\n  pointer-events: none;\n}\n.lbf-pic[data-v-77740021] {\n  position: absolute;\n  inset: 0;\n  -webkit-mask-size: 100% 100%;\n  mask-size: 100% 100%;\n}\n.lbf-img[data-v-77740021] {\n  position: absolute;\n  inset: 0;\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n  opacity: 0.78;\n}\n.lbf-top[data-v-77740021] {\n  position: absolute;\n  right: 4px;\n  top: 4px;\n  display: flex;\n  align-items: center;\n  gap: 3px;\n}\n.lbf-more[data-v-77740021] {\n  display: flex;\n  gap: 3px;\n}\n.lbf-more img[data-v-77740021],\n.lbf-plus[data-v-77740021] {\n  width: 22px;\n  height: 22px;\n  border-radius: 4px;\n  object-fit: cover;\n  box-shadow: 0 0 0 1px rgb(0 0 0 / 50%);\n}\n.lbf-more.big img[data-v-77740021],\n.lbf-more.big .lbf-plus[data-v-77740021] {\n  width: 32px;\n  height: 32px;\n}\n.lbf-plus[data-v-77740021] {\n  display: grid;\n  place-items: center;\n  background: rgb(0 0 0 / 65%);\n  color: #fff;\n  font-size: 10px;\n}\n.lbf-lora[data-v-77740021] {\n  position: absolute;\n  left: 4px;\n  top: 20px;\n  display: inline-flex;\n  align-items: center;\n  gap: 2px;\n  padding: 0 5px;\n  border-radius: 999px;\n  background: rgb(0 0 0 / 65%);\n  color: #fff;\n  font-size: 10px;\n  line-height: 16px;\n}\n.lbf-text[data-v-77740021] {\n  position: absolute;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  margin: 0;\n  padding: 14px 6px 4px;\n  background: linear-gradient(to top, rgb(0 0 0 / 75%), transparent);\n  color: #fff;\n  font-size: 11px;\n  line-height: 1.3;\n  text-shadow: 0 1px 2px rgb(0 0 0 / 60%);\n  display: -webkit-box;\n  -webkit-line-clamp: 2;\n  -webkit-box-orient: vertical;\n  overflow: hidden;\n}\n.lbf.bare .lbf-text[data-v-77740021] {\n  background: none;\n  color: color-mix(in srgb, #fff 85%, transparent);\n}\n@container (max-height: 70px) {\n.lbf-text[data-v-77740021],\n  .lbf-lora[data-v-77740021] {\n    display: none;\n}\n}\n@container (max-width: 90px) {\n.lbf-more[data-v-77740021] {\n    display: none;\n}\n}\n@container (min-height: 160px) {\n.lbf-text[data-v-77740021] {\n    -webkit-line-clamp: 3;\n}\n}\n\n.lsum[data-v-0e068eb5] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n}\n.lsum-stage[data-v-0e068eb5] {\n  flex: 1;\n  min-height: 0;\n  pointer-events: none;\n}\n.lsum-bar[data-v-0e068eb5] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n.lsum-text[data-v-0e068eb5] {\n  flex: 1;\n  min-width: 0;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.la[data-v-18a7e0c3] {\n  display: grid;\n  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);\n  gap: 16px;\n  height: 100%;\n  min-height: 0;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n}\n.la-ask[data-v-18a7e0c3],\n.la-result[data-v-18a7e0c3] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n  min-height: 0;\n  overflow: auto;\n}\n.la-result[data-v-18a7e0c3] {\n  padding-left: 16px;\n  border-left: 1px solid var(--zen-border, #34343c);\n}\n.la-source[data-v-18a7e0c3] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n}\n.la-pic[data-v-18a7e0c3] {\n  height: 180px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-surface-2, #26262d);\n  overflow: hidden;\n}\n.la-pic.off img[data-v-18a7e0c3] {\n  opacity: 0.3;\n}\n.la-pic img[data-v-18a7e0c3] {\n  max-width: 100%;\n  max-height: 100%;\n  object-fit: contain;\n}\n.la-none[data-v-18a7e0c3] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 6px;\n  padding: 16px;\n  text-align: center;\n  color: var(--zen-muted, #9aa0aa);\n}\n.la-none i[data-v-18a7e0c3] {\n  font-size: 24px;\n}\n.la-toggle[data-v-18a7e0c3] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n.la-toggle.dim[data-v-18a7e0c3] {\n  opacity: 0.5;\n}\n.la-chips[data-v-18a7e0c3] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 4px;\n}\n.la-chip[data-v-18a7e0c3] {\n  padding: 3px 8px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: 999px;\n  background: none;\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 11px;\n  cursor: pointer;\n}\n.la-chip[data-v-18a7e0c3]:hover {\n  color: var(--zen-text, #e5e5ea);\n  border-color: var(--zen-accent, #6366f1);\n}\n.la-row[data-v-18a7e0c3] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n.la-ctl[data-v-18a7e0c3] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.la-grow[data-v-18a7e0c3] {\n  flex: 1;\n}\n.la-note[data-v-18a7e0c3] {\n  margin: 0;\n  color: var(--zen-muted, #9aa0aa);\n}\n.la-error[data-v-18a7e0c3] {\n  margin: 0;\n  color: var(--zen-danger, #f87171);\n  white-space: pre-wrap;\n}\n.la-thumb[data-v-18a7e0c3] {\n  height: 260px;\n  flex: none;\n}\n.la-caption[data-v-18a7e0c3] {\n  margin: 0;\n  padding: 6px 8px;\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-surface-2, #26262d);\n  line-height: 1.45;\n}\n.la-boxes[data-v-18a7e0c3] {\n  margin: 0;\n  padding: 0;\n  list-style: none;\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n}\n.la-dot[data-v-18a7e0c3] {\n  display: inline-block;\n  width: 8px;\n  height: 8px;\n  margin-right: 6px;\n  border-radius: 2px;\n}\n.la-kind[data-v-18a7e0c3] {\n  margin: 0 4px;\n  font-size: 10px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.la-empty[data-v-18a7e0c3] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 8px;\n  height: 100%;\n  color: var(--zen-muted, #9aa0aa);\n  text-align: center;\n}\n.la-empty i[data-v-18a7e0c3] {\n  font-size: 28px;\n}\n\n.lm[data-v-ede01aa2] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n}\n.lm-bar[data-v-ede01aa2] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 6px;\n}\n.lm-bar-note[data-v-ede01aa2] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lm-lib[data-v-ede01aa2] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  width: 280px;\n  padding: 10px;\n  color: var(--zen-text, #e5e5ea);\n}\n.lm-lib-head[data-v-ede01aa2] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 6px;\n}\n.lm-lib-title[data-v-ede01aa2] {\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lm-lib-list[data-v-ede01aa2] {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n  max-height: 240px;\n  overflow-y: auto;\n}\n.lm-lib-row[data-v-ede01aa2] {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n}\n.lm-lib-pick[data-v-ede01aa2] {\n  flex: 1;\n  min-width: 0;\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  padding: 4px 6px;\n  border: 1px solid transparent;\n  border-radius: var(--zen-radius, 6px);\n  background: transparent;\n  color: var(--zen-text, #e5e5ea);\n  font: inherit;\n  font-size: 12px;\n  text-align: left;\n  cursor: pointer;\n}\n.lm-lib-pick[data-v-ede01aa2]:hover {\n  border-color: var(--zen-border, #34343c);\n  background: color-mix(in srgb, var(--zen-text, #fff) 5%, transparent);\n}\n.lm-lib-name[data-v-ede01aa2] {\n  overflow: hidden;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n}\n.lm-grid[data-v-ede01aa2] {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));\n  gap: 6px;\n}\n.lm-tile[data-v-ede01aa2] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 4px;\n  min-width: 0;\n  padding: 8px 4px 6px;\n  border: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 70%, transparent);\n  border-radius: var(--zen-radius, 7px);\n  background: transparent;\n  color: var(--zen-text, #e5e5ea);\n  cursor: pointer;\n}\n.lm-tile[data-v-ede01aa2]:hover {\n  background: color-mix(in srgb, var(--zen-text, #fff) 4%, transparent);\n}\n.lm-tile.on[data-v-ede01aa2] {\n  border-color: var(--zen-accent, #3b82f6);\n  background: color-mix(in srgb, var(--zen-accent, #3b82f6) 12%, transparent);\n}\n.lm-tile-name[data-v-ede01aa2] {\n  max-width: 100%;\n  overflow: hidden;\n  font-size: 11px;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n}\n.lm-tile-meta[data-v-ede01aa2] {\n  display: inline-flex;\n  align-items: center;\n  gap: 3px;\n  font-size: 10px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lm-new[data-v-ede01aa2] {\n  justify-content: center;\n  border-style: dashed;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lm-new .mdi[data-v-ede01aa2] {\n  font-size: 22px;\n}\n.lm-empty[data-v-ede01aa2] {\n  margin: 0;\n  font-size: 11px;\n  line-height: 1.45;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lm-edit[data-v-ede01aa2] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  padding-top: 10px;\n  border-top: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 60%, transparent);\n}\n.lm-head[data-v-ede01aa2] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.lm-name[data-v-ede01aa2] {\n  flex: 1;\n  min-width: 0;\n}\n.lm-color[data-v-ede01aa2] {\n  flex: none;\n  width: 22px;\n  height: 22px;\n  padding: 0;\n  border: 0;\n  border-radius: 4px;\n  background: transparent;\n  cursor: pointer;\n}\n\n.mc[data-v-f481af91] {\n  display: grid;\n  grid-template-columns: repeat(2, minmax(0, 1fr));\n  gap: 10px;\n}\n.mc-card[data-v-f481af91] {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  gap: 4px;\n  padding: 12px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-surface, #1e1e24);\n  color: var(--zen-text, #e5e5ea);\n  font: inherit;\n  font-size: 12px;\n  text-align: left;\n  cursor: pointer;\n}\n.mc-card[data-v-f481af91]:hover {\n  border-color: color-mix(in srgb, var(--zen-accent, #6366f1) 50%, var(--zen-border, #34343c));\n}\n.mc-card.on[data-v-f481af91] {\n  border-color: var(--zen-accent, #6366f1);\n  box-shadow: 0 0 0 1px var(--zen-accent, #6366f1);\n}\n.mc-icon[data-v-f481af91] {\n  font-size: 22px;\n  color: var(--zen-accent, #6366f1);\n}\n.mc-label[data-v-f481af91] {\n  font-size: 14px;\n  font-weight: 600;\n}\n.mc-model[data-v-f481af91] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.mc-what[data-v-f481af91] {\n  margin-top: 4px;\n  font-size: 11px;\n  line-height: 1.4;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.ls[data-v-5978b710] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n  padding: 4px 2px;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n}\n.ls-note[data-v-5978b710] {\n  margin: 0;\n  font-size: 11px;\n  line-height: 1.45;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.pal[data-v-90f7fa68] {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  gap: 4px;\n}\n.pal-chip[data-v-90f7fa68] {\n  display: inline-flex;\n}\n.pal-none[data-v-90f7fa68] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.preset[data-v-86f41e2a] {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n}\n.preset-input[data-v-86f41e2a] {\n  flex: 1;\n  min-width: 0;\n}\n.preset-menu[data-v-86f41e2a] {\n  display: flex;\n  flex-direction: column;\n  gap: 1px;\n  padding: 4px;\n  max-height: 280px;\n  overflow: auto;\n}\n\n.pl-cog[data-v-359cb6a9] {\n  margin-left: 2px;\n  font-size: 13px;\n  opacity: 0.7;\n}\n.pl-host[data-v-359cb6a9] {\n  position: relative;\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n}\n.pl-choose[data-v-359cb6a9] {\n  position: absolute;\n  inset: 0;\n  z-index: 5;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  padding: 16px;\n  border-radius: var(--zen-radius, 7px);\n  background: color-mix(in srgb, var(--zen-bg, #141418) 88%, transparent);\n  backdrop-filter: blur(2px);\n}\n.pl-choose-card[data-v-359cb6a9] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n  max-width: 720px;\n  color: var(--zen-text, #e5e5ea);\n}\n.pl-choose-title[data-v-359cb6a9] {\n  font-size: 16px;\n  font-weight: 600;\n}\n.pl-choose-note[data-v-359cb6a9] {\n  font-size: 12px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.pl-note[data-v-359cb6a9] {\n  margin: 0;\n  padding-top: 10px;\n  border-top: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 60%, transparent);\n  font-size: 11px;\n  line-height: 1.45;\n  color: var(--zen-muted, #9aa0aa);\n}\n.pl-form[data-v-359cb6a9] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n}\n.pl-chips[data-v-359cb6a9] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 4px;\n}\n.pl-face[data-v-359cb6a9] {\n  position: absolute;\n  top: 4px;\n  right: 4px;\n  display: flex;\n  gap: 2px;\n  pointer-events: none;\n}\n.pl-chip[data-v-359cb6a9] {\n  display: inline-flex;\n  align-items: center;\n  gap: 5px;\n  height: 24px;\n  padding: 0 9px 0 3px;\n  border: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 80%, transparent);\n  border-radius: 11px;\n  background: transparent;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n  cursor: pointer;\n}\n.pl-chip[data-v-359cb6a9]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.pl-chip.on[data-v-359cb6a9] {\n  border-color: var(--zen-accent, #3b82f6);\n  background: color-mix(in srgb, var(--zen-accent, #3b82f6) 22%, transparent);\n  color: var(--zen-text, #e5e5ea);\n}\n.pl-chip.partial[data-v-359cb6a9] {\n  border-style: dashed;\n  border-color: var(--zen-accent, #3b82f6);\n  color: var(--zen-text, #e5e5ea);\n}\n.pl-inherited[data-v-359cb6a9] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 4px;\n  margin-bottom: 4px;\n}\n.pl-inh-ref[data-v-359cb6a9],\n.pl-inh-lora[data-v-359cb6a9] {\n  display: inline-flex;\n  align-items: center;\n  gap: 4px;\n  max-width: 100%;\n  padding: 2px 6px 2px 3px;\n  border: 1px dashed color-mix(in srgb, var(--zen-border, #34343c) 90%, transparent);\n  border-radius: 5px;\n  background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 10.5px;\n  cursor: pointer;\n}\n.pl-inh-ref[data-v-359cb6a9]:hover,\n.pl-inh-lora[data-v-359cb6a9]:hover {\n  border-color: var(--zen-accent, #3b82f6);\n  color: var(--zen-text, #e5e5ea);\n}\n.pl-inh-ref img[data-v-359cb6a9] {\n  width: 18px;\n  height: 18px;\n  border-radius: 3px;\n  object-fit: cover;\n}\n.pl-inh-name[data-v-359cb6a9] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  max-width: 120px;\n}\n.pl-inh-str[data-v-359cb6a9] {\n  font-variant-numeric: tabular-nums;\n  opacity: 0.75;\n}\n.pl-hint[data-v-359cb6a9] {\n  margin: 0;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.pl-grid[data-v-359cb6a9] {\n  display: grid;\n  grid-template-columns: 62px minmax(0, 1fr);\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n}\n.pl-blend-row[data-v-359cb6a9] {\n  display: grid;\n  grid-template-columns: 44px minmax(0, 1fr) 82px;\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n}\n.pl-pairs[data-v-359cb6a9] {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));\n  gap: 6px 10px;\n}\n.pl-pair[data-v-359cb6a9] {\n  display: grid;\n  grid-template-columns: 52px minmax(0, 1fr);\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n}\n.pl-row-head[data-v-359cb6a9] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n.pl-sub[data-v-359cb6a9] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.pl-menu[data-v-359cb6a9] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  padding: 8px;\n}\n.pl-menu-title[data-v-359cb6a9] {\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n}\n.pl-menu .zen-btn[data-v-359cb6a9] {\n  justify-content: flex-start;\n}\n.pl-swatch[data-v-359cb6a9] {\n  flex: none;\n  width: 12px;\n  height: 12px;\n  border-radius: 3px;\n}\n.pl-wand[data-v-359cb6a9] {\n  position: absolute;\n  inset: 0;\n  cursor: crosshair;\n}\n.pl-point[data-v-359cb6a9] {\n  position: absolute;\n  width: 10px;\n  height: 10px;\n  margin: -5px 0 0 -5px;\n  border: 2px solid #fff;\n  border-radius: 50%;\n  background: #22c55e;\n  box-shadow: 0 0 0 1px rgb(0 0 0 / 50%);\n  pointer-events: none;\n}\n.pl-point.live[data-v-359cb6a9] {\n  pointer-events: auto;\n  cursor: grab;\n  touch-action: none;\n}\n.pl-point.live[data-v-359cb6a9]:hover {\n  transform: scale(1.3);\n}\n.pl-point.out[data-v-359cb6a9] {\n  background: #ef4444;\n}\n.pl-status[data-v-359cb6a9] {\n  display: inline-flex;\n  align-items: center;\n  gap: 5px;\n  height: 24px;\n  padding: 0 8px;\n  border: 0;\n  border-radius: var(--zen-radius, 7px);\n  background: none;\n  color: var(--zen-success, #4ade80);\n  font: inherit;\n  font-size: 11px;\n  cursor: pointer;\n}\n.pl-status[data-v-359cb6a9]:hover {\n  background: color-mix(in srgb, var(--zen-text, #e5e5ea) 8%, transparent);\n}\n.pl-status.warn[data-v-359cb6a9] {\n  color: var(--zen-warning, #f5b041);\n}\n.pl-count[data-v-359cb6a9] {\n  color: var(--zen-muted, #9aa0aa);\n  font-variant-numeric: tabular-nums;\n}\n.pl-pop[data-v-359cb6a9] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  width: min(340px, 88vw);\n  box-sizing: border-box;\n  padding: 10px;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n}\n.pl-pop-head[data-v-359cb6a9] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n.pl-pop-title[data-v-359cb6a9] {\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n.pl-out[data-v-359cb6a9] {\n  margin: 0;\n  max-height: 320px;\n  overflow: auto;\n  padding: 6px 8px;\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-surface-2, #26262d);\n  font-family: var(--zen-mono, ui-monospace, monospace);\n  font-size: 10.5px;\n  line-height: 1.45;\n  white-space: pre-wrap;\n  word-break: break-word;\n  user-select: text;\n}\n.pl-warn[data-v-359cb6a9] {\n  margin: 0;\n  padding-left: 16px;\n  font-size: 11px;\n  color: var(--zen-warning, #f5b041);\n}\n\n.lhost[data-v-caa49d38] {\n  position: relative;\n  box-sizing: border-box;\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n}\n.lhost[data-v-caa49d38] > * {\n  position: absolute;\n  inset: 0;\n}\n\n/* natural content flow — the node auto-grows to fit (see mountWidget), so rows are never\n   scrolled and the Add button simply follows the last row. */\n.ls-mid[data-v-c21f11cb] {\n  display: flex;\n  flex-direction: column;\n}\n.ls-rows[data-v-c21f11cb] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n}\n.ls-empty[data-v-c21f11cb] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 5px;\n  padding: 14px 8px;\n  text-align: center;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);\n}\n.ls-empty > .mdi[data-v-c21f11cb] {\n  font-size: 24px;\n  opacity: 0.8;\n}\n.ls-empty > span[data-v-c21f11cb] {\n  font-size: 11px;\n}\n.ls-row[data-v-c21f11cb] {\n  position: relative;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  transition: transform 0.15s ease;\n}\n.ls-row.off[data-v-c21f11cb] {\n  opacity: 0.5;\n}\n/* A group's rows step in under its header, joined by a rule down the side. */\n.ls-row.grouped[data-v-c21f11cb] {\n  margin-left: 6px;\n  padding-left: 6px;\n  border-left: 2px solid color-mix(in srgb, var(--zen-accent, #6366f1) 45%, transparent);\n}\n.ls-group[data-v-c21f11cb] {\n  position: relative;\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  min-height: 26px;\n  padding: 0 2px 0 0;\n  border-radius: var(--zen-radius, 6px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 6%, transparent);\n  transition: transform 0.15s ease;\n}\n.ls-rows.settling .ls-group[data-v-c21f11cb] {\n  transition: none;\n}\n.ls-group.muted .ls-gname[data-v-c21f11cb] {\n  text-decoration: line-through;\n  color: var(--zen-muted, #9aa0aa);\n}\n.ls-fold[data-v-c21f11cb],\n.ls-gname[data-v-c21f11cb] {\n  border: 0;\n  background: none;\n  color: inherit;\n  font: inherit;\n  cursor: pointer;\n  padding: 0;\n}\n.ls-fold[data-v-c21f11cb] {\n  flex: none;\n  width: 20px;\n  height: 24px;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 16px;\n  line-height: 1;\n}\n.ls-fold[data-v-c21f11cb]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.ls-gname[data-v-c21f11cb] {\n  flex: 1;\n  min-width: 0;\n  height: 24px;\n  overflow: hidden;\n  text-align: left;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  font-size: 12px;\n  font-weight: 600;\n}\n.ls-gname-edit[data-v-c21f11cb] {\n  flex: 1;\n  min-width: 0;\n  height: 22px;\n  padding: 0 5px;\n  font: inherit;\n  font-size: 12px;\n  font-weight: 600;\n  color: var(--zen-text, #e5e5ea);\n  background: var(--zen-bg, #1a1a1f);\n  border: 1px solid var(--zen-accent, #6366f1);\n  border-radius: var(--zen-radius, 6px);\n  outline: none;\n}\n.ls-driven[data-v-c21f11cb],\n.ls-solo[data-v-c21f11cb] {\n  flex: none;\n  font-size: 13px;\n  color: var(--zen-accent, #6366f1);\n}\n.ls-gcount[data-v-c21f11cb] {\n  flex: 0 1 auto;\n  max-width: 45%;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  padding: 0 4px;\n  font-size: 10.5px;\n  font-variant-numeric: tabular-nums;\n  color: var(--zen-muted, #9aa0aa);\n}\n/* The grabbed row is lifted, not ghosted — it's the real row, translated, so it stays exactly\n   its own size at any canvas zoom. z-index carries it over its neighbours as it passes them. */\n.ls-rows.settling .ls-row[data-v-c21f11cb] {\n  transition: none;\n}\n.ls-row.dragging[data-v-c21f11cb] {\n  z-index: 5;\n  transition: none;\n  box-shadow: 0 6px 16px rgb(0 0 0 / 45%);\n  border-radius: var(--zen-radius, 6px);\n  cursor: grabbing;\n}\n/* grip + dot travel together, so they pair at 2px instead of the row's 6px */\n.ls-gutter[data-v-c21f11cb] {\n  flex: none;\n  display: inline-flex;\n  align-items: center;\n  gap: 2px;\n}\n.ls-grip[data-v-c21f11cb] {\n  flex: none;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: 12px;\n  cursor: grab;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 14px;\n  line-height: 1;\n  /* The gesture-layer rules a drag handle needs (see useDragSurface): without touch-action the\n     browser reserves the gesture for scroll and fires pointercancel on the first pixel of\n     movement, and without user-select the drag turns into a text selection. */\n  touch-action: none;\n  -webkit-user-select: none;\n  user-select: none;\n}\n/* the glyph must never be the pointer target — the grip itself is what the press resolves to */\n.ls-grip[data-v-c21f11cb] > * {\n  pointer-events: none;\n}\n.ls-grip[data-v-c21f11cb]:active {\n  cursor: grabbing;\n}\n.ls-grip[data-v-c21f11cb]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.ls-pick[data-v-c21f11cb] {\n  flex: 1;\n  min-width: 0;\n}\n/* No width: ZenNumber's intrinsic width is derived from the widest value its own min/max can\n   produce, so every row lines up at exactly the size the digits need. The 84px this used to\n   hardcode was two pixels short of \"-10.00\". */\n.ls-str[data-v-c21f11cb] {\n  flex: none;\n}\n.ls-confirm[data-v-c21f11cb] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  max-width: 230px;\n  padding: 6px 6px 4px;\n}\n.ls-confirm-text[data-v-c21f11cb] {\n  font-size: 12px;\n  line-height: 1.4;\n  color: var(--zen-text, #e5e5ea);\n}\n.ls-confirm-actions[data-v-c21f11cb] {\n  display: flex;\n  justify-content: flex-end;\n  gap: 6px;\n}\n.ls-pop-head[data-v-c21f11cb] {\n  padding: 4px 8px 6px;\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.06em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.nr-row[data-v-616b0b9a] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  height: 18px;\n}\n.nr-slider[data-v-616b0b9a] {\n  flex: 1;\n  min-width: 0;\n}\n.nr-tip[data-v-616b0b9a] {\n  position: fixed;\n  z-index: 10000;\n  transform: translate(-50%, -100%);\n  padding: 2px 6px;\n  font-size: 11px;\n  font-weight: 600;\n  font-variant-numeric: tabular-nums;\n  line-height: 1.3;\n  white-space: nowrap;\n  color: var(--zen-text, #e5e5ea);\n  background: var(--zen-surface, #202026);\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 6px);\n  box-shadow: 0 4px 12px rgb(0 0 0 / 45%);\n  pointer-events: none;\n}\n.nr-end[data-v-616b0b9a] {\n  flex: none;\n  font-size: 10.5px;\n  font-variant-numeric: tabular-nums;\n  color: var(--zen-muted, #9aa0aa);\n}\n.nr-menu[data-v-616b0b9a] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  width: 210px;\n  padding: 6px 8px 8px;\n}\n.nr-head[data-v-616b0b9a] {\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.06em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n.nr-field[data-v-616b0b9a] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 10px;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n}\n.nr-presets[data-v-616b0b9a] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 4px;\n  padding-top: 2px;\n}\n.nr-preset[data-v-616b0b9a] {\n  padding: 2px 7px;\n  font: inherit;\n  font-size: 11px;\n  color: var(--zen-muted, #cfd2d8);\n  background: color-mix(in srgb, var(--zen-text, #fff) 6%, transparent);\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 6px);\n  cursor: pointer;\n}\n.nr-preset[data-v-616b0b9a]:hover {\n  border-color: var(--zen-accent, #6366f1);\n  color: var(--zen-text, #e5e5ea);\n}\n\n/* The only positioned ancestor inside the widget, so every zone's offsetTop is measured against\n   it. Nothing between it and a row may be positioned or the drag maths silently shifts. */\n.rg-groups[data-v-c9d8e03d] {\n  position: relative;\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n}\n.rg-group[data-v-c9d8e03d] {\n  display: flex;\n  flex-direction: column;\n  gap: 5px;\n  padding: 4px 6px 6px;\n  border: 1px solid var(--zen-surface-border, var(--zen-border, #34343c));\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);\n  transition:\n    border-color 0.12s ease,\n    background 0.12s ease,\n    transform 0.15s ease;\n}\n.rg-group[data-v-c9d8e03d]:hover {\n  background: color-mix(in srgb, var(--zen-text, #fff) 5%, transparent);\n}\n/* the group the pointer is over, and the one the row came from */\n.rg-group.drop[data-v-c9d8e03d] {\n  border-color: var(--zen-accent, #6366f1);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 10%, transparent);\n}\n.rg-group.source[data-v-c9d8e03d]:not(.drop) {\n  border-style: dashed;\n}\ntextarea.rg-prompt.rg-prompt[data-v-c9d8e03d] {\n  width: 100%;\n  min-height: 28px;\n  padding: 5px 8px;\n}\n.rg-groups.settling .rg-group[data-v-c9d8e03d],\n.rg-groups.settling .rg-row[data-v-c9d8e03d] {\n  transition: none;\n}\n.rg-group.lifted[data-v-c9d8e03d] {\n  position: relative;\n  z-index: 1;\n  transition: none;\n  background: color-mix(in srgb, var(--zen-text, #fff) 5%, var(--zen-surface, #1f1f24));\n  box-shadow: 0 6px 18px rgb(0 0 0 / 35%);\n}\n.rg-head[data-v-c9d8e03d] {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  min-height: 24px;\n  padding-left: 2px;\n}\n.rg-label[data-v-c9d8e03d] {\n  flex: 1;\n  min-width: 0;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  cursor: help;\n}\n.rg-title[data-v-c9d8e03d] {\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n  white-space: nowrap;\n}\n.rg-count[data-v-c9d8e03d] {\n  flex: none;\n  padding: 0 5px;\n  border-radius: 999px;\n  background: color-mix(in srgb, var(--zen-text, #fff) 7%, transparent);\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  line-height: 15px;\n}\n/* An empty group still has to be a target big enough to aim at, so it keeps a row's worth of\n   height rather than collapsing to its header. */\n.rg-slot[data-v-c9d8e03d] {\n  margin: 0;\n  padding: 6px;\n  text-align: center;\n  font-size: 10px;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-surface-border, var(--zen-border, #34343c));\n  border-radius: var(--zen-radius, 6px);\n}\n.rg-rows[data-v-c9d8e03d] {\n  display: flex;\n  flex-direction: column;\n  gap: 5px;\n}\n.rg-row[data-v-c9d8e03d] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.rg-row.off[data-v-c9d8e03d] {\n  opacity: 0.5;\n}\n/* The grabbed row is lifted, not ghosted — it's the real row, translated, so it stays exactly its\n   own size at any canvas zoom. The z-index carries it over the groups it passes; no ancestor may\n   set one, or it would be trapped inside its own group's stacking context. */\n.rg-row.dragging[data-v-c9d8e03d] {\n  position: relative;\n  z-index: 5;\n  box-shadow: 0 6px 16px rgb(0 0 0 / 45%);\n  border-radius: var(--zen-radius, 6px);\n  cursor: grabbing;\n}\n.rg-grip[data-v-c9d8e03d] {\n  flex: none;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: 12px;\n  cursor: grab;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 14px;\n  line-height: 1;\n  /* The gesture-layer rules a drag handle needs (see useDragSurface): without touch-action the\n     browser reserves the gesture for scroll and fires pointercancel on the first pixel of\n     movement, and without user-select the drag turns into a text selection. */\n  touch-action: none;\n  -webkit-user-select: none;\n  user-select: none;\n}\n/* the glyph must never be the pointer target — the grip itself is what the press resolves to */\n.rg-grip[data-v-c9d8e03d] > * {\n  pointer-events: none;\n}\n.rg-grip[data-v-c9d8e03d]:active {\n  cursor: grabbing;\n}\n.rg-grip[data-v-c9d8e03d]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.rg-pick[data-v-c9d8e03d] {\n  flex: 1;\n  min-width: 0;\n}\n/* No width: ZenNumber's intrinsic width is now derived from the widest value its own min/max\n   can produce, so every row lines up at exactly the size the digits need and nothing clips. */\n.rg-str[data-v-c9d8e03d] {\n  flex: none;\n}\n\n/* content-driven panel: the node grows to fit this form */\n\n/* stacked field (label above a full-width control) */\n.si-field[data-v-289f994b] {\n  display: flex;\n  flex-direction: column;\n  gap: 3px;\n}\n/* inline row (label left, control right) */\n.si-row[data-v-289f994b] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n  min-height: 24px;\n}\n.si-lbl[data-v-289f994b] {\n  display: inline-flex;\n  align-items: center;\n  gap: 5px;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n  font-weight: 600;\n}\n.si-lbl .mdi[data-v-289f994b] {\n  font-size: 14px;\n}\n.si-grow[data-v-289f994b] {\n  flex: 1;\n  min-width: 0;\n}\n.si-project[data-v-289f994b] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n}\n.si-sel[data-v-289f994b] {\n  display: flex;\n  align-items: center;\n  gap: 7px;\n  min-width: 0;\n}\n.si-sel .mdi[data-v-289f994b] {\n  flex: none;\n  font-size: 15px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.si-sel-name[data-v-289f994b] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.si-opt-ic[data-v-289f994b] {\n  flex: none;\n  font-size: 15px;\n  color: var(--zen-accent, #6366f1);\n}\n.si-opt-name[data-v-289f994b] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.si-newbtn[data-v-289f994b] {\n  justify-content: flex-start !important;\n}\n\n/* quality */\n.si-quality[data-v-289f994b] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  flex: 1;\n  min-width: 0;\n  max-width: 60%;\n}\n.si-qval[data-v-289f994b] {\n  flex: none;\n  min-width: 26px;\n  text-align: right;\n  font-variant-numeric: tabular-nums;\n  color: var(--zen-text, #e5e5ea);\n}\n.si-sep[data-v-289f994b] {\n  height: 1px;\n  background: var(--zen-border, #34343c);\n  opacity: 0.7;\n  margin: 1px 0;\n}\n\n/* collapsible header */\n.si-exp[data-v-289f994b] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  width: 100%;\n  padding: 3px 2px;\n  background: none;\n  border: none;\n  cursor: pointer;\n  font: inherit;\n  font-size: 11px;\n  font-weight: 600;\n  color: var(--zen-muted, #9aa0aa);\n  text-align: left;\n}\n.si-exp[data-v-289f994b]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.si-exp .mdi[data-v-289f994b] {\n  font-size: 14px;\n}\n.si-badge[data-v-289f994b] {\n  margin-left: auto;\n  padding: 1px 6px;\n  border-radius: 999px;\n  font-size: 9px;\n  font-weight: 700;\n  letter-spacing: 0.02em;\n  color: var(--zen-accent-text, #fff);\n  background: var(--zen-accent, #6366f1);\n}\n.si-exp-body[data-v-289f994b] {\n  padding: 0 2px 2px;\n}\n.si-sub[data-v-289f994b] {\n  display: block;\n  margin-bottom: 3px;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n}\n\n/* destination footer */\n.si-dest[data-v-289f994b] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  margin-top: 1px;\n  padding: 5px 7px;\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-input, #1b1b20);\n  border: 1px solid var(--zen-border, #34343c);\n  color: var(--zen-text, #e5e5ea);\n  font-size: 11px;\n}\n.si-dest .mdi[data-v-289f994b] {\n  flex: none;\n  font-size: 14px;\n  color: var(--zen-accent, #6366f1);\n}\n.si-dest-path[data-v-289f994b] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n\n.sp[data-v-8adc7196] {\n  position: relative;\n}\n.sp-preview[data-v-8adc7196] {\n  position: relative;\n  flex: 1 1 0;\n  min-height: 0;\n  width: 100%;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: var(--zen-radius, 8px);\n}\n.sp-preview img[data-v-8adc7196] {\n  display: block;\n  border-radius: var(--zen-radius, 8px);\n  max-width: 100%;\n  max-height: 100%;\n  width: auto;\n  height: auto;\n  object-fit: contain;\n  /* no native image-drag ghost; the drag falls through to litegraph (moves the node) */\n  -webkit-user-drag: none;\n  user-select: none;\n}\n.sp-none[data-v-8adc7196] {\n  flex-direction: column;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  text-align: center;\n  padding: 8px;\n}\n.sp-none .mdi[data-v-8adc7196] {\n  font-size: 26px;\n  opacity: 0.8;\n}\n\n/* batch pager (bottom-center) */\n.sp-pager[data-v-8adc7196] {\n  position: absolute;\n  bottom: 6px;\n  left: 50%;\n  transform: translateX(-50%);\n  z-index: 3;\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  padding: 2px 4px;\n  border-radius: var(--zen-radius, 7px);\n  background: rgba(0, 0, 0, 0.5);\n  border: 1px solid rgba(255, 255, 255, 0.12);\n  backdrop-filter: blur(4px);\n  /* the body is pointer-events:none (drag-through), so controls opt back in + stay visible */\n  pointer-events: auto;\n}\n.sp-count[data-v-8adc7196] {\n  font-size: 11px;\n  color: #fff;\n  min-width: 38px;\n  text-align: center;\n}\n\n/* hover actions (top-right): download + lightbox */\n.sp-actions[data-v-8adc7196] {\n  position: absolute;\n  top: 6px;\n  right: 6px;\n  z-index: 3;\n  display: flex;\n  gap: 4px;\n  opacity: 0;\n  pointer-events: none;\n  transition: opacity 0.12s ease;\n}\n.sp-preview.sp-hot .sp-actions[data-v-8adc7196] {\n  opacity: 1;\n  pointer-events: auto;\n}\n/* A dark chip with a white icon, so the buttons read over any picture; the same as\n   Load Image's (ImagePick.vue's .li-ov-btn). ZenIconButton's own look (no background, muted icon) is for a toolbar, hence\n   the !important. Pointing at one fills it with the accent. */\n.sp-act[data-v-8adc7196] {\n  width: 26px !important;\n  height: 26px !important;\n  border: 1px solid rgba(255, 255, 255, 0.14) !important;\n  background: rgba(0, 0, 0, 0.46) !important;\n  color: #fff !important;\n  backdrop-filter: blur(4px);\n}\n.sp-act[data-v-8adc7196]:hover {\n  background: var(--zen-accent, #6366f1) !important;\n  border-color: var(--zen-accent, #6366f1) !important;\n  color: var(--zen-accent-text, #fff) !important;\n}\n\n.tl[data-v-e451bbd8] {\n  display: grid;\n  grid-template-columns: 250px minmax(0, 1fr);\n  gap: 14px;\n  height: 100%;\n  min-height: 0;\n}\n.tl-side[data-v-e451bbd8] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  min-height: 0;\n  padding-right: 14px;\n  border-right: 1px solid var(--zen-border, #34343c);\n}\n.tl-side-top[data-v-e451bbd8] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.tl-search[data-v-e451bbd8] {\n  flex: 1;\n  min-width: 0;\n}\n.tl-list[data-v-e451bbd8] {\n  flex: 1;\n  min-height: 0;\n  overflow-y: auto;\n  display: flex;\n  flex-direction: column;\n  gap: 2px;\n}\n.tl-cat[data-v-e451bbd8] {\n  padding: 8px 6px 3px;\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.06em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n.tl-item[data-v-e451bbd8] {\n  display: flex;\n  flex-direction: column;\n  gap: 1px;\n  padding: 6px 8px;\n  text-align: left;\n  font: inherit;\n  color: var(--zen-text, #e5e5ea);\n  background: none;\n  border: 1px solid transparent;\n  border-radius: var(--zen-radius, 7px);\n  cursor: pointer;\n}\n.tl-item[data-v-e451bbd8]:hover {\n  background: color-mix(in srgb, var(--zen-text, #fff) 6%, transparent);\n}\n.tl-item.on[data-v-e451bbd8] {\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 16%, transparent);\n  border-color: color-mix(in srgb, var(--zen-accent, #6366f1) 45%, transparent);\n}\n.tl-item-name[data-v-e451bbd8] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  font-size: 12.5px;\n  font-weight: 600;\n}\n.tl-used[data-v-e451bbd8] {\n  font-size: 13px;\n  color: var(--zen-accent, #6366f1);\n}\n.tl-item-sub[data-v-e451bbd8],\n.tl-none[data-v-e451bbd8] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.tl-item-sub[data-v-e451bbd8] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.tl-none[data-v-e451bbd8] {\n  padding: 16px 8px;\n  text-align: center;\n}\n.tl-edit[data-v-e451bbd8] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n  min-width: 0;\n  min-height: 0;\n}\n.tl-fields[data-v-e451bbd8] {\n  display: flex;\n  gap: 10px;\n}\n.tl-field[data-v-e451bbd8] {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n  flex: 0 0 200px;\n  min-width: 0;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.tl-field.tl-name[data-v-e451bbd8] {\n  flex: 1;\n}\n.tl-cat-input[data-v-e451bbd8],\n.tl-area[data-v-e451bbd8] {\n  font: inherit;\n  color: var(--zen-text, #e5e5ea);\n  background: var(--zen-surface, #202026);\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  outline: none;\n}\n.tl-cat-input[data-v-e451bbd8] {\n  height: 28px;\n  padding: 0 8px;\n  font-size: 12px;\n}\n.tl-cat-input[data-v-e451bbd8]:focus,\n.tl-area[data-v-e451bbd8]:focus {\n  border-color: var(--zen-accent, #6366f1);\n}\n.tl-area[data-v-e451bbd8] {\n  flex: 1;\n  min-height: 0;\n  resize: none;\n  padding: 10px 12px;\n  font-family: var(--zen-font-mono, ui-monospace, \"SF Mono\", Menlo, monospace);\n  font-size: 12.5px;\n  line-height: 1.55;\n}\n.tl-foot[data-v-e451bbd8] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.tl-count[data-v-e451bbd8] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.tl-grow[data-v-e451bbd8] {\n  flex: 1;\n}\n@media (max-width: 640px) {\n.tl[data-v-e451bbd8] {\n    grid-template-columns: minmax(0, 1fr);\n    grid-template-rows: 170px minmax(0, 1fr);\n}\n.tl-side[data-v-e451bbd8] {\n    padding: 0 0 10px;\n    border-right: 0;\n    border-bottom: 1px solid var(--zen-border, #34343c);\n}\n}\n\n.st-pick[data-v-b520f037] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.st-combo[data-v-b520f037] {\n  flex: 1;\n  min-width: 0;\n}\n/* One line, always: a long name is cut short with an ellipsis, never wrapped under itself. */\n.st-current[data-v-b520f037],\n.st-placeholder[data-v-b520f037] {\n  display: block;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.st-current[data-v-b520f037] {\n  font-weight: 600;\n}\n.st-placeholder[data-v-b520f037] {\n  color: var(--zen-muted, #9aa0aa);\n}\n.st-opt[data-v-b520f037] {\n  display: flex;\n  align-items: baseline;\n  justify-content: space-between;\n  gap: 10px;\n  min-width: 0;\n  width: 100%;\n}\n.st-opt-name[data-v-b520f037] {\n  flex: 1;\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.st-opt-cat[data-v-b520f037] {\n  flex: none;\n  font-size: 10.5px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.st-pick[data-v-b520f037],\n.st-note[data-v-b520f037] {\n  flex: none;\n}\n/* The text takes the rest of the node, and scrolls inside it when there is more. */\n/* ZenWidget's footer spacer grows too; this outweighs it, so the slack goes to the text. */\n.st-preview[data-v-b520f037],\n.st-empty[data-v-b520f037] {\n  flex: 1000 1 0;\n  min-height: 0;\n}\n.st-preview[data-v-b520f037] {\n  display: block;\n  overflow-y: auto;\n  padding: 7px 9px;\n  text-align: left;\n  white-space: pre-wrap;\n  overflow-wrap: anywhere;\n  font: inherit;\n  font-size: 11.5px;\n  line-height: 1.45;\n  color: var(--zen-muted, #b9bcc4);\n  background: color-mix(in srgb, var(--zen-text, #fff) 4%, transparent);\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  cursor: pointer;\n}\n.st-preview[data-v-b520f037]:hover {\n  border-color: var(--zen-accent, #6366f1);\n  color: var(--zen-text, #e5e5ea);\n}\n.st-empty[data-v-b520f037] {\n  display: grid;\n  place-items: center;\n  padding: 10px 8px;\n  text-align: center;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n}\n.st-note[data-v-b520f037] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  font-size: 11px;\n  color: var(--zen-warning, #f59e0b);\n}\n.st-link[data-v-b520f037] {\n  margin-left: auto;\n  padding: 0;\n  font: inherit;\n  color: var(--zen-accent, #6366f1);\n  background: none;\n  border: 0;\n  cursor: pointer;\n  text-decoration: underline;\n}\n.zen-widget[data-v-566c7d03]{display:flex;flex-direction:column;width:100%;padding:6px 2px;box-sizing:border-box;cursor:default;font-size:12px;color:var(--zen-text, #e5e5ea)}.zen-widget.fill[data-v-566c7d03]{height:100%;min-height:0}.zen-widget.has-footer[data-v-566c7d03]{flex:1 0 auto}.zen-widget-spacer[data-v-566c7d03]{flex:1 1 0;min-height:0}.zen-widget.drag-through[data-v-566c7d03]{cursor:inherit}.zen-row[data-v-33277610]{display:flex;width:100%;min-width:0}.zen-row[data-v-33277610]>*{flex:0 0 auto;width:auto}.zen-row[data-v-33277610]>[data-grow]{flex:1 1 var(--zen-row-min, 120px);width:auto;min-width:0}.zen-scroll{scrollbar-color:var( --zen-scrollbar, var(--dialog-surface, color-mix(in srgb, var(--zen-text, #e5e5ea) 24%, transparent)) ) transparent}:where(.zen-scroll,.zen-scroll *){scrollbar-width:thin}[data-zen-layer]{--zen-scrollbar: color-mix(in srgb, var(--zen-text, #e5e5ea) 32%, transparent)}:where(.zen-surface){box-sizing:border-box;border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius-surface, var(--zen-radius, 7px));background:var(--zen-chrome-bg, var(--zen-surface, #202026));box-shadow:var(--zen-shadow-pop, 0 10px 30px rgb(0 0 0 / 45%));color:var(--zen-text, #e5e5ea);font-family:var(--p-font-family, system-ui, sans-serif)}.zen-pop-tooltip[data-v-baec6be9]{pointer-events:none}.zen-pop-anchor[data-v-baec6be9]{display:inline-flex}.zen-pop[data-v-baec6be9]{position:fixed;z-index:100000;min-width:160px;max-width:min(360px,92vw);padding:5px;display:flex;flex-direction:column;gap:1px}.zen-tip[data-v-e12bb9ef]{display:inline-grid;place-items:center;width:16px;height:16px;padding:0;margin:0;border:none;background:none;color:var(--zen-muted, #9aa0aa);cursor:help;border-radius:var(--zen-radius, 6px);flex:none;vertical-align:middle}.zen-tip.inline[data-v-e12bb9ef]{display:inline;width:auto;height:auto;font:inherit;color:inherit;text-align:inherit;text-decoration:underline dotted transparent;text-underline-offset:3px;transition:text-decoration-color .15s ease}.zen-tip.inline[data-v-e12bb9ef]:hover,.zen-tip.inline[data-v-e12bb9ef]:focus-visible{color:inherit;text-decoration-color:color-mix(in srgb,currentColor 55%,transparent)}.zen-tip svg[data-v-e12bb9ef]{width:13px;height:13px}.zen-tip[data-v-e12bb9ef]:hover,.zen-tip[data-v-e12bb9ef]:focus-visible{color:var(--zen-accent, #8ab4ff)}.zen-tip[data-v-e12bb9ef]:focus-visible{outline:2px solid var(--zen-accent, #8ab4ff);outline-offset:1px}.zen-tip-body[data-v-e12bb9ef]{max-width:280px;padding:8px 10px;font-size:12px;line-height:1.45;color:var(--zen-text, #e5e5ea);white-space:normal}.zen-field[data-v-9c483aa7]{display:flex;flex-direction:column;gap:2px;min-width:0}.zf-row[data-v-9c483aa7]{display:flex;align-items:center;gap:6px;min-width:0}.zen-field.stack .zf-row[data-v-9c483aa7]{flex-direction:column;align-items:stretch;gap:3px}.zf-label-wrap[data-v-9c483aa7]{flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;min-width:0}.zf-label[data-v-9c483aa7]{flex:0 0 auto;font-size:11px;color:var(--zen-muted, #9aa0aa);white-space:nowrap}.zf-control[data-v-9c483aa7]{flex:1 1 auto;min-width:0;display:flex;align-items:center;--zen-control-min: 0px}.zf-control[data-v-9c483aa7]>*{flex:1 1 auto;min-width:0}.zf-hint[data-v-9c483aa7]{font-size:10px;color:var(--zen-muted, #9aa0aa);opacity:.8}:root{--zen-dur-fast: .12s;--zen-dur: .2s}@media(prefers-reduced-motion:reduce){:root{--zen-dur-fast: 0s;--zen-dur: 0s}}:root[data-zen-motion=reduce]{--zen-dur-fast: 0s;--zen-dur: 0s}@media(prefers-reduced-motion:reduce){:root[data-zen-motion=full]{--zen-dur-fast: .12s;--zen-dur: .2s}}.zen-ico-img[data-v-819f0eab]{width:1em;height:1em;object-fit:contain;display:inline-block;vertical-align:-.15em;border-radius:var(--zen-radius, 7px)}.zen-section[data-v-217a9770]{display:flex;flex-direction:column;min-width:0;color:var(--zen-text, #e5e5ea)}.zen-section.plain+.zen-section.plain[data-v-217a9770]{border-top:1px solid var(--zen-border, #34343c)}.zen-section.card[data-v-217a9770]{border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-surface, #202026)}.zs-head[data-v-217a9770]{display:flex;align-items:center;gap:4px;min-height:26px}.zen-section.plain>.zs-head[data-v-217a9770]{padding:4px 0}.zen-section.card>.zs-head[data-v-217a9770]{padding:3px 4px 3px 8px}.zs-toggle[data-v-217a9770]{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:5px;padding:2px 0;border:0;border-radius:var(--zen-radius, 4px);background:none;color:inherit;font:inherit;font-size:11.5px;font-weight:600;text-align:left;cursor:pointer}.zs-toggle.static[data-v-217a9770]{cursor:default}.zs-toggle[data-v-217a9770]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zs-toggle[data-v-217a9770]:disabled{cursor:default}.zen-section.disabled>.zs-head[data-v-217a9770]{opacity:.5}.zs-chev[data-v-217a9770]{flex:0 0 auto;font-size:14px;color:var(--zen-muted, #9aa0aa);transition:transform var(--zen-dur, .2s) ease}.zen-section.open>.zs-head .zs-chev[data-v-217a9770]{transform:rotate(90deg)}.zs-icon[data-v-217a9770]{flex:0 0 auto;font-size:14px;color:var(--zen-muted, #9aa0aa)}.zs-title[data-v-217a9770]{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.zs-meta[data-v-217a9770]{margin-left:auto;padding-left:8px;flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:400;font-size:11px;color:var(--zen-muted, #9aa0aa)}.zs-actions[data-v-217a9770]{flex:0 0 auto;display:flex;align-items:center;gap:2px}.zs-wrap[data-v-217a9770]{display:grid;grid-template-rows:0fr;transition:grid-template-rows var(--zen-dur, .2s) ease}.zen-section.open>.zs-wrap[data-v-217a9770]{grid-template-rows:1fr}.zs-clip[data-v-217a9770]{min-height:0;min-width:0}.zs-clip.clipped[data-v-217a9770]{overflow:hidden}.zen-section:not(.open)>.zs-wrap>.zs-clip[data-v-217a9770]{visibility:hidden;transition:visibility 0s var(--zen-dur, .2s)}.zs-body[data-v-217a9770]{display:flex;flex-direction:column;gap:var(--zen-section-gap, 8px)}.zen-section.plain>.zs-wrap>.zs-clip>.zs-body[data-v-217a9770]{padding:2px 0 10px}.zen-section.card>.zs-wrap>.zs-clip>.zs-body[data-v-217a9770]{padding:2px 8px 8px}.zen-sections[data-v-be050f3f]{display:flex;flex-direction:column;min-width:0}.zen-resize-handle[data-v-732b507d]{position:relative;z-index:1;flex:0 0 8px;touch-action:none;user-select:none;background:transparent}.vertical[data-v-732b507d]{cursor:col-resize}.horizontal[data-v-732b507d]{cursor:row-resize}.both[data-v-732b507d]{cursor:move}.zen-resize-handle[data-v-732b507d]:after{content:\"\";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border-radius:999px;background:var(--zen-accent, #6366f1);opacity:0;transition:opacity var(--zen-dur-fast, .12s) ease;pointer-events:none}.vertical[data-v-732b507d]:after{width:3px;height:32px;max-height:calc(100% - 4px)}.horizontal[data-v-732b507d]:after{width:32px;height:3px;max-width:calc(100% - 4px)}.both[data-v-732b507d]:after{width:8px;height:8px}.zen-resize-handle[data-v-732b507d]:hover:after,.zen-resize-handle.active[data-v-732b507d]:after,.zen-resize-handle[data-v-732b507d]:focus-visible:after{opacity:1}.zen-resize-handle[data-v-732b507d]:focus-visible{outline:2px solid var(--zen-focus-ring, var(--zen-accent, #6366f1));outline-offset:1px}.line[data-v-732b507d]{flex-basis:1px;background:var(--zen-border, #34343c);transition:background var(--zen-dur-fast, .12s) ease}.line[data-v-732b507d]:before{content:\"\";position:absolute}.line.vertical[data-v-732b507d]:before{inset:0 -2.5px}.line.horizontal[data-v-732b507d]:before{inset:-2.5px 0}.line[data-v-732b507d]:hover,.line.active[data-v-732b507d]{background:var(--zen-accent, #6366f1)}.line[data-v-732b507d]:after{display:none}.zen-split[data-v-a558794f]{display:flex;width:100%;height:100%;min-width:0;min-height:0}.zen-split.vertical[data-v-a558794f]{flex-direction:column}.zen-split.dragging[data-v-a558794f]{user-select:none}.zen-split.horizontal.dragging[data-v-a558794f]{cursor:col-resize}.zen-split.vertical.dragging[data-v-a558794f]{cursor:row-resize}.zsp-pane[data-v-a558794f]{position:relative;min-width:0;min-height:0;overflow:hidden}.zsp-pane.collapsed[data-v-a558794f]{visibility:hidden}.zen-scroll[data-v-ee849f62]{height:100%;min-height:0;overflow-y:auto;overflow-x:hidden}.zen-scroll.x[data-v-ee849f62]{overflow-x:auto;overflow-y:hidden}.zen-scroll-ov[data-v-ee849f62]{position:relative;height:100%;min-height:0;overflow:hidden}.zen-scroll-viewport[data-v-ee849f62]{scrollbar-width:none}.zen-scroll-viewport[data-v-ee849f62]::-webkit-scrollbar{display:none}.zen-scroll-track[data-v-ee849f62]{position:absolute;top:0;right:0;bottom:0;width:12px;z-index:4;opacity:0;transition:opacity .2s ease}.zen-scroll-ov:hover .zen-scroll-track[data-v-ee849f62],.zen-scroll-ov.active .zen-scroll-track[data-v-ee849f62]{opacity:1}.zen-scroll-thumb[data-v-ee849f62]{position:absolute;top:0;right:3px;width:6px;border-radius:var(--zen-radius-sm, 4px);background:var(--zen-scrollbar, color-mix(in srgb, var(--zen-text, #e5e5ea) 28%, transparent));transition:width .15s ease,right .15s ease,background .15s ease;touch-action:none;cursor:pointer}.zen-scroll-track:hover .zen-scroll-thumb[data-v-ee849f62],.zen-scroll-thumb[data-v-ee849f62]:active{width:8px;right:2px;background:var(--zen-accent, #6366f1)}.zen-scroll-ov.x .zen-scroll-track[data-v-ee849f62]{top:auto;left:0;width:auto;height:12px}.zen-scroll-ov.x .zen-scroll-thumb[data-v-ee849f62]{inset:auto auto 3px 0;width:auto;height:6px}.zen-scroll-ov.x .zen-scroll-track:hover .zen-scroll-thumb[data-v-ee849f62],.zen-scroll-ov.x .zen-scroll-thumb[data-v-ee849f62]:active{width:auto;right:auto;height:8px;bottom:2px}.zen-view[data-v-f7345db8]{position:relative;display:flex;flex-direction:column;height:100%;min-height:0;overflow:hidden;background:var(--zen-bg, #1a1a1f);color:var(--zen-text, #e5e5ea);font-family:var(--p-font-family, system-ui, sans-serif)}.zen-view-body[data-v-f7345db8]{flex:1 1 0;min-height:0}.zen-view-body.fill[data-v-f7345db8]{display:flex}.zen-view-body.pad[data-v-f7345db8]{padding:10px}.zen-toolbar[data-v-ea3754a7]{flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:7px 9px;border-bottom:1px solid var(--zen-surface-border, var(--zen-border, #34343c));background:var(--zen-chrome-bg, var(--zen-surface, #202026))}.tb-icon[data-v-ea3754a7]{font-size:15px;color:var(--zen-accent, #6366f1)}.tb-title[data-v-ea3754a7]{font-size:12px;font-weight:600;color:var(--zen-text, #e5e5ea);white-space:nowrap}.tb-grow[data-v-ea3754a7]{flex:1}.zen-btn[data-v-44a20193]{display:inline-flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;user-select:none;font-family:inherit;font-size:12px;font-weight:600;box-sizing:border-box;height:var(--zen-control-h, 28px);padding:0 12px;border-radius:var(--zen-radius, 7px);border:1px solid var(--zen-control-border, var(--zen-border, #34343c));background:var(--zen-control-bg, var(--zen-surface, #202026));color:var(--zen-text, #e5e5ea);transition:border-color var(--zen-dur-fast, .12s) ease,background var(--zen-dur-fast, .12s) ease,color var(--zen-dur-fast, .12s) ease,filter var(--zen-dur-fast, .12s) ease}.zen-btn[data-v-44a20193]:hover:not(:disabled){border-color:var(--zen-control-hover-border, var(--zen-accent, #6366f1));background:var(--zen-control-hover-bg, var(--zen-control-bg))}.zen-btn[data-v-44a20193]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zen-btn[data-v-44a20193]:disabled{opacity:.45;cursor:not-allowed}.zen-btn .mdi[data-v-44a20193]{font-size:15px}.zen-btn.block[data-v-44a20193]{width:100%}.zen-btn.sm[data-v-44a20193]{height:var(--zen-control-h-sm, 24px);padding:0 9px;font-size:11px}.zen-btn.primary[data-v-44a20193]{background:var(--zen-accent, #6366f1);border-color:var(--zen-accent, #6366f1);color:var(--zen-accent-text, #fff)}.zen-btn.primary[data-v-44a20193]:hover:not(:disabled){border-color:color-mix(in srgb,var(--zen-accent, #6366f1) 72%,var(--zen-accent-text, #fff));background:color-mix(in srgb,var(--zen-accent, #6366f1) 72%,var(--zen-accent-text, #fff))}.zen-btn.ghost[data-v-44a20193]{background:transparent;border-color:transparent}.zen-btn.ghost[data-v-44a20193]:hover:not(:disabled){background:color-mix(in srgb,var(--zen-text, #e5e5ea) 10%,transparent);border-color:transparent}.zen-btn.danger[data-v-44a20193]:hover:not(:disabled){background:var(--zen-danger, #dc2626);border-color:var(--zen-danger, #dc2626);color:var(--zen-danger-text, #fff)}.zen-iconbtn[data-v-350d2f84]{display:inline-flex;align-items:center;justify-content:center;flex:none;box-sizing:border-box;width:var(--zen-control-h, 28px);height:var(--zen-control-h, 28px);border:1px solid transparent;border-radius:var(--zen-radius, 7px);background:none;color:var(--zen-muted, #9aa0aa);cursor:pointer;user-select:none;transition:background var(--zen-dur-fast, .12s) ease,color var(--zen-dur-fast, .12s) ease}.zen-iconbtn[data-v-350d2f84]:hover:not(:disabled){background:color-mix(in srgb,var(--zen-text, #e5e5ea) 12%,transparent);color:var(--zen-text, #e5e5ea)}.zen-iconbtn.active[data-v-350d2f84]{color:var(--zen-accent, #6366f1)}.zen-iconbtn.danger[data-v-350d2f84]:hover:not(:disabled){background:var(--zen-danger, #dc2626);color:var(--zen-danger-text, #fff)}.zen-iconbtn[data-v-350d2f84]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zen-iconbtn.sm[data-v-350d2f84]{width:var(--zen-control-h-sm, 24px);height:var(--zen-control-h-sm, 24px)}.zen-iconbtn[data-v-350d2f84]:disabled{cursor:not-allowed;opacity:.4;cursor:default}.zen-iconbtn .mdi[data-v-350d2f84]{font-size:16px;line-height:1}.zen-iconbtn .mdi[data-v-350d2f84]:before{display:block;line-height:1}.zen-lotus[data-v-b2ab3c2d]{display:inline-block;flex:none;width:1.2em;overflow:visible}.petal[data-v-b2ab3c2d]{transform:rotate(var(--r));transform-origin:0 0;transform-box:view-box}.zen-lotus.interactive[data-v-b2ab3c2d]{cursor:pointer}.blooming .petal[data-v-b2ab3c2d]{animation:zen-lotus-bloom-b2ab3c2d .9s cubic-bezier(.3,0,.2,1) both}@keyframes zen-lotus-bloom-b2ab3c2d{0%{transform:rotate(var(--r)) scale(1)}28%{transform:rotate(calc(var(--r) * .12)) scale(.82,.9)}62%{transform:rotate(calc(var(--r) * 1.12)) scale(1.06)}to{transform:rotate(var(--r)) scale(1)}}.ripple[data-v-b2ab3c2d]{fill:none;stroke:currentColor;stroke-width:3;opacity:0;transform-origin:0 2px;transform-box:view-box;animation:zen-lotus-ripple-b2ab3c2d 1s ease-out .25s both}@keyframes zen-lotus-ripple-b2ab3c2d{0%{opacity:.6;transform:scale(.3)}to{opacity:0;transform:scale(1.5)}}.breathing>g[data-v-b2ab3c2d]{transform-origin:0 0;transform-box:view-box;animation:zen-lotus-breathe-b2ab3c2d 4.8s ease-in-out infinite}@keyframes zen-lotus-breathe-b2ab3c2d{0%,to{transform:scale(.94);opacity:.85}50%{transform:scale(1.04);opacity:1}}@media(prefers-reduced-motion:reduce){.blooming .petal[data-v-b2ab3c2d]{animation-name:zen-lotus-glow-b2ab3c2d}.ripple[data-v-b2ab3c2d]{animation:none}.breathing>g[data-v-b2ab3c2d]{animation-name:zen-lotus-fade-b2ab3c2d}}:root[data-zen-motion=reduce] .blooming .petal[data-v-b2ab3c2d]{animation-name:zen-lotus-glow-b2ab3c2d}:root[data-zen-motion=reduce] .ripple[data-v-b2ab3c2d]{animation:none}:root[data-zen-motion=reduce] .breathing>g[data-v-b2ab3c2d]{animation-name:zen-lotus-fade-b2ab3c2d}@keyframes zen-lotus-glow-b2ab3c2d{0%,to{transform:rotate(var(--r));filter:none}40%{transform:rotate(var(--r));filter:brightness(1.6) drop-shadow(0 0 6px currentColor)}}@keyframes zen-lotus-fade-b2ab3c2d{0%,to{opacity:.75}50%{opacity:1}}.zen-empty[data-v-71f336c3]{margin:auto;display:flex;flex-direction:column;align-items:center;gap:6px;max-width:260px;padding:20px;text-align:center;color:var(--zen-muted, #9aa0aa);font-family:var(--p-font-family, system-ui, sans-serif)}.zen-empty-mark[data-v-71f336c3]{width:44px;margin-bottom:4px;fill:currentColor;opacity:.45}.zen-empty-icon[data-v-71f336c3]{width:auto;font-size:36px}.zen-empty-title[data-v-71f336c3]{color:var(--zen-text, #e5e5ea);font-size:13px;font-weight:600}.zen-empty-text[data-v-71f336c3]{margin:0;font-size:12px;line-height:1.5}.zen-empty-actions[data-v-71f336c3]{display:flex;gap:6px;margin-top:6px}.zen-input[data-v-2eb7b22b]{width:100%;box-sizing:border-box;font:inherit;font-size:12px;line-height:normal;background:var(--zen-field-bg, var(--zen-input, #1b1b20));color:var(--zen-text, #e5e5ea);border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);height:var(--zen-control-h, 28px);padding:0 9px;transition:border-color var(--zen-dur-fast, .12s) ease}.zen-input[data-v-2eb7b22b]::placeholder{color:var(--zen-muted, #9aa0aa)}.zen-input[data-v-2eb7b22b]:focus{outline:none;border-color:var(--zen-accent, #6366f1)}.zen-input[data-v-2eb7b22b]:disabled{opacity:.45;cursor:not-allowed}.zen-input.sm[data-v-2eb7b22b]{height:var(--zen-control-h-sm, 24px);padding:0 8px;font-size:11px}.zen-input.area[data-v-2eb7b22b]{height:auto;padding:7px 9px;resize:vertical;min-height:64px;line-height:1.45}.zen-input.area.auto[data-v-2eb7b22b]{resize:none;min-height:0;overflow:hidden}.zmi[data-v-ab5962bc]{position:relative;display:grid;min-height:0;border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);background:var(--zen-field-bg, var(--zen-input, #1b1b20));transition:border-color var(--zen-dur-fast, .12s) ease}.zmi.focused[data-v-ab5962bc]{border-color:var(--zen-accent, #6366f1)}.zmi-mirror[data-v-ab5962bc],.zmi-area[data-v-ab5962bc]{grid-area:1 / 1;box-sizing:border-box;margin:0;padding:8px 10px;border:0;font-family:inherit;font-size:12.5px;line-height:1.5;letter-spacing:normal;white-space:pre-wrap;overflow-wrap:break-word;word-break:normal;scrollbar-gutter:stable}.zmi-mirror[data-v-ab5962bc]{overflow:hidden;color:transparent;pointer-events:none}.zmi-mirror mark[data-v-ab5962bc]{border-radius:3px;background:color-mix(in srgb,var(--zen-accent, #6366f1) 28%,transparent);color:transparent;box-shadow:0 0 0 1px color-mix(in srgb,var(--zen-accent, #6366f1) 45%,transparent)}.zmi-mirror mark.unknown[data-v-ab5962bc]{background:color-mix(in srgb,var(--zen-danger, #dc2626) 22%,transparent);box-shadow:0 0 0 1px color-mix(in srgb,var(--zen-danger, #dc2626) 55%,transparent);text-decoration:wavy underline var(--zen-danger, #dc2626)}.zmi-area[data-v-ab5962bc]{height:100%;min-height:100%;resize:none;outline:none;background:transparent;color:var(--zen-text, #e5e5ea);caret-color:var(--zen-text, #e5e5ea)}.zmi.sized[data-v-ab5962bc]{grid-template-rows:100%;overflow:hidden}.zmi-grip[data-v-ab5962bc]{position:absolute;right:1px;bottom:1px;z-index:1;width:12px;height:12px;cursor:ns-resize;touch-action:none;background:linear-gradient(135deg,transparent 55%,var(--zen-muted, #9aa0aa) 55%,var(--zen-muted, #9aa0aa) 62%,transparent 62%),linear-gradient(135deg,transparent 75%,var(--zen-muted, #9aa0aa) 75%,var(--zen-muted, #9aa0aa) 82%,transparent 82%);opacity:.6}.zmi-grip[data-v-ab5962bc]:hover{opacity:1}.zmi-area[data-v-ab5962bc]::placeholder{color:var(--zen-muted, #9aa0aa);opacity:.7}.zmi-peek[data-v-ab5962bc]{position:fixed;z-index:100000;display:flex;flex-direction:column;gap:6px;width:220px;padding:6px;border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);background:var(--zen-surface, #202026);box-shadow:0 10px 30px #00000073;pointer-events:none}.zmi-peek>img[data-v-ab5962bc],.zmi-peek[data-v-ab5962bc]>img,.zmi-peek[data-v-ab5962bc]>video{display:block;width:100%;max-height:180px;border-radius:calc(var(--zen-radius, 7px) - 2px);background:var(--zen-media-bg, var(--zen-input, #1b1b20));object-fit:contain}.zmi-peek>.mdi[data-v-ab5962bc]{display:grid;place-items:center;height:90px;color:var(--zen-muted, #9aa0aa);font-size:32px}.zmi-pop[data-v-ab5962bc]{position:fixed;z-index:100000;width:250px;max-height:260px;overflow-y:auto;padding:4px}.zmi-item[data-v-ab5962bc]{display:flex;align-items:center;gap:8px;width:100%;padding:4px 6px;border:0;border-radius:6px;background:none;color:var(--zen-text, #e5e5ea);font:inherit;text-align:left;cursor:pointer}.zmi-item.on[data-v-ab5962bc]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 25%,transparent)}.zmi-thumb[data-v-ab5962bc]{display:grid;flex:none;place-items:center;width:30px;height:30px;overflow:hidden;border-radius:5px;background:var(--zen-media-bg, var(--zen-input, #1b1b20));color:var(--zen-muted, #9aa0aa)}.zmi-thumb img[data-v-ab5962bc]{width:100%;height:100%;object-fit:contain}.zmi-text[data-v-ab5962bc]{display:flex;flex-direction:column;min-width:0}.zmi-text b[data-v-ab5962bc]{color:#9db7ff;font-size:12px}.zmi-text small[data-v-ab5962bc]{overflow:hidden;color:var(--zen-muted, #9aa0aa);font-size:10.5px;white-space:nowrap;text-overflow:ellipsis}.zen-off[data-v-ab5962bc]{opacity:.45}.zen-num[data-v-f28d60a9]{display:inline-flex;align-items:stretch;height:var(--zen-control-h, 28px);box-sizing:border-box;border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);background:var(--zen-field-bg, var(--zen-input, #1b1b20));overflow:hidden;user-select:none;font-size:11px;font-variant-numeric:tabular-nums;min-width:calc(50px + var(--zn-chars, 4) * 1ch)}.zen-num.bare[data-v-f28d60a9]{min-width:calc(2px + var(--zn-chars, 4) * 1ch)}.zen-num[data-v-f28d60a9]:focus-within{border-color:var(--zen-accent, #6366f1)}.zen-num.sm[data-v-f28d60a9]{height:var(--zen-control-h-sm, 24px)}.zen-num.disabled[data-v-f28d60a9]{cursor:not-allowed;opacity:.5;pointer-events:none}.zn-step[data-v-f28d60a9]{flex:none;width:21px;border:none;background:none;color:var(--zen-muted, #9aa0aa);cursor:pointer;display:inline-flex;align-items:center;justify-content:center}.zn-step.hot[data-v-f28d60a9]{color:var(--zen-text, #e5e5ea);background:color-mix(in srgb,var(--zen-text, #e5e5ea) 9%,transparent)}.zn-step .mdi[data-v-f28d60a9]{font-size:13px}.zn-val[data-v-f28d60a9]{flex:1;min-width:calc(var(--zn-chars, 4) * 1ch);display:flex;align-items:center;justify-content:center;cursor:ew-resize;border-left:1px solid var(--zen-border, #34343c);border-right:1px solid var(--zen-border, #34343c);padding:0 2px}.zen-num.bare .zn-val[data-v-f28d60a9]{border-left:none;border-right:none}.zn-input[data-v-f28d60a9]{width:100%;min-width:0;background:none;border:none;outline:none;color:var(--zen-text, #e5e5ea);font:inherit;line-height:normal;text-align:center;pointer-events:none;cursor:ew-resize}.zn-input.live[data-v-f28d60a9]{pointer-events:auto;cursor:text}.zn-input[data-v-f28d60a9]:disabled{color:var(--zen-muted, #9aa0aa)}.zen-tg.sm[data-v-9ef2e1ca]{height:var(--zen-control-h-sm, 24px)}.zen-tg.disabled[data-v-9ef2e1ca]{opacity:.45}.zen-tg.disabled .zen-tg-b[data-v-9ef2e1ca]{cursor:not-allowed}.zen-tg[data-v-9ef2e1ca]{display:inline-flex;box-sizing:border-box;height:var(--zen-control-h, 28px);border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);overflow:hidden;background:var(--zen-control-bg, var(--zen-surface, #202026))}.zen-tg-b[data-v-9ef2e1ca]{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:0 9px;border:none;background:none;color:var(--zen-muted, #9aa0aa);font-size:11px;font-weight:600;font-family:inherit;cursor:pointer;transition:background var(--zen-dur-fast, .12s) ease,color var(--zen-dur-fast, .12s) ease}.zen-tg-b[data-v-9ef2e1ca]:first-child{border-radius:calc(var(--zen-radius, 7px) - 1px) 0 0 calc(var(--zen-radius, 7px) - 1px)}.zen-tg-b[data-v-9ef2e1ca]:last-child{border-radius:0 calc(var(--zen-radius, 7px) - 1px) calc(var(--zen-radius, 7px) - 1px) 0}.zen-tg-b[data-v-9ef2e1ca]:only-child{border-radius:calc(var(--zen-radius, 7px) - 1px)}.zen-tg-b+.zen-tg-b[data-v-9ef2e1ca]{border-left:1px solid var(--zen-border, #34343c)}.zen-tg-b[data-v-9ef2e1ca]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}.zen-tg-b[data-v-9ef2e1ca]:hover{color:var(--zen-text, #e5e5ea)}.zen-tg-b.on[data-v-9ef2e1ca]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 22%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--zen-accent, #6366f1) 55%,transparent);color:var(--zen-accent, #6366f1)}.zen-tg-b .mdi[data-v-9ef2e1ca]{font-size:14px}.zen-tg.zen-tg-collapse .zen-tg-b[data-v-9ef2e1ca]{gap:0;padding:4px 7px;transition:background var(--zen-dur, .2s) ease,color var(--zen-dur, .2s) ease,gap var(--zen-dur, .2s) ease}.zen-tg.zen-tg-collapse .zen-tg-l[data-v-9ef2e1ca]{display:inline-grid;grid-template-columns:0fr;overflow:hidden;opacity:0;white-space:nowrap;transition:grid-template-columns var(--zen-dur, .2s) ease,opacity var(--zen-dur, .2s) ease}.zen-tg.zen-tg-collapse .zen-tg-l>span[data-v-9ef2e1ca]{min-width:0;overflow:hidden}.zen-tg.zen-tg-collapse .zen-tg-b.on[data-v-9ef2e1ca]{gap:5px;padding:4px 9px 4px 8px}.zen-tg.zen-tg-collapse .zen-tg-b.on .zen-tg-l[data-v-9ef2e1ca]{grid-template-columns:1fr;opacity:1}.zres[data-v-124b6fb4]{display:flex;flex-direction:column;gap:9px;width:268px;padding:6px;color:var(--zen-text, #e5e5ea);font-size:11px}.zres-sec[data-v-124b6fb4]{color:var(--zen-muted, #9aa0aa);font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}.zres-aspects[data-v-124b6fb4]{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.zres-chip[data-v-124b6fb4]{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;height:46px;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-field-bg, var(--zen-input, #1b1b20));color:var(--zen-muted, #9aa0aa);font:inherit;font-size:10px;font-weight:600;cursor:pointer}.zres-chip[data-v-124b6fb4]:hover,.zres-chip.on[data-v-124b6fb4]{border-color:var(--zen-accent, #6366f1);color:var(--zen-text, #e5e5ea)}.zres-chip.on[data-v-124b6fb4]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 16%,var(--zen-field-bg, var(--zen-input, #1b1b20)))}.zres-rect[data-v-124b6fb4]{display:block;border-radius:1px;background:currentColor;opacity:.7}.zres-wide[data-v-124b6fb4] .zen-tg{display:flex;width:100%}.zres-wide[data-v-124b6fb4] .zen-tg-b{flex:1}.zres-div[data-v-124b6fb4]{border-top:1px solid var(--zen-border, #34343c)}.zres-row[data-v-124b6fb4]{display:flex;align-items:center;gap:8px}.zres-lbl[data-v-124b6fb4]{flex:1;color:var(--zen-muted, #9aa0aa)}.zres-wh[data-v-124b6fb4]{display:flex;align-items:center;gap:6px}.zres-wh label[data-v-124b6fb4]{display:flex;flex:1;align-items:center;gap:5px;color:var(--zen-muted, #9aa0aa)}.zres-wh label[data-v-124b6fb4] .zen-num{flex:1;min-width:0}.zres-foot[data-v-124b6fb4]{display:flex;align-items:center;color:var(--zen-muted, #9aa0aa);font-size:10px;font-variant-numeric:tabular-nums}.zres-grow[data-v-124b6fb4]{flex:1}.zen-off[data-v-124b6fb4]{opacity:.45}.zen-select[data-v-8eec2106]{position:relative;display:inline-flex;min-width:var(--zen-control-min, 90px)}.zs-trigger[data-v-8eec2106]{display:inline-flex;flex:1 1 auto;align-items:center;gap:6px;min-width:0;box-sizing:border-box;height:var(--zen-control-h, 28px);padding:0 6px 0 8px;font-size:12px;font-family:inherit;cursor:pointer;background:var(--zen-control-bg, var(--zen-surface, #202026));color:var(--zen-text, #e5e5ea);border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);transition:border-color var(--zen-dur-fast, .12s) ease}.zen-select.sm .zs-trigger[data-v-8eec2106]{height:var(--zen-control-h-sm, 24px);font-size:11px}.zs-trigger[data-v-8eec2106]:disabled{opacity:.45;cursor:not-allowed}.zs-trigger[data-v-8eec2106]:hover,.zen-select.open .zs-trigger[data-v-8eec2106]{border-color:var(--zen-control-hover-border, var(--zen-accent, #6366f1));background:var(--zen-control-hover-bg, var(--zen-control-bg))}.zs-trigger[data-v-8eec2106]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zs-label[data-v-8eec2106]{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left}.zs-caret[data-v-8eec2106]{font-size:16px;color:var(--zen-muted, #9aa0aa);flex:0 0 auto}.zs-ico[data-v-8eec2106]{font-size:14px;flex:0 0 auto}.zs-menu[data-v-8eec2106]{position:fixed;z-index:100000;max-height:260px;overflow-y:auto;padding:4px;display:flex;flex-direction:column;gap:1px}.zs-opt[data-v-8eec2106]{display:flex;align-items:center;gap:7px;padding:6px 8px;font-size:12px;font-family:inherit;text-align:left;cursor:pointer;background:none;border:none;color:var(--zen-text, #e5e5ea);border-radius:var(--zen-radius, 7px);white-space:nowrap}.zs-opt span[data-v-8eec2106]{flex:1}.zs-opt[data-v-8eec2106]:hover,.zs-opt.cur[data-v-8eec2106]{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 10%,transparent)}.zs-opt[data-v-8eec2106]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}.zs-opt.on[data-v-8eec2106]{color:var(--zen-accent, #6366f1)}.zs-check[data-v-8eec2106]{font-size:14px;color:var(--zen-accent, #6366f1);flex:0 0 auto}.zen-peek{position:fixed;display:flex;flex-direction:column;max-width:min(560px,60vw);overflow:hidden;border-radius:var(--zen-radius, 8px);pointer-events:none;animation:zen-peek-in var(--zen-dur-fast, .12s) ease-out}.zen-peek img,.zen-peek video{display:block;max-width:min(560px,60vw);max-height:min(480px,70vh);object-fit:contain;background:var(--zen-media-bg, var(--zen-input, #1b1b20))}.zen-peek-custom{display:block;max-width:min(560px,60vw);max-height:min(480px,70vh);overflow:hidden;background:var(--zen-media-bg, var(--zen-input, #1b1b20))}.zen-peek-audio{display:flex;align-items:center;gap:10px;padding:14px;color:var(--zen-muted, #9aa0aa);font-size:22px}.zen-peek-caption{display:flex;flex-direction:column;gap:2px;max-width:100%;padding:8px 10px;font-size:12px;line-height:1.4}.zen-peek-caption span{color:var(--zen-muted, #9aa0aa)}@keyframes zen-peek-in{0%{opacity:0;transform:scale(.97)}}@media(prefers-reduced-motion:reduce){:root:not([data-zen-motion=full]) .zen-peek{animation:none}}:root[data-zen-motion=reduce] .zen-peek{animation:none}.zen-combo[data-v-989f5012]{position:relative;width:100%;min-width:var(--zen-control-min, 90px)}.zc-trigger[data-v-989f5012]{display:flex;align-items:center;gap:6px;width:100%;box-sizing:border-box;min-height:var(--zen-control-h, 28px);background:var(--zen-control-bg, var(--zen-input, #1b1b20));color:var(--zen-text, #e5e5ea);border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);padding:4px 8px;font:inherit;font-size:12px;cursor:pointer;text-align:left;transition:border-color var(--zen-dur-fast, .12s) ease}.zc-trigger[data-v-989f5012]:hover:not(:disabled){border-color:var(--zen-control-hover-border, var(--zen-accent, #6366f1));background:var(--zen-control-hover-bg, var(--zen-control-bg))}.zc-trigger[data-v-989f5012]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zc-trigger.sm[data-v-989f5012]{min-height:var(--zen-control-h-sm, 24px);padding:2px 7px;font-size:11px}.zc-trigger[data-v-989f5012]:disabled{cursor:not-allowed;opacity:.45;cursor:default}.zen-combo.open .zc-trigger[data-v-989f5012]{border-color:var(--zen-accent, #6366f1)}.zc-current[data-v-989f5012]{flex:1;min-width:0;overflow:hidden}.zc-caret[data-v-989f5012]{flex:none;color:var(--zen-muted, #9aa0aa);transition:transform var(--zen-dur-fast, .12s) ease}.zen-combo.open .zc-caret[data-v-989f5012]{transform:rotate(180deg)}.zen-combo-menu{position:fixed;z-index:100000;display:flex;flex-direction:column;max-height:360px;overflow:hidden}.zen-combo-menu .zc-search{display:flex;align-items:center;gap:6px;padding:8px 10px;border-bottom:1px solid var(--zen-border, #34343c)}.zen-combo-menu .zc-search>.mdi{color:var(--zen-muted, #9aa0aa);font-size:16px}.zen-combo-menu .zc-search input{flex:1;min-width:0;background:none;border:none;outline:none;color:inherit;font:inherit;font-size:12px}.zen-combo-menu .zc-clear{border:none;background:none;color:var(--zen-muted, #9aa0aa);cursor:pointer;padding:0 2px}.zen-combo-menu .zc-search-actions{flex:none;display:inline-flex;align-items:center}.zen-combo-menu .zc-header{flex:none;border-bottom:1px solid var(--zen-border, #34343c)}.zen-combo-menu .zc-list{overflow-y:auto;padding:4px;min-height:0}.zen-combo-menu .zc-virt{position:relative;width:100%}.zen-combo-menu .zc-win{position:absolute;top:0;left:0;right:0}.zen-combo-menu .zc-opt{display:flex;align-items:center;gap:9px;padding:6px 8px;border-radius:var(--zen-radius, 7px);cursor:pointer;font-size:12px;box-sizing:border-box;overflow:hidden}.zen-combo-menu .zc-opt.active{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 10%,transparent)}.zen-combo-menu .zc-opt.sel{color:var(--zen-accent, #6366f1)}.zen-combo-menu .zc-opt-lbl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.zen-combo-menu .zc-sep{height:1px;margin:4px 6px;background:var(--zen-border, #34343c)}.zen-combo-menu .zc-empty{padding:16px;text-align:center;font-size:12px;color:var(--zen-muted, #9aa0aa)}.zen-combo-menu .zc-footer{border-top:1px solid var(--zen-border, #34343c);padding:6px}.zen-combo-menu.grid .zc-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(var(--zc-grid-min, 92px),1fr));gap:6px;align-content:start}.zen-combo-menu.grid .zc-opt{flex-direction:column;align-items:stretch;height:auto;gap:4px;padding:4px}.zen-combo-menu.grid .zc-empty{grid-column:1 / -1}.zen-switch[data-v-c2dc757b]{position:relative;flex:0 0 auto;width:42px;height:23px;padding:0;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-switch-radius, var(--zen-radius, 7px));background:var(--zen-surface, #202026);cursor:pointer;transition:background var(--zen-dur, .2s) ease,border-color var(--zen-dur, .2s) ease}.zen-switch.on[data-v-c2dc757b]{background:var(--zen-accent, #6366f1);border-color:var(--zen-accent, #6366f1)}.zen-switch[data-v-c2dc757b]:disabled{opacity:.5;cursor:default}.zen-switch .knob[data-v-c2dc757b]{position:absolute;top:1px;left:1px;width:19px;height:19px;border-radius:var(--zen-switch-radius, var(--zen-radius, 7px));background:#fff;display:flex;align-items:center;justify-content:center;transition:transform var(--zen-dur, .2s) ease;box-shadow:0 1px 2px #00000059}.zen-switch.on .knob[data-v-c2dc757b]{transform:translate(19px);background:var(--zen-accent-text, #fff)}.zen-switch[data-v-c2dc757b]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zen-switch .knob .mdi[data-v-c2dc757b]{font-size:12px;color:var(--zen-muted, #9aa0aa)}.zen-switch.on .knob .mdi[data-v-c2dc757b]{color:var(--zen-accent, #6366f1)}.zen-check[data-v-36edc25d]{display:inline-flex;align-items:center;gap:7px;background:none;border:none;cursor:pointer;color:var(--zen-text, #e5e5ea);font:inherit;font-size:12px;padding:0;text-align:left}.zen-check[data-v-36edc25d]:focus-visible{outline:none}.zen-check:focus-visible .box[data-v-36edc25d]{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zen-check[data-v-36edc25d]:disabled{opacity:.5;cursor:default}.box[data-v-36edc25d]{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;flex:none;border:1px solid var(--zen-border, #34343c);border-radius:min(var(--zen-radius, 7px),6px);background:var(--zen-input, #1b1b20);color:var(--zen-accent-text, #fff);transition:background var(--zen-dur-fast, .12s) ease,border-color var(--zen-dur-fast, .12s) ease}.zen-check.on .box[data-v-36edc25d]{background:var(--zen-accent, #6366f1);border-color:var(--zen-accent, #6366f1)}.zen-check:hover:not(:disabled) .box[data-v-36edc25d]{border-color:var(--zen-accent, #6366f1)}.box .mdi[data-v-36edc25d]{font-size:13px;line-height:1}.lbl[data-v-36edc25d]{line-height:1.2}.zen-dot[data-v-43c4a2bb]{display:inline-flex;align-items:center;gap:6px;padding:4px;margin:-4px;background:none;border:none;cursor:pointer;color:var(--zen-text, #e5e5ea);font:inherit;font-size:12px;line-height:1.2}.zen-dot[data-v-43c4a2bb]:disabled{opacity:.4;cursor:default}.mark[data-v-43c4a2bb]{position:relative;display:inline-block;flex:none;width:var(--zen-dot-size, 13px);height:var(--zen-dot-size, 13px);border-radius:var(--zen-dot-radius, var(--zen-radius, 7px));border:1px solid var(--zen-border, #34343c);background:var(--zen-input, #1b1b20);transition:border-color var(--zen-dur-fast, .12s) ease}.mark[data-v-43c4a2bb]:after{content:\"\";position:absolute;inset:var(--zen-dot-gap, 2px);border-radius:inherit;background:var(--zen-dot-on, var(--zen-accent, #6366f1));transform:scale(0);opacity:0;transition:transform var(--zen-dur-fast, .12s) ease,opacity var(--zen-dur-fast, .12s) ease}.zen-dot.on .mark[data-v-43c4a2bb]{border-color:var(--zen-dot-on, var(--zen-accent, #6366f1))}.zen-dot.on .mark[data-v-43c4a2bb]:after{transform:scale(1);opacity:1}.zen-dot:hover:not(:disabled) .mark[data-v-43c4a2bb]{border-color:var(--zen-dot-on, var(--zen-accent, #6366f1))}.zen-dot:hover:not(:disabled):not(.on) .mark[data-v-43c4a2bb]:after{transform:scale(1);opacity:.22}.zen-dot[data-v-43c4a2bb]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px;border-radius:var(--zen-radius, 7px)}.zen-dot:not(.on) .lbl[data-v-43c4a2bb]{color:var(--zen-muted, #9aa0aa)}.zvol[data-v-9e6c85be]{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 8px 0 2px;color:var(--zen-text, #e5e5ea);font-size:10.5px;user-select:none}.zvol.quiet[data-v-9e6c85be]{opacity:.45}.zvol-b[data-v-9e6c85be]{display:grid;place-items:center;width:26px;height:26px;padding:0;border:0;border-radius:var(--zen-radius, 7px);background:none;color:inherit;cursor:pointer}.zvol-b[data-v-9e6c85be]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 10%,transparent)}.zvol-b .mdi[data-v-9e6c85be]{font-size:17px}.zvol.off .zvol-b[data-v-9e6c85be]{color:var(--zen-muted, #9aa0aa)}.zvol-track[data-v-9e6c85be]{position:relative;width:72px;height:18px;cursor:pointer;touch-action:none}.zvol-track[data-v-9e6c85be]:before{position:absolute;top:50%;right:0;left:0;height:4px;border-radius:2px;background:color-mix(in srgb,var(--zen-text, #e5e5ea) 16%,transparent);transform:translateY(-50%);content:\"\"}.zvol-fill[data-v-9e6c85be]{position:absolute;top:50%;left:0;height:4px;border-radius:2px;background:var(--zen-accent, #6366f1);transform:translateY(-50%)}.zvol-knob[data-v-9e6c85be]{position:absolute;top:50%;width:11px;height:11px;border-radius:50%;background:var(--zen-text, #e5e5ea);box-shadow:0 1px 3px #00000073;transform:translate(-50%,-50%)}.zvol-n[data-v-9e6c85be]{min-width:20px;color:var(--zen-muted, #9aa0aa);font-variant-numeric:tabular-nums;text-align:right}.zce[data-v-b10dcc0e]{display:flex;flex-direction:column;gap:4px}.zce-box[data-v-b10dcc0e]{position:relative;height:80px;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-field-bg, var(--zen-input, #1b1b20))}.zce-svg[data-v-b10dcc0e]{display:block;width:100%;height:100%;cursor:crosshair}.zce-grid[data-v-b10dcc0e]{stroke:color-mix(in srgb,var(--zen-text, #e5e5ea) 7%,transparent);stroke-width:1;vector-effect:non-scaling-stroke}.zce-unit[data-v-b10dcc0e]{stroke:color-mix(in srgb,var(--zen-text, #e5e5ea) 25%,transparent);stroke-dasharray:3 3;stroke-width:1;vector-effect:non-scaling-stroke}.zce-area[data-v-b10dcc0e]{fill:color-mix(in srgb,var(--zen-accent, #6366f1) 16%,transparent)}.zce-line[data-v-b10dcc0e]{fill:none;stroke:var(--zen-accent, #6366f1);stroke-width:1.8;vector-effect:non-scaling-stroke}.zce-pt[data-v-b10dcc0e]{position:absolute;width:10px;height:10px;margin:-5px 0 0 -5px;border:2px solid var(--zen-accent, #6366f1);border-radius:50%;background:var(--zen-bg, #1a1a1f);cursor:grab;touch-action:none}.zce-pt[data-v-b10dcc0e]:hover{background:var(--zen-accent, #6366f1)}.zce-axis[data-v-b10dcc0e]{display:flex;justify-content:space-between;color:var(--zen-muted, #9aa0aa);font-size:10px}.zce-presets[data-v-b10dcc0e]{display:flex;flex-wrap:wrap;gap:4px}.zce-preset[data-v-b10dcc0e]{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:none;color:var(--zen-muted, #9aa0aa);font:inherit;font-size:10.5px;cursor:pointer}.zce-preset[data-v-b10dcc0e]:hover{border-color:var(--zen-accent, #6366f1);color:var(--zen-text, #e5e5ea)}.zen-off[data-v-b10dcc0e]{opacity:.45}.zen-slider[data-v-2a465bf0]{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:var(--zen-radius, 7px);background:var(--zen-border, #34343c);outline:none;cursor:pointer}.zen-slider[data-v-2a465bf0]:disabled{opacity:.5;cursor:default}.zen-slider[data-v-2a465bf0]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:var(--zen-radius, 7px);background:var(--zen-accent, #6366f1);border:2px solid var(--zen-bg, #1a1a1f);cursor:pointer;box-shadow:0 1px 3px #0006}.zen-slider[data-v-2a465bf0]::-moz-range-thumb{width:14px;height:14px;border:2px solid var(--zen-bg, #1a1a1f);border-radius:var(--zen-radius, 7px);background:var(--zen-accent, #6366f1);cursor:pointer}.zen-slider[data-v-2a465bf0]::-moz-range-track{height:4px;border-radius:var(--zen-radius, 7px);background:var(--zen-border, #34343c)}.zen-slider[data-v-2a465bf0]:focus-visible{box-shadow:0 0 0 2px var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent))}.zcp[data-v-2beb2797]{display:block;width:100%;min-width:var(--zen-control-min, 76px)}.zcp.compact[data-v-2beb2797]{display:inline-block;width:auto;min-width:0}.zcp.compact .zcp-trigger[data-v-2beb2797]{width:auto;height:auto;padding:0;border:none;background:none}.zcp-trigger[data-v-2beb2797]{display:flex;align-items:center;gap:6px;width:100%;height:var(--zen-control-h, 28px);box-sizing:border-box;padding:0 6px;border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);background:var(--zen-control-bg, var(--zen-input, #1b1b20));color:var(--zen-text, #e5e5ea);cursor:pointer;font:inherit;font-size:11px}.zcp-trigger[data-v-2beb2797]:hover{border-color:var(--zen-control-hover-border, var(--zen-accent, #6366f1));background:var(--zen-control-hover-bg, var(--zen-control-bg))}.zcp-sw[data-v-2beb2797]{width:16px;height:16px;flex:none;border-radius:4px;border:1px solid rgba(255,255,255,.2)}.zcp-sw.lg[data-v-2beb2797]{width:24px;height:24px}.zcp-hexlbl[data-v-2beb2797]{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left;text-transform:uppercase;font-variant-numeric:tabular-nums}.zcp-trigger .mdi[data-v-2beb2797]{font-size:14px;color:var(--zen-muted, #9aa0aa)}.zcp-pop[data-v-2beb2797]{position:fixed;z-index:100000;display:flex;flex-direction:column;gap:8px;padding:8px}.zcp-sv[data-v-2beb2797]{position:relative;width:100%;height:118px;border-radius:6px;overflow:hidden;cursor:crosshair;touch-action:none}.zcp-sv-white[data-v-2beb2797],.zcp-sv-black[data-v-2beb2797]{position:absolute;inset:0}.zcp-sv-white[data-v-2beb2797]{background:linear-gradient(to right,#fff,#fff0)}.zcp-sv-black[data-v-2beb2797]{background:linear-gradient(to top,#000,#0000)}.zcp-sv-thumb[data-v-2beb2797]{position:absolute;width:12px;height:12px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #00000080;transform:translate(-50%,-50%);pointer-events:none}.zcp-hue[data-v-2beb2797]{position:relative;width:100%;height:12px;border-radius:6px;cursor:pointer;touch-action:none;background:linear-gradient(to right,red,#ff0,#0f0,#0ff,#00f,#f0f,red)}.zcp-hue-thumb[data-v-2beb2797]{position:absolute;top:50%;width:12px;height:12px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #00000080;transform:translate(-50%,-50%);pointer-events:none}.zcp-row[data-v-2beb2797]{display:flex;align-items:center;gap:8px}.zcp-input[data-v-2beb2797]{flex:1;min-width:0;height:26px;box-sizing:border-box;padding:0 6px;border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);background:var(--zen-field-bg, var(--zen-input, #1b1b20));color:var(--zen-text, #e5e5ea);font:inherit;font-size:11px;text-transform:uppercase}.zcp-input[data-v-2beb2797]:focus{outline:none;border-color:var(--zen-accent, #6366f1)}.zcp-presets[data-v-2beb2797]{display:flex;gap:4px;flex-wrap:wrap}.zcp-pre[data-v-2beb2797]{width:20px;height:20px;padding:0;border-radius:4px;border:1px solid var(--zen-border, #34343c);cursor:pointer}.zen-off[data-v-2beb2797]{opacity:.45}.zen-dims[data-v-bb012b3c]{display:flex;align-items:center;flex-wrap:wrap;gap:5px}.zd-n[data-v-bb012b3c]{flex:1 1 60px;min-width:48px}.zd-x[data-v-bb012b3c]{flex:none;color:var(--zen-muted, #9aa0aa);font-size:11px}.zd-mp[data-v-bb012b3c]{flex:0 1 56px;min-width:44px}.zd-unit[data-v-bb012b3c],.zd-aspect[data-v-bb012b3c]{flex:none;font-size:10px;color:var(--zen-muted, #9aa0aa);font-variant-numeric:tabular-nums}.zd-aspect[data-v-bb012b3c]{margin-left:auto}.zen-off[data-v-bb012b3c]{opacity:.45}.zmi-lead[data-v-4282c43c]{flex:none;display:inline-flex;align-items:center}.zmi-wrap[data-v-4282c43c]{position:relative}.zmi[data-v-4282c43c]{display:flex;align-items:center;gap:9px;width:100%;text-align:left;cursor:pointer;font:inherit;font-size:12px;padding:7px 9px;border:none;border-radius:var(--zen-radius, 7px);background:none;color:var(--zen-text, #e5e5ea)}.zmi[data-v-4282c43c]:hover:not(:disabled),.zmi.on[data-v-4282c43c]{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 10%,transparent)}.zmi[data-v-4282c43c]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}.zmi[data-v-4282c43c]:disabled{opacity:.45;cursor:default}.zmi.danger[data-v-4282c43c]:hover:not(:disabled){background:var(--zen-danger, #dc2626);color:var(--zen-danger-text, #fff)}.zmi-ico[data-v-4282c43c]{flex:0 0 auto;font-size:15px;color:var(--zen-muted, #9aa0aa)}.zmi.danger:hover:not(:disabled) .zmi-ico[data-v-4282c43c]{color:var(--zen-danger-text, #fff)}.zmi-lbl[data-v-4282c43c]{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.zmi-caret[data-v-4282c43c]{margin-left:auto;flex:0 0 auto;font-size:15px;color:var(--zen-muted, #9aa0aa)}.zmi-hint[data-v-4282c43c]{margin-left:auto;flex:0 0 auto;font-size:10px;color:var(--zen-muted, #9aa0aa);font-variant-numeric:tabular-nums}.zmi-sub[data-v-4282c43c]{display:flex;flex-direction:column;gap:1px}.zen-msep[data-v-5c3057e1]{height:1px;background:var(--zen-border, #34343c);margin:4px}.zen-modal-back{position:fixed;inset:0;z-index:100100;display:flex;align-items:center;justify-content:center;background:#0000008c;backdrop-filter:blur(2px)}.zen-modal{display:flex;flex-direction:column;max-width:94vw;max-height:90vh;overflow:hidden;background:var(--zen-chrome-bg, var(--zen-surface, #202026));color:var(--zen-text, #e5e5ea);border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:calc(var(--zen-radius-surface, var(--zen-radius, 7px)) + 2px);box-shadow:0 24px 70px #0009;font-family:var(--p-font-family, system-ui, sans-serif)}.zen-modal .zm-head{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--zen-border, #34343c);flex:none}.zen-modal .zm-title{flex:none;font-size:13px;font-weight:600;white-space:nowrap}.zen-modal .zm-head-mid{flex:1;min-width:0;display:flex;align-items:center;gap:8px}.zen-modal .zm-x{border:none;background:none;color:var(--zen-muted, #9aa0aa);cursor:pointer;font-size:18px;display:inline-flex}.zen-modal .zm-x:hover{color:var(--zen-text, #e5e5ea)}.zen-modal .zm-body{flex:1;min-height:0;overflow:auto;padding:14px}.zen-modal .zm-foot{flex:none;border-top:1px solid var(--zen-border, #34343c);padding:10px 14px}.zw-root[data-v-5ca67f58]{position:fixed;inset:0;z-index:100200;pointer-events:none;font-family:var(--p-font-family, system-ui, sans-serif)}.zw-root.zw-backdrop[data-v-5ca67f58]{background:#0000006b;backdrop-filter:blur(2px);pointer-events:auto}.zw[data-v-5ca67f58]{position:fixed;pointer-events:auto;display:flex;flex-direction:column;overflow:hidden;color:var(--zen-text, #e5e5ea);background:var(--zen-glass, color-mix(in srgb, var(--zen-bg, #1a1a1f) 90%, transparent));border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius-surface, var(--zen-radius, 7px));box-shadow:0 24px 70px #0000008c;backdrop-filter:blur(12px)}.zw-bar[data-v-5ca67f58]{flex:0 0 auto;display:flex;align-items:center;gap:8px;height:40px;padding:0 8px 0 12px;cursor:grab;background:color-mix(in srgb,var(--zen-chrome-bg, var(--zen-surface, #202026)) 82%,transparent);border-bottom:1px solid var(--zen-surface-border, var(--zen-border, #34343c));user-select:none}.zw-bar[data-v-5ca67f58]:active{cursor:grabbing}.zw-icon[data-v-5ca67f58]{font-size:16px;color:var(--zen-accent, #6366f1)}.zw-title[data-v-5ca67f58]{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.zw-grow[data-v-5ca67f58]{flex:1}.zw-actions[data-v-5ca67f58]{display:inline-flex;align-items:center;gap:6px}.zw-no-drag[data-v-5ca67f58]{display:inline-flex;align-items:center;gap:2px;cursor:default}.zw-body[data-v-5ca67f58]{flex:1;min-height:0;display:flex}.zw-foot[data-v-5ca67f58]{flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:6px 12px;background:color-mix(in srgb,var(--zen-chrome-bg, var(--zen-surface, #202026)) 82%,transparent);border-top:1px solid var(--zen-surface-border, var(--zen-border, #34343c))}.zw-resize[data-v-5ca67f58]{position:absolute;right:0;bottom:0;width:16px;height:16px;cursor:nwse-resize;z-index:2}.zw-resize[data-v-5ca67f58]:after{content:\"\";position:absolute;right:3px;bottom:3px;width:7px;height:7px;border-right:2px solid var(--zen-muted, #9aa0aa);border-bottom:2px solid var(--zen-muted, #9aa0aa);opacity:.55}.zen-ctx[data-v-0b23826c]{position:fixed;z-index:100000;min-width:190px;max-height:70vh;overflow-y:auto;padding:4px;font-size:12px}.zen-ctx-item[data-v-0b23826c]{display:flex;align-items:center;gap:8px;width:100%;padding:6px 8px;border:0;border-radius:var(--zen-radius, 7px);background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}.zen-ctx-item[data-v-0b23826c]:hover:not(:disabled){background:color-mix(in srgb,var(--zen-accent, #6366f1) 22%,transparent)}.zen-ctx-item[data-v-0b23826c]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}.zen-ctx-item[data-v-0b23826c]:disabled{opacity:.4;cursor:default}.zen-ctx-item.danger[data-v-0b23826c]{color:var(--zen-danger, #dc2626)}.zen-ctx-item .mdi[data-v-0b23826c]{width:16px;color:var(--zen-muted, #9aa0aa);font-size:14px;text-align:center}.zen-ctx-item span[data-v-0b23826c]{flex:1}.zen-ctx-item kbd[data-v-0b23826c]{color:var(--zen-muted, #9aa0aa);font-family:inherit;font-size:10.5px}.zen-ctx-sep[data-v-0b23826c]{height:1px;margin:4px 2px;background:var(--zen-surface-border, var(--zen-border, #34343c))}.zen-ctx-head[data-v-0b23826c]{padding:5px 8px 3px;color:var(--zen-muted, #9aa0aa);font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}.zen-compare[data-v-27960160]{position:relative;overflow:hidden;width:100%;height:100%;user-select:none;touch-action:pan-y;background:var(--zen-surface-2, #222)}.zen-compare img[data-v-27960160]{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}.slider .zc-before[data-v-27960160]{clip-path:inset(0 calc(100% - var(--split)) 0 0)}.slider:not(.moving) .zc-before[data-v-27960160],.slider:not(.moving) .zc-line[data-v-27960160]{transition:clip-path var(--zen-dur, .2s) ease,left var(--zen-dur, .2s) ease}.dissolve .zc-before[data-v-27960160]{transition:opacity .45s ease}.dissolve.hovering .zc-before[data-v-27960160]{opacity:0}.zc-line[data-v-27960160]{position:absolute;top:0;bottom:0;left:var(--split);width:2px;margin-left:-1px;background:#ffffffe6;box-shadow:0 0 6px #0006;pointer-events:none}.zc-knob[data-v-27960160]{position:absolute;top:50%;left:50%;width:22px;height:22px;transform:translate(-50%,-50%) rotate(90deg);border-radius:50%;display:grid;place-items:center;background:#fffffff2;color:#222;font-size:14px;box-shadow:0 1px 4px #00000059;opacity:0;transition:opacity var(--zen-dur-fast, .12s)}.hovering .zc-knob[data-v-27960160],.zen-compare:focus-visible .zc-knob[data-v-27960160]{opacity:1}.zc-tag[data-v-27960160]{position:absolute;bottom:8px;font-size:10px;padding:2px 7px;border-radius:999px;background:#0000008c;color:#fff;backdrop-filter:blur(4px);pointer-events:none;opacity:0;transition:opacity var(--zen-dur-fast, .12s)}.hovering .zc-tag[data-v-27960160]{opacity:1}.zc-tag.left[data-v-27960160]{left:8px}.zc-tag.right[data-v-27960160]{right:8px}.zen-compare[data-v-27960160]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}.zmc[data-v-29f0e538]{display:flex;box-sizing:border-box;min-width:0;align-items:center;gap:4px;padding:5px 8px;border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius-surface, var(--zen-radius, 7px));background:color-mix(in srgb,var(--zen-surface, #202026) 88%,transparent);backdrop-filter:blur(10px);color:var(--zen-text, #e5e5ea);font-size:11px;user-select:none}.zmc-b[data-v-29f0e538]{display:inline-grid;flex:none;place-items:center;min-width:26px;height:26px;padding:0 4px;border:0;border-radius:var(--zen-radius, 7px);background:none;color:var(--zen-muted, #9aa0aa);font:inherit;cursor:pointer}.zmc-b[data-v-29f0e538]:hover,.zmc-b.on[data-v-29f0e538]{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 10%,transparent);color:var(--zen-text, #e5e5ea)}.zmc-b.on[data-v-29f0e538]{color:var(--zen-accent, #6366f1)}.zmc-b[data-v-29f0e538]:disabled{opacity:.4;cursor:default}.zmc-b .mdi[data-v-29f0e538]{font-size:17px}.zmc-rate[data-v-29f0e538]{min-width:38px;font-size:11px;font-weight:700;font-variant-numeric:tabular-nums}.zmc-time[data-v-29f0e538]{flex:none;min-width:44px;font-variant-numeric:tabular-nums;text-align:center}.zmc-time.soft[data-v-29f0e538]{color:var(--zen-muted, #9aa0aa)}.zmc-bar[data-v-29f0e538]{position:relative;flex:1;min-width:60px;height:22px;cursor:pointer;touch-action:none}.zmc-track[data-v-29f0e538]{position:absolute;top:50%;right:0;left:0;height:4px;overflow:hidden;border-radius:2px;background:color-mix(in srgb,var(--zen-text, #e5e5ea) 14%,transparent);transform:translateY(-50%);transition:height var(--zen-dur-fast, .12s)}.zmc-bar:hover .zmc-track[data-v-29f0e538]{height:6px}.zmc-buf[data-v-29f0e538]{position:absolute;top:0;bottom:0;background:color-mix(in srgb,var(--zen-text, #e5e5ea) 16%,transparent)}.zmc-fill[data-v-29f0e538]{position:absolute;top:0;bottom:0;left:0;background:var(--zen-accent, #6366f1)}.zmc-knob[data-v-29f0e538]{position:absolute;top:50%;width:12px;height:12px;border-radius:50%;background:var(--zen-text, #e5e5ea);box-shadow:0 1px 4px #0000007f;transform:translate(-50%,-50%) scale(0);transition:transform var(--zen-dur-fast, .12s)}.zmc-bar:hover .zmc-knob[data-v-29f0e538]{transform:translate(-50%,-50%) scale(1)}.zmc-tip[data-v-29f0e538]{position:absolute;bottom:100%;margin-bottom:4px;padding:2px 5px;border-radius:4px;background:#000c;color:#fff;font-size:10.5px;font-variant-numeric:tabular-nums;white-space:nowrap;transform:translate(-50%);pointer-events:none}.zmc.compact .zmc-time[data-v-29f0e538]{min-width:34px}.zmc.compact .zmc-bar[data-v-29f0e538]{min-width:40px}.zmc.tiny[data-v-29f0e538]{gap:2px;padding:4px 5px}.zmc.tiny[data-v-29f0e538] .zvol-track{display:none}.zlb[data-v-33f25bb1]{position:fixed;inset:0;z-index:100300;display:flex;overflow:hidden;user-select:none;background:color-mix(in srgb,var(--zen-bg, #1a1a1f) 92%,transparent);backdrop-filter:blur(6px);font-family:var(--p-font-family, system-ui, sans-serif);color:var(--zen-text, #e5e5ea)}.zlb.inline[data-v-33f25bb1]{position:absolute;z-index:1;border-radius:var(--zen-radius, 7px);background:var(--zen-bg, #1a1a1f);backdrop-filter:none}.zlb-main[data-v-33f25bb1]{position:relative;flex:1;min-width:0;display:flex;flex-direction:column}.zlb-chrome[data-v-33f25bb1]{display:flex;align-items:center;gap:2px;padding:3px;background:color-mix(in srgb,var(--zen-chrome-bg, var(--zen-surface, #202026)) 94%,transparent);border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius-surface, var(--zen-radius, 7px));box-shadow:var(--interface-floating-panel-shadow, 0 6px 18px rgba(0, 0, 0, .28));backdrop-filter:blur(12px)}.zlb-chrome .zen-iconbtn[data-v-33f25bb1]{width:30px;height:30px}.zlb-top[data-v-33f25bb1],.zlb-bottom[data-v-33f25bb1]{position:absolute;left:12px;right:12px;z-index:4;display:flex;gap:8px;pointer-events:none;transition:opacity var(--zen-dur, .2s) ease,translate var(--zen-dur, .2s) ease}.zlb-top[data-v-33f25bb1]>*,.zlb-bottom[data-v-33f25bb1]>*{pointer-events:auto}.zlb-top[data-v-33f25bb1]{top:12px;align-items:flex-start}.zlb-bottom[data-v-33f25bb1]{bottom:12px;align-items:flex-end;justify-content:center;flex-wrap:wrap-reverse}.zlb-main.idle .zlb-top[data-v-33f25bb1],.zlb-main.far-top .zlb-top[data-v-33f25bb1]:not(:focus-within){opacity:0;translate:0 -6px}.zlb-main.idle .zlb-bottom[data-v-33f25bb1],.zlb-main.far-bottom .zlb-bottom[data-v-33f25bb1]:not(:focus-within,:has(.zlb-caret.on)){opacity:0;translate:0 6px}.zlb-main.far-top .zlb-top[data-v-33f25bb1]:not(:focus-within)>*,.zlb-main.far-bottom .zlb-bottom[data-v-33f25bb1]:not(:focus-within,:has(.zlb-caret.on))>*{pointer-events:none}.zlb-main.idle[data-v-33f25bb1]{cursor:none}.zlb-grow[data-v-33f25bb1]{flex:1}.zlb-info[data-v-33f25bb1]{gap:6px;min-width:0;flex:0 0 auto;height:38px;box-sizing:border-box;padding:0 10px 0 4px;font-size:13px}.zlb-info[data-v-33f25bb1]:not(:has(.zlb-pos)){padding-right:4px}.zlb-tip[data-v-33f25bb1]{display:grid;place-items:center;width:30px;height:30px;font-size:15px;color:var(--zen-muted, #9aa0aa)}.zlb-pos[data-v-33f25bb1],.zlb-zval[data-v-33f25bb1]{font-size:11.5px;color:var(--zen-muted, #9aa0aa);font-variant-numeric:tabular-nums;white-space:nowrap}.zlb-zval[data-v-33f25bb1]{min-width:40px;text-align:center}.zlb-tools[data-v-33f25bb1]{position:relative;flex-wrap:wrap;justify-content:center;max-width:100%;overflow:hidden}.zlb-progress[data-v-33f25bb1]{position:absolute;left:0;bottom:0;height:2px;width:100%;transform-origin:left;background:var(--zen-accent, #6366f1);animation:zlb-progress-33f25bb1 linear forwards}@keyframes zlb-progress-33f25bb1{0%{transform:scaleX(0)}to{transform:scaleX(1)}}.zlb-caret[data-v-33f25bb1]{display:inline-flex;align-items:center;justify-content:center;width:18px;height:30px;margin-left:-2px;padding:0;cursor:pointer;color:var(--zen-muted, #9aa0aa);background:none;border:1px solid transparent;border-radius:var(--zen-radius, 7px)}.zlb-caret .mdi[data-v-33f25bb1]{line-height:1}.zlb-caret .mdi[data-v-33f25bb1]:before{display:block;line-height:1}.zlb-caret[data-v-33f25bb1]:hover,.zlb-caret.on[data-v-33f25bb1]{color:var(--zen-text, #e5e5ea);background:color-mix(in srgb,var(--zen-text, #e5e5ea) 12%,transparent)}.zlb-slidepop[data-v-33f25bb1]{display:flex;flex-direction:column;gap:12px;padding:10px 12px;min-width:230px}.zlb-slidepop-row[data-v-33f25bb1]{display:flex;flex-direction:column;gap:6px}.zlb-slidepop-row.inline[data-v-33f25bb1]{flex-direction:row;align-items:center;justify-content:space-between;cursor:pointer}.zlb-slidepop-speed[data-v-33f25bb1]{display:flex;align-items:center;gap:10px}.zlb-slidepop-speed .zen-slider[data-v-33f25bb1]{flex:1;min-width:0}.zlb-slidepop-value[data-v-33f25bb1]{min-width:34px;text-align:right;font-size:12px;font-variant-numeric:tabular-nums;color:var(--zen-text, #e5e5ea)}.zlb-slidepop-label[data-v-33f25bb1]{font-size:11.5px;font-weight:600;color:var(--zen-muted, #9aa0aa)}.zlb-sep[data-v-33f25bb1]{width:1px;height:18px;margin:0 4px;background:var(--zen-surface-border, var(--zen-border, #34343c))}.zlb-side.zlb-side-enter-active[data-v-33f25bb1],.zlb-side.zlb-side-leave-active[data-v-33f25bb1]{transition:translate var(--zen-dur, .2s) cubic-bezier(.45,0,.2,1),margin-right var(--zen-dur, .2s) cubic-bezier(.45,0,.2,1),opacity var(--zen-dur, .2s) ease}.zlb-side.zlb-side-enter-from[data-v-33f25bb1],.zlb-side.zlb-side-leave-to[data-v-33f25bb1]{translate:calc(-100% - 12px) 0;margin-right:calc(-1 * (var(--zlb-side-w, 264px) + 12px));opacity:0}.zlb-side[data-v-33f25bb1]{position:relative;z-index:5;flex:0 0 auto;display:flex;flex-direction:column;min-height:0;margin:12px 0 12px 12px;overflow:hidden;background:color-mix(in srgb,var(--zen-chrome-bg, var(--zen-surface, #202026)) 94%,transparent);border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius-surface, var(--zen-radius, 7px));box-shadow:var(--interface-floating-panel-shadow, 0 6px 18px rgba(0, 0, 0, .28));backdrop-filter:blur(12px)}.zlb-resize[data-v-33f25bb1]{position:absolute;top:0;right:-3px;bottom:0;width:8px;z-index:4;cursor:ew-resize}.zlb-resize[data-v-33f25bb1]:hover{background:color-mix(in srgb,var(--zen-accent, #6366f1) 45%,transparent)}.zlb-side-head[data-v-33f25bb1]{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:8px 10px;border-bottom:1px solid var(--zen-border, #34343c)}.zlb-search[data-v-33f25bb1]{flex:1;min-width:0;display:flex;align-items:center;gap:6px;height:28px;padding:0 8px;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-input, #1b1b20)}.zlb-search[data-v-33f25bb1]:focus-within{border-color:var(--zen-accent, #6366f1)}.zlb-search .mdi[data-v-33f25bb1]{font-size:14px;color:var(--zen-muted, #9aa0aa)}.zlb-search input[data-v-33f25bb1]{flex:1;min-width:0;border:none;background:none;outline:none;color:var(--zen-text, #e5e5ea);font:inherit;font-size:12px}.zlb-tscroll[data-v-33f25bb1]{flex:1;min-height:0}.zlb-tscroll[data-v-33f25bb1] .zen-scroll-viewport{padding:10px 14px}.zlb-tscroll[data-v-33f25bb1] .zen-scroll-thumb{width:4px;right:4px}.zlb-tscroll[data-v-33f25bb1] .zen-scroll-track:hover .zen-scroll-thumb,.zlb-tscroll[data-v-33f25bb1] .zen-scroll-thumb:active{width:6px;right:3px}.zlb-tpad[data-v-33f25bb1]{position:relative;width:100%}.zlb-grid[data-v-33f25bb1]{position:absolute;top:0;left:0;right:0;display:grid;align-content:start}.zlb-cell[data-v-33f25bb1]{position:relative;aspect-ratio:1;padding:0;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-input, #1b1b20);cursor:pointer;overflow:hidden}.zlb-cell img[data-v-33f25bb1],.zlb-cell video[data-v-33f25bb1]{width:100%;height:100%;object-fit:cover;display:block}.zlb-grid.contain .zlb-cell img[data-v-33f25bb1],.zlb-grid.contain .zlb-cell video[data-v-33f25bb1]{object-fit:contain}.zlb-cell-audio[data-v-33f25bb1]{display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:30px;color:var(--zen-muted, #9aa0aa)}.zlb-cell-badge[data-v-33f25bb1]{position:absolute;top:4px;left:4px;font-size:16px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.8);pointer-events:none}.zlb-cell[data-v-33f25bb1]:hover{border-color:var(--zen-accent, #6366f1)}.zlb-cell.on[data-v-33f25bb1]{border-color:var(--zen-accent, #6366f1);box-shadow:0 0 0 2px var(--zen-accent, #6366f1) inset}.zlb-cell-wf[data-v-33f25bb1]{position:absolute;bottom:3px;right:3px;font-size:11px;color:#fff;background:#0009;border-radius:max(0px,calc(var(--zen-radius, 7px) - 3px));padding:1px 3px}.zlb-side-foot[data-v-33f25bb1]{flex:0 0 auto;display:flex;align-items:center;gap:3px;padding:6px 8px;border-top:1px solid var(--zen-border, #34343c)}.zlb-foot-n[data-v-33f25bb1]{font-size:11px;color:var(--zen-muted, #9aa0aa);font-variant-numeric:tabular-nums;padding-right:4px}.zlb-stage[data-v-33f25bb1]{container-type:size;position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:16px}.zlb-stage.has-mc[data-v-33f25bb1]{padding-bottom:calc(60px + var(--zlb-foot, 0px))}.zlb.inline .zlb-stage.has-mc[data-v-33f25bb1]{padding-bottom:52px}.zlb-mc[data-v-33f25bb1]{position:absolute;right:12px;bottom:calc(8px + var(--zlb-foot, 0px));left:12px;z-index:3;max-width:760px;margin:0 auto}.zlb.inline .zlb-stage[data-v-33f25bb1]{padding:6px}.zlb-media[data-v-33f25bb1]{max-width:100%;max-height:100%;object-fit:contain;display:block;border-radius:var(--zen-radius, 7px);box-shadow:0 24px 60px -20px #0000008c;transition:transform var(--zen-dur, .2s) linear}.zlb-layered[data-v-33f25bb1]{position:relative;overflow:hidden}.zlb-layered img[data-v-33f25bb1]{position:absolute;inset:0;width:100%;height:100%;display:block;user-select:none}.zlb-overlay[data-v-33f25bb1]{mix-blend-mode:multiply;opacity:.75;pointer-events:none}.zlb-masked-out[data-v-33f25bb1]{filter:grayscale(.85) brightness(.32)}.zlb-overlay-mask[data-v-33f25bb1]{mask-mode:luminance;mask-size:100% 100%;mask-repeat:no-repeat;pointer-events:none}.zlb-panel[data-v-33f25bb1]{user-select:text;position:relative;z-index:5;flex:0 0 340px;min-width:0;display:flex;flex-direction:column;margin:12px 12px 12px 0;overflow:hidden;background:color-mix(in srgb,var(--zen-chrome-bg, var(--zen-surface, #202026)) 94%,transparent);border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius-surface, var(--zen-radius, 7px));box-shadow:var(--interface-floating-panel-shadow, 0 6px 18px rgba(0, 0, 0, .28));backdrop-filter:blur(12px)}.zlb-panel-scroll[data-v-33f25bb1]{flex:1;min-height:0}.zlb-panel-body[data-v-33f25bb1]{padding:16px}@media(max-width:860px){.zlb[data-v-33f25bb1]{flex-direction:column}.zlb-panel[data-v-33f25bb1]{flex:0 0 auto;max-height:45%;margin:0 12px 12px}}.zlb-media.steering[data-v-33f25bb1]{transition:none;will-change:transform}.zlb.inline .zlb-media[data-v-33f25bb1]{box-shadow:none}.zlb-empty[data-v-33f25bb1]{opacity:.4;font-size:48px}.zlb-audio[data-v-33f25bb1]{display:flex;flex-direction:column;align-items:center;gap:clamp(4px,3cqh,14px);padding:clamp(4px,5cqh,24px);max-width:560px;width:100%;color:var(--zen-text, #e5e5ea)}.zlb-audio .mdi[data-v-33f25bb1]{font-size:clamp(28px,30cqh,96px);line-height:1;opacity:.5}.zlb-audio-name[data-v-33f25bb1]{font-size:14px;font-weight:600;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.zlb-audio audio[data-v-33f25bb1]{width:100%}.zlb-nav[data-v-33f25bb1]{position:absolute;top:20%;bottom:20%;z-index:3;width:clamp(40px,7%,84px);display:flex;align-items:center;padding:0 8px;border:none;color:#fff;cursor:pointer;opacity:0;transition:opacity var(--zen-dur, .2s) ease;mask-image:linear-gradient(to bottom,transparent,#000 30%,#000 70%,transparent)}.zlb-nav.prev[data-v-33f25bb1]{left:0;justify-content:flex-start;background:linear-gradient(to right,color-mix(in srgb,var(--zen-accent, #6366f1) 20%,transparent),transparent)}.zlb-nav.next[data-v-33f25bb1]{right:0;justify-content:flex-end;background:linear-gradient(to left,color-mix(in srgb,var(--zen-accent, #6366f1) 20%,transparent),transparent)}.zlb-nav[data-v-33f25bb1]:hover:not(:disabled){opacity:1}.zlb-nav[data-v-33f25bb1]:disabled{display:none}.zlb-nav .mdi[data-v-33f25bb1]{font-size:28px;filter:drop-shadow(0 1px 4px rgba(0,0,0,.6));transition:translate var(--zen-dur, .2s) ease}.zlb-nav.prev:hover .mdi[data-v-33f25bb1]{translate:-3px 0}.zlb-nav.next:hover .mdi[data-v-33f25bb1]{translate:3px 0}.zlb-slide-next-enter-active[data-v-33f25bb1],.zlb-slide-next-leave-active[data-v-33f25bb1],.zlb-slide-prev-enter-active[data-v-33f25bb1],.zlb-slide-prev-leave-active[data-v-33f25bb1],.zlb-slide-up-enter-active[data-v-33f25bb1],.zlb-slide-up-leave-active[data-v-33f25bb1],.zlb-slide-down-enter-active[data-v-33f25bb1],.zlb-slide-down-leave-active[data-v-33f25bb1]{transition:translate var(--zlb-slide-ms, .46s) cubic-bezier(.45,0,.2,1)}.zlb-slide-next-leave-active[data-v-33f25bb1],.zlb-slide-prev-leave-active[data-v-33f25bb1],.zlb-slide-up-leave-active[data-v-33f25bb1],.zlb-slide-down-leave-active[data-v-33f25bb1]{position:absolute}.zlb-slide-down-enter-from[data-v-33f25bb1],.zlb-slide-up-leave-to[data-v-33f25bb1]{translate:0 var(--zlb-slide-y, 100%)}.zlb-slide-down-leave-to[data-v-33f25bb1],.zlb-slide-up-enter-from[data-v-33f25bb1]{translate:0 calc(var(--zlb-slide-y, 100%) * -1)}.zlb-slide-next-enter-from[data-v-33f25bb1],.zlb-slide-prev-leave-to[data-v-33f25bb1]{translate:var(--zlb-slide, 100%) 0}.zlb-slide-next-leave-to[data-v-33f25bb1],.zlb-slide-prev-enter-from[data-v-33f25bb1]{translate:calc(var(--zlb-slide, 100%) * -1) 0}@media(prefers-reduced-motion:reduce){:root:not([data-zen-motion=full]){transition:none}}:root[data-zen-motion=reduce]{transition:none}.zsc[data-v-a47e719d]{display:block;width:100%;height:100%;outline:none;cursor:crosshair;touch-action:none}.zsc[data-v-a47e719d]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}.zft[data-v-86083019]{display:flex;flex-direction:column;gap:1px;font-size:12px}.zft-row[data-v-86083019]{display:flex;align-items:center;gap:4px;min-width:0;padding:4px 8px 4px 4px;border-radius:var(--zen-radius, 7px);color:var(--zen-muted, #9aa0aa);cursor:pointer}.zft-row[data-v-86083019]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 6%,transparent);color:var(--zen-text, #e5e5ea)}.zft-row.on[data-v-86083019]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 20%,transparent);color:var(--zen-text, #e5e5ea)}.zft-chev[data-v-86083019]{display:grid;flex:none;place-items:center;width:16px;height:16px;padding:0;border:0;border-radius:3px;background:none;color:inherit;cursor:pointer}.zft-row[data-v-86083019]:focus-visible,.zft-chev[data-v-86083019]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}button.zft-chev[data-v-86083019]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 12%,transparent)}.zft-icon[data-v-86083019]{flex:none;font-size:15px}.zft-name[data-v-86083019]{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.zft-count[data-v-86083019]{flex:none;font-size:10.5px;font-variant-numeric:tabular-nums}.zmp[data-v-bf8a1376]{position:relative;display:grid;grid-template-columns:190px minmax(0,1fr) 260px;height:calc(100% + 28px);margin:-14px;font-size:12px}.zmp-search[data-v-bf8a1376]{flex:1;max-width:320px}.zmp-grow[data-v-bf8a1376]{flex:1}.zmp-folders[data-v-bf8a1376]{display:flex;flex-direction:column;gap:1px;min-height:0;overflow-y:auto;padding:10px 8px;border-right:1px solid var(--zen-border, #34343c)}.zmp-folder[data-v-bf8a1376]{display:flex;align-items:center;gap:6px;width:100%;padding:5px 8px;border:0;border-radius:var(--zen-radius, 7px);background:none;color:var(--zen-muted, #9aa0aa);font:inherit;text-align:left;cursor:pointer}.zmp-folder[data-v-bf8a1376]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 6%,transparent);color:var(--zen-text, #e5e5ea)}.zmp-folder.on[data-v-bf8a1376]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 20%,transparent);color:var(--zen-text, #e5e5ea)}.zmp-folder .mdi[data-v-bf8a1376]{flex:none;font-size:15px}.zmp-fname[data-v-bf8a1376]{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.zmp-count[data-v-bf8a1376]{flex:none;color:var(--zen-muted, #9aa0aa);font-size:10.5px;font-variant-numeric:tabular-nums}.zmp-main[data-v-bf8a1376]{display:flex;flex-direction:column;min-width:0;min-height:0}.zmp-filters[data-v-bf8a1376]{display:flex;flex:none;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--zen-border, #34343c)}.zmp-grid[data-v-bf8a1376]{display:grid;flex:1;align-content:start;gap:10px;min-height:0;overflow-y:auto;padding:12px}.zmp-card[data-v-bf8a1376]{display:flex;flex-direction:column;gap:4px;min-width:0;padding:4px;border:1px solid transparent;border-radius:calc(var(--zen-radius, 7px) + 2px);background:none;color:var(--zen-text, #e5e5ea);font:inherit;text-align:left;cursor:pointer}.zmp-grid.compact .zmp-card[data-v-bf8a1376]{gap:2px;padding:2px}.zmp-opts[data-v-bf8a1376]{display:flex;flex-direction:column;gap:8px;min-width:170px;padding:8px 10px}.zmp-opt[data-v-bf8a1376]{display:flex;align-items:center;justify-content:space-between;gap:16px;font-size:12px;color:var(--zen-text, #e5e5ea);cursor:pointer}.zmp-card[data-v-bf8a1376]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 5%,transparent)}.zmp-card.focus[data-v-bf8a1376]{border-color:var(--zen-border, #34343c)}.zmp-card.sel .zmp-thumb[data-v-bf8a1376]{outline:2px solid var(--zen-accent, #6366f1);outline-offset:1px}.zmp-thumb[data-v-bf8a1376]{position:relative;display:grid;place-items:center;aspect-ratio:1;overflow:hidden;border-radius:var(--zen-radius, 7px);background:var(--zen-media-bg, var(--zen-input, #1b1b20))}.zmp-thumb img[data-v-bf8a1376],.zmp-thumb video[data-v-bf8a1376]{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}.zmp-audio[data-v-bf8a1376]{display:grid;place-items:center;width:100%;height:100%;background:linear-gradient(160deg,color-mix(in srgb,var(--zen-accent, #6366f1) 22%,var(--zen-media-bg, var(--zen-input, #1b1b20))),var(--zen-media-bg, var(--zen-input, #1b1b20)));color:color-mix(in srgb,var(--zen-accent, #6366f1) 70%,white);font-size:34px}.zmp-kind[data-v-bf8a1376]{position:absolute;bottom:5px;left:5px;display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#000000a6;color:#fff;font-size:13px}.zmp-tick[data-v-bf8a1376]{position:absolute;top:5px;right:5px;display:grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:var(--zen-accent, #6366f1);color:var(--zen-accent-text, #fff);font-size:11px;font-weight:700}.zmp-name[data-v-bf8a1376],.zmp-dir[data-v-bf8a1376]{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.zmp-name[data-v-bf8a1376]{font-size:11.5px}.zmp-dir[data-v-bf8a1376]{margin-top:-3px;color:var(--zen-muted, #9aa0aa);font-size:10.5px}.zmp-empty[data-v-bf8a1376]{display:flex;flex-direction:column;grid-column:1 / -1;align-items:center;gap:6px;padding:48px 12px;color:var(--zen-muted, #9aa0aa);text-align:center}.zmp-empty .mdi[data-v-bf8a1376]{font-size:28px}.zmp-preview[data-v-bf8a1376]{display:flex;flex-direction:column;gap:10px;min-height:0;overflow-y:auto;padding:12px;border-left:1px solid var(--zen-border, #34343c)}.zmp-big[data-v-bf8a1376]{position:relative;display:grid;place-items:center;aspect-ratio:1;overflow:hidden;border-radius:var(--zen-radius, 7px);background:var(--zen-media-bg, var(--zen-input, #1b1b20))}.zmp-big img[data-v-bf8a1376],.zmp-big video[data-v-bf8a1376]{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}.zmp-bigaudio[data-v-bf8a1376]{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;padding:10px;color:color-mix(in srgb,var(--zen-accent, #6366f1) 70%,white);font-size:48px}.zmp-bigaudio audio[data-v-bf8a1376]{width:100%}.zmp-meta[data-v-bf8a1376]{display:flex;flex-direction:column;gap:3px;color:var(--zen-muted, #9aa0aa);overflow-wrap:anywhere}.zmp-meta b[data-v-bf8a1376]{color:var(--zen-text, #e5e5ea);font-size:12.5px}.zmp-hint[data-v-bf8a1376]{display:flex;flex-direction:column;align-items:center;gap:8px;margin:auto 0;color:var(--zen-muted, #9aa0aa);line-height:1.5;text-align:center}.zmp-hint .mdi[data-v-bf8a1376]{font-size:26px}.zmp-drop[data-v-bf8a1376]{position:absolute;inset:8px;display:flex;align-items:center;justify-content:center;gap:8px;border:2px dashed var(--zen-accent, #6366f1);border-radius:calc(var(--zen-radius, 7px) + 2px);background:color-mix(in srgb,var(--zen-accent, #6366f1) 14%,rgb(0 0 0 / 60%));color:var(--zen-text, #e5e5ea);font-size:14px;font-weight:600;pointer-events:none}.zmp-foot[data-v-bf8a1376]{display:flex;align-items:center;gap:8px}.zmp-soft[data-v-bf8a1376]{color:var(--zen-muted, #9aa0aa)}.ztl[data-v-ad0b766d]{position:relative;--ztl-bg: color-mix(in srgb, var(--zen-bg, #1a1a1f) 70%, #000);--ztl-bg: oklch(from var(--zen-bg, #1a1a1f) calc(l - .07) c h);--ztl-row: color-mix(in srgb, var(--zen-text, #e5e5ea) 3%, transparent);--ztl-line: color-mix(in srgb, var(--zen-text, #e5e5ea) 9%, transparent);--ztl-accent: var(--zen-accent, #6366f1);--ztl-seam: color-mix(in srgb, var(--zen-text, #e5e5ea) 62%, transparent);--ztl-playhead: var(--zen-playhead, #ff5a4f);display:flex;min-width:0;overflow:hidden;border:1px solid var(--ztl-line);border-radius:var(--zen-radius, 7px);background:var(--ztl-bg);user-select:none;touch-action:none}.ztl-grid[data-v-ad0b766d]{display:flex;width:max-content;min-width:100%}.ztl-heads[data-v-ad0b766d]{position:sticky;left:0;z-index:8;flex:none;width:var(--ztl-head);border-right:1px solid var(--ztl-line);background:var(--ztl-bg)}.ztl-corner[data-v-ad0b766d]{position:sticky;top:0;z-index:5;background:var(--ztl-bg);display:flex;align-items:center;justify-content:center;height:24px;border-bottom:1px solid var(--ztl-line)}.ztl-time[data-v-ad0b766d]{color:var(--zen-text, #e5e5ea);font-family:var(--zen-mono, ui-monospace, monospace);font-size:10.5px;font-variant-numeric:tabular-nums}.ztl-head[data-v-ad0b766d]{display:flex;align-items:center;gap:6px;box-sizing:border-box;min-width:0;overflow:hidden;padding:0 8px;border-bottom:1px solid var(--ztl-line);color:var(--zen-muted, #9aa0aa);font-size:10.5px;font-weight:600;letter-spacing:.02em}.ztl-head.movable[data-v-ad0b766d]{cursor:grab}.ztl-head.lifted[data-v-ad0b766d]{position:relative;z-index:6;background:color-mix(in srgb,var(--ztl-accent) 22%,var(--ztl-bg));box-shadow:0 4px 14px #00000073;cursor:grabbing}.ztl-insert[data-v-ad0b766d]{position:absolute;right:0;left:0;z-index:3;height:2px;margin-top:-1px;background:var(--ztl-accent);pointer-events:none}.ztl-head .mdi[data-v-ad0b766d]{flex:none;font-size:13px}.ztl-head.has-actions[data-v-ad0b766d]{flex-wrap:wrap;align-content:center;row-gap:2px}.ztl-head.has-actions .ztl-head-label[data-v-ad0b766d]{flex:1 1 0}.ztl-head-actions[data-v-ad0b766d]{display:flex;flex:1 0 100%;gap:2px;padding-left:24px}.ztl-head.has-actions.inline[data-v-ad0b766d]{flex-wrap:nowrap}.ztl-head.inline .ztl-head-actions[data-v-ad0b766d]{flex:none;padding-left:0}.ztl-head.inline .ztl-head-action[data-v-ad0b766d]{justify-content:center;width:20px;height:20px;padding:0;opacity:.6}.ztl-head.inline:hover .ztl-head-action[data-v-ad0b766d],.ztl-head.inline .ztl-head-action.on[data-v-ad0b766d]{opacity:1}.ztl-head-action[data-v-ad0b766d]{display:inline-flex;align-items:center;gap:2px;height:17px;padding:0 4px;border:1px solid transparent;border-radius:4px;background:none;color:var(--zen-muted, #9aa0aa);font:inherit;font-size:9.5px;font-weight:600;cursor:pointer}.ztl-head-action .mdi[data-v-ad0b766d]{font-size:12px}.ztl-head-action[data-v-ad0b766d]:hover{color:var(--zen-text, #e5e5ea)}.ztl-head-action.on[data-v-ad0b766d]{border-color:color-mix(in srgb,var(--ztl-accent) 55%,transparent);background:color-mix(in srgb,var(--ztl-accent) 22%,transparent);color:var(--zen-text, #e5e5ea)}.ztl-head-thumb[data-v-ad0b766d]{flex:none;width:18px;height:18px;border-radius:calc(var(--zen-radius, 7px) / 2);object-fit:cover}.ztl-head-label[data-v-ad0b766d]{min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.ztl-scroll[data-v-ad0b766d]{position:relative;flex:1;min-width:0;overflow:auto;scrollbar-width:none}.ztl-scroll[data-v-ad0b766d]::-webkit-scrollbar{display:none}.ztl-curve[data-v-ad0b766d]{position:absolute;top:0;left:0;overflow:visible}.ztl-cstep[data-v-ad0b766d]{fill:none;stroke:color-mix(in srgb,var(--ztl-curve) 70%,transparent);stroke-dasharray:3 3;stroke-width:1.5}.ztl-carea[data-v-ad0b766d]{fill:color-mix(in srgb,var(--ztl-curve) 22%,transparent)}.ztl-cunit[data-v-ad0b766d]{stroke:color-mix(in srgb,var(--zen-text, #e5e5ea) 18%,transparent);stroke-dasharray:4 4;stroke-width:1}.ztl-cline[data-v-ad0b766d]{fill:none;stroke:var(--ztl-curve);stroke-width:2.2;stroke-linejoin:round}.ztl-cval[data-v-ad0b766d]{fill:var(--ztl-curve);font-size:10px;font-variant-numeric:tabular-nums;pointer-events:none;paint-order:stroke;stroke:var(--ztl-bg);stroke-width:3px}.ztl-larea[data-v-ad0b766d]{fill:color-mix(in srgb,var(--ztl-curve) 20%,transparent)}.ztl-lbar[data-v-ad0b766d]{stroke:var(--ztl-curve);stroke-width:2.5;stroke-linecap:round}.ztl-lhit[data-v-ad0b766d]{stroke:transparent;stroke-width:12;cursor:ns-resize}.ztl-lseg:hover .ztl-lbar[data-v-ad0b766d]{stroke-width:3.5}.ztl-lseg.inherited .ztl-larea[data-v-ad0b766d]{fill:color-mix(in srgb,var(--ztl-curve) 10%,transparent)}.ztl-lseg.inherited .ztl-lbar[data-v-ad0b766d],.ztl-lseg.inherited .ztl-cline[data-v-ad0b766d]{stroke-dasharray:5 4}.ztl-lseg.inherited .ztl-carea[data-v-ad0b766d]{fill:color-mix(in srgb,var(--ztl-curve) 9%,transparent)}.ztl-lpad[data-v-ad0b766d]{fill:transparent}.ztl-levels.shaped .ztl-lseg+.ztl-lseg .ztl-lpad[data-v-ad0b766d]{stroke:color-mix(in srgb,var(--zen-text, #e5e5ea) 8%,transparent);stroke-dasharray:2 3}.ztl-cpt[data-v-ad0b766d]{fill:var(--ztl-bg);stroke:var(--ztl-curve);stroke-width:2;cursor:grab}.ztl-cpt[data-v-ad0b766d]:hover{fill:var(--ztl-curve)}.ztl-range[data-v-ad0b766d]{position:absolute;top:0;bottom:0;z-index:1;border-right:1px solid color-mix(in srgb,var(--ztl-accent) 60%,transparent);border-left:1px solid color-mix(in srgb,var(--ztl-accent) 60%,transparent);background:color-mix(in srgb,var(--ztl-accent) 9%,transparent);pointer-events:none}.ztl-range[data-v-ad0b766d]:before{position:absolute;top:0;right:0;left:0;height:4px;background:var(--ztl-accent);content:\"\"}.ztl-tail[data-v-ad0b766d]{position:absolute;top:0;right:0;bottom:0;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;border-left:1px dashed color-mix(in srgb,var(--zen-text, #e5e5ea) 45%,transparent);background:repeating-linear-gradient(-45deg,color-mix(in srgb,var(--zen-text, #e5e5ea) 14%,transparent) 0 4px,transparent 4px 9px);pointer-events:none}.ztl-tail-label[data-v-ad0b766d]{padding:0 4px 2px;overflow:hidden;color:var(--zen-text, #e5e5ea);font-size:10px;white-space:nowrap;text-overflow:ellipsis;opacity:.85}.ztl-progress[data-v-ad0b766d]{position:absolute;bottom:0;left:0;height:3px;border-radius:0 2px 2px 0;background:var(--ztl-playhead);transition:width var(--zen-dur, .2s) ease;pointer-events:none}.ztl-hbar[data-v-ad0b766d]{position:absolute;right:0;bottom:0;z-index:6;height:9px;touch-action:none}.ztl-thumb[data-v-ad0b766d]{position:absolute;top:2px;bottom:2px;border-radius:3px;background:color-mix(in srgb,var(--zen-text, #e5e5ea) 22%,transparent);transition:background var(--zen-dur-fast, .12s)}.ztl-hbar:hover .ztl-thumb[data-v-ad0b766d]{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 38%,transparent)}.ztl-body[data-v-ad0b766d]{position:relative;flex:none}.ztl-ruler[data-v-ad0b766d]{position:sticky;top:0;z-index:5;background:var(--ztl-bg);height:24px;border-bottom:1px solid var(--ztl-line);cursor:col-resize}.ztl-tick[data-v-ad0b766d]{position:absolute;bottom:0;width:1px;height:5px;background:var(--ztl-line)}.ztl-tick.major[data-v-ad0b766d]{height:9px;background:color-mix(in srgb,var(--zen-text, #e5e5ea) 30%,transparent)}.ztl-tick b[data-v-ad0b766d]{position:absolute;bottom:10px;left:3px;color:var(--zen-muted, #9aa0aa);font-size:9.5px;font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}.ztl-track[data-v-ad0b766d]{position:relative;box-sizing:border-box;border-bottom:1px solid var(--ztl-line)}.ztl-track.zebra[data-v-ad0b766d]{background:var(--ztl-row)}.ztl-track.dropping[data-v-ad0b766d]{background:color-mix(in srgb,var(--ztl-accent) 16%,transparent)}.ztl-item[data-v-ad0b766d]{position:absolute;box-sizing:border-box;touch-action:none}.ztl-item.clip[data-v-ad0b766d]{top:3px;bottom:3px;display:flex;align-items:center;gap:5px;overflow:hidden;padding:0 7px;border:1px solid color-mix(in srgb,var(--ztl-color, var(--ztl-accent)) 70%,#000);border-radius:calc(var(--zen-radius, 7px) * .65);background:color-mix(in srgb,var(--ztl-color, var(--ztl-accent)) 42%,var(--ztl-bg));cursor:pointer}.ztl-item.clip.join-start[data-v-ad0b766d]{border-left-color:var(--ztl-seam);border-top-left-radius:0;border-bottom-left-radius:0}.ztl-item.clip.join-end[data-v-ad0b766d]{border-top-right-radius:0;border-bottom-right-radius:0}.ztl-item.clip.on[data-v-ad0b766d]{border-color:var(--zen-text, #e5e5ea);box-shadow:0 0 0 1px var(--zen-text, #e5e5ea) inset;background:color-mix(in srgb,var(--ztl-color, var(--ztl-accent)) 62%,var(--ztl-bg))}.ztl-item.droptarget[data-v-ad0b766d]{z-index:3;outline:2px solid var(--ztl-accent);outline-offset:1px}.ztl-item.lifted[data-v-ad0b766d]{z-index:3;box-shadow:0 6px 16px #00000073;cursor:grabbing;opacity:.92}.ztl-item.clip.ghost[data-v-ad0b766d]{border-style:dashed;background:color-mix(in srgb,var(--ztl-color, var(--ztl-accent)) 16%,var(--ztl-bg))}.ztl-item.clip.muted[data-v-ad0b766d]{opacity:.4}.ztl-item.clip img[data-v-ad0b766d]{flex:none;height:100%;margin-left:-7px;aspect-ratio:1;object-fit:cover}.ztl-badge[data-v-ad0b766d]{flex:none;padding:0 4px;border-radius:3px;background:#00000052;color:color-mix(in srgb,var(--zen-text, #e5e5ea) 88%,var(--ztl-color, var(--ztl-accent)));font-family:var(--zen-mono, ui-monospace, monospace);font-size:9px;line-height:13px;white-space:nowrap}.ztl-item.clip.banded[data-v-ad0b766d]{align-items:flex-start;padding-top:1px}.ztl-item.clip.banded>.ztl-label[data-v-ad0b766d],.ztl-item.clip.banded>.ztl-icon[data-v-ad0b766d],.ztl-item.clip.banded>.ztl-badge[data-v-ad0b766d]{position:relative;z-index:1;margin-top:1px}.ztl-mark[data-v-ad0b766d]{position:absolute;top:0;bottom:0;z-index:1;width:1px;margin-left:-.5px;background:#ffffff73}.ztl-mark[data-v-ad0b766d]:before{content:\"\";position:absolute;top:0;left:-3px;border:3.5px solid transparent;border-top-color:#ffffffb3}.ztl-mark.strong[data-v-ad0b766d]{background:#fffc}.ztl-mark.strong[data-v-ad0b766d]:before{border-top-color:#fff}.ztl-frames[data-v-ad0b766d],.ztl-wave[data-v-ad0b766d]{position:absolute;inset:16px 0 0;pointer-events:none}.ztl-frames[data-v-ad0b766d]{overflow:hidden;border-top:1px solid rgb(0 0 0 / 35%)}.ztl-item.clip .ztl-frames img[data-v-ad0b766d]{position:absolute;top:0;height:100%;margin:0;aspect-ratio:auto;object-fit:cover;opacity:.9}.ztl-wave[data-v-ad0b766d]{width:100%;height:calc(100% - 16px);padding:2px 0;box-sizing:border-box;fill:color-mix(in srgb,var(--ztl-color, var(--ztl-accent)) 35%,#fff);opacity:.85}.ztl-label[data-v-ad0b766d]{overflow:hidden;color:color-mix(in srgb,var(--zen-text, #e5e5ea) 78%,var(--ztl-color, var(--ztl-accent)));font-size:10.5px;font-weight:500;white-space:nowrap;text-overflow:ellipsis;text-shadow:0 1px 1px rgb(0 0 0 / 40%)}.ztl-icon[data-v-ad0b766d]{flex:none;color:#fff;font-size:12px;opacity:.85}.ztl-fade[data-v-ad0b766d]{position:absolute;top:0;bottom:0;pointer-events:none}.ztl-fade.in[data-v-ad0b766d]{left:0;background:linear-gradient(to top right,transparent calc(50% - .75px),rgb(255 255 255 / 70%) 50%,transparent calc(50% + .75px)),linear-gradient(to top right,transparent 50%,rgb(0 0 0 / 45%) 50%)}.ztl-fade.out[data-v-ad0b766d]{right:0;background:linear-gradient(to top left,transparent calc(50% - .75px),rgb(255 255 255 / 70%) 50%,transparent calc(50% + .75px)),linear-gradient(to top left,transparent 50%,rgb(0 0 0 / 45%) 50%)}.ztl-fadeknob[data-v-ad0b766d]{position:absolute;top:1px;z-index:2;width:9px;height:9px;margin:0 -4.5px;border:1px solid rgb(0 0 0 / 55%);border-radius:50%;background:#fff;cursor:ew-resize;opacity:0;transition:opacity var(--zen-dur-fast, .12s)}.ztl-fadeknob.set[data-v-ad0b766d],.ztl-item:hover .ztl-fadeknob[data-v-ad0b766d]{opacity:1}.ztl-grip[data-v-ad0b766d]{position:absolute;top:0;bottom:0;width:7px;cursor:ew-resize}.ztl-grip.end[data-v-ad0b766d]{right:0}.ztl-grip.start[data-v-ad0b766d]{left:0}.ztl-grip[data-v-ad0b766d]:after{content:\"\";position:absolute;top:25%;bottom:25%;left:3px;width:1px;background:#ffffff8c;opacity:0;transition:opacity var(--zen-dur-fast, .12s)}.ztl-item:hover .ztl-grip[data-v-ad0b766d]:after{opacity:1}.ztl-item.marker[data-v-ad0b766d]{z-index:2;top:50%;width:22px;height:22px;overflow:hidden;transform:translate(-50%,-50%);border:2px solid var(--ztl-color, var(--zen-marker, #f5c542));border-radius:5px;background:var(--ztl-bg);cursor:grab}.ztl-item.marker[data-v-ad0b766d]:not(.thumbed):not(.ghost){width:12px;height:12px;border-radius:2px;background:var(--ztl-color, var(--zen-marker, #f5c542));transform:translate(-50%,-50%) rotate(45deg)}.ztl-item.marker.on[data-v-ad0b766d]{border-color:#fff;box-shadow:0 0 0 2px var(--ztl-accent)}.ztl-item.marker.ghost[data-v-ad0b766d]{width:22px;height:22px;display:grid;place-items:center;border:1px dashed color-mix(in srgb,var(--zen-text, #e5e5ea) 35%,transparent);border-radius:5px;background:transparent;color:color-mix(in srgb,var(--zen-text, #e5e5ea) 55%,transparent);transform:translate(-50%,-50%);cursor:pointer}.ztl-item.marker.ghost[data-v-ad0b766d]:hover{border-color:var(--ztl-accent);color:var(--zen-text, #e5e5ea)}.ztl-item.marker.ghost .ztl-icon[data-v-ad0b766d]{color:inherit;font-size:12px}.ztl-item.marker img[data-v-ad0b766d]{width:100%;height:100%;object-fit:cover;pointer-events:none}.ztl-guide[data-v-ad0b766d]{position:absolute;top:24px;bottom:0;width:0;border-left:1px dashed color-mix(in srgb,var(--zen-text, #e5e5ea) 22%,transparent);pointer-events:none}.ztl-marquee[data-v-ad0b766d]{position:absolute;z-index:7;border:1px solid var(--ztl-accent);border-radius:calc(var(--zen-radius, 7px) * .65);background:color-mix(in srgb,var(--ztl-accent) 14%,transparent);pointer-events:none}.ztl-snapline[data-v-ad0b766d]{position:absolute;top:24px;bottom:0;z-index:3;width:1px;background:var(--zen-accent, #6366f1);box-shadow:0 0 4px var(--zen-accent, #6366f1);pointer-events:none}.ztl-playhead[data-v-ad0b766d]{position:absolute;top:0;bottom:0;left:0;z-index:6;width:0;border-left:1px solid var(--ztl-playhead);pointer-events:none}.ztl-playhead span[data-v-ad0b766d]{position:absolute;top:0;left:-6px;width:11px;height:11px;background:var(--ztl-playhead);clip-path:polygon(0 0,100% 0,100% 60%,50% 100%,0 60%)}.zbc-frame[data-v-657d6f53]{position:relative;width:100%;height:100%;min-height:0;overflow:hidden}.zbc[data-v-657d6f53]{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);overflow:hidden;border-radius:var(--zen-radius, 7px);background:repeating-conic-gradient(color-mix(in srgb,var(--zen-text, #fff) 4%,transparent) 0% 25%,transparent 0% 50%) 0 0 / 16px 16px,var(--zen-input, #1b1b20);outline:1px solid var(--zen-border, #34343c);outline-offset:-1px;user-select:none;touch-action:none;cursor:crosshair}.zbc-keys[data-v-657d6f53]{position:absolute;top:0;left:0;width:1px;height:1px;padding:0;border:0;opacity:0;pointer-events:none}.zbc[data-v-657d6f53]:focus-within{outline:1px solid color-mix(in srgb,var(--zen-text, #fff) 22%,transparent);outline-offset:-1px}.zbc.tool-brush[data-v-657d6f53],.zbc.tool-erase[data-v-657d6f53]{cursor:none}.zbc-backdrop[data-v-657d6f53]{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none}.zbc-grid[data-v-657d6f53]{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(to right,color-mix(in srgb,var(--zen-text, #fff) 8%,transparent) 1px,transparent 1px),linear-gradient(to bottom,color-mix(in srgb,var(--zen-text, #fff) 8%,transparent) 1px,transparent 1px)}.zbc-box[data-v-657d6f53]{position:absolute;box-sizing:border-box;border:1.5px solid var(--zbc-color);border-radius:3px;cursor:move;transition:box-shadow .12s ease}.zbc-box.masked[data-v-657d6f53]{border-style:dashed}.zbc-box.locked[data-v-657d6f53]{cursor:default}.zbc-box.sel[data-v-657d6f53]{box-shadow:0 0 0 1px color-mix(in srgb,var(--zbc-color) 70%,transparent),0 0 14px color-mix(in srgb,var(--zbc-color) 40%,transparent)}.zbc-fill[data-v-657d6f53]{position:absolute;inset:0;background:color-mix(in srgb,var(--zbc-color) 22%,transparent);-webkit-mask-size:100% 100%;mask-size:100% 100%;pointer-events:none}.zbc-content[data-v-657d6f53]{position:absolute;inset:0;overflow:hidden;container-type:size;pointer-events:none}.zbc-box.painting .zbc-content[data-v-657d6f53]{opacity:.35}.zbc-box.masked .zbc-fill[data-v-657d6f53]{background:color-mix(in srgb,var(--zbc-color) 45%,transparent)}.zbc-box.painting .zbc-fill[data-v-657d6f53]{visibility:hidden}.zbc-paint[data-v-657d6f53]{position:absolute;opacity:.5;pointer-events:none}.zbc-tag[data-v-657d6f53]{position:absolute;left:-1px;top:-1px;display:flex;align-items:center;gap:4px;max-width:calc(100% + 2px);padding:1px 6px 1px 4px;border-radius:3px 0 4px;background:var(--zbc-color);color:#fff;font-size:10px;line-height:15px;white-space:nowrap;overflow:hidden;text-shadow:0 1px 1px rgb(0 0 0 / 35%);pointer-events:none}.zbc-n[data-v-657d6f53]{font-weight:700}.zbc-label[data-v-657d6f53]{overflow:hidden;text-overflow:ellipsis}.zbc-h[data-v-657d6f53]{position:absolute;width:9px;height:9px;margin:-5px 0 0 -5px;border:1.5px solid #fff;border-radius:2px;background:var(--zbc-color, var(--zen-accent, #6366f1));box-shadow:0 0 0 1px #0006}.h-nw[data-v-657d6f53]{left:0;top:0;cursor:nwse-resize}.h-n[data-v-657d6f53]{left:50%;top:0;cursor:ns-resize}.h-ne[data-v-657d6f53]{left:100%;top:0;cursor:nesw-resize}.h-e[data-v-657d6f53]{left:100%;top:50%;cursor:ew-resize}.h-se[data-v-657d6f53]{left:100%;top:100%;cursor:nwse-resize}.h-s[data-v-657d6f53]{left:50%;top:100%;cursor:ns-resize}.h-sw[data-v-657d6f53]{left:0;top:100%;cursor:nesw-resize}.h-w[data-v-657d6f53]{left:0;top:50%;cursor:ew-resize}.zbc-selframe[data-v-657d6f53]{position:absolute;box-sizing:border-box;outline:1.5px dashed var(--zbc-color);outline-offset:-1px;pointer-events:none}.zbc-selframe .zbc-h[data-v-657d6f53]{pointer-events:auto}.zbc-group[data-v-657d6f53]{position:absolute;box-sizing:border-box;border:1px dashed var(--zen-accent, #6366f1);pointer-events:none}.zbc-group .zbc-h[data-v-657d6f53]{pointer-events:auto;background:var(--zen-accent, #6366f1)}.zbc-draft[data-v-657d6f53],.zbc-marquee[data-v-657d6f53]{position:absolute;box-sizing:border-box;pointer-events:none}.zbc-draft[data-v-657d6f53]{border:1.5px dashed var(--zen-text, #e5e5ea);background:color-mix(in srgb,var(--zen-text, #fff) 8%,transparent)}.zbc-marquee[data-v-657d6f53]{border:1px solid var(--zen-accent, #6366f1);background:color-mix(in srgb,var(--zen-accent, #6366f1) 12%,transparent)}.zbc-ring[data-v-657d6f53]{position:absolute;box-sizing:border-box;border:1.5px solid #fff;border-radius:50%;box-shadow:0 0 0 1px #0000007f;pointer-events:none}.zbc-ring.erase[data-v-657d6f53]{border-style:dashed}.zbc-empty[data-v-657d6f53]{position:absolute;inset:0;display:grid;place-items:center;color:var(--zen-muted, #9aa0aa);font-size:12px;pointer-events:none}.zll[data-v-6dd767a3]{display:flex;flex-direction:column;gap:2px}.zll-row[data-v-6dd767a3]{position:relative;display:flex;align-items:center;gap:6px;min-height:30px;padding:2px 4px;border-radius:var(--zen-radius, 7px);border:1px solid transparent;color:var(--zen-text, #e5e5ea);cursor:pointer;transition:transform .15s ease,background .12s ease}.zll-row[data-v-6dd767a3]:hover{background:color-mix(in srgb,var(--zen-text, #fff) 5%,transparent)}.zll-row.sel[data-v-6dd767a3]{border-color:color-mix(in srgb,var(--zen-accent, #6366f1) 60%,transparent);background:color-mix(in srgb,var(--zen-accent, #6366f1) 14%,transparent)}.zll-row.hidden .zll-text[data-v-6dd767a3],.zll-row.hidden .zll-swatch[data-v-6dd767a3]{opacity:.45}.zll.settling .zll-row[data-v-6dd767a3]{transition:background .12s ease}.zll-row.dragging[data-v-6dd767a3]{z-index:1;transition:none;background:var(--zen-surface-2, #26262d);box-shadow:0 6px 18px #00000059}.zll-grip[data-v-6dd767a3]{display:grid;place-items:center;width:14px;color:var(--zen-muted, #9aa0aa);cursor:grab;touch-action:none}.zll-grip.pin[data-v-6dd767a3]{cursor:default;opacity:.6}.zll-swatch[data-v-6dd767a3]{flex:none;width:22px;height:22px;border-radius:5px;overflow:hidden;box-shadow:inset 0 0 0 1px #00000040}.zll-swatch img[data-v-6dd767a3]{width:100%;height:100%;object-fit:cover}.zll-text[data-v-6dd767a3]{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2}.zll-label[data-v-6dd767a3]{font-size:12px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.zll-sub[data-v-6dd767a3]{font-size:10px;color:var(--zen-muted, #9aa0aa);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.zll-btn[data-v-6dd767a3]{display:grid;place-items:center;width:22px;height:22px;padding:0;border:0;border-radius:5px;background:transparent;color:var(--zen-muted, #9aa0aa);cursor:pointer;opacity:.55}.zll-row:hover .zll-btn[data-v-6dd767a3],.zll-btn.on[data-v-6dd767a3]{opacity:1}.zll-btn[data-v-6dd767a3]:hover{background:color-mix(in srgb,var(--zen-text, #fff) 8%,transparent);color:var(--zen-text, #e5e5ea)}.lpk[data-v-9a639d76]{position:fixed;z-index:100400;pointer-events:none;display:flex;flex-direction:column;max-height:480px;overflow:hidden;background:var(--zen-chrome-bg, var(--zen-surface, #202026));color:var(--zen-text, #e5e5ea);border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:calc(var(--zen-radius-surface, var(--zen-radius, 7px)) + 2px);box-shadow:0 16px 48px #0000008c;font-family:var(--p-font-family, system-ui, sans-serif)}.lpk-media[data-v-9a639d76]{flex:1 1 auto;min-height:0;display:flex;justify-content:center;background:var(--zen-input, #1b1b20)}.lpk-media img[data-v-9a639d76],.lpk-media video[data-v-9a639d76]{display:block;max-width:100%;max-height:360px;object-fit:contain}.lpk-body[data-v-9a639d76]{flex:none;display:flex;flex-direction:column;gap:5px;padding:8px 10px 9px}.lpk-title[data-v-9a639d76]{font-size:12.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lpk-chips[data-v-9a639d76]{display:flex;flex-wrap:wrap;gap:4px}.lpk-chips[data-v-9a639d76]:empty{display:none}.lpk-chip[data-v-9a639d76]{font-size:10.5px;padding:1px 6px;border-radius:999px;background:color-mix(in srgb,var(--zen-accent, #6366f1) 18%,transparent);color:var(--zen-text, #e5e5ea)}.lpk-words[data-v-9a639d76]{font-size:11px;color:var(--zen-muted, #9aa0aa);display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.lpk-hint[data-v-9a639d76]{font-size:10px;color:var(--zen-muted, #9aa0aa);opacity:.8}.ld[data-v-4262c681]{height:100%;box-sizing:border-box;overflow:auto;padding:12px 14px 16px;display:flex;flex-direction:column;gap:14px;color:var(--zen-text, #e5e5ea);font-size:12px}.ld-head[data-v-4262c681]{display:flex;gap:12px;align-items:flex-start}.ld-cover[data-v-4262c681]{flex:none;width:104px;height:136px;padding:0;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-input, #1b1b20);overflow:hidden;cursor:zoom-in;display:flex;align-items:center;justify-content:center}.ld-cover[data-v-4262c681]:disabled{cursor:default}.ld-cover img[data-v-4262c681],.ld-cover video[data-v-4262c681]{width:100%;height:100%;object-fit:contain;display:block}.ld-cover>.mdi[data-v-4262c681]{font-size:32px;color:var(--zen-muted, #9aa0aa)}.ld-id[data-v-4262c681]{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}.ld-title[data-v-4262c681]{font-size:14px;font-weight:600;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.ld-file[data-v-4262c681]{font-size:10.5px;color:var(--zen-muted, #9aa0aa);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ld-chips[data-v-4262c681]{display:flex;flex-wrap:wrap;gap:4px}.ld-chip[data-v-4262c681]{display:inline-flex;align-items:center;gap:3px;font:inherit;font-size:11px;padding:2px 8px;border:1px solid var(--zen-border, #34343c);border-radius:999px;background:var(--zen-input, #1b1b20);color:var(--zen-text, #e5e5ea)}.ld-chip.accent[data-v-4262c681]{border-color:transparent;background:color-mix(in srgb,var(--zen-accent, #6366f1) 22%,transparent)}.ld-chip.word[data-v-4262c681]{cursor:pointer}.ld-chip.word[data-v-4262c681]:hover{border-color:var(--zen-accent, #6366f1)}.ld-actions[data-v-4262c681]{display:flex;align-items:center;gap:6px;margin-top:2px}.ld-link[data-v-4262c681]{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;color:var(--zen-accent, #6366f1);text-decoration:none}.ld-link[data-v-4262c681]:hover{text-decoration:underline}.ld-sec[data-v-4262c681]{display:flex;flex-direction:column;gap:7px}.ld-sec h4[data-v-4262c681]{margin:0;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--zen-muted, #9aa0aa)}.ld-count[data-v-4262c681]{font-weight:400}.ld-copy[data-v-4262c681],.ld-toggle[data-v-4262c681],.ld-more[data-v-4262c681]{border:none;background:none;padding:0 2px;font:inherit;cursor:pointer;color:var(--zen-muted, #9aa0aa);display:inline-flex;align-items:center;gap:3px;text-transform:none;letter-spacing:0}.ld-copy[data-v-4262c681]:hover,.ld-toggle[data-v-4262c681]:hover,.ld-more[data-v-4262c681]:hover,.ld-toggle.on[data-v-4262c681]{color:var(--zen-text, #e5e5ea)}.ld-toggle[data-v-4262c681]{margin-left:auto;font-size:11px}.ld-more[data-v-4262c681]{align-self:flex-start;font-size:11px;color:var(--zen-accent, #6366f1)}.ld-examples[data-v-4262c681]{container:ld-examples / inline-size}.ld-viewer[data-v-4262c681]{display:flex;flex-direction:column;gap:12px;outline:none}.ld-look[data-v-4262c681]{display:flex;flex-direction:column;gap:6px;min-width:0}@container ld-examples (min-width: 560px){.ld-viewer[data-v-4262c681]{display:grid;grid-template-columns:minmax(0,1fr) minmax(200px,38%);align-items:start}}.ld-stage[data-v-4262c681]{position:relative;display:flex;height:340px;overflow:hidden;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-media-bg, var(--zen-input, #1b1b20))}.ld-stage-media[data-v-4262c681]{flex:1;display:flex;align-items:center;justify-content:center;min-width:0;padding:0;border:0;background:none;cursor:zoom-in}.ld-stage-media img[data-v-4262c681],.ld-stage-media video[data-v-4262c681]{display:block;max-width:100%;max-height:100%;object-fit:contain}.ld-nav[data-v-4262c681]{position:absolute;top:50%;display:grid;place-items:center;width:30px;height:44px;padding:0;border:0;border-radius:var(--zen-radius, 7px);background:#00000073;color:#fff;font-size:22px;opacity:0;transform:translateY(-50%);cursor:pointer;transition:opacity var(--zen-dur-fast, .12s) ease}.ld-nav.prev[data-v-4262c681]{left:6px}.ld-nav.next[data-v-4262c681]{right:6px}.ld-stage:hover .ld-nav[data-v-4262c681],.ld-nav[data-v-4262c681]:focus-visible{opacity:1}.ld-nav[data-v-4262c681]:hover{background:#000000a6}.ld-counter[data-v-4262c681]{position:absolute;right:8px;bottom:8px;padding:2px 7px;border-radius:999px;background:#0000008c;color:#fff;font-size:10.5px;font-variant-numeric:tabular-nums;pointer-events:none}.ld-strip[data-v-4262c681]{display:flex;gap:4px;overflow-x:auto;overflow-y:hidden;padding-bottom:4px}.ld-thumb[data-v-4262c681]{position:relative;flex:none;height:64px;padding:0;overflow:hidden;border:1px solid var(--zen-border, #34343c);border-radius:calc(var(--zen-radius, 7px) - 2px);background:var(--zen-media-bg, var(--zen-input, #1b1b20));opacity:.7;cursor:pointer;transition:opacity var(--zen-dur-fast, .12s) ease}.ld-thumb[data-v-4262c681]:hover,.ld-thumb.sel[data-v-4262c681]{opacity:1}.ld-thumb.sel[data-v-4262c681]{border-color:var(--zen-accent, #6366f1);box-shadow:inset 0 0 0 1px var(--zen-accent, #6366f1)}.ld-thumb img[data-v-4262c681],.ld-thumb video[data-v-4262c681]{display:block;width:100%;height:100%;object-fit:cover}.ld-badge[data-v-4262c681]{position:absolute;right:3px;bottom:3px;font-size:14px;color:#fff;text-shadow:0 1px 3px rgb(0 0 0 / 70%)}.blur img[data-v-4262c681],.blur video[data-v-4262c681]{filter:blur(14px)}.ld-params[data-v-4262c681]{min-width:0;display:flex;flex-direction:column;gap:8px}.ld-k[data-v-4262c681]{display:flex;align-items:center;gap:4px;font-size:10.5px;font-weight:600;color:var(--zen-muted, #9aa0aa)}.ld-text[data-v-4262c681]{max-height:140px;overflow:auto;padding:6px 8px;border-radius:var(--zen-radius, 7px);background:var(--zen-input, #1b1b20);white-space:pre-wrap;word-break:break-word;line-height:1.45;user-select:text}.ld-kv[data-v-4262c681]{margin:0;display:grid;grid-template-columns:max-content minmax(0,1fr);gap:3px 10px;font-size:11.5px}.ld-kv dt[data-v-4262c681]{color:var(--zen-muted, #9aa0aa)}.ld-kv dd[data-v-4262c681]{margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;user-select:text}.ld-desc[data-v-4262c681]{white-space:pre-wrap;line-height:1.5;user-select:text;display:-webkit-box;-webkit-line-clamp:8;line-clamp:8;-webkit-box-orient:vertical;overflow:hidden}.ld-desc.open[data-v-4262c681]{display:block}.ld-muted[data-v-4262c681]{margin:0;color:var(--zen-muted, #9aa0aa);font-size:11.5px}.lt[data-v-40f2868d]{flex:none;box-sizing:border-box;width:40px;height:40px;object-fit:cover;border-radius:var(--zen-radius, 7px);background:var(--zen-input, #1b1b20);border:1px solid var(--zen-border, #34343c)}.lt.sm[data-v-40f2868d]{width:18px;height:18px;border-radius:var(--zen-radius, 7px)}.lt.ph[data-v-40f2868d]{display:inline-flex;align-items:center;justify-content:center;color:var(--zen-muted, #9aa0aa);font-size:20px}.lt.sm.ph[data-v-40f2868d]{font-size:11px}.lt.warn[data-v-40f2868d]{display:inline-flex;align-items:center;justify-content:center;color:var(--zen-danger, #dc2626);background:color-mix(in srgb,var(--zen-danger, #dc2626) 14%,transparent);border-color:color-mix(in srgb,var(--zen-danger, #dc2626) 45%,transparent);font-size:20px}.lt.sm.warn[data-v-40f2868d]{font-size:12px}.lp-sel[data-v-ba2b3a49]{display:flex;align-items:center;gap:7px;min-width:0}.lp-sel-name[data-v-ba2b3a49]{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lp-sel.missing .lp-sel-name[data-v-ba2b3a49]{color:var(--zen-danger, #dc2626)}.lp-opt[data-v-ba2b3a49]{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;line-height:1.25}.lp-opt-name[data-v-ba2b3a49]{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12.5px}.lp-opt-dir[data-v-ba2b3a49]{font-size:10px;color:var(--zen-muted, #9aa0aa);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lp-star[data-v-ba2b3a49]{flex:none;border:none;background:none;cursor:pointer;color:var(--zen-muted, #9aa0aa);font-size:15px;padding:2px;display:inline-flex}.lp-star.on[data-v-ba2b3a49],.lp-star[data-v-ba2b3a49]:hover{color:var(--zen-star, #f5b301)}.lp-browse[data-v-ba2b3a49]{border:none;background:none;cursor:pointer;color:var(--zen-muted, #9aa0aa);font-size:16px;padding:0 2px;display:inline-flex}.lp-browse[data-v-ba2b3a49]:hover{color:var(--zen-text, #e5e5ea)}.lp-crumbs[data-v-ba2b3a49]{display:flex;align-items:center;gap:2px;min-width:0;padding:4px 8px;overflow:hidden;white-space:nowrap}.lp-crumbs>.mdi[data-v-ba2b3a49]{flex:none;font-size:13px;color:var(--zen-muted, #9aa0aa)}.lp-up[data-v-ba2b3a49],.lp-crumb[data-v-ba2b3a49]{flex:none;border:none;background:none;cursor:pointer;font:inherit;font-size:11.5px;padding:2px 5px;border-radius:var(--zen-radius, 7px);color:var(--zen-muted, #9aa0aa)}.lp-crumb.on[data-v-ba2b3a49]{color:var(--zen-text, #e5e5ea);font-weight:600}.lp-up[data-v-ba2b3a49]:hover:not(:disabled),.lp-crumb[data-v-ba2b3a49]:hover{color:var(--zen-text, #e5e5ea);background:color-mix(in srgb,var(--zen-text, #e5e5ea) 6%,transparent)}.lp-up[data-v-ba2b3a49]:disabled{opacity:.35;cursor:default}.lp-folder[data-v-ba2b3a49]{flex:none;box-sizing:border-box;width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;font-size:22px;color:var(--zen-accent, #6366f1);border-radius:var(--zen-radius, 7px);background:color-mix(in srgb,var(--zen-accent, #6366f1) 10%,var(--zen-input, #1b1b20));border:1px solid var(--zen-border, #34343c)}.lp-chev[data-v-ba2b3a49]{flex:none;color:var(--zen-muted, #9aa0aa);font-size:16px}.lb[data-v-7cd4fbea]{display:grid;grid-template-columns:210px minmax(0,1fr) 360px;height:calc(100% + 28px);margin:-14px;font-size:12px}.lb-search[data-v-7cd4fbea]{display:flex;flex:1;max-width:340px}.lb-grow[data-v-7cd4fbea]{flex:1}.lb-soft[data-v-7cd4fbea]{color:var(--zen-muted, #9aa0aa)}.lb-folders[data-v-7cd4fbea]{display:flex;flex-direction:column;gap:1px;min-height:0;overflow-y:auto;padding:10px 8px;border-right:1px solid var(--zen-border, #34343c)}.lb-folder[data-v-7cd4fbea]{display:flex;align-items:center;gap:6px;width:100%;padding:5px 8px;border:0;border-radius:var(--zen-radius, 7px);background:none;color:var(--zen-muted, #9aa0aa);font:inherit;text-align:left;cursor:pointer}.lb-folder[data-v-7cd4fbea]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 6%,transparent);color:var(--zen-text, #e5e5ea)}.lb-folder.on[data-v-7cd4fbea]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 20%,transparent);color:var(--zen-text, #e5e5ea)}.lb-folder .mdi[data-v-7cd4fbea]{flex:none;font-size:15px}.lb-folder .mdi-star[data-v-7cd4fbea]{color:var(--zen-star, #f5b301)}.lb-fname[data-v-7cd4fbea]{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.lb-count[data-v-7cd4fbea]{flex:none;font-size:10.5px;font-variant-numeric:tabular-nums}.lb-sep[data-v-7cd4fbea]{margin:6px 4px;border-top:1px solid var(--zen-border, #34343c)}.lb-main[data-v-7cd4fbea]{display:flex;flex-direction:column;min-width:0;min-height:0}.lb-filters[data-v-7cd4fbea]{display:flex;flex:none;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--zen-border, #34343c)}.lb-scope[data-v-7cd4fbea]{display:inline-flex;align-items:center;gap:5px;font-weight:600}.lb-grid[data-v-7cd4fbea]{display:grid;flex:1;align-content:start;gap:10px;min-height:0;overflow-y:auto;padding:12px;outline:none}.lb-card[data-v-7cd4fbea]{display:flex;flex-direction:column;gap:3px;min-width:0;padding:4px;border:1px solid transparent;border-radius:calc(var(--zen-radius, 7px) + 2px);background:none;color:var(--zen-text, #e5e5ea);font:inherit;text-align:left;cursor:pointer}.lb-card[data-v-7cd4fbea]:focus{outline:none}.lb-card[data-v-7cd4fbea]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 5%,transparent)}.lb-card.focus .lb-img[data-v-7cd4fbea]{outline:2px solid var(--zen-accent, #6366f1);outline-offset:1px}.lb-img[data-v-7cd4fbea]{position:relative;display:grid;place-items:center;aspect-ratio:3 / 4;overflow:hidden;border-radius:var(--zen-radius, 7px);background:var(--zen-media-bg, var(--zen-input, #1b1b20))}.lb-img img[data-v-7cd4fbea],.lb-img video[data-v-7cd4fbea]{width:100%;height:100%;object-fit:cover}.lb-noimg[data-v-7cd4fbea]{color:var(--zen-muted, #9aa0aa);font-size:30px;opacity:.5}.lb-badge[data-v-7cd4fbea],.lb-star[data-v-7cd4fbea],.lb-inuse[data-v-7cd4fbea]{position:absolute;display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#0009;color:#fff;font-size:13px}.lb-badge[data-v-7cd4fbea]{bottom:5px;left:5px}.lb-star[data-v-7cd4fbea]{top:5px;right:5px;opacity:0;transition:opacity var(--zen-dur-fast, .12s)}.lb-card:hover .lb-star[data-v-7cd4fbea],.lb-star.on[data-v-7cd4fbea]{opacity:1}.lb-star.on[data-v-7cd4fbea]{color:var(--zen-star, #f5b301)}.lb-inuse[data-v-7cd4fbea]{top:5px;left:5px;background:var(--zen-accent, #6366f1);color:var(--zen-accent-text, #fff)}.lb-name[data-v-7cd4fbea],.lb-dir[data-v-7cd4fbea]{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.lb-name[data-v-7cd4fbea]{font-size:11.5px}.lb-dir[data-v-7cd4fbea]{margin-top:-2px;color:var(--zen-muted, #9aa0aa);font-size:10.5px}.lb-empty[data-v-7cd4fbea]{display:flex;flex-direction:column;grid-column:1 / -1;align-items:center;gap:6px;padding:48px 12px;color:var(--zen-muted, #9aa0aa);text-align:center}.lb-empty .mdi[data-v-7cd4fbea]{font-size:28px}.lb-list[data-v-7cd4fbea]{display:flex;flex:1;flex-direction:column;min-height:0}.lb-lhead[data-v-7cd4fbea],.lb-row[data-v-7cd4fbea]{display:grid;grid-template-columns:34px minmax(0,2.4fr) minmax(0,1.2fr) 72px 104px 28px;align-items:center;gap:10px;padding:0 12px}.lb-lhead[data-v-7cd4fbea]{flex:none;height:28px;border-bottom:1px solid var(--zen-border, #34343c);color:var(--zen-muted, #9aa0aa);font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase}.lb-lrows[data-v-7cd4fbea]{display:grid;flex:1;align-content:start;min-height:0;overflow-y:auto;outline:none}.lb-row[data-v-7cd4fbea]{height:34px;border-bottom:1px solid color-mix(in srgb,var(--zen-border, #34343c) 50%,transparent);cursor:pointer}.lb-row[data-v-7cd4fbea]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 5%,transparent)}.lb-row.focus[data-v-7cd4fbea]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 18%,transparent)}.lb-rthumb[data-v-7cd4fbea]{display:grid;place-items:center;width:26px;height:26px;overflow:hidden;border-radius:5px;background:var(--zen-media-bg, var(--zen-input, #1b1b20));color:var(--zen-muted, #9aa0aa)}.lb-rthumb img[data-v-7cd4fbea]{width:100%;height:100%;object-fit:cover}.lb-rname[data-v-7cd4fbea],.lb-rdir[data-v-7cd4fbea]{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.lb-rname .mdi[data-v-7cd4fbea]{margin-left:4px;color:var(--zen-muted, #9aa0aa)}.lb-rname .lb-rcur[data-v-7cd4fbea]{color:var(--zen-accent, #6366f1)}.lb-rdir[data-v-7cd4fbea]{color:var(--zen-muted, #9aa0aa)}.num[data-v-7cd4fbea]{color:var(--zen-muted, #9aa0aa);font-variant-numeric:tabular-nums;text-align:right}.lb-rstar[data-v-7cd4fbea]{display:grid;place-items:center;color:var(--zen-muted, #9aa0aa);opacity:0}.lb-row:hover .lb-rstar[data-v-7cd4fbea],.lb-rstar.on[data-v-7cd4fbea]{opacity:1}.lb-rstar.on[data-v-7cd4fbea]{color:var(--zen-star, #f5b301)}.lb-detail[data-v-7cd4fbea]{min-height:0;overflow-y:auto;padding:12px;border-left:1px solid var(--zen-border, #34343c)}.lb-hint[data-v-7cd4fbea]{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:40%;color:var(--zen-muted, #9aa0aa);line-height:1.5;text-align:center}.lb-hint .mdi[data-v-7cd4fbea]{font-size:26px}.lb-foot[data-v-7cd4fbea]{display:flex;align-items:center;gap:8px}.lb-foot-name[data-v-7cd4fbea]{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.jt[data-v-e4670a8d]{font-family:var(--zen-mono, ui-monospace, \"SF Mono\", Menlo, Consolas, monospace);font-size:11.5px;line-height:1.6}.jt-row[data-v-e4670a8d]{display:flex;align-items:center;gap:3px;cursor:pointer;white-space:nowrap;border-radius:var(--zen-radius, 7px)}.jt-row[data-v-e4670a8d]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 7%,transparent)}.jt-row.leaf[data-v-e4670a8d]{cursor:default}.jt-caret[data-v-e4670a8d]{font-size:14px;color:var(--zen-muted, #9aa0aa);margin-left:-2px}.jt-key[data-v-e4670a8d]{color:var(--zen-accent, #6366f1)}.jt-key[data-v-e4670a8d]:after{content:\":\";color:var(--zen-muted, #9aa0aa);margin:0 2px 0 1px}.jt-brace[data-v-e4670a8d]{color:var(--zen-muted, #9aa0aa)}.jt-close[data-v-e4670a8d]{cursor:default}.jt-collapsed[data-v-e4670a8d]{color:var(--zen-muted, #9aa0aa);font-style:italic;margin:0 4px;opacity:.8}.jt-children[data-v-e4670a8d]{border-left:1px solid var(--zen-border, #34343c)}.jt-val[data-v-e4670a8d]{white-space:pre-wrap;word-break:break-word}.t-string[data-v-e4670a8d]{color:color-mix(in srgb,#4caf50 70%,var(--zen-text, #e5e5ea))}.t-number[data-v-e4670a8d]{color:color-mix(in srgb,#d4a017 70%,var(--zen-text, #e5e5ea))}.t-boolean[data-v-e4670a8d]{color:color-mix(in srgb,#b16ce8 70%,var(--zen-text, #e5e5ea))}.t-null[data-v-e4670a8d]{color:#9aa0aa;font-style:italic}\n/* ZenKit ↔ ComfyUI theme bridge — the runtime-free way to theme @nynxz/zenkit-ui.\n *\n * @nynxz/zenkit-ui components read --zen-* tokens. WITH the ZenKit runtime installed,\n * @nynxz/zenkit-core sets those from the active theme pack (the derivation in @nynxz/zenkit-theme's\n * zen.ts → zenAliases). Consumers that use @nynxz/zenkit-ui WITHOUT the runtime import this file\n * instead: it maps the same --zen-* set straight onto ComfyUI's native theme variables, so\n * the components follow the user's selected ComfyUI theme with zero JS.\n *\n * Declared at :root so teleported overlays (ZenPopover / ZenCombo menus, ZenModal) — which\n * mount outside any component subtree — pick the tokens up too. The right-hand fallbacks keep\n * every token sane if ComfyUI renames or drops a variable. Kept in lockstep with zen.ts:\n * the same core and status tokens, sourced from the host instead of a pack. (The other\n * --zen-* tokens the components use — glass, scrollbar, switch-radius — resolve through\n * inline fallbacks that chain back to these.)\n *\n * Import once, near your extension entry:  import '@nynxz/zenkit-ui/comfy-bridge.css'\n */\n:root {\n  --zen-bg: var(--comfy-menu-bg, #1a1a1f);\n  --zen-surface: var(--comfy-menu-secondary-bg, #202026);\n  --zen-surface-2: var(--comfy-menu-secondary-bg, #26262d);\n  --zen-input: var(--comfy-input-bg, #1b1b20);\n  --zen-border: var(--border-color, #34343c);\n  --zen-text: var(--input-text, var(--fg-color, #e5e5ea));\n  --zen-muted: var(--descrip-text, #9aa0aa);\n  --zen-accent: var(--p-primary-color, #6366f1);\n  --zen-accent-text: var(--p-button-text-primary-color, #fff);\n  --zen-radius: var(--border-radius-base, 7px);\n  --zen-danger: var(--color-destructive-background, var(--destructive, #dc2626));\n  --zen-danger-text: #fff;\n  --zen-warn: var(--color-warning-background, var(--warning, #d97706));\n  --zen-warn-text: var(--color-warning-on-background, var(--color-warning-foreground, #15151a));\n  --zen-ok: var(--color-success-background, var(--color-success, #16a34a));\n  --zen-ok-text: #fff;\n  --zen-info: var(--zen-accent);\n  --zen-info-text: var(--zen-accent-text);\n  --zen-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;\n  /* keyboard-focus outline colour shared by every control's :focus-visible */\n  --zen-focus-ring: color-mix(in srgb, var(--zen-accent) 60%, transparent);\n}\n\n.gs-head[data-v-e2a0d204] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  /* lines the master switch up with the cards' switches below it */\n  padding-right: 7px;\n}\n.gs-colors[data-v-e2a0d204] {\n  flex: 1;\n  min-width: 0;\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  gap: 4px;\n}\n.gs-all[data-v-e2a0d204] {\n  height: 18px;\n  padding: 0 7px;\n  border: 1px solid var(--zen-control-border, var(--zen-border, #34343c));\n  border-radius: 999px;\n  background: var(--zen-control-bg, transparent);\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 10px;\n  cursor: pointer;\n}\n.gs-all.on[data-v-e2a0d204] {\n  color: var(--zen-text, #e5e5ea);\n  border-color: var(--zen-accent, #6366f1);\n}\n/* A colour chip: the group colour itself, ringed in the accent while selected. */\n.gs-color[data-v-e2a0d204] {\n  width: 16px;\n  height: 16px;\n  padding: 0;\n  border: 2px solid transparent;\n  border-radius: 50%;\n  background: var(--gs-c) padding-box;\n  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 12%);\n  cursor: pointer;\n  opacity: 0.55;\n}\n.gs-color.on[data-v-e2a0d204] {\n  opacity: 1;\n  border-color: var(--zen-accent, #6366f1);\n}\n.gs-color.none[data-v-e2a0d204] {\n  background: transparent;\n  box-shadow: inset 0 0 0 1px var(--zen-muted, #9aa0aa);\n}\n.gs-rows[data-v-e2a0d204] {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n}\n\n/* One card per group: its own outline, a lift on hover, and the group's colour as a stripe down\n   the left edge so the card still reads as that group without a separate swatch. */\n.gs-card[data-v-e2a0d204] {\n  display: flex;\n  flex-direction: column;\n  border: 1px solid var(--zen-surface-border, var(--zen-border, #34343c));\n  border-left: 3px solid var(--gs-c, var(--zen-surface-border, var(--zen-border, #34343c)));\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);\n  transition:\n    background 0.12s ease,\n    border-color 0.12s ease;\n}\n.gs-card[data-v-e2a0d204]:hover {\n  background: color-mix(in srgb, var(--zen-text, #fff) 5%, transparent);\n}\n.gs-card-head[data-v-e2a0d204] {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  min-height: 32px;\n  padding: 3px 6px 3px 8px;\n}\n.gs-card.off .gs-name[data-v-e2a0d204],\n.gs-node.off .gs-name[data-v-e2a0d204] {\n  opacity: 0.5;\n}\n.gs-card.empty .gs-name[data-v-e2a0d204] {\n  opacity: 0.45;\n}\n\n/* The name is a button so the whole label toggles — a far bigger target than the switch. */\n.gs-name[data-v-e2a0d204] {\n  flex: 1;\n  min-width: 0;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  padding: 2px 0;\n  border: none;\n  background: none;\n  color: var(--zen-text, #e5e5ea);\n  font: inherit;\n  text-align: left;\n  cursor: pointer;\n}\n.gs-name[data-v-e2a0d204]:disabled {\n  cursor: default;\n}\n.gs-title[data-v-e2a0d204] {\n  min-width: 0;\n  font-size: 12px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.gs-count[data-v-e2a0d204] {\n  flex: none;\n  padding: 0 5px;\n  border-radius: 999px;\n  background: color-mix(in srgb, var(--zen-text, #fff) 7%, transparent);\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  line-height: 16px;\n  font-variant-numeric: tabular-nums;\n}\n/* Some nodes running, some not: the badge carries it, in the accent. */\n.gs-count.mixed[data-v-e2a0d204] {\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 20%, transparent);\n  color: var(--zen-text, #e5e5ea);\n}\n.gs-nodes[data-v-e2a0d204] {\n  display: flex;\n  flex-direction: column;\n  gap: 2px;\n  padding: 4px 6px 6px 8px;\n  border-top: 1px solid var(--zen-surface-border, var(--zen-border, #34343c));\n}\n.gs-node[data-v-e2a0d204] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  min-height: 24px;\n}\n.gs-node .gs-title[data-v-e2a0d204] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.gs-node-switch[data-v-e2a0d204] {\n  zoom: 0.75;\n}\n.gs-empty[data-v-e2a0d204] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 5px;\n  padding: 14px 8px;\n  text-align: center;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);\n}\n.gs-empty > .mdi[data-v-e2a0d204] {\n  font-size: 24px;\n  opacity: 0.8;\n}\n.gs-empty > span[data-v-e2a0d204] {\n  font-size: 11px;\n}\n/*$vite$:1*/";document.head.appendChild(s);})();import { ComfyApp, app } from "../../../scripts/app.js";
+(function(){var s=document.createElement('style');s.setAttribute('data-extension',"comfyui-nynxznodes");s.textContent="\n.bp-row[data-v-32c9ebc0] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n  min-height: 24px;\n}\n.bp-lbl[data-v-32c9ebc0] {\n  flex: none;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n  font-weight: 600;\n}\n.bp-pair[data-v-32c9ebc0] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  justify-content: flex-end;\n}\n.bp-hint[data-v-32c9ebc0] {\n  display: flex;\n  align-items: flex-start;\n  gap: 5px;\n  margin: 0;\n  padding: 5px 7px;\n  border-radius: var(--zen-radius, 6px);\n  background: var(--zen-input, #1b1b20);\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  line-height: 1.35;\n}\n.bp-hint .mdi[data-v-32c9ebc0] {\n  flex: none;\n  font-size: 13px;\n  color: var(--zen-accent, #6366f1);\n}\n.bp-patterns[data-v-32c9ebc0] {\n  display: grid;\n  grid-template-columns: repeat(6, 1fr);\n  gap: 5px;\n  padding: 2px 0;\n}\n.bp-sw[data-v-32c9ebc0] {\n  position: relative;\n  aspect-ratio: 1;\n  padding: 0;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 6px);\n  cursor: pointer;\n  overflow: hidden;\n}\n.bp-sw[data-v-32c9ebc0]:hover {\n  border-color: var(--zen-accent, #6366f1);\n}\n.bp-sw.on[data-v-32c9ebc0] {\n  border-color: var(--zen-accent, #6366f1);\n  box-shadow: 0 0 0 1px var(--zen-accent, #6366f1) inset;\n}\n.bp-sw-fill[data-v-32c9ebc0] {\n  position: absolute;\n  inset: 0;\n  background-repeat: repeat;\n}\n\n.wa[data-v-0d8685b2] {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  padding: 3px;\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  transition:\n    border-color 0.12s ease,\n    background 0.12s ease;\n}\n.wa.active[data-v-0d8685b2] {\n  border-color: var(--zen-accent, #6366f1);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 10%, transparent);\n}\n/* the slotted icon buttons keep their own size; only the primary button flexes */\n.wa[data-v-0d8685b2] > :not(.wa-main) {\n  flex: none;\n}\n.wa-main[data-v-0d8685b2] {\n  flex: 1;\n  min-width: 0;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  height: 26px; /* matches ZenIconButton, so the row is one height whatever it contains */\n  border: none;\n  border-radius: var(--zen-radius, 5px);\n  background: transparent;\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 11px;\n  font-weight: 600;\n  /* A label that can change (a drag hint, a growing count) must never WRAP: in a widget whose\n     drop zones were measured once, a second line moves everything below it. */\n  white-space: nowrap;\n  overflow: hidden;\n  cursor: pointer;\n  transition:\n    color 0.12s ease,\n    background 0.12s ease;\n}\n.wa-main[data-v-0d8685b2]:hover {\n  color: var(--zen-text, #e5e5ea);\n  background: color-mix(in srgb, var(--zen-text, #fff) 8%, transparent);\n}\n.wa-main .mdi[data-v-0d8685b2] {\n  font-size: 15px;\n}\n.wa-label[data-v-0d8685b2] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.wa-count[data-v-0d8685b2] {\n  padding: 0 5px;\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 22%, transparent);\n  color: var(--zen-text, #e5e5ea);\n  font-size: 10px;\n  font-weight: 700;\n}\n\n.cl-rows[data-v-299b8ff3] {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n}\n.cl-row[data-v-299b8ff3] {\n  position: relative;\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  transition: transform 0.15s ease;\n}\n.cl-rows.settling .cl-row[data-v-299b8ff3] {\n  transition: none;\n}\n.cl-row.dragging[data-v-299b8ff3] {\n  z-index: 5;\n  transition: none;\n  box-shadow: 0 6px 16px rgb(0 0 0 / 45%);\n  border-radius: var(--zen-radius, 6px);\n  cursor: grabbing;\n}\n.cl-grip[data-v-299b8ff3] {\n  flex: none;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: 12px;\n  cursor: grab;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 14px;\n  line-height: 1;\n  touch-action: none;\n  -webkit-user-select: none;\n  user-select: none;\n}\n.cl-grip[data-v-299b8ff3] > * {\n  pointer-events: none;\n}\n.cl-grip[data-v-299b8ff3]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.cl-text[data-v-299b8ff3] {\n  flex: 1;\n  min-width: 0;\n  height: 24px;\n  padding: 0 7px;\n  font: inherit;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n  background: var(--zen-surface, #202026);\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 6px);\n  outline: none;\n}\n.cl-text[data-v-299b8ff3]:focus {\n  border-color: var(--zen-accent, #6366f1);\n}\n.cl-row.on .cl-text[data-v-299b8ff3] {\n  border-color: color-mix(in srgb, var(--zen-accent, #6366f1) 55%, transparent);\n}\n.cl-pop-head[data-v-299b8ff3] {\n  padding: 4px 8px 6px;\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.06em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.cf[data-v-22d311f2] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  height: 28px;\n  padding: 0 2px;\n  font-size: 12px;\n}\n.cf-label[data-v-22d311f2] {\n  flex: 0 1 40%;\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  color: var(--zen-muted, #9aa0aa);\n}\n.cf-field[data-v-22d311f2] {\n  flex: 1;\n  min-width: 0;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  height: 26px;\n  padding: 0 6px;\n  box-sizing: border-box;\n  border: 1px solid var(--zen-control-border, var(--zen-border, #34343c));\n  border-radius: var(--zen-radius, 6px);\n  background: var(--zen-field-bg, var(--zen-input, #15151a));\n}\n.cf-field[data-v-22d311f2]:focus-within {\n  border-color: var(--zen-accent, #6366f1);\n}\n.cf-text[data-v-22d311f2] {\n  flex: 1;\n  min-width: 0;\n  padding: 0;\n  border: none;\n  outline: none;\n  background: none;\n  color: var(--zen-text, #e5e5ea);\n  font: inherit;\n  font-family: var(--zen-mono, ui-monospace, monospace);\n  font-size: 11px;\n}\n.cf-text.invalid[data-v-22d311f2] {\n  color: var(--zen-danger, #f87171);\n}\n.cf-linked[data-v-22d311f2] {\n  font-size: 11px;\n  font-style: italic;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.fbf[data-v-163982f0] {\n  position: absolute;\n  inset: 0;\n}\n.fbf-pic[data-v-163982f0] {\n  position: absolute;\n  inset: 0;\n  -webkit-mask-size: 100% 100%;\n  mask-size: 100% 100%;\n}\n.fbf-img[data-v-163982f0] {\n  position: absolute;\n  inset: 0;\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n  opacity: 0.8;\n}\n.fbf-more[data-v-163982f0] {\n  position: absolute;\n  right: 4px;\n  top: 4px;\n  display: flex;\n  gap: 3px;\n}\n.fbf-more img[data-v-163982f0],\n.fbf-plus[data-v-163982f0] {\n  width: 22px;\n  height: 22px;\n  border-radius: 4px;\n  object-fit: cover;\n  box-shadow: 0 0 0 1px rgb(0 0 0 / 50%);\n}\n.fbf-more.big img[data-v-163982f0],\n.fbf-more.big .fbf-plus[data-v-163982f0] {\n  width: 34px;\n  height: 34px;\n}\n.fbf-plus[data-v-163982f0] {\n  display: grid;\n  place-items: center;\n  background: rgb(0 0 0 / 65%);\n  color: #fff;\n  font-size: 10px;\n}\n.fbf-lora[data-v-163982f0] {\n  position: absolute;\n  left: 4px;\n  top: 20px;\n  display: inline-flex;\n  align-items: center;\n  gap: 2px;\n  padding: 0 5px;\n  border-radius: 999px;\n  background: rgb(0 0 0 / 60%);\n  color: #fff;\n  font-size: 10px;\n  line-height: 16px;\n}\n.fbf-text[data-v-163982f0] {\n  position: absolute;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  margin: 0;\n  padding: 14px 6px 4px;\n  background: linear-gradient(to top, rgb(0 0 0 / 75%), transparent);\n  color: #fff;\n  font-size: 11px;\n  line-height: 1.3;\n  text-shadow: 0 1px 2px rgb(0 0 0 / 60%);\n  display: -webkit-box;\n  -webkit-line-clamp: 2;\n  -webkit-box-orient: vertical;\n  overflow: hidden;\n}\n.fbf.bare .fbf-text[data-v-163982f0] {\n  background: none;\n  color: color-mix(in srgb, #fff 85%, transparent);\n}\n@container (max-height: 70px) {\n.fbf-text[data-v-163982f0],\n  .fbf-lora[data-v-163982f0] {\n    display: none;\n}\n}\n@container (max-width: 90px) {\n.fbf-more[data-v-163982f0] {\n    display: none;\n}\n}\n@container (min-height: 160px) {\n.fbf-text[data-v-163982f0] {\n    -webkit-line-clamp: 3;\n}\n}\n\n.fl[data-v-71f8bdb9] {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n  align-items: stretch;\n}\n.fl-row[data-v-71f8bdb9] {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n}\n.fl-row.off .fl-pick[data-v-71f8bdb9] {\n  opacity: 0.5;\n}\n.fl-pick[data-v-71f8bdb9] {\n  flex: 1;\n  min-width: 0;\n}\n.fl-str[data-v-71f8bdb9] {\n  width: 64px;\n  flex: none;\n}\n\n.fp[data-v-744c36c6] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n}\n.fp-pill[data-v-744c36c6] {\n  height: 24px;\n  padding: 0 12px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: 999px;\n  background: transparent;\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 11px;\n  cursor: pointer;\n  transition:\n    background 0.12s ease,\n    color 0.12s ease,\n    border-color 0.12s ease;\n}\n.fp-pill[data-v-744c36c6]:hover:not(:disabled) {\n  color: var(--zen-text, #e5e5ea);\n  border-color: color-mix(in srgb, var(--zen-text, #fff) 25%, transparent);\n}\n.fp-pill.on[data-v-744c36c6] {\n  border-color: color-mix(in srgb, var(--zen-accent, #6366f1) 70%, transparent);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 18%, transparent);\n  color: var(--zen-text, #e5e5ea);\n}\n.fp-pill[data-v-744c36c6]:disabled {\n  opacity: 0.45;\n  cursor: default;\n}\n\n.fr[data-v-f6094846] {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, 64px);\n  gap: 8px;\n  padding: 2px;\n  border-radius: var(--zen-radius, 7px);\n  outline: 1px dashed transparent;\n  transition: outline-color 0.12s ease;\n}\n.fr.dropping[data-v-f6094846] {\n  outline-color: var(--zen-accent, #6366f1);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 8%, transparent);\n}\n.fr-tile[data-v-f6094846] {\n  display: flex;\n  flex-direction: column;\n  gap: 3px;\n  width: 64px;\n}\n.fr-tile.off .fr-thumb[data-v-f6094846] {\n  opacity: 0.4;\n}\n.fr-thumb[data-v-f6094846] {\n  position: relative;\n  width: 64px;\n  height: 64px;\n  border-radius: 6px;\n  overflow: hidden;\n  background: #000;\n  box-shadow: inset 0 0 0 1px var(--zen-border, #34343c);\n}\n.fr-thumb img[data-v-f6094846] {\n  width: 100%;\n  height: 100%;\n  display: block;\n}\n.fr-acts[data-v-f6094846] {\n  position: absolute;\n  inset: auto 2px 2px 2px;\n  display: flex;\n  justify-content: flex-end;\n  gap: 2px;\n  opacity: 0;\n  transition: opacity 0.12s ease;\n}\n.fr-thumb:hover .fr-acts[data-v-f6094846] {\n  opacity: 1;\n}\n.fr-act[data-v-f6094846] {\n  display: grid;\n  place-items: center;\n  width: 18px;\n  height: 18px;\n  padding: 0;\n  border: 0;\n  border-radius: 4px;\n  background: rgb(0 0 0 / 70%);\n  color: #fff;\n  cursor: pointer;\n  font-size: 11px;\n}\n.fr-act.danger[data-v-f6094846]:hover {\n  background: var(--zen-danger, #dc2626);\n}\n.fr-str[data-v-f6094846] {\n  width: 64px;\n}\n.fr-empty[data-v-f6094846] {\n  grid-column: 1 / -1;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  height: 30px;\n  padding: 0;\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: 6px;\n  background: transparent;\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 11px;\n  cursor: pointer;\n  transition:\n    border-color 0.12s ease,\n    color 0.12s ease;\n}\n.fr-empty[data-v-f6094846]:hover {\n  border-color: var(--zen-accent, #6366f1);\n  color: var(--zen-text, #e5e5ea);\n}\n.fr-empty .mdi[data-v-f6094846] {\n  font-size: 15px;\n}\n\n.fsec[data-v-3701245b] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  padding-top: 10px;\n  border-top: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 60%, transparent);\n}\n.fsec[data-v-3701245b]:first-child {\n  padding-top: 0;\n  border-top: 0;\n}\n.fsec-head[data-v-3701245b] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  min-height: 22px;\n}\n.fsec-label[data-v-3701245b] {\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fsec-note[data-v-3701245b] {\n  overflow: hidden;\n  min-width: 0;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  font-size: 10px;\n  color: color-mix(in srgb, var(--zen-muted, #9aa0aa) 75%, transparent);\n}\n.fsec-acts[data-v-3701245b] {\n  display: flex;\n  gap: 2px;\n  margin-left: auto;\n}\n\n.fcf[data-v-73b750b4] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n}\n.fcf[data-v-73b750b4] > * {\n  flex: none;\n}\n.fcf-row[data-v-73b750b4] {\n  display: grid;\n  grid-template-columns: 52px minmax(0, 1fr) 92px;\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fcf-read[data-v-73b750b4] {\n  display: grid;\n  grid-template-columns: 52px minmax(0, 1fr);\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fcf-pairs[data-v-73b750b4] {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));\n  gap: 6px 10px;\n}\n.fcf-pair[data-v-73b750b4] {\n  display: grid;\n  grid-template-columns: 52px minmax(0, 1fr);\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.lt[data-v-863b189a] {\n  display: block;\n  width: 100%;\n  height: 100%;\n}\n.lt-canvas[data-v-863b189a] {\n  fill: var(--zen-surface-2, #26262d);\n  stroke: var(--zen-border, #34343c);\n}\n.lt-label[data-v-863b189a] {\n  font-size: 10px;\n  fill: var(--zen-text, #e5e5ea);\n  paint-order: stroke;\n  stroke: rgb(0 0 0 / 0.6);\n  stroke-width: 2px;\n}\n\n.lb[data-v-38d9a54a] {\n  display: grid;\n  grid-template-columns: 180px minmax(0, 1fr) 280px;\n  gap: 12px;\n  height: 100%;\n  min-height: 0;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n}\n.lb-search[data-v-38d9a54a] {\n  width: 260px;\n}\n.lb-save[data-v-38d9a54a] {\n  display: flex;\n  gap: 6px;\n  width: 340px;\n}\n.lb-save[data-v-38d9a54a] > :first-child {\n  flex: 1;\n}\n.lb-grow[data-v-38d9a54a] {\n  flex: 1;\n}\n.lb-modes[data-v-38d9a54a] {\n  display: flex;\n  flex-direction: column;\n  gap: 2px;\n}\n.lb-mode[data-v-38d9a54a] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  padding: 7px 9px;\n  border: 0;\n  border-radius: var(--zen-radius, 7px);\n  background: none;\n  color: inherit;\n  font: inherit;\n  text-align: left;\n  cursor: pointer;\n}\n.lb-mode[data-v-38d9a54a]:hover {\n  background: color-mix(in srgb, var(--zen-text, #e5e5ea) 8%, transparent);\n}\n.lb-mode.on[data-v-38d9a54a] {\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 22%, transparent);\n}\n.lb-mode i[data-v-38d9a54a] {\n  font-size: 15px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lb-mname[data-v-38d9a54a] {\n  flex: 1;\n}\n.lb-count[data-v-38d9a54a] {\n  font-size: 10px;\n  color: var(--zen-muted, #9aa0aa);\n  font-variant-numeric: tabular-nums;\n}\n.lb-main[data-v-38d9a54a] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  min-height: 0;\n}\n.lb-gridwrap[data-v-38d9a54a] {\n  flex: 1;\n  min-height: 0;\n}\n.lb-grid[data-v-38d9a54a] {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));\n  gap: 10px;\n  padding: 2px;\n}\n.lb-card[data-v-38d9a54a] {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n  padding: 6px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-surface, #1e1e24);\n  color: inherit;\n  font: inherit;\n  text-align: left;\n  cursor: pointer;\n}\n.lb-card[data-v-38d9a54a]:hover {\n  border-color: color-mix(in srgb, var(--zen-accent, #6366f1) 50%, var(--zen-border, #34343c));\n}\n.lb-card.on[data-v-38d9a54a] {\n  border-color: var(--zen-accent, #6366f1);\n  box-shadow: 0 0 0 1px var(--zen-accent, #6366f1);\n}\n.lb-thumb[data-v-38d9a54a] {\n  display: block;\n  height: 120px;\n}\n.lb-cname[data-v-38d9a54a] {\n  font-weight: 600;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.lb-cmeta[data-v-38d9a54a] {\n  font-size: 10.5px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lb-detail[data-v-38d9a54a] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  min-height: 0;\n  overflow: auto;\n  padding-left: 12px;\n  border-left: 1px solid var(--zen-border, #34343c);\n}\n.lb-big[data-v-38d9a54a] {\n  height: 200px;\n  flex: none;\n}\n.lb-row[data-v-38d9a54a] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.lb-facts[data-v-38d9a54a] {\n  display: grid;\n  grid-template-columns: auto 1fr;\n  gap: 2px 10px;\n  margin: 0;\n}\n.lb-facts dt[data-v-38d9a54a] {\n  color: var(--zen-muted, #9aa0aa);\n}\n.lb-facts dd[data-v-38d9a54a] {\n  margin: 0;\n}\n.lb-prompt[data-v-38d9a54a] {\n  margin: 0;\n  padding: 6px 8px;\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-surface-2, #26262d);\n  font-size: 11px;\n  line-height: 1.45;\n  max-height: 110px;\n  overflow: auto;\n  white-space: pre-wrap;\n}\n.lb-names[data-v-38d9a54a] {\n  margin: 0;\n  padding: 0;\n  list-style: none;\n  display: flex;\n  flex-direction: column;\n  gap: 2px;\n}\n.lb-dot[data-v-38d9a54a] {\n  display: inline-block;\n  width: 8px;\n  height: 8px;\n  margin-right: 6px;\n  border-radius: 2px;\n}\n.lb-note[data-v-38d9a54a] {\n  margin: 0;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lb-empty[data-v-38d9a54a] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  height: 100%;\n  min-height: 160px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lb-empty i[data-v-38d9a54a] {\n  font-size: 28px;\n}\n\n/* rail | canvas | side, with the status bar over the canvas so all three end on one line. Every\n   track is a fixed size or a share of the node, never its content, so selecting or typing can't\n   move anything. */\n.le[data-v-6959136d] {\n  display: grid;\n  grid-template-rows: minmax(0, 1fr) auto;\n  gap: 6px;\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n  color: var(--zen-text, #e5e5ea);\n  font-size: 12px;\n}\n/* In a ZenKit panel the window draws its own frame; inset so the rail and the panes don't sit on\n   it and double its border. On the node, the node body already pads. */\n.le.in-panel[data-v-6959136d] {\n  box-sizing: border-box;\n  padding: 8px;\n}\n.le-main[data-v-6959136d] {\n  min-width: 0;\n  min-height: 0;\n}\n.le-canvascol[data-v-6959136d] {\n  display: grid;\n  grid-template-rows: 28px minmax(0, 1fr);\n  gap: 6px;\n  height: 100%;\n  min-width: 0;\n  min-height: 0;\n}\n.le-toolbar[data-v-6959136d],\n.le-foot[data-v-6959136d] {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  min-width: 0;\n}\n.le-foot[data-v-6959136d] {\n  padding: 4px 6px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 2%, transparent);\n}\n.le-sep[data-v-6959136d] {\n  width: 1px;\n  height: 16px;\n  margin: 0 4px;\n  background: var(--zen-border, #34343c);\n}\n.le-opacity[data-v-6959136d] {\n  display: grid;\n  grid-template-columns: auto 1fr 34px;\n  align-items: center;\n  gap: 8px;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.le-menu[data-v-6959136d] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  padding: 8px;\n}\n.le-menu-title[data-v-6959136d] {\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n}\n.le-menu .zen-btn[data-v-6959136d] {\n  justify-content: flex-start;\n}\n.le-json[data-v-6959136d] {\n  color: var(--zen-text, #e5e5ea);\n  font-size: 12px;\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  width: 300px;\n  padding: 10px;\n}\n.le-row[data-v-6959136d] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.le-grow[data-v-6959136d] {\n  flex: 1;\n  min-width: 0;\n}\n.le-stage.dropping[data-v-6959136d] {\n  outline: 2px dashed var(--zen-accent, #6366f1);\n  outline-offset: -2px;\n  border-radius: var(--zen-radius, 7px);\n}\n.le-stage[data-v-6959136d] {\n  min-width: 0;\n  min-height: 0;\n}\n.le-hint-empty[data-v-6959136d] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 4px;\n}\n.le-hint-empty i[data-v-6959136d] {\n  font-size: 28px;\n  opacity: 0.6;\n}\n.le-help[data-v-6959136d] {\n  display: grid;\n  grid-template-columns: auto auto;\n  gap: 4px 14px;\n  margin: 0;\n  padding: 10px 12px;\n  font-size: 11px;\n}\n.le-help dt[data-v-6959136d] {\n  color: var(--zen-text, #e5e5ea);\n  white-space: nowrap;\n}\n.le-help dd[data-v-6959136d] {\n  margin: 0;\n  color: var(--zen-muted, #9aa0aa);\n}\n.le-tip[data-v-6959136d] {\n  flex: 0 1 auto;\n  min-width: 0;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n  overflow: hidden;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n}\n.le-link[data-v-6959136d] {\n  padding: 0;\n  border: 0;\n  background: none;\n  color: var(--zen-accent, #6366f1);\n  font: inherit;\n  cursor: pointer;\n}\n.le-ctl[data-v-6959136d] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  width: 104px;\n  transition: opacity 0.12s ease;\n}\n.le-chip[data-v-6959136d] {\n  flex: none;\n  display: inline-flex;\n  align-items: center;\n  gap: 4px;\n  height: 22px;\n  padding: 0 8px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: 999px;\n  background: var(--zen-input, #1b1b20);\n  color: var(--zen-text, #e5e5ea);\n  font-size: 11px;\n  font-variant-numeric: tabular-nums;\n  cursor: pointer;\n}\n.le-side[data-v-6959136d] {\n  height: 100%;\n  min-height: 0;\n}\n.le-pane[data-v-6959136d] {\n  display: flex;\n  flex-direction: column;\n  height: 100%;\n  min-height: 0;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 2%, transparent);\n  overflow: hidden;\n}\n.le-tabs[data-v-6959136d] {\n  flex: none;\n  display: flex;\n  gap: 2px;\n  padding: 4px 4px 0;\n  border-bottom: 1px solid var(--zen-border, #34343c);\n}\n.le-tab[data-v-6959136d] {\n  display: inline-flex;\n  align-items: center;\n  gap: 5px;\n  height: 28px;\n  padding: 0 10px;\n  border: 0;\n  border-bottom: 2px solid transparent;\n  background: transparent;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  cursor: pointer;\n}\n.le-tab[data-v-6959136d]:hover:not(:disabled) {\n  color: var(--zen-text, #e5e5ea);\n}\n.le-tab.on[data-v-6959136d] {\n  border-bottom-color: var(--zen-accent, #3b82f6);\n  color: var(--zen-text, #e5e5ea);\n}\n.le-tab[data-v-6959136d]:disabled {\n  opacity: 0.4;\n  cursor: default;\n}\n.le-head[data-v-6959136d] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  height: 34px;\n  padding: 0 8px;\n  border-bottom: 1px solid var(--zen-border, #34343c);\n}\n.le-title[data-v-6959136d] {\n  flex: 1;\n  font-size: 11px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n.le-count[data-v-6959136d] {\n  padding: 0 6px;\n  border-radius: 999px;\n  background: color-mix(in srgb, var(--zen-text, #fff) 8%, transparent);\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n}\n.le-swatch[data-v-6959136d] {\n  flex: none;\n  width: 12px;\n  height: 12px;\n  border-radius: 3px;\n}\n.le-body[data-v-6959136d] {\n  flex: 1 1 0;\n  min-height: 0;\n  padding: 6px;\n}\n.le-note[data-v-6959136d] {\n  margin: 0;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.fresco[data-v-6418226b] {\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n}\n.fs-menu[data-v-6418226b] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  padding: 8px;\n}\n.fs-menu-title[data-v-6418226b] {\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n}\n.fs-menu .zen-btn[data-v-6418226b] {\n  justify-content: flex-start;\n}\n.fs-swatch[data-v-6418226b] {\n  flex: none;\n  width: 12px;\n  height: 12px;\n  border-radius: 3px;\n}\n.fs-wand[data-v-6418226b] {\n  position: absolute;\n  inset: 0;\n  cursor: crosshair;\n}\n.fs-point[data-v-6418226b] {\n  position: absolute;\n  width: 10px;\n  height: 10px;\n  margin: -5px 0 0 -5px;\n  border: 2px solid #fff;\n  border-radius: 50%;\n  background: #22c55e;\n  box-shadow: 0 0 0 1px rgb(0 0 0 / 50%);\n  pointer-events: none;\n}\n.fs-point.live[data-v-6418226b] {\n  pointer-events: auto;\n  cursor: grab;\n  touch-action: none;\n}\n.fs-point.live[data-v-6418226b]:hover {\n  transform: scale(1.3);\n}\n.fs-point.out[data-v-6418226b] {\n  background: #ef4444;\n}\n.fs-form[data-v-6418226b] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n}\n.fs-form[data-v-6418226b] > * {\n  flex: none;\n}\n.fs-grid[data-v-6418226b] {\n  display: grid;\n  grid-template-columns: 62px minmax(0, 1fr);\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fs-pairs[data-v-6418226b] {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));\n  gap: 6px 10px;\n}\n.fs-pair[data-v-6418226b] {\n  display: grid;\n  grid-template-columns: 52px minmax(0, 1fr);\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fs-group[data-v-6418226b] {\n  margin-top: 6px;\n  padding: 6px 0 0;\n  border-top: 1px solid var(--zen-border, #34343c);\n  font-size: 12px;\n  font-weight: 600;\n  color: var(--zen-text, #e5e5ea);\n}\n.fs-group-note[data-v-6418226b] {\n  font-size: 11px;\n  font-weight: 400;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.fsum[data-v-71527fdd] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n}\n.fsum-stage[data-v-71527fdd] {\n  flex: 1;\n  min-height: 0;\n  pointer-events: none;\n}\n.fsum-bar[data-v-71527fdd] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fsum-text[data-v-71527fdd] {\n  overflow: hidden;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n}\n\n.fhost[data-v-4623400c] {\n  display: flex;\n  flex-direction: column;\n  box-sizing: border-box;\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n}\n.fhost-dep[data-v-4623400c] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n  padding: 4px 8px;\n  border-bottom: 1px solid color-mix(in srgb, var(--zen-warning, #f5b041) 35%, transparent);\n  background: color-mix(in srgb, var(--zen-warning, #f5b041) 10%, transparent);\n  color: var(--zen-text, #e5e5ea);\n  font-size: 11px;\n}\n.fhost-body[data-v-4623400c] {\n  position: relative;\n  flex: 1;\n  min-height: 0;\n}\n.fhost-body[data-v-4623400c] > * {\n  position: absolute;\n  inset: 0;\n}\n\n/* Fill layout (see mountWidget's `fill`): the widget takes the node body, the image grid\n   takes whatever height is left and scrolls, and the toolbar is pinned under it. Resizing\n   the node therefore shows more images, never more padding. */\n.fg[data-v-bbb08a38] {\n  position: relative;\n  display: flex;\n  flex-direction: column;\n  gap: 7px;\n  height: 100%;\n  min-height: 0;\n  padding: 2px;\n  box-sizing: border-box;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n}\n\n/* flex-basis 0 (not auto) so the grid's content can't push the toolbar off the node */\n/* focused programmatically on hover (see armScroll) — never show a ring for it */\n.fg-scroll[data-v-bbb08a38] {\n  flex: 1 1 0;\n  min-height: 0;\n  outline: none;\n}\n.fg-grid[data-v-bbb08a38] {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(124px, 1fr));\n  gap: 6px;\n  align-items: start;\n  padding-right: 2px;\n}\n.fg-card[data-v-bbb08a38] {\n  display: flex;\n  flex-direction: column;\n  gap: 3px;\n  padding: 4px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 9px);\n  background: var(--zen-input, #1b1b20);\n  transition:\n    border-color 0.12s ease,\n    opacity 0.12s ease;\n}\n.fg-card.off[data-v-bbb08a38] {\n  opacity: 0.5;\n}\n.fg-card.dragging[data-v-bbb08a38] {\n  opacity: 0.35;\n}\n.fg-card.over[data-v-bbb08a38] {\n  border-color: var(--zen-accent, #6366f1);\n  box-shadow: 0 0 0 1px var(--zen-accent, #6366f1) inset;\n}\n.fg-thumb[data-v-bbb08a38] {\n  position: relative;\n  width: 100%;\n  aspect-ratio: 1;\n  border-radius: var(--zen-radius, 6px);\n  background: var(--zen-surface, #202026);\n  overflow: hidden;\n  cursor: grab;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.fg-thumb[data-v-bbb08a38]:active {\n  cursor: grabbing;\n}\n/* contain on black: the encoder letterboxes with real black pixels, so the card shows the\n   actual frame it gets rather than flattering it with a themed backdrop */\n.fg-thumb img[data-v-bbb08a38] {\n  width: 100%;\n  height: 100%;\n  display: block;\n  object-fit: contain;\n  background: #000;\n}\n.fg-ph[data-v-bbb08a38] {\n  font-size: 30px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fg-ph.warn[data-v-bbb08a38] {\n  color: #e0a33a;\n}\n.fg-idx[data-v-bbb08a38] {\n  position: absolute;\n  top: 4px;\n  left: 4px;\n  min-width: 16px;\n  height: 16px;\n  padding: 0 4px;\n  border-radius: var(--zen-radius, 5px);\n  background: rgba(0, 0, 0, 0.62);\n  color: #fff;\n  font-size: 10px;\n  font-weight: 700;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n}\n.fg-acts[data-v-bbb08a38] {\n  position: absolute;\n  top: 4px;\n  right: 4px;\n  display: flex;\n  gap: 3px;\n  opacity: 0;\n  transition: opacity 0.12s ease;\n}\n.fg-card:hover .fg-acts[data-v-bbb08a38] {\n  opacity: 1;\n}\n.fg-act[data-v-bbb08a38] {\n  width: 19px;\n  height: 19px;\n  padding: 0;\n  border: none;\n  border-radius: var(--zen-radius, 5px);\n  background: rgba(0, 0, 0, 0.62);\n  color: #fff;\n  font-size: 12px;\n  cursor: pointer;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n}\n.fg-act[data-v-bbb08a38]:hover {\n  background: var(--zen-accent, #6366f1);\n}\n.fg-act.danger[data-v-bbb08a38]:hover {\n  background: #d9534f;\n}\n.fg-mutemark[data-v-bbb08a38] {\n  position: absolute;\n  inset: 0;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  background: rgba(0, 0, 0, 0.45);\n  color: #fff;\n  font-size: 22px;\n  pointer-events: none;\n}\n\n/* name + share ride in the thumb's bottom strip rather than costing the card its own rows */\n.fg-meta[data-v-bbb08a38] {\n  position: absolute;\n  left: 0;\n  right: 0;\n  bottom: 3px;\n  display: flex;\n  align-items: flex-end;\n  gap: 4px;\n  padding: 10px 5px 1px;\n  background: linear-gradient(transparent, rgba(0, 0, 0, 0.78));\n  pointer-events: none;\n}\n.fg-name[data-v-bbb08a38] {\n  flex: 1;\n  min-width: 0;\n  font-size: 9.5px;\n  color: #fff;\n  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.fg-pct[data-v-bbb08a38] {\n  flex: none;\n  font-size: 9.5px;\n  font-weight: 700;\n  line-height: 1.25;\n  color: #fff;\n  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);\n}\n.fg-pct.dim[data-v-bbb08a38] {\n  font-weight: 500;\n  color: var(--zen-muted, #9aa0aa);\n}\n/* the live share of the blend this source claims */\n.fg-share[data-v-bbb08a38] {\n  position: absolute;\n  left: 0;\n  bottom: 0;\n  height: 3px;\n  background: var(--zen-accent, #6366f1);\n  transition: width 0.12s ease;\n  pointer-events: none;\n}\n.fg-foot[data-v-bbb08a38] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n}\n.fg-slider[data-v-bbb08a38] {\n  flex: 1;\n  min-width: 0;\n}\n.fg-num[data-v-bbb08a38] {\n  flex: none;\n  width: 46px;\n}\n\n/* fills the scroll area so the empty node reads as one big drop target */\n.fg-empty[data-v-bbb08a38] {\n  height: 100%;\n  min-height: 96px;\n  box-sizing: border-box;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 4px;\n  padding: 18px 8px;\n  text-align: center;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);\n}\n.fg-empty > .mdi[data-v-bbb08a38] {\n  font-size: 26px;\n  opacity: 0.8;\n}\n.fg-empty > span[data-v-bbb08a38] {\n  font-size: 11px;\n}\n.fg-empty > small[data-v-bbb08a38] {\n  font-size: 10px;\n  opacity: 0.7;\n}\n.fg-warn[data-v-bbb08a38] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  padding: 5px 8px;\n  border-radius: var(--zen-radius, 7px);\n  background: color-mix(in srgb, #e0a33a 14%, transparent);\n  color: #e0a33a;\n  font-size: 10.5px;\n}\n.fg-bar[data-v-bbb08a38] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.fg-add[data-v-bbb08a38] {\n  flex: 1;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  padding: 7px;\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  background: transparent;\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 11px;\n  font-weight: 600;\n  cursor: pointer;\n  transition:\n    border-color 0.12s ease,\n    color 0.12s ease,\n    background 0.12s ease;\n}\n.fg-add[data-v-bbb08a38]:hover:not(:disabled) {\n  border-color: var(--zen-accent, #6366f1);\n  color: var(--zen-text, #e5e5ea);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 8%, transparent);\n}\n.fg-add[data-v-bbb08a38]:disabled {\n  opacity: 0.6;\n  cursor: default;\n}\n.fg-add .mdi[data-v-bbb08a38] {\n  font-size: 15px;\n}\n.fg-add-n[data-v-bbb08a38] {\n  margin-left: 2px;\n  padding: 0 5px;\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 22%, transparent);\n  color: var(--zen-text, #e5e5ea);\n  font-size: 10px;\n  font-weight: 700;\n}\n.fg-dropmask[data-v-bbb08a38] {\n  position: absolute;\n  inset: 0;\n  z-index: 5;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 6px;\n  border: 2px dashed var(--zen-accent, #6366f1);\n  border-radius: var(--zen-radius, 9px);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 16%, rgba(0, 0, 0, 0.55));\n  color: var(--zen-text, #e5e5ea);\n  font-size: 11px;\n  font-weight: 600;\n  pointer-events: none;\n}\n.fg-dropmask .mdi[data-v-bbb08a38] {\n  font-size: 28px;\n}\n\n.fi[data-v-dec39350] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  height: 100%;\n  min-height: 0;\n  padding: 2px;\n  box-sizing: border-box;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n  --fs-rs: var(--radius-sm, 5px);\n}\n.fi-empty[data-v-dec39350] {\n  height: 100%;\n  min-height: 120px;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 5px;\n  color: var(--zen-muted, #9aa0aa);\n  text-align: center;\n}\n.fi-empty > .mdi[data-v-dec39350] {\n  font-size: 30px;\n  opacity: 0.8;\n}\n.fi-empty small[data-v-dec39350] {\n  font-size: 10px;\n  opacity: 0.75;\n}\n.fi-bar[data-v-dec39350] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  flex-wrap: wrap;\n  gap: 6px;\n}\n.fi-main[data-v-dec39350] {\n  flex: 1 1 auto;\n  min-height: 0;\n  display: flex;\n  gap: 6px;\n}\n.fi-gridwrap[data-v-dec39350] {\n  position: relative;\n  flex: 1 1 auto;\n  min-width: 0;\n  min-height: 0;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  overflow: hidden;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n  background: #0e0e12;\n}\n.fi-caption[data-v-dec39350] {\n  position: absolute;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  padding: 3px 6px;\n  font-size: 9px;\n  line-height: 1.25;\n  text-align: center;\n  color: var(--zen-text, #e5e5ea);\n  background: linear-gradient(transparent, rgba(0, 0, 0, 0.72));\n  pointer-events: none;\n}\n.fi-canvas[data-v-dec39350] {\n  display: block;\n  image-rendering: pixelated;\n}\n.fi-side[data-v-dec39350] {\n  flex: none;\n  width: 190px;\n  display: flex;\n  flex-direction: column;\n  min-height: 0;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 2%, transparent);\n  overflow: hidden;\n}\n.fi-side-head[data-v-dec39350] {\n  flex: none;\n  padding: 5px 8px;\n  font-size: 10px;\n  font-weight: 700;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n  border-bottom: 1px solid var(--zen-border, #34343c);\n}\n.fi-bars[data-v-dec39350],\n.fi-legend[data-v-dec39350] {\n  flex: 1 1 0;\n  min-height: 0;\n  overflow-y: auto;\n  padding: 5px;\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n}\n.fi-brow[data-v-dec39350],\n.fi-lrow[data-v-dec39350] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  font-size: 10.5px;\n}\n.fi-lrow[data-v-dec39350] {\n  padding: 3px;\n  border: 1px solid transparent;\n  border-radius: var(--fs-rs);\n  background: none;\n  color: inherit;\n  font: inherit;\n  cursor: pointer;\n  text-align: left;\n}\n.fi-lrow[data-v-dec39350]:hover {\n  border-color: color-mix(in srgb, var(--zen-accent, #6366f1) 50%, transparent);\n}\n.fi-lrow.on[data-v-dec39350] {\n  border-color: var(--zen-accent, #6366f1);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 16%, transparent);\n}\n.fi-thumb[data-v-dec39350] {\n  flex: none;\n  width: 24px;\n  height: 24px;\n  border-radius: 4px;\n  border: 1.5px solid;\n  overflow: hidden;\n  background: var(--zen-surface, #202026);\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.fi-thumb.sm[data-v-dec39350] {\n  width: 17px;\n  height: 17px;\n  border-radius: 3px;\n}\n.fi-thumb img[data-v-dec39350] {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n  display: block;\n}\n.fi-thumb-fill[data-v-dec39350] {\n  width: 100%;\n  height: 100%;\n}\n.fi-blabel[data-v-dec39350] {\n  flex: 1;\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.fi-btrack[data-v-dec39350] {\n  flex: 1.4;\n  height: 6px;\n  border-radius: 3px;\n  background: color-mix(in srgb, var(--zen-text, #fff) 10%, transparent);\n  overflow: hidden;\n}\n.fi-bfill[data-v-dec39350] {\n  display: block;\n  height: 100%;\n  border-radius: 3px;\n}\n.fi-bval[data-v-dec39350] {\n  flex: none;\n  width: 26px;\n  text-align: right;\n  font-variant-numeric: tabular-nums;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fi-lstr[data-v-dec39350] {\n  flex: none;\n  font-variant-numeric: tabular-nums;\n  font-size: 10px;\n  color: var(--zen-text, #e5e5ea);\n}\n.fi-lmeta[data-v-dec39350] {\n  flex: none;\n  min-width: 30px;\n  text-align: right;\n  font-variant-numeric: tabular-nums;\n  color: var(--zen-muted, #9aa0aa);\n}\n.fi-lhint[data-v-dec39350] {\n  flex: none;\n  margin: 0;\n  padding: 5px 7px;\n  font-size: 9.5px;\n  line-height: 1.3;\n  color: var(--zen-muted, #9aa0aa);\n  border-top: 1px solid var(--zen-border, #34343c);\n}\n.fi-lhint b[data-v-dec39350] {\n  color: var(--zen-text, #e5e5ea);\n}\n\n/* side-panel tabs */\n.fi-side-tabs[data-v-dec39350] {\n  flex: none;\n  display: flex;\n  gap: 3px;\n  padding: 4px;\n  border-bottom: 1px solid var(--zen-border, #34343c);\n}\n.fi-tab[data-v-dec39350] {\n  flex: 1;\n  padding: 3px 6px;\n  border: 1px solid transparent;\n  border-radius: var(--zen-radius, 5px);\n  background: none;\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 10px;\n  font-weight: 700;\n  letter-spacing: 0.03em;\n  text-transform: uppercase;\n  cursor: pointer;\n}\n.fi-tab[data-v-dec39350]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.fi-tab.on[data-v-dec39350] {\n  color: var(--zen-text, #e5e5ea);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 16%, transparent);\n}\n\n/* settings tab */\n.fi-settings[data-v-dec39350] {\n  flex: 1 1 0;\n  min-height: 0;\n  overflow-y: auto;\n  padding: 4px 6px 6px;\n}\n.fi-sgroup[data-v-dec39350] {\n  margin-top: 5px;\n}\n.fi-sgroup-h[data-v-dec39350] {\n  font-size: 9px;\n  font-weight: 700;\n  letter-spacing: 0.05em;\n  text-transform: uppercase;\n  color: var(--zen-accent, #6366f1);\n  margin-bottom: 2px;\n}\n.fi-srow[data-v-dec39350] {\n  display: flex;\n  justify-content: space-between;\n  gap: 6px;\n  font-size: 10.5px;\n  padding: 1px 0;\n}\n.fi-srow.dim[data-v-dec39350] {\n  opacity: 0.4;\n}\n.fi-sk[data-v-dec39350] {\n  color: var(--zen-muted, #9aa0aa);\n}\n.fi-svv[data-v-dec39350] {\n  color: var(--zen-text, #e5e5ea);\n  font-variant-numeric: tabular-nums;\n  text-align: right;\n}\n\n/* section header */\n.gs-head[data-v-b38d9f08] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  width: 100%;\n  padding: 5px 2px;\n  background: none;\n  border: none;\n  cursor: pointer;\n  font: inherit;\n  font-size: 11px;\n  font-weight: 700;\n  letter-spacing: 0.02em;\n  color: var(--zen-muted, #9aa0aa);\n  text-align: left;\n}\n.gs-head[data-v-b38d9f08]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.gs-head .mdi[data-v-b38d9f08] {\n  font-size: 14px;\n}\n.gs-badge[data-v-b38d9f08] {\n  margin-left: auto;\n  padding: 1px 6px;\n  border-radius: 999px;\n  font-size: 9px;\n  font-weight: 700;\n  color: var(--zen-accent-text, #fff);\n  background: var(--zen-accent, #6366f1);\n}\n.gs-body[data-v-b38d9f08] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  padding: 2px 2px 8px 6px;\n}\n.gs-row[data-v-b38d9f08] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n  min-height: 24px;\n}\n.gs-lbl[data-v-b38d9f08] {\n  flex: none;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n  font-weight: 600;\n}\n.gs-pair[data-v-b38d9f08] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  justify-content: flex-end;\n}\n.gs-x[data-v-b38d9f08] {\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n}\n.gs-hint[data-v-b38d9f08] {\n  display: flex;\n  align-items: flex-start;\n  gap: 5px;\n  margin: 0;\n  padding: 5px 7px;\n  border-radius: var(--zen-radius, 6px);\n  background: var(--zen-input, #1b1b20);\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  line-height: 1.35;\n}\n.gs-hint .mdi[data-v-b38d9f08] {\n  flex: none;\n  font-size: 13px;\n  color: var(--zen-accent, #6366f1);\n}\n\n/* content-driven: the viewport sizes to the image aspect; the node grows to fit it */\n.ic-head[data-v-dd66395d] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 6px;\n  min-height: 26px;\n}\n.ic-head-nav[data-v-dd66395d] {\n  display: flex;\n  align-items: center;\n  gap: 2px;\n}\n.ic-nav-lbl[data-v-dd66395d] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n  font-variant-numeric: tabular-nums;\n  min-width: 30px;\n  text-align: center;\n}\n.ic-nav-gap[data-v-dd66395d] {\n  width: 8px;\n}\n/* fills the node body; the image is contained inside, so the box never drives the node size */\n.ic-view[data-v-dd66395d] {\n  position: relative;\n  flex: 1 1 0;\n  min-height: 0;\n  width: 100%;\n  overflow: hidden;\n  border-radius: var(--zen-radius, 8px);\n  background: var(--zen-input, #1b1b20);\n  border: 1px solid var(--zen-border, #34343c);\n  user-select: none;\n  touch-action: none;\n}\n.ic-view.dragging[data-v-dd66395d] {\n  cursor: grabbing !important;\n}\n.ic-img[data-v-dd66395d] {\n  position: absolute;\n  inset: 0;\n  width: 100%;\n  height: 100%;\n  object-fit: contain;\n  pointer-events: none;\n  transition: opacity 80ms ease;\n}\n.ic-handle[data-v-dd66395d] {\n  position: absolute;\n  width: 22px;\n  height: 22px;\n  border-radius: 50%;\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 35%, transparent);\n  border: 2px solid var(--zen-accent, #6366f1);\n  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);\n  pointer-events: none;\n  transform: translate(-50%, -50%);\n  z-index: 2;\n}\n/* box mode: A shows through this frame over B; the frame itself only draws the outline */\n.ic-box[data-v-dd66395d] {\n  position: absolute;\n  box-sizing: border-box;\n  border: 2px solid var(--zen-accent, #6366f1);\n  border-radius: 2px;\n  box-shadow:\n    0 0 0 1px rgba(0, 0, 0, 0.45),\n    0 2px 10px rgba(0, 0, 0, 0.35);\n  pointer-events: none;\n  z-index: 2;\n}\n.ic-box-tag[data-v-dd66395d] {\n  position: absolute;\n  top: 4px;\n  left: 4px;\n  padding: 0 5px;\n  border-radius: 4px;\n  font-size: 10px;\n  font-weight: 700;\n  line-height: 16px;\n  color: #fff;\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 80%, transparent);\n}\n/* fills the same body space the viewport will — so swapping empty↔image doesn't resize the node */\n.ic-empty[data-v-dd66395d] {\n  flex: 1 1 0;\n  min-height: 0;\n  width: 100%;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n}\n.ic-empty .mdi[data-v-dd66395d] {\n  font-size: 30px;\n  opacity: 0.5;\n}\n.ic-pop-head[data-v-dd66395d] {\n  padding: 4px 8px 6px;\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.06em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n/* fill mode: the panel fills the node body so the preview fits the current size (it doesn't\n   resize the node when the image changes); the picker row is fixed, the preview takes the rest */\n.li[data-v-b38870a5] {\n  position: relative;\n}\n.li-row[data-v-b38870a5] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  flex: none;\n}\n.li-preview[data-v-b38870a5] {\n  position: relative;\n  flex: 1 1 0;\n  min-height: 0;\n  width: 100%;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: var(--zen-radius, 8px);\n}\n.li-preview img[data-v-b38870a5] {\n  display: block;\n  border-radius: var(--zen-radius, 8px);\n  max-width: 100%;\n  max-height: 100%;\n  width: auto;\n  height: auto;\n  object-fit: contain;\n}\n.li-none[data-v-b38870a5] {\n  flex-direction: column;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  text-align: center;\n  padding: 8px;\n}\n.li-none .mdi[data-v-b38870a5] {\n  font-size: 26px;\n  opacity: 0.8;\n}\n.li-loading[data-v-b38870a5] {\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n}\n\n/* drag-and-drop overlay */\n.li-dropmask[data-v-b38870a5] {\n  position: absolute;\n  inset: 0;\n  z-index: 5;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 8px;\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 16%, var(--zen-bg, #1a1a1f) 78%);\n  border: 2px dashed var(--zen-accent, #6366f1);\n  border-radius: var(--zen-radius, 8px);\n  color: var(--zen-text, #e5e5ea);\n  pointer-events: none;\n}\n.li-dropmask .mdi[data-v-b38870a5] {\n  font-size: 32px;\n  color: var(--zen-accent, #6366f1);\n}\n.li-pick[data-v-b38870a5] {\n  flex: 1;\n  min-width: 0;\n}\n.li-sel[data-v-b38870a5] {\n  display: flex;\n  align-items: center;\n  gap: 7px;\n  min-width: 0;\n}\n.li-sel-ic[data-v-b38870a5] {\n  flex: none;\n  font-size: 15px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.li-sel-name[data-v-b38870a5] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n\n/* preview hover tools: lightweight corner actions; no full-image darkening */\n.li-ov[data-v-b38870a5] {\n  position: absolute;\n  inset: 0;\n  opacity: 0;\n  pointer-events: none;\n  transition: opacity 0.12s ease;\n}\n.li-preview:hover .li-ov[data-v-b38870a5] {\n  opacity: 1;\n  pointer-events: auto;\n}\n.li-ov-actions[data-v-b38870a5] {\n  position: absolute;\n  top: 6px;\n  right: 6px;\n  z-index: 2;\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  max-width: calc(100% - 12px);\n}\n/* A dark chip with a white icon, so the buttons read over any picture; the same as\n   Save Image's and Preview Image's (SavePreview.vue's .sp-act). ZenIconButton's own look (no background, muted icon) is for a toolbar, hence\n   the !important. Pointing at one fills it with the accent. */\n.li-ov-btn[data-v-b38870a5] {\n  width: 26px !important;\n  height: 26px !important;\n  border: 1px solid rgba(255, 255, 255, 0.14) !important;\n  background: rgba(0, 0, 0, 0.46) !important;\n  color: #fff !important;\n  backdrop-filter: blur(4px);\n}\n.li-ov-btn[data-v-b38870a5]:hover {\n  background: var(--zen-accent, #6366f1) !important;\n  border-color: var(--zen-accent, #6366f1) !important;\n  color: var(--zen-accent-text, #fff) !important;\n}\n.li-ov-info[data-v-b38870a5] {\n  cursor: help;\n}\n.li-ov-corner[data-v-b38870a5] {\n  position: absolute;\n  right: 6px;\n  bottom: 6px;\n  z-index: 2;\n}\n.li-info-pop[data-v-b38870a5] {\n  /* position/top/left/z-index come from the inline fixed style (teleported to body) */\n  box-sizing: border-box;\n  width: 210px;\n  max-width: calc(100vw - 24px);\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n  padding: 8px;\n  background: color-mix(in srgb, var(--zen-surface, #202026) 94%, #000 6%);\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);\n  cursor: default;\n}\n.li-info-row[data-v-b38870a5] {\n  display: grid;\n  grid-template-columns: 18px minmax(0, 1fr);\n  align-items: center;\n  min-width: 0;\n  gap: 7px;\n  min-height: 19px;\n  font-size: 11px;\n}\n.li-info-row > .mdi[data-v-b38870a5] {\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 14px;\n  text-align: center;\n}\n.li-info-row b[data-v-b38870a5] {\n  display: block;\n  min-width: 0;\n  color: var(--zen-text, #e5e5ea);\n  font-weight: 600;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.li-thumb[data-v-b38870a5] {\n  flex: none;\n  box-sizing: border-box;\n  width: 40px;\n  height: 40px;\n  object-fit: cover;\n  border-radius: var(--zen-radius, 6px);\n  background: var(--zen-input, #1b1b20);\n  border: 1px solid var(--zen-border, #34343c);\n}\n.li-thumb.sm[data-v-b38870a5] {\n  width: 18px;\n  height: 18px;\n  border-radius: var(--zen-radius, 5px);\n}\n.li-thumb.ph[data-v-b38870a5] {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  color: var(--zen-muted, #9aa0aa);\n}\n/* grid-combo cell (contain square + name) */\n.li-gthumb[data-v-b38870a5] {\n  width: 100%;\n  aspect-ratio: 1;\n  border-radius: var(--zen-radius, 6px);\n  overflow: hidden;\n  background: var(--zen-surface, #202026);\n  position: relative;\n}\n/* Pinned to the square: its height comes from aspect-ratio, which `height: 100%` can't measure\n   against, so a portrait picture would grow past it and be cropped. */\n.li-gthumb img[data-v-b38870a5] {\n  position: absolute;\n  inset: 0;\n  width: 100%;\n  height: 100%;\n  object-fit: contain;\n  display: block;\n}\n.li-gname[data-v-b38870a5] {\n  font-size: 10px;\n  color: var(--zen-text, #e5e5ea);\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  text-align: center;\n}\n.li-lname[data-v-b38870a5] {\n  flex: 1;\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.li-foot[data-v-b38870a5] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  width: 100%;\n}\n.li-foot-browse[data-v-b38870a5] {\n  margin-left: auto;\n}\n/* compact source switcher inside the combo search row */\n.li-src[data-v-b38870a5] .zen-tg-b {\n  padding: 2px 7px;\n  font-size: 10px;\n}\n.li-pop-head[data-v-b38870a5] {\n  padding: 4px 8px 6px;\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.06em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.ma[data-v-294512d9] {\n  flex: none;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  overflow: hidden;\n  border-radius: 50%;\n  border: 2px solid var(--ma-color);\n  background: color-mix(in srgb, var(--ma-color) 35%, var(--zen-bg, #141418));\n}\n.ma-img[data-v-294512d9] {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n}\n.ma-letter[data-v-294512d9] {\n  font-weight: 700;\n  line-height: 1;\n  color: var(--zen-text, #e5e5ea);\n}\n\n.lbf[data-v-77740021] {\n  position: absolute;\n  inset: 0;\n  pointer-events: none;\n}\n.lbf-pic[data-v-77740021] {\n  position: absolute;\n  inset: 0;\n  -webkit-mask-size: 100% 100%;\n  mask-size: 100% 100%;\n}\n.lbf-img[data-v-77740021] {\n  position: absolute;\n  inset: 0;\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n  opacity: 0.78;\n}\n.lbf-top[data-v-77740021] {\n  position: absolute;\n  right: 4px;\n  top: 4px;\n  display: flex;\n  align-items: center;\n  gap: 3px;\n}\n.lbf-more[data-v-77740021] {\n  display: flex;\n  gap: 3px;\n}\n.lbf-more img[data-v-77740021],\n.lbf-plus[data-v-77740021] {\n  width: 22px;\n  height: 22px;\n  border-radius: 4px;\n  object-fit: cover;\n  box-shadow: 0 0 0 1px rgb(0 0 0 / 50%);\n}\n.lbf-more.big img[data-v-77740021],\n.lbf-more.big .lbf-plus[data-v-77740021] {\n  width: 32px;\n  height: 32px;\n}\n.lbf-plus[data-v-77740021] {\n  display: grid;\n  place-items: center;\n  background: rgb(0 0 0 / 65%);\n  color: #fff;\n  font-size: 10px;\n}\n.lbf-lora[data-v-77740021] {\n  position: absolute;\n  left: 4px;\n  top: 20px;\n  display: inline-flex;\n  align-items: center;\n  gap: 2px;\n  padding: 0 5px;\n  border-radius: 999px;\n  background: rgb(0 0 0 / 65%);\n  color: #fff;\n  font-size: 10px;\n  line-height: 16px;\n}\n.lbf-text[data-v-77740021] {\n  position: absolute;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  margin: 0;\n  padding: 14px 6px 4px;\n  background: linear-gradient(to top, rgb(0 0 0 / 75%), transparent);\n  color: #fff;\n  font-size: 11px;\n  line-height: 1.3;\n  text-shadow: 0 1px 2px rgb(0 0 0 / 60%);\n  display: -webkit-box;\n  -webkit-line-clamp: 2;\n  -webkit-box-orient: vertical;\n  overflow: hidden;\n}\n.lbf.bare .lbf-text[data-v-77740021] {\n  background: none;\n  color: color-mix(in srgb, #fff 85%, transparent);\n}\n@container (max-height: 70px) {\n.lbf-text[data-v-77740021],\n  .lbf-lora[data-v-77740021] {\n    display: none;\n}\n}\n@container (max-width: 90px) {\n.lbf-more[data-v-77740021] {\n    display: none;\n}\n}\n@container (min-height: 160px) {\n.lbf-text[data-v-77740021] {\n    -webkit-line-clamp: 3;\n}\n}\n\n.lsum[data-v-0e068eb5] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n}\n.lsum-stage[data-v-0e068eb5] {\n  flex: 1;\n  min-height: 0;\n  pointer-events: none;\n}\n.lsum-bar[data-v-0e068eb5] {\n  flex: none;\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n.lsum-text[data-v-0e068eb5] {\n  flex: 1;\n  min-width: 0;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.la[data-v-18a7e0c3] {\n  display: grid;\n  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);\n  gap: 16px;\n  height: 100%;\n  min-height: 0;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n}\n.la-ask[data-v-18a7e0c3],\n.la-result[data-v-18a7e0c3] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n  min-height: 0;\n  overflow: auto;\n}\n.la-result[data-v-18a7e0c3] {\n  padding-left: 16px;\n  border-left: 1px solid var(--zen-border, #34343c);\n}\n.la-source[data-v-18a7e0c3] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n}\n.la-pic[data-v-18a7e0c3] {\n  height: 180px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-surface-2, #26262d);\n  overflow: hidden;\n}\n.la-pic.off img[data-v-18a7e0c3] {\n  opacity: 0.3;\n}\n.la-pic img[data-v-18a7e0c3] {\n  max-width: 100%;\n  max-height: 100%;\n  object-fit: contain;\n}\n.la-none[data-v-18a7e0c3] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 6px;\n  padding: 16px;\n  text-align: center;\n  color: var(--zen-muted, #9aa0aa);\n}\n.la-none i[data-v-18a7e0c3] {\n  font-size: 24px;\n}\n.la-toggle[data-v-18a7e0c3] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n.la-toggle.dim[data-v-18a7e0c3] {\n  opacity: 0.5;\n}\n.la-chips[data-v-18a7e0c3] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 4px;\n}\n.la-chip[data-v-18a7e0c3] {\n  padding: 3px 8px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: 999px;\n  background: none;\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 11px;\n  cursor: pointer;\n}\n.la-chip[data-v-18a7e0c3]:hover {\n  color: var(--zen-text, #e5e5ea);\n  border-color: var(--zen-accent, #6366f1);\n}\n.la-row[data-v-18a7e0c3] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n.la-ctl[data-v-18a7e0c3] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.la-grow[data-v-18a7e0c3] {\n  flex: 1;\n}\n.la-note[data-v-18a7e0c3] {\n  margin: 0;\n  color: var(--zen-muted, #9aa0aa);\n}\n.la-error[data-v-18a7e0c3] {\n  margin: 0;\n  color: var(--zen-danger, #f87171);\n  white-space: pre-wrap;\n}\n.la-thumb[data-v-18a7e0c3] {\n  height: 260px;\n  flex: none;\n}\n.la-caption[data-v-18a7e0c3] {\n  margin: 0;\n  padding: 6px 8px;\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-surface-2, #26262d);\n  line-height: 1.45;\n}\n.la-boxes[data-v-18a7e0c3] {\n  margin: 0;\n  padding: 0;\n  list-style: none;\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n}\n.la-dot[data-v-18a7e0c3] {\n  display: inline-block;\n  width: 8px;\n  height: 8px;\n  margin-right: 6px;\n  border-radius: 2px;\n}\n.la-kind[data-v-18a7e0c3] {\n  margin: 0 4px;\n  font-size: 10px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.la-empty[data-v-18a7e0c3] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 8px;\n  height: 100%;\n  color: var(--zen-muted, #9aa0aa);\n  text-align: center;\n}\n.la-empty i[data-v-18a7e0c3] {\n  font-size: 28px;\n}\n\n.lm[data-v-ede01aa2] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n}\n.lm-bar[data-v-ede01aa2] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 6px;\n}\n.lm-bar-note[data-v-ede01aa2] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lm-lib[data-v-ede01aa2] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  width: 280px;\n  padding: 10px;\n  color: var(--zen-text, #e5e5ea);\n}\n.lm-lib-head[data-v-ede01aa2] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 6px;\n}\n.lm-lib-title[data-v-ede01aa2] {\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lm-lib-list[data-v-ede01aa2] {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n  max-height: 240px;\n  overflow-y: auto;\n}\n.lm-lib-row[data-v-ede01aa2] {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n}\n.lm-lib-pick[data-v-ede01aa2] {\n  flex: 1;\n  min-width: 0;\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  padding: 4px 6px;\n  border: 1px solid transparent;\n  border-radius: var(--zen-radius, 6px);\n  background: transparent;\n  color: var(--zen-text, #e5e5ea);\n  font: inherit;\n  font-size: 12px;\n  text-align: left;\n  cursor: pointer;\n}\n.lm-lib-pick[data-v-ede01aa2]:hover {\n  border-color: var(--zen-border, #34343c);\n  background: color-mix(in srgb, var(--zen-text, #fff) 5%, transparent);\n}\n.lm-lib-name[data-v-ede01aa2] {\n  overflow: hidden;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n}\n.lm-grid[data-v-ede01aa2] {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));\n  gap: 6px;\n}\n.lm-tile[data-v-ede01aa2] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 4px;\n  min-width: 0;\n  padding: 8px 4px 6px;\n  border: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 70%, transparent);\n  border-radius: var(--zen-radius, 7px);\n  background: transparent;\n  color: var(--zen-text, #e5e5ea);\n  cursor: pointer;\n}\n.lm-tile[data-v-ede01aa2]:hover {\n  background: color-mix(in srgb, var(--zen-text, #fff) 4%, transparent);\n}\n.lm-tile.on[data-v-ede01aa2] {\n  border-color: var(--zen-accent, #3b82f6);\n  background: color-mix(in srgb, var(--zen-accent, #3b82f6) 12%, transparent);\n}\n.lm-tile-name[data-v-ede01aa2] {\n  max-width: 100%;\n  overflow: hidden;\n  font-size: 11px;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n}\n.lm-tile-meta[data-v-ede01aa2] {\n  display: inline-flex;\n  align-items: center;\n  gap: 3px;\n  font-size: 10px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lm-new[data-v-ede01aa2] {\n  justify-content: center;\n  border-style: dashed;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lm-new .mdi[data-v-ede01aa2] {\n  font-size: 22px;\n}\n.lm-empty[data-v-ede01aa2] {\n  margin: 0;\n  font-size: 11px;\n  line-height: 1.45;\n  color: var(--zen-muted, #9aa0aa);\n}\n.lm-edit[data-v-ede01aa2] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  padding-top: 10px;\n  border-top: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 60%, transparent);\n}\n.lm-head[data-v-ede01aa2] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.lm-name[data-v-ede01aa2] {\n  flex: 1;\n  min-width: 0;\n}\n.lm-color[data-v-ede01aa2] {\n  flex: none;\n  width: 22px;\n  height: 22px;\n  padding: 0;\n  border: 0;\n  border-radius: 4px;\n  background: transparent;\n  cursor: pointer;\n}\n\n.mc[data-v-f481af91] {\n  display: grid;\n  grid-template-columns: repeat(2, minmax(0, 1fr));\n  gap: 10px;\n}\n.mc-card[data-v-f481af91] {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-start;\n  gap: 4px;\n  padding: 12px;\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-surface, #1e1e24);\n  color: var(--zen-text, #e5e5ea);\n  font: inherit;\n  font-size: 12px;\n  text-align: left;\n  cursor: pointer;\n}\n.mc-card[data-v-f481af91]:hover {\n  border-color: color-mix(in srgb, var(--zen-accent, #6366f1) 50%, var(--zen-border, #34343c));\n}\n.mc-card.on[data-v-f481af91] {\n  border-color: var(--zen-accent, #6366f1);\n  box-shadow: 0 0 0 1px var(--zen-accent, #6366f1);\n}\n.mc-icon[data-v-f481af91] {\n  font-size: 22px;\n  color: var(--zen-accent, #6366f1);\n}\n.mc-label[data-v-f481af91] {\n  font-size: 14px;\n  font-weight: 600;\n}\n.mc-model[data-v-f481af91] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.mc-what[data-v-f481af91] {\n  margin-top: 4px;\n  font-size: 11px;\n  line-height: 1.4;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.ls[data-v-5978b710] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n  padding: 4px 2px;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n}\n.ls-note[data-v-5978b710] {\n  margin: 0;\n  font-size: 11px;\n  line-height: 1.45;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.pal[data-v-90f7fa68] {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  gap: 4px;\n}\n.pal-chip[data-v-90f7fa68] {\n  display: inline-flex;\n}\n.pal-none[data-v-90f7fa68] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.preset[data-v-86f41e2a] {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n}\n.preset-input[data-v-86f41e2a] {\n  flex: 1;\n  min-width: 0;\n}\n.preset-menu[data-v-86f41e2a] {\n  display: flex;\n  flex-direction: column;\n  gap: 1px;\n  padding: 4px;\n  max-height: 280px;\n  overflow: auto;\n}\n\n.pl-cog[data-v-359cb6a9] {\n  margin-left: 2px;\n  font-size: 13px;\n  opacity: 0.7;\n}\n.pl-host[data-v-359cb6a9] {\n  position: relative;\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n}\n.pl-choose[data-v-359cb6a9] {\n  position: absolute;\n  inset: 0;\n  z-index: 5;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  padding: 16px;\n  border-radius: var(--zen-radius, 7px);\n  background: color-mix(in srgb, var(--zen-bg, #141418) 88%, transparent);\n  backdrop-filter: blur(2px);\n}\n.pl-choose-card[data-v-359cb6a9] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n  max-width: 720px;\n  color: var(--zen-text, #e5e5ea);\n}\n.pl-choose-title[data-v-359cb6a9] {\n  font-size: 16px;\n  font-weight: 600;\n}\n.pl-choose-note[data-v-359cb6a9] {\n  font-size: 12px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.pl-note[data-v-359cb6a9] {\n  margin: 0;\n  padding-top: 10px;\n  border-top: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 60%, transparent);\n  font-size: 11px;\n  line-height: 1.45;\n  color: var(--zen-muted, #9aa0aa);\n}\n.pl-form[data-v-359cb6a9] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n}\n.pl-chips[data-v-359cb6a9] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 4px;\n}\n.pl-face[data-v-359cb6a9] {\n  position: absolute;\n  top: 4px;\n  right: 4px;\n  display: flex;\n  gap: 2px;\n  pointer-events: none;\n}\n.pl-chip[data-v-359cb6a9] {\n  display: inline-flex;\n  align-items: center;\n  gap: 5px;\n  height: 24px;\n  padding: 0 9px 0 3px;\n  border: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 80%, transparent);\n  border-radius: 11px;\n  background: transparent;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n  cursor: pointer;\n}\n.pl-chip[data-v-359cb6a9]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.pl-chip.on[data-v-359cb6a9] {\n  border-color: var(--zen-accent, #3b82f6);\n  background: color-mix(in srgb, var(--zen-accent, #3b82f6) 22%, transparent);\n  color: var(--zen-text, #e5e5ea);\n}\n.pl-chip.partial[data-v-359cb6a9] {\n  border-style: dashed;\n  border-color: var(--zen-accent, #3b82f6);\n  color: var(--zen-text, #e5e5ea);\n}\n.pl-inherited[data-v-359cb6a9] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 4px;\n  margin-bottom: 4px;\n}\n.pl-inh-ref[data-v-359cb6a9],\n.pl-inh-lora[data-v-359cb6a9] {\n  display: inline-flex;\n  align-items: center;\n  gap: 4px;\n  max-width: 100%;\n  padding: 2px 6px 2px 3px;\n  border: 1px dashed color-mix(in srgb, var(--zen-border, #34343c) 90%, transparent);\n  border-radius: 5px;\n  background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 10.5px;\n  cursor: pointer;\n}\n.pl-inh-ref[data-v-359cb6a9]:hover,\n.pl-inh-lora[data-v-359cb6a9]:hover {\n  border-color: var(--zen-accent, #3b82f6);\n  color: var(--zen-text, #e5e5ea);\n}\n.pl-inh-ref img[data-v-359cb6a9] {\n  width: 18px;\n  height: 18px;\n  border-radius: 3px;\n  object-fit: cover;\n}\n.pl-inh-name[data-v-359cb6a9] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  max-width: 120px;\n}\n.pl-inh-str[data-v-359cb6a9] {\n  font-variant-numeric: tabular-nums;\n  opacity: 0.75;\n}\n.pl-hint[data-v-359cb6a9] {\n  margin: 0;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.pl-grid[data-v-359cb6a9] {\n  display: grid;\n  grid-template-columns: 62px minmax(0, 1fr);\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n}\n.pl-blend-row[data-v-359cb6a9] {\n  display: grid;\n  grid-template-columns: 44px minmax(0, 1fr) 82px;\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n}\n.pl-pairs[data-v-359cb6a9] {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));\n  gap: 6px 10px;\n}\n.pl-pair[data-v-359cb6a9] {\n  display: grid;\n  grid-template-columns: 52px minmax(0, 1fr);\n  align-items: center;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n}\n.pl-row-head[data-v-359cb6a9] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n.pl-sub[data-v-359cb6a9] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.pl-menu[data-v-359cb6a9] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  padding: 8px;\n}\n.pl-menu-title[data-v-359cb6a9] {\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n}\n.pl-menu .zen-btn[data-v-359cb6a9] {\n  justify-content: flex-start;\n}\n.pl-swatch[data-v-359cb6a9] {\n  flex: none;\n  width: 12px;\n  height: 12px;\n  border-radius: 3px;\n}\n.pl-wand[data-v-359cb6a9] {\n  position: absolute;\n  inset: 0;\n  cursor: crosshair;\n}\n.pl-point[data-v-359cb6a9] {\n  position: absolute;\n  width: 10px;\n  height: 10px;\n  margin: -5px 0 0 -5px;\n  border: 2px solid #fff;\n  border-radius: 50%;\n  background: #22c55e;\n  box-shadow: 0 0 0 1px rgb(0 0 0 / 50%);\n  pointer-events: none;\n}\n.pl-point.live[data-v-359cb6a9] {\n  pointer-events: auto;\n  cursor: grab;\n  touch-action: none;\n}\n.pl-point.live[data-v-359cb6a9]:hover {\n  transform: scale(1.3);\n}\n.pl-point.out[data-v-359cb6a9] {\n  background: #ef4444;\n}\n.pl-status[data-v-359cb6a9] {\n  display: inline-flex;\n  align-items: center;\n  gap: 5px;\n  height: 24px;\n  padding: 0 8px;\n  border: 0;\n  border-radius: var(--zen-radius, 7px);\n  background: none;\n  color: var(--zen-success, #4ade80);\n  font: inherit;\n  font-size: 11px;\n  cursor: pointer;\n}\n.pl-status[data-v-359cb6a9]:hover {\n  background: color-mix(in srgb, var(--zen-text, #e5e5ea) 8%, transparent);\n}\n.pl-status.warn[data-v-359cb6a9] {\n  color: var(--zen-warning, #f5b041);\n}\n.pl-count[data-v-359cb6a9] {\n  color: var(--zen-muted, #9aa0aa);\n  font-variant-numeric: tabular-nums;\n}\n.pl-pop[data-v-359cb6a9] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  width: min(340px, 88vw);\n  box-sizing: border-box;\n  padding: 10px;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n}\n.pl-pop-head[data-v-359cb6a9] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n.pl-pop-title[data-v-359cb6a9] {\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n.pl-out[data-v-359cb6a9] {\n  margin: 0;\n  max-height: 320px;\n  overflow: auto;\n  padding: 6px 8px;\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-surface-2, #26262d);\n  font-family: var(--zen-mono, ui-monospace, monospace);\n  font-size: 10.5px;\n  line-height: 1.45;\n  white-space: pre-wrap;\n  word-break: break-word;\n  user-select: text;\n}\n.pl-warn[data-v-359cb6a9] {\n  margin: 0;\n  padding-left: 16px;\n  font-size: 11px;\n  color: var(--zen-warning, #f5b041);\n}\n\n.lhost[data-v-caa49d38] {\n  position: relative;\n  box-sizing: border-box;\n  width: 100%;\n  height: 100%;\n  min-height: 0;\n}\n.lhost[data-v-caa49d38] > * {\n  position: absolute;\n  inset: 0;\n}\n\n/* natural content flow — the node auto-grows to fit (see mountWidget), so rows are never\n   scrolled and the Add button simply follows the last row. */\n.ls-mid[data-v-04aebb5a] {\n  display: flex;\n  flex-direction: column;\n}\n.ls-rows[data-v-04aebb5a] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n}\n.ls-empty[data-v-04aebb5a] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 5px;\n  padding: 14px 8px;\n  text-align: center;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);\n}\n.ls-empty > .mdi[data-v-04aebb5a] {\n  font-size: 24px;\n  opacity: 0.8;\n}\n.ls-empty > span[data-v-04aebb5a] {\n  font-size: 11px;\n}\n.ls-row[data-v-04aebb5a] {\n  position: relative;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  transition: transform 0.15s ease;\n}\n.ls-row.off[data-v-04aebb5a] {\n  opacity: 0.5;\n}\n/* A group's rows step in under its header, joined by a rule down the side. */\n.ls-row.grouped[data-v-04aebb5a] {\n  margin-left: 6px;\n  padding-left: 6px;\n  border-left: 2px solid color-mix(in srgb, var(--zen-accent, #6366f1) 45%, transparent);\n}\n.ls-group[data-v-04aebb5a] {\n  position: relative;\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  min-height: 26px;\n  padding: 0 2px 0 0;\n  border-radius: var(--zen-radius, 6px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 6%, transparent);\n  transition: transform 0.15s ease;\n}\n.ls-rows.settling .ls-group[data-v-04aebb5a] {\n  transition: none;\n}\n.ls-group.muted .ls-gname[data-v-04aebb5a] {\n  text-decoration: line-through;\n  color: var(--zen-muted, #9aa0aa);\n}\n.ls-fold[data-v-04aebb5a],\n.ls-gname[data-v-04aebb5a] {\n  border: 0;\n  background: none;\n  color: inherit;\n  font: inherit;\n  cursor: pointer;\n  padding: 0;\n}\n.ls-fold[data-v-04aebb5a] {\n  flex: none;\n  width: 20px;\n  height: 24px;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 16px;\n  line-height: 1;\n}\n.ls-fold[data-v-04aebb5a]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.ls-gname[data-v-04aebb5a] {\n  flex: 1;\n  min-width: 0;\n  height: 24px;\n  overflow: hidden;\n  text-align: left;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  font-size: 12px;\n  font-weight: 600;\n}\n.ls-gname-edit[data-v-04aebb5a] {\n  flex: 1;\n  min-width: 0;\n  height: 22px;\n  padding: 0 5px;\n  font: inherit;\n  font-size: 12px;\n  font-weight: 600;\n  color: var(--zen-text, #e5e5ea);\n  background: var(--zen-bg, #1a1a1f);\n  border: 1px solid var(--zen-accent, #6366f1);\n  border-radius: var(--zen-radius, 6px);\n  outline: none;\n}\n.ls-driven[data-v-04aebb5a],\n.ls-solo[data-v-04aebb5a] {\n  flex: none;\n  font-size: 13px;\n  color: var(--zen-accent, #6366f1);\n}\n.ls-gcount[data-v-04aebb5a] {\n  flex: 0 1 auto;\n  max-width: 45%;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  padding: 0 4px;\n  font-size: 10.5px;\n  font-variant-numeric: tabular-nums;\n  color: var(--zen-muted, #9aa0aa);\n}\n/* The grabbed row is lifted, not ghosted — it's the real row, translated, so it stays exactly\n   its own size at any canvas zoom. z-index carries it over its neighbours as it passes them. */\n.ls-rows.settling .ls-row[data-v-04aebb5a] {\n  transition: none;\n}\n.ls-row.dragging[data-v-04aebb5a] {\n  z-index: 5;\n  transition: none;\n  box-shadow: 0 6px 16px rgb(0 0 0 / 45%);\n  border-radius: var(--zen-radius, 6px);\n  cursor: grabbing;\n}\n/* grip + dot travel together, so they pair at 2px instead of the row's 6px */\n.ls-gutter[data-v-04aebb5a] {\n  flex: none;\n  display: inline-flex;\n  align-items: center;\n  gap: 2px;\n}\n.ls-grip[data-v-04aebb5a] {\n  flex: none;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: 12px;\n  cursor: grab;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 14px;\n  line-height: 1;\n  /* The gesture-layer rules a drag handle needs (see useDragSurface): without touch-action the\n     browser reserves the gesture for scroll and fires pointercancel on the first pixel of\n     movement, and without user-select the drag turns into a text selection. */\n  touch-action: none;\n  -webkit-user-select: none;\n  user-select: none;\n}\n/* the glyph must never be the pointer target — the grip itself is what the press resolves to */\n.ls-grip[data-v-04aebb5a] > * {\n  pointer-events: none;\n  /* the icon font draws this glyph high in its box: measured 0.75px above the dot's centre at\n     14px, so it comes down that much (in em, to hold at any size) */\n  transform: translateY(0.054em);\n}\n.ls-grip[data-v-04aebb5a]:active {\n  cursor: grabbing;\n}\n.ls-grip[data-v-04aebb5a]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.ls-pick[data-v-04aebb5a] {\n  flex: 1;\n  min-width: 0;\n}\n/* No width: ZenNumber's intrinsic width is derived from the widest value its own min/max can\n   produce, so every row lines up at exactly the size the digits need. The 84px this used to\n   hardcode was two pixels short of \"-10.00\". */\n.ls-str[data-v-04aebb5a] {\n  flex: none;\n}\n.ls-confirm[data-v-04aebb5a] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  max-width: 230px;\n  padding: 6px 6px 4px;\n}\n.ls-confirm-text[data-v-04aebb5a] {\n  font-size: 12px;\n  line-height: 1.4;\n  color: var(--zen-text, #e5e5ea);\n}\n.ls-confirm-actions[data-v-04aebb5a] {\n  display: flex;\n  justify-content: flex-end;\n  gap: 6px;\n}\n.ls-pop-head[data-v-04aebb5a] {\n  padding: 4px 8px 6px;\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.06em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n\n.nr-row[data-v-616b0b9a] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  height: 18px;\n}\n.nr-slider[data-v-616b0b9a] {\n  flex: 1;\n  min-width: 0;\n}\n.nr-tip[data-v-616b0b9a] {\n  position: fixed;\n  z-index: 10000;\n  transform: translate(-50%, -100%);\n  padding: 2px 6px;\n  font-size: 11px;\n  font-weight: 600;\n  font-variant-numeric: tabular-nums;\n  line-height: 1.3;\n  white-space: nowrap;\n  color: var(--zen-text, #e5e5ea);\n  background: var(--zen-surface, #202026);\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 6px);\n  box-shadow: 0 4px 12px rgb(0 0 0 / 45%);\n  pointer-events: none;\n}\n.nr-end[data-v-616b0b9a] {\n  flex: none;\n  font-size: 10.5px;\n  font-variant-numeric: tabular-nums;\n  color: var(--zen-muted, #9aa0aa);\n}\n.nr-menu[data-v-616b0b9a] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  width: 210px;\n  padding: 6px 8px 8px;\n}\n.nr-head[data-v-616b0b9a] {\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.06em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n.nr-field[data-v-616b0b9a] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 10px;\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n}\n.nr-presets[data-v-616b0b9a] {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 4px;\n  padding-top: 2px;\n}\n.nr-preset[data-v-616b0b9a] {\n  padding: 2px 7px;\n  font: inherit;\n  font-size: 11px;\n  color: var(--zen-muted, #cfd2d8);\n  background: color-mix(in srgb, var(--zen-text, #fff) 6%, transparent);\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 6px);\n  cursor: pointer;\n}\n.nr-preset[data-v-616b0b9a]:hover {\n  border-color: var(--zen-accent, #6366f1);\n  color: var(--zen-text, #e5e5ea);\n}\n\n/* The only positioned ancestor inside the widget, so every zone's offsetTop is measured against\n   it. Nothing between it and a row may be positioned or the drag maths silently shifts. */\n.rg-groups[data-v-c9d8e03d] {\n  position: relative;\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n}\n.rg-group[data-v-c9d8e03d] {\n  display: flex;\n  flex-direction: column;\n  gap: 5px;\n  padding: 4px 6px 6px;\n  border: 1px solid var(--zen-surface-border, var(--zen-border, #34343c));\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);\n  transition:\n    border-color 0.12s ease,\n    background 0.12s ease,\n    transform 0.15s ease;\n}\n.rg-group[data-v-c9d8e03d]:hover {\n  background: color-mix(in srgb, var(--zen-text, #fff) 5%, transparent);\n}\n/* the group the pointer is over, and the one the row came from */\n.rg-group.drop[data-v-c9d8e03d] {\n  border-color: var(--zen-accent, #6366f1);\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 10%, transparent);\n}\n.rg-group.source[data-v-c9d8e03d]:not(.drop) {\n  border-style: dashed;\n}\ntextarea.rg-prompt.rg-prompt[data-v-c9d8e03d] {\n  width: 100%;\n  min-height: 28px;\n  padding: 5px 8px;\n}\n.rg-groups.settling .rg-group[data-v-c9d8e03d],\n.rg-groups.settling .rg-row[data-v-c9d8e03d] {\n  transition: none;\n}\n.rg-group.lifted[data-v-c9d8e03d] {\n  position: relative;\n  z-index: 1;\n  transition: none;\n  background: color-mix(in srgb, var(--zen-text, #fff) 5%, var(--zen-surface, #1f1f24));\n  box-shadow: 0 6px 18px rgb(0 0 0 / 35%);\n}\n.rg-head[data-v-c9d8e03d] {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  min-height: 24px;\n  padding-left: 2px;\n}\n.rg-label[data-v-c9d8e03d] {\n  flex: 1;\n  min-width: 0;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  cursor: help;\n}\n.rg-title[data-v-c9d8e03d] {\n  font-size: 12px;\n  color: var(--zen-text, #e5e5ea);\n  white-space: nowrap;\n}\n.rg-count[data-v-c9d8e03d] {\n  flex: none;\n  padding: 0 5px;\n  border-radius: 999px;\n  background: color-mix(in srgb, var(--zen-text, #fff) 7%, transparent);\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  line-height: 15px;\n}\n/* An empty group still has to be a target big enough to aim at, so it keeps a row's worth of\n   height rather than collapsing to its header. */\n.rg-slot[data-v-c9d8e03d] {\n  margin: 0;\n  padding: 6px;\n  text-align: center;\n  font-size: 10px;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-surface-border, var(--zen-border, #34343c));\n  border-radius: var(--zen-radius, 6px);\n}\n.rg-rows[data-v-c9d8e03d] {\n  display: flex;\n  flex-direction: column;\n  gap: 5px;\n}\n.rg-row[data-v-c9d8e03d] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.rg-row.off[data-v-c9d8e03d] {\n  opacity: 0.5;\n}\n/* The grabbed row is lifted, not ghosted — it's the real row, translated, so it stays exactly its\n   own size at any canvas zoom. The z-index carries it over the groups it passes; no ancestor may\n   set one, or it would be trapped inside its own group's stacking context. */\n.rg-row.dragging[data-v-c9d8e03d] {\n  position: relative;\n  z-index: 5;\n  box-shadow: 0 6px 16px rgb(0 0 0 / 45%);\n  border-radius: var(--zen-radius, 6px);\n  cursor: grabbing;\n}\n.rg-grip[data-v-c9d8e03d] {\n  flex: none;\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  width: 12px;\n  cursor: grab;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 14px;\n  line-height: 1;\n  /* The gesture-layer rules a drag handle needs (see useDragSurface): without touch-action the\n     browser reserves the gesture for scroll and fires pointercancel on the first pixel of\n     movement, and without user-select the drag turns into a text selection. */\n  touch-action: none;\n  -webkit-user-select: none;\n  user-select: none;\n}\n/* the glyph must never be the pointer target — the grip itself is what the press resolves to */\n.rg-grip[data-v-c9d8e03d] > * {\n  pointer-events: none;\n}\n.rg-grip[data-v-c9d8e03d]:active {\n  cursor: grabbing;\n}\n.rg-grip[data-v-c9d8e03d]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.rg-pick[data-v-c9d8e03d] {\n  flex: 1;\n  min-width: 0;\n}\n/* No width: ZenNumber's intrinsic width is now derived from the widest value its own min/max\n   can produce, so every row lines up at exactly the size the digits need and nothing clips. */\n.rg-str[data-v-c9d8e03d] {\n  flex: none;\n}\n\n/* content-driven panel: the node grows to fit this form */\n\n/* stacked field (label above a full-width control) */\n.si-field[data-v-289f994b] {\n  display: flex;\n  flex-direction: column;\n  gap: 3px;\n}\n/* inline row (label left, control right) */\n.si-row[data-v-289f994b] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 8px;\n  min-height: 24px;\n}\n.si-lbl[data-v-289f994b] {\n  display: inline-flex;\n  align-items: center;\n  gap: 5px;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 11px;\n  font-weight: 600;\n}\n.si-lbl .mdi[data-v-289f994b] {\n  font-size: 14px;\n}\n.si-grow[data-v-289f994b] {\n  flex: 1;\n  min-width: 0;\n}\n.si-project[data-v-289f994b] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n}\n.si-sel[data-v-289f994b] {\n  display: flex;\n  align-items: center;\n  gap: 7px;\n  min-width: 0;\n}\n.si-sel .mdi[data-v-289f994b] {\n  flex: none;\n  font-size: 15px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.si-sel-name[data-v-289f994b] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.si-opt-ic[data-v-289f994b] {\n  flex: none;\n  font-size: 15px;\n  color: var(--zen-accent, #6366f1);\n}\n.si-opt-name[data-v-289f994b] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.si-newbtn[data-v-289f994b] {\n  justify-content: flex-start !important;\n}\n\n/* quality */\n.si-quality[data-v-289f994b] {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  flex: 1;\n  min-width: 0;\n  max-width: 60%;\n}\n.si-qval[data-v-289f994b] {\n  flex: none;\n  min-width: 26px;\n  text-align: right;\n  font-variant-numeric: tabular-nums;\n  color: var(--zen-text, #e5e5ea);\n}\n.si-sep[data-v-289f994b] {\n  height: 1px;\n  background: var(--zen-border, #34343c);\n  opacity: 0.7;\n  margin: 1px 0;\n}\n\n/* collapsible header */\n.si-exp[data-v-289f994b] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  width: 100%;\n  padding: 3px 2px;\n  background: none;\n  border: none;\n  cursor: pointer;\n  font: inherit;\n  font-size: 11px;\n  font-weight: 600;\n  color: var(--zen-muted, #9aa0aa);\n  text-align: left;\n}\n.si-exp[data-v-289f994b]:hover {\n  color: var(--zen-text, #e5e5ea);\n}\n.si-exp .mdi[data-v-289f994b] {\n  font-size: 14px;\n}\n.si-badge[data-v-289f994b] {\n  margin-left: auto;\n  padding: 1px 6px;\n  border-radius: 999px;\n  font-size: 9px;\n  font-weight: 700;\n  letter-spacing: 0.02em;\n  color: var(--zen-accent-text, #fff);\n  background: var(--zen-accent, #6366f1);\n}\n.si-exp-body[data-v-289f994b] {\n  padding: 0 2px 2px;\n}\n.si-sub[data-v-289f994b] {\n  display: block;\n  margin-bottom: 3px;\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n}\n\n/* destination footer */\n.si-dest[data-v-289f994b] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  margin-top: 1px;\n  padding: 5px 7px;\n  border-radius: var(--zen-radius, 7px);\n  background: var(--zen-input, #1b1b20);\n  border: 1px solid var(--zen-border, #34343c);\n  color: var(--zen-text, #e5e5ea);\n  font-size: 11px;\n}\n.si-dest .mdi[data-v-289f994b] {\n  flex: none;\n  font-size: 14px;\n  color: var(--zen-accent, #6366f1);\n}\n.si-dest-path[data-v-289f994b] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n\n.sp[data-v-8adc7196] {\n  position: relative;\n}\n.sp-preview[data-v-8adc7196] {\n  position: relative;\n  flex: 1 1 0;\n  min-height: 0;\n  width: 100%;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border-radius: var(--zen-radius, 8px);\n}\n.sp-preview img[data-v-8adc7196] {\n  display: block;\n  border-radius: var(--zen-radius, 8px);\n  max-width: 100%;\n  max-height: 100%;\n  width: auto;\n  height: auto;\n  object-fit: contain;\n  /* no native image-drag ghost; the drag falls through to litegraph (moves the node) */\n  -webkit-user-drag: none;\n  user-select: none;\n}\n.sp-none[data-v-8adc7196] {\n  flex-direction: column;\n  gap: 6px;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  text-align: center;\n  padding: 8px;\n}\n.sp-none .mdi[data-v-8adc7196] {\n  font-size: 26px;\n  opacity: 0.8;\n}\n\n/* batch pager (bottom-center) */\n.sp-pager[data-v-8adc7196] {\n  position: absolute;\n  bottom: 6px;\n  left: 50%;\n  transform: translateX(-50%);\n  z-index: 3;\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  padding: 2px 4px;\n  border-radius: var(--zen-radius, 7px);\n  background: rgba(0, 0, 0, 0.5);\n  border: 1px solid rgba(255, 255, 255, 0.12);\n  backdrop-filter: blur(4px);\n  /* the body is pointer-events:none (drag-through), so controls opt back in + stay visible */\n  pointer-events: auto;\n}\n.sp-count[data-v-8adc7196] {\n  font-size: 11px;\n  color: #fff;\n  min-width: 38px;\n  text-align: center;\n}\n\n/* hover actions (top-right): download + lightbox */\n.sp-actions[data-v-8adc7196] {\n  position: absolute;\n  top: 6px;\n  right: 6px;\n  z-index: 3;\n  display: flex;\n  gap: 4px;\n  opacity: 0;\n  pointer-events: none;\n  transition: opacity 0.12s ease;\n}\n.sp-preview.sp-hot .sp-actions[data-v-8adc7196] {\n  opacity: 1;\n  pointer-events: auto;\n}\n/* A dark chip with a white icon, so the buttons read over any picture; the same as\n   Load Image's (ImagePick.vue's .li-ov-btn). ZenIconButton's own look (no background, muted icon) is for a toolbar, hence\n   the !important. Pointing at one fills it with the accent. */\n.sp-act[data-v-8adc7196] {\n  width: 26px !important;\n  height: 26px !important;\n  border: 1px solid rgba(255, 255, 255, 0.14) !important;\n  background: rgba(0, 0, 0, 0.46) !important;\n  color: #fff !important;\n  backdrop-filter: blur(4px);\n}\n.sp-act[data-v-8adc7196]:hover {\n  background: var(--zen-accent, #6366f1) !important;\n  border-color: var(--zen-accent, #6366f1) !important;\n  color: var(--zen-accent-text, #fff) !important;\n}\n\n.tl[data-v-e451bbd8] {\n  display: grid;\n  grid-template-columns: 250px minmax(0, 1fr);\n  gap: 14px;\n  height: 100%;\n  min-height: 0;\n}\n.tl-side[data-v-e451bbd8] {\n  display: flex;\n  flex-direction: column;\n  gap: 8px;\n  min-height: 0;\n  padding-right: 14px;\n  border-right: 1px solid var(--zen-border, #34343c);\n}\n.tl-side-top[data-v-e451bbd8] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.tl-search[data-v-e451bbd8] {\n  flex: 1;\n  min-width: 0;\n}\n.tl-list[data-v-e451bbd8] {\n  flex: 1;\n  min-height: 0;\n  overflow-y: auto;\n  display: flex;\n  flex-direction: column;\n  gap: 2px;\n}\n.tl-cat[data-v-e451bbd8] {\n  padding: 8px 6px 3px;\n  font-size: 10px;\n  font-weight: 600;\n  letter-spacing: 0.06em;\n  text-transform: uppercase;\n  color: var(--zen-muted, #9aa0aa);\n}\n.tl-item[data-v-e451bbd8] {\n  display: flex;\n  flex-direction: column;\n  gap: 1px;\n  padding: 6px 8px;\n  text-align: left;\n  font: inherit;\n  color: var(--zen-text, #e5e5ea);\n  background: none;\n  border: 1px solid transparent;\n  border-radius: var(--zen-radius, 7px);\n  cursor: pointer;\n}\n.tl-item[data-v-e451bbd8]:hover {\n  background: color-mix(in srgb, var(--zen-text, #fff) 6%, transparent);\n}\n.tl-item.on[data-v-e451bbd8] {\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 16%, transparent);\n  border-color: color-mix(in srgb, var(--zen-accent, #6366f1) 45%, transparent);\n}\n.tl-item-name[data-v-e451bbd8] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  font-size: 12.5px;\n  font-weight: 600;\n}\n.tl-used[data-v-e451bbd8] {\n  font-size: 13px;\n  color: var(--zen-accent, #6366f1);\n}\n.tl-item-sub[data-v-e451bbd8],\n.tl-none[data-v-e451bbd8] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.tl-item-sub[data-v-e451bbd8] {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.tl-none[data-v-e451bbd8] {\n  padding: 16px 8px;\n  text-align: center;\n}\n.tl-edit[data-v-e451bbd8] {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n  min-width: 0;\n  min-height: 0;\n}\n.tl-fields[data-v-e451bbd8] {\n  display: flex;\n  gap: 10px;\n}\n.tl-field[data-v-e451bbd8] {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n  flex: 0 0 200px;\n  min-width: 0;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.tl-field.tl-name[data-v-e451bbd8] {\n  flex: 1;\n}\n.tl-cat-input[data-v-e451bbd8],\n.tl-area[data-v-e451bbd8] {\n  font: inherit;\n  color: var(--zen-text, #e5e5ea);\n  background: var(--zen-surface, #202026);\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  outline: none;\n}\n.tl-cat-input[data-v-e451bbd8] {\n  height: 28px;\n  padding: 0 8px;\n  font-size: 12px;\n}\n.tl-cat-input[data-v-e451bbd8]:focus,\n.tl-area[data-v-e451bbd8]:focus {\n  border-color: var(--zen-accent, #6366f1);\n}\n.tl-area[data-v-e451bbd8] {\n  flex: 1;\n  min-height: 0;\n  resize: none;\n  padding: 10px 12px;\n  font-family: var(--zen-font-mono, ui-monospace, \"SF Mono\", Menlo, monospace);\n  font-size: 12.5px;\n  line-height: 1.55;\n}\n.tl-foot[data-v-e451bbd8] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.tl-count[data-v-e451bbd8] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.tl-grow[data-v-e451bbd8] {\n  flex: 1;\n}\n@media (max-width: 640px) {\n.tl[data-v-e451bbd8] {\n    grid-template-columns: minmax(0, 1fr);\n    grid-template-rows: 170px minmax(0, 1fr);\n}\n.tl-side[data-v-e451bbd8] {\n    padding: 0 0 10px;\n    border-right: 0;\n    border-bottom: 1px solid var(--zen-border, #34343c);\n}\n}\n\n.st-pick[data-v-b520f037] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n}\n.st-combo[data-v-b520f037] {\n  flex: 1;\n  min-width: 0;\n}\n/* One line, always: a long name is cut short with an ellipsis, never wrapped under itself. */\n.st-current[data-v-b520f037],\n.st-placeholder[data-v-b520f037] {\n  display: block;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.st-current[data-v-b520f037] {\n  font-weight: 600;\n}\n.st-placeholder[data-v-b520f037] {\n  color: var(--zen-muted, #9aa0aa);\n}\n.st-opt[data-v-b520f037] {\n  display: flex;\n  align-items: baseline;\n  justify-content: space-between;\n  gap: 10px;\n  min-width: 0;\n  width: 100%;\n}\n.st-opt-name[data-v-b520f037] {\n  flex: 1;\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.st-opt-cat[data-v-b520f037] {\n  flex: none;\n  font-size: 10.5px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.st-pick[data-v-b520f037],\n.st-note[data-v-b520f037] {\n  flex: none;\n}\n/* The text takes the rest of the node, and scrolls inside it when there is more. */\n/* ZenWidget's footer spacer grows too; this outweighs it, so the slack goes to the text. */\n.st-preview[data-v-b520f037],\n.st-empty[data-v-b520f037] {\n  flex: 1000 1 0;\n  min-height: 0;\n}\n.st-preview[data-v-b520f037] {\n  display: block;\n  overflow-y: auto;\n  padding: 7px 9px;\n  text-align: left;\n  white-space: pre-wrap;\n  overflow-wrap: anywhere;\n  font: inherit;\n  font-size: 11.5px;\n  line-height: 1.45;\n  color: var(--zen-muted, #b9bcc4);\n  background: color-mix(in srgb, var(--zen-text, #fff) 4%, transparent);\n  border: 1px solid var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n  cursor: pointer;\n}\n.st-preview[data-v-b520f037]:hover {\n  border-color: var(--zen-accent, #6366f1);\n  color: var(--zen-text, #e5e5ea);\n}\n.st-empty[data-v-b520f037] {\n  display: grid;\n  place-items: center;\n  padding: 10px 8px;\n  text-align: center;\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 7px);\n}\n.st-note[data-v-b520f037] {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  font-size: 11px;\n  color: var(--zen-warning, #f59e0b);\n}\n.st-link[data-v-b520f037] {\n  margin-left: auto;\n  padding: 0;\n  font: inherit;\n  color: var(--zen-accent, #6366f1);\n  background: none;\n  border: 0;\n  cursor: pointer;\n  text-decoration: underline;\n}\n.zen-widget[data-v-566c7d03]{display:flex;flex-direction:column;width:100%;padding:6px 2px;box-sizing:border-box;cursor:default;font-size:12px;color:var(--zen-text, #e5e5ea)}.zen-widget.fill[data-v-566c7d03]{height:100%;min-height:0}.zen-widget.has-footer[data-v-566c7d03]{flex:1 0 auto}.zen-widget-spacer[data-v-566c7d03]{flex:1 1 0;min-height:0}.zen-widget.drag-through[data-v-566c7d03]{cursor:inherit}.zen-row[data-v-33277610]{display:flex;width:100%;min-width:0}.zen-row[data-v-33277610]>*{flex:0 0 auto;width:auto}.zen-row[data-v-33277610]>[data-grow]{flex:1 1 var(--zen-row-min, 120px);width:auto;min-width:0}.zen-scroll{scrollbar-color:var( --zen-scrollbar, var(--dialog-surface, color-mix(in srgb, var(--zen-text, #e5e5ea) 24%, transparent)) ) transparent}:where(.zen-scroll,.zen-scroll *){scrollbar-width:thin}[data-zen-layer]{--zen-scrollbar: color-mix(in srgb, var(--zen-text, #e5e5ea) 32%, transparent)}:where(.zen-surface){box-sizing:border-box;border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius-surface, var(--zen-radius, 7px));background:var(--zen-chrome-bg, var(--zen-surface, #202026));box-shadow:var(--zen-shadow-pop, 0 10px 30px rgb(0 0 0 / 45%));color:var(--zen-text, #e5e5ea);font-family:var(--p-font-family, system-ui, sans-serif)}.zen-pop-tooltip[data-v-34f78306]{pointer-events:none}.zen-pop-anchor[data-v-34f78306]{display:inline-flex}.zen-pop[data-v-34f78306]{position:fixed;z-index:100000;min-width:160px;max-width:min(360px,92vw);padding:5px;display:flex;flex-direction:column;gap:1px}.zen-tip[data-v-e12bb9ef]{display:inline-grid;place-items:center;width:16px;height:16px;padding:0;margin:0;border:none;background:none;color:var(--zen-muted, #9aa0aa);cursor:help;border-radius:var(--zen-radius, 6px);flex:none;vertical-align:middle}.zen-tip.inline[data-v-e12bb9ef]{display:inline;width:auto;height:auto;font:inherit;color:inherit;text-align:inherit;text-decoration:underline dotted transparent;text-underline-offset:3px;transition:text-decoration-color .15s ease}.zen-tip.inline[data-v-e12bb9ef]:hover,.zen-tip.inline[data-v-e12bb9ef]:focus-visible{color:inherit;text-decoration-color:color-mix(in srgb,currentColor 55%,transparent)}.zen-tip svg[data-v-e12bb9ef]{width:13px;height:13px}.zen-tip[data-v-e12bb9ef]:hover,.zen-tip[data-v-e12bb9ef]:focus-visible{color:var(--zen-accent, #8ab4ff)}.zen-tip[data-v-e12bb9ef]:focus-visible{outline:2px solid var(--zen-accent, #8ab4ff);outline-offset:1px}.zen-tip-body[data-v-e12bb9ef]{max-width:280px;padding:8px 10px;font-size:12px;line-height:1.45;color:var(--zen-text, #e5e5ea);white-space:normal}.zen-field[data-v-9c483aa7]{display:flex;flex-direction:column;gap:2px;min-width:0}.zf-row[data-v-9c483aa7]{display:flex;align-items:center;gap:6px;min-width:0}.zen-field.stack .zf-row[data-v-9c483aa7]{flex-direction:column;align-items:stretch;gap:3px}.zf-label-wrap[data-v-9c483aa7]{flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;min-width:0}.zf-label[data-v-9c483aa7]{flex:0 0 auto;font-size:11px;color:var(--zen-muted, #9aa0aa);white-space:nowrap}.zf-control[data-v-9c483aa7]{flex:1 1 auto;min-width:0;display:flex;align-items:center;--zen-control-min: 0px}.zf-control[data-v-9c483aa7]>*{flex:1 1 auto;min-width:0}.zf-hint[data-v-9c483aa7]{font-size:10px;color:var(--zen-muted, #9aa0aa);opacity:.8}:root{--zen-dur-fast: .12s;--zen-dur: .2s}@media(prefers-reduced-motion:reduce){:root{--zen-dur-fast: 0s;--zen-dur: 0s}}:root[data-zen-motion=reduce]{--zen-dur-fast: 0s;--zen-dur: 0s}@media(prefers-reduced-motion:reduce){:root[data-zen-motion=full]{--zen-dur-fast: .12s;--zen-dur: .2s}}.zen-ico-img[data-v-819f0eab]{width:1em;height:1em;object-fit:contain;display:inline-block;vertical-align:-.15em;border-radius:var(--zen-radius, 7px)}.zen-section[data-v-217a9770]{display:flex;flex-direction:column;min-width:0;color:var(--zen-text, #e5e5ea)}.zen-section.plain+.zen-section.plain[data-v-217a9770]{border-top:1px solid var(--zen-border, #34343c)}.zen-section.card[data-v-217a9770]{border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-surface, #202026)}.zs-head[data-v-217a9770]{display:flex;align-items:center;gap:4px;min-height:26px}.zen-section.plain>.zs-head[data-v-217a9770]{padding:4px 0}.zen-section.card>.zs-head[data-v-217a9770]{padding:3px 4px 3px 8px}.zs-toggle[data-v-217a9770]{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:5px;padding:2px 0;border:0;border-radius:var(--zen-radius, 4px);background:none;color:inherit;font:inherit;font-size:11.5px;font-weight:600;text-align:left;cursor:pointer}.zs-toggle.static[data-v-217a9770]{cursor:default}.zs-toggle[data-v-217a9770]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zs-toggle[data-v-217a9770]:disabled{cursor:default}.zen-section.disabled>.zs-head[data-v-217a9770]{opacity:.5}.zs-chev[data-v-217a9770]{flex:0 0 auto;font-size:14px;color:var(--zen-muted, #9aa0aa);transition:transform var(--zen-dur, .2s) ease}.zen-section.open>.zs-head .zs-chev[data-v-217a9770]{transform:rotate(90deg)}.zs-icon[data-v-217a9770]{flex:0 0 auto;font-size:14px;color:var(--zen-muted, #9aa0aa)}.zs-title[data-v-217a9770]{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.zs-meta[data-v-217a9770]{margin-left:auto;padding-left:8px;flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:400;font-size:11px;color:var(--zen-muted, #9aa0aa)}.zs-actions[data-v-217a9770]{flex:0 0 auto;display:flex;align-items:center;gap:2px}.zs-wrap[data-v-217a9770]{display:grid;grid-template-rows:0fr;transition:grid-template-rows var(--zen-dur, .2s) ease}.zen-section.open>.zs-wrap[data-v-217a9770]{grid-template-rows:1fr}.zs-clip[data-v-217a9770]{min-height:0;min-width:0}.zs-clip.clipped[data-v-217a9770]{overflow:hidden}.zen-section:not(.open)>.zs-wrap>.zs-clip[data-v-217a9770]{visibility:hidden;transition:visibility 0s var(--zen-dur, .2s)}.zs-body[data-v-217a9770]{display:flex;flex-direction:column;gap:var(--zen-section-gap, 8px)}.zen-section.plain>.zs-wrap>.zs-clip>.zs-body[data-v-217a9770]{padding:2px 0 10px}.zen-section.card>.zs-wrap>.zs-clip>.zs-body[data-v-217a9770]{padding:2px 8px 8px}.zen-sections[data-v-be050f3f]{display:flex;flex-direction:column;min-width:0}.zen-resize-handle[data-v-732b507d]{position:relative;z-index:1;flex:0 0 8px;touch-action:none;user-select:none;background:transparent}.vertical[data-v-732b507d]{cursor:col-resize}.horizontal[data-v-732b507d]{cursor:row-resize}.both[data-v-732b507d]{cursor:move}.zen-resize-handle[data-v-732b507d]:after{content:\"\";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border-radius:999px;background:var(--zen-accent, #6366f1);opacity:0;transition:opacity var(--zen-dur-fast, .12s) ease;pointer-events:none}.vertical[data-v-732b507d]:after{width:3px;height:32px;max-height:calc(100% - 4px)}.horizontal[data-v-732b507d]:after{width:32px;height:3px;max-width:calc(100% - 4px)}.both[data-v-732b507d]:after{width:8px;height:8px}.zen-resize-handle[data-v-732b507d]:hover:after,.zen-resize-handle.active[data-v-732b507d]:after,.zen-resize-handle[data-v-732b507d]:focus-visible:after{opacity:1}.zen-resize-handle[data-v-732b507d]:focus-visible{outline:2px solid var(--zen-focus-ring, var(--zen-accent, #6366f1));outline-offset:1px}.line[data-v-732b507d]{flex-basis:1px;background:var(--zen-border, #34343c);transition:background var(--zen-dur-fast, .12s) ease}.line[data-v-732b507d]:before{content:\"\";position:absolute}.line.vertical[data-v-732b507d]:before{inset:0 -2.5px}.line.horizontal[data-v-732b507d]:before{inset:-2.5px 0}.line[data-v-732b507d]:hover,.line.active[data-v-732b507d]{background:var(--zen-accent, #6366f1)}.line[data-v-732b507d]:after{display:none}.zen-split[data-v-a558794f]{display:flex;width:100%;height:100%;min-width:0;min-height:0}.zen-split.vertical[data-v-a558794f]{flex-direction:column}.zen-split.dragging[data-v-a558794f]{user-select:none}.zen-split.horizontal.dragging[data-v-a558794f]{cursor:col-resize}.zen-split.vertical.dragging[data-v-a558794f]{cursor:row-resize}.zsp-pane[data-v-a558794f]{position:relative;min-width:0;min-height:0;overflow:hidden}.zsp-pane.collapsed[data-v-a558794f]{visibility:hidden}.zen-scroll[data-v-d68b9d36]{height:100%;min-height:0;overflow-y:auto;overflow-x:hidden}.zen-scroll.x[data-v-d68b9d36]{overflow-x:auto;overflow-y:hidden}.zen-scroll-ov[data-v-d68b9d36]{position:relative;height:100%;min-height:0;overflow:hidden}.zen-scroll-viewport[data-v-d68b9d36]{scrollbar-width:none;will-change:scroll-position}.zen-scroll-viewport[data-v-d68b9d36]::-webkit-scrollbar{display:none}.zen-scroll-track[data-v-d68b9d36]{position:absolute;top:0;right:0;bottom:0;width:12px;z-index:4;opacity:0;transition:opacity .2s ease}.zen-scroll-ov:hover .zen-scroll-track[data-v-d68b9d36],.zen-scroll-ov.active .zen-scroll-track[data-v-d68b9d36]{opacity:1}.zen-scroll-thumb[data-v-d68b9d36]{position:absolute;top:0;right:3px;width:6px;border-radius:var(--zen-radius-sm, 4px);background:var(--zen-scrollbar, color-mix(in srgb, var(--zen-text, #e5e5ea) 28%, transparent));transition:width .15s ease,right .15s ease,background .15s ease;touch-action:none;cursor:pointer}.zen-scroll-track:hover .zen-scroll-thumb[data-v-d68b9d36],.zen-scroll-thumb[data-v-d68b9d36]:active{width:8px;right:2px;background:var(--zen-accent, #6366f1)}.zen-scroll-ov.x .zen-scroll-track[data-v-d68b9d36]{top:auto;left:0;width:auto;height:12px}.zen-scroll-ov.x .zen-scroll-thumb[data-v-d68b9d36]{inset:auto auto 3px 0;width:auto;height:6px}.zen-scroll-ov.x .zen-scroll-track:hover .zen-scroll-thumb[data-v-d68b9d36],.zen-scroll-ov.x .zen-scroll-thumb[data-v-d68b9d36]:active{width:auto;right:auto;height:8px;bottom:2px}.zen-view[data-v-f7345db8]{position:relative;display:flex;flex-direction:column;height:100%;min-height:0;overflow:hidden;background:var(--zen-bg, #1a1a1f);color:var(--zen-text, #e5e5ea);font-family:var(--p-font-family, system-ui, sans-serif)}.zen-view-body[data-v-f7345db8]{flex:1 1 0;min-height:0}.zen-view-body.fill[data-v-f7345db8]{display:flex}.zen-view-body.pad[data-v-f7345db8]{padding:10px}.zen-toolbar[data-v-ea3754a7]{flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:7px 9px;border-bottom:1px solid var(--zen-surface-border, var(--zen-border, #34343c));background:var(--zen-chrome-bg, var(--zen-surface, #202026))}.tb-icon[data-v-ea3754a7]{font-size:15px;color:var(--zen-accent, #6366f1)}.tb-title[data-v-ea3754a7]{font-size:12px;font-weight:600;color:var(--zen-text, #e5e5ea);white-space:nowrap}.tb-grow[data-v-ea3754a7]{flex:1}.zen-btn[data-v-44a20193]{display:inline-flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;user-select:none;font-family:inherit;font-size:12px;font-weight:600;box-sizing:border-box;height:var(--zen-control-h, 28px);padding:0 12px;border-radius:var(--zen-radius, 7px);border:1px solid var(--zen-control-border, var(--zen-border, #34343c));background:var(--zen-control-bg, var(--zen-surface, #202026));color:var(--zen-text, #e5e5ea);transition:border-color var(--zen-dur-fast, .12s) ease,background var(--zen-dur-fast, .12s) ease,color var(--zen-dur-fast, .12s) ease,filter var(--zen-dur-fast, .12s) ease}.zen-btn[data-v-44a20193]:hover:not(:disabled){border-color:var(--zen-control-hover-border, var(--zen-accent, #6366f1));background:var(--zen-control-hover-bg, var(--zen-control-bg))}.zen-btn[data-v-44a20193]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zen-btn[data-v-44a20193]:disabled{opacity:.45;cursor:not-allowed}.zen-btn .mdi[data-v-44a20193]{font-size:15px}.zen-btn.block[data-v-44a20193]{width:100%}.zen-btn.sm[data-v-44a20193]{height:var(--zen-control-h-sm, 24px);padding:0 9px;font-size:11px}.zen-btn.primary[data-v-44a20193]{background:var(--zen-accent, #6366f1);border-color:var(--zen-accent, #6366f1);color:var(--zen-accent-text, #fff)}.zen-btn.primary[data-v-44a20193]:hover:not(:disabled){border-color:color-mix(in srgb,var(--zen-accent, #6366f1) 72%,var(--zen-accent-text, #fff));background:color-mix(in srgb,var(--zen-accent, #6366f1) 72%,var(--zen-accent-text, #fff))}.zen-btn.ghost[data-v-44a20193]{background:transparent;border-color:transparent}.zen-btn.ghost[data-v-44a20193]:hover:not(:disabled){background:color-mix(in srgb,var(--zen-text, #e5e5ea) 10%,transparent);border-color:transparent}.zen-btn.danger[data-v-44a20193]:hover:not(:disabled){background:var(--zen-danger, #dc2626);border-color:var(--zen-danger, #dc2626);color:var(--zen-danger-text, #fff)}.zen-iconbtn[data-v-350d2f84]{display:inline-flex;align-items:center;justify-content:center;flex:none;box-sizing:border-box;width:var(--zen-control-h, 28px);height:var(--zen-control-h, 28px);border:1px solid transparent;border-radius:var(--zen-radius, 7px);background:none;color:var(--zen-muted, #9aa0aa);cursor:pointer;user-select:none;transition:background var(--zen-dur-fast, .12s) ease,color var(--zen-dur-fast, .12s) ease}.zen-iconbtn[data-v-350d2f84]:hover:not(:disabled){background:color-mix(in srgb,var(--zen-text, #e5e5ea) 12%,transparent);color:var(--zen-text, #e5e5ea)}.zen-iconbtn.active[data-v-350d2f84]{color:var(--zen-accent, #6366f1)}.zen-iconbtn.danger[data-v-350d2f84]:hover:not(:disabled){background:var(--zen-danger, #dc2626);color:var(--zen-danger-text, #fff)}.zen-iconbtn[data-v-350d2f84]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zen-iconbtn.sm[data-v-350d2f84]{width:var(--zen-control-h-sm, 24px);height:var(--zen-control-h-sm, 24px)}.zen-iconbtn[data-v-350d2f84]:disabled{cursor:not-allowed;opacity:.4;cursor:default}.zen-iconbtn .mdi[data-v-350d2f84]{font-size:16px;line-height:1}.zen-iconbtn .mdi[data-v-350d2f84]:before{display:block;line-height:1}.zen-lotus[data-v-b2ab3c2d]{display:inline-block;flex:none;width:1.2em;overflow:visible}.petal[data-v-b2ab3c2d]{transform:rotate(var(--r));transform-origin:0 0;transform-box:view-box}.zen-lotus.interactive[data-v-b2ab3c2d]{cursor:pointer}.blooming .petal[data-v-b2ab3c2d]{animation:zen-lotus-bloom-b2ab3c2d .9s cubic-bezier(.3,0,.2,1) both}@keyframes zen-lotus-bloom-b2ab3c2d{0%{transform:rotate(var(--r)) scale(1)}28%{transform:rotate(calc(var(--r) * .12)) scale(.82,.9)}62%{transform:rotate(calc(var(--r) * 1.12)) scale(1.06)}to{transform:rotate(var(--r)) scale(1)}}.ripple[data-v-b2ab3c2d]{fill:none;stroke:currentColor;stroke-width:3;opacity:0;transform-origin:0 2px;transform-box:view-box;animation:zen-lotus-ripple-b2ab3c2d 1s ease-out .25s both}@keyframes zen-lotus-ripple-b2ab3c2d{0%{opacity:.6;transform:scale(.3)}to{opacity:0;transform:scale(1.5)}}.breathing>g[data-v-b2ab3c2d]{transform-origin:0 0;transform-box:view-box;animation:zen-lotus-breathe-b2ab3c2d 4.8s ease-in-out infinite}@keyframes zen-lotus-breathe-b2ab3c2d{0%,to{transform:scale(.94);opacity:.85}50%{transform:scale(1.04);opacity:1}}@media(prefers-reduced-motion:reduce){.blooming .petal[data-v-b2ab3c2d]{animation-name:zen-lotus-glow-b2ab3c2d}.ripple[data-v-b2ab3c2d]{animation:none}.breathing>g[data-v-b2ab3c2d]{animation-name:zen-lotus-fade-b2ab3c2d}}:root[data-zen-motion=reduce] .blooming .petal[data-v-b2ab3c2d]{animation-name:zen-lotus-glow-b2ab3c2d}:root[data-zen-motion=reduce] .ripple[data-v-b2ab3c2d]{animation:none}:root[data-zen-motion=reduce] .breathing>g[data-v-b2ab3c2d]{animation-name:zen-lotus-fade-b2ab3c2d}@keyframes zen-lotus-glow-b2ab3c2d{0%,to{transform:rotate(var(--r));filter:none}40%{transform:rotate(var(--r));filter:brightness(1.6) drop-shadow(0 0 6px currentColor)}}@keyframes zen-lotus-fade-b2ab3c2d{0%,to{opacity:.75}50%{opacity:1}}.zen-empty[data-v-71f336c3]{margin:auto;display:flex;flex-direction:column;align-items:center;gap:6px;max-width:260px;padding:20px;text-align:center;color:var(--zen-muted, #9aa0aa);font-family:var(--p-font-family, system-ui, sans-serif)}.zen-empty-mark[data-v-71f336c3]{width:44px;margin-bottom:4px;fill:currentColor;opacity:.45}.zen-empty-icon[data-v-71f336c3]{width:auto;font-size:36px}.zen-empty-title[data-v-71f336c3]{color:var(--zen-text, #e5e5ea);font-size:13px;font-weight:600}.zen-empty-text[data-v-71f336c3]{margin:0;font-size:12px;line-height:1.5}.zen-empty-actions[data-v-71f336c3]{display:flex;gap:6px;margin-top:6px}.zen-input[data-v-2eb7b22b]{width:100%;box-sizing:border-box;font:inherit;font-size:12px;line-height:normal;background:var(--zen-field-bg, var(--zen-input, #1b1b20));color:var(--zen-text, #e5e5ea);border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);height:var(--zen-control-h, 28px);padding:0 9px;transition:border-color var(--zen-dur-fast, .12s) ease}.zen-input[data-v-2eb7b22b]::placeholder{color:var(--zen-muted, #9aa0aa)}.zen-input[data-v-2eb7b22b]:focus{outline:none;border-color:var(--zen-accent, #6366f1)}.zen-input[data-v-2eb7b22b]:disabled{opacity:.45;cursor:not-allowed}.zen-input.sm[data-v-2eb7b22b]{height:var(--zen-control-h-sm, 24px);padding:0 8px;font-size:11px}.zen-input.area[data-v-2eb7b22b]{height:auto;padding:7px 9px;resize:vertical;min-height:64px;line-height:1.45}.zen-input.area.auto[data-v-2eb7b22b]{resize:none;min-height:0;overflow:hidden}.zmi[data-v-95e0cb5c]{position:relative;display:grid;min-height:0;border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);background:var(--zen-field-bg, var(--zen-input, #1b1b20));transition:border-color var(--zen-dur-fast, .12s) ease}.zmi.focused[data-v-95e0cb5c]{border-color:var(--zen-accent, #6366f1)}.zmi-mirror[data-v-95e0cb5c],.zmi-area[data-v-95e0cb5c]{grid-area:1 / 1;box-sizing:border-box;margin:0;padding:8px 10px;border:0;font-family:inherit;font-size:12.5px;line-height:1.5;letter-spacing:normal;white-space:pre-wrap;overflow-wrap:break-word;word-break:normal;scrollbar-gutter:stable}.zmi-mirror[data-v-95e0cb5c]{overflow:hidden;color:transparent;pointer-events:none}.zmi-mirror mark[data-v-95e0cb5c]{border-radius:3px;background:color-mix(in srgb,var(--zen-accent, #6366f1) 28%,transparent);color:transparent;box-shadow:0 0 0 1px color-mix(in srgb,var(--zen-accent, #6366f1) 45%,transparent)}.zmi-mirror mark.unknown[data-v-95e0cb5c]{background:color-mix(in srgb,var(--zen-danger, #dc2626) 22%,transparent);box-shadow:0 0 0 1px color-mix(in srgb,var(--zen-danger, #dc2626) 55%,transparent);text-decoration:wavy underline var(--zen-danger, #dc2626)}.zmi-area[data-v-95e0cb5c]{height:100%;min-height:100%;resize:none;outline:none;background:transparent;color:var(--zen-text, #e5e5ea);caret-color:var(--zen-text, #e5e5ea)}.zmi.sized[data-v-95e0cb5c]{grid-template-rows:100%;overflow:hidden}.zmi-grip[data-v-95e0cb5c]{position:absolute;right:1px;bottom:1px;z-index:1;width:12px;height:12px;cursor:ns-resize;touch-action:none;background:linear-gradient(135deg,transparent 55%,var(--zen-muted, #9aa0aa) 55%,var(--zen-muted, #9aa0aa) 62%,transparent 62%),linear-gradient(135deg,transparent 75%,var(--zen-muted, #9aa0aa) 75%,var(--zen-muted, #9aa0aa) 82%,transparent 82%);opacity:.6}.zmi-grip[data-v-95e0cb5c]:hover{opacity:1}.zmi-area[data-v-95e0cb5c]::placeholder{color:var(--zen-muted, #9aa0aa);opacity:.7}.zmi-peek[data-v-95e0cb5c]{position:fixed;z-index:100000;display:flex;flex-direction:column;gap:6px;width:220px;padding:6px;border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);background:var(--zen-surface, #202026);box-shadow:0 10px 30px #00000073;pointer-events:none}.zmi-peek>img[data-v-95e0cb5c],.zmi-peek[data-v-95e0cb5c]>img,.zmi-peek[data-v-95e0cb5c]>video{display:block;width:100%;max-height:180px;border-radius:calc(var(--zen-radius, 7px) - 2px);background:var(--zen-media-bg, #0b0b0e);object-fit:contain}.zmi-peek>.mdi[data-v-95e0cb5c]{display:grid;place-items:center;height:90px;color:var(--zen-muted, #9aa0aa);font-size:32px}.zmi-pop[data-v-95e0cb5c]{position:fixed;z-index:100000;width:250px;max-height:260px;overflow-y:auto;padding:4px}.zmi-item[data-v-95e0cb5c]{display:flex;align-items:center;gap:8px;width:100%;padding:4px 6px;border:0;border-radius:6px;background:none;color:var(--zen-text, #e5e5ea);font:inherit;text-align:left;cursor:pointer}.zmi-item.on[data-v-95e0cb5c]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 25%,transparent)}.zmi-thumb[data-v-95e0cb5c]{display:grid;flex:none;place-items:center;width:30px;height:30px;overflow:hidden;border-radius:5px;background:var(--zen-media-bg, #0b0b0e);color:var(--zen-muted, #9aa0aa)}.zmi-thumb img[data-v-95e0cb5c]{width:100%;height:100%;object-fit:contain}.zmi-text[data-v-95e0cb5c]{display:flex;flex-direction:column;min-width:0}.zmi-text b[data-v-95e0cb5c]{color:#9db7ff;font-size:12px}.zmi-text small[data-v-95e0cb5c]{overflow:hidden;color:var(--zen-muted, #9aa0aa);font-size:10.5px;white-space:nowrap;text-overflow:ellipsis}.zen-off[data-v-95e0cb5c]{opacity:.45}.zen-num[data-v-f28d60a9]{display:inline-flex;align-items:stretch;height:var(--zen-control-h, 28px);box-sizing:border-box;border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);background:var(--zen-field-bg, var(--zen-input, #1b1b20));overflow:hidden;user-select:none;font-size:11px;font-variant-numeric:tabular-nums;min-width:calc(50px + var(--zn-chars, 4) * 1ch)}.zen-num.bare[data-v-f28d60a9]{min-width:calc(2px + var(--zn-chars, 4) * 1ch)}.zen-num[data-v-f28d60a9]:focus-within{border-color:var(--zen-accent, #6366f1)}.zen-num.sm[data-v-f28d60a9]{height:var(--zen-control-h-sm, 24px)}.zen-num.disabled[data-v-f28d60a9]{cursor:not-allowed;opacity:.5;pointer-events:none}.zn-step[data-v-f28d60a9]{flex:none;width:21px;border:none;background:none;color:var(--zen-muted, #9aa0aa);cursor:pointer;display:inline-flex;align-items:center;justify-content:center}.zn-step.hot[data-v-f28d60a9]{color:var(--zen-text, #e5e5ea);background:color-mix(in srgb,var(--zen-text, #e5e5ea) 9%,transparent)}.zn-step .mdi[data-v-f28d60a9]{font-size:13px}.zn-val[data-v-f28d60a9]{flex:1;min-width:calc(var(--zn-chars, 4) * 1ch);display:flex;align-items:center;justify-content:center;cursor:ew-resize;border-left:1px solid var(--zen-border, #34343c);border-right:1px solid var(--zen-border, #34343c);padding:0 2px}.zen-num.bare .zn-val[data-v-f28d60a9]{border-left:none;border-right:none}.zn-input[data-v-f28d60a9]{width:100%;min-width:0;background:none;border:none;outline:none;color:var(--zen-text, #e5e5ea);font:inherit;line-height:normal;text-align:center;pointer-events:none;cursor:ew-resize}.zn-input.live[data-v-f28d60a9]{pointer-events:auto;cursor:text}.zn-input[data-v-f28d60a9]:disabled{color:var(--zen-muted, #9aa0aa)}.zen-tg.sm[data-v-9ef2e1ca]{height:var(--zen-control-h-sm, 24px)}.zen-tg.disabled[data-v-9ef2e1ca]{opacity:.45}.zen-tg.disabled .zen-tg-b[data-v-9ef2e1ca]{cursor:not-allowed}.zen-tg[data-v-9ef2e1ca]{display:inline-flex;box-sizing:border-box;height:var(--zen-control-h, 28px);border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);overflow:hidden;background:var(--zen-control-bg, var(--zen-surface, #202026))}.zen-tg-b[data-v-9ef2e1ca]{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:0 9px;border:none;background:none;color:var(--zen-muted, #9aa0aa);font-size:11px;font-weight:600;font-family:inherit;cursor:pointer;transition:background var(--zen-dur-fast, .12s) ease,color var(--zen-dur-fast, .12s) ease}.zen-tg-b[data-v-9ef2e1ca]:first-child{border-radius:calc(var(--zen-radius, 7px) - 1px) 0 0 calc(var(--zen-radius, 7px) - 1px)}.zen-tg-b[data-v-9ef2e1ca]:last-child{border-radius:0 calc(var(--zen-radius, 7px) - 1px) calc(var(--zen-radius, 7px) - 1px) 0}.zen-tg-b[data-v-9ef2e1ca]:only-child{border-radius:calc(var(--zen-radius, 7px) - 1px)}.zen-tg-b+.zen-tg-b[data-v-9ef2e1ca]{border-left:1px solid var(--zen-border, #34343c)}.zen-tg-b[data-v-9ef2e1ca]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}.zen-tg-b[data-v-9ef2e1ca]:hover{color:var(--zen-text, #e5e5ea)}.zen-tg-b.on[data-v-9ef2e1ca]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 22%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--zen-accent, #6366f1) 55%,transparent);color:var(--zen-accent, #6366f1)}.zen-tg-b .mdi[data-v-9ef2e1ca]{font-size:14px}.zen-tg.zen-tg-collapse .zen-tg-b[data-v-9ef2e1ca]{gap:0;padding:4px 7px;transition:background var(--zen-dur, .2s) ease,color var(--zen-dur, .2s) ease,gap var(--zen-dur, .2s) ease}.zen-tg.zen-tg-collapse .zen-tg-l[data-v-9ef2e1ca]{display:inline-grid;grid-template-columns:0fr;overflow:hidden;opacity:0;white-space:nowrap;transition:grid-template-columns var(--zen-dur, .2s) ease,opacity var(--zen-dur, .2s) ease}.zen-tg.zen-tg-collapse .zen-tg-l>span[data-v-9ef2e1ca]{min-width:0;overflow:hidden}.zen-tg.zen-tg-collapse .zen-tg-b.on[data-v-9ef2e1ca]{gap:5px;padding:4px 9px 4px 8px}.zen-tg.zen-tg-collapse .zen-tg-b.on .zen-tg-l[data-v-9ef2e1ca]{grid-template-columns:1fr;opacity:1}.zres[data-v-124b6fb4]{display:flex;flex-direction:column;gap:9px;width:268px;padding:6px;color:var(--zen-text, #e5e5ea);font-size:11px}.zres-sec[data-v-124b6fb4]{color:var(--zen-muted, #9aa0aa);font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}.zres-aspects[data-v-124b6fb4]{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.zres-chip[data-v-124b6fb4]{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;height:46px;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-field-bg, var(--zen-input, #1b1b20));color:var(--zen-muted, #9aa0aa);font:inherit;font-size:10px;font-weight:600;cursor:pointer}.zres-chip[data-v-124b6fb4]:hover,.zres-chip.on[data-v-124b6fb4]{border-color:var(--zen-accent, #6366f1);color:var(--zen-text, #e5e5ea)}.zres-chip.on[data-v-124b6fb4]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 16%,var(--zen-field-bg, var(--zen-input, #1b1b20)))}.zres-rect[data-v-124b6fb4]{display:block;border-radius:1px;background:currentColor;opacity:.7}.zres-wide[data-v-124b6fb4] .zen-tg{display:flex;width:100%}.zres-wide[data-v-124b6fb4] .zen-tg-b{flex:1}.zres-div[data-v-124b6fb4]{border-top:1px solid var(--zen-border, #34343c)}.zres-row[data-v-124b6fb4]{display:flex;align-items:center;gap:8px}.zres-lbl[data-v-124b6fb4]{flex:1;color:var(--zen-muted, #9aa0aa)}.zres-wh[data-v-124b6fb4]{display:flex;align-items:center;gap:6px}.zres-wh label[data-v-124b6fb4]{display:flex;flex:1;align-items:center;gap:5px;color:var(--zen-muted, #9aa0aa)}.zres-wh label[data-v-124b6fb4] .zen-num{flex:1;min-width:0}.zres-foot[data-v-124b6fb4]{display:flex;align-items:center;color:var(--zen-muted, #9aa0aa);font-size:10px;font-variant-numeric:tabular-nums}.zres-grow[data-v-124b6fb4]{flex:1}.zen-off[data-v-124b6fb4]{opacity:.45}.zen-select[data-v-564bc28a]{position:relative;display:inline-flex;min-width:var(--zen-control-min, 90px)}.zs-trigger[data-v-564bc28a]{display:inline-flex;user-select:none;flex:1 1 auto;align-items:center;gap:6px;min-width:0;box-sizing:border-box;height:var(--zen-control-h, 28px);padding:0 6px 0 8px;font-size:12px;font-family:inherit;cursor:pointer;background:var(--zen-control-bg, var(--zen-surface, #202026));color:var(--zen-text, #e5e5ea);border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);transition:border-color var(--zen-dur-fast, .12s) ease}.zen-select.sm .zs-trigger[data-v-564bc28a]{height:var(--zen-control-h-sm, 24px);font-size:11px}.zs-trigger[data-v-564bc28a]:disabled{opacity:.45;cursor:not-allowed}.zs-trigger[data-v-564bc28a]:hover,.zen-select.open .zs-trigger[data-v-564bc28a]{border-color:var(--zen-control-hover-border, var(--zen-accent, #6366f1));background:var(--zen-control-hover-bg, var(--zen-control-bg))}.zs-trigger[data-v-564bc28a]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zs-label[data-v-564bc28a]{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left}.zs-caret[data-v-564bc28a]{font-size:16px;color:var(--zen-muted, #9aa0aa);flex:0 0 auto}.zs-ico[data-v-564bc28a]{font-size:14px;flex:0 0 auto}.zs-menu[data-v-564bc28a]{position:fixed;user-select:none;z-index:100000;max-height:260px;overflow-y:auto;padding:4px;display:flex;flex-direction:column;gap:1px}.zs-opt[data-v-564bc28a]{display:flex;align-items:center;gap:7px;padding:6px 8px;font-size:12px;font-family:inherit;text-align:left;cursor:pointer;background:none;border:none;color:var(--zen-text, #e5e5ea);border-radius:var(--zen-radius, 7px);white-space:nowrap}.zs-opt span[data-v-564bc28a]{flex:1}.zs-opt[data-v-564bc28a]:hover,.zs-opt.cur[data-v-564bc28a]{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 10%,transparent)}.zs-opt[data-v-564bc28a]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}.zs-opt.on[data-v-564bc28a]{color:var(--zen-accent, #6366f1)}.zs-check[data-v-564bc28a]{font-size:14px;color:var(--zen-accent, #6366f1);flex:0 0 auto}.zen-peek{position:fixed;display:flex;flex-direction:column;max-width:min(560px,60vw);overflow:hidden;border-radius:var(--zen-radius, 8px);pointer-events:none;animation:zen-peek-in var(--zen-dur-fast, .12s) ease-out}.zen-peek img,.zen-peek video{display:block;max-width:min(560px,60vw);max-height:min(480px,70vh);object-fit:contain;background:var(--zen-media-bg, #0b0b0e)}.zen-peek-custom{display:block;max-width:min(560px,60vw);max-height:min(480px,70vh);overflow:hidden;background:var(--zen-media-bg, #0b0b0e)}.zen-peek-audio{display:flex;align-items:center;gap:10px;padding:14px;color:var(--zen-muted, #9aa0aa);font-size:22px}.zen-peek-caption{display:flex;flex-direction:column;gap:2px;max-width:100%;padding:8px 10px;font-size:12px;line-height:1.4}.zen-peek-caption span{color:var(--zen-muted, #9aa0aa)}@keyframes zen-peek-in{0%{opacity:0;transform:scale(.97)}}@media(prefers-reduced-motion:reduce){:root:not([data-zen-motion=full]) .zen-peek{animation:none}}:root[data-zen-motion=reduce] .zen-peek{animation:none}.zen-combo[data-v-77bb9f63]{position:relative;width:100%;min-width:var(--zen-control-min, 90px)}.zc-trigger[data-v-77bb9f63]{display:flex;user-select:none;align-items:center;gap:6px;width:100%;box-sizing:border-box;min-height:var(--zen-control-h, 28px);background:var(--zen-control-bg, var(--zen-input, #1b1b20));color:var(--zen-text, #e5e5ea);border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);padding:4px 8px;font:inherit;font-size:12px;cursor:pointer;text-align:left;transition:border-color var(--zen-dur-fast, .12s) ease}.zc-trigger[data-v-77bb9f63]:hover:not(:disabled){border-color:var(--zen-control-hover-border, var(--zen-accent, #6366f1));background:var(--zen-control-hover-bg, var(--zen-control-bg))}.zc-trigger[data-v-77bb9f63]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zc-trigger.sm[data-v-77bb9f63]{min-height:var(--zen-control-h-sm, 24px);padding:2px 7px;font-size:11px}.zc-trigger[data-v-77bb9f63]:disabled{cursor:not-allowed;opacity:.45;cursor:default}.zen-combo.open .zc-trigger[data-v-77bb9f63]{border-color:var(--zen-accent, #6366f1)}.zc-current[data-v-77bb9f63]{flex:1;min-width:0;overflow:hidden}.zc-caret[data-v-77bb9f63]{flex:none;color:var(--zen-muted, #9aa0aa);transition:transform var(--zen-dur-fast, .12s) ease}.zen-combo.open .zc-caret[data-v-77bb9f63]{transform:rotate(180deg)}.zen-combo-menu{position:fixed;user-select:none;z-index:100000;display:flex;flex-direction:column;max-height:360px;overflow:hidden}.zen-combo-menu .zc-search{display:flex;align-items:center;gap:6px;padding:8px 10px;border-bottom:1px solid var(--zen-border, #34343c)}.zen-combo-menu .zc-search>.mdi{color:var(--zen-muted, #9aa0aa);font-size:16px}.zen-combo-menu .zc-search input{flex:1;user-select:text;min-width:0;background:none;border:none;outline:none;color:inherit;font:inherit;font-size:12px}.zen-combo-menu .zc-clear{border:none;background:none;color:var(--zen-muted, #9aa0aa);cursor:pointer;padding:0 2px}.zen-combo-menu .zc-search-actions{flex:none;display:inline-flex;align-items:center}.zen-combo-menu .zc-header{flex:none;border-bottom:1px solid var(--zen-border, #34343c)}.zen-combo-menu .zc-list{overflow-y:auto;padding:4px;min-height:0;will-change:scroll-position}.zen-combo-menu .zc-list.virt{overflow-anchor:none}.zen-combo-menu .zc-virt{position:relative;width:100%}.zen-combo-menu .zc-win{position:absolute;top:0;left:0;right:0}.zen-combo-menu .zc-opt{display:flex;align-items:center;gap:9px;padding:6px 8px;border-radius:var(--zen-radius, 7px);cursor:pointer;font-size:12px;box-sizing:border-box;overflow:hidden}.zen-combo-menu .zc-opt.active{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 10%,transparent)}.zen-combo-menu .zc-opt.sel{color:var(--zen-accent, #6366f1)}.zen-combo-menu .zc-opt-lbl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.zen-combo-menu .zc-sep{height:1px;margin:4px 6px;background:var(--zen-border, #34343c)}.zen-combo-menu .zc-empty{padding:16px;text-align:center;font-size:12px;color:var(--zen-muted, #9aa0aa)}.zen-combo-menu .zc-footer{border-top:1px solid var(--zen-border, #34343c);padding:6px}.zen-combo-menu.grid .zc-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(var(--zc-grid-min, 92px),1fr));gap:6px;align-content:start}.zen-combo-menu.grid .zc-opt{flex-direction:column;align-items:stretch;height:auto;gap:4px;padding:4px}.zen-combo-menu.grid .zc-empty{grid-column:1 / -1}.zen-switch[data-v-c2dc757b]{position:relative;flex:0 0 auto;width:42px;height:23px;padding:0;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-switch-radius, var(--zen-radius, 7px));background:var(--zen-surface, #202026);cursor:pointer;transition:background var(--zen-dur, .2s) ease,border-color var(--zen-dur, .2s) ease}.zen-switch.on[data-v-c2dc757b]{background:var(--zen-accent, #6366f1);border-color:var(--zen-accent, #6366f1)}.zen-switch[data-v-c2dc757b]:disabled{opacity:.5;cursor:default}.zen-switch .knob[data-v-c2dc757b]{position:absolute;top:1px;left:1px;width:19px;height:19px;border-radius:var(--zen-switch-radius, var(--zen-radius, 7px));background:#fff;display:flex;align-items:center;justify-content:center;transition:transform var(--zen-dur, .2s) ease;box-shadow:0 1px 2px #00000059}.zen-switch.on .knob[data-v-c2dc757b]{transform:translate(19px);background:var(--zen-accent-text, #fff)}.zen-switch[data-v-c2dc757b]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zen-switch .knob .mdi[data-v-c2dc757b]{font-size:12px;color:var(--zen-muted, #9aa0aa)}.zen-switch.on .knob .mdi[data-v-c2dc757b]{color:var(--zen-accent, #6366f1)}.zen-check[data-v-36edc25d]{display:inline-flex;align-items:center;gap:7px;background:none;border:none;cursor:pointer;color:var(--zen-text, #e5e5ea);font:inherit;font-size:12px;padding:0;text-align:left}.zen-check[data-v-36edc25d]:focus-visible{outline:none}.zen-check:focus-visible .box[data-v-36edc25d]{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px}.zen-check[data-v-36edc25d]:disabled{opacity:.5;cursor:default}.box[data-v-36edc25d]{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;flex:none;border:1px solid var(--zen-border, #34343c);border-radius:min(var(--zen-radius, 7px),6px);background:var(--zen-input, #1b1b20);color:var(--zen-accent-text, #fff);transition:background var(--zen-dur-fast, .12s) ease,border-color var(--zen-dur-fast, .12s) ease}.zen-check.on .box[data-v-36edc25d]{background:var(--zen-accent, #6366f1);border-color:var(--zen-accent, #6366f1)}.zen-check:hover:not(:disabled) .box[data-v-36edc25d]{border-color:var(--zen-accent, #6366f1)}.box .mdi[data-v-36edc25d]{font-size:13px;line-height:1}.lbl[data-v-36edc25d]{line-height:1.2}.zen-dot[data-v-73775b30]{display:inline-flex;align-items:center;gap:6px;padding:4px;margin:-4px;background:none;border:none;cursor:pointer;color:var(--zen-text, #e5e5ea);font:inherit;font-size:12px;line-height:1.2}.zen-dot[data-v-73775b30]:disabled{opacity:.4;cursor:default}.mark[data-v-73775b30]{position:relative;display:inline-block;flex:none;width:var(--zen-dot-size, 13px);height:var(--zen-dot-size, 13px);border-radius:var(--zen-dot-radius, var(--zen-radius, 7px));border:1px solid var(--zen-border, #34343c);background:var(--zen-input, #1b1b20);transition:border-color var(--zen-dur-fast, .12s) ease}.mark[data-v-73775b30]:after{content:\"\";position:absolute;inset:var(--zen-dot-gap, 2px);border-radius:max(0px,calc(min(var(--zen-dot-radius, var(--zen-radius, 7px)),var(--zen-dot-size, 13px) / 2) - 1px - var(--zen-dot-gap, 2px)));background:var(--zen-dot-on, var(--zen-accent, #6366f1));transform:scale(0);opacity:0;transition:transform var(--zen-dur-fast, .12s) ease,opacity var(--zen-dur-fast, .12s) ease}.zen-dot.on .mark[data-v-73775b30]{border-color:var(--zen-dot-on, var(--zen-accent, #6366f1))}.zen-dot.on .mark[data-v-73775b30]:after{transform:scale(1);opacity:1}.zen-dot:hover:not(:disabled) .mark[data-v-73775b30]{border-color:var(--zen-dot-on, var(--zen-accent, #6366f1))}.zen-dot:hover:not(:disabled):not(.on) .mark[data-v-73775b30]:after{transform:scale(1);opacity:.22}.zen-dot[data-v-73775b30]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:1px;border-radius:var(--zen-radius, 7px)}.zen-dot:not(.on) .lbl[data-v-73775b30]{color:var(--zen-muted, #9aa0aa)}.zvol[data-v-9e6c85be]{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 8px 0 2px;color:var(--zen-text, #e5e5ea);font-size:10.5px;user-select:none}.zvol.quiet[data-v-9e6c85be]{opacity:.45}.zvol-b[data-v-9e6c85be]{display:grid;place-items:center;width:26px;height:26px;padding:0;border:0;border-radius:var(--zen-radius, 7px);background:none;color:inherit;cursor:pointer}.zvol-b[data-v-9e6c85be]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 10%,transparent)}.zvol-b .mdi[data-v-9e6c85be]{font-size:17px}.zvol.off .zvol-b[data-v-9e6c85be]{color:var(--zen-muted, #9aa0aa)}.zvol-track[data-v-9e6c85be]{position:relative;width:72px;height:18px;cursor:pointer;touch-action:none}.zvol-track[data-v-9e6c85be]:before{position:absolute;top:50%;right:0;left:0;height:4px;border-radius:2px;background:color-mix(in srgb,var(--zen-text, #e5e5ea) 16%,transparent);transform:translateY(-50%);content:\"\"}.zvol-fill[data-v-9e6c85be]{position:absolute;top:50%;left:0;height:4px;border-radius:2px;background:var(--zen-accent, #6366f1);transform:translateY(-50%)}.zvol-knob[data-v-9e6c85be]{position:absolute;top:50%;width:11px;height:11px;border-radius:50%;background:var(--zen-text, #e5e5ea);box-shadow:0 1px 3px #00000073;transform:translate(-50%,-50%)}.zvol-n[data-v-9e6c85be]{min-width:20px;color:var(--zen-muted, #9aa0aa);font-variant-numeric:tabular-nums;text-align:right}.zce[data-v-b10dcc0e]{display:flex;flex-direction:column;gap:4px}.zce-box[data-v-b10dcc0e]{position:relative;height:80px;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-field-bg, var(--zen-input, #1b1b20))}.zce-svg[data-v-b10dcc0e]{display:block;width:100%;height:100%;cursor:crosshair}.zce-grid[data-v-b10dcc0e]{stroke:color-mix(in srgb,var(--zen-text, #e5e5ea) 7%,transparent);stroke-width:1;vector-effect:non-scaling-stroke}.zce-unit[data-v-b10dcc0e]{stroke:color-mix(in srgb,var(--zen-text, #e5e5ea) 25%,transparent);stroke-dasharray:3 3;stroke-width:1;vector-effect:non-scaling-stroke}.zce-area[data-v-b10dcc0e]{fill:color-mix(in srgb,var(--zen-accent, #6366f1) 16%,transparent)}.zce-line[data-v-b10dcc0e]{fill:none;stroke:var(--zen-accent, #6366f1);stroke-width:1.8;vector-effect:non-scaling-stroke}.zce-pt[data-v-b10dcc0e]{position:absolute;width:10px;height:10px;margin:-5px 0 0 -5px;border:2px solid var(--zen-accent, #6366f1);border-radius:50%;background:var(--zen-bg, #1a1a1f);cursor:grab;touch-action:none}.zce-pt[data-v-b10dcc0e]:hover{background:var(--zen-accent, #6366f1)}.zce-axis[data-v-b10dcc0e]{display:flex;justify-content:space-between;color:var(--zen-muted, #9aa0aa);font-size:10px}.zce-presets[data-v-b10dcc0e]{display:flex;flex-wrap:wrap;gap:4px}.zce-preset[data-v-b10dcc0e]{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:none;color:var(--zen-muted, #9aa0aa);font:inherit;font-size:10.5px;cursor:pointer}.zce-preset[data-v-b10dcc0e]:hover{border-color:var(--zen-accent, #6366f1);color:var(--zen-text, #e5e5ea)}.zen-off[data-v-b10dcc0e]{opacity:.45}.zen-slider[data-v-2a465bf0]{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:var(--zen-radius, 7px);background:var(--zen-border, #34343c);outline:none;cursor:pointer}.zen-slider[data-v-2a465bf0]:disabled{opacity:.5;cursor:default}.zen-slider[data-v-2a465bf0]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:var(--zen-radius, 7px);background:var(--zen-accent, #6366f1);border:2px solid var(--zen-bg, #1a1a1f);cursor:pointer;box-shadow:0 1px 3px #0006}.zen-slider[data-v-2a465bf0]::-moz-range-thumb{width:14px;height:14px;border:2px solid var(--zen-bg, #1a1a1f);border-radius:var(--zen-radius, 7px);background:var(--zen-accent, #6366f1);cursor:pointer}.zen-slider[data-v-2a465bf0]::-moz-range-track{height:4px;border-radius:var(--zen-radius, 7px);background:var(--zen-border, #34343c)}.zen-slider[data-v-2a465bf0]:focus-visible{box-shadow:0 0 0 2px var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent))}.zcp[data-v-2beb2797]{display:block;width:100%;min-width:var(--zen-control-min, 76px)}.zcp.compact[data-v-2beb2797]{display:inline-block;width:auto;min-width:0}.zcp.compact .zcp-trigger[data-v-2beb2797]{width:auto;height:auto;padding:0;border:none;background:none}.zcp-trigger[data-v-2beb2797]{display:flex;align-items:center;gap:6px;width:100%;height:var(--zen-control-h, 28px);box-sizing:border-box;padding:0 6px;border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);background:var(--zen-control-bg, var(--zen-input, #1b1b20));color:var(--zen-text, #e5e5ea);cursor:pointer;font:inherit;font-size:11px}.zcp-trigger[data-v-2beb2797]:hover{border-color:var(--zen-control-hover-border, var(--zen-accent, #6366f1));background:var(--zen-control-hover-bg, var(--zen-control-bg))}.zcp-sw[data-v-2beb2797]{width:16px;height:16px;flex:none;border-radius:4px;border:1px solid rgba(255,255,255,.2)}.zcp-sw.lg[data-v-2beb2797]{width:24px;height:24px}.zcp-hexlbl[data-v-2beb2797]{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left;text-transform:uppercase;font-variant-numeric:tabular-nums}.zcp-trigger .mdi[data-v-2beb2797]{font-size:14px;color:var(--zen-muted, #9aa0aa)}.zcp-pop[data-v-2beb2797]{position:fixed;z-index:100000;display:flex;flex-direction:column;gap:8px;padding:8px}.zcp-sv[data-v-2beb2797]{position:relative;width:100%;height:118px;border-radius:6px;overflow:hidden;cursor:crosshair;touch-action:none}.zcp-sv-white[data-v-2beb2797],.zcp-sv-black[data-v-2beb2797]{position:absolute;inset:0}.zcp-sv-white[data-v-2beb2797]{background:linear-gradient(to right,#fff,#fff0)}.zcp-sv-black[data-v-2beb2797]{background:linear-gradient(to top,#000,#0000)}.zcp-sv-thumb[data-v-2beb2797]{position:absolute;width:12px;height:12px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #00000080;transform:translate(-50%,-50%);pointer-events:none}.zcp-hue[data-v-2beb2797]{position:relative;width:100%;height:12px;border-radius:6px;cursor:pointer;touch-action:none;background:linear-gradient(to right,red,#ff0,#0f0,#0ff,#00f,#f0f,red)}.zcp-hue-thumb[data-v-2beb2797]{position:absolute;top:50%;width:12px;height:12px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #00000080;transform:translate(-50%,-50%);pointer-events:none}.zcp-row[data-v-2beb2797]{display:flex;align-items:center;gap:8px}.zcp-input[data-v-2beb2797]{flex:1;min-width:0;height:26px;box-sizing:border-box;padding:0 6px;border:1px solid var(--zen-control-border, var(--zen-border, #34343c));border-radius:var(--zen-radius, 7px);background:var(--zen-field-bg, var(--zen-input, #1b1b20));color:var(--zen-text, #e5e5ea);font:inherit;font-size:11px;text-transform:uppercase}.zcp-input[data-v-2beb2797]:focus{outline:none;border-color:var(--zen-accent, #6366f1)}.zcp-presets[data-v-2beb2797]{display:flex;gap:4px;flex-wrap:wrap}.zcp-pre[data-v-2beb2797]{width:20px;height:20px;padding:0;border-radius:4px;border:1px solid var(--zen-border, #34343c);cursor:pointer}.zen-off[data-v-2beb2797]{opacity:.45}.zen-dims[data-v-bb012b3c]{display:flex;align-items:center;flex-wrap:wrap;gap:5px}.zd-n[data-v-bb012b3c]{flex:1 1 60px;min-width:48px}.zd-x[data-v-bb012b3c]{flex:none;color:var(--zen-muted, #9aa0aa);font-size:11px}.zd-mp[data-v-bb012b3c]{flex:0 1 56px;min-width:44px}.zd-unit[data-v-bb012b3c],.zd-aspect[data-v-bb012b3c]{flex:none;font-size:10px;color:var(--zen-muted, #9aa0aa);font-variant-numeric:tabular-nums}.zd-aspect[data-v-bb012b3c]{margin-left:auto}.zen-off[data-v-bb012b3c]{opacity:.45}.zmi-lead[data-v-4282c43c]{flex:none;display:inline-flex;align-items:center}.zmi-wrap[data-v-4282c43c]{position:relative}.zmi[data-v-4282c43c]{display:flex;align-items:center;gap:9px;width:100%;text-align:left;cursor:pointer;font:inherit;font-size:12px;padding:7px 9px;border:none;border-radius:var(--zen-radius, 7px);background:none;color:var(--zen-text, #e5e5ea)}.zmi[data-v-4282c43c]:hover:not(:disabled),.zmi.on[data-v-4282c43c]{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 10%,transparent)}.zmi[data-v-4282c43c]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}.zmi[data-v-4282c43c]:disabled{opacity:.45;cursor:default}.zmi.danger[data-v-4282c43c]:hover:not(:disabled){background:var(--zen-danger, #dc2626);color:var(--zen-danger-text, #fff)}.zmi-ico[data-v-4282c43c]{flex:0 0 auto;font-size:15px;color:var(--zen-muted, #9aa0aa)}.zmi.danger:hover:not(:disabled) .zmi-ico[data-v-4282c43c]{color:var(--zen-danger-text, #fff)}.zmi-lbl[data-v-4282c43c]{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.zmi-caret[data-v-4282c43c]{margin-left:auto;flex:0 0 auto;font-size:15px;color:var(--zen-muted, #9aa0aa)}.zmi-hint[data-v-4282c43c]{margin-left:auto;flex:0 0 auto;font-size:10px;color:var(--zen-muted, #9aa0aa);font-variant-numeric:tabular-nums}.zmi-sub[data-v-4282c43c]{display:flex;flex-direction:column;gap:1px}.zen-msep[data-v-5c3057e1]{height:1px;background:var(--zen-border, #34343c);margin:4px}.zen-modal-back{position:fixed;inset:0;z-index:100100;display:flex;align-items:center;justify-content:center;background:#0000008c;backdrop-filter:blur(2px)}.zen-modal{display:flex;flex-direction:column;max-width:94vw;max-height:90vh;overflow:hidden;background:var(--zen-chrome-bg, var(--zen-surface, #202026));color:var(--zen-text, #e5e5ea);border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:calc(var(--zen-radius-surface, var(--zen-radius, 7px)) + 2px);box-shadow:0 24px 70px #0009;font-family:var(--p-font-family, system-ui, sans-serif)}.zen-modal .zm-head{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--zen-border, #34343c);flex:none}.zen-modal .zm-title{flex:none;font-size:13px;font-weight:600;white-space:nowrap}.zen-modal .zm-head-mid{flex:1;min-width:0;display:flex;align-items:center;gap:8px}.zen-modal .zm-x{border:none;background:none;color:var(--zen-muted, #9aa0aa);cursor:pointer;font-size:18px;display:inline-flex}.zen-modal .zm-x:hover{color:var(--zen-text, #e5e5ea)}.zen-modal .zm-body{flex:1;min-height:0;overflow:auto;padding:14px}.zen-modal .zm-foot{flex:none;border-top:1px solid var(--zen-border, #34343c);padding:10px 14px}.zw-root[data-v-5ca67f58]{position:fixed;inset:0;z-index:100200;pointer-events:none;font-family:var(--p-font-family, system-ui, sans-serif)}.zw-root.zw-backdrop[data-v-5ca67f58]{background:#0000006b;backdrop-filter:blur(2px);pointer-events:auto}.zw[data-v-5ca67f58]{position:fixed;pointer-events:auto;display:flex;flex-direction:column;overflow:hidden;color:var(--zen-text, #e5e5ea);background:var(--zen-glass, color-mix(in srgb, var(--zen-bg, #1a1a1f) 90%, transparent));border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius-surface, var(--zen-radius, 7px));box-shadow:0 24px 70px #0000008c;backdrop-filter:blur(12px)}.zw-bar[data-v-5ca67f58]{flex:0 0 auto;display:flex;align-items:center;gap:8px;height:40px;padding:0 8px 0 12px;cursor:grab;background:color-mix(in srgb,var(--zen-chrome-bg, var(--zen-surface, #202026)) 82%,transparent);border-bottom:1px solid var(--zen-surface-border, var(--zen-border, #34343c));user-select:none}.zw-bar[data-v-5ca67f58]:active{cursor:grabbing}.zw-icon[data-v-5ca67f58]{font-size:16px;color:var(--zen-accent, #6366f1)}.zw-title[data-v-5ca67f58]{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.zw-grow[data-v-5ca67f58]{flex:1}.zw-actions[data-v-5ca67f58]{display:inline-flex;align-items:center;gap:6px}.zw-no-drag[data-v-5ca67f58]{display:inline-flex;align-items:center;gap:2px;cursor:default}.zw-body[data-v-5ca67f58]{flex:1;min-height:0;display:flex}.zw-foot[data-v-5ca67f58]{flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:6px 12px;background:color-mix(in srgb,var(--zen-chrome-bg, var(--zen-surface, #202026)) 82%,transparent);border-top:1px solid var(--zen-surface-border, var(--zen-border, #34343c))}.zw-resize[data-v-5ca67f58]{position:absolute;right:0;bottom:0;width:16px;height:16px;cursor:nwse-resize;z-index:2}.zw-resize[data-v-5ca67f58]:after{content:\"\";position:absolute;right:3px;bottom:3px;width:7px;height:7px;border-right:2px solid var(--zen-muted, #9aa0aa);border-bottom:2px solid var(--zen-muted, #9aa0aa);opacity:.55}.zen-ctx[data-v-0b23826c]{position:fixed;z-index:100000;min-width:190px;max-height:70vh;overflow-y:auto;padding:4px;font-size:12px}.zen-ctx-item[data-v-0b23826c]{display:flex;align-items:center;gap:8px;width:100%;padding:6px 8px;border:0;border-radius:var(--zen-radius, 7px);background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}.zen-ctx-item[data-v-0b23826c]:hover:not(:disabled){background:color-mix(in srgb,var(--zen-accent, #6366f1) 22%,transparent)}.zen-ctx-item[data-v-0b23826c]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}.zen-ctx-item[data-v-0b23826c]:disabled{opacity:.4;cursor:default}.zen-ctx-item.danger[data-v-0b23826c]{color:var(--zen-danger, #dc2626)}.zen-ctx-item .mdi[data-v-0b23826c]{width:16px;color:var(--zen-muted, #9aa0aa);font-size:14px;text-align:center}.zen-ctx-item span[data-v-0b23826c]{flex:1}.zen-ctx-item kbd[data-v-0b23826c]{color:var(--zen-muted, #9aa0aa);font-family:inherit;font-size:10.5px}.zen-ctx-sep[data-v-0b23826c]{height:1px;margin:4px 2px;background:var(--zen-surface-border, var(--zen-border, #34343c))}.zen-ctx-head[data-v-0b23826c]{padding:5px 8px 3px;color:var(--zen-muted, #9aa0aa);font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}.zen-compare[data-v-7f4b84dd]{position:relative;overflow:hidden;width:100%;height:100%;user-select:none;touch-action:pan-y;background:var(--zen-surface-2, #222)}.zen-compare img[data-v-7f4b84dd]{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}.zen-compare.contain img[data-v-7f4b84dd]{object-fit:contain}.slider .zc-before[data-v-7f4b84dd]{clip-path:inset(0 calc(100% - var(--split)) 0 0)}.slider:not(.moving) .zc-before[data-v-7f4b84dd],.slider:not(.moving) .zc-line[data-v-7f4b84dd]{transition:clip-path var(--zen-dur, .2s) ease,left var(--zen-dur, .2s) ease}.dissolve .zc-before[data-v-7f4b84dd]{transition:opacity .45s ease}.dissolve.hovering .zc-before[data-v-7f4b84dd]{opacity:0}.zc-line[data-v-7f4b84dd]{position:absolute;top:0;bottom:0;left:var(--split);width:2px;margin-left:-1px;background:#ffffffe6;box-shadow:0 0 6px #0006;pointer-events:none}.zc-knob[data-v-7f4b84dd]{position:absolute;top:50%;left:50%;width:22px;height:22px;transform:translate(-50%,-50%) rotate(90deg);border-radius:50%;display:grid;place-items:center;background:#fffffff2;color:#222;font-size:14px;box-shadow:0 1px 4px #00000059;opacity:0;transition:opacity var(--zen-dur-fast, .12s)}.hovering .zc-knob[data-v-7f4b84dd],.zen-compare:focus-visible .zc-knob[data-v-7f4b84dd]{opacity:1}.zc-tag[data-v-7f4b84dd]{position:absolute;bottom:8px;font-size:10px;padding:2px 7px;border-radius:999px;background:#0000008c;color:#fff;backdrop-filter:blur(4px);pointer-events:none;opacity:0;transition:opacity var(--zen-dur-fast, .12s)}.hovering .zc-tag[data-v-7f4b84dd]{opacity:1}.zc-tag.left[data-v-7f4b84dd]{left:8px}.zc-tag.right[data-v-7f4b84dd]{right:8px}.zen-compare[data-v-7f4b84dd]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}.zmc[data-v-29f0e538]{display:flex;box-sizing:border-box;min-width:0;align-items:center;gap:4px;padding:5px 8px;border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius-surface, var(--zen-radius, 7px));background:color-mix(in srgb,var(--zen-surface, #202026) 88%,transparent);backdrop-filter:blur(10px);color:var(--zen-text, #e5e5ea);font-size:11px;user-select:none}.zmc-b[data-v-29f0e538]{display:inline-grid;flex:none;place-items:center;min-width:26px;height:26px;padding:0 4px;border:0;border-radius:var(--zen-radius, 7px);background:none;color:var(--zen-muted, #9aa0aa);font:inherit;cursor:pointer}.zmc-b[data-v-29f0e538]:hover,.zmc-b.on[data-v-29f0e538]{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 10%,transparent);color:var(--zen-text, #e5e5ea)}.zmc-b.on[data-v-29f0e538]{color:var(--zen-accent, #6366f1)}.zmc-b[data-v-29f0e538]:disabled{opacity:.4;cursor:default}.zmc-b .mdi[data-v-29f0e538]{font-size:17px}.zmc-rate[data-v-29f0e538]{min-width:38px;font-size:11px;font-weight:700;font-variant-numeric:tabular-nums}.zmc-time[data-v-29f0e538]{flex:none;min-width:44px;font-variant-numeric:tabular-nums;text-align:center}.zmc-time.soft[data-v-29f0e538]{color:var(--zen-muted, #9aa0aa)}.zmc-bar[data-v-29f0e538]{position:relative;flex:1;min-width:60px;height:22px;cursor:pointer;touch-action:none}.zmc-track[data-v-29f0e538]{position:absolute;top:50%;right:0;left:0;height:4px;overflow:hidden;border-radius:2px;background:color-mix(in srgb,var(--zen-text, #e5e5ea) 14%,transparent);transform:translateY(-50%);transition:height var(--zen-dur-fast, .12s)}.zmc-bar:hover .zmc-track[data-v-29f0e538]{height:6px}.zmc-buf[data-v-29f0e538]{position:absolute;top:0;bottom:0;background:color-mix(in srgb,var(--zen-text, #e5e5ea) 16%,transparent)}.zmc-fill[data-v-29f0e538]{position:absolute;top:0;bottom:0;left:0;background:var(--zen-accent, #6366f1)}.zmc-knob[data-v-29f0e538]{position:absolute;top:50%;width:12px;height:12px;border-radius:50%;background:var(--zen-text, #e5e5ea);box-shadow:0 1px 4px #0000007f;transform:translate(-50%,-50%) scale(0);transition:transform var(--zen-dur-fast, .12s)}.zmc-bar:hover .zmc-knob[data-v-29f0e538]{transform:translate(-50%,-50%) scale(1)}.zmc-tip[data-v-29f0e538]{position:absolute;bottom:100%;margin-bottom:4px;padding:2px 5px;border-radius:4px;background:#000c;color:#fff;font-size:10.5px;font-variant-numeric:tabular-nums;white-space:nowrap;transform:translate(-50%);pointer-events:none}.zmc.compact .zmc-time[data-v-29f0e538]{min-width:34px}.zmc.compact .zmc-bar[data-v-29f0e538]{min-width:40px}.zmc.tiny[data-v-29f0e538]{gap:2px;padding:4px 5px}.zmc.tiny[data-v-29f0e538] .zvol-track{display:none}.zlb[data-v-92030b8f]{position:fixed;inset:0;z-index:100300;display:flex;overflow:hidden;user-select:none;background:color-mix(in srgb,var(--zen-bg, #1a1a1f) 92%,transparent);backdrop-filter:blur(6px);font-family:var(--p-font-family, system-ui, sans-serif);color:var(--zen-text, #e5e5ea)}.zlb.inline[data-v-92030b8f]{position:absolute;z-index:1;border-radius:var(--zen-radius, 7px);background:var(--zen-bg, #1a1a1f);backdrop-filter:none}.zlb-main[data-v-92030b8f]{position:relative;flex:1;min-width:0;display:flex;flex-direction:column}.zlb-chrome[data-v-92030b8f]{display:flex;align-items:center;gap:2px;padding:3px;background:color-mix(in srgb,var(--zen-chrome-bg, var(--zen-surface, #202026)) 94%,transparent);border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius-surface, var(--zen-radius, 7px));box-shadow:var(--interface-floating-panel-shadow, 0 6px 18px rgba(0, 0, 0, .28));backdrop-filter:blur(12px)}.zlb-chrome .zen-iconbtn[data-v-92030b8f]{width:30px;height:30px}.zlb-top[data-v-92030b8f],.zlb-bottom[data-v-92030b8f]{position:absolute;left:12px;right:12px;z-index:4;display:flex;gap:8px;pointer-events:none;transition:opacity var(--zen-dur, .2s) ease,translate var(--zen-dur, .2s) ease}.zlb-top[data-v-92030b8f]>*,.zlb-bottom[data-v-92030b8f]>*{pointer-events:auto}.zlb-top[data-v-92030b8f]{top:12px;align-items:flex-start}.zlb-bottom[data-v-92030b8f]{bottom:12px;align-items:flex-end;justify-content:center;flex-wrap:wrap-reverse}.zlb-main.idle .zlb-top[data-v-92030b8f],.zlb-main.far-top .zlb-top[data-v-92030b8f]:not(:focus-within){opacity:0;translate:0 -6px}.zlb-main.idle .zlb-bottom[data-v-92030b8f],.zlb-main.far-bottom .zlb-bottom[data-v-92030b8f]:not(:focus-within,:has(.zlb-caret.on)){opacity:0;translate:0 6px}.zlb-main.far-top .zlb-top[data-v-92030b8f]:not(:focus-within)>*,.zlb-main.far-bottom .zlb-bottom[data-v-92030b8f]:not(:focus-within,:has(.zlb-caret.on))>*{pointer-events:none}.zlb-main.idle[data-v-92030b8f]{cursor:none}.zlb-grow[data-v-92030b8f]{flex:1}.zlb-info[data-v-92030b8f]{gap:6px;min-width:0;flex:0 0 auto;height:38px;box-sizing:border-box;padding:0 10px 0 4px;font-size:13px}.zlb-info[data-v-92030b8f]:not(:has(.zlb-pos)){padding-right:4px}.zlb-tip[data-v-92030b8f]{display:grid;place-items:center;width:30px;height:30px;font-size:15px;color:var(--zen-muted, #9aa0aa)}.zlb-pos[data-v-92030b8f],.zlb-zval[data-v-92030b8f]{font-size:11.5px;color:var(--zen-muted, #9aa0aa);font-variant-numeric:tabular-nums;white-space:nowrap}.zlb-zval[data-v-92030b8f]{min-width:40px;text-align:center}.zlb-tools[data-v-92030b8f]{position:relative;flex-wrap:wrap;justify-content:center;max-width:100%;overflow:hidden}.zlb-progress[data-v-92030b8f]{position:absolute;left:0;bottom:0;height:2px;width:100%;transform-origin:left;background:var(--zen-accent, #6366f1);animation:zlb-progress-92030b8f linear forwards}@keyframes zlb-progress-92030b8f{0%{transform:scaleX(0)}to{transform:scaleX(1)}}.zlb-caret[data-v-92030b8f]{display:inline-flex;align-items:center;justify-content:center;width:18px;height:30px;margin-left:-2px;padding:0;cursor:pointer;color:var(--zen-muted, #9aa0aa);background:none;border:1px solid transparent;border-radius:var(--zen-radius, 7px)}.zlb-caret .mdi[data-v-92030b8f]{line-height:1}.zlb-caret .mdi[data-v-92030b8f]:before{display:block;line-height:1}.zlb-caret[data-v-92030b8f]:hover,.zlb-caret.on[data-v-92030b8f]{color:var(--zen-text, #e5e5ea);background:color-mix(in srgb,var(--zen-text, #e5e5ea) 12%,transparent)}.zlb-slidepop[data-v-92030b8f]{display:flex;flex-direction:column;gap:12px;padding:10px 12px;min-width:230px}.zlb-slidepop-row[data-v-92030b8f]{display:flex;flex-direction:column;gap:6px}.zlb-slidepop-row.inline[data-v-92030b8f]{flex-direction:row;align-items:center;justify-content:space-between;cursor:pointer}.zlb-slidepop-speed[data-v-92030b8f]{display:flex;align-items:center;gap:10px}.zlb-slidepop-speed .zen-slider[data-v-92030b8f]{flex:1;min-width:0}.zlb-slidepop-value[data-v-92030b8f]{min-width:34px;text-align:right;font-size:12px;font-variant-numeric:tabular-nums;color:var(--zen-text, #e5e5ea)}.zlb-slidepop-label[data-v-92030b8f]{font-size:11.5px;font-weight:600;color:var(--zen-muted, #9aa0aa)}.zlb-sep[data-v-92030b8f]{width:1px;height:18px;margin:0 4px;background:var(--zen-surface-border, var(--zen-border, #34343c))}.zlb-side.zlb-side-enter-active[data-v-92030b8f],.zlb-side.zlb-side-leave-active[data-v-92030b8f]{transition:translate var(--zen-dur, .2s) cubic-bezier(.45,0,.2,1),margin-right var(--zen-dur, .2s) cubic-bezier(.45,0,.2,1),opacity var(--zen-dur, .2s) ease}.zlb-side.zlb-side-enter-from[data-v-92030b8f],.zlb-side.zlb-side-leave-to[data-v-92030b8f]{translate:calc(-100% - 12px) 0;margin-right:calc(-1 * (var(--zlb-side-w, 264px) + 12px));opacity:0}.zlb-side[data-v-92030b8f]{position:relative;z-index:5;flex:0 0 auto;display:flex;flex-direction:column;min-height:0;margin:12px 0 12px 12px;overflow:hidden;background:color-mix(in srgb,var(--zen-chrome-bg, var(--zen-surface, #202026)) 94%,transparent);border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius-surface, var(--zen-radius, 7px));box-shadow:var(--interface-floating-panel-shadow, 0 6px 18px rgba(0, 0, 0, .28));backdrop-filter:blur(12px)}.zlb-resize[data-v-92030b8f]{position:absolute;top:0;right:-3px;bottom:0;width:8px;z-index:4;cursor:ew-resize}.zlb-resize[data-v-92030b8f]:hover{background:color-mix(in srgb,var(--zen-accent, #6366f1) 45%,transparent)}.zlb-side-head[data-v-92030b8f]{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:8px 10px;border-bottom:1px solid var(--zen-border, #34343c)}.zlb-search[data-v-92030b8f]{flex:1;min-width:0;display:flex;align-items:center;gap:6px;height:28px;padding:0 8px;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-input, #1b1b20)}.zlb-search[data-v-92030b8f]:focus-within{border-color:var(--zen-accent, #6366f1)}.zlb-search .mdi[data-v-92030b8f]{font-size:14px;color:var(--zen-muted, #9aa0aa)}.zlb-search input[data-v-92030b8f]{flex:1;min-width:0;border:none;background:none;outline:none;color:var(--zen-text, #e5e5ea);font:inherit;font-size:12px}.zlb-tscroll[data-v-92030b8f]{flex:1;min-height:0}.zlb-tscroll[data-v-92030b8f] .zen-scroll-viewport{padding:10px 14px;overflow-anchor:none}.zlb-tscroll[data-v-92030b8f] .zen-scroll-thumb{width:4px;right:4px}.zlb-tscroll[data-v-92030b8f] .zen-scroll-track:hover .zen-scroll-thumb,.zlb-tscroll[data-v-92030b8f] .zen-scroll-thumb:active{width:6px;right:3px}.zlb-tpad[data-v-92030b8f]{position:relative;width:100%}.zlb-grid[data-v-92030b8f]{position:absolute;top:0;left:0;right:0;display:grid;align-content:start}.zlb-cell[data-v-92030b8f]{position:relative;aspect-ratio:1;padding:0;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-input, #1b1b20);cursor:pointer;overflow:hidden}.zlb-cell img[data-v-92030b8f],.zlb-cell video[data-v-92030b8f]{width:100%;height:100%;object-fit:cover;display:block}.zlb-grid.contain .zlb-cell img[data-v-92030b8f],.zlb-grid.contain .zlb-cell video[data-v-92030b8f]{object-fit:contain}.zlb-cell-audio[data-v-92030b8f]{display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:30px;color:var(--zen-muted, #9aa0aa)}.zlb-cell-badge[data-v-92030b8f]{position:absolute;top:4px;left:4px;font-size:16px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.8);pointer-events:none}.zlb-cell[data-v-92030b8f]:hover,.zlb-cell.on[data-v-92030b8f]{border-color:var(--zen-accent, #6366f1)}.zlb-cell.on[data-v-92030b8f]:after{content:\"\";position:absolute;inset:0;border:2px solid var(--zen-accent, #6366f1);border-radius:calc(var(--zen-radius, 7px) - 1px);pointer-events:none}.zlb-cell-wf[data-v-92030b8f]{position:absolute;bottom:3px;right:3px;font-size:11px;color:#fff;background:#0009;border-radius:max(0px,calc(var(--zen-radius, 7px) - 3px));padding:1px 3px}.zlb-side-foot[data-v-92030b8f]{flex:0 0 auto;display:flex;align-items:center;gap:3px;padding:6px 8px;border-top:1px solid var(--zen-border, #34343c)}.zlb-foot-n[data-v-92030b8f]{font-size:11px;color:var(--zen-muted, #9aa0aa);font-variant-numeric:tabular-nums;padding-right:4px}.zlb-stage[data-v-92030b8f]{container-type:size;position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:16px}.zlb-stage.has-mc[data-v-92030b8f]{padding-bottom:calc(60px + var(--zlb-foot, 0px))}.zlb.inline .zlb-stage.has-mc[data-v-92030b8f]{padding-bottom:52px}.zlb-mc[data-v-92030b8f]{position:absolute;right:12px;bottom:calc(8px + var(--zlb-foot, 0px));left:12px;z-index:3;max-width:760px;margin:0 auto}.zlb.inline .zlb-stage[data-v-92030b8f]{padding:6px}.zlb-media[data-v-92030b8f]{max-width:100%;max-height:100%;object-fit:contain;display:block;border-radius:var(--zen-radius, 7px);box-shadow:0 24px 60px -20px #0000008c;transition:transform var(--zen-dur, .2s) linear}.zlb-layered[data-v-92030b8f]{position:relative;overflow:hidden}.zlb-layered img[data-v-92030b8f]{position:absolute;inset:0;width:100%;height:100%;display:block;user-select:none}.zlb-overlay[data-v-92030b8f]{mix-blend-mode:multiply;opacity:.75;pointer-events:none}.zlb-masked-out[data-v-92030b8f]{filter:grayscale(.85) brightness(.32)}.zlb-overlay-mask[data-v-92030b8f]{mask-mode:luminance;mask-size:100% 100%;mask-repeat:no-repeat;pointer-events:none}.zlb-panel[data-v-92030b8f]{user-select:text;position:relative;z-index:5;flex:0 0 340px;min-width:0;display:flex;flex-direction:column;margin:12px 12px 12px 0;overflow:hidden;background:color-mix(in srgb,var(--zen-chrome-bg, var(--zen-surface, #202026)) 94%,transparent);border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:var(--zen-radius-surface, var(--zen-radius, 7px));box-shadow:var(--interface-floating-panel-shadow, 0 6px 18px rgba(0, 0, 0, .28));backdrop-filter:blur(12px)}.zlb-panel-scroll[data-v-92030b8f]{flex:1;min-height:0}.zlb-panel-body[data-v-92030b8f]{padding:16px}@media(max-width:860px){.zlb[data-v-92030b8f]{flex-direction:column}.zlb-panel[data-v-92030b8f]{flex:0 0 auto;max-height:45%;margin:0 12px 12px}}.zlb-media.steering[data-v-92030b8f]{transition:none;will-change:transform}.zlb.inline .zlb-media[data-v-92030b8f]{box-shadow:none}.zlb-empty[data-v-92030b8f]{opacity:.4;font-size:48px}.zlb-audio[data-v-92030b8f]{display:flex;flex-direction:column;align-items:center;gap:clamp(4px,3cqh,14px);padding:clamp(4px,5cqh,24px);max-width:560px;width:100%;color:var(--zen-text, #e5e5ea)}.zlb-audio .mdi[data-v-92030b8f]{font-size:clamp(28px,30cqh,96px);line-height:1;opacity:.5}.zlb-audio-name[data-v-92030b8f]{font-size:14px;font-weight:600;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.zlb-audio audio[data-v-92030b8f]{width:100%}.zlb-nav[data-v-92030b8f]{position:absolute;top:20%;bottom:20%;z-index:3;width:clamp(40px,7%,84px);display:flex;align-items:center;padding:0 8px;border:none;color:#fff;cursor:pointer;opacity:0;transition:opacity var(--zen-dur, .2s) ease;mask-image:linear-gradient(to bottom,transparent,#000 30%,#000 70%,transparent)}.zlb-nav.prev[data-v-92030b8f]{left:0;justify-content:flex-start;background:linear-gradient(to right,color-mix(in srgb,var(--zen-accent, #6366f1) 20%,transparent),transparent)}.zlb-nav.next[data-v-92030b8f]{right:0;justify-content:flex-end;background:linear-gradient(to left,color-mix(in srgb,var(--zen-accent, #6366f1) 20%,transparent),transparent)}.zlb-nav[data-v-92030b8f]:hover:not(:disabled){opacity:1}.zlb-nav[data-v-92030b8f]:disabled{display:none}.zlb-nav .mdi[data-v-92030b8f]{font-size:28px;filter:drop-shadow(0 1px 4px rgba(0,0,0,.6));transition:translate var(--zen-dur, .2s) ease}.zlb-nav.prev:hover .mdi[data-v-92030b8f]{translate:-3px 0}.zlb-nav.next:hover .mdi[data-v-92030b8f]{translate:3px 0}.zlb-slide-next-enter-active[data-v-92030b8f],.zlb-slide-next-leave-active[data-v-92030b8f],.zlb-slide-prev-enter-active[data-v-92030b8f],.zlb-slide-prev-leave-active[data-v-92030b8f],.zlb-slide-up-enter-active[data-v-92030b8f],.zlb-slide-up-leave-active[data-v-92030b8f],.zlb-slide-down-enter-active[data-v-92030b8f],.zlb-slide-down-leave-active[data-v-92030b8f]{transition:translate var(--zlb-slide-ms, .46s) cubic-bezier(.45,0,.2,1)}.zlb-slide-next-leave-active[data-v-92030b8f],.zlb-slide-prev-leave-active[data-v-92030b8f],.zlb-slide-up-leave-active[data-v-92030b8f],.zlb-slide-down-leave-active[data-v-92030b8f]{position:absolute}.zlb-slide-down-enter-from[data-v-92030b8f],.zlb-slide-up-leave-to[data-v-92030b8f]{translate:0 var(--zlb-slide-y, 100%)}.zlb-slide-down-leave-to[data-v-92030b8f],.zlb-slide-up-enter-from[data-v-92030b8f]{translate:0 calc(var(--zlb-slide-y, 100%) * -1)}.zlb-slide-next-enter-from[data-v-92030b8f],.zlb-slide-prev-leave-to[data-v-92030b8f]{translate:var(--zlb-slide, 100%) 0}.zlb-slide-next-leave-to[data-v-92030b8f],.zlb-slide-prev-enter-from[data-v-92030b8f]{translate:calc(var(--zlb-slide, 100%) * -1) 0}@media(prefers-reduced-motion:reduce){:root:not([data-zen-motion=full]){transition:none}}:root[data-zen-motion=reduce]{transition:none}.zsc[data-v-a47e719d]{display:block;width:100%;height:100%;outline:none;cursor:crosshair;touch-action:none}.zsc[data-v-a47e719d]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}.zft[data-v-86083019]{display:flex;flex-direction:column;gap:1px;font-size:12px}.zft-row[data-v-86083019]{display:flex;align-items:center;gap:4px;min-width:0;padding:4px 8px 4px 4px;border-radius:var(--zen-radius, 7px);color:var(--zen-muted, #9aa0aa);cursor:pointer}.zft-row[data-v-86083019]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 6%,transparent);color:var(--zen-text, #e5e5ea)}.zft-row.on[data-v-86083019]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 20%,transparent);color:var(--zen-text, #e5e5ea)}.zft-chev[data-v-86083019]{display:grid;flex:none;place-items:center;width:16px;height:16px;padding:0;border:0;border-radius:3px;background:none;color:inherit;cursor:pointer}.zft-row[data-v-86083019]:focus-visible,.zft-chev[data-v-86083019]:focus-visible{outline:2px solid var(--zen-focus-ring, color-mix(in srgb, var(--zen-accent, #6366f1) 60%, transparent));outline-offset:-2px}button.zft-chev[data-v-86083019]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 12%,transparent)}.zft-icon[data-v-86083019]{flex:none;font-size:15px}.zft-name[data-v-86083019]{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.zft-count[data-v-86083019]{flex:none;font-size:10.5px;font-variant-numeric:tabular-nums}.zmp[data-v-3cc842c8]{position:relative;display:grid;grid-template-columns:190px minmax(0,1fr) 260px;height:calc(100% + 28px);margin:-14px;font-size:12px}.zmp-search[data-v-3cc842c8]{flex:1;max-width:320px}.zmp-grow[data-v-3cc842c8]{flex:1}.zmp-folders[data-v-3cc842c8]{display:flex;flex-direction:column;gap:1px;min-height:0;overflow-y:auto;padding:10px 8px;border-right:1px solid var(--zen-border, #34343c)}.zmp-folder[data-v-3cc842c8]{display:flex;align-items:center;gap:6px;width:100%;padding:5px 8px;border:0;border-radius:var(--zen-radius, 7px);background:none;color:var(--zen-muted, #9aa0aa);font:inherit;text-align:left;cursor:pointer}.zmp-folder[data-v-3cc842c8]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 6%,transparent);color:var(--zen-text, #e5e5ea)}.zmp-folder.on[data-v-3cc842c8]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 20%,transparent);color:var(--zen-text, #e5e5ea)}.zmp-folder .mdi[data-v-3cc842c8]{flex:none;font-size:15px}.zmp-fname[data-v-3cc842c8]{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.zmp-count[data-v-3cc842c8]{flex:none;color:var(--zen-muted, #9aa0aa);font-size:10.5px;font-variant-numeric:tabular-nums}.zmp-main[data-v-3cc842c8]{display:flex;flex-direction:column;min-width:0;min-height:0}.zmp-filters[data-v-3cc842c8]{display:flex;flex:none;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--zen-border, #34343c)}.zmp-grid[data-v-3cc842c8]{display:grid;flex:1;align-content:start;gap:10px;min-height:0;overflow-y:auto;padding:12px}.zmp-card[data-v-3cc842c8]{display:flex;flex-direction:column;gap:4px;min-width:0;padding:4px;border:1px solid transparent;border-radius:calc(var(--zen-radius, 7px) + 2px);background:none;color:var(--zen-text, #e5e5ea);font:inherit;text-align:left;cursor:pointer}.zmp-card[data-v-3cc842c8]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 5%,transparent)}.zmp-card.focus[data-v-3cc842c8]{border-color:var(--zen-border, #34343c)}.zmp-card.sel .zmp-thumb[data-v-3cc842c8]{outline:2px solid var(--zen-accent, #6366f1);outline-offset:1px}.zmp-thumb[data-v-3cc842c8]{position:relative;display:grid;place-items:center;aspect-ratio:1;overflow:hidden;border-radius:var(--zen-radius, 7px);background:var(--zen-media-bg, #0b0b0e)}.zmp-thumb img[data-v-3cc842c8],.zmp-thumb video[data-v-3cc842c8]{width:100%;height:100%;object-fit:contain}.zmp-audio[data-v-3cc842c8]{display:grid;place-items:center;width:100%;height:100%;background:linear-gradient(160deg,color-mix(in srgb,var(--zen-accent, #6366f1) 22%,var(--zen-media-bg, #0b0b0e)),var(--zen-media-bg, #0b0b0e));color:color-mix(in srgb,var(--zen-accent, #6366f1) 70%,white);font-size:34px}.zmp-kind[data-v-3cc842c8]{position:absolute;bottom:5px;left:5px;display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#000000a6;color:#fff;font-size:13px}.zmp-tick[data-v-3cc842c8]{position:absolute;top:5px;right:5px;display:grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:var(--zen-accent, #6366f1);color:var(--zen-accent-text, #fff);font-size:11px;font-weight:700}.zmp-name[data-v-3cc842c8],.zmp-dir[data-v-3cc842c8]{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.zmp-name[data-v-3cc842c8]{font-size:11.5px}.zmp-dir[data-v-3cc842c8]{margin-top:-3px;color:var(--zen-muted, #9aa0aa);font-size:10.5px}.zmp-empty[data-v-3cc842c8]{display:flex;flex-direction:column;grid-column:1 / -1;align-items:center;gap:6px;padding:48px 12px;color:var(--zen-muted, #9aa0aa);text-align:center}.zmp-empty .mdi[data-v-3cc842c8]{font-size:28px}.zmp-preview[data-v-3cc842c8]{display:flex;flex-direction:column;gap:10px;min-height:0;overflow-y:auto;padding:12px;border-left:1px solid var(--zen-border, #34343c)}.zmp-big[data-v-3cc842c8]{display:grid;place-items:center;aspect-ratio:1;overflow:hidden;border-radius:var(--zen-radius, 7px);background:var(--zen-media-bg, #0b0b0e)}.zmp-big img[data-v-3cc842c8],.zmp-big video[data-v-3cc842c8]{width:100%;height:100%;object-fit:contain}.zmp-bigaudio[data-v-3cc842c8]{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;padding:10px;color:color-mix(in srgb,var(--zen-accent, #6366f1) 70%,white);font-size:48px}.zmp-bigaudio audio[data-v-3cc842c8]{width:100%}.zmp-meta[data-v-3cc842c8]{display:flex;flex-direction:column;gap:3px;color:var(--zen-muted, #9aa0aa);overflow-wrap:anywhere}.zmp-meta b[data-v-3cc842c8]{color:var(--zen-text, #e5e5ea);font-size:12.5px}.zmp-hint[data-v-3cc842c8]{display:flex;flex-direction:column;align-items:center;gap:8px;margin:auto 0;color:var(--zen-muted, #9aa0aa);line-height:1.5;text-align:center}.zmp-hint .mdi[data-v-3cc842c8]{font-size:26px}.zmp-drop[data-v-3cc842c8]{position:absolute;inset:8px;display:flex;align-items:center;justify-content:center;gap:8px;border:2px dashed var(--zen-accent, #6366f1);border-radius:calc(var(--zen-radius, 7px) + 2px);background:color-mix(in srgb,var(--zen-accent, #6366f1) 14%,rgb(0 0 0 / 60%));color:var(--zen-text, #e5e5ea);font-size:14px;font-weight:600;pointer-events:none}.zmp-foot[data-v-3cc842c8]{display:flex;align-items:center;gap:8px}.zmp-soft[data-v-3cc842c8]{color:var(--zen-muted, #9aa0aa)}.ztl[data-v-ad0b766d]{position:relative;--ztl-bg: color-mix(in srgb, var(--zen-bg, #1a1a1f) 70%, #000);--ztl-bg: oklch(from var(--zen-bg, #1a1a1f) calc(l - .07) c h);--ztl-row: color-mix(in srgb, var(--zen-text, #e5e5ea) 3%, transparent);--ztl-line: color-mix(in srgb, var(--zen-text, #e5e5ea) 9%, transparent);--ztl-accent: var(--zen-accent, #6366f1);--ztl-seam: color-mix(in srgb, var(--zen-text, #e5e5ea) 62%, transparent);--ztl-playhead: var(--zen-playhead, #ff5a4f);display:flex;min-width:0;overflow:hidden;border:1px solid var(--ztl-line);border-radius:var(--zen-radius, 7px);background:var(--ztl-bg);user-select:none;touch-action:none}.ztl-grid[data-v-ad0b766d]{display:flex;width:max-content;min-width:100%}.ztl-heads[data-v-ad0b766d]{position:sticky;left:0;z-index:8;flex:none;width:var(--ztl-head);border-right:1px solid var(--ztl-line);background:var(--ztl-bg)}.ztl-corner[data-v-ad0b766d]{position:sticky;top:0;z-index:5;background:var(--ztl-bg);display:flex;align-items:center;justify-content:center;height:24px;border-bottom:1px solid var(--ztl-line)}.ztl-time[data-v-ad0b766d]{color:var(--zen-text, #e5e5ea);font-family:var(--zen-mono, ui-monospace, monospace);font-size:10.5px;font-variant-numeric:tabular-nums}.ztl-head[data-v-ad0b766d]{display:flex;align-items:center;gap:6px;box-sizing:border-box;min-width:0;overflow:hidden;padding:0 8px;border-bottom:1px solid var(--ztl-line);color:var(--zen-muted, #9aa0aa);font-size:10.5px;font-weight:600;letter-spacing:.02em}.ztl-head.movable[data-v-ad0b766d]{cursor:grab}.ztl-head.lifted[data-v-ad0b766d]{position:relative;z-index:6;background:color-mix(in srgb,var(--ztl-accent) 22%,var(--ztl-bg));box-shadow:0 4px 14px #00000073;cursor:grabbing}.ztl-insert[data-v-ad0b766d]{position:absolute;right:0;left:0;z-index:3;height:2px;margin-top:-1px;background:var(--ztl-accent);pointer-events:none}.ztl-head .mdi[data-v-ad0b766d]{flex:none;font-size:13px}.ztl-head.has-actions[data-v-ad0b766d]{flex-wrap:wrap;align-content:center;row-gap:2px}.ztl-head.has-actions .ztl-head-label[data-v-ad0b766d]{flex:1 1 0}.ztl-head-actions[data-v-ad0b766d]{display:flex;flex:1 0 100%;gap:2px;padding-left:24px}.ztl-head.has-actions.inline[data-v-ad0b766d]{flex-wrap:nowrap}.ztl-head.inline .ztl-head-actions[data-v-ad0b766d]{flex:none;padding-left:0}.ztl-head.inline .ztl-head-action[data-v-ad0b766d]{justify-content:center;width:20px;height:20px;padding:0;opacity:.6}.ztl-head.inline:hover .ztl-head-action[data-v-ad0b766d],.ztl-head.inline .ztl-head-action.on[data-v-ad0b766d]{opacity:1}.ztl-head-action[data-v-ad0b766d]{display:inline-flex;align-items:center;gap:2px;height:17px;padding:0 4px;border:1px solid transparent;border-radius:4px;background:none;color:var(--zen-muted, #9aa0aa);font:inherit;font-size:9.5px;font-weight:600;cursor:pointer}.ztl-head-action .mdi[data-v-ad0b766d]{font-size:12px}.ztl-head-action[data-v-ad0b766d]:hover{color:var(--zen-text, #e5e5ea)}.ztl-head-action.on[data-v-ad0b766d]{border-color:color-mix(in srgb,var(--ztl-accent) 55%,transparent);background:color-mix(in srgb,var(--ztl-accent) 22%,transparent);color:var(--zen-text, #e5e5ea)}.ztl-head-thumb[data-v-ad0b766d]{flex:none;width:18px;height:18px;border-radius:calc(var(--zen-radius, 7px) / 2);object-fit:cover}.ztl-head-label[data-v-ad0b766d]{min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.ztl-scroll[data-v-ad0b766d]{position:relative;flex:1;min-width:0;overflow:auto;scrollbar-width:none}.ztl-scroll[data-v-ad0b766d]::-webkit-scrollbar{display:none}.ztl-curve[data-v-ad0b766d]{position:absolute;top:0;left:0;overflow:visible}.ztl-cstep[data-v-ad0b766d]{fill:none;stroke:color-mix(in srgb,var(--ztl-curve) 70%,transparent);stroke-dasharray:3 3;stroke-width:1.5}.ztl-carea[data-v-ad0b766d]{fill:color-mix(in srgb,var(--ztl-curve) 22%,transparent)}.ztl-cunit[data-v-ad0b766d]{stroke:color-mix(in srgb,var(--zen-text, #e5e5ea) 18%,transparent);stroke-dasharray:4 4;stroke-width:1}.ztl-cline[data-v-ad0b766d]{fill:none;stroke:var(--ztl-curve);stroke-width:2.2;stroke-linejoin:round}.ztl-cval[data-v-ad0b766d]{fill:var(--ztl-curve);font-size:10px;font-variant-numeric:tabular-nums;pointer-events:none;paint-order:stroke;stroke:var(--ztl-bg);stroke-width:3px}.ztl-larea[data-v-ad0b766d]{fill:color-mix(in srgb,var(--ztl-curve) 20%,transparent)}.ztl-lbar[data-v-ad0b766d]{stroke:var(--ztl-curve);stroke-width:2.5;stroke-linecap:round}.ztl-lhit[data-v-ad0b766d]{stroke:transparent;stroke-width:12;cursor:ns-resize}.ztl-lseg:hover .ztl-lbar[data-v-ad0b766d]{stroke-width:3.5}.ztl-lseg.inherited .ztl-larea[data-v-ad0b766d]{fill:color-mix(in srgb,var(--ztl-curve) 10%,transparent)}.ztl-lseg.inherited .ztl-lbar[data-v-ad0b766d],.ztl-lseg.inherited .ztl-cline[data-v-ad0b766d]{stroke-dasharray:5 4}.ztl-lseg.inherited .ztl-carea[data-v-ad0b766d]{fill:color-mix(in srgb,var(--ztl-curve) 9%,transparent)}.ztl-lpad[data-v-ad0b766d]{fill:transparent}.ztl-levels.shaped .ztl-lseg+.ztl-lseg .ztl-lpad[data-v-ad0b766d]{stroke:color-mix(in srgb,var(--zen-text, #e5e5ea) 8%,transparent);stroke-dasharray:2 3}.ztl-cpt[data-v-ad0b766d]{fill:var(--ztl-bg);stroke:var(--ztl-curve);stroke-width:2;cursor:grab}.ztl-cpt[data-v-ad0b766d]:hover{fill:var(--ztl-curve)}.ztl-range[data-v-ad0b766d]{position:absolute;top:0;bottom:0;z-index:1;border-right:1px solid color-mix(in srgb,var(--ztl-accent) 60%,transparent);border-left:1px solid color-mix(in srgb,var(--ztl-accent) 60%,transparent);background:color-mix(in srgb,var(--ztl-accent) 9%,transparent);pointer-events:none}.ztl-range[data-v-ad0b766d]:before{position:absolute;top:0;right:0;left:0;height:4px;background:var(--ztl-accent);content:\"\"}.ztl-tail[data-v-ad0b766d]{position:absolute;top:0;right:0;bottom:0;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;border-left:1px dashed color-mix(in srgb,var(--zen-text, #e5e5ea) 45%,transparent);background:repeating-linear-gradient(-45deg,color-mix(in srgb,var(--zen-text, #e5e5ea) 14%,transparent) 0 4px,transparent 4px 9px);pointer-events:none}.ztl-tail-label[data-v-ad0b766d]{padding:0 4px 2px;overflow:hidden;color:var(--zen-text, #e5e5ea);font-size:10px;white-space:nowrap;text-overflow:ellipsis;opacity:.85}.ztl-progress[data-v-ad0b766d]{position:absolute;bottom:0;left:0;height:3px;border-radius:0 2px 2px 0;background:var(--ztl-playhead);transition:width var(--zen-dur, .2s) ease;pointer-events:none}.ztl-hbar[data-v-ad0b766d]{position:absolute;right:0;bottom:0;z-index:6;height:9px;touch-action:none}.ztl-thumb[data-v-ad0b766d]{position:absolute;top:2px;bottom:2px;border-radius:3px;background:color-mix(in srgb,var(--zen-text, #e5e5ea) 22%,transparent);transition:background var(--zen-dur-fast, .12s)}.ztl-hbar:hover .ztl-thumb[data-v-ad0b766d]{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 38%,transparent)}.ztl-body[data-v-ad0b766d]{position:relative;flex:none}.ztl-ruler[data-v-ad0b766d]{position:sticky;top:0;z-index:5;background:var(--ztl-bg);height:24px;border-bottom:1px solid var(--ztl-line);cursor:col-resize}.ztl-tick[data-v-ad0b766d]{position:absolute;bottom:0;width:1px;height:5px;background:var(--ztl-line)}.ztl-tick.major[data-v-ad0b766d]{height:9px;background:color-mix(in srgb,var(--zen-text, #e5e5ea) 30%,transparent)}.ztl-tick b[data-v-ad0b766d]{position:absolute;bottom:10px;left:3px;color:var(--zen-muted, #9aa0aa);font-size:9.5px;font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}.ztl-track[data-v-ad0b766d]{position:relative;box-sizing:border-box;border-bottom:1px solid var(--ztl-line)}.ztl-track.zebra[data-v-ad0b766d]{background:var(--ztl-row)}.ztl-track.dropping[data-v-ad0b766d]{background:color-mix(in srgb,var(--ztl-accent) 16%,transparent)}.ztl-item[data-v-ad0b766d]{position:absolute;box-sizing:border-box;touch-action:none}.ztl-item.clip[data-v-ad0b766d]{top:3px;bottom:3px;display:flex;align-items:center;gap:5px;overflow:hidden;padding:0 7px;border:1px solid color-mix(in srgb,var(--ztl-color, var(--ztl-accent)) 70%,#000);border-radius:calc(var(--zen-radius, 7px) * .65);background:color-mix(in srgb,var(--ztl-color, var(--ztl-accent)) 42%,var(--ztl-bg));cursor:pointer}.ztl-item.clip.join-start[data-v-ad0b766d]{border-left-color:var(--ztl-seam);border-top-left-radius:0;border-bottom-left-radius:0}.ztl-item.clip.join-end[data-v-ad0b766d]{border-top-right-radius:0;border-bottom-right-radius:0}.ztl-item.clip.on[data-v-ad0b766d]{border-color:var(--zen-text, #e5e5ea);box-shadow:0 0 0 1px var(--zen-text, #e5e5ea) inset;background:color-mix(in srgb,var(--ztl-color, var(--ztl-accent)) 62%,var(--ztl-bg))}.ztl-item.droptarget[data-v-ad0b766d]{z-index:3;outline:2px solid var(--ztl-accent);outline-offset:1px}.ztl-item.lifted[data-v-ad0b766d]{z-index:3;box-shadow:0 6px 16px #00000073;cursor:grabbing;opacity:.92}.ztl-item.clip.ghost[data-v-ad0b766d]{border-style:dashed;background:color-mix(in srgb,var(--ztl-color, var(--ztl-accent)) 16%,var(--ztl-bg))}.ztl-item.clip.muted[data-v-ad0b766d]{opacity:.4}.ztl-item.clip img[data-v-ad0b766d]{flex:none;height:100%;margin-left:-7px;aspect-ratio:1;object-fit:cover}.ztl-badge[data-v-ad0b766d]{flex:none;padding:0 4px;border-radius:3px;background:#00000052;color:color-mix(in srgb,var(--zen-text, #e5e5ea) 88%,var(--ztl-color, var(--ztl-accent)));font-family:var(--zen-mono, ui-monospace, monospace);font-size:9px;line-height:13px;white-space:nowrap}.ztl-item.clip.banded[data-v-ad0b766d]{align-items:flex-start;padding-top:1px}.ztl-item.clip.banded>.ztl-label[data-v-ad0b766d],.ztl-item.clip.banded>.ztl-icon[data-v-ad0b766d],.ztl-item.clip.banded>.ztl-badge[data-v-ad0b766d]{position:relative;z-index:1;margin-top:1px}.ztl-mark[data-v-ad0b766d]{position:absolute;top:0;bottom:0;z-index:1;width:1px;margin-left:-.5px;background:#ffffff73}.ztl-mark[data-v-ad0b766d]:before{content:\"\";position:absolute;top:0;left:-3px;border:3.5px solid transparent;border-top-color:#ffffffb3}.ztl-mark.strong[data-v-ad0b766d]{background:#fffc}.ztl-mark.strong[data-v-ad0b766d]:before{border-top-color:#fff}.ztl-frames[data-v-ad0b766d],.ztl-wave[data-v-ad0b766d]{position:absolute;inset:16px 0 0;pointer-events:none}.ztl-frames[data-v-ad0b766d]{overflow:hidden;border-top:1px solid rgb(0 0 0 / 35%)}.ztl-item.clip .ztl-frames img[data-v-ad0b766d]{position:absolute;top:0;height:100%;margin:0;aspect-ratio:auto;object-fit:cover;opacity:.9}.ztl-wave[data-v-ad0b766d]{width:100%;height:calc(100% - 16px);padding:2px 0;box-sizing:border-box;fill:color-mix(in srgb,var(--ztl-color, var(--ztl-accent)) 35%,#fff);opacity:.85}.ztl-label[data-v-ad0b766d]{overflow:hidden;color:color-mix(in srgb,var(--zen-text, #e5e5ea) 78%,var(--ztl-color, var(--ztl-accent)));font-size:10.5px;font-weight:500;white-space:nowrap;text-overflow:ellipsis;text-shadow:0 1px 1px rgb(0 0 0 / 40%)}.ztl-icon[data-v-ad0b766d]{flex:none;color:#fff;font-size:12px;opacity:.85}.ztl-fade[data-v-ad0b766d]{position:absolute;top:0;bottom:0;pointer-events:none}.ztl-fade.in[data-v-ad0b766d]{left:0;background:linear-gradient(to top right,transparent calc(50% - .75px),rgb(255 255 255 / 70%) 50%,transparent calc(50% + .75px)),linear-gradient(to top right,transparent 50%,rgb(0 0 0 / 45%) 50%)}.ztl-fade.out[data-v-ad0b766d]{right:0;background:linear-gradient(to top left,transparent calc(50% - .75px),rgb(255 255 255 / 70%) 50%,transparent calc(50% + .75px)),linear-gradient(to top left,transparent 50%,rgb(0 0 0 / 45%) 50%)}.ztl-fadeknob[data-v-ad0b766d]{position:absolute;top:1px;z-index:2;width:9px;height:9px;margin:0 -4.5px;border:1px solid rgb(0 0 0 / 55%);border-radius:50%;background:#fff;cursor:ew-resize;opacity:0;transition:opacity var(--zen-dur-fast, .12s)}.ztl-fadeknob.set[data-v-ad0b766d],.ztl-item:hover .ztl-fadeknob[data-v-ad0b766d]{opacity:1}.ztl-grip[data-v-ad0b766d]{position:absolute;top:0;bottom:0;width:7px;cursor:ew-resize}.ztl-grip.end[data-v-ad0b766d]{right:0}.ztl-grip.start[data-v-ad0b766d]{left:0}.ztl-grip[data-v-ad0b766d]:after{content:\"\";position:absolute;top:25%;bottom:25%;left:3px;width:1px;background:#ffffff8c;opacity:0;transition:opacity var(--zen-dur-fast, .12s)}.ztl-item:hover .ztl-grip[data-v-ad0b766d]:after{opacity:1}.ztl-item.marker[data-v-ad0b766d]{z-index:2;top:50%;width:22px;height:22px;overflow:hidden;transform:translate(-50%,-50%);border:2px solid var(--ztl-color, var(--zen-marker, #f5c542));border-radius:5px;background:var(--ztl-bg);cursor:grab}.ztl-item.marker[data-v-ad0b766d]:not(.thumbed):not(.ghost){width:12px;height:12px;border-radius:2px;background:var(--ztl-color, var(--zen-marker, #f5c542));transform:translate(-50%,-50%) rotate(45deg)}.ztl-item.marker.on[data-v-ad0b766d]{border-color:#fff;box-shadow:0 0 0 2px var(--ztl-accent)}.ztl-item.marker.ghost[data-v-ad0b766d]{width:22px;height:22px;display:grid;place-items:center;border:1px dashed color-mix(in srgb,var(--zen-text, #e5e5ea) 35%,transparent);border-radius:5px;background:transparent;color:color-mix(in srgb,var(--zen-text, #e5e5ea) 55%,transparent);transform:translate(-50%,-50%);cursor:pointer}.ztl-item.marker.ghost[data-v-ad0b766d]:hover{border-color:var(--ztl-accent);color:var(--zen-text, #e5e5ea)}.ztl-item.marker.ghost .ztl-icon[data-v-ad0b766d]{color:inherit;font-size:12px}.ztl-item.marker img[data-v-ad0b766d]{width:100%;height:100%;object-fit:cover;pointer-events:none}.ztl-guide[data-v-ad0b766d]{position:absolute;top:24px;bottom:0;width:0;border-left:1px dashed color-mix(in srgb,var(--zen-text, #e5e5ea) 22%,transparent);pointer-events:none}.ztl-marquee[data-v-ad0b766d]{position:absolute;z-index:7;border:1px solid var(--ztl-accent);border-radius:calc(var(--zen-radius, 7px) * .65);background:color-mix(in srgb,var(--ztl-accent) 14%,transparent);pointer-events:none}.ztl-snapline[data-v-ad0b766d]{position:absolute;top:24px;bottom:0;z-index:3;width:1px;background:var(--zen-accent, #6366f1);box-shadow:0 0 4px var(--zen-accent, #6366f1);pointer-events:none}.ztl-playhead[data-v-ad0b766d]{position:absolute;top:0;bottom:0;left:0;z-index:6;width:0;border-left:1px solid var(--ztl-playhead);pointer-events:none}.ztl-playhead span[data-v-ad0b766d]{position:absolute;top:0;left:-6px;width:11px;height:11px;background:var(--ztl-playhead);clip-path:polygon(0 0,100% 0,100% 60%,50% 100%,0 60%)}.zbc-frame[data-v-657d6f53]{position:relative;width:100%;height:100%;min-height:0;overflow:hidden}.zbc[data-v-657d6f53]{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);overflow:hidden;border-radius:var(--zen-radius, 7px);background:repeating-conic-gradient(color-mix(in srgb,var(--zen-text, #fff) 4%,transparent) 0% 25%,transparent 0% 50%) 0 0 / 16px 16px,var(--zen-input, #1b1b20);outline:1px solid var(--zen-border, #34343c);outline-offset:-1px;user-select:none;touch-action:none;cursor:crosshair}.zbc-keys[data-v-657d6f53]{position:absolute;top:0;left:0;width:1px;height:1px;padding:0;border:0;opacity:0;pointer-events:none}.zbc[data-v-657d6f53]:focus-within{outline:1px solid color-mix(in srgb,var(--zen-text, #fff) 22%,transparent);outline-offset:-1px}.zbc.tool-brush[data-v-657d6f53],.zbc.tool-erase[data-v-657d6f53]{cursor:none}.zbc-backdrop[data-v-657d6f53]{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none}.zbc-grid[data-v-657d6f53]{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(to right,color-mix(in srgb,var(--zen-text, #fff) 8%,transparent) 1px,transparent 1px),linear-gradient(to bottom,color-mix(in srgb,var(--zen-text, #fff) 8%,transparent) 1px,transparent 1px)}.zbc-box[data-v-657d6f53]{position:absolute;box-sizing:border-box;border:1.5px solid var(--zbc-color);border-radius:3px;cursor:move;transition:box-shadow .12s ease}.zbc-box.masked[data-v-657d6f53]{border-style:dashed}.zbc-box.locked[data-v-657d6f53]{cursor:default}.zbc-box.sel[data-v-657d6f53]{box-shadow:0 0 0 1px color-mix(in srgb,var(--zbc-color) 70%,transparent),0 0 14px color-mix(in srgb,var(--zbc-color) 40%,transparent)}.zbc-fill[data-v-657d6f53]{position:absolute;inset:0;background:color-mix(in srgb,var(--zbc-color) 22%,transparent);-webkit-mask-size:100% 100%;mask-size:100% 100%;pointer-events:none}.zbc-content[data-v-657d6f53]{position:absolute;inset:0;overflow:hidden;container-type:size;pointer-events:none}.zbc-box.painting .zbc-content[data-v-657d6f53]{opacity:.35}.zbc-box.masked .zbc-fill[data-v-657d6f53]{background:color-mix(in srgb,var(--zbc-color) 45%,transparent)}.zbc-box.painting .zbc-fill[data-v-657d6f53]{visibility:hidden}.zbc-paint[data-v-657d6f53]{position:absolute;opacity:.5;pointer-events:none}.zbc-tag[data-v-657d6f53]{position:absolute;left:-1px;top:-1px;display:flex;align-items:center;gap:4px;max-width:calc(100% + 2px);padding:1px 6px 1px 4px;border-radius:3px 0 4px;background:var(--zbc-color);color:#fff;font-size:10px;line-height:15px;white-space:nowrap;overflow:hidden;text-shadow:0 1px 1px rgb(0 0 0 / 35%);pointer-events:none}.zbc-n[data-v-657d6f53]{font-weight:700}.zbc-label[data-v-657d6f53]{overflow:hidden;text-overflow:ellipsis}.zbc-h[data-v-657d6f53]{position:absolute;width:9px;height:9px;margin:-5px 0 0 -5px;border:1.5px solid #fff;border-radius:2px;background:var(--zbc-color, var(--zen-accent, #6366f1));box-shadow:0 0 0 1px #0006}.h-nw[data-v-657d6f53]{left:0;top:0;cursor:nwse-resize}.h-n[data-v-657d6f53]{left:50%;top:0;cursor:ns-resize}.h-ne[data-v-657d6f53]{left:100%;top:0;cursor:nesw-resize}.h-e[data-v-657d6f53]{left:100%;top:50%;cursor:ew-resize}.h-se[data-v-657d6f53]{left:100%;top:100%;cursor:nwse-resize}.h-s[data-v-657d6f53]{left:50%;top:100%;cursor:ns-resize}.h-sw[data-v-657d6f53]{left:0;top:100%;cursor:nesw-resize}.h-w[data-v-657d6f53]{left:0;top:50%;cursor:ew-resize}.zbc-selframe[data-v-657d6f53]{position:absolute;box-sizing:border-box;outline:1.5px dashed var(--zbc-color);outline-offset:-1px;pointer-events:none}.zbc-selframe .zbc-h[data-v-657d6f53]{pointer-events:auto}.zbc-group[data-v-657d6f53]{position:absolute;box-sizing:border-box;border:1px dashed var(--zen-accent, #6366f1);pointer-events:none}.zbc-group .zbc-h[data-v-657d6f53]{pointer-events:auto;background:var(--zen-accent, #6366f1)}.zbc-draft[data-v-657d6f53],.zbc-marquee[data-v-657d6f53]{position:absolute;box-sizing:border-box;pointer-events:none}.zbc-draft[data-v-657d6f53]{border:1.5px dashed var(--zen-text, #e5e5ea);background:color-mix(in srgb,var(--zen-text, #fff) 8%,transparent)}.zbc-marquee[data-v-657d6f53]{border:1px solid var(--zen-accent, #6366f1);background:color-mix(in srgb,var(--zen-accent, #6366f1) 12%,transparent)}.zbc-ring[data-v-657d6f53]{position:absolute;box-sizing:border-box;border:1.5px solid #fff;border-radius:50%;box-shadow:0 0 0 1px #0000007f;pointer-events:none}.zbc-ring.erase[data-v-657d6f53]{border-style:dashed}.zbc-empty[data-v-657d6f53]{position:absolute;inset:0;display:grid;place-items:center;color:var(--zen-muted, #9aa0aa);font-size:12px;pointer-events:none}.zll[data-v-6dd767a3]{display:flex;flex-direction:column;gap:2px}.zll-row[data-v-6dd767a3]{position:relative;display:flex;align-items:center;gap:6px;min-height:30px;padding:2px 4px;border-radius:var(--zen-radius, 7px);border:1px solid transparent;color:var(--zen-text, #e5e5ea);cursor:pointer;transition:transform .15s ease,background .12s ease}.zll-row[data-v-6dd767a3]:hover{background:color-mix(in srgb,var(--zen-text, #fff) 5%,transparent)}.zll-row.sel[data-v-6dd767a3]{border-color:color-mix(in srgb,var(--zen-accent, #6366f1) 60%,transparent);background:color-mix(in srgb,var(--zen-accent, #6366f1) 14%,transparent)}.zll-row.hidden .zll-text[data-v-6dd767a3],.zll-row.hidden .zll-swatch[data-v-6dd767a3]{opacity:.45}.zll.settling .zll-row[data-v-6dd767a3]{transition:background .12s ease}.zll-row.dragging[data-v-6dd767a3]{z-index:1;transition:none;background:var(--zen-surface-2, #26262d);box-shadow:0 6px 18px #00000059}.zll-grip[data-v-6dd767a3]{display:grid;place-items:center;width:14px;color:var(--zen-muted, #9aa0aa);cursor:grab;touch-action:none}.zll-grip.pin[data-v-6dd767a3]{cursor:default;opacity:.6}.zll-swatch[data-v-6dd767a3]{flex:none;width:22px;height:22px;border-radius:5px;overflow:hidden;box-shadow:inset 0 0 0 1px #00000040}.zll-swatch img[data-v-6dd767a3]{width:100%;height:100%;object-fit:cover}.zll-text[data-v-6dd767a3]{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.2}.zll-label[data-v-6dd767a3]{font-size:12px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.zll-sub[data-v-6dd767a3]{font-size:10px;color:var(--zen-muted, #9aa0aa);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.zll-btn[data-v-6dd767a3]{display:grid;place-items:center;width:22px;height:22px;padding:0;border:0;border-radius:5px;background:transparent;color:var(--zen-muted, #9aa0aa);cursor:pointer;opacity:.55}.zll-row:hover .zll-btn[data-v-6dd767a3],.zll-btn.on[data-v-6dd767a3]{opacity:1}.zll-btn[data-v-6dd767a3]:hover{background:color-mix(in srgb,var(--zen-text, #fff) 8%,transparent);color:var(--zen-text, #e5e5ea)}.lpk[data-v-9a639d76]{position:fixed;z-index:100400;pointer-events:none;display:flex;flex-direction:column;max-height:480px;overflow:hidden;background:var(--zen-chrome-bg, var(--zen-surface, #202026));color:var(--zen-text, #e5e5ea);border:1px solid var(--zen-surface-border, var(--zen-border, #34343c));border-radius:calc(var(--zen-radius-surface, var(--zen-radius, 7px)) + 2px);box-shadow:0 16px 48px #0000008c;font-family:var(--p-font-family, system-ui, sans-serif)}.lpk-media[data-v-9a639d76]{flex:1 1 auto;min-height:0;display:flex;justify-content:center;background:var(--zen-input, #1b1b20)}.lpk-media img[data-v-9a639d76],.lpk-media video[data-v-9a639d76]{display:block;max-width:100%;max-height:360px;object-fit:contain}.lpk-body[data-v-9a639d76]{flex:none;display:flex;flex-direction:column;gap:5px;padding:8px 10px 9px}.lpk-title[data-v-9a639d76]{font-size:12.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lpk-chips[data-v-9a639d76]{display:flex;flex-wrap:wrap;gap:4px}.lpk-chips[data-v-9a639d76]:empty{display:none}.lpk-chip[data-v-9a639d76]{font-size:10.5px;padding:1px 6px;border-radius:999px;background:color-mix(in srgb,var(--zen-accent, #6366f1) 18%,transparent);color:var(--zen-text, #e5e5ea)}.lpk-words[data-v-9a639d76]{font-size:11px;color:var(--zen-muted, #9aa0aa);display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.lpk-hint[data-v-9a639d76]{font-size:10px;color:var(--zen-muted, #9aa0aa);opacity:.8}.ld[data-v-a9e6a30b]{height:100%;box-sizing:border-box;overflow:auto;padding:12px 14px 16px;display:flex;flex-direction:column;gap:14px;color:var(--zen-text, #e5e5ea);font-size:12px}.ld-head[data-v-a9e6a30b]{display:flex;gap:12px;align-items:flex-start}.ld-cover[data-v-a9e6a30b]{flex:none;width:104px;height:136px;padding:0;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-input, #1b1b20);overflow:hidden;cursor:zoom-in;display:flex;align-items:center;justify-content:center}.ld-cover[data-v-a9e6a30b]:disabled{cursor:default}.ld-cover img[data-v-a9e6a30b],.ld-cover video[data-v-a9e6a30b]{width:100%;height:100%;object-fit:contain;display:block}.ld-cover>.mdi[data-v-a9e6a30b]{font-size:32px;color:var(--zen-muted, #9aa0aa)}.ld-id[data-v-a9e6a30b]{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}.ld-title[data-v-a9e6a30b]{font-size:14px;font-weight:600;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.ld-file[data-v-a9e6a30b]{font-size:10.5px;color:var(--zen-muted, #9aa0aa);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ld-chips[data-v-a9e6a30b]{display:flex;flex-wrap:wrap;gap:4px}.ld-chip[data-v-a9e6a30b]{display:inline-flex;align-items:center;gap:3px;font:inherit;font-size:11px;padding:2px 8px;border:1px solid var(--zen-border, #34343c);border-radius:999px;background:var(--zen-input, #1b1b20);color:var(--zen-text, #e5e5ea)}.ld-chip.accent[data-v-a9e6a30b]{border-color:transparent;background:color-mix(in srgb,var(--zen-accent, #6366f1) 22%,transparent)}.ld-chip.word[data-v-a9e6a30b]{cursor:pointer}.ld-chip.word[data-v-a9e6a30b]:hover{border-color:var(--zen-accent, #6366f1)}.ld-actions[data-v-a9e6a30b]{display:flex;align-items:center;gap:6px;margin-top:2px}.ld-link[data-v-a9e6a30b]{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;color:var(--zen-accent, #6366f1);text-decoration:none}.ld-link[data-v-a9e6a30b]:hover{text-decoration:underline}.ld-sec[data-v-a9e6a30b]{display:flex;flex-direction:column;gap:7px}.ld-sec h4[data-v-a9e6a30b]{margin:0;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--zen-muted, #9aa0aa)}.ld-count[data-v-a9e6a30b]{font-weight:400}.ld-copy[data-v-a9e6a30b],.ld-toggle[data-v-a9e6a30b],.ld-more[data-v-a9e6a30b]{border:none;background:none;padding:0 2px;font:inherit;cursor:pointer;color:var(--zen-muted, #9aa0aa);display:inline-flex;align-items:center;gap:3px;text-transform:none;letter-spacing:0}.ld-copy[data-v-a9e6a30b]:hover,.ld-toggle[data-v-a9e6a30b]:hover,.ld-more[data-v-a9e6a30b]:hover,.ld-toggle.on[data-v-a9e6a30b]{color:var(--zen-text, #e5e5ea)}.ld-toggle[data-v-a9e6a30b]{margin-left:auto;font-size:11px}.ld-more[data-v-a9e6a30b]{align-self:flex-start;font-size:11px;color:var(--zen-accent, #6366f1)}.ld-examples[data-v-a9e6a30b]{container:ld-examples / inline-size}.ld-viewer[data-v-a9e6a30b]{display:flex;flex-direction:column;gap:12px;outline:none}.ld-look[data-v-a9e6a30b]{display:flex;flex-direction:column;gap:6px;min-width:0}@container ld-examples (min-width: 560px){.ld-viewer[data-v-a9e6a30b]{display:grid;grid-template-columns:minmax(0,1fr) minmax(200px,38%);align-items:start}}.ld-stage[data-v-a9e6a30b]{position:relative;display:flex;height:340px;overflow:hidden;border:1px solid var(--zen-border, #34343c);border-radius:var(--zen-radius, 7px);background:var(--zen-media-bg, #0b0b0e)}.ld-stage-media[data-v-a9e6a30b]{flex:1;display:flex;align-items:center;justify-content:center;min-width:0;padding:0;border:0;background:none;cursor:zoom-in}.ld-stage-media img[data-v-a9e6a30b],.ld-stage-media video[data-v-a9e6a30b]{display:block;max-width:100%;max-height:100%;object-fit:contain}.ld-nav[data-v-a9e6a30b]{position:absolute;top:50%;display:grid;place-items:center;width:30px;height:44px;padding:0;border:0;border-radius:var(--zen-radius, 7px);background:#00000073;color:#fff;font-size:22px;opacity:0;transform:translateY(-50%);cursor:pointer;transition:opacity var(--zen-dur-fast, .12s) ease}.ld-nav.prev[data-v-a9e6a30b]{left:6px}.ld-nav.next[data-v-a9e6a30b]{right:6px}.ld-stage:hover .ld-nav[data-v-a9e6a30b],.ld-nav[data-v-a9e6a30b]:focus-visible{opacity:1}.ld-nav[data-v-a9e6a30b]:hover{background:#000000a6}.ld-counter[data-v-a9e6a30b]{position:absolute;right:8px;bottom:8px;padding:2px 7px;border-radius:999px;background:#0000008c;color:#fff;font-size:10.5px;font-variant-numeric:tabular-nums;pointer-events:none}.ld-strip[data-v-a9e6a30b]{display:flex;gap:4px;overflow-x:auto;overflow-y:hidden;padding-bottom:4px}.ld-thumb[data-v-a9e6a30b]{position:relative;flex:none;height:64px;padding:0;overflow:hidden;border:1px solid var(--zen-border, #34343c);border-radius:calc(var(--zen-radius, 7px) - 2px);background:var(--zen-media-bg, #0b0b0e);opacity:.7;cursor:pointer;transition:opacity var(--zen-dur-fast, .12s) ease}.ld-thumb[data-v-a9e6a30b]:hover,.ld-thumb.sel[data-v-a9e6a30b]{opacity:1}.ld-thumb.sel[data-v-a9e6a30b]{border-color:var(--zen-accent, #6366f1);box-shadow:inset 0 0 0 1px var(--zen-accent, #6366f1)}.ld-thumb img[data-v-a9e6a30b],.ld-thumb video[data-v-a9e6a30b]{display:block;width:100%;height:100%;object-fit:cover}.ld-badge[data-v-a9e6a30b]{position:absolute;right:3px;bottom:3px;font-size:14px;color:#fff;text-shadow:0 1px 3px rgb(0 0 0 / 70%)}.blur img[data-v-a9e6a30b],.blur video[data-v-a9e6a30b]{filter:blur(14px)}.ld-params[data-v-a9e6a30b]{min-width:0;display:flex;flex-direction:column;gap:8px}.ld-k[data-v-a9e6a30b]{display:flex;align-items:center;gap:4px;font-size:10.5px;font-weight:600;color:var(--zen-muted, #9aa0aa)}.ld-text[data-v-a9e6a30b]{max-height:140px;overflow:auto;padding:6px 8px;border-radius:var(--zen-radius, 7px);background:var(--zen-input, #1b1b20);white-space:pre-wrap;word-break:break-word;line-height:1.45;user-select:text}.ld-kv[data-v-a9e6a30b]{margin:0;display:grid;grid-template-columns:max-content minmax(0,1fr);gap:3px 10px;font-size:11.5px}.ld-kv dt[data-v-a9e6a30b]{color:var(--zen-muted, #9aa0aa)}.ld-kv dd[data-v-a9e6a30b]{margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;user-select:text}.ld-desc[data-v-a9e6a30b]{white-space:pre-wrap;line-height:1.5;user-select:text;display:-webkit-box;-webkit-line-clamp:8;line-clamp:8;-webkit-box-orient:vertical;overflow:hidden}.ld-desc.open[data-v-a9e6a30b]{display:block}.ld-muted[data-v-a9e6a30b]{margin:0;color:var(--zen-muted, #9aa0aa);font-size:11.5px}.lt[data-v-40f2868d]{flex:none;box-sizing:border-box;width:40px;height:40px;object-fit:cover;border-radius:var(--zen-radius, 7px);background:var(--zen-input, #1b1b20);border:1px solid var(--zen-border, #34343c)}.lt.sm[data-v-40f2868d]{width:18px;height:18px;border-radius:var(--zen-radius, 7px)}.lt.ph[data-v-40f2868d]{display:inline-flex;align-items:center;justify-content:center;color:var(--zen-muted, #9aa0aa);font-size:20px}.lt.sm.ph[data-v-40f2868d]{font-size:11px}.lt.warn[data-v-40f2868d]{display:inline-flex;align-items:center;justify-content:center;color:var(--zen-danger, #dc2626);background:color-mix(in srgb,var(--zen-danger, #dc2626) 14%,transparent);border-color:color-mix(in srgb,var(--zen-danger, #dc2626) 45%,transparent);font-size:20px}.lt.sm.warn[data-v-40f2868d]{font-size:12px}.lp-sel[data-v-ba2b3a49]{display:flex;align-items:center;gap:7px;min-width:0}.lp-sel-name[data-v-ba2b3a49]{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lp-sel.missing .lp-sel-name[data-v-ba2b3a49]{color:var(--zen-danger, #dc2626)}.lp-opt[data-v-ba2b3a49]{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;line-height:1.25}.lp-opt-name[data-v-ba2b3a49]{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12.5px}.lp-opt-dir[data-v-ba2b3a49]{font-size:10px;color:var(--zen-muted, #9aa0aa);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lp-star[data-v-ba2b3a49]{flex:none;border:none;background:none;cursor:pointer;color:var(--zen-muted, #9aa0aa);font-size:15px;padding:2px;display:inline-flex}.lp-star.on[data-v-ba2b3a49],.lp-star[data-v-ba2b3a49]:hover{color:var(--zen-star, #f5b301)}.lp-browse[data-v-ba2b3a49]{border:none;background:none;cursor:pointer;color:var(--zen-muted, #9aa0aa);font-size:16px;padding:0 2px;display:inline-flex}.lp-browse[data-v-ba2b3a49]:hover{color:var(--zen-text, #e5e5ea)}.lp-crumbs[data-v-ba2b3a49]{display:flex;align-items:center;gap:2px;min-width:0;padding:4px 8px;overflow:hidden;white-space:nowrap}.lp-crumbs>.mdi[data-v-ba2b3a49]{flex:none;font-size:13px;color:var(--zen-muted, #9aa0aa)}.lp-up[data-v-ba2b3a49],.lp-crumb[data-v-ba2b3a49]{flex:none;border:none;background:none;cursor:pointer;font:inherit;font-size:11.5px;padding:2px 5px;border-radius:var(--zen-radius, 7px);color:var(--zen-muted, #9aa0aa)}.lp-crumb.on[data-v-ba2b3a49]{color:var(--zen-text, #e5e5ea);font-weight:600}.lp-up[data-v-ba2b3a49]:hover:not(:disabled),.lp-crumb[data-v-ba2b3a49]:hover{color:var(--zen-text, #e5e5ea);background:color-mix(in srgb,var(--zen-text, #e5e5ea) 6%,transparent)}.lp-up[data-v-ba2b3a49]:disabled{opacity:.35;cursor:default}.lp-folder[data-v-ba2b3a49]{flex:none;box-sizing:border-box;width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;font-size:22px;color:var(--zen-accent, #6366f1);border-radius:var(--zen-radius, 7px);background:color-mix(in srgb,var(--zen-accent, #6366f1) 10%,var(--zen-input, #1b1b20));border:1px solid var(--zen-border, #34343c)}.lp-chev[data-v-ba2b3a49]{flex:none;color:var(--zen-muted, #9aa0aa);font-size:16px}.lb[data-v-e37dd837]{display:grid;grid-template-columns:210px minmax(0,1fr) 360px;height:calc(100% + 28px);margin:-14px;font-size:12px}.lb-search[data-v-e37dd837]{display:flex;flex:1;max-width:340px}.lb-grow[data-v-e37dd837]{flex:1}.lb-soft[data-v-e37dd837]{color:var(--zen-muted, #9aa0aa)}.lb-folders[data-v-e37dd837]{display:flex;flex-direction:column;gap:1px;min-height:0;overflow-y:auto;padding:10px 8px;border-right:1px solid var(--zen-border, #34343c)}.lb-folder[data-v-e37dd837]{display:flex;align-items:center;gap:6px;width:100%;padding:5px 8px;border:0;border-radius:var(--zen-radius, 7px);background:none;color:var(--zen-muted, #9aa0aa);font:inherit;text-align:left;cursor:pointer}.lb-folder[data-v-e37dd837]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 6%,transparent);color:var(--zen-text, #e5e5ea)}.lb-folder.on[data-v-e37dd837]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 20%,transparent);color:var(--zen-text, #e5e5ea)}.lb-folder .mdi[data-v-e37dd837]{flex:none;font-size:15px}.lb-folder .mdi-star[data-v-e37dd837]{color:var(--zen-star, #f5b301)}.lb-fname[data-v-e37dd837]{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.lb-count[data-v-e37dd837]{flex:none;font-size:10.5px;font-variant-numeric:tabular-nums}.lb-sep[data-v-e37dd837]{margin:6px 4px;border-top:1px solid var(--zen-border, #34343c)}.lb-main[data-v-e37dd837]{display:flex;flex-direction:column;min-width:0;min-height:0}.lb-filters[data-v-e37dd837]{display:flex;flex:none;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--zen-border, #34343c)}.lb-scope[data-v-e37dd837]{display:inline-flex;align-items:center;gap:5px;font-weight:600}.lb-grid[data-v-e37dd837]{display:grid;flex:1;align-content:start;gap:10px;min-height:0;overflow-y:auto;padding:12px;outline:none}.lb-card[data-v-e37dd837]{display:flex;flex-direction:column;gap:3px;min-width:0;padding:4px;border:1px solid transparent;border-radius:calc(var(--zen-radius, 7px) + 2px);background:none;color:var(--zen-text, #e5e5ea);font:inherit;text-align:left;cursor:pointer}.lb-card[data-v-e37dd837]:focus{outline:none}.lb-card[data-v-e37dd837]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 5%,transparent)}.lb-card.focus .lb-img[data-v-e37dd837]{outline:2px solid var(--zen-accent, #6366f1);outline-offset:1px}.lb-img[data-v-e37dd837]{position:relative;display:grid;place-items:center;aspect-ratio:3 / 4;overflow:hidden;border-radius:var(--zen-radius, 7px);background:var(--zen-media-bg, #0b0b0e)}.lb-img img[data-v-e37dd837],.lb-img video[data-v-e37dd837]{width:100%;height:100%;object-fit:cover}.lb-noimg[data-v-e37dd837]{color:var(--zen-muted, #9aa0aa);font-size:30px;opacity:.5}.lb-badge[data-v-e37dd837],.lb-star[data-v-e37dd837],.lb-inuse[data-v-e37dd837]{position:absolute;display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#0009;color:#fff;font-size:13px}.lb-badge[data-v-e37dd837]{bottom:5px;left:5px}.lb-star[data-v-e37dd837]{top:5px;right:5px;opacity:0;transition:opacity var(--zen-dur-fast, .12s)}.lb-card:hover .lb-star[data-v-e37dd837],.lb-star.on[data-v-e37dd837]{opacity:1}.lb-star.on[data-v-e37dd837]{color:var(--zen-star, #f5b301)}.lb-inuse[data-v-e37dd837]{top:5px;left:5px;background:var(--zen-accent, #6366f1);color:var(--zen-accent-text, #fff)}.lb-name[data-v-e37dd837],.lb-dir[data-v-e37dd837]{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.lb-name[data-v-e37dd837]{font-size:11.5px}.lb-dir[data-v-e37dd837]{margin-top:-2px;color:var(--zen-muted, #9aa0aa);font-size:10.5px}.lb-empty[data-v-e37dd837]{display:flex;flex-direction:column;grid-column:1 / -1;align-items:center;gap:6px;padding:48px 12px;color:var(--zen-muted, #9aa0aa);text-align:center}.lb-empty .mdi[data-v-e37dd837]{font-size:28px}.lb-list[data-v-e37dd837]{display:flex;flex:1;flex-direction:column;min-height:0}.lb-lhead[data-v-e37dd837],.lb-row[data-v-e37dd837]{display:grid;grid-template-columns:34px minmax(0,2.4fr) minmax(0,1.2fr) 72px 104px 28px;align-items:center;gap:10px;padding:0 12px}.lb-lhead[data-v-e37dd837]{flex:none;height:28px;border-bottom:1px solid var(--zen-border, #34343c);color:var(--zen-muted, #9aa0aa);font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase}.lb-lrows[data-v-e37dd837]{display:grid;flex:1;align-content:start;min-height:0;overflow-y:auto;outline:none}.lb-row[data-v-e37dd837]{height:34px;border-bottom:1px solid color-mix(in srgb,var(--zen-border, #34343c) 50%,transparent);cursor:pointer}.lb-row[data-v-e37dd837]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 5%,transparent)}.lb-row.focus[data-v-e37dd837]{background:color-mix(in srgb,var(--zen-accent, #6366f1) 18%,transparent)}.lb-rthumb[data-v-e37dd837]{display:grid;place-items:center;width:26px;height:26px;overflow:hidden;border-radius:5px;background:var(--zen-media-bg, #0b0b0e);color:var(--zen-muted, #9aa0aa)}.lb-rthumb img[data-v-e37dd837]{width:100%;height:100%;object-fit:cover}.lb-rname[data-v-e37dd837],.lb-rdir[data-v-e37dd837]{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.lb-rname .mdi[data-v-e37dd837]{margin-left:4px;color:var(--zen-muted, #9aa0aa)}.lb-rname .lb-rcur[data-v-e37dd837]{color:var(--zen-accent, #6366f1)}.lb-rdir[data-v-e37dd837]{color:var(--zen-muted, #9aa0aa)}.num[data-v-e37dd837]{color:var(--zen-muted, #9aa0aa);font-variant-numeric:tabular-nums;text-align:right}.lb-rstar[data-v-e37dd837]{display:grid;place-items:center;color:var(--zen-muted, #9aa0aa);opacity:0}.lb-row:hover .lb-rstar[data-v-e37dd837],.lb-rstar.on[data-v-e37dd837]{opacity:1}.lb-rstar.on[data-v-e37dd837]{color:var(--zen-star, #f5b301)}.lb-detail[data-v-e37dd837]{min-height:0;overflow-y:auto;padding:12px;border-left:1px solid var(--zen-border, #34343c)}.lb-hint[data-v-e37dd837]{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:40%;color:var(--zen-muted, #9aa0aa);line-height:1.5;text-align:center}.lb-hint .mdi[data-v-e37dd837]{font-size:26px}.lb-foot[data-v-e37dd837]{display:flex;align-items:center;gap:8px}.lb-foot-name[data-v-e37dd837]{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.jt[data-v-e4670a8d]{font-family:var(--zen-mono, ui-monospace, \"SF Mono\", Menlo, Consolas, monospace);font-size:11.5px;line-height:1.6}.jt-row[data-v-e4670a8d]{display:flex;align-items:center;gap:3px;cursor:pointer;white-space:nowrap;border-radius:var(--zen-radius, 7px)}.jt-row[data-v-e4670a8d]:hover{background:color-mix(in srgb,var(--zen-text, #e5e5ea) 7%,transparent)}.jt-row.leaf[data-v-e4670a8d]{cursor:default}.jt-caret[data-v-e4670a8d]{font-size:14px;color:var(--zen-muted, #9aa0aa);margin-left:-2px}.jt-key[data-v-e4670a8d]{color:var(--zen-accent, #6366f1)}.jt-key[data-v-e4670a8d]:after{content:\":\";color:var(--zen-muted, #9aa0aa);margin:0 2px 0 1px}.jt-brace[data-v-e4670a8d]{color:var(--zen-muted, #9aa0aa)}.jt-close[data-v-e4670a8d]{cursor:default}.jt-collapsed[data-v-e4670a8d]{color:var(--zen-muted, #9aa0aa);font-style:italic;margin:0 4px;opacity:.8}.jt-children[data-v-e4670a8d]{border-left:1px solid var(--zen-border, #34343c)}.jt-val[data-v-e4670a8d]{white-space:pre-wrap;word-break:break-word}.t-string[data-v-e4670a8d]{color:color-mix(in srgb,#4caf50 70%,var(--zen-text, #e5e5ea))}.t-number[data-v-e4670a8d]{color:color-mix(in srgb,#d4a017 70%,var(--zen-text, #e5e5ea))}.t-boolean[data-v-e4670a8d]{color:color-mix(in srgb,#b16ce8 70%,var(--zen-text, #e5e5ea))}.t-null[data-v-e4670a8d]{color:#9aa0aa;font-style:italic}\n/* ZenKit ↔ ComfyUI theme bridge — the runtime-free way to theme @nynxz/zenkit-ui.\n *\n * @nynxz/zenkit-ui components read --zen-* tokens. WITH the ZenKit runtime installed,\n * @nynxz/zenkit-core sets those from the active theme pack (the derivation in @nynxz/zenkit-theme's\n * zen.ts → zenAliases). Consumers that use @nynxz/zenkit-ui WITHOUT the runtime import this file\n * instead: it maps the same --zen-* set straight onto ComfyUI's native theme variables, so\n * the components follow the user's selected ComfyUI theme with zero JS.\n *\n * Declared at :root so teleported overlays (ZenPopover / ZenCombo menus, ZenModal) — which\n * mount outside any component subtree — pick the tokens up too. The right-hand fallbacks keep\n * every token sane if ComfyUI renames or drops a variable. Kept in lockstep with zen.ts:\n * the same core and status tokens, sourced from the host instead of a pack. (The other\n * --zen-* tokens the components use — glass, scrollbar, switch-radius — resolve through\n * inline fallbacks that chain back to these.)\n *\n * Import once, near your extension entry:  import '@nynxz/zenkit-ui/comfy-bridge.css'\n */\n:root {\n  --zen-bg: var(--comfy-menu-bg, #1a1a1f);\n  --zen-surface: var(--comfy-menu-secondary-bg, #202026);\n  --zen-surface-2: var(--comfy-menu-secondary-bg, #26262d);\n  --zen-input: var(--comfy-input-bg, #1b1b20);\n  --zen-border: var(--border-color, #34343c);\n  --zen-text: var(--input-text, var(--fg-color, #e5e5ea));\n  --zen-muted: var(--descrip-text, #9aa0aa);\n  --zen-accent: var(--p-primary-color, #6366f1);\n  --zen-accent-text: var(--p-button-text-primary-color, #fff);\n  --zen-radius: var(--border-radius-base, 7px);\n  --zen-danger: var(--color-destructive-background, #dc2626);\n  --zen-danger-text: #fff;\n  --zen-warn: var(--color-warning-background, #d97706);\n  --zen-warn-text: var(--color-warning-on-background, #15151a);\n  --zen-ok: var(--color-success-background, #16a34a);\n  --zen-ok-text: #fff;\n  --zen-info: var(--zen-accent);\n  --zen-info-text: var(--zen-accent-text);\n  --zen-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;\n  /* keyboard-focus outline colour shared by every control's :focus-visible */\n  --zen-focus-ring: color-mix(in srgb, var(--zen-accent) 60%, transparent);\n}\n\n.gs-head[data-v-e2a0d204] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  /* lines the master switch up with the cards' switches below it */\n  padding-right: 7px;\n}\n.gs-colors[data-v-e2a0d204] {\n  flex: 1;\n  min-width: 0;\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  gap: 4px;\n}\n.gs-all[data-v-e2a0d204] {\n  height: 18px;\n  padding: 0 7px;\n  border: 1px solid var(--zen-control-border, var(--zen-border, #34343c));\n  border-radius: 999px;\n  background: var(--zen-control-bg, transparent);\n  color: var(--zen-muted, #9aa0aa);\n  font: inherit;\n  font-size: 10px;\n  cursor: pointer;\n}\n.gs-all.on[data-v-e2a0d204] {\n  color: var(--zen-text, #e5e5ea);\n  border-color: var(--zen-accent, #6366f1);\n}\n/* A colour chip: the group colour itself, ringed in the accent while selected. */\n.gs-color[data-v-e2a0d204] {\n  width: 16px;\n  height: 16px;\n  padding: 0;\n  border: 2px solid transparent;\n  border-radius: 50%;\n  background: var(--gs-c) padding-box;\n  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 12%);\n  cursor: pointer;\n  opacity: 0.55;\n}\n.gs-color.on[data-v-e2a0d204] {\n  opacity: 1;\n  border-color: var(--zen-accent, #6366f1);\n}\n.gs-color.none[data-v-e2a0d204] {\n  background: transparent;\n  box-shadow: inset 0 0 0 1px var(--zen-muted, #9aa0aa);\n}\n.gs-rows[data-v-e2a0d204] {\n  display: flex;\n  flex-direction: column;\n  gap: 4px;\n}\n\n/* One card per group: its own outline, a lift on hover, and the group's colour as a stripe down\n   the left edge so the card still reads as that group without a separate swatch. */\n.gs-card[data-v-e2a0d204] {\n  display: flex;\n  flex-direction: column;\n  border: 1px solid var(--zen-surface-border, var(--zen-border, #34343c));\n  border-left: 3px solid var(--gs-c, var(--zen-surface-border, var(--zen-border, #34343c)));\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);\n  transition:\n    background 0.12s ease,\n    border-color 0.12s ease;\n}\n.gs-card[data-v-e2a0d204]:hover {\n  background: color-mix(in srgb, var(--zen-text, #fff) 5%, transparent);\n}\n.gs-card-head[data-v-e2a0d204] {\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  min-height: 32px;\n  padding: 3px 6px 3px 8px;\n}\n.gs-card.off .gs-name[data-v-e2a0d204],\n.gs-node.off .gs-name[data-v-e2a0d204] {\n  opacity: 0.5;\n}\n.gs-card.empty .gs-name[data-v-e2a0d204] {\n  opacity: 0.45;\n}\n\n/* The name is a button so the whole label toggles — a far bigger target than the switch. */\n.gs-name[data-v-e2a0d204] {\n  flex: 1;\n  min-width: 0;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  padding: 2px 0;\n  border: none;\n  background: none;\n  color: var(--zen-text, #e5e5ea);\n  font: inherit;\n  text-align: left;\n  cursor: pointer;\n}\n.gs-name[data-v-e2a0d204]:disabled {\n  cursor: default;\n}\n.gs-title[data-v-e2a0d204] {\n  min-width: 0;\n  font-size: 12px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.gs-count[data-v-e2a0d204] {\n  flex: none;\n  padding: 0 5px;\n  border-radius: 999px;\n  background: color-mix(in srgb, var(--zen-text, #fff) 7%, transparent);\n  color: var(--zen-muted, #9aa0aa);\n  font-size: 10px;\n  line-height: 16px;\n  font-variant-numeric: tabular-nums;\n}\n/* Some nodes running, some not: the badge carries it, in the accent. */\n.gs-count.mixed[data-v-e2a0d204] {\n  background: color-mix(in srgb, var(--zen-accent, #6366f1) 20%, transparent);\n  color: var(--zen-text, #e5e5ea);\n}\n.gs-nodes[data-v-e2a0d204] {\n  display: flex;\n  flex-direction: column;\n  gap: 2px;\n  padding: 4px 6px 6px 8px;\n  border-top: 1px solid var(--zen-surface-border, var(--zen-border, #34343c));\n}\n.gs-node[data-v-e2a0d204] {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  min-height: 24px;\n}\n.gs-node .gs-title[data-v-e2a0d204] {\n  font-size: 11px;\n  color: var(--zen-muted, #9aa0aa);\n}\n.gs-node-switch[data-v-e2a0d204] {\n  zoom: 0.75;\n}\n.gs-empty[data-v-e2a0d204] {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  gap: 5px;\n  padding: 14px 8px;\n  text-align: center;\n  color: var(--zen-muted, #9aa0aa);\n  border: 1px dashed var(--zen-border, #34343c);\n  border-radius: var(--zen-radius, 8px);\n  background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);\n}\n.gs-empty > .mdi[data-v-e2a0d204] {\n  font-size: 24px;\n  opacity: 0.8;\n}\n.gs-empty > span[data-v-e2a0d204] {\n  font-size: 11px;\n}\n/*$vite$:1*/";document.head.appendChild(s);})();import { ComfyApp, app } from "../../../scripts/app.js";
 import { api } from "../../../scripts/api.js";
 //#region \0rolldown/runtime.js
 var __defProp = Object.defineProperty;
@@ -4641,9 +4641,9 @@ var version = "3.5.42";
 * @license MIT
 **/
 var policy = void 0;
-var tt$1 = typeof window !== "undefined" && window.trustedTypes;
-if (tt$1) try {
-	policy = /* @__PURE__ */ tt$1.createPolicy("vue", { createHTML: (val) => val });
+var tt = typeof window !== "undefined" && window.trustedTypes;
+if (tt) try {
+	policy = /* @__PURE__ */ tt.createPolicy("vue", { createHTML: (val) => val });
 } catch (e) {}
 var unsafeToTrustedHTML = policy ? (val) => policy.createHTML(val) : (val) => val;
 var svgNS = "http://www.w3.org/2000/svg";
@@ -5307,7 +5307,7 @@ function normalizeContainer(container) {
 	return container;
 }
 //#endregion
-//#region ../ZenKit/packages/ui/dist/index.js
+//#region node_modules/.pnpm/@nynxz+zenkit-ui@0.5.0_vue@3.5.42_typescript@5.9.3_/node_modules/@nynxz/zenkit-ui/dist/index.js
 var ho = /* @__PURE__ */ defineComponent({
 	__name: "ZenWidget",
 	props: {
@@ -5350,30 +5350,46 @@ var ho = /* @__PURE__ */ defineComponent({
 		}, null, 4), renderSlot(l.$slots, "footer", {}, void 0, !0)], 64)) : createCommentVNode("", !0)], 6));
 	}
 });
-var Pe = (e, o) => {
+var Pe$1 = (e, o) => {
 	const t = e.__vccOpts || e;
 	for (const [l, r] of o) t[l] = r;
 	return t;
 };
-var Vf = /* @__PURE__ */ Pe(ho, [["__scopeId", "data-v-566c7d03"]]);
-function Fl(e, o, t) {
-	let l = e(), r = requestAnimationFrame(function s() {
-		const u = e();
-		if (!u) {
-			t();
+var Af = /* @__PURE__ */ Pe$1(ho, [["__scopeId", "data-v-566c7d03"]]);
+var go = 150;
+function Fl(e, o, t, l) {
+	let r = e(), s = 0;
+	const u = (x) => {
+		x.target instanceof Node && l?.()?.contains(x.target) && (s = performance.now() + go);
+	};
+	l && (window.addEventListener("scroll", u, {
+		capture: !0,
+		passive: !0
+	}), window.addEventListener("wheel", u, {
+		capture: !0,
+		passive: !0
+	}));
+	let d = requestAnimationFrame(function x(M) {
+		if (d = requestAnimationFrame(x), M < s) return;
+		const V = e();
+		if (!V) {
+			c(), t();
 			return;
 		}
-		(!l || u.x !== l.x || u.y !== l.y || u.width !== l.width || u.height !== l.height) && (l = u, o()), r = requestAnimationFrame(s);
+		(!r || V.x !== r.x || V.y !== r.y || V.width !== r.width || V.height !== r.height) && (r = V, o());
 	});
-	return () => cancelAnimationFrame(r);
+	function c() {
+		cancelAnimationFrame(d), window.removeEventListener("scroll", u, { capture: !0 }), window.removeEventListener("wheel", u, { capture: !0 });
+	}
+	return c;
 }
 function Kl(e) {
 	if (!e?.isConnected) return null;
 	const o = e.getBoundingClientRect();
 	return o.width || o.height ? o : null;
 }
-var go = "data-zen-layer";
-var Je$1 = {
+var bo = "data-zen-layer";
+var Ye$1 = {
 	/** dropdowns, menus, pickers, context menus, popovers */
 	popover: 1e5,
 	modal: 100100,
@@ -5383,15 +5399,15 @@ var Je$1 = {
 	peek: 100400
 };
 function Ln(e, o) {
-	const t = e instanceof Element ? e.closest(`[${go}]`) : null;
+	const t = e instanceof Element ? e.closest(`[${bo}]`) : null;
 	return !!t && t !== o;
 }
 var wn = [];
-var pl = /* @__PURE__ */ new WeakSet();
-function rl(e = Je$1.popover) {
+var hl = /* @__PURE__ */ new WeakSet();
+function rl(e = Ye$1.popover) {
 	return wn.reduce((o, t) => Math.max(o, t.z + 1), e);
 }
-function Mt(e = Je$1.popover) {
+function zt(e = Ye$1.popover) {
 	const o = Symbol("layer"), t = rl(e);
 	wn.push({
 		id: o,
@@ -5401,15 +5417,15 @@ function Mt(e = Je$1.popover) {
 	return {
 		z: t,
 		isTop: l,
-		escape: (r) => r.key !== "Escape" || pl.has(r) || !l() ? !1 : (pl.add(r), !0),
+		escape: (r) => r.key !== "Escape" || hl.has(r) || !l() ? !1 : (hl.add(r), !0),
 		release: () => {
 			const r = wn.findIndex((s) => s.id === o);
 			r !== -1 && wn.splice(r, 1);
 		}
 	};
 }
-var bo = ["role"];
-var On = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var ko = ["role"];
+var cl = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenPopover",
 	props: {
 		open: {
@@ -5429,83 +5445,87 @@ var On = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 	setup(e, { expose: o, emit: t }) {
 		const l = e, r = t, s = /* @__PURE__ */ ref(!1), u = computed({
 			get: () => l.open !== void 0 ? l.open : s.value,
-			set: (y) => {
-				l.open !== void 0 ? r("update:open", y) : s.value = y;
+			set: (g) => {
+				l.open !== void 0 ? r("update:open", g) : s.value = g;
 			}
-		}), d = /* @__PURE__ */ ref(null), c = /* @__PURE__ */ ref(null), z = /* @__PURE__ */ ref({}), M = /* @__PURE__ */ ref(!1);
-		function B() {
-			const y = l.anchor;
-			return y ? y instanceof HTMLElement ? y.getBoundingClientRect() : "width" in y ? y : new DOMRect(y.x, y.y, 0, 0) : d.value ? d.value.getBoundingClientRect() : null;
+		}), d = /* @__PURE__ */ ref(null), c = /* @__PURE__ */ ref(null), x = /* @__PURE__ */ ref({}), M = /* @__PURE__ */ ref(!1);
+		function V() {
+			const g = l.anchor;
+			return g ? g instanceof HTMLElement ? g.getBoundingClientRect() : "width" in g ? g : new DOMRect(g.x, g.y, 0, 0) : d.value ? d.value.getBoundingClientRect() : null;
 		}
-		function x() {
-			const y = l.anchor;
-			return y ? y instanceof HTMLElement ? y : null : d.value;
+		function k() {
+			const g = l.anchor;
+			return g ? g instanceof HTMLElement ? g : null : d.value;
 		}
 		function p() {
-			const y = B(), P = c.value;
-			if (!y || !P) return;
-			const k = l.offset, q = window.innerWidth, fe = window.innerHeight, H = P.offsetWidth, ae = P.offsetHeight, [U, ie] = l.placement.split("-");
-			let me = U;
-			me === "bottom" && y.bottom + k + ae > fe && y.top - k - ae >= 0 ? me = "top" : me === "top" && y.top - k - ae < 0 && y.bottom + k + ae <= fe ? me = "bottom" : me === "right" && y.right + k + H > q && y.left - k - H >= 0 ? me = "left" : me === "left" && y.left - k - H < 0 && y.right + k + H <= q && (me = "right");
+			const g = V(), b = c.value;
+			if (!g || !b) return;
+			const R = l.offset, ae = window.innerWidth, Q = window.innerHeight, ve = b.offsetWidth, oe = b.offsetHeight, [ce, pe] = l.placement.split("-");
+			let O = ce;
+			O === "bottom" && g.bottom + R + oe > Q && g.top - R - oe >= 0 ? O = "top" : O === "top" && g.top - R - oe < 0 && g.bottom + R + oe <= Q ? O = "bottom" : O === "right" && g.right + R + ve > ae && g.left - R - ve >= 0 ? O = "left" : O === "left" && g.left - R - ve < 0 && g.right + R + ve <= ae && (O = "right");
 			const _ = {};
-			me === "bottom" ? _.top = y.bottom + k + "px" : me === "top" ? _.bottom = fe - y.top + k + "px" : me === "right" ? _.left = y.right + k + "px" : _.right = q - y.left + k + "px", me === "bottom" || me === "top" ? ie === "end" ? _.right = Math.max(4, q - y.right) + "px" : _.left = Math.max(4, Math.min(y.left, q - H - 4)) + "px" : ie === "end" ? _.bottom = Math.max(4, fe - y.bottom) + "px" : _.top = Math.max(4, Math.min(y.top, fe - ae - 4)) + "px", l.matchWidth && (_.minWidth = y.width + "px"), z.value = _, M.value = !0;
+			O === "bottom" ? _.top = g.bottom + R + "px" : O === "top" ? _.bottom = Q - g.top + R + "px" : O === "right" ? _.left = g.right + R + "px" : _.right = ae - g.left + R + "px", O === "bottom" || O === "top" ? pe === "end" ? _.right = Math.max(4, ae - g.right) + "px" : _.left = Math.max(4, Math.min(g.left, ae - ve - 4)) + "px" : pe === "end" ? _.bottom = Math.max(4, Q - g.bottom) + "px" : _.top = Math.max(4, Math.min(g.top, Q - oe - 4)) + "px", l.matchWidth && (_.minWidth = g.width + "px"), x.value = _, M.value = !0;
 		}
-		function g() {
+		function h() {
 			u.value = !0;
 		}
-		function R() {
+		function B() {
 			u.value = !1;
 		}
-		function J() {
-			u.value ? R() : g();
+		function te() {
+			u.value ? B() : h();
 		}
-		function E(y) {
-			const P = y.target;
-			c.value?.contains(P) || x()?.contains(P) || Ln(y.target, c.value) || R();
+		function S(g) {
+			const b = g.target;
+			c.value?.contains(b) || k()?.contains(b) || Ln(g.target, c.value) || B();
 		}
-		let S = null;
-		const O = /* @__PURE__ */ ref(Je$1.popover);
-		function j(y) {
-			S?.escape(y) && R();
+		let $ = null;
+		const X = /* @__PURE__ */ ref(Ye$1.popover);
+		function ne(g) {
+			$?.escape(g) && B();
 		}
-		function I() {
-			u.value && p();
+		function Z(g) {
+			g.target instanceof Node && c.value?.contains(g.target) || u.value && p();
 		}
-		function de(y) {
-			c.value?.contains(y.target) || R();
+		function de(g) {
+			c.value?.contains(g.target) || B();
 		}
-		let he = null;
-		function Z() {
-			he?.(), he = null, window.removeEventListener("wheel", de, !0), S?.release(), S = null, window.removeEventListener("pointerdown", E, !0), window.removeEventListener("keydown", j, !0), window.removeEventListener("resize", I), window.removeEventListener("scroll", I, !0);
+		let fe = null, G = 0;
+		function E() {
+			fe?.(), fe = null, window.removeEventListener("wheel", de, !0), $?.release(), $ = null, window.removeEventListener("pointerdown", S, !0), window.removeEventListener("keydown", ne, !0), window.removeEventListener("resize", Z), window.removeEventListener("scroll", Z, !0);
 		}
-		return watch(u, (y) => {
-			if (!y) {
-				Z();
+		return watch(u, (g) => {
+			const b = ++G;
+			if (!g) {
+				E();
 				return;
 			}
-			M.value = !1, S ??= Mt(Je$1.popover), O.value = S.z, nextTick(() => {
+			M.value = !1, $ ??= zt(Ye$1.popover), X.value = $.z, nextTick(() => {
+				if (b !== G || !u.value) return;
 				p(), setTimeout(() => {
-					window.addEventListener("pointerdown", E, !0), window.addEventListener("keydown", j, !0);
-				}, 0), window.addEventListener("resize", I), window.addEventListener("scroll", I, !0);
-				const P = x();
-				P ? he = Fl(() => Kl(P), p, R) : window.addEventListener("wheel", de, {
+					b === G && (window.addEventListener("pointerdown", S, !0), window.addEventListener("keydown", ne, !0));
+				}, 0), window.addEventListener("resize", Z), window.addEventListener("scroll", Z, !0);
+				const R = k();
+				R ? fe = Fl(() => Kl(R), p, B, () => c.value) : window.addEventListener("wheel", de, {
 					capture: !0,
 					passive: !0
 				});
 			});
-		}), onBeforeUnmount(Z), o({
-			open: g,
-			close: R,
-			toggle: J
-		}), (y, P) => (openBlock(), createElementBlock(Fragment, null, [y.$slots.trigger ? (openBlock(), createElementBlock("span", {
+		}), onBeforeUnmount(() => {
+			G++, E();
+		}), o({
+			open: h,
+			close: B,
+			toggle: te
+		}), (g, b) => (openBlock(), createElementBlock(Fragment, null, [g.$slots.trigger ? (openBlock(), createElementBlock("span", {
 			key: 0,
 			ref_key: "anchorEl",
 			ref: d,
 			class: "zen-pop-anchor"
-		}, [renderSlot(y.$slots, "trigger", {
-			toggle: J,
-			open: g,
-			close: R,
+		}, [renderSlot(g.$slots, "trigger", {
+			toggle: te,
+			open: h,
+			close: B,
 			active: u.value
 		}, void 0, !0)], 512)) : createCommentVNode("", !0), (openBlock(), createBlock(Teleport, { to: "body" }, [u.value ? (openBlock(), createElementBlock("div", {
 			key: 0,
@@ -5513,22 +5533,22 @@ var On = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			ref: c,
 			"data-zen-layer": "",
 			class: normalizeClass(["zen-pop zen-surface zen-scroll", { "zen-pop-tooltip": e.role === "tooltip" }]),
-			style: normalizeStyle([z.value, {
-				zIndex: O.value,
+			style: normalizeStyle([x.value, {
+				zIndex: X.value,
 				visibility: M.value ? "visible" : "hidden"
 			}]),
 			role: e.role
-		}, [renderSlot(y.$slots, "default", { close: R }, void 0, !0)], 14, bo)) : createCommentVNode("", !0)]))], 64));
+		}, [renderSlot(g.$slots, "default", { close: B }, void 0, !0)], 14, ko)) : createCommentVNode("", !0)]))], 64));
 	}
-}), [["__scopeId", "data-v-baec6be9"]]);
-var wo = ["aria-label", "aria-describedby"];
-var $o = {
+}), [["__scopeId", "data-v-34f78306"]]);
+var $o = ["aria-label", "aria-describedby"];
+var xo = {
 	key: 1,
 	viewBox: "0 0 16 16",
 	"aria-hidden": "true"
 };
-var xo = ["id"];
-var Ol = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var zo = ["id"];
+var Ol = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenTip",
 	props: {
 		text: {},
@@ -5537,15 +5557,15 @@ var Ol = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 	},
 	setup(e) {
 		const o = e, t = useSlots(), l = computed(() => !!t.default), r = computed(() => o.delay ?? (l.value ? 450 : 0)), s = /* @__PURE__ */ ref(null), u = /* @__PURE__ */ ref(!1), d = useId();
-		let c, z;
+		let c, x;
 		const M = () => {
-			clearTimeout(c), !u.value && (clearTimeout(z), r.value ? z = setTimeout(() => u.value = !0, r.value) : u.value = !0);
-		}, B = () => {
-			clearTimeout(z), clearTimeout(c), u.value = !0;
-		}, x = () => {
-			clearTimeout(z), clearTimeout(c), c = setTimeout(() => u.value = !1, 80);
+			clearTimeout(c), !u.value && (clearTimeout(x), r.value ? x = setTimeout(() => u.value = !0, r.value) : u.value = !0);
+		}, V = () => {
+			clearTimeout(x), clearTimeout(c), u.value = !0;
+		}, k = () => {
+			clearTimeout(x), clearTimeout(c), c = setTimeout(() => u.value = !1, 80);
 		};
-		return (p, g) => (openBlock(), createElementBlock(Fragment, null, [createBaseVNode("button", {
+		return (p, h) => (openBlock(), createElementBlock(Fragment, null, [createBaseVNode("button", {
 			ref_key: "btn",
 			ref: s,
 			type: "button",
@@ -5553,12 +5573,12 @@ var Ol = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			"aria-label": l.value ? void 0 : e.label ?? "More about this",
 			"aria-describedby": u.value ? unref(d) : void 0,
 			onMouseenter: M,
-			onMouseleave: x,
-			onFocus: B,
-			onBlur: x,
-			onKeydown: g[0] || (g[0] = withKeys((R) => u.value = !1, ["esc"])),
-			onClick: g[1] || (g[1] = withModifiers((R) => u.value = !u.value, ["prevent"]))
-		}, [l.value ? renderSlot(p.$slots, "default", {}, void 0, !0, 0) : (openBlock(), createElementBlock("svg", $o, [...g[3] || (g[3] = [
+			onMouseleave: k,
+			onFocus: V,
+			onBlur: k,
+			onKeydown: h[0] || (h[0] = withKeys((B) => u.value = !1, ["esc"])),
+			onClick: h[1] || (h[1] = withModifiers((B) => u.value = !u.value, ["prevent"]))
+		}, [l.value ? renderSlot(p.$slots, "default", {}, void 0, !0, 0) : (openBlock(), createElementBlock("svg", xo, [...h[3] || (h[3] = [
 			createBaseVNode("circle", {
 				cx: "8",
 				cy: "8",
@@ -5579,9 +5599,9 @@ var Ol = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 				r: "0.9",
 				fill: "currentColor"
 			}, null, -1)
-		])]))], 42, wo), createVNode(On, {
+		])]))], 42, $o), createVNode(cl, {
 			open: u.value,
-			"onUpdate:open": g[2] || (g[2] = (R) => u.value = R),
+			"onUpdate:open": h[2] || (h[2] = (B) => u.value = B),
 			anchor: s.value,
 			placement: "top-start",
 			offset: 6,
@@ -5590,23 +5610,23 @@ var Ol = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			default: withCtx(() => [createBaseVNode("div", {
 				id: unref(d),
 				class: "zen-tip-body"
-			}, toDisplayString(e.text), 9, xo)]),
+			}, toDisplayString(e.text), 9, zo)]),
 			_: 1
 		}, 8, ["open", "anchor"])], 64));
 	}
 }), [["__scopeId", "data-v-e12bb9ef"]]);
-var Mo = { class: "zf-row" };
-var Eo = {
+var Eo = { class: "zf-row" };
+var Lo = {
 	key: 0,
 	class: "zf-label-wrap"
 };
-var Lo = { class: "zf-label" };
-var So = { class: "zf-control" };
-var Co = {
+var So = { class: "zf-label" };
+var Co = { class: "zf-control" };
+var To = {
 	key: 0,
 	class: "zf-hint"
 };
-var Hf = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var Bf = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenField",
 	props: {
 		label: {},
@@ -5618,23 +5638,23 @@ var Hf = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 		tip: {}
 	},
 	setup(e) {
-		return (o, t) => (openBlock(), createElementBlock("div", { class: normalizeClass(["zen-field", { stack: e.stack }]) }, [createBaseVNode("div", Mo, [e.label ? (openBlock(), createElementBlock("span", Eo, [createBaseVNode("label", Lo, toDisplayString(e.label), 1), e.tip ? (openBlock(), createBlock(Ol, {
+		return (o, t) => (openBlock(), createElementBlock("div", { class: normalizeClass(["zen-field", { stack: e.stack }]) }, [createBaseVNode("div", Eo, [e.label ? (openBlock(), createElementBlock("span", Lo, [createBaseVNode("label", So, toDisplayString(e.label), 1), e.tip ? (openBlock(), createBlock(Ol, {
 			key: 0,
 			text: e.tip,
 			label: `About ${e.label}`
-		}, null, 8, ["text", "label"])) : createCommentVNode("", !0)])) : createCommentVNode("", !0), createBaseVNode("div", So, [renderSlot(o.$slots, "default", {}, void 0, !0)])]), e.hint ? (openBlock(), createElementBlock("span", Co, toDisplayString(e.hint), 1)) : createCommentVNode("", !0)], 2));
+		}, null, 8, ["text", "label"])) : createCommentVNode("", !0)])) : createCommentVNode("", !0), createBaseVNode("div", Co, [renderSlot(o.$slots, "default", {}, void 0, !0)])]), e.hint ? (openBlock(), createElementBlock("span", To, toDisplayString(e.hint), 1)) : createCommentVNode("", !0)], 2));
 	}
 }), [["__scopeId", "data-v-9c483aa7"]]);
-function Po(e) {
+function Io(e) {
 	if (!e) return !1;
 	const o = e.trim();
 	return !o || o.includes(" ") ? !1 : /^(https?:|data:|blob:|\/)/i.test(o) || /\.(png|jpe?g|gif|webp|svg|ico|avif|bmp)(\?|#|$)/i.test(o);
 }
-function st(e, o = "") {
+function lt(e, o = "") {
 	const t = e?.trim() || o;
 	return t.startsWith("mdi-") ? `mdi ${t}` : t;
 }
-var el = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var el = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenIcon",
 	props: {
 		icon: {},
@@ -5643,7 +5663,7 @@ var el = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 	setup(e) {
 		const o = e, t = /* @__PURE__ */ ref(!1);
 		watch(() => o.icon, () => t.value = !1);
-		const l = computed(() => Po(o.icon)), r = computed(() => l.value && !t.value), s = computed(() => l.value ? o.fallback : o.icon || o.fallback);
+		const l = computed(() => Io(o.icon)), r = computed(() => l.value && !t.value), s = computed(() => l.value ? o.fallback : o.icon || o.fallback);
 		function u() {
 			l.value && (t.value = !0);
 		}
@@ -5653,12 +5673,12 @@ var el = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			referrerpolicy: "no-referrer",
 			draggable: "false"
 		} : {}, {
-			class: r.value ? "zen-ico-img" : unref(st)(s.value),
+			class: r.value ? "zen-ico-img" : unref(lt)(s.value),
 			onError: u
 		}), null, 16, ["class"]));
 	}
 }), [["__scopeId", "data-v-819f0eab"]]);
-var _o = [
+var Zo = [
 	"role",
 	"aria-label",
 	"aria-orientation",
@@ -5668,7 +5688,7 @@ var _o = [
 	"aria-valuemax",
 	"aria-valuetext"
 ];
-var Zo = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var Uo = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenResizeHandle",
 	props: {
 		orientation: { default: "vertical" },
@@ -5697,31 +5717,31 @@ var Zo = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 		function u(c) {
 			if (c.button !== 0 || s) return;
 			c.preventDefault(), c.stopPropagation();
-			const z = c.currentTarget, M = c.pointerId, B = document.body, x = B.style.cursor, p = B.style.userSelect;
-			B.style.cursor = t.orientation === "both" ? "move" : t.orientation === "vertical" ? "col-resize" : "row-resize", B.style.userSelect = "none", r.value = !0;
-			const g = (S) => {
-				S.pointerId === M && l("dragMove", S);
-			}, R = (S) => {
-				S.pointerId === M && s?.(!1);
-			}, J = (S) => {
-				S.pointerId === M && s?.(!0);
-			}, E = (S) => {
-				S.key === "Escape" && (S.preventDefault(), S.stopPropagation(), s?.(!0));
+			const x = c.currentTarget, M = c.pointerId, V = document.body, k = V.style.cursor, p = V.style.userSelect;
+			V.style.cursor = t.orientation === "both" ? "move" : t.orientation === "vertical" ? "col-resize" : "row-resize", V.style.userSelect = "none", r.value = !0;
+			const h = ($) => {
+				$.pointerId === M && l("dragMove", $);
+			}, B = ($) => {
+				$.pointerId === M && s?.(!1);
+			}, te = ($) => {
+				$.pointerId === M && s?.(!0);
+			}, S = ($) => {
+				$.key === "Escape" && ($.preventDefault(), $.stopPropagation(), s?.(!0));
 			};
-			s = (S) => {
-				s = null, window.removeEventListener("pointermove", g, !0), window.removeEventListener("pointerup", R, !0), window.removeEventListener("pointercancel", J, !0), window.removeEventListener("keydown", E, !0), z.removeEventListener("lostpointercapture", J), z.hasPointerCapture(M) && z.releasePointerCapture(M), r.value = !1, B.style.cursor = x, B.style.userSelect = p, l("dragEnd", S);
-			}, z.setPointerCapture(M), window.addEventListener("pointermove", g, !0), window.addEventListener("pointerup", R, !0), window.addEventListener("pointercancel", J, !0), window.addEventListener("keydown", E, !0), z.addEventListener("lostpointercapture", J), l("dragStart", c);
+			s = ($) => {
+				s = null, window.removeEventListener("pointermove", h, !0), window.removeEventListener("pointerup", B, !0), window.removeEventListener("pointercancel", te, !0), window.removeEventListener("keydown", S, !0), x.removeEventListener("lostpointercapture", te), x.hasPointerCapture(M) && x.releasePointerCapture(M), r.value = !1, V.style.cursor = k, V.style.userSelect = p, l("dragEnd", $);
+			}, x.setPointerCapture(M), window.addEventListener("pointermove", h, !0), window.addEventListener("pointerup", B, !0), window.addEventListener("pointercancel", te, !0), window.addEventListener("keydown", S, !0), x.addEventListener("lostpointercapture", te), l("dragStart", c);
 		}
 		function d(c) {
 			if (r.value || c.altKey || c.ctrlKey || c.metaKey) return;
-			const z = c.key === "ArrowLeft" || c.key === "ArrowRight" ? "x" : c.key === "ArrowUp" || c.key === "ArrowDown" ? "y" : null;
-			if (z && (t.orientation === "both" || z === (t.orientation === "vertical" ? "x" : "y"))) {
+			const x = c.key === "ArrowLeft" || c.key === "ArrowRight" ? "x" : c.key === "ArrowUp" || c.key === "ArrowDown" ? "y" : null;
+			if (x && (t.orientation === "both" || x === (t.orientation === "vertical" ? "x" : "y"))) {
 				c.preventDefault(), c.stopPropagation();
 				const M = c.key === "ArrowLeft" || c.key === "ArrowUp" ? -1 : 1;
-				l("nudge", M * t.step * (c.shiftKey ? 5 : 1), z);
+				l("nudge", M * t.step * (c.shiftKey ? 5 : 1), x);
 			} else (c.key === "Home" || c.key === "End" || c.key === "Enter" || c.key === " " && t.orientation === "both") && (c.preventDefault(), c.stopPropagation(), c.key === "Enter" || c.key === " " ? l("toggle") : l("limit", c.key === "Home" ? "min" : "max"));
 		}
-		return onBeforeUnmount(() => s?.(!0)), (c, z) => (openBlock(), createElementBlock("div", {
+		return onBeforeUnmount(() => s?.(!0)), (c, x) => (openBlock(), createElementBlock("div", {
 			class: normalizeClass(["zen-resize-handle", [
 				e.orientation,
 				e.variant,
@@ -5738,12 +5758,12 @@ var Zo = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			"aria-valuetext": e.orientation === "both" ? void 0 : e.valueText,
 			onPointerdown: u,
 			onKeydown: d,
-			onDblclick: z[0] || (z[0] = (M) => l("reset"))
-		}, null, 42, _o));
+			onDblclick: x[0] || (x[0] = (M) => l("reset"))
+		}, null, 42, Zo));
 	}
 }), [["__scopeId", "data-v-732b507d"]]);
-var Uo = ["id", "inert"];
-var Kf = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var Xo = ["id", "inert"];
+var Hf = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenSplit",
 	props: /* @__PURE__ */ mergeModels({
 		direction: { default: "horizontal" },
@@ -5756,168 +5776,168 @@ var Kf = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 	}),
 	emits: ["update:sizes"],
 	setup(e, { expose: o }) {
-		const t = e, l = useModel(e, "sizes"), r = computed(() => t.direction === "horizontal"), s = (h) => (t.panes[h]?.size ?? 0) > 1, u = computed(() => {
-			const h = t.panes.length, $ = t.panes.filter((Fe, le) => !s(le)), L = $.reduce((Fe, le) => Fe + (le.size ?? 0), 0), ue = $.filter((Fe) => Fe.size == null).length, ve = ue ? L < 1 ? (1 - L) / ue : 1 / $.length : 0;
-			return Array.from({ length: h }, (Fe, le) => t.panes[le].size ?? ve);
-		}), d = (h) => Array.isArray(h) && h.length === t.panes.length && h.every(($) => Number.isFinite($) && $ >= 0), c = /* @__PURE__ */ ref(d(l.value) ? [...l.value] : u.value);
-		let z = !1;
-		watch(() => [l.value, t.panes.length], ([h]) => {
-			z || (c.value = d(h) ? [...h] : u.value);
+		const t = e, l = useModel(e, "sizes"), r = computed(() => t.direction === "horizontal"), s = (z) => (t.panes[z]?.size ?? 0) > 1, u = computed(() => {
+			const z = t.panes.length, L = t.panes.filter((ye, J) => !s(J)), A = L.reduce((ye, J) => ye + (J.size ?? 0), 0), F = L.filter((ye) => ye.size == null).length, q = F ? A < 1 ? (1 - A) / F : 1 / L.length : 0;
+			return Array.from({ length: z }, (ye, J) => t.panes[J].size ?? q);
+		}), d = (z) => Array.isArray(z) && z.length === t.panes.length && z.every((L) => Number.isFinite(L) && L >= 0), c = /* @__PURE__ */ ref(d(l.value) ? [...l.value] : u.value);
+		let x = !1;
+		watch(() => [l.value, t.panes.length], ([z]) => {
+			x || (c.value = d(z) ? [...z] : u.value);
 		});
-		function M(h) {
-			c.value = h;
-			const $ = l.value;
-			(!$ || $.length !== h.length || $.some((L, ue) => L !== h[ue])) && (l.value = [...h]);
+		function M(z) {
+			c.value = z;
+			const L = l.value;
+			(!L || L.length !== z.length || L.some((A, F) => A !== z[F])) && (l.value = [...z]);
 		}
-		const B = computed(() => c.value.reduce((h, $, L) => s(L) ? h : h + $, 0)), x = computed(() => {
-			if (B.value > 0) return -1;
-			for (let h = c.value.length - 1; h >= 0; h--) if (c.value[h] > 0) return h;
+		const V = computed(() => c.value.reduce((z, L, A) => s(A) ? z : z + L, 0)), k = computed(() => {
+			if (V.value > 0) return -1;
+			for (let z = c.value.length - 1; z >= 0; z--) if (c.value[z] > 0) return z;
 			return -1;
 		});
-		function p(h) {
-			const $ = c.value[h] ?? 0, L = h === x.value ? 1 : s(h) ? 0 : B.value > 0 ? $ / B.value : 0, ue = s(h) ? `${$}px` : "0px", ve = $ > 0 ? t.panes[h]?.min ?? 0 : 0;
+		function p(z) {
+			const L = c.value[z] ?? 0, A = z === k.value ? 1 : s(z) ? 0 : V.value > 0 ? L / V.value : 0, F = s(z) ? `${L}px` : "0px", q = L > 0 ? t.panes[z]?.min ?? 0 : 0;
 			return {
-				flex: `${L} 1 ${ue}`,
-				[r.value ? "minWidth" : "minHeight"]: `${ve}px`
+				flex: `${A} 1 ${F}`,
+				[r.value ? "minWidth" : "minHeight"]: `${q}px`
 			};
 		}
-		const g = /* @__PURE__ */ ref(null), R = [];
-		function J() {
-			return t.panes.map((h, $) => {
-				const L = R[$];
-				return L ? r.value ? L.offsetWidth : L.offsetHeight : 0;
+		const h = /* @__PURE__ */ ref(null), B = [];
+		function te() {
+			return t.panes.map((z, L) => {
+				const A = B[L];
+				return A ? r.value ? A.offsetWidth : A.offsetHeight : 0;
 			});
 		}
-		function E() {
-			const h = g.value;
-			if (!h) return 1;
-			const $ = h.getBoundingClientRect(), L = r.value ? $.width / h.offsetWidth : $.height / h.offsetHeight;
-			return Number.isFinite(L) && L > 0 ? L : 1;
+		function S() {
+			const z = h.value;
+			if (!z) return 1;
+			const L = z.getBoundingClientRect(), A = r.value ? L.width / z.offsetWidth : L.height / z.offsetHeight;
+			return Number.isFinite(A) && A > 0 ? A : 1;
 		}
-		function S(h) {
-			const $ = h, L = h + 1;
-			return s(L) && !s($) || t.panes[L]?.collapsible && !t.panes[$]?.collapsible ? L : $;
+		function $(z) {
+			const L = z, A = z + 1;
+			return s(A) && !s(L) || t.panes[A]?.collapsible && !t.panes[L]?.collapsible ? A : L;
 		}
-		function O(h, $, L, ue) {
-			const ve = $ === h ? h + 1 : h, Fe = t.panes[$], le = t.panes[ve], X = ue[$] + ue[ve], re = Fe.min ?? 0, Ke = Fe.max ?? 1 / 0, Ye = le.min ?? 0, tt = le.max ?? 1 / 0;
-			let qe;
-			if (Fe.collapsible && L < re / 2 && X <= tt) qe = 0;
-			else if (le.collapsible && X - L < Ye / 2 && X <= Ke) qe = X;
+		function X(z, L, A, F) {
+			const q = L === z ? z + 1 : z, ye = t.panes[L], J = t.panes[q], U = F[L] + F[q], ie = ye.min ?? 0, Ae = ye.max ?? 1 / 0, _e = J.min ?? 0, Qe = J.max ?? 1 / 0;
+			let Ne;
+			if (ye.collapsible && A < ie / 2 && U <= Qe) Ne = 0;
+			else if (J.collapsible && U - A < _e / 2 && U <= Ae) Ne = U;
 			else {
-				const pe = Math.max(re, X - tt), se = Math.max(pe, Math.min(Ke, X - Ye));
-				qe = Math.min(Math.max(L, pe), se);
+				const C = Math.max(ie, U - Qe), T = Math.max(C, Math.min(Ae, U - _e));
+				Ne = Math.min(Math.max(A, C), T);
 			}
-			qe = Math.min(Math.max(qe, 0), X);
-			const Qe = [...ue];
-			Qe[$] = qe, Qe[ve] = X - qe;
-			const A = Qe.reduce((pe, se, be) => s(be) ? pe : pe + se, 0);
-			return Qe.map((pe, se) => s(se) ? se === $ || se === ve ? Math.round(pe) : c.value[se] : A > 0 ? Math.round(pe / A * 1e4) / 1e4 : 0);
+			Ne = Math.min(Math.max(Ne, 0), U);
+			const qe = [...F];
+			qe[L] = Ne, qe[q] = U - Ne;
+			const I = qe.reduce((C, T, D) => s(D) ? C : C + T, 0);
+			return qe.map((C, T) => s(T) ? T === L || T === q ? Math.round(C) : c.value[T] : I > 0 ? Math.round(C / I * 1e4) / 1e4 : 0);
 		}
-		function j(h, $) {
-			if (s(h)) return u.value[h];
-			const L = $.reduce((ve, Fe, le) => s(le) ? ve : ve + Fe, 0), ue = u.value.reduce((ve, Fe, le) => s(le) ? ve : ve + Fe, 0);
-			return ue > 0 ? u.value[h] / ue * L : 0;
+		function ne(z, L) {
+			if (s(z)) return u.value[z];
+			const A = L.reduce((q, ye, J) => s(J) ? q : q + ye, 0), F = u.value.reduce((q, ye, J) => s(J) ? q : q + ye, 0);
+			return F > 0 ? u.value[z] / F * A : 0;
 		}
-		const I = [], de = /* @__PURE__ */ ref(-1);
-		let he = [], Z = [], y = 0, P = 1;
-		function k(h, $) {
-			he = J(), Z = [...c.value];
-			for (const L of [$, $ + 1]) he[L] > 0 && (I[L] = he[L]);
-			y = r.value ? h.clientX : h.clientY, P = E(), z = !0, de.value = $;
+		const Z = [], de = /* @__PURE__ */ ref(-1);
+		let fe = [], G = [], E = 0, g = 1;
+		function b(z, L) {
+			fe = te(), G = [...c.value];
+			for (const A of [L, L + 1]) fe[A] > 0 && (Z[A] = fe[A]);
+			E = r.value ? z.clientX : z.clientY, g = S(), x = !0, de.value = L;
 		}
-		function q(h, $) {
-			const L = ((r.value ? h.clientX : h.clientY) - y) / P;
-			c.value = O($, $, he[$] + L, he);
+		function R(z, L) {
+			const A = ((r.value ? z.clientX : z.clientY) - E) / g;
+			c.value = X(L, L, fe[L] + A, fe);
 		}
-		function fe(h) {
-			z = !1, de.value = -1, h ? c.value = Z : M(c.value);
+		function ae(z) {
+			x = !1, de.value = -1, z ? c.value = G : M(c.value);
 		}
-		function H(h) {
-			const $ = J(), L = S(h);
-			M(O(h, L, j(L, $), $));
+		function Q(z) {
+			const L = te(), A = $(z);
+			M(X(z, A, ne(A, L), L));
 		}
-		function ae(h, $) {
-			const L = J();
-			M(O(h, h, L[h] + $, L));
+		function ve(z, L) {
+			const A = te();
+			M(X(z, z, A[z] + L, A));
 		}
-		function U(h, $) {
-			const L = $ === "min" ? h : h + 1;
-			M(O(h, L, t.panes[L].min ?? 0, J()));
+		function oe(z, L) {
+			const A = L === "min" ? z : z + 1;
+			M(X(z, A, t.panes[A].min ?? 0, te()));
 		}
-		function ie(h) {
-			const $ = J(), L = S(h);
-			t.panes[L].collapsible && M(me(h, L, $[L] > 0, $));
+		function ce(z) {
+			const L = te(), A = $(z);
+			t.panes[A].collapsible && M(pe(z, A, L[A] > 0, L));
 		}
-		function me(h, $, L, ue) {
-			return L ? (ue[$] > 0 && (I[$] = ue[$]), O(h, $, 0, ue)) : O(h, $, I[$] ?? j($, ue), ue);
+		function pe(z, L, A, F) {
+			return A ? (F[L] > 0 && (Z[L] = F[L]), X(z, L, 0, F)) : X(z, L, Z[L] ?? ne(L, F), F);
 		}
-		function _(h) {
-			const $ = S(h), L = c.value[$] ?? 0, ue = t.panes[$];
-			if (!s($)) {
-				const ve = Math.round((B.value > 0 ? L / B.value : 0) * 100);
+		function O(z) {
+			const L = $(z), A = c.value[L] ?? 0, F = t.panes[L];
+			if (!s(L)) {
+				const q = Math.round((V.value > 0 ? A / V.value : 0) * 100);
 				return {
-					p: $,
-					now: ve,
+					p: L,
+					now: q,
 					min: 0,
 					max: 100,
-					text: `${ve}%`
+					text: `${q}%`
 				};
 			}
 			return {
-				p: $,
-				now: Math.round(L),
-				min: ue.collapsible ? 0 : ue.min ?? 0,
-				max: ue.max,
-				text: `${Math.round(L)}px`
+				p: L,
+				now: Math.round(A),
+				min: F.collapsible ? 0 : F.min ?? 0,
+				max: F.max,
+				text: `${Math.round(A)}px`
 			};
 		}
-		const ee = useId(), W = (h) => `${ee}-pane-${h}`;
-		function C() {
+		const _ = useId(), K = (z) => `${_}-pane-${z}`;
+		function Y() {
 			M([...u.value]);
 		}
-		function Y(h, $ = !0) {
-			if (!t.panes[h]?.collapsible) return;
-			const L = h < t.panes.length - 1 && (h === 0 || S(h) === h) ? h : h - 1;
-			L < 0 || M(me(L, h, $, J()));
+		function ue(z, L = !0) {
+			if (!t.panes[z]?.collapsible) return;
+			const A = z < t.panes.length - 1 && (z === 0 || $(z) === z) ? z : z - 1;
+			A < 0 || M(pe(A, z, L, te()));
 		}
 		return o({
-			el: g,
-			reset: C,
-			collapse: Y
-		}), (h, $) => (openBlock(), createElementBlock("div", {
+			el: h,
+			reset: Y,
+			collapse: ue
+		}), (z, L) => (openBlock(), createElementBlock("div", {
 			ref_key: "root",
-			ref: g,
+			ref: h,
 			class: normalizeClass(["zen-split", [
 				e.direction,
 				`gutter-${e.gutter}`,
 				{ dragging: de.value >= 0 }
 			]])
-		}, [(openBlock(!0), createElementBlock(Fragment, null, renderList(e.panes, (L, ue) => (openBlock(), createElementBlock(Fragment, { key: ue }, [createBaseVNode("div", {
-			id: W(ue),
+		}, [(openBlock(!0), createElementBlock(Fragment, null, renderList(e.panes, (A, F) => (openBlock(), createElementBlock(Fragment, { key: F }, [createBaseVNode("div", {
+			id: K(F),
 			ref_for: !0,
-			ref: (ve) => R[ue] = ve,
-			class: normalizeClass(["zsp-pane", { collapsed: (c.value[ue] ?? 0) <= 0 }]),
-			style: normalizeStyle(p(ue)),
-			inert: (c.value[ue] ?? 0) <= 0 || void 0
-		}, [renderSlot(h.$slots, `pane-${ue}`, {}, void 0, !0)], 14, Uo), ue < e.panes.length - 1 ? (openBlock(), createBlock(Zo, {
+			ref: (q) => B[F] = q,
+			class: normalizeClass(["zsp-pane", { collapsed: (c.value[F] ?? 0) <= 0 }]),
+			style: normalizeStyle(p(F)),
+			inert: (c.value[F] ?? 0) <= 0 || void 0
+		}, [renderSlot(z.$slots, `pane-${F}`, {}, void 0, !0)], 14, Xo), F < e.panes.length - 1 ? (openBlock(), createBlock(Uo, {
 			key: 0,
 			class: "zsp-gutter",
 			orientation: r.value ? "vertical" : "horizontal",
 			variant: e.gutter,
 			step: e.step,
-			controls: W(_(ue).p),
-			value: _(ue).now,
-			min: _(ue).min,
-			max: _(ue).max,
-			"value-text": _(ue).text,
-			label: `Resize pane ${_(ue).p + 1}`,
-			onDragStart: (ve) => k(ve, ue),
-			onDragMove: (ve) => q(ve, ue),
-			onDragEnd: fe,
-			onReset: (ve) => H(ue),
-			onNudge: (ve) => ae(ue, ve),
-			onLimit: (ve) => U(ue, ve),
-			onToggle: (ve) => ie(ue)
+			controls: K(O(F).p),
+			value: O(F).now,
+			min: O(F).min,
+			max: O(F).max,
+			"value-text": O(F).text,
+			label: `Resize pane ${O(F).p + 1}`,
+			onDragStart: (q) => b(q, F),
+			onDragMove: (q) => R(q, F),
+			onDragEnd: ae,
+			onReset: (q) => Q(F),
+			onNudge: (q) => ve(F, q),
+			onLimit: (q) => oe(F, q),
+			onToggle: (q) => ce(F)
 		}, null, 8, [
 			"orientation",
 			"variant",
@@ -5937,8 +5957,8 @@ var Kf = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 		])) : createCommentVNode("", !0)], 64))), 128))], 2));
 	}
 }), [["__scopeId", "data-v-a558794f"]]);
-var Yo = 28;
-var tl = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var qo = 28;
+var tl = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenScroll",
 	props: {
 		horizontal: {
@@ -5952,70 +5972,70 @@ var tl = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 	},
 	emits: ["scroll"],
 	setup(e, { expose: o, emit: t }) {
-		const l = e, r = t, s = /* @__PURE__ */ ref(null), u = /* @__PURE__ */ ref(null), d = l.horizontal, c = (k) => d ? k.scrollLeft : k.scrollTop, z = (k) => d ? k.scrollWidth : k.scrollHeight, M = (k) => d ? k.clientWidth : k.clientHeight, B = /* @__PURE__ */ ref(0), x = /* @__PURE__ */ ref(0), p = /* @__PURE__ */ ref(!1), g = /* @__PURE__ */ ref(!1);
-		let R, J, E = !1, S = 0, O = 0;
-		function j() {
-			const k = u.value;
-			if (!k) return;
-			const [q, fe, H] = [
-				c(k),
-				z(k),
-				M(k)
+		const l = e, r = t, s = /* @__PURE__ */ ref(null), u = /* @__PURE__ */ ref(null), d = l.horizontal, c = (b) => d ? b.scrollLeft : b.scrollTop, x = (b) => d ? b.scrollWidth : b.scrollHeight, M = (b) => d ? b.clientWidth : b.clientHeight, V = /* @__PURE__ */ ref(0), k = /* @__PURE__ */ ref(0), p = /* @__PURE__ */ ref(!1), h = /* @__PURE__ */ ref(!1);
+		let B, te, S = !1, $ = 0, X = 0;
+		function ne() {
+			const b = u.value;
+			if (!b) return;
+			const [R, ae, Q] = [
+				c(b),
+				x(b),
+				M(b)
 			];
-			p.value = fe > H + 1;
-			const ae = H - 8;
-			x.value = Math.max(Yo, H / fe * ae);
-			const U = fe - H;
-			B.value = 4 + (U > 0 ? q / U * (ae - x.value) : 0);
+			p.value = ae > Q + 1;
+			const ve = Q - 8;
+			k.value = Math.max(qo, Q / ae * ve);
+			const oe = ae - Q;
+			V.value = 4 + (oe > 0 ? R / oe * (ve - k.value) : 0);
 		}
-		function I() {
-			g.value = !0, clearTimeout(R), R = setTimeout(() => g.value = E, 900);
+		function Z() {
+			h.value = !0, clearTimeout(B), B = setTimeout(() => h.value = S, 900);
 		}
-		function de(k) {
-			l.overlay && (j(), I()), r("scroll", k);
+		function de(b) {
+			l.overlay && (ne(), Z()), r("scroll", b);
 		}
-		function he(k) {
-			u.value && (E = !0, S = d ? k.clientX : k.clientY, O = c(u.value), k.target.setPointerCapture(k.pointerId), k.preventDefault());
+		function fe(b) {
+			u.value && (S = !0, $ = d ? b.clientX : b.clientY, X = c(u.value), b.target.setPointerCapture(b.pointerId), b.preventDefault());
 		}
-		function Z(k) {
-			const q = u.value;
-			if (!E || !q) return;
-			const fe = (z(q) - M(q)) / Math.max(1, M(q) - 8 - x.value), H = O + ((d ? k.clientX : k.clientY) - S) * fe;
-			d ? q.scrollLeft = H : q.scrollTop = H;
+		function G(b) {
+			const R = u.value;
+			if (!S || !R) return;
+			const ae = (x(R) - M(R)) / Math.max(1, M(R) - 8 - k.value), Q = X + ((d ? b.clientX : b.clientY) - $) * ae;
+			d ? R.scrollLeft = Q : R.scrollTop = Q;
 		}
-		function y() {
-			E = !1, I();
+		function E() {
+			S = !1, Z();
 		}
-		function P(k) {
-			const q = u.value;
-			if (!q || k.target !== k.currentTarget) return;
-			const fe = k.currentTarget.getBoundingClientRect(), H = (d ? k.clientX - fe.left : k.clientY - fe.top) < B.value ? -1 : 1;
-			q.scrollBy({
-				[d ? "left" : "top"]: H * M(q) * .9,
+		function g(b) {
+			const R = u.value;
+			if (!R || b.target !== b.currentTarget) return;
+			const ae = b.currentTarget.getBoundingClientRect(), Q = (d ? b.clientX - ae.left : b.clientY - ae.top) < V.value ? -1 : 1;
+			R.scrollBy({
+				[d ? "left" : "top"]: Q * M(R) * .9,
 				behavior: "smooth"
 			});
 		}
 		return onMounted(async () => {
-			if (l.overlay && (await nextTick(), j(), J = new ResizeObserver(j), u.value)) {
-				J.observe(u.value);
-				for (const k of Array.from(u.value.children)) J.observe(k);
+			if (l.overlay && (await nextTick(), ne(), te = new ResizeObserver(ne), u.value)) {
+				te.observe(u.value);
+				for (const b of Array.from(u.value.children)) te.observe(b);
 			}
 		}), onBeforeUnmount(() => {
-			J?.disconnect(), clearTimeout(R);
+			te?.disconnect(), clearTimeout(B);
 		}), o({
 			/** the element that scrolls: the root, or with `overlay` the inner viewport */
 			get viewport() {
 				return l.overlay ? u.value : s.value;
 			},
 			/** re-measure the overlay bar (after content changes it can't observe) */
-			refresh: j
-		}), (k, q) => e.overlay ? (openBlock(), createElementBlock("div", {
+			refresh: ne
+		}), (b, R) => e.overlay ? (openBlock(), createElementBlock("div", {
 			key: 0,
 			ref_key: "root",
 			ref: s,
 			class: normalizeClass(["zen-scroll-ov", {
 				x: e.horizontal,
-				active: g.value,
+				active: h.value,
 				scrollable: p.value
 			}])
 		}, [createBaseVNode("div", {
@@ -6023,37 +6043,37 @@ var tl = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			ref: u,
 			class: normalizeClass(["zen-scroll zen-scroll-viewport", { x: e.horizontal }]),
 			onScrollPassive: de
-		}, [renderSlot(k.$slots, "default", {}, void 0, !0)], 34), withDirectives(createBaseVNode("div", {
+		}, [renderSlot(b.$slots, "default", {}, void 0, !0)], 34), withDirectives(createBaseVNode("div", {
 			class: "zen-scroll-track",
-			onPointerdown: P
+			onPointerdown: g
 		}, [createBaseVNode("div", {
 			class: "zen-scroll-thumb",
 			style: normalizeStyle(e.horizontal ? {
-				width: `${x.value}px`,
-				transform: `translateX(${B.value}px)`
+				width: `${k.value}px`,
+				transform: `translateX(${V.value}px)`
 			} : {
-				height: `${x.value}px`,
-				transform: `translateY(${B.value}px)`
+				height: `${k.value}px`,
+				transform: `translateY(${V.value}px)`
 			}),
-			onPointerdown: withModifiers(he, ["stop"]),
-			onPointermove: Z,
-			onPointerup: y,
-			onPointercancel: y
+			onPointerdown: withModifiers(fe, ["stop"]),
+			onPointermove: G,
+			onPointerup: E,
+			onPointercancel: E
 		}, null, 36)], 544), [[vShow, p.value]])], 2)) : (openBlock(), createElementBlock("div", {
 			key: 1,
 			ref_key: "root",
 			ref: s,
 			class: normalizeClass(["zen-scroll", { x: e.horizontal }]),
 			onScrollPassive: de
-		}, [renderSlot(k.$slots, "default", {}, void 0, !0)], 34));
+		}, [renderSlot(b.$slots, "default", {}, void 0, !0)], 34));
 	}
-}), [["__scopeId", "data-v-ee849f62"]]);
-var ta = ["disabled"];
-var na = {
+}), [["__scopeId", "data-v-d68b9d36"]]);
+var na = ["disabled"];
+var la = {
 	key: 1,
 	class: "lbl"
 };
-var Yt = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var Yt = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenButton",
 	props: {
 		variant: { default: "default" },
@@ -6082,12 +6102,12 @@ var Yt = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			disabled: e.disabled
 		}, [e.icon ? (openBlock(), createElementBlock("i", {
 			key: 0,
-			class: normalizeClass(unref(st)(e.icon))
-		}, null, 2)) : createCommentVNode("", !0), o.$slots.default ? (openBlock(), createElementBlock("span", na, [renderSlot(o.$slots, "default", {}, void 0, !0)])) : createCommentVNode("", !0)], 10, ta));
+			class: normalizeClass(unref(lt)(e.icon))
+		}, null, 2)) : createCommentVNode("", !0), o.$slots.default ? (openBlock(), createElementBlock("span", la, [renderSlot(o.$slots, "default", {}, void 0, !0)])) : createCommentVNode("", !0)], 10, na));
 	}
 }), [["__scopeId", "data-v-44a20193"]]);
-var oa = ["disabled", "aria-label"];
-var Ge$1 = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var aa = ["disabled", "aria-label"];
+var je$1 = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenIconButton",
 	props: {
 		icon: {},
@@ -6116,11 +6136,11 @@ var Ge$1 = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			}]),
 			disabled: e.disabled,
 			"aria-label": unref(o)["aria-label"] ?? unref(o).title
-		}, [createBaseVNode("i", { class: normalizeClass(unref(st)(e.icon)) }, null, 2)], 10, oa));
+		}, [createBaseVNode("i", { class: normalizeClass(unref(lt)(e.icon)) }, null, 2)], 10, aa));
 	}
 }), [["__scopeId", "data-v-350d2f84"]]);
-var sa = ["viewBox"];
-var ia = {
+var ia = ["viewBox"];
+var ua = {
 	key: 0,
 	class: "ripple",
 	cx: "0",
@@ -6128,8 +6148,8 @@ var ia = {
 	rx: "40",
 	ry: "6"
 };
-var ua = ["d", "opacity"];
-var ra = {
+var ra = ["d", "opacity"];
+var ca = {
 	key: 0,
 	cx: "0",
 	cy: "12",
@@ -6137,7 +6157,7 @@ var ra = {
 	ry: "5",
 	opacity: "0.45"
 };
-var da = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var va = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenLotus",
 	props: {
 		water: {
@@ -6201,8 +6221,8 @@ var da = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 		}, [(openBlock(), createElementBlock("g", {
 			key: r.value,
 			class: normalizeClass({ blooming: r.value > 0 })
-		}, [r.value > 0 ? (openBlock(), createElementBlock("ellipse", ia)) : createCommentVNode("", !0), (openBlock(), createElementBlock(Fragment, null, renderList(l, (c, z) => createBaseVNode("path", {
-			key: z,
+		}, [r.value > 0 ? (openBlock(), createElementBlock("ellipse", ua)) : createCommentVNode("", !0), (openBlock(), createElementBlock(Fragment, null, renderList(l, (c, x) => createBaseVNode("path", {
+			key: x,
 			class: "petal",
 			d: c.d,
 			opacity: c.o,
@@ -6210,55 +6230,55 @@ var da = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 				"--r": `${c.r}deg`,
 				animationDelay: `${c.delay}s`
 			})
-		}, null, 12, ua)), 64))], 2)), e.water ? (openBlock(), createElementBlock("ellipse", ra)) : createCommentVNode("", !0)], 10, sa));
+		}, null, 12, ra)), 64))], 2)), e.water ? (openBlock(), createElementBlock("ellipse", ca)) : createCommentVNode("", !0)], 10, ia));
 	}
 }), [["__scopeId", "data-v-b2ab3c2d"]]);
-var va = {
+var fa = {
 	class: "zen-empty",
 	role: "status"
 };
-var fa = {
+var ma = {
 	key: 2,
 	class: "zen-empty-title"
 };
-var ma = {
+var pa = {
 	key: 3,
 	class: "zen-empty-text"
 };
-var pa = {
+var ha = {
 	key: 4,
 	class: "zen-empty-actions"
 };
-var Nf = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var Kf = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenEmpty",
 	props: {
 		title: {},
 		icon: {}
 	},
 	setup(e) {
-		return (o, t) => (openBlock(), createElementBlock("div", va, [
+		return (o, t) => (openBlock(), createElementBlock("div", fa, [
 			e.icon ? (openBlock(), createBlock(el, {
 				key: 0,
 				class: "zen-empty-mark zen-empty-icon",
 				icon: e.icon
-			}, null, 8, ["icon"])) : (openBlock(), createBlock(da, {
+			}, null, 8, ["icon"])) : (openBlock(), createBlock(va, {
 				key: 1,
 				class: "zen-empty-mark",
 				water: ""
 			})),
-			e.title ? (openBlock(), createElementBlock("div", fa, toDisplayString(e.title), 1)) : createCommentVNode("", !0),
-			o.$slots.default ? (openBlock(), createElementBlock("p", ma, [renderSlot(o.$slots, "default", {}, void 0, !0)])) : createCommentVNode("", !0),
-			o.$slots.actions ? (openBlock(), createElementBlock("div", pa, [renderSlot(o.$slots, "actions", {}, void 0, !0)])) : createCommentVNode("", !0)
+			e.title ? (openBlock(), createElementBlock("div", ma, toDisplayString(e.title), 1)) : createCommentVNode("", !0),
+			o.$slots.default ? (openBlock(), createElementBlock("p", pa, [renderSlot(o.$slots, "default", {}, void 0, !0)])) : createCommentVNode("", !0),
+			o.$slots.actions ? (openBlock(), createElementBlock("div", ha, [renderSlot(o.$slots, "actions", {}, void 0, !0)])) : createCommentVNode("", !0)
 		]));
 	}
 }), [["__scopeId", "data-v-71f336c3"]]);
-var ya = [
+var ga = [
 	"rows",
 	"placeholder",
 	"disabled",
 	"value"
 ];
-var ga = [
+var ba = [
 	"type",
 	"placeholder",
 	"disabled",
@@ -6267,7 +6287,7 @@ var ga = [
 	"step",
 	"value"
 ];
-var Nl = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var Zl = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenInput",
 	props: {
 		modelValue: {},
@@ -6303,8 +6323,8 @@ var Nl = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 		function u(d) {
 			const c = d.target.value;
 			if (t.type === "number") {
-				const z = Number(c);
-				s("update:modelValue", c === "" || Number.isNaN(z) ? 0 : z);
+				const x = Number(c);
+				s("update:modelValue", c === "" || Number.isNaN(x) ? 0 : x);
 			} else s("update:modelValue", c);
 		}
 		return (d, c) => e.type === "textarea" ? (openBlock(), createElementBlock("textarea", {
@@ -6320,7 +6340,7 @@ var Nl = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			disabled: e.disabled,
 			value: e.modelValue,
 			onInput: u
-		}, null, 42, ya)) : (openBlock(), createElementBlock("input", {
+		}, null, 42, ga)) : (openBlock(), createElementBlock("input", {
 			key: 1,
 			class: normalizeClass(["zen-input", { sm: e.sm || e.size === "sm" }]),
 			type: e.type,
@@ -6331,17 +6351,17 @@ var Nl = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			step: e.step,
 			value: e.modelValue,
 			onInput: u
-		}, null, 42, ga));
+		}, null, 42, ba));
 	}
 }), [["__scopeId", "data-v-2eb7b22b"]]);
-var Pa = ["aria-disabled"];
-var Ia = [
+var Ia = ["aria-disabled"];
+var Aa = [
 	"value",
 	"disabled",
 	"onKeydown"
 ];
-var Aa = ["aria-disabled"];
-var un = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var Ra = ["aria-disabled"];
+var un = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenNumber",
 	props: {
 		modelValue: {},
@@ -6361,65 +6381,65 @@ var un = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 	},
 	emits: ["update:modelValue"],
 	setup(e, { emit: o }) {
-		const t = e, l = o, r = /* @__PURE__ */ ref(null), s = /* @__PURE__ */ ref(!1), u = /* @__PURE__ */ ref(""), d = /* @__PURE__ */ ref(0), c = computed(() => t.precision ?? String(t.step).split(".")[1]?.length ?? 0), z = computed(() => (Number.isFinite(t.modelValue) ? t.modelValue : 0).toFixed(c.value)), M = computed(() => {
-			const P = [t.min, t.max].filter((k) => k != null && Number.isFinite(k));
-			return P.length ? Math.max(3, ...P.map((k) => k.toFixed(c.value).length)) : 6;
+		const t = e, l = o, r = /* @__PURE__ */ ref(null), s = /* @__PURE__ */ ref(!1), u = /* @__PURE__ */ ref(""), d = /* @__PURE__ */ ref(0), c = computed(() => t.precision ?? String(t.step).split(".")[1]?.length ?? 0), x = computed(() => (Number.isFinite(t.modelValue) ? t.modelValue : 0).toFixed(c.value)), M = computed(() => {
+			const g = [t.min, t.max].filter((b) => b != null && Number.isFinite(b));
+			return g.length ? Math.max(3, ...g.map((b) => b.toFixed(c.value).length)) : 6;
 		});
-		function B(P) {
-			t.min != null && (P = Math.max(t.min, P)), t.max != null && (P = Math.min(t.max, P));
-			const k = Math.pow(10, c.value);
-			return Math.round(P * k) / k;
+		function V(g) {
+			t.min != null && (g = Math.max(t.min, g)), t.max != null && (g = Math.min(t.max, g));
+			const b = Math.pow(10, c.value);
+			return Math.round(g * b) / b;
 		}
-		function x(P) {
-			Number.isFinite(P) && l("update:modelValue", B(P));
+		function k(g) {
+			Number.isFinite(g) && l("update:modelValue", V(g));
 		}
-		function p(P) {
+		function p(g) {
 			if (t.disabled) return;
-			const k = B((t.modelValue || 0) + P * t.step);
-			x(k), s.value && (u.value = k.toFixed(c.value));
+			const b = V((t.modelValue || 0) + g * t.step);
+			k(b), s.value && (u.value = b.toFixed(c.value));
 		}
-		function g() {
-			s.value = !0, u.value = z.value, requestAnimationFrame(() => r.value?.select());
+		function h() {
+			s.value = !0, u.value = x.value, requestAnimationFrame(() => r.value?.select());
 		}
-		function R() {
-			s.value = !1, E();
+		function B() {
+			s.value = !1, S();
 		}
-		function J(P) {
-			u.value = P.target.value;
-		}
-		function E() {
-			const P = parseFloat(u.value);
-			Number.isFinite(P) && x(P);
+		function te(g) {
+			u.value = g.target.value;
 		}
 		function S() {
-			u.value = z.value, r.value?.blur();
+			const g = parseFloat(u.value);
+			Number.isFinite(g) && k(g);
 		}
-		let O = !1, j = !1, I = 0, de = 0;
-		function he(P) {
-			t.disabled || s.value || (O = !0, j = !1, I = P.clientX, de = t.modelValue || 0, P.currentTarget.setPointerCapture(P.pointerId));
+		function $() {
+			u.value = x.value, r.value?.blur();
 		}
-		function Z(P) {
-			if (!O) return;
-			const k = P.clientX - I;
-			Math.abs(k) > 3 && (j = !0), j && (P.preventDefault(), x(de + k / 4 * t.step));
+		let X = !1, ne = !1, Z = 0, de = 0;
+		function fe(g) {
+			t.disabled || s.value || (X = !0, ne = !1, Z = g.clientX, de = t.modelValue || 0, g.currentTarget.setPointerCapture(g.pointerId));
 		}
-		function y(P) {
-			if (O) {
-				O = !1;
+		function G(g) {
+			if (!X) return;
+			const b = g.clientX - Z;
+			Math.abs(b) > 3 && (ne = !0), ne && (g.preventDefault(), k(de + b / 4 * t.step));
+		}
+		function E(g) {
+			if (X) {
+				X = !1;
 				try {
-					P.currentTarget.releasePointerCapture(P.pointerId);
+					g.currentTarget.releasePointerCapture(g.pointerId);
 				} catch {}
-				j || r.value?.focus();
+				ne || r.value?.focus();
 			}
 		}
-		return (P, k) => (openBlock(), createElementBlock("div", {
+		return (g, b) => (openBlock(), createElementBlock("div", {
 			class: normalizeClass(["zen-num", {
 				disabled: e.disabled,
 				bare: e.bare,
 				sm: e.size === "sm"
 			}]),
 			style: normalizeStyle({ "--zn-chars": M.value }),
-			onPointerleave: k[11] || (k[11] = (q) => d.value = 0)
+			onPointerleave: b[11] || (b[11] = (R) => d.value = 0)
 		}, [
 			e.bare ? createCommentVNode("", !0) : (openBlock(), createElementBlock("span", {
 				key: 0,
@@ -6428,19 +6448,19 @@ var un = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 				class: normalizeClass(["zn-step", { hot: d.value === -1 }]),
 				tabindex: "-1",
 				"aria-disabled": e.disabled || void 0,
-				onPointerenter: k[0] || (k[0] = (q) => d.value = -1),
-				onPointerleave: k[1] || (k[1] = (q) => d.value = 0),
-				onPointerdown: k[2] || (k[2] = withModifiers(() => {}, ["prevent"])),
-				onClick: k[3] || (k[3] = (q) => p(-1))
-			}, [...k[12] || (k[12] = [createBaseVNode("i", {
+				onPointerenter: b[0] || (b[0] = (R) => d.value = -1),
+				onPointerleave: b[1] || (b[1] = (R) => d.value = 0),
+				onPointerdown: b[2] || (b[2] = withModifiers(() => {}, ["prevent"])),
+				onClick: b[3] || (b[3] = (R) => p(-1))
+			}, [...b[12] || (b[12] = [createBaseVNode("i", {
 				class: "mdi mdi-minus",
 				"aria-hidden": "true"
-			}, null, -1)])], 42, Pa)),
+			}, null, -1)])], 42, Ia)),
 			createBaseVNode("div", {
 				class: "zn-val",
-				onPointerdown: he,
-				onPointermove: Z,
-				onPointerup: y
+				onPointerdown: fe,
+				onPointermove: G,
+				onPointerup: E
 			}, [createBaseVNode("input", {
 				ref_key: "el",
 				ref: r,
@@ -6448,18 +6468,18 @@ var un = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 				type: "text",
 				inputmode: "decimal",
 				size: "1",
-				value: s.value ? u.value : z.value,
+				value: s.value ? u.value : x.value,
 				disabled: e.disabled,
-				onFocus: g,
-				onBlur: R,
-				onInput: J,
+				onFocus: h,
+				onBlur: B,
+				onInput: te,
 				onKeydown: [
-					k[4] || (k[4] = withKeys(withModifiers((q) => p(1), ["prevent"]), ["up"])),
-					k[5] || (k[5] = withKeys(withModifiers((q) => p(-1), ["prevent"]), ["down"])),
-					k[6] || (k[6] = withKeys(withModifiers((q) => r.value?.blur(), ["prevent"]), ["enter"])),
-					withKeys(withModifiers(S, ["prevent"]), ["esc"])
+					b[4] || (b[4] = withKeys(withModifiers((R) => p(1), ["prevent"]), ["up"])),
+					b[5] || (b[5] = withKeys(withModifiers((R) => p(-1), ["prevent"]), ["down"])),
+					b[6] || (b[6] = withKeys(withModifiers((R) => r.value?.blur(), ["prevent"]), ["enter"])),
+					withKeys(withModifiers($, ["prevent"]), ["esc"])
 				]
-			}, null, 42, Ia)], 32),
+			}, null, 42, Aa)], 32),
 			e.bare ? createCommentVNode("", !0) : (openBlock(), createElementBlock("span", {
 				key: 1,
 				role: "button",
@@ -6467,18 +6487,18 @@ var un = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 				class: normalizeClass(["zn-step", { hot: d.value === 1 }]),
 				tabindex: "-1",
 				"aria-disabled": e.disabled || void 0,
-				onPointerenter: k[7] || (k[7] = (q) => d.value = 1),
-				onPointerleave: k[8] || (k[8] = (q) => d.value = 0),
-				onPointerdown: k[9] || (k[9] = withModifiers(() => {}, ["prevent"])),
-				onClick: k[10] || (k[10] = (q) => p(1))
-			}, [...k[13] || (k[13] = [createBaseVNode("i", {
+				onPointerenter: b[7] || (b[7] = (R) => d.value = 1),
+				onPointerleave: b[8] || (b[8] = (R) => d.value = 0),
+				onPointerdown: b[9] || (b[9] = withModifiers(() => {}, ["prevent"])),
+				onClick: b[10] || (b[10] = (R) => p(1))
+			}, [...b[13] || (b[13] = [createBaseVNode("i", {
 				class: "mdi mdi-plus",
 				"aria-hidden": "true"
-			}, null, -1)])], 42, Aa))
+			}, null, -1)])], 42, Ra))
 		], 38));
 	}
 }), [["__scopeId", "data-v-f28d60a9"]]);
-var Ba = [
+var Da = [
 	"title",
 	"aria-checked",
 	"aria-label",
@@ -6490,7 +6510,7 @@ var Va = {
 	key: 1,
 	class: "zen-tg-l"
 };
-var Tt = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var Tt = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenToggleGroup",
 	props: {
 		modelValue: {},
@@ -6503,7 +6523,7 @@ var Tt = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 	setup(e, { emit: o }) {
 		const t = e, l = o;
 		function r(s) {
-			const u = t.options.length, d = t.options.findIndex((B) => B.value === t.modelValue), z = {
+			const u = t.options.length, d = t.options.findIndex((V) => V.value === t.modelValue), x = {
 				ArrowRight: (d + 1) % u,
 				ArrowDown: (d + 1) % u,
 				ArrowLeft: (d - 1 + u) % u,
@@ -6511,10 +6531,10 @@ var Tt = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 				Home: 0,
 				End: u - 1
 			}[s.key];
-			if (z === void 0 || !u || t.disabled) return;
+			if (x === void 0 || !u || t.disabled) return;
 			s.preventDefault();
 			const M = s.currentTarget;
-			l("update:modelValue", t.options[z].value), nextTick(() => M.querySelectorAll(".zen-tg-b")[z]?.focus());
+			l("update:modelValue", t.options[x].value), nextTick(() => M.querySelectorAll(".zen-tg-b")[x]?.focus());
 		}
 		return (s, u) => (openBlock(), createElementBlock("div", {
 			class: normalizeClass(["zen-tg", {
@@ -6532,22 +6552,22 @@ var Tt = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			role: "radio",
 			"aria-checked": d.value === e.modelValue,
 			"aria-label": d.label ? void 0 : d.title,
-			tabindex: d.value === e.modelValue || c === 0 && !e.options.some((z) => z.value === e.modelValue) ? 0 : -1,
+			tabindex: d.value === e.modelValue || c === 0 && !e.options.some((x) => x.value === e.modelValue) ? 0 : -1,
 			disabled: e.disabled,
-			onClick: (z) => l("update:modelValue", d.value)
+			onClick: (x) => l("update:modelValue", d.value)
 		}, [d.icon ? (openBlock(), createElementBlock("i", {
 			key: 0,
-			class: normalizeClass(unref(st)(d.icon))
-		}, null, 2)) : createCommentVNode("", !0), d.label ? (openBlock(), createElementBlock("span", Va, [createBaseVNode("span", null, toDisplayString(d.label), 1)])) : createCommentVNode("", !0)], 10, Ba))), 128))], 34));
+			class: normalizeClass(unref(lt)(d.icon))
+		}, null, 2)) : createCommentVNode("", !0), d.label ? (openBlock(), createElementBlock("span", Va, [createBaseVNode("span", null, toDisplayString(d.label), 1)])) : createCommentVNode("", !0)], 10, Da))), 128))], 34));
 	}
 }), [["__scopeId", "data-v-9ef2e1ca"]]);
-var Ha = ["inert"];
-var Wa = { class: "zres-aspects" };
-var Fa = ["title", "onClick"];
-var Ka = { class: "zres-row" };
-var Oa = { class: "zres-wh" };
-var _a = { class: "zres-foot" };
-var Uf = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var Wa = ["inert"];
+var Fa = { class: "zres-aspects" };
+var Ka = ["title", "onClick"];
+var Oa = { class: "zres-row" };
+var Na = { class: "zres-wh" };
+var Za = { class: "zres-foot" };
+var Nf = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenResolution",
 	props: {
 		width: {},
@@ -6596,99 +6616,99 @@ var Uf = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 	},
 	emits: ["update:width", "update:height"],
 	setup(e, { emit: o }) {
-		const t = e, l = o, r = (Z) => Math.min(t.maxSide, Math.max(t.snap, Math.round(Z / t.snap) * t.snap)), s = computed(() => t.height > t.width), u = computed(() => t.width * t.height / 1e6), d = (Z) => s.value && Z.w !== Z.h ? Z.h / Z.w : Z.w / Z.h;
-		function c(Z, y) {
-			const P = y * 1e6, k = Math.sqrt(P * Z);
-			let q = {
-				width: r(k),
-				height: r(k / Z)
-			}, fe = 1 / 0;
-			for (let H = -3; H <= 3; H++) {
-				const ae = r(k + H * t.snap), U = r(ae / Z), ie = 3 * Math.abs(Math.log(ae / U / Z)) + Math.abs(Math.log(ae * U / P));
-				ie < fe && ([q, fe] = [{
-					width: ae,
-					height: U
-				}, ie]);
+		const t = e, l = o, r = (G) => Math.min(t.maxSide, Math.max(t.snap, Math.round(G / t.snap) * t.snap)), s = computed(() => t.height > t.width), u = computed(() => t.width * t.height / 1e6), d = (G) => s.value && G.w !== G.h ? G.h / G.w : G.w / G.h;
+		function c(G, E) {
+			const g = E * 1e6, b = Math.sqrt(g * G);
+			let R = {
+				width: r(b),
+				height: r(b / G)
+			}, ae = 1 / 0;
+			for (let Q = -3; Q <= 3; Q++) {
+				const ve = r(b + Q * t.snap), oe = r(ve / G), ce = 3 * Math.abs(Math.log(ve / oe / G)) + Math.abs(Math.log(ve * oe / g));
+				ce < ae && ([R, ae] = [{
+					width: ve,
+					height: oe
+				}, ce]);
 			}
-			return q;
+			return R;
 		}
-		const z = (Z) => Z.width === t.width && Z.height === t.height;
-		function M(Z) {
-			const y = t.native(Z);
+		const x = (G) => G.width === t.width && G.height === t.height;
+		function M(G) {
+			const E = t.native(G);
 			return {
-				width: r(y.width),
-				height: r(y.height)
+				width: r(E.width),
+				height: r(E.height)
 			};
 		}
-		const B = computed(() => {
-			const Z = Math.max(t.width, t.height) / Math.min(t.width, t.height);
-			let y = t.ratios[0];
-			for (const P of t.ratios) Math.abs(P.w / P.h - Z) < Math.abs(y.w / y.h - Z) && (y = P);
-			return Math.abs(y.w / y.h - Z) < .05 ? y : null;
-		}), x = computed(() => B.value?.label ?? ""), p = computed(() => B.value ? d(B.value) : t.width / t.height), g = computed(() => {
-			if (t.native && z(M(p.value))) return "native";
-			const Z = t.presets.find((y) => z(c(p.value, y)));
-			return Z === void 0 ? "" : String(Z);
+		const V = computed(() => {
+			const G = Math.max(t.width, t.height) / Math.min(t.width, t.height);
+			let E = t.ratios[0];
+			for (const g of t.ratios) Math.abs(g.w / g.h - G) < Math.abs(E.w / E.h - G) && (E = g);
+			return Math.abs(E.w / E.h - G) < .05 ? E : null;
+		}), k = computed(() => V.value?.label ?? ""), p = computed(() => V.value ? d(V.value) : t.width / t.height), h = computed(() => {
+			if (t.native && x(M(p.value))) return "native";
+			const G = t.presets.find((E) => x(c(p.value, E)));
+			return G === void 0 ? "" : String(G);
 		});
-		function R(Z) {
-			l("update:width", r(Z.width)), l("update:height", r(Z.height));
+		function B(G) {
+			l("update:width", r(G.width)), l("update:height", r(G.height));
 		}
-		function J(Z, y, P = u.value) {
-			return y === "native" && t.native ? M(Z) : c(Z, y ? Number(y) : P);
+		function te(G, E, g = u.value) {
+			return E === "native" && t.native ? M(G) : c(G, E ? Number(E) : g);
 		}
-		function E(Z) {
-			R(J(d(Z), g.value));
+		function S(G) {
+			B(te(d(G), h.value));
 		}
-		function S(Z) {
-			Z !== s.value && R({
+		function $(G) {
+			G !== s.value && B({
 				width: t.height,
 				height: t.width
 			});
 		}
-		function O(Z) {
-			R(J(p.value, Z));
+		function X(G) {
+			B(te(p.value, G));
 		}
-		function j(Z) {
-			R(c(p.value, Math.min(Math.max(Z, .05), t.maxMp)));
+		function ne(G) {
+			B(c(p.value, Math.min(Math.max(G, .05), t.maxMp)));
 		}
-		const I = computed(() => [...t.native ? [{
+		const Z = computed(() => [...t.native ? [{
 			value: "native",
 			label: "Native",
 			title: "The model's own size for this shape"
-		}] : [], ...t.presets.map((Z) => ({
-			value: String(Z),
-			label: String(Z),
-			title: `${Z} megapixels`
+		}] : [], ...t.presets.map((G) => ({
+			value: String(G),
+			label: String(G),
+			title: `${G} megapixels`
 		}))]);
-		function de(Z) {
-			const [y, P] = s.value && Z.w !== Z.h ? [Z.h, Z.w] : [Z.w, Z.h], k = 20 / Math.max(y, P);
+		function de(G) {
+			const [E, g] = s.value && G.w !== G.h ? [G.h, G.w] : [G.w, G.h], b = 20 / Math.max(E, g);
 			return {
-				width: `${Math.round(y * k)}px`,
-				height: `${Math.round(P * k)}px`
+				width: `${Math.round(E * b)}px`,
+				height: `${Math.round(g * b)}px`
 			};
 		}
-		const he = computed(() => {
-			const Z = (fe, H) => H ? Z(H, fe % H) : fe, y = Z(t.width, t.height), [P, k] = [t.width / y, t.height / y];
-			if (P <= 21 && k <= 21) return `${P}:${k}`;
-			const q = B.value;
-			return q ? s.value && q.w !== q.h ? `≈ ${q.h}:${q.w}` : `≈ ${q.label}` : `${(t.width / t.height).toFixed(2)}:1`;
+		const fe = computed(() => {
+			const G = (ae, Q) => Q ? G(Q, ae % Q) : ae, E = G(t.width, t.height), [g, b] = [t.width / E, t.height / E];
+			if (g <= 21 && b <= 21) return `${g}:${b}`;
+			const R = V.value;
+			return R ? s.value && R.w !== R.h ? `≈ ${R.h}:${R.w}` : `≈ ${R.label}` : `${(t.width / t.height).toFixed(2)}:1`;
 		});
-		return (Z, y) => (openBlock(), createElementBlock("div", {
+		return (G, E) => (openBlock(), createElementBlock("div", {
 			class: normalizeClass(["zres", { "zen-off": e.disabled }]),
 			inert: e.disabled || void 0
 		}, [
-			y[8] || (y[8] = createBaseVNode("div", { class: "zres-sec" }, "aspect ratio", -1)),
-			createBaseVNode("div", Wa, [(openBlock(!0), createElementBlock(Fragment, null, renderList(e.ratios, (P) => (openBlock(), createElementBlock("button", {
-				key: P.label,
+			E[8] || (E[8] = createBaseVNode("div", { class: "zres-sec" }, "aspect ratio", -1)),
+			createBaseVNode("div", Fa, [(openBlock(!0), createElementBlock(Fragment, null, renderList(e.ratios, (g) => (openBlock(), createElementBlock("button", {
+				key: g.label,
 				type: "button",
-				class: normalizeClass(["zres-chip", { on: x.value === P.label }]),
-				title: P.label,
-				onClick: (k) => E(P)
+				class: normalizeClass(["zres-chip", { on: k.value === g.label }]),
+				title: g.label,
+				onClick: (b) => S(g)
 			}, [createBaseVNode("span", {
 				class: "zres-rect",
-				style: normalizeStyle(de(P))
-			}, null, 4), createBaseVNode("span", null, toDisplayString(P.label), 1)], 10, Fa))), 128))]),
-			x.value !== "1:1" ? (openBlock(), createBlock(Tt, {
+				style: normalizeStyle(de(g))
+			}, null, 4), createBaseVNode("span", null, toDisplayString(g.label), 1)], 10, Ka))), 128))]),
+			k.value !== "1:1" ? (openBlock(), createBlock(Tt, {
 				key: 0,
 				class: "zres-wide",
 				"model-value": s.value ? "portrait" : "landscape",
@@ -6701,33 +6721,33 @@ var Uf = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 					label: "Portrait",
 					icon: "mdi mdi-crop-portrait"
 				}],
-				"onUpdate:modelValue": y[0] || (y[0] = (P) => S(P === "portrait"))
+				"onUpdate:modelValue": E[0] || (E[0] = (g) => $(g === "portrait"))
 			}, null, 8, ["model-value"])) : createCommentVNode("", !0),
-			y[9] || (y[9] = createBaseVNode("div", { class: "zres-div" }, null, -1)),
-			createBaseVNode("div", Ka, [y[4] || (y[4] = createBaseVNode("span", { class: "zres-lbl" }, "megapixels", -1)), createVNode(un, {
+			E[9] || (E[9] = createBaseVNode("div", { class: "zres-div" }, null, -1)),
+			createBaseVNode("div", Oa, [E[4] || (E[4] = createBaseVNode("span", { class: "zres-lbl" }, "megapixels", -1)), createVNode(un, {
 				"model-value": Math.round(u.value * 100) / 100,
 				min: .1,
 				max: e.maxMp,
 				step: .05,
 				precision: 2,
-				"onUpdate:modelValue": j
+				"onUpdate:modelValue": ne
 			}, null, 8, ["model-value", "max"])]),
 			createVNode(Tt, {
 				class: "zres-wide",
-				"model-value": g.value,
-				options: I.value,
-				"onUpdate:modelValue": O
+				"model-value": h.value,
+				options: Z.value,
+				"onUpdate:modelValue": X
 			}, null, 8, ["model-value", "options"]),
-			y[10] || (y[10] = createBaseVNode("div", { class: "zres-div" }, null, -1)),
-			createBaseVNode("div", Oa, [
-				createBaseVNode("label", null, [y[5] || (y[5] = createBaseVNode("span", null, "W", -1)), createVNode(un, {
+			E[10] || (E[10] = createBaseVNode("div", { class: "zres-div" }, null, -1)),
+			createBaseVNode("div", Na, [
+				createBaseVNode("label", null, [E[5] || (E[5] = createBaseVNode("span", null, "W", -1)), createVNode(un, {
 					"model-value": e.width,
 					min: e.snap,
 					max: e.maxSide,
 					step: e.snap,
 					precision: 0,
-					"onUpdate:modelValue": y[1] || (y[1] = (P) => R({
-						width: P,
+					"onUpdate:modelValue": E[1] || (E[1] = (g) => B({
+						width: g,
 						height: e.height
 					}))
 				}, null, 8, [
@@ -6736,23 +6756,23 @@ var Uf = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 					"max",
 					"step"
 				])]),
-				createVNode(Ge$1, {
+				createVNode(je$1, {
 					icon: "mdi mdi-swap-horizontal",
 					title: "Swap width and height",
-					onClick: y[2] || (y[2] = (P) => R({
+					onClick: E[2] || (E[2] = (g) => B({
 						width: e.height,
 						height: e.width
 					}))
 				}),
-				createBaseVNode("label", null, [y[6] || (y[6] = createBaseVNode("span", null, "H", -1)), createVNode(un, {
+				createBaseVNode("label", null, [E[6] || (E[6] = createBaseVNode("span", null, "H", -1)), createVNode(un, {
 					"model-value": e.height,
 					min: e.snap,
 					max: e.maxSide,
 					step: e.snap,
 					precision: 0,
-					"onUpdate:modelValue": y[3] || (y[3] = (P) => R({
+					"onUpdate:modelValue": E[3] || (E[3] = (g) => B({
 						width: e.width,
-						height: P
+						height: g
 					}))
 				}, null, 8, [
 					"model-value",
@@ -6761,31 +6781,31 @@ var Uf = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 					"step"
 				])])
 			]),
-			createBaseVNode("div", _a, [
-				createBaseVNode("span", null, toDisplayString(u.value.toFixed(2)) + " MP · " + toDisplayString(he.value), 1),
-				y[7] || (y[7] = createBaseVNode("span", { class: "zres-grow" }, null, -1)),
+			createBaseVNode("div", Za, [
+				createBaseVNode("span", null, toDisplayString(u.value.toFixed(2)) + " MP · " + toDisplayString(fe.value), 1),
+				E[7] || (E[7] = createBaseVNode("span", { class: "zres-grow" }, null, -1)),
 				createBaseVNode("span", null, "snaps to " + toDisplayString(e.snap) + " px", 1)
 			])
-		], 10, Ha));
+		], 10, Wa));
 	}
 }), [["__scopeId", "data-v-124b6fb4"]]);
-var Za = [
+var Ua = [
 	"disabled",
 	"aria-expanded",
 	"aria-activedescendant"
 ];
-var Ua = { class: "zs-label" };
-var Xa = [
+var Xa = { class: "zs-label" };
+var Ya = [
 	"id",
 	"aria-selected",
 	"onClick",
 	"onPointermove"
 ];
-var Ya = {
+var qa = {
 	key: 1,
 	class: "mdi mdi-check zs-check"
 };
-var Xf = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var Zf = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenSelect",
 	props: {
 		modelValue: {},
@@ -6796,84 +6816,84 @@ var Xf = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 	},
 	emits: ["update:modelValue", "active"],
 	setup(e, { emit: o }) {
-		const t = e, l = o, r = (y) => typeof y == "object" ? y : {
-			value: y,
-			label: String(y)
-		}, s = /* @__PURE__ */ ref(!1), u = /* @__PURE__ */ ref(null), d = /* @__PURE__ */ ref(null), c = /* @__PURE__ */ ref({}), z = computed(() => t.options.map(r).find((y) => y.value === t.modelValue)), M = /* @__PURE__ */ ref(-1), B = useId(), x = (y) => `${B}-opt-${y}`;
-		function p(y) {
-			const P = t.options.length;
-			P && (M.value = Math.min(Math.max(y, 0), P - 1), nextTick(() => d.value?.querySelector(`#${CSS.escape(x(M.value))}`)?.scrollIntoView({ block: "nearest" })));
+		const t = e, l = o, r = (E) => typeof E == "object" ? E : {
+			value: E,
+			label: String(E)
+		}, s = /* @__PURE__ */ ref(!1), u = /* @__PURE__ */ ref(null), d = /* @__PURE__ */ ref(null), c = /* @__PURE__ */ ref({}), x = computed(() => t.options.map(r).find((E) => E.value === t.modelValue)), M = /* @__PURE__ */ ref(-1), V = useId(), k = (E) => `${V}-opt-${E}`;
+		function p(E) {
+			const g = t.options.length;
+			g && (M.value = Math.min(Math.max(E, 0), g - 1), nextTick(() => d.value?.querySelector(`#${CSS.escape(k(M.value))}`)?.scrollIntoView({ block: "nearest" })));
 		}
 		watch([s, M], () => {
-			const y = s.value ? t.options[M.value] : void 0;
-			l("active", y === void 0 ? null : r(y).value);
+			const E = s.value ? t.options[M.value] : void 0;
+			l("active", E === void 0 ? null : r(E).value);
 		});
-		function g(y) {
-			const P = t.options.map((q) => String(r(q).label ?? r(q).value).toLowerCase()), k = P.length;
-			for (let q = 1; q <= k; q++) {
-				const fe = (M.value + q) % k;
-				if (P[fe].startsWith(y)) return p(fe);
+		function h(E) {
+			const g = t.options.map((R) => String(r(R).label ?? r(R).value).toLowerCase()), b = g.length;
+			for (let R = 1; R <= b; R++) {
+				const ae = (M.value + R) % b;
+				if (g[ae].startsWith(E)) return p(ae);
 			}
 		}
-		function R(y) {
+		function B(E) {
 			s.value || t.disabled || [
 				"ArrowDown",
 				"ArrowUp",
 				"Enter",
 				" "
-			].includes(y.key) && (y.preventDefault(), de());
+			].includes(E.key) && (E.preventDefault(), de());
 		}
-		function J(y) {
-			const P = y.target;
-			u.value?.contains(P) || d.value?.contains(P) || Ln(y.target, d.value) || he();
+		function te(E) {
+			const g = E.target;
+			u.value?.contains(g) || d.value?.contains(g) || Ln(E.target, d.value) || fe();
 		}
-		let E = null, S = null;
-		const O = /* @__PURE__ */ ref(Je$1.popover);
-		function j(y) {
-			if (E?.escape(y)) return he();
-			if (!s.value || !E?.isTop()) return;
-			if (y.key === "Tab") return he();
-			const P = () => {
-				const H = t.options[M.value];
-				H !== void 0 && Z(r(H).value);
-			}, k = {
+		let S = null, $ = null;
+		const X = /* @__PURE__ */ ref(Ye$1.popover);
+		function ne(E) {
+			if (S?.escape(E)) return fe();
+			if (!s.value || !S?.isTop()) return;
+			if (E.key === "Tab") return fe();
+			const g = () => {
+				const Q = t.options[M.value];
+				Q !== void 0 && G(r(Q).value);
+			}, b = {
 				ArrowDown: () => p(M.value + 1),
 				ArrowUp: () => p(M.value - 1),
 				Home: () => p(0),
 				End: () => p(t.options.length - 1),
-				Enter: P,
-				" ": P
-			}, q = y.key.length === 1 && !y.ctrlKey && !y.metaKey && !y.altKey, fe = k[y.key] ?? (q ? () => g(y.key.toLowerCase()) : void 0);
-			fe && (y.preventDefault(), y.stopPropagation(), fe());
+				Enter: g,
+				" ": g
+			}, R = E.key.length === 1 && !E.ctrlKey && !E.metaKey && !E.altKey, ae = b[E.key] ?? (R ? () => h(E.key.toLowerCase()) : void 0);
+			ae && (E.preventDefault(), E.stopPropagation(), ae());
 		}
-		function I(y) {
-			d.value?.contains(y.target) || he();
+		function Z(E) {
+			d.value?.contains(E.target) || fe();
 		}
 		function de() {
-			const y = u.value?.querySelector(".zs-trigger");
-			if (y) {
-				const P = y.getBoundingClientRect(), k = Math.min(260, t.options.length * 30 + 10), q = window.innerHeight - P.bottom, fe = q < k + 8 && P.top > q;
-				c.value = fe ? {
-					bottom: window.innerHeight - P.top + 4 + "px",
-					left: P.left + "px",
-					minWidth: P.width + "px"
+			const E = u.value?.querySelector(".zs-trigger");
+			if (E) {
+				const g = E.getBoundingClientRect(), b = Math.min(260, t.options.length * 30 + 10), R = window.innerHeight - g.bottom, ae = R < b + 8 && g.top > R;
+				c.value = ae ? {
+					bottom: window.innerHeight - g.top + 4 + "px",
+					left: g.left + "px",
+					minWidth: g.width + "px"
 				} : {
-					top: P.bottom + 4 + "px",
-					left: P.left + "px",
-					minWidth: P.width + "px"
+					top: g.bottom + 4 + "px",
+					left: g.left + "px",
+					minWidth: g.width + "px"
 				};
 			}
-			s.value = !0, p(Math.max(0, t.options.findIndex((P) => r(P).value === t.modelValue))), E ??= Mt(Je$1.popover), O.value = E.z, S = setTimeout(() => {
-				S = null, s.value && (window.addEventListener("pointerdown", J, !0), window.addEventListener("keydown", j, !0), window.addEventListener("scroll", I, !0), window.addEventListener("resize", he));
+			s.value = !0, p(Math.max(0, t.options.findIndex((g) => r(g).value === t.modelValue))), S ??= zt(Ye$1.popover), X.value = S.z, $ = setTimeout(() => {
+				$ = null, s.value && (window.addEventListener("pointerdown", te, !0), window.addEventListener("keydown", ne, !0), window.addEventListener("scroll", Z, !0), window.addEventListener("resize", fe));
 			}, 0);
 		}
-		function he() {
-			S !== null && (clearTimeout(S), S = null), s.value && (s.value = !1, E?.release(), E = null, window.removeEventListener("pointerdown", J, !0), window.removeEventListener("keydown", j, !0), window.removeEventListener("scroll", I, !0), window.removeEventListener("resize", he));
+		function fe() {
+			$ !== null && (clearTimeout($), $ = null), s.value && (s.value = !1, S?.release(), S = null, window.removeEventListener("pointerdown", te, !0), window.removeEventListener("keydown", ne, !0), window.removeEventListener("scroll", Z, !0), window.removeEventListener("resize", fe));
 		}
-		function Z(y) {
-			l("update:modelValue", y), he();
+		function G(E) {
+			l("update:modelValue", E), fe();
 		}
-		return onBeforeUnmount(he), (y, P) => (openBlock(), createElementBlock("div", {
+		return onBeforeUnmount(fe), (E, g) => (openBlock(), createElementBlock("div", {
 			ref_key: "root",
 			ref: u,
 			class: normalizeClass(["zen-select", {
@@ -6886,52 +6906,52 @@ var Xf = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			disabled: e.disabled,
 			"aria-haspopup": "listbox",
 			"aria-expanded": s.value,
-			"aria-activedescendant": s.value && M.value >= 0 ? x(M.value) : void 0,
-			onClick: P[0] || (P[0] = (k) => s.value ? he() : de()),
-			onKeydown: R
+			"aria-activedescendant": s.value && M.value >= 0 ? k(M.value) : void 0,
+			onClick: g[0] || (g[0] = (b) => s.value ? fe() : de()),
+			onKeydown: B
 		}, [
-			z.value?.icon ? (openBlock(), createElementBlock("i", {
+			x.value?.icon ? (openBlock(), createElementBlock("i", {
 				key: 0,
-				class: normalizeClass(["zs-ico", unref(st)(z.value.icon)])
+				class: normalizeClass(["zs-ico", unref(lt)(x.value.icon)])
 			}, null, 2)) : createCommentVNode("", !0),
-			createBaseVNode("span", Ua, toDisplayString(z.value?.label ?? z.value?.value ?? e.placeholder ?? ""), 1),
-			P[1] || (P[1] = createBaseVNode("i", { class: "mdi mdi-menu-down zs-caret" }, null, -1))
-		], 40, Za), (openBlock(), createBlock(Teleport, { to: "body" }, [s.value ? (openBlock(), createElementBlock("div", {
+			createBaseVNode("span", Xa, toDisplayString(x.value?.label ?? x.value?.value ?? e.placeholder ?? ""), 1),
+			g[1] || (g[1] = createBaseVNode("i", { class: "mdi mdi-menu-down zs-caret" }, null, -1))
+		], 40, Ua), (openBlock(), createBlock(Teleport, { to: "body" }, [s.value ? (openBlock(), createElementBlock("div", {
 			key: 0,
 			ref_key: "menuRef",
 			ref: d,
 			"data-zen-layer": "",
 			class: "zs-menu zen-surface zen-scroll",
-			style: normalizeStyle([c.value, { zIndex: O.value }]),
+			style: normalizeStyle([c.value, { zIndex: X.value }]),
 			role: "listbox"
-		}, [(openBlock(!0), createElementBlock(Fragment, null, renderList(e.options, (k, q) => (openBlock(), createElementBlock("button", {
-			id: x(q),
-			key: String(r(k).value),
+		}, [(openBlock(!0), createElementBlock(Fragment, null, renderList(e.options, (b, R) => (openBlock(), createElementBlock("button", {
+			id: k(R),
+			key: String(r(b).value),
 			type: "button",
 			tabindex: "-1",
 			class: normalizeClass(["zs-opt", {
-				on: r(k).value === e.modelValue,
-				cur: q === M.value
+				on: r(b).value === e.modelValue,
+				cur: R === M.value
 			}]),
 			role: "option",
-			"aria-selected": r(k).value === e.modelValue,
-			onClick: (fe) => Z(r(k).value),
-			onPointermove: (fe) => M.value = q
+			"aria-selected": r(b).value === e.modelValue,
+			onClick: (ae) => G(r(b).value),
+			onPointermove: (ae) => M.value = R
 		}, [
-			r(k).icon ? (openBlock(), createElementBlock("i", {
+			r(b).icon ? (openBlock(), createElementBlock("i", {
 				key: 0,
-				class: normalizeClass(["zs-ico", unref(st)(r(k).icon)])
+				class: normalizeClass(["zs-ico", unref(lt)(r(b).icon)])
 			}, null, 2)) : createCommentVNode("", !0),
-			createBaseVNode("span", null, toDisplayString(r(k).label ?? r(k).value), 1),
-			r(k).value === e.modelValue ? (openBlock(), createElementBlock("i", Ya)) : createCommentVNode("", !0)
-		], 42, Xa))), 128))], 4)) : createCommentVNode("", !0)]))], 2));
+			createBaseVNode("span", null, toDisplayString(r(b).label ?? r(b).value), 1),
+			r(b).value === e.modelValue ? (openBlock(), createElementBlock("i", qa)) : createCommentVNode("", !0)
+		], 42, Ya))), 128))], 4)) : createCommentVNode("", !0)]))], 2));
 	}
-}), [["__scopeId", "data-v-8eec2106"]]);
-var ja = "[data-peek], [data-peek-kind=\"custom\"]";
-function Ga(e) {
+}), [["__scopeId", "data-v-564bc28a"]]);
+var Ga = "[data-peek], [data-peek-kind=\"custom\"]";
+function Ja(e) {
 	return /\.(mp4|webm|mov|mkv|m4v)(\?|$)/i.test(e) ? "video" : /\.(wav|mp3|flac|ogg|m4a|aac)(\?|$)/i.test(e) ? "audio" : "image";
 }
-function Ja(e) {
+function Qa(e) {
 	const o = e.peekLabel ?? "", t = e.peekDetail ?? "";
 	if (e.peekKind === "custom") {
 		const s = e.peekId ?? e.peek ?? "";
@@ -6946,7 +6966,7 @@ function Ja(e) {
 	}
 	const l = e.peek;
 	if (!l) return null;
-	const r = e.peekKind === "image" || e.peekKind === "video" || e.peekKind === "audio" ? e.peekKind : Ga(l);
+	const r = e.peekKind === "image" || e.peekKind === "video" || e.peekKind === "audio" ? e.peekKind : Ja(l);
 	return {
 		kind: r,
 		url: l,
@@ -6956,7 +6976,7 @@ function Ja(e) {
 		key: `${r}:${l}`
 	};
 }
-function Qa(e, o, t, l, r = 12, s = 8) {
+function es(e, o, t, l, r = 12, s = 8) {
 	const u = l.width - e.right;
 	let d = u >= o + r || u >= e.left ? e.right + r : e.left - o - r;
 	d = Math.min(Math.max(s, d), l.width - o - s);
@@ -6966,7 +6986,7 @@ function Qa(e, o, t, l, r = 12, s = 8) {
 		top: c
 	};
 }
-function es(e, o, t, l, r = 10, s = 8) {
+function ts(e, o, t, l, r = 10, s = 8) {
 	const u = e.top + e.height + r;
 	let d = e.top - t - r;
 	return d < s && u + t <= l.height - s && (d = u), d = Math.min(Math.max(s, d), l.height - t - s), {
@@ -6974,20 +6994,20 @@ function es(e, o, t, l, r = 10, s = 8) {
 		top: d
 	};
 }
-var ts = ["src"];
 var ns = ["src"];
-var ls = {
+var ls = ["src"];
+var os = {
 	key: 2,
 	class: "zen-peek-audio"
 };
-var os = ["src"];
-var as = {
+var as = ["src"];
+var ss = {
 	key: 4,
 	class: "zen-peek-caption"
 };
-var ss = { key: 0 };
-var is = { key: 1 };
-var us = /* @__PURE__ */ defineComponent({
+var is = { key: 0 };
+var us = { key: 1 };
+var rs = /* @__PURE__ */ defineComponent({
 	__name: "ZenPeek",
 	props: {
 		render: { type: Function },
@@ -6998,99 +7018,99 @@ var us = /* @__PURE__ */ defineComponent({
 		const o = e, t = /* @__PURE__ */ ref(null), l = /* @__PURE__ */ ref(null), r = /* @__PURE__ */ ref(null), s = /* @__PURE__ */ ref(null), u = /* @__PURE__ */ reactive({
 			left: 0,
 			top: 0
-		}), d = /* @__PURE__ */ ref(Je$1.peek);
-		let c = null, z = null, M = null, B = !1, x = !1, p = !1;
-		function g() {
+		}), d = /* @__PURE__ */ ref(Ye$1.peek);
+		let c = null, x = null, M = null, V = !1, k = !1, p = !1;
+		function h() {
 			return t.value?.parentElement ?? null;
 		}
-		function R(H) {
-			const ae = g(), U = H instanceof Element ? H.closest(ja) : null;
-			return U && ae?.contains(U) ? U : null;
+		function B(Q) {
+			const ve = h(), oe = Q instanceof Element ? Q.closest(Ga) : null;
+			return oe && ve?.contains(oe) ? oe : null;
 		}
-		function J() {
+		function te() {
 			s.value = null, c?.release(), c = null;
 		}
-		function E() {
-			const H = x && !p ? o.focus && B ? M : z : null, ae = H ? Ja(H.dataset) : null;
-			if (!H || !ae) return J();
-			const U = H.getBoundingClientRect();
-			s.value?.key === ae.key && s.value.rect.top === U.top || (s.value = {
-				...ae,
-				el: H,
-				rect: U
-			}, c || (c = Mt(Je$1.peek), d.value = c.z));
-		}
 		function S() {
-			const H = s.value, ae = l.value;
-			if (!H || !ae) return;
-			const U = {
+			const Q = k && !p ? o.focus && V ? M : x : null, ve = Q ? Qa(Q.dataset) : null;
+			if (!Q || !ve) return te();
+			const oe = Q.getBoundingClientRect();
+			s.value?.key === ve.key && s.value.rect.top === oe.top || (s.value = {
+				...ve,
+				el: Q,
+				rect: oe
+			}, c || (c = zt(Ye$1.peek), d.value = c.z));
+		}
+		function $() {
+			const Q = s.value, ve = l.value;
+			if (!Q || !ve) return;
+			const oe = {
 				width: window.innerWidth,
 				height: window.innerHeight
-			}, ie = o.placement === "above" ? es(H.rect, ae.offsetWidth, ae.offsetHeight, U) : Qa(H.rect, ae.offsetWidth, ae.offsetHeight, U);
-			u.left = ie.left, u.top = ie.top;
+			}, ce = o.placement === "above" ? ts(Q.rect, ve.offsetWidth, ve.offsetHeight, oe) : es(Q.rect, ve.offsetWidth, ve.offsetHeight, oe);
+			u.left = ce.left, u.top = ce.top;
 		}
-		let O = null;
-		function j() {
-			const H = O;
-			O = null;
+		let X = null;
+		function ne() {
+			const Q = X;
+			X = null;
 			try {
-				H?.();
-			} catch (ae) {
-				console.warn("ZenPeek: a custom peek failed to clean up", ae);
+				Q?.();
+			} catch (ve) {
+				console.warn("ZenPeek: a custom peek failed to clean up", ve);
 			}
 		}
-		const I = () => {
-			const H = document.documentElement.dataset.zenMotion;
-			return H === "reduce" || H === "full" ? H === "reduce" : typeof window.matchMedia == "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+		const Z = () => {
+			const Q = document.documentElement.dataset.zenMotion;
+			return Q === "reduce" || Q === "full" ? Q === "reduce" : typeof window.matchMedia == "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 		};
 		watch(() => s.value?.key, () => {
-			j();
-			const H = s.value;
-			if (H?.kind === "custom" && o.render && r.value) try {
-				const ae = o.render(H.id, r.value, {
-					el: H.el,
-					reducedMotion: I(),
-					place: S
+			ne();
+			const Q = s.value;
+			if (Q?.kind === "custom" && o.render && r.value) try {
+				const ve = o.render(Q.id, r.value, {
+					el: Q.el,
+					reducedMotion: Z(),
+					place: $
 				});
-				O = typeof ae == "function" ? ae : null;
-			} catch (ae) {
-				console.warn("ZenPeek: a custom peek failed to render", ae);
+				X = typeof ve == "function" ? ve : null;
+			} catch (ve) {
+				console.warn("ZenPeek: a custom peek failed to render", ve);
 			}
-			S();
-		}, { flush: "post" }), watch(s, S, { flush: "post" });
+			$();
+		}, { flush: "post" }), watch(s, $, { flush: "post" });
 		let de = null;
-		watch(l, (H, ae) => {
-			ae && de?.unobserve(ae), H && de?.observe(H);
+		watch(l, (Q, ve) => {
+			ve && de?.unobserve(ve), Q && de?.observe(Q);
 		});
-		function he(H) {
-			z = R(H.target), B = !1, x = H.shiftKey, x || (p = !1), E();
+		function fe(Q) {
+			x = B(Q.target), V = !1, k = Q.shiftKey, k || (p = !1), S();
 		}
-		function Z(H) {
-			if (H.key === "Escape" && H.type === "keydown" && s.value && c?.escape(H)) return H.preventDefault(), H.stopPropagation(), p = !0, J();
-			H.key === "Shift" && (x = H.type === "keydown", (!x || !H.repeat) && (p = !1), E());
+		function G(Q) {
+			if (Q.key === "Escape" && Q.type === "keydown" && s.value && c?.escape(Q)) return Q.preventDefault(), Q.stopPropagation(), p = !0, te();
+			Q.key === "Shift" && (k = Q.type === "keydown", (!k || !Q.repeat) && (p = !1), S());
 		}
-		function y(H) {
-			M = R(H.target), B = !0, o.focus && E();
+		function E(Q) {
+			M = B(Q.target), V = !0, o.focus && S();
 		}
-		function P(H) {
-			R(H.relatedTarget) || (M = null, o.focus && E());
+		function g(Q) {
+			B(Q.relatedTarget) || (M = null, o.focus && S());
 		}
-		function k() {
-			x = !1, p = !1, E();
+		function b() {
+			k = !1, p = !1, S();
 		}
-		function q() {
-			z = null, M = null, E();
+		function R() {
+			x = null, M = null, S();
 		}
 		onMounted(() => {
-			typeof ResizeObserver == "function" && (de = new ResizeObserver(() => S())), window.addEventListener("pointermove", he, {
+			typeof ResizeObserver == "function" && (de = new ResizeObserver(() => $())), window.addEventListener("pointermove", fe, {
 				passive: !0,
 				capture: !0
-			}), window.addEventListener("keydown", Z, { capture: !0 }), window.addEventListener("keyup", Z, { capture: !0 }), window.addEventListener("focusin", y, { capture: !0 }), window.addEventListener("focusout", P, { capture: !0 }), window.addEventListener("dragstart", q, { capture: !0 }), window.addEventListener("blur", k);
+			}), window.addEventListener("keydown", G, { capture: !0 }), window.addEventListener("keyup", G, { capture: !0 }), window.addEventListener("focusin", E, { capture: !0 }), window.addEventListener("focusout", g, { capture: !0 }), window.addEventListener("dragstart", R, { capture: !0 }), window.addEventListener("blur", b);
 		}), onBeforeUnmount(() => {
-			window.removeEventListener("pointermove", he, { capture: !0 }), window.removeEventListener("keydown", Z, { capture: !0 }), window.removeEventListener("keyup", Z, { capture: !0 }), window.removeEventListener("focusin", y, { capture: !0 }), window.removeEventListener("focusout", P, { capture: !0 }), window.removeEventListener("dragstart", q, { capture: !0 }), window.removeEventListener("blur", k), de?.disconnect(), j(), J();
+			window.removeEventListener("pointermove", fe, { capture: !0 }), window.removeEventListener("keydown", G, { capture: !0 }), window.removeEventListener("keyup", G, { capture: !0 }), window.removeEventListener("focusin", E, { capture: !0 }), window.removeEventListener("focusout", g, { capture: !0 }), window.removeEventListener("dragstart", R, { capture: !0 }), window.removeEventListener("blur", b), de?.disconnect(), ne(), te();
 		});
-		const fe = computed(() => s.value && (s.value.label || s.value.detail));
-		return (H, ae) => (openBlock(), createElementBlock(Fragment, null, [createBaseVNode("span", {
+		const ae = computed(() => s.value && (s.value.label || s.value.detail));
+		return (Q, ve) => (openBlock(), createElementBlock(Fragment, null, [createBaseVNode("span", {
 			ref_key: "anchor",
 			ref: t,
 			class: "zen-peek-anchor",
@@ -7110,62 +7130,66 @@ var us = /* @__PURE__ */ defineComponent({
 			key: 0,
 			src: s.value.url,
 			alt: "",
-			onLoad: S
-		}, null, 40, ts)) : s.value.kind === "video" ? (openBlock(), createElementBlock("video", {
+			onLoad: $
+		}, null, 40, ns)) : s.value.kind === "video" ? (openBlock(), createElementBlock("video", {
 			key: 1,
 			src: s.value.url,
 			autoplay: "",
 			muted: "",
 			loop: "",
 			playsinline: "",
-			onLoadedmetadata: S
-		}, null, 40, ns)) : s.value.kind === "audio" ? (openBlock(), createElementBlock("div", ls, [ae[0] || (ae[0] = createBaseVNode("i", { class: "mdi mdi-waveform" }, null, -1)), createBaseVNode("audio", {
+			onLoadedmetadata: $
+		}, null, 40, ls)) : s.value.kind === "audio" ? (openBlock(), createElementBlock("div", os, [ve[0] || (ve[0] = createBaseVNode("i", { class: "mdi mdi-waveform" }, null, -1)), createBaseVNode("audio", {
 			src: s.value.url,
 			controls: "",
 			autoplay: ""
-		}, null, 8, os)])) : (openBlock(), createElementBlock("div", {
+		}, null, 8, as)])) : (openBlock(), createElementBlock("div", {
 			key: s.value.key,
 			ref_key: "customBox",
 			ref: r,
 			class: "zen-peek-custom"
-		}, [renderSlot(H.$slots, "custom", {
+		}, [renderSlot(Q.$slots, "custom", {
 			id: s.value.id,
 			el: s.value.el
-		})])), fe.value ? (openBlock(), createElementBlock("div", as, [s.value.label ? (openBlock(), createElementBlock("b", ss, toDisplayString(s.value.label), 1)) : createCommentVNode("", !0), s.value.detail ? (openBlock(), createElementBlock("span", is, toDisplayString(s.value.detail), 1)) : createCommentVNode("", !0)])) : createCommentVNode("", !0)], 4)) : createCommentVNode("", !0)]))], 64));
+		})])), ae.value ? (openBlock(), createElementBlock("div", ss, [s.value.label ? (openBlock(), createElementBlock("b", is, toDisplayString(s.value.label), 1)) : createCommentVNode("", !0), s.value.detail ? (openBlock(), createElementBlock("span", us, toDisplayString(s.value.detail), 1)) : createCommentVNode("", !0)])) : createCommentVNode("", !0)], 4)) : createCommentVNode("", !0)]))], 64));
 	}
 });
-var rs = ["disabled"];
-var cs = { class: "zc-current" };
-var ds = {
+var cs = ["disabled"];
+var ds = { class: "zc-current" };
+var vs = {
 	key: 0,
 	class: "zc-search"
 };
-var vs = {
+var fs = {
 	key: 1,
 	class: "zc-search-actions"
 };
-var fs = {
+var ms = {
 	key: 1,
 	class: "zc-header"
 };
-var ms = ["onMouseenter", "onClick"];
-var ps = { class: "zc-opt-lbl" };
-var hs = {
+var ps = [
+	"data-index",
+	"onMouseenter",
+	"onClick"
+];
+var hs = { class: "zc-opt-lbl" };
+var ys = {
 	key: 0,
 	class: "zc-sep"
 };
-var ys = ["onMouseenter", "onClick"];
-var gs = { class: "zc-opt-lbl" };
-var bs = {
+var gs = [
+	"data-index",
+	"onMouseenter",
+	"onClick"
+];
+var bs = { class: "zc-opt-lbl" };
+var ks = {
 	key: 2,
 	class: "zc-empty"
 };
-var ks = {
-	key: 2,
-	class: "zc-footer"
-};
-var hl = 4;
-var $s = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var An = 8;
+var $s = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenCombo",
 	props: {
 		modelValue: {},
@@ -7206,106 +7230,128 @@ var $s = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 		"key"
 	],
 	setup(e, { emit: o }) {
-		const t = e, l = o, r = useSlots(), s = /* @__PURE__ */ ref(!1), u = /* @__PURE__ */ ref(""), d = /* @__PURE__ */ ref(0), c = /* @__PURE__ */ ref(0), z = /* @__PURE__ */ ref(240), M = /* @__PURE__ */ ref(240), B = /* @__PURE__ */ ref(null), x = /* @__PURE__ */ ref(null), p = /* @__PURE__ */ ref(null), g = /* @__PURE__ */ ref(null), R = /* @__PURE__ */ ref({}), J = /* @__PURE__ */ ref(Je$1.popover);
-		let E = null;
-		const S = computed(() => !t.grid && !!t.itemHeight && t.itemHeight > 0), O = computed(() => new Set(t.pinned ?? [])), j = computed(() => t.items.find((C) => C.value === t.modelValue)), I = (C) => C.label ?? String(C.value), de = computed(() => {
-			const C = u.value.trim().toLowerCase();
-			let Y = t.items;
-			if (C) {
-				const $ = C.split(/\s+/);
-				Y = Y.filter((L) => {
-					const ue = (I(L) + " " + String(L.value) + " " + (L.keywords ?? "")).toLowerCase();
-					return $.every((ve) => ue.includes(ve));
+		const t = e, l = o, r = useSlots(), s = /* @__PURE__ */ ref(!1), u = /* @__PURE__ */ ref(""), d = /* @__PURE__ */ ref(0), c = /* @__PURE__ */ ref(0), x = /* @__PURE__ */ ref(240), M = /* @__PURE__ */ ref(240), V = /* @__PURE__ */ ref(null), k = /* @__PURE__ */ ref(null), p = /* @__PURE__ */ ref(null), h = /* @__PURE__ */ ref(null), B = /* @__PURE__ */ ref({}), te = /* @__PURE__ */ ref(Ye$1.popover);
+		let S = null;
+		const $ = computed(() => !t.grid && !!t.itemHeight && t.itemHeight > 0), X = computed(() => new Set(t.pinned ?? [])), ne = computed(() => t.items.find((F) => F.value === t.modelValue)), Z = (F) => F.label ?? String(F.value), de = computed(() => {
+			const F = u.value.trim().toLowerCase();
+			let q = t.items;
+			if (F) {
+				const J = F.split(/\s+/);
+				q = q.filter((U) => {
+					const ie = (Z(U) + " " + String(U.value) + " " + (U.keywords ?? "")).toLowerCase();
+					return J.every((Ae) => ie.includes(Ae));
 				});
 			}
-			if (!t.sorted) return Y;
-			const h = O.value;
-			return [...Y].sort(($, L) => {
-				const ue = h.has($.value) ? 0 : 1, ve = h.has(L.value) ? 0 : 1;
-				return ue !== ve ? ue - ve : I($).localeCompare(I(L));
+			if (!t.sorted) return q;
+			const ye = X.value;
+			return [...q].sort((J, U) => {
+				const ie = ye.has(J.value) ? 0 : 1, Ae = ye.has(U.value) ? 0 : 1;
+				return ie !== Ae ? ie - Ae : Z(J).localeCompare(Z(U));
 			});
-		}), he = computed(() => de.value.findIndex((C) => !O.value.has(C.value))), Z = computed(() => S.value ? Math.max(0, Math.floor(c.value / t.itemHeight) - hl) : 0), y = computed(() => {
-			if (!S.value) return [];
-			const C = Math.ceil(z.value / t.itemHeight) + 8, Y = Math.min(de.value.length, Z.value + C), h = [];
-			for (let $ = Z.value; $ < Y; $++) h.push({
-				item: de.value[$],
-				index: $
+		}), fe = computed(() => de.value.findIndex((F) => !X.value.has(F.value))), G = computed(() => {
+			if (!$.value) return 0;
+			const F = Math.floor(c.value / t.itemHeight);
+			return Math.max(0, (Math.floor(F / An) - 1) * An);
+		}), E = computed(() => {
+			if (!$.value) return 0;
+			const F = Math.ceil((c.value + x.value) / t.itemHeight);
+			return Math.min(de.value.length, (Math.ceil(F / An) + 1) * An);
+		}), g = computed(() => {
+			if (!$.value) return [];
+			const F = [];
+			for (let q = G.value; q < E.value; q++) F.push({
+				item: de.value[q],
+				index: q
 			});
-			return h;
+			return F;
 		});
-		function P(C) {
-			const Y = C.target;
-			B.value?.contains(Y) || x.value?.contains(Y) || Ln(C.target, x.value) || ie();
+		function b(F) {
+			const q = F.target;
+			V.value?.contains(q) || k.value?.contains(q) || Ln(F.target, k.value) || O();
 		}
-		function k() {
-			const C = B.value?.querySelector(".zc-trigger");
-			if (!C) return;
-			const Y = C.getBoundingClientRect(), h = window.innerWidth, $ = window.innerHeight, L = t.menuWidth ?? Math.max(Y.width, t.menuMinWidth ?? 240), ue = Math.round(Math.min(L, h - 16));
-			let ve = Y.left;
-			ve + ue > h - 8 && (ve = h - ue - 8), ve < 8 && (ve = 8);
-			const Fe = S.value ? de.value.length * t.itemHeight : de.value.length * 32, le = Math.min(360, Fe + (t.searchable ? 46 : 8) + 8), X = $ - Y.bottom, re = Y.top, Ke = X < le + 8 && re > X, Ye = Math.max(160, Math.round((Ke ? re : X) - 12)), tt = (t.searchable ? 46 : 0) + (r.header ? 32 : 0) + (r.footer ? 48 : 0) + 8;
-			M.value = Math.max(120, Ye - tt), R.value = {
-				left: ve + "px",
-				width: ue + "px",
-				maxHeight: Ye + "px",
-				...Ke ? { bottom: $ - Y.top + 4 + "px" } : { top: Y.bottom + 4 + "px" }
+		function R() {
+			const F = V.value?.querySelector(".zc-trigger");
+			if (!F) return;
+			const q = F.getBoundingClientRect(), ye = window.innerWidth, J = window.innerHeight, U = t.menuWidth ?? Math.max(q.width, t.menuMinWidth ?? 240), ie = Math.round(Math.min(U, ye - 16));
+			let Ae = q.left;
+			Ae + ie > ye - 8 && (Ae = ye - ie - 8), Ae < 8 && (Ae = 8);
+			const _e = $.value ? de.value.length * t.itemHeight : de.value.length * 32, Qe = Math.min(360, _e + (t.searchable ? 46 : 8) + 8), Ne = J - q.bottom, qe = q.top, I = Ne < Qe + 8 && qe > Ne, C = Math.max(160, Math.round((I ? qe : Ne) - 12)), T = (t.searchable ? 46 : 0) + (r.header ? 32 : 0) + (r.footer ? 48 : 0) + 8;
+			M.value = Math.max(120, C - T), B.value = {
+				left: Ae + "px",
+				width: ie + "px",
+				maxHeight: C + "px",
+				...I ? { bottom: J - q.top + 4 + "px" } : { top: q.bottom + 4 + "px" }
 			};
 		}
-		function q() {
-			p.value && (z.value = p.value.clientHeight);
-		}
-		function fe(C) {
-			x.value?.contains(C.target) || k();
-		}
-		function H(C) {
-			c.value = C.target.scrollTop;
-		}
 		function ae() {
-			t.disabled || (l("open"), u.value = "", c.value = 0, d.value = Math.max(0, de.value.findIndex((C) => C.value === t.modelValue)), k(), E ??= Mt(Je$1.popover), J.value = E.z, s.value = !0, nextTick(() => {
-				g.value?.focus(), p.value && (p.value.scrollTop = 0), q(), _(), window.addEventListener("pointerdown", P, !0), window.addEventListener("scroll", fe, !0), window.addEventListener("resize", k), U = Fl(() => Kl(B.value?.querySelector(".zc-trigger")), k, ie);
-			}));
+			p.value && (x.value = p.value.clientHeight);
 		}
-		let U = null;
-		function ie() {
-			s.value && (s.value = !1, U?.(), U = null, E?.release(), E = null, window.removeEventListener("pointerdown", P, !0), window.removeEventListener("scroll", fe, !0), window.removeEventListener("resize", k));
+		function Q(F) {
+			k.value?.contains(F.target) || R();
 		}
-		function me(C) {
-			t.pickGuard?.(C) || (l("update:modelValue", C), ie());
+		function ve(F) {
+			c.value = F.target.scrollTop;
 		}
-		function _() {
-			if (S.value) {
-				const C = t.itemHeight, Y = d.value * C, h = p.value;
-				if (!h) return;
-				Y < h.scrollTop ? h.scrollTop = Y : Y + C > h.scrollTop + h.clientHeight && (h.scrollTop = Y + C - h.clientHeight);
-			} else nextTick(() => {
-				x.value?.querySelector(".zc-opt.active")?.scrollIntoView({ block: "nearest" });
+		function oe() {
+			if (t.disabled) return;
+			l("open"), Y = !1, u.value = "", c.value = 0, d.value = Math.max(0, de.value.findIndex((q) => q.value === t.modelValue)), R(), S ??= zt(Ye$1.popover), te.value = S.z, s.value = !0;
+			const F = ++pe;
+			nextTick(() => {
+				F !== pe || !s.value || (h.value?.focus(), p.value && (p.value.scrollTop = 0), ae(), K(), window.addEventListener("pointerdown", b, !0), window.addEventListener("scroll", Q, !0), window.addEventListener("resize", R), ce = Fl(() => Kl(V.value?.querySelector(".zc-trigger")), R, O, () => k.value));
 			});
 		}
-		function ee(C) {
-			if (l("key", C), !C.defaultPrevented) {
-				if (C.key === "Escape") {
-					E?.escape(C) && ie();
+		let ce = null, pe = 0;
+		function O() {
+			s.value && (pe++, s.value = !1, ce?.(), ce = null, S?.release(), S = null, window.removeEventListener("pointerdown", b, !0), window.removeEventListener("scroll", Q, !0), window.removeEventListener("resize", R));
+		}
+		function _(F) {
+			t.pickGuard?.(F) || (l("update:modelValue", F), O());
+		}
+		function K() {
+			if ($.value) {
+				const F = t.itemHeight, q = p.value;
+				if (!q) return;
+				const ye = getComputedStyle(q), J = parseFloat(ye.paddingTop) || 0, U = parseFloat(ye.paddingBottom) || 0, ie = J + d.value * F;
+				ie - J < q.scrollTop ? q.scrollTop = ie - J : ie + F + U > q.scrollTop + q.clientHeight && (q.scrollTop = ie + F + U - q.clientHeight);
+			} else nextTick(() => {
+				k.value?.querySelector(".zc-opt.active")?.scrollIntoView({ block: "nearest" });
+			});
+		}
+		let Y = !1;
+		function ue(F) {
+			Y || (d.value = F);
+		}
+		function z(F) {
+			if (!Y) return;
+			Y = !1;
+			const q = F.target, ye = q?.closest?.(".zc-opt[data-index]");
+			ye ? d.value = Number(ye.dataset.index) : q?.closest?.(".zc-footer") && (d.value = -1);
+		}
+		function L(F) {
+			if (l("key", F), !F.defaultPrevented) {
+				if (F.key === "Escape") {
+					S?.escape(F) && O();
 					return;
 				}
-				if (C.key === "ArrowDown") C.preventDefault(), d.value = Math.min(d.value + 1, de.value.length - 1), _();
-				else if (C.key === "ArrowUp") C.preventDefault(), d.value = Math.max(d.value - 1, 0), _();
-				else if (C.key === "Enter") {
-					C.preventDefault();
-					const Y = de.value[d.value];
-					Y && me(Y.value);
+				if (F.key === "ArrowDown") F.preventDefault(), Y = !0, d.value = Math.min(d.value + 1, de.value.length - 1), K();
+				else if (F.key === "ArrowUp") F.preventDefault(), Y = !0, d.value = Math.max(d.value - 1, 0), K();
+				else if (F.key === "Enter") {
+					F.preventDefault();
+					const q = de.value[d.value];
+					q && _(q.value);
 				}
 			}
 		}
-		function W() {
+		function A() {
 			d.value = 0, c.value = 0, p.value && (p.value.scrollTop = 0);
 		}
-		return watch(u, (C) => {
-			l("query", C), W();
+		return watch(u, (F) => {
+			l("query", F), A();
 		}), watch(() => t.items, () => {
-			s.value && W();
-		}), onBeforeUnmount(ie), (C, Y) => (openBlock(), createElementBlock("div", {
+			s.value && A();
+		}), onBeforeUnmount(O), (F, q) => (openBlock(), createElementBlock("div", {
 			ref_key: "root",
-			ref: B,
+			ref: V,
 			class: normalizeClass(["zen-combo", {
 				open: s.value,
 				disabled: e.disabled
@@ -7314,26 +7360,27 @@ var $s = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			type: "button",
 			class: normalizeClass(["zc-trigger", { sm: e.size === "sm" }]),
 			disabled: e.disabled,
-			onClick: Y[0] || (Y[0] = (h) => s.value ? ie() : ae())
-		}, [createBaseVNode("span", cs, [renderSlot(C.$slots, "selected", { item: j.value }, () => [createTextVNode(toDisplayString(j.value ? I(j.value) : e.placeholder), 1)], !0)]), Y[3] || (Y[3] = createBaseVNode("i", { class: "zc-caret mdi mdi-chevron-down" }, null, -1))], 10, rs), (openBlock(), createBlock(Teleport, { to: "body" }, [s.value ? (openBlock(), createElementBlock("div", {
+			onClick: q[0] || (q[0] = (ye) => s.value ? O() : oe())
+		}, [createBaseVNode("span", ds, [renderSlot(F.$slots, "selected", { item: ne.value }, () => [createTextVNode(toDisplayString(ne.value ? Z(ne.value) : e.placeholder), 1)], !0)]), q[4] || (q[4] = createBaseVNode("i", { class: "zc-caret mdi mdi-chevron-down" }, null, -1))], 10, cs), (openBlock(), createBlock(Teleport, { to: "body" }, [s.value ? (openBlock(), createElementBlock("div", {
 			key: 0,
 			ref_key: "menuRef",
-			ref: x,
+			ref: k,
 			"data-zen-layer": "",
 			class: normalizeClass(["zen-combo-menu zen-surface", { grid: e.grid }]),
+			onPointermove: z,
 			style: normalizeStyle([
-				R.value,
-				{ zIndex: J.value },
+				B.value,
+				{ zIndex: te.value },
 				e.grid && e.gridMin ? { "--zc-grid-min": e.gridMin + "px" } : {}
 			]),
-			onKeydown: ee
+			onKeydown: L
 		}, [
-			e.searchable ? (openBlock(), createElementBlock("div", ds, [
-				Y[5] || (Y[5] = createBaseVNode("i", { class: "mdi mdi-magnify" }, null, -1)),
+			e.searchable ? (openBlock(), createElementBlock("div", vs, [
+				q[6] || (q[6] = createBaseVNode("i", { class: "mdi mdi-magnify" }, null, -1)),
 				withDirectives(createBaseVNode("input", {
 					ref_key: "searchRef",
-					ref: g,
-					"onUpdate:modelValue": Y[1] || (Y[1] = (h) => u.value = h),
+					ref: h,
+					"onUpdate:modelValue": q[1] || (q[1] = (ye) => u.value = ye),
 					type: "text",
 					placeholder: "Search…",
 					spellcheck: "false"
@@ -7343,59 +7390,65 @@ var $s = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 					type: "button",
 					class: "zc-clear",
 					title: "Clear",
-					onClick: Y[2] || (Y[2] = (h) => u.value = "")
-				}, [...Y[4] || (Y[4] = [createBaseVNode("i", { class: "mdi mdi-close" }, null, -1)])])) : createCommentVNode("", !0),
-				C.$slots.search ? (openBlock(), createElementBlock("span", vs, [renderSlot(C.$slots, "search", { close: ie }, void 0, !0)])) : createCommentVNode("", !0)
+					onClick: q[2] || (q[2] = (ye) => u.value = "")
+				}, [...q[5] || (q[5] = [createBaseVNode("i", { class: "mdi mdi-close" }, null, -1)])])) : createCommentVNode("", !0),
+				F.$slots.search ? (openBlock(), createElementBlock("span", fs, [renderSlot(F.$slots, "search", { close: O }, void 0, !0)])) : createCommentVNode("", !0)
 			])) : createCommentVNode("", !0),
-			C.$slots.header ? (openBlock(), createElementBlock("div", fs, [renderSlot(C.$slots, "header", { close: ie }, void 0, !0)])) : createCommentVNode("", !0),
+			F.$slots.header ? (openBlock(), createElementBlock("div", ms, [renderSlot(F.$slots, "header", { close: O }, void 0, !0)])) : createCommentVNode("", !0),
 			createBaseVNode("div", {
 				ref_key: "listRef",
 				ref: p,
-				class: "zc-list zen-scroll",
+				class: normalizeClass(["zc-list zen-scroll", { virt: $.value }]),
 				style: normalizeStyle({ maxHeight: M.value + "px" }),
-				onScroll: H
-			}, [S.value ? (openBlock(), createElementBlock("div", {
+				onScroll: ve
+			}, [$.value ? (openBlock(), createElementBlock("div", {
 				key: 0,
 				class: "zc-virt",
 				style: normalizeStyle({ height: de.value.length * e.itemHeight + "px" })
 			}, [createBaseVNode("div", {
 				class: "zc-win",
-				style: normalizeStyle({ transform: "translateY(" + Z.value * e.itemHeight + "px)" })
-			}, [(openBlock(!0), createElementBlock(Fragment, null, renderList(y.value, (h) => (openBlock(), createElementBlock("div", {
-				key: String(h.item.value),
+				style: normalizeStyle({ transform: "translateY(" + G.value * e.itemHeight + "px)" })
+			}, [(openBlock(!0), createElementBlock(Fragment, null, renderList(g.value, (ye) => (openBlock(), createElementBlock("div", {
+				key: String(ye.item.value),
 				class: normalizeClass(["zc-opt", {
-					active: h.index === d.value,
-					sel: h.item.value === e.modelValue,
-					pinned: O.value.has(h.item.value)
+					active: ye.index === d.value,
+					sel: ye.item.value === e.modelValue,
+					pinned: X.value.has(ye.item.value)
 				}]),
 				style: normalizeStyle({ height: e.itemHeight + "px" }),
-				onMouseenter: ($) => d.value = h.index,
-				onClick: ($) => me(h.item.value)
-			}, [renderSlot(C.$slots, "option", {
-				item: h.item,
-				active: h.index === d.value,
-				pinned: O.value.has(h.item.value)
-			}, () => [createBaseVNode("span", ps, toDisplayString(I(h.item)), 1)], !0)], 46, ms))), 128))], 4)], 4)) : (openBlock(!0), createElementBlock(Fragment, { key: 1 }, renderList(de.value, (h, $) => (openBlock(), createElementBlock(Fragment, { key: String(h.value) }, [!u.value && he.value > 0 && $ === he.value ? (openBlock(), createElementBlock("div", hs)) : createCommentVNode("", !0), createBaseVNode("div", {
+				"data-index": ye.index,
+				onMouseenter: (J) => ue(ye.index),
+				onClick: (J) => _(ye.item.value)
+			}, [renderSlot(F.$slots, "option", {
+				item: ye.item,
+				active: ye.index === d.value,
+				pinned: X.value.has(ye.item.value)
+			}, () => [createBaseVNode("span", hs, toDisplayString(Z(ye.item)), 1)], !0)], 46, ps))), 128))], 4)], 4)) : (openBlock(!0), createElementBlock(Fragment, { key: 1 }, renderList(de.value, (ye, J) => (openBlock(), createElementBlock(Fragment, { key: String(ye.value) }, [!u.value && fe.value > 0 && J === fe.value ? (openBlock(), createElementBlock("div", ys)) : createCommentVNode("", !0), createBaseVNode("div", {
 				class: normalizeClass(["zc-opt", {
-					active: $ === d.value,
-					sel: h.value === e.modelValue,
-					pinned: O.value.has(h.value)
+					active: J === d.value,
+					sel: ye.value === e.modelValue,
+					pinned: X.value.has(ye.value)
 				}]),
-				onMouseenter: (L) => d.value = $,
-				onClick: (L) => me(h.value)
-			}, [renderSlot(C.$slots, "option", {
-				item: h,
-				active: $ === d.value,
-				pinned: O.value.has(h.value)
-			}, () => [createBaseVNode("span", gs, toDisplayString(I(h)), 1)], !0)], 42, ys)], 64))), 128)), de.value.length ? createCommentVNode("", !0) : (openBlock(), createElementBlock("div", bs, toDisplayString(e.emptyText), 1))], 36),
-			C.$slots.footer ? (openBlock(), createElementBlock("div", ks, [renderSlot(C.$slots, "footer", { close: ie }, void 0, !0)])) : createCommentVNode("", !0),
-			createVNode(us)
+				"data-index": J,
+				onMouseenter: (U) => ue(J),
+				onClick: (U) => _(ye.value)
+			}, [renderSlot(F.$slots, "option", {
+				item: ye,
+				active: J === d.value,
+				pinned: X.value.has(ye.value)
+			}, () => [createBaseVNode("span", bs, toDisplayString(Z(ye)), 1)], !0)], 42, gs)], 64))), 128)), de.value.length ? createCommentVNode("", !0) : (openBlock(), createElementBlock("div", ks, toDisplayString(e.emptyText), 1))], 38),
+			F.$slots.footer ? (openBlock(), createElementBlock("div", {
+				key: 2,
+				class: "zc-footer",
+				onMouseenter: q[3] || (q[3] = (ye) => ue(-1))
+			}, [renderSlot(F.$slots, "footer", { close: O }, void 0, !0)], 32)) : createCommentVNode("", !0),
+			createVNode(rs)
 		], 38)) : createCommentVNode("", !0)]))], 2));
 	}
-}), [["__scopeId", "data-v-989f5012"]]);
+}), [["__scopeId", "data-v-77bb9f63"]]);
 var xs = ["aria-checked", "disabled"];
 var zs = { class: "knob" };
-var Hn = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var yl = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenSwitch",
 	props: {
 		modelValue: { type: Boolean },
@@ -7418,7 +7471,7 @@ var Hn = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			onClick: r[0] || (r[0] = (s) => t("update:modelValue", !e.modelValue))
 		}, [createBaseVNode("span", zs, [e.onIcon || e.offIcon ? (openBlock(), createElementBlock("i", {
 			key: 0,
-			class: normalizeClass(unref(st)(e.modelValue ? e.onIcon : e.offIcon))
+			class: normalizeClass(unref(lt)(e.modelValue ? e.onIcon : e.offIcon))
 		}, null, 2)) : createCommentVNode("", !0)])], 10, xs));
 	}
 }), [["__scopeId", "data-v-c2dc757b"]]);
@@ -7427,7 +7480,7 @@ var Is = {
 	key: 0,
 	class: "lbl"
 };
-var qf = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var Uf = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenDot",
 	props: {
 		modelValue: { type: Boolean },
@@ -7453,14 +7506,14 @@ var qf = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			style: normalizeStyle(r.value)
 		}, null, 4), e.label || s.$slots.default ? (openBlock(), createElementBlock("span", Is, [renderSlot(s.$slots, "default", {}, () => [createTextVNode(toDisplayString(e.label), 1)], !0)])) : createCommentVNode("", !0)], 10, Ps));
 	}
-}), [["__scopeId", "data-v-43c4a2bb"]]);
+}), [["__scopeId", "data-v-73775b30"]]);
 var Rs = ["title"];
 var Bs = ["aria-label"];
-var Vs = {
+var Ds = {
 	key: 0,
 	class: "zvol-n"
 };
-var Hs = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var Hs = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenVolume",
 	props: /* @__PURE__ */ mergeModels({
 		disabled: {
@@ -7485,29 +7538,29 @@ var Hs = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 	setup(e) {
 		const o = useModel(e, "volume"), t = useModel(e, "muted"), l = e, r = /* @__PURE__ */ ref(null), s = computed(() => t.value ? 0 : o.value), u = computed(() => s.value === 0 ? "mdi-volume-off" : s.value < .34 ? "mdi-volume-low" : s.value < .67 ? "mdi-volume-medium" : "mdi-volume-high"), d = computed(() => l.disabled ? l.disabledTitle : `Volume ${Math.round(s.value * 100)}% — scroll to adjust, click the speaker to mute`);
 		function c(p) {
-			const g = Math.round(Math.min(1, Math.max(0, p)) * 100) / 100;
-			o.value = g, t.value = g === 0;
+			const h = Math.round(Math.min(1, Math.max(0, p)) * 100) / 100;
+			o.value = h, t.value = h === 0;
 		}
-		function z() {
+		function x() {
 			t.value || o.value === 0 ? (t.value = !1, o.value === 0 && (o.value = .6)) : t.value = !0;
 		}
 		function M(p) {
 			c(s.value + (p.deltaY < 0 ? .05 : -.05));
 		}
-		function B(p) {
-			const g = r.value.getBoundingClientRect();
-			return (p - g.left) / Math.max(1, g.width);
+		function V(p) {
+			const h = r.value.getBoundingClientRect();
+			return (p - h.left) / Math.max(1, h.width);
 		}
-		function x(p) {
+		function k(p) {
 			if (p.button !== 0) return;
-			const g = p.currentTarget;
-			g.setPointerCapture(p.pointerId), c(B(p.clientX));
-			const R = (E) => c(B(E.clientX)), J = () => {
-				g.removeEventListener("pointermove", R), g.removeEventListener("pointerup", J);
+			const h = p.currentTarget;
+			h.setPointerCapture(p.pointerId), c(V(p.clientX));
+			const B = (S) => c(V(S.clientX)), te = () => {
+				h.removeEventListener("pointermove", B), h.removeEventListener("pointerup", te);
 			};
-			g.addEventListener("pointermove", R), g.addEventListener("pointerup", J);
+			h.addEventListener("pointermove", B), h.addEventListener("pointerup", te);
 		}
-		return (p, g) => (openBlock(), createElementBlock("div", {
+		return (p, h) => (openBlock(), createElementBlock("div", {
 			class: normalizeClass(["zvol", {
 				off: t.value || o.value === 0,
 				quiet: e.disabled
@@ -7519,13 +7572,13 @@ var Hs = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 				type: "button",
 				class: "zvol-b",
 				"aria-label": t.value ? "Unmute" : "Mute",
-				onClick: z
+				onClick: x
 			}, [createBaseVNode("i", { class: normalizeClass(["mdi", u.value]) }, null, 2)], 8, Bs),
 			createBaseVNode("div", {
 				ref_key: "track",
 				ref: r,
 				class: "zvol-track",
-				onPointerdown: x
+				onPointerdown: k
 			}, [createBaseVNode("div", {
 				class: "zvol-fill",
 				style: normalizeStyle({ width: `${s.value * 100}%` })
@@ -7533,7 +7586,7 @@ var Hs = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 				class: "zvol-knob",
 				style: normalizeStyle({ left: `${s.value * 100}%` })
 			}, null, 4)], 544),
-			e.showValue ? (openBlock(), createElementBlock("span", Vs, toDisplayString(Math.round(s.value * 100)), 1)) : createCommentVNode("", !0)
+			e.showValue ? (openBlock(), createElementBlock("span", Ds, toDisplayString(Math.round(s.value * 100)), 1)) : createCommentVNode("", !0)
 		], 42, Rs));
 	}
 }), [["__scopeId", "data-v-9e6c85be"]]);
@@ -7544,7 +7597,7 @@ var Gs = [
 	"value",
 	"disabled"
 ];
-var Qs = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var Qs = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenSlider",
 	props: {
 		modelValue: {},
@@ -7581,7 +7634,7 @@ var ni = { class: "zcp-row" };
 var li = ["value"];
 var oi = { class: "zcp-presets" };
 var ai = ["title", "onClick"];
-var Gf = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var Yf = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenColorPicker",
 	props: {
 		modelValue: {},
@@ -7598,115 +7651,115 @@ var Gf = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 	},
 	emits: ["update:modelValue"],
 	setup(e, { emit: o }) {
-		const t = e, l = o, r = /* @__PURE__ */ ref(!1), s = /* @__PURE__ */ ref(null), u = /* @__PURE__ */ ref(null), d = /* @__PURE__ */ ref({}), c = /* @__PURE__ */ ref(Je$1.popover);
-		let z = null;
-		const M = /* @__PURE__ */ ref(0), B = /* @__PURE__ */ ref(1), x = /* @__PURE__ */ ref(1), p = (U) => Math.max(0, Math.min(1, U));
-		function g(U) {
-			const ie = U.replace("#", "");
+		const t = e, l = o, r = /* @__PURE__ */ ref(!1), s = /* @__PURE__ */ ref(null), u = /* @__PURE__ */ ref(null), d = /* @__PURE__ */ ref({}), c = /* @__PURE__ */ ref(Ye$1.popover);
+		let x = null;
+		const M = /* @__PURE__ */ ref(0), V = /* @__PURE__ */ ref(1), k = /* @__PURE__ */ ref(1), p = (oe) => Math.max(0, Math.min(1, oe));
+		function h(oe) {
+			const ce = oe.replace("#", "");
 			return [
-				parseInt(ie.slice(0, 2), 16) || 0,
-				parseInt(ie.slice(2, 4), 16) || 0,
-				parseInt(ie.slice(4, 6), 16) || 0
+				parseInt(ce.slice(0, 2), 16) || 0,
+				parseInt(ce.slice(2, 4), 16) || 0,
+				parseInt(ce.slice(4, 6), 16) || 0
 			];
 		}
-		function R(U, ie, me) {
-			const _ = (ee) => Math.round(ee).toString(16).padStart(2, "0");
-			return "#" + _(U) + _(ie) + _(me);
+		function B(oe, ce, pe) {
+			const O = (_) => Math.round(_).toString(16).padStart(2, "0");
+			return "#" + O(oe) + O(ce) + O(pe);
 		}
-		function J(U, ie, me) {
-			U /= 255, ie /= 255, me /= 255;
-			const _ = Math.max(U, ie, me), W = _ - Math.min(U, ie, me);
-			let C = 0;
-			return W && (_ === U ? C = (ie - me) / W % 6 : _ === ie ? C = (me - U) / W + 2 : C = (U - ie) / W + 4, C *= 60, C < 0 && (C += 360)), [
-				C,
-				_ ? W / _ : 0,
-				_
+		function te(oe, ce, pe) {
+			oe /= 255, ce /= 255, pe /= 255;
+			const O = Math.max(oe, ce, pe), K = O - Math.min(oe, ce, pe);
+			let Y = 0;
+			return K && (O === oe ? Y = (ce - pe) / K % 6 : O === ce ? Y = (pe - oe) / K + 2 : Y = (oe - ce) / K + 4, Y *= 60, Y < 0 && (Y += 360)), [
+				Y,
+				O ? K / O : 0,
+				O
 			];
 		}
-		function E(U, ie, me) {
-			const _ = me * ie, ee = _ * (1 - Math.abs(U / 60 % 2 - 1)), W = me - _;
-			let C = 0, Y = 0, h = 0;
-			return U < 60 ? (C = _, Y = ee) : U < 120 ? (C = ee, Y = _) : U < 180 ? (Y = _, h = ee) : U < 240 ? (Y = ee, h = _) : U < 300 ? (C = ee, h = _) : (C = _, h = ee), [
-				(C + W) * 255,
-				(Y + W) * 255,
-				(h + W) * 255
+		function S(oe, ce, pe) {
+			const O = pe * ce, _ = O * (1 - Math.abs(oe / 60 % 2 - 1)), K = pe - O;
+			let Y = 0, ue = 0, z = 0;
+			return oe < 60 ? (Y = O, ue = _) : oe < 120 ? (Y = _, ue = O) : oe < 180 ? (ue = O, z = _) : oe < 240 ? (ue = _, z = O) : oe < 300 ? (Y = _, z = O) : (Y = O, z = _), [
+				(Y + K) * 255,
+				(ue + K) * 255,
+				(z + K) * 255
 			];
 		}
-		const S = computed(() => {
-			const [U, ie, me] = E(M.value, B.value, x.value);
-			return R(U, ie, me);
-		}), O = computed(() => {
-			const [U, ie, me] = E(M.value, 1, 1);
-			return R(U, ie, me);
+		const $ = computed(() => {
+			const [oe, ce, pe] = S(M.value, V.value, k.value);
+			return B(oe, ce, pe);
+		}), X = computed(() => {
+			const [oe, ce, pe] = S(M.value, 1, 1);
+			return B(oe, ce, pe);
 		});
-		function j() {
-			const [U, ie, me] = g(t.modelValue || "#000000"), [_, ee, W] = J(U, ie, me);
-			M.value = _, B.value = ee, x.value = W;
+		function ne() {
+			const [oe, ce, pe] = h(t.modelValue || "#000000"), [O, _, K] = te(oe, ce, pe);
+			M.value = O, V.value = _, k.value = K;
 		}
-		watch(() => t.modelValue, (U) => {
-			U && U.toLowerCase() !== S.value.toLowerCase() && j();
+		watch(() => t.modelValue, (oe) => {
+			oe && oe.toLowerCase() !== $.value.toLowerCase() && ne();
 		});
-		function I() {
-			l("update:modelValue", S.value);
+		function Z() {
+			l("update:modelValue", $.value);
 		}
-		function de(U) {
-			const ie = U.currentTarget, me = (ee) => {
-				const W = ie.getBoundingClientRect();
-				B.value = p((ee.clientX - W.left) / W.width), x.value = p(1 - (ee.clientY - W.top) / W.height), I();
+		function de(oe) {
+			const ce = oe.currentTarget, pe = (_) => {
+				const K = ce.getBoundingClientRect();
+				V.value = p((_.clientX - K.left) / K.width), k.value = p(1 - (_.clientY - K.top) / K.height), Z();
 			};
-			me(U);
-			const _ = () => {
-				window.removeEventListener("pointermove", me), window.removeEventListener("pointerup", _);
+			pe(oe);
+			const O = () => {
+				window.removeEventListener("pointermove", pe), window.removeEventListener("pointerup", O);
 			};
-			window.addEventListener("pointermove", me), window.addEventListener("pointerup", _);
+			window.addEventListener("pointermove", pe), window.addEventListener("pointerup", O);
 		}
-		function he(U) {
-			const ie = U.currentTarget, me = (ee) => {
-				const W = ie.getBoundingClientRect();
-				M.value = p((ee.clientX - W.left) / W.width) * 360, I();
+		function fe(oe) {
+			const ce = oe.currentTarget, pe = (_) => {
+				const K = ce.getBoundingClientRect();
+				M.value = p((_.clientX - K.left) / K.width) * 360, Z();
 			};
-			me(U);
-			const _ = () => {
-				window.removeEventListener("pointermove", me), window.removeEventListener("pointerup", _);
+			pe(oe);
+			const O = () => {
+				window.removeEventListener("pointermove", pe), window.removeEventListener("pointerup", O);
 			};
-			window.addEventListener("pointermove", me), window.addEventListener("pointerup", _);
+			window.addEventListener("pointermove", pe), window.addEventListener("pointerup", O);
 		}
-		function Z(U) {
-			let ie = U.target.value.trim();
-			ie.startsWith("#") || (ie = "#" + ie), /^#[0-9a-fA-F]{6}$/.test(ie) && (l("update:modelValue", ie), j());
+		function G(oe) {
+			let ce = oe.target.value.trim();
+			ce.startsWith("#") || (ce = "#" + ce), /^#[0-9a-fA-F]{6}$/.test(ce) && (l("update:modelValue", ce), ne());
 		}
-		function y(U) {
-			l("update:modelValue", U), j();
+		function E(oe) {
+			l("update:modelValue", oe), ne();
 		}
-		function P() {
-			const U = s.value?.getBoundingClientRect();
-			if (!U) return;
-			const ie = 196, me = u.value?.offsetHeight ?? 280, _ = window.innerHeight - U.bottom, ee = _ < me + 14 && U.top > _;
+		function g() {
+			const oe = s.value?.getBoundingClientRect();
+			if (!oe) return;
+			const ce = 196, pe = u.value?.offsetHeight ?? 280, O = window.innerHeight - oe.bottom, _ = O < pe + 14 && oe.top > O;
 			d.value = {
-				left: Math.max(8, Math.min(U.left, window.innerWidth - ie - 8)) + "px",
-				top: (ee ? Math.max(8, U.top - 6 - me) : U.bottom + 6) + "px",
+				left: Math.max(8, Math.min(oe.left, window.innerWidth - ce - 8)) + "px",
+				top: (_ ? Math.max(8, oe.top - 6 - pe) : oe.bottom + 6) + "px",
 				width: "196px"
 			};
 		}
-		function k(U) {
-			u.value?.contains(U.target) || P();
+		function b(oe) {
+			u.value?.contains(oe.target) || g();
 		}
-		function q(U) {
-			const ie = U.target;
-			s.value?.contains(ie) || u.value?.contains(ie) || Ln(U.target, u.value) || ae();
+		function R(oe) {
+			const ce = oe.target;
+			s.value?.contains(ce) || u.value?.contains(ce) || Ln(oe.target, u.value) || ve();
 		}
-		function fe(U) {
-			z?.escape(U) && ae();
+		function ae(oe) {
+			x?.escape(oe) && ve();
 		}
-		function H() {
-			r.value = !r.value, r.value ? (j(), z ??= Mt(Je$1.popover), c.value = z.z, nextTick(() => {
-				P(), window.addEventListener("pointerdown", q, !0), window.addEventListener("keydown", fe, !0), window.addEventListener("resize", P), window.addEventListener("scroll", k, !0), requestAnimationFrame(P);
-			})) : ae();
+		function Q() {
+			r.value = !r.value, r.value ? (ne(), x ??= zt(Ye$1.popover), c.value = x.z, nextTick(() => {
+				g(), window.addEventListener("pointerdown", R, !0), window.addEventListener("keydown", ae, !0), window.addEventListener("resize", g), window.addEventListener("scroll", b, !0), requestAnimationFrame(g);
+			})) : ve();
 		}
-		function ae() {
-			r.value = !1, z?.release(), z = null, window.removeEventListener("pointerdown", q, !0), window.removeEventListener("keydown", fe, !0), window.removeEventListener("resize", P), window.removeEventListener("scroll", k, !0);
+		function ve() {
+			r.value = !1, x?.release(), x = null, window.removeEventListener("pointerdown", R, !0), window.removeEventListener("keydown", ae, !0), window.removeEventListener("resize", g), window.removeEventListener("scroll", b, !0);
 		}
-		return onBeforeUnmount(ae), j(), (U, ie) => (openBlock(), createElementBlock("div", {
+		return onBeforeUnmount(ve), ne(), (oe, ce) => (openBlock(), createElementBlock("div", {
 			class: normalizeClass(["zcp", {
 				compact: e.compact,
 				"zen-off": e.disabled
@@ -7717,63 +7770,63 @@ var Gf = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			ref: s,
 			type: "button",
 			class: "zcp-trigger",
-			onClick: H
+			onClick: Q
 		}, [createBaseVNode("span", {
 			class: "zcp-sw",
 			style: normalizeStyle({ background: e.modelValue })
-		}, null, 4), e.compact ? createCommentVNode("", !0) : (openBlock(), createElementBlock(Fragment, { key: 0 }, [createBaseVNode("span", ti, toDisplayString(e.modelValue), 1), ie[1] || (ie[1] = createBaseVNode("i", { class: "mdi mdi-chevron-down" }, null, -1))], 64))], 512), (openBlock(), createBlock(Teleport, { to: "body" }, [r.value ? (openBlock(), createElementBlock("div", {
+		}, null, 4), e.compact ? createCommentVNode("", !0) : (openBlock(), createElementBlock(Fragment, { key: 0 }, [createBaseVNode("span", ti, toDisplayString(e.modelValue), 1), ce[1] || (ce[1] = createBaseVNode("i", { class: "mdi mdi-chevron-down" }, null, -1))], 64))], 512), (openBlock(), createBlock(Teleport, { to: "body" }, [r.value ? (openBlock(), createElementBlock("div", {
 			key: 0,
 			ref_key: "pop",
 			ref: u,
 			"data-zen-layer": "",
 			class: "zcp-pop zen-surface",
 			style: normalizeStyle([d.value, { zIndex: c.value }]),
-			onPointerdown: ie[0] || (ie[0] = withModifiers(() => {}, ["stop"]))
+			onPointerdown: ce[0] || (ce[0] = withModifiers(() => {}, ["stop"]))
 		}, [
 			createBaseVNode("div", {
 				class: "zcp-sv",
-				style: normalizeStyle({ background: O.value }),
+				style: normalizeStyle({ background: X.value }),
 				onPointerdown: de
 			}, [
-				ie[2] || (ie[2] = createBaseVNode("div", { class: "zcp-sv-white" }, null, -1)),
-				ie[3] || (ie[3] = createBaseVNode("div", { class: "zcp-sv-black" }, null, -1)),
+				ce[2] || (ce[2] = createBaseVNode("div", { class: "zcp-sv-white" }, null, -1)),
+				ce[3] || (ce[3] = createBaseVNode("div", { class: "zcp-sv-black" }, null, -1)),
 				createBaseVNode("div", {
 					class: "zcp-sv-thumb",
 					style: normalizeStyle({
-						left: B.value * 100 + "%",
-						top: (1 - x.value) * 100 + "%"
+						left: V.value * 100 + "%",
+						top: (1 - k.value) * 100 + "%"
 					})
 				}, null, 4)
 			], 36),
 			createBaseVNode("div", {
 				class: "zcp-hue",
-				onPointerdown: he
+				onPointerdown: fe
 			}, [createBaseVNode("div", {
 				class: "zcp-hue-thumb",
 				style: normalizeStyle({ left: M.value / 360 * 100 + "%" })
 			}, null, 4)], 32),
 			createBaseVNode("div", ni, [createBaseVNode("span", {
 				class: "zcp-sw lg",
-				style: normalizeStyle({ background: S.value })
+				style: normalizeStyle({ background: $.value })
 			}, null, 4), createBaseVNode("input", {
 				class: "zcp-input",
 				value: e.modelValue,
 				maxlength: "7",
 				spellcheck: "false",
-				onInput: Z
+				onInput: G
 			}, null, 40, li)]),
-			createBaseVNode("div", oi, [(openBlock(!0), createElementBlock(Fragment, null, renderList(e.presets, (me) => (openBlock(), createElementBlock("button", {
-				key: me,
+			createBaseVNode("div", oi, [(openBlock(!0), createElementBlock(Fragment, null, renderList(e.presets, (pe) => (openBlock(), createElementBlock("button", {
+				key: pe,
 				type: "button",
 				class: "zcp-pre",
-				style: normalizeStyle({ background: me }),
-				title: me,
-				onClick: (_) => y(me)
+				style: normalizeStyle({ background: pe }),
+				title: pe,
+				onClick: (O) => E(pe)
 			}, null, 12, ai))), 128))])
 		], 36)) : createCommentVNode("", !0)]))], 10, ei));
 	}
 }), [["__scopeId", "data-v-2beb2797"]]);
-function yl(e) {
+function gl(e) {
 	const o = e;
 	return !!o && (o.isContentEditable || [
 		"INPUT",
@@ -7790,7 +7843,7 @@ function hi(e, o, t) {
 	}
 	return !1;
 }
-function nm(e = {}) {
+function Qf(e = {}) {
 	const o = /* @__PURE__ */ ref(null);
 	function t(s) {
 		const u = o.value, d = s.target;
@@ -7800,12 +7853,12 @@ function nm(e = {}) {
 	}
 	function l() {
 		const s = o.value, u = document.activeElement;
-		if (!s || yl(u) || s.contains(u)) return;
+		if (!s || gl(u) || s.contains(u)) return;
 		(e.focusTarget?.() ?? s).focus({ preventScroll: !0 });
 	}
 	function r() {
 		const s = o.value, u = document.activeElement;
-		s && u && s.contains(u) && !yl(u) && u.blur();
+		s && u && s.contains(u) && !gl(u) && u.blur();
 	}
 	return onMounted(() => window.addEventListener("wheel", t, {
 		capture: !0,
@@ -7832,7 +7885,7 @@ var $i = {
 	key: 2,
 	class: "zmi-hint"
 };
-var lm = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var em = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenMenuItem",
 	props: {
 		icon: {},
@@ -7852,7 +7905,7 @@ var lm = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 		function c() {
 			clearTimeout(d), t.disabled || (u.value = !0);
 		}
-		function z() {
+		function x() {
 			clearTimeout(d), d = setTimeout(() => {
 				u.value = !1;
 			}, 220);
@@ -7860,13 +7913,13 @@ var lm = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 		function M() {
 			t.disabled || l("select");
 		}
-		return (B, x) => unref(r).submenu ? (openBlock(), createElementBlock("div", {
+		return (V, k) => unref(r).submenu ? (openBlock(), createElementBlock("div", {
 			key: 0,
 			ref_key: "rootEl",
 			ref: s,
 			class: "zmi-wrap",
 			onPointerenter: c,
-			onPointerleave: z
+			onPointerleave: x
 		}, [createBaseVNode("button", {
 			type: "button",
 			class: normalizeClass(["zmi", {
@@ -7877,13 +7930,13 @@ var lm = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 		}, [
 			e.icon ? (openBlock(), createElementBlock("i", {
 				key: 0,
-				class: normalizeClass(["zmi-ico", unref(st)(e.icon)])
+				class: normalizeClass(["zmi-ico", unref(lt)(e.icon)])
 			}, null, 2)) : createCommentVNode("", !0),
-			createBaseVNode("span", gi, [renderSlot(B.$slots, "default", {}, void 0, !0)]),
-			x[1] || (x[1] = createBaseVNode("i", { class: "mdi mdi-chevron-right zmi-caret" }, null, -1))
-		], 10, yi), createVNode(On, {
+			createBaseVNode("span", gi, [renderSlot(V.$slots, "default", {}, void 0, !0)]),
+			k[1] || (k[1] = createBaseVNode("i", { class: "mdi mdi-chevron-right zmi-caret" }, null, -1))
+		], 10, yi), createVNode(cl, {
 			open: u.value,
-			"onUpdate:open": x[0] || (x[0] = (p) => u.value = p),
+			"onUpdate:open": k[0] || (k[0] = (p) => u.value = p),
 			anchor: s.value,
 			placement: "right-start",
 			offset: 3
@@ -7891,8 +7944,8 @@ var lm = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			default: withCtx(() => [createBaseVNode("div", {
 				class: "zmi-sub",
 				onPointerenter: c,
-				onPointerleave: z
-			}, [renderSlot(B.$slots, "submenu", {}, void 0, !0)], 32)]),
+				onPointerleave: x
+			}, [renderSlot(V.$slots, "submenu", {}, void 0, !0)], 32)]),
 			_: 3
 		}, 8, ["open", "anchor"])], 544)) : (openBlock(), createElementBlock("button", {
 			key: 1,
@@ -7901,13 +7954,13 @@ var lm = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			disabled: e.disabled,
 			onClick: M
 		}, [
-			unref(r).lead ? (openBlock(), createElementBlock("span", ki, [renderSlot(B.$slots, "lead", {}, void 0, !0)])) : createCommentVNode("", !0),
+			unref(r).lead ? (openBlock(), createElementBlock("span", ki, [renderSlot(V.$slots, "lead", {}, void 0, !0)])) : createCommentVNode("", !0),
 			e.icon ? (openBlock(), createElementBlock("i", {
 				key: 1,
-				class: normalizeClass(["zmi-ico", unref(st)(e.icon)])
+				class: normalizeClass(["zmi-ico", unref(lt)(e.icon)])
 			}, null, 2)) : createCommentVNode("", !0),
-			createBaseVNode("span", wi, [renderSlot(B.$slots, "default", {}, void 0, !0)]),
-			unref(r).hint ? (openBlock(), createElementBlock("span", $i, [renderSlot(B.$slots, "hint", {}, void 0, !0)])) : createCommentVNode("", !0)
+			createBaseVNode("span", wi, [renderSlot(V.$slots, "default", {}, void 0, !0)]),
+			unref(r).hint ? (openBlock(), createElementBlock("span", $i, [renderSlot(V.$slots, "hint", {}, void 0, !0)])) : createCommentVNode("", !0)
 		], 10, bi));
 	}
 }), [["__scopeId", "data-v-4282c43c"]]);
@@ -7915,7 +7968,7 @@ var zi = {
 	class: "zen-msep",
 	role: "separator"
 };
-var om = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var tm = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenMenuSeparator",
 	setup(e) {
 		return (o, t) => (openBlock(), createElementBlock("div", zi));
@@ -7932,7 +7985,7 @@ var Ti = {
 	key: 0,
 	class: "zm-foot"
 };
-var cl = /* @__PURE__ */ defineComponent({
+var dl = /* @__PURE__ */ defineComponent({
 	__name: "ZenModal",
 	props: {
 		open: { type: Boolean },
@@ -7947,16 +8000,16 @@ var cl = /* @__PURE__ */ defineComponent({
 			l("update:open", !1);
 		}
 		let s = null;
-		const u = /* @__PURE__ */ ref(Je$1.modal);
-		function d(z) {
-			s?.escape(z) && r();
+		const u = /* @__PURE__ */ ref(Ye$1.modal);
+		function d(x) {
+			s?.escape(x) && r();
 		}
 		function c() {
 			s?.release(), s = null, window.removeEventListener("keydown", d, !0);
 		}
-		return watch(() => t.open, (z) => {
-			z ? (s ??= Mt(Je$1.modal), u.value = s.z, window.addEventListener("keydown", d, !0)) : c();
-		}, { immediate: !0 }), onBeforeUnmount(c), (z, M) => (openBlock(), createBlock(Teleport, { to: "body" }, [e.open ? (openBlock(), createElementBlock("div", {
+		return watch(() => t.open, (x) => {
+			x ? (s ??= zt(Ye$1.modal), u.value = s.z, window.addEventListener("keydown", d, !0)) : c();
+		}, { immediate: !0 }), onBeforeUnmount(c), (x, M) => (openBlock(), createBlock(Teleport, { to: "body" }, [e.open ? (openBlock(), createElementBlock("div", {
 			key: 0,
 			"data-zen-layer": "",
 			class: "zen-modal-back zen-scroll",
@@ -7971,7 +8024,7 @@ var cl = /* @__PURE__ */ defineComponent({
 		}, [
 			createBaseVNode("div", Ei, [
 				e.title ? (openBlock(), createElementBlock("span", Li, toDisplayString(e.title), 1)) : createCommentVNode("", !0),
-				createBaseVNode("div", Si, [renderSlot(z.$slots, "header")]),
+				createBaseVNode("div", Si, [renderSlot(x.$slots, "header")]),
 				createBaseVNode("button", {
 					type: "button",
 					class: "zm-x",
@@ -7979,8 +8032,8 @@ var cl = /* @__PURE__ */ defineComponent({
 					onClick: r
 				}, [...M[0] || (M[0] = [createBaseVNode("i", { class: "mdi mdi-close" }, null, -1)])])
 			]),
-			createBaseVNode("div", Ci, [renderSlot(z.$slots, "default")]),
-			z.$slots.footer ? (openBlock(), createElementBlock("div", Ti, [renderSlot(z.$slots, "footer")])) : createCommentVNode("", !0)
+			createBaseVNode("div", Ci, [renderSlot(x.$slots, "default")]),
+			x.$slots.footer ? (openBlock(), createElementBlock("div", Ti, [renderSlot(x.$slots, "footer")])) : createCommentVNode("", !0)
 		], 4)], 36)) : createCommentVNode("", !0)]));
 	}
 });
@@ -7988,38 +8041,38 @@ var Bi = {
 	key: 0,
 	class: "zen-ctx-sep"
 };
-var Vi = {
+var Di = {
 	key: 1,
 	class: "zen-ctx-head"
 };
-var Di = ["disabled", "onClick"];
+var Vi = ["disabled", "onClick"];
 var Hi = { key: 0 };
 var Bt = 6;
-var sm = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var lm = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenContextMenu",
 	props: { items: {} },
 	setup(e, { expose: o }) {
 		const t = /* @__PURE__ */ ref(!1), l = /* @__PURE__ */ ref(null), r = /* @__PURE__ */ reactive({
 			x: 0,
 			y: 0
-		}), s = /* @__PURE__ */ ref(Je$1.popover);
+		}), s = /* @__PURE__ */ ref(Ye$1.popover);
 		let u = null;
 		function d(p) {
-			l.value?.contains(p.target) || Ln(p.target, l.value) || B();
+			l.value?.contains(p.target) || Ln(p.target, l.value) || V();
 		}
 		function c(p) {
-			u?.escape(p) && B();
+			u?.escape(p) && V();
 		}
-		async function z(p, g) {
-			p.preventDefault(), p.stopPropagation(), r.x = p.clientX, r.y = p.clientY, u ??= Mt(Je$1.popover), s.value = u.z, t.value = !0, await nextTick();
-			const R = l.value?.getBoundingClientRect();
-			if (R) {
-				const J = window.innerWidth, E = window.innerHeight, S = g?.clear;
-				if (S) {
-					const O = S.top - Bt - R.height, j = S.bottom + Bt;
-					r.y = O >= Bt || j + R.height > E - Bt ? O : j;
+		async function x(p, h) {
+			p.preventDefault(), p.stopPropagation(), r.x = p.clientX, r.y = p.clientY, u ??= zt(Ye$1.popover), s.value = u.z, t.value = !0, await nextTick();
+			const B = l.value?.getBoundingClientRect();
+			if (B) {
+				const te = window.innerWidth, S = window.innerHeight, $ = h?.clear;
+				if ($) {
+					const X = $.top - Bt - B.height, ne = $.bottom + Bt;
+					r.y = X >= Bt || ne + B.height > S - Bt ? X : ne;
 				}
-				r.x = Math.max(Bt, Math.min(r.x, J - R.width - Bt)), r.y = Math.max(Bt, Math.min(r.y, E - R.height - Bt));
+				r.x = Math.max(Bt, Math.min(r.x, te - B.width - Bt)), r.y = Math.max(Bt, Math.min(r.y, S - B.height - Bt));
 			}
 			setTimeout(() => {
 				window.addEventListener("pointerdown", d, !0), window.addEventListener("keydown", c, !0), window.addEventListener("wheel", M, {
@@ -8029,18 +8082,18 @@ var sm = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			}, 0);
 		}
 		function M(p) {
-			l.value?.contains(p.target) || B();
+			l.value?.contains(p.target) || V();
 		}
-		function B() {
+		function V() {
 			t.value && (t.value = !1, u?.release(), u = null, window.removeEventListener("pointerdown", d, !0), window.removeEventListener("keydown", c, !0), window.removeEventListener("wheel", M, !0));
 		}
-		function x(p) {
-			p.keepOpen || B(), p.run();
+		function k(p) {
+			p.keepOpen || V(), p.run();
 		}
-		return onBeforeUnmount(B), o({
-			show: z,
-			close: B
-		}), (p, g) => (openBlock(), createBlock(Teleport, { to: "body" }, [t.value ? (openBlock(), createElementBlock("div", {
+		return onBeforeUnmount(V), o({
+			show: x,
+			close: V
+		}), (p, h) => (openBlock(), createBlock(Teleport, { to: "body" }, [t.value ? (openBlock(), createElementBlock("div", {
 			key: 0,
 			ref_key: "menuEl",
 			ref: l,
@@ -8052,19 +8105,19 @@ var sm = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 				top: `${r.y}px`,
 				zIndex: s.value
 			}),
-			onContextmenu: g[0] || (g[0] = withModifiers(() => {}, ["prevent"]))
-		}, [(openBlock(!0), createElementBlock(Fragment, null, renderList(e.items, (R, J) => (openBlock(), createElementBlock(Fragment, { key: J }, [R === "-" ? (openBlock(), createElementBlock("div", Bi)) : "heading" in R ? (openBlock(), createElementBlock("div", Vi, toDisplayString(R.heading), 1)) : (openBlock(), createElementBlock("button", {
+			onContextmenu: h[0] || (h[0] = withModifiers(() => {}, ["prevent"]))
+		}, [(openBlock(!0), createElementBlock(Fragment, null, renderList(e.items, (B, te) => (openBlock(), createElementBlock(Fragment, { key: te }, [B === "-" ? (openBlock(), createElementBlock("div", Bi)) : "heading" in B ? (openBlock(), createElementBlock("div", Di, toDisplayString(B.heading), 1)) : (openBlock(), createElementBlock("button", {
 			key: 2,
 			type: "button",
-			class: normalizeClass(["zen-ctx-item", { danger: R.danger }]),
-			disabled: R.disabled,
+			class: normalizeClass(["zen-ctx-item", { danger: B.danger }]),
+			disabled: B.disabled,
 			role: "menuitem",
-			onClick: (E) => x(R)
+			onClick: (S) => k(B)
 		}, [
-			createBaseVNode("i", { class: normalizeClass(["mdi", R.icon ? unref(st)(R.icon) : "zen-ctx-blank"]) }, null, 2),
-			createBaseVNode("span", null, toDisplayString(R.label), 1),
-			R.hint ? (openBlock(), createElementBlock("kbd", Hi, toDisplayString(R.hint), 1)) : createCommentVNode("", !0)
-		], 10, Di))], 64))), 128))], 36)) : createCommentVNode("", !0)]));
+			createBaseVNode("i", { class: normalizeClass(["mdi", B.icon ? unref(lt)(B.icon) : "zen-ctx-blank"]) }, null, 2),
+			createBaseVNode("span", null, toDisplayString(B.label), 1),
+			B.hint ? (openBlock(), createElementBlock("kbd", Hi, toDisplayString(B.hint), 1)) : createCommentVNode("", !0)
+		], 10, Vi))], 64))), 128))], 36)) : createCommentVNode("", !0)]));
 	}
 }), [["__scopeId", "data-v-0b23826c"]]);
 var Xi = ["title"];
@@ -8075,8 +8128,8 @@ var ji = {
 	class: "zmc-time soft"
 };
 var Gi = ["disabled", "title"];
-var gl = "zenkit.media.volume";
-var Qi = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var bl = "zenkit.media.volume";
+var Qi = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenMediaControls",
 	props: {
 		media: {},
@@ -8094,26 +8147,26 @@ var Qi = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			1,
 			1.5,
 			2
-		], r = /* @__PURE__ */ ref(!0), s = /* @__PURE__ */ ref(0), u = /* @__PURE__ */ ref(0), d = /* @__PURE__ */ ref([]), c = /* @__PURE__ */ ref(!0), z = /* @__PURE__ */ ref(1), M = /* @__PURE__ */ ref(1), B = /* @__PURE__ */ ref(!1), x = /* @__PURE__ */ ref(null), p = /* @__PURE__ */ ref(null), g = computed(() => t.media instanceof HTMLVideoElement), R = /* @__PURE__ */ ref(null), J = /* @__PURE__ */ ref(1 / 0), E = computed(() => J.value < 300 ? "tiny" : t.compact || J.value < 420 ? "compact" : "full");
-		let S = null;
+		], r = /* @__PURE__ */ ref(!0), s = /* @__PURE__ */ ref(0), u = /* @__PURE__ */ ref(0), d = /* @__PURE__ */ ref([]), c = /* @__PURE__ */ ref(!0), x = /* @__PURE__ */ ref(1), M = /* @__PURE__ */ ref(1), V = /* @__PURE__ */ ref(!1), k = /* @__PURE__ */ ref(null), p = /* @__PURE__ */ ref(null), h = computed(() => t.media instanceof HTMLVideoElement), B = /* @__PURE__ */ ref(null), te = /* @__PURE__ */ ref(1 / 0), S = computed(() => te.value < 300 ? "tiny" : t.compact || te.value < 420 ? "compact" : "full");
+		let $ = null;
 		onMounted(() => {
-			R.value && (S = new ResizeObserver(() => J.value = R.value?.clientWidth ?? 1 / 0), S.observe(R.value));
-		}), onBeforeUnmount(() => S?.disconnect());
+			B.value && ($ = new ResizeObserver(() => te.value = B.value?.clientWidth ?? 1 / 0), $.observe(B.value));
+		}), onBeforeUnmount(() => $?.disconnect());
 		try {
-			const W = JSON.parse(localStorage.getItem(gl) ?? "null");
-			W && ([M.value, B.value] = [W.v, W.m]);
+			const K = JSON.parse(localStorage.getItem(bl) ?? "null");
+			K && ([M.value, V.value] = [K.v, K.m]);
 		} catch {}
-		let O = 0;
-		function j() {
-			const W = t.media;
-			if (!W) return;
-			r.value = W.paused, s.value = W.currentTime, u.value = Number.isFinite(W.duration) ? W.duration : 0;
-			const C = [];
-			for (let Y = 0; Y < W.buffered.length; Y++) C.push([W.buffered.start(Y), W.buffered.end(Y)]);
-			d.value = C;
+		let X = 0;
+		function ne() {
+			const K = t.media;
+			if (!K) return;
+			r.value = K.paused, s.value = K.currentTime, u.value = Number.isFinite(K.duration) ? K.duration : 0;
+			const Y = [];
+			for (let ue = 0; ue < K.buffered.length; ue++) Y.push([K.buffered.start(ue), K.buffered.end(ue)]);
+			d.value = Y;
 		}
-		function I() {
-			j(), O = t.media && !t.media.paused ? requestAnimationFrame(I) : 0;
+		function Z() {
+			ne(), X = t.media && !t.media.paused ? requestAnimationFrame(Z) : 0;
 		}
 		const de = [
 			"play",
@@ -8125,180 +8178,180 @@ var Qi = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			"progress",
 			"ratechange"
 		];
-		function he(W) {
-			j(), W.type === "play" && !O && (O = requestAnimationFrame(I));
+		function fe(K) {
+			ne(), K.type === "play" && !X && (X = requestAnimationFrame(Z));
 		}
-		watch(() => t.media, (W, C) => {
-			for (const Y of de) C?.removeEventListener(Y, he);
-			if (cancelAnimationFrame(O), O = 0, !!W) {
-				for (const Y of de) W.addEventListener(Y, he);
-				W.loop = c.value && !t.noLoop, W.playbackRate = z.value, W.volume = M.value, W.muted = B.value, j(), W.paused || (O = requestAnimationFrame(I));
+		watch(() => t.media, (K, Y) => {
+			for (const ue of de) Y?.removeEventListener(ue, fe);
+			if (cancelAnimationFrame(X), X = 0, !!K) {
+				for (const ue of de) K.addEventListener(ue, fe);
+				K.loop = c.value && !t.noLoop, K.playbackRate = x.value, K.volume = M.value, K.muted = V.value, ne(), K.paused || (X = requestAnimationFrame(Z));
 			}
 		}, { immediate: !0 }), onBeforeUnmount(() => {
-			for (const W of de) t.media?.removeEventListener(W, he);
-			cancelAnimationFrame(O);
+			for (const K of de) t.media?.removeEventListener(K, fe);
+			cancelAnimationFrame(X);
 		});
-		function Z() {
-			const W = t.media;
-			W && (W.paused ? W.play().catch(() => {}) : W.pause());
+		function G() {
+			const K = t.media;
+			K && (K.paused ? K.play().catch(() => {}) : K.pause());
 		}
-		function y(W) {
-			const C = t.media;
-			!C || !u.value || (C.currentTime = Math.min(Math.max(W, 0), u.value), s.value = C.currentTime);
+		function E(K) {
+			const Y = t.media;
+			!Y || !u.value || (Y.currentTime = Math.min(Math.max(K, 0), u.value), s.value = Y.currentTime);
 		}
-		function P(W) {
-			t.media?.pause(), y(s.value + W / t.fps);
+		function g(K) {
+			t.media?.pause(), E(s.value + K / t.fps);
 		}
-		function k(W) {
-			c.value = W;
-			const C = t.media;
-			C && (C.loop = W && !t.noLoop);
+		function b(K) {
+			c.value = K;
+			const Y = t.media;
+			Y && (Y.loop = K && !t.noLoop);
 		}
-		watch(() => t.noLoop, () => k(c.value));
-		function q() {
-			z.value = l[(l.indexOf(z.value) + 1) % l.length];
-			const W = t.media;
-			W && (W.playbackRate = z.value);
+		watch(() => t.noLoop, () => b(c.value));
+		function R() {
+			x.value = l[(l.indexOf(x.value) + 1) % l.length];
+			const K = t.media;
+			K && (K.playbackRate = x.value);
 		}
-		function fe() {
+		function ae() {
 			try {
-				localStorage.setItem(gl, JSON.stringify({
+				localStorage.setItem(bl, JSON.stringify({
 					v: M.value,
-					m: B.value
+					m: V.value
 				}));
 			} catch {}
 		}
-		watch([M, B], () => {
-			const W = t.media;
-			W && ([W.volume, W.muted] = [M.value, B.value]), fe();
+		watch([M, V], () => {
+			const K = t.media;
+			K && ([K.volume, K.muted] = [M.value, V.value]), ae();
 		});
-		function H() {
-			B.value = !B.value, !B.value && M.value === 0 && (M.value = .6);
+		function Q() {
+			V.value = !V.value, !V.value && M.value === 0 && (M.value = .6);
 		}
-		const ae = (W) => {
-			const C = p.value.getBoundingClientRect();
-			return Math.min(Math.max(W - C.left, 0), C.width) / C.width * u.value;
+		const ve = (K) => {
+			const Y = p.value.getBoundingClientRect();
+			return Math.min(Math.max(K - Y.left, 0), Y.width) / Y.width * u.value;
 		};
-		function U(W) {
-			u.value && (x.value = ae(W.clientX));
+		function oe(K) {
+			u.value && (k.value = ve(K.clientX));
 		}
-		function ie(W) {
-			if (W.button !== 0 || !t.media || !u.value) return;
-			W.preventDefault(), W.currentTarget.setPointerCapture(W.pointerId);
-			const C = !t.media.paused;
-			t.media.pause(), y(ae(W.clientX));
-			const Y = ($) => {
-				y(ae($.clientX)), x.value = ae($.clientX);
-			}, h = () => {
-				window.removeEventListener("pointermove", Y), window.removeEventListener("pointerup", h), C && t.media?.play().catch(() => {});
+		function ce(K) {
+			if (K.button !== 0 || !t.media || !u.value) return;
+			K.preventDefault(), K.currentTarget.setPointerCapture(K.pointerId);
+			const Y = !t.media.paused;
+			t.media.pause(), E(ve(K.clientX));
+			const ue = (L) => {
+				E(ve(L.clientX)), k.value = ve(L.clientX);
+			}, z = () => {
+				window.removeEventListener("pointermove", ue), window.removeEventListener("pointerup", z), Y && t.media?.play().catch(() => {});
 			};
-			window.addEventListener("pointermove", Y), window.addEventListener("pointerup", h);
+			window.addEventListener("pointermove", ue), window.addEventListener("pointerup", z);
 		}
-		const me = (W) => `${u.value ? W / u.value * 100 : 0}%`;
-		function _(W) {
-			if (!Number.isFinite(W)) return "0:00";
-			const C = Math.floor(W / 60), Y = Math.floor(W % 60), h = Math.floor(W % 1 * t.fps);
-			return g.value && E.value === "full" ? `${C}:${String(Y).padStart(2, "0")}.${String(h).padStart(2, "0")}` : `${C}:${String(Y).padStart(2, "0")}`;
+		const pe = (K) => `${u.value ? K / u.value * 100 : 0}%`;
+		function O(K) {
+			if (!Number.isFinite(K)) return "0:00";
+			const Y = Math.floor(K / 60), ue = Math.floor(K % 60), z = Math.floor(K % 1 * t.fps);
+			return h.value && S.value === "full" ? `${Y}:${String(ue).padStart(2, "0")}.${String(z).padStart(2, "0")}` : `${Y}:${String(ue).padStart(2, "0")}`;
 		}
-		function ee(W) {
+		function _(K) {
 			if (!t.media) return !1;
-			switch (W.key) {
+			switch (K.key) {
 				case " ":
-				case "k": return Z(), !0;
-				case "j": return y(s.value - 5), !0;
-				case "l": return y(s.value + 5), !0;
-				case ",": return P(-1), !0;
-				case ".": return P(1), !0;
-				case "m": return H(), !0;
+				case "k": return G(), !0;
+				case "j": return E(s.value - 5), !0;
+				case "l": return E(s.value + 5), !0;
+				case ",": return g(-1), !0;
+				case ".": return g(1), !0;
+				case "m": return Q(), !0;
 				default: return !1;
 			}
 		}
 		return o({
-			onKey: ee,
-			toggle: Z,
-			seek: y
-		}), (W, C) => (openBlock(), createElementBlock("div", {
+			onKey: _,
+			toggle: G,
+			seek: E
+		}), (K, Y) => (openBlock(), createElementBlock("div", {
 			ref_key: "root",
-			ref: R,
+			ref: B,
 			class: normalizeClass(["zmc", {
-				compact: E.value !== "full",
-				tiny: E.value === "tiny"
+				compact: S.value !== "full",
+				tiny: S.value === "tiny"
 			}]),
-			onPointerdown: C[6] || (C[6] = withModifiers(() => {}, ["stop"])),
-			onDblclick: C[7] || (C[7] = withModifiers(() => {}, ["stop"]))
+			onPointerdown: Y[6] || (Y[6] = withModifiers(() => {}, ["stop"])),
+			onDblclick: Y[7] || (Y[7] = withModifiers(() => {}, ["stop"]))
 		}, [
 			createBaseVNode("button", {
 				type: "button",
 				class: "zmc-b",
 				title: r.value ? "Play (Space)" : "Pause (Space)",
-				onClick: Z
+				onClick: G
 			}, [createBaseVNode("i", { class: normalizeClass(["mdi", r.value ? "mdi-play" : "mdi-pause"]) }, null, 2)], 8, Xi),
-			g.value && E.value === "full" ? (openBlock(), createElementBlock("button", {
+			h.value && S.value === "full" ? (openBlock(), createElementBlock("button", {
 				key: 0,
 				type: "button",
 				class: "zmc-b",
 				title: "Previous frame (,)",
-				onClick: C[0] || (C[0] = (Y) => P(-1))
-			}, [...C[8] || (C[8] = [createBaseVNode("i", { class: "mdi mdi-skip-previous-outline" }, null, -1)])])) : createCommentVNode("", !0),
-			g.value && E.value === "full" ? (openBlock(), createElementBlock("button", {
+				onClick: Y[0] || (Y[0] = (ue) => g(-1))
+			}, [...Y[8] || (Y[8] = [createBaseVNode("i", { class: "mdi mdi-skip-previous-outline" }, null, -1)])])) : createCommentVNode("", !0),
+			h.value && S.value === "full" ? (openBlock(), createElementBlock("button", {
 				key: 1,
 				type: "button",
 				class: "zmc-b",
 				title: "Next frame (.)",
-				onClick: C[1] || (C[1] = (Y) => P(1))
-			}, [...C[9] || (C[9] = [createBaseVNode("i", { class: "mdi mdi-skip-next-outline" }, null, -1)])])) : createCommentVNode("", !0),
-			createBaseVNode("span", Yi, toDisplayString(_(s.value)), 1),
+				onClick: Y[1] || (Y[1] = (ue) => g(1))
+			}, [...Y[9] || (Y[9] = [createBaseVNode("i", { class: "mdi mdi-skip-next-outline" }, null, -1)])])) : createCommentVNode("", !0),
+			createBaseVNode("span", Yi, toDisplayString(O(s.value)), 1),
 			createBaseVNode("div", {
 				ref_key: "bar",
 				ref: p,
 				class: "zmc-bar",
-				onPointerdown: ie,
-				onPointermove: U,
-				onPointerleave: C[2] || (C[2] = (Y) => x.value = null)
+				onPointerdown: ce,
+				onPointermove: oe,
+				onPointerleave: Y[2] || (Y[2] = (ue) => k.value = null)
 			}, [
-				createBaseVNode("div", qi, [(openBlock(!0), createElementBlock(Fragment, null, renderList(d.value, (Y, h) => (openBlock(), createElementBlock("div", {
-					key: h,
+				createBaseVNode("div", qi, [(openBlock(!0), createElementBlock(Fragment, null, renderList(d.value, (ue, z) => (openBlock(), createElementBlock("div", {
+					key: z,
 					class: "zmc-buf",
 					style: normalizeStyle({
-						left: me(Y[0]),
-						width: me(Y[1] - Y[0])
+						left: pe(ue[0]),
+						width: pe(ue[1] - ue[0])
 					})
 				}, null, 4))), 128)), createBaseVNode("div", {
 					class: "zmc-fill",
-					style: normalizeStyle({ width: me(s.value) })
+					style: normalizeStyle({ width: pe(s.value) })
 				}, null, 4)]),
 				createBaseVNode("div", {
 					class: "zmc-knob",
-					style: normalizeStyle({ left: me(s.value) })
+					style: normalizeStyle({ left: pe(s.value) })
 				}, null, 4),
-				x.value !== null ? (openBlock(), createElementBlock("span", {
+				k.value !== null ? (openBlock(), createElementBlock("span", {
 					key: 0,
 					class: "zmc-tip",
-					style: normalizeStyle({ left: me(x.value) })
-				}, toDisplayString(_(x.value)), 5)) : createCommentVNode("", !0)
+					style: normalizeStyle({ left: pe(k.value) })
+				}, toDisplayString(O(k.value)), 5)) : createCommentVNode("", !0)
 			], 544),
-			E.value !== "tiny" ? (openBlock(), createElementBlock("span", ji, toDisplayString(_(u.value)), 1)) : createCommentVNode("", !0),
-			E.value !== "tiny" ? (openBlock(), createElementBlock("button", {
+			S.value !== "tiny" ? (openBlock(), createElementBlock("span", ji, toDisplayString(O(u.value)), 1)) : createCommentVNode("", !0),
+			S.value !== "tiny" ? (openBlock(), createElementBlock("button", {
 				key: 3,
 				type: "button",
 				class: normalizeClass(["zmc-b", { on: c.value && !e.noLoop }]),
 				disabled: e.noLoop,
 				title: e.noLoop ? "Plays to the end (slideshow)" : c.value ? "Looping" : "Loop",
-				onClick: C[3] || (C[3] = (Y) => k(!c.value))
-			}, [...C[10] || (C[10] = [createBaseVNode("i", { class: "mdi mdi-repeat" }, null, -1)])], 10, Gi)) : createCommentVNode("", !0),
-			E.value === "full" ? (openBlock(), createElementBlock("button", {
+				onClick: Y[3] || (Y[3] = (ue) => b(!c.value))
+			}, [...Y[10] || (Y[10] = [createBaseVNode("i", { class: "mdi mdi-repeat" }, null, -1)])], 10, Gi)) : createCommentVNode("", !0),
+			S.value === "full" ? (openBlock(), createElementBlock("button", {
 				key: 4,
 				type: "button",
 				class: "zmc-b zmc-rate",
 				title: "Playback speed",
-				onClick: q
-			}, toDisplayString(z.value) + "× ", 1)) : createCommentVNode("", !0),
+				onClick: R
+			}, toDisplayString(x.value) + "× ", 1)) : createCommentVNode("", !0),
 			createVNode(Hs, {
 				volume: M.value,
-				"onUpdate:volume": C[4] || (C[4] = (Y) => M.value = Y),
-				muted: B.value,
-				"onUpdate:muted": C[5] || (C[5] = (Y) => B.value = Y),
-				"show-value": E.value === "full"
+				"onUpdate:volume": Y[4] || (Y[4] = (ue) => M.value = ue),
+				muted: V.value,
+				"onUpdate:muted": Y[5] || (Y[5] = (ue) => V.value = ue),
+				"show-value": S.value === "full"
 			}, null, 8, [
 				"volume",
 				"muted",
@@ -8397,21 +8450,21 @@ var Au = {
 };
 var Ru = { class: "zlb-slidepop-row inline" };
 var Bu = { class: "zlb-zval" };
-var Vu = {
+var Du = {
 	key: 0,
 	class: "zlb-panel"
 };
-var Du = { class: "zlb-panel-body" };
-var bl = "zenkit.lightbox.strip";
-var kl = "zenkit.lightbox.fit";
+var Vu = { class: "zlb-panel-body" };
+var kl = "zenkit.lightbox.strip";
+var wl = "zenkit.lightbox.fit";
 var en = 7;
-var wl = 3;
+var Rn = 3;
 var Hu = 1;
 var Wu = 8;
 var $l = 120;
 var Fu = 100 / 3;
 var xl = "zenkit.lightbox.slideshow";
-var Ou = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var Ou = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenLightbox",
 	props: {
 		items: {},
@@ -8440,173 +8493,179 @@ var Ou = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 	],
 	setup(e, { expose: o, emit: t }) {
 		const l = e, r = t, s = computed(() => l.controls !== "none"), u = computed(() => l.items[l.index]), d = /* @__PURE__ */ ref(!0), c = computed(() => l.items.length);
-		function z() {
+		function x() {
 			try {
-				return localStorage.getItem(bl) === "1";
+				return localStorage.getItem(kl) === "1";
 			} catch {
 				return !1;
 			}
 		}
-		const M = /* @__PURE__ */ ref(z());
-		watch(M, (K) => {
+		const M = /* @__PURE__ */ ref(x());
+		watch(M, (N) => {
 			try {
-				localStorage.setItem(bl, K ? "1" : "0");
+				localStorage.setItem(kl, N ? "1" : "0");
 			} catch {}
 		});
-		function B() {
+		function V() {
 			try {
-				return localStorage.getItem(kl) === "contain" ? "contain" : "cover";
+				return localStorage.getItem(wl) === "contain" ? "contain" : "cover";
 			} catch {
 				return "cover";
 			}
 		}
-		const x = /* @__PURE__ */ ref(B()), p = computed(() => l.thumbFit ?? x.value);
-		function g() {
-			const K = p.value === "cover" ? "contain" : "cover";
-			if (r("update:thumbFit", K), l.thumbFit === void 0) {
-				x.value = K;
+		const k = /* @__PURE__ */ ref(V()), p = computed(() => l.thumbFit ?? k.value);
+		function h() {
+			const N = p.value === "cover" ? "contain" : "cover";
+			if (r("update:thumbFit", N), l.thumbFit === void 0) {
+				k.value = N;
 				try {
-					localStorage.setItem(kl, K);
+					localStorage.setItem(wl, N);
 				} catch {}
 			}
 		}
-		const R = /* @__PURE__ */ ref(""), J = /* @__PURE__ */ ref(92), E = /* @__PURE__ */ ref(264), S = /* @__PURE__ */ ref(null), O = /* @__PURE__ */ ref(0), j = /* @__PURE__ */ ref(244), I = computed(() => s.value && !l.inline && M.value && c.value > 1 && !l.grid), de = computed(() => [u.value?.label, u.value?.meta].filter(Boolean).join(" · ")), he = /* @__PURE__ */ ref(480);
-		let Z = null;
-		const y = () => S.value?.viewport ?? null;
-		function P(K) {
-			O.value = K.target.scrollTop;
+		const B = /* @__PURE__ */ ref(""), te = /* @__PURE__ */ ref(92), S = /* @__PURE__ */ ref(264), $ = /* @__PURE__ */ ref(null), X = /* @__PURE__ */ ref(0), ne = /* @__PURE__ */ ref(244), Z = computed(() => s.value && !l.inline && M.value && c.value > 1 && !l.grid), de = computed(() => [u.value?.label, u.value?.meta].filter(Boolean).join(" · ")), fe = /* @__PURE__ */ ref(480);
+		let G = null;
+		const E = () => $.value?.viewport ?? null;
+		function g(N) {
+			X.value = N.target.scrollTop;
 		}
-		function k() {
-			const K = y();
-			K && (j.value = Math.max(40, K.clientWidth - 28), he.value = K.clientHeight);
+		function b() {
+			const N = E();
+			N && (ne.value = Math.max(40, N.clientWidth - 28), fe.value = N.clientHeight);
 		}
-		function q(K) {
-			J.value = Math.max(56, Math.min(220, J.value + K * 22));
+		function R(N) {
+			te.value = Math.max(56, Math.min(220, te.value + N * 22));
 		}
-		let fe = !1, H = 0, ae = 0;
-		function U(K) {
-			fe = !0, H = K.clientX, ae = E.value, K.currentTarget.setPointerCapture(K.pointerId), K.preventDefault();
+		let ae = !1, Q = 0, ve = 0;
+		function oe(N) {
+			ae = !0, Q = N.clientX, ve = S.value, N.currentTarget.setPointerCapture(N.pointerId), N.preventDefault();
 		}
-		function ie(K) {
-			fe && (E.value = Math.max(190, Math.min(560, ae + (K.clientX - H))));
+		function ce(N) {
+			ae && (S.value = Math.max(190, Math.min(560, ve + (N.clientX - Q))));
 		}
-		function me(K) {
-			if (fe) {
-				fe = !1;
+		function pe(N) {
+			if (ae) {
+				ae = !1;
 				try {
-					K.currentTarget.releasePointerCapture(K.pointerId);
+					N.currentTarget.releasePointerCapture(N.pointerId);
 				} catch {}
 			}
 		}
-		const _ = computed(() => {
-			const K = R.value.trim().toLowerCase(), te = [];
-			return l.items.forEach((ke, et) => {
-				(!K || (ke.label || "").toLowerCase().includes(K)) && te.push({
+		const O = computed(() => {
+			const N = B.value.trim().toLowerCase(), le = [];
+			return l.items.forEach((ke, Je) => {
+				(!N || (ke.label || "").toLowerCase().includes(N)) && le.push({
 					it: ke,
-					i: et
+					i: Je
 				});
-			}), te;
-		}), ee = computed(() => Math.max(1, Math.floor((j.value + en) / (J.value + en)))), W = computed(() => (j.value - (ee.value - 1) * en) / ee.value), C = computed(() => W.value + en), Y = computed(() => Math.ceil(_.value.length / ee.value)), h = computed(() => Math.max(0, Y.value * C.value - en)), $ = computed(() => Math.max(0, Math.floor(O.value / C.value) - wl)), L = computed(() => Math.min(Y.value, Math.ceil((O.value + he.value) / C.value) + wl)), ue = computed(() => _.value.slice($.value * ee.value, L.value * ee.value)), ve = computed(() => ({
-			gridTemplateColumns: `repeat(${ee.value}, 1fr)`,
+			}), le;
+		}), _ = computed(() => Math.max(1, Math.floor((ne.value + en) / (te.value + en)))), K = computed(() => (ne.value - (_.value - 1) * en) / _.value), Y = computed(() => K.value + en), ue = computed(() => Math.ceil(O.value.length / _.value)), z = computed(() => Math.max(0, ue.value * Y.value - en)), L = computed(() => {
+			const N = Math.floor(X.value / Y.value);
+			return Math.max(0, (Math.floor(N / Rn) - 1) * Rn);
+		}), A = computed(() => {
+			const N = Math.ceil((X.value + fe.value) / Y.value);
+			return Math.min(ue.value, (Math.ceil(N / Rn) + 1) * Rn);
+		}), F = computed(() => O.value.slice(L.value * _.value, A.value * _.value)), q = computed(() => ({
+			gridTemplateColumns: `repeat(${_.value}, 1fr)`,
 			gap: "7px",
-			transform: `translateY(${$.value * C.value}px)`
+			transform: `translateY(${L.value * Y.value}px)`
 		}));
-		function Fe() {
-			const K = y();
-			if (!K) return;
-			const te = _.value.findIndex((et) => et.i === l.index);
-			if (te < 0) return;
-			const ke = Math.floor(te / ee.value) * C.value;
-			ke < K.scrollTop ? K.scrollTop = ke : ke + C.value > K.scrollTop + K.clientHeight && (K.scrollTop = ke + C.value - K.clientHeight + 10);
+		function ye() {
+			const N = E();
+			if (!N) return;
+			const le = O.value.findIndex((Je) => Je.i === l.index);
+			if (le < 0) return;
+			const ke = Math.floor(le / _.value) * Y.value;
+			ke < N.scrollTop ? N.scrollTop = ke : ke + Y.value > N.scrollTop + N.clientHeight && (N.scrollTop = ke + Y.value - N.clientHeight + 10);
 		}
-		watch(S, () => {
-			Z?.disconnect(), Z = null;
-			const K = y();
-			K && (k(), typeof ResizeObserver < "u" && (Z = new ResizeObserver(() => k()), Z.observe(K)), nextTick(Fe));
-		}), watch(R, () => {
-			const K = y();
-			K && (K.scrollTop = 0), O.value = 0;
+		watch($, () => {
+			G?.disconnect(), G = null;
+			const N = E();
+			N && (b(), typeof ResizeObserver < "u" && (G = new ResizeObserver(() => b()), G.observe(N)), nextTick(ye));
+		}), watch(B, () => {
+			const N = E();
+			N && (N.scrollTop = 0), X.value = 0;
 		});
-		function le() {
-			!l.inline && X.value === 1 && r("close");
+		function J() {
+			!l.inline && U.value === 1 && r("close");
 		}
-		const X = /* @__PURE__ */ ref(1), re = /* @__PURE__ */ ref(0);
-		let Ke = 1, Ye = 0, tt = 0, qe = null, Qe = null, A = 0;
-		function pe() {
-			A = 0, qe && (qe.style.transform = `translate(${Ye}px, ${tt}px) rotate(${re.value}deg) scale(${Ke})`), X.value = Ke;
+		const U = /* @__PURE__ */ ref(1), ie = /* @__PURE__ */ ref(0);
+		let Ae = 1, _e = 0, Qe = 0, Ne = null, qe = null, I = 0;
+		function C() {
+			I = 0, Ne && (Ne.style.transform = `translate(${_e}px, ${Qe}px) rotate(${ie.value}deg) scale(${Ae})`), U.value = Ae;
 		}
-		function se() {
-			A || (A = requestAnimationFrame(pe));
+		function T() {
+			I || (I = requestAnimationFrame(C));
 		}
-		function be(K) {
-			const te = K instanceof HTMLElement ? K : null;
-			te !== qe && (qe = te, se());
+		function D(N) {
+			const le = N instanceof HTMLElement ? N : null;
+			le !== Ne && (Ne = le, T());
 		}
-		onBeforeUnmount(() => cancelAnimationFrame(A));
-		let Ae;
-		function ze() {
-			qe?.classList.add("steering"), clearTimeout(Ae);
+		onBeforeUnmount(() => cancelAnimationFrame(I));
+		let ge;
+		function be() {
+			Ne?.classList.add("steering"), clearTimeout(ge);
 		}
-		function Re() {
-			clearTimeout(Ae), qe?.classList.remove("steering"), Qe = null;
+		function Ee() {
+			clearTimeout(ge), Ne?.classList.remove("steering"), qe = null;
 		}
-		onBeforeUnmount(() => clearTimeout(Ae));
-		const $e = /* @__PURE__ */ ref(null), F = /* @__PURE__ */ ref(0), oe = /* @__PURE__ */ ref(0), G = /* @__PURE__ */ ref(0), Ve = /* @__PURE__ */ ref(0);
-		let _e = null;
-		const nt = /* @__PURE__ */ ref(null), ft = /* @__PURE__ */ ref(0);
+		onBeforeUnmount(() => clearTimeout(ge));
+		const we = /* @__PURE__ */ ref(null), He = /* @__PURE__ */ ref(0), Ge = /* @__PURE__ */ ref(0), Ue = /* @__PURE__ */ ref(0), at = /* @__PURE__ */ ref(0);
+		let ft = null;
+		const bt = /* @__PURE__ */ ref(null), Mt = /* @__PURE__ */ ref(0);
 		let Gt = null;
-		watch(nt, (K) => {
-			Gt?.disconnect(), ft.value = K?.offsetHeight ?? 0, K && (Gt = new ResizeObserver(() => ft.value = K.offsetHeight), Gt.observe(K));
+		watch(bt, (N) => {
+			Gt?.disconnect(), Mt.value = N?.offsetHeight ?? 0, N && (Gt = new ResizeObserver(() => Mt.value = N.offsetHeight), Gt.observe(N));
 		}), onBeforeUnmount(() => Gt?.disconnect());
 		function Sn() {
-			const K = $e.value;
-			if (!K) return;
-			const te = getComputedStyle(K), ke = (et) => parseFloat(et) || 0;
-			F.value = K.clientWidth - ke(te.paddingLeft) - ke(te.paddingRight), oe.value = K.clientHeight - ke(te.paddingTop) - ke(te.paddingBottom), Qe = null;
+			const N = we.value;
+			if (!N) return;
+			const le = getComputedStyle(N), ke = (Je) => parseFloat(Je) || 0;
+			He.value = N.clientWidth - ke(le.paddingLeft) - ke(le.paddingRight), Ge.value = N.clientHeight - ke(le.paddingTop) - ke(le.paddingBottom), qe = null;
 		}
-		function mn(K) {
-			const te = K.target;
-			te instanceof HTMLVideoElement ? (G.value = te.videoWidth, Ve.value = te.videoHeight) : te instanceof HTMLImageElement && (G.value = te.naturalWidth, Ve.value = te.naturalHeight);
+		function mn(N) {
+			const le = N.target;
+			le instanceof HTMLVideoElement ? (Ue.value = le.videoWidth, at.value = le.videoHeight) : le instanceof HTMLImageElement && (Ue.value = le.naturalWidth, at.value = le.naturalHeight);
 		}
 		const Jt = computed(() => {
-			const K = X.value > 1 ? "grab" : "default";
-			if (!G.value || !Ve.value) return { cursor: K };
-			const te = G.value / Ve.value;
+			const N = U.value > 1 ? "grab" : "default";
+			if (!Ue.value || !at.value) return { cursor: N };
+			const le = Ue.value / at.value;
 			return {
-				width: `min(100cqw, ${100 * te}cqh)`,
-				height: `min(100cqh, ${100 / te}cqw)`,
-				cursor: K
+				width: `min(100cqw, ${100 * le}cqh)`,
+				height: `min(100cqh, ${100 / le}cqw)`,
+				cursor: N
 			};
 		});
-		watch($e, (K) => {
-			_e?.disconnect(), _e = null, K && (Sn(), typeof ResizeObserver < "u" && (_e = new ResizeObserver(() => Sn()), _e.observe(K)));
+		watch(we, (N) => {
+			ft?.disconnect(), ft = null, N && (Sn(), typeof ResizeObserver < "u" && (ft = new ResizeObserver(() => Sn()), ft.observe(N)));
 		}, { immediate: !0 }), watch(() => u.value?.src, () => {
-			G.value = 0, Ve.value = 0;
+			Ue.value = 0, at.value = 0;
 		});
-		function gt() {
-			Re(), Ke = 1, re.value = 0, Ye = tt = 0, se();
+		function ht() {
+			Ee(), Ae = 1, ie.value = 0, _e = Qe = 0, T();
 		}
-		function pn(K) {
-			return Math.max(Hu, Math.min(Wu, K));
+		function pn(N) {
+			return Math.max(Hu, Math.min(Wu, N));
 		}
-		function It(K) {
-			Re(), Ke = pn(Ke * K), Ke === 1 && (Ye = tt = 0), se();
+		function It(N) {
+			Ee(), Ae = pn(Ae * N), Ae === 1 && (_e = Qe = 0), T();
 		}
-		function mt(K) {
-			Re(), re.value = (re.value + K) % 360, se();
+		function dt(N) {
+			Ee(), ie.value = (ie.value + N) % 360, T();
 		}
 		const Cn = computed(() => Yl(u.value?.src));
-		function Zn() {
-			const K = u.value;
-			if (!K) return;
-			const te = document.createElement("a"), ke = Cn.value;
-			ke && (te.href = ke, te.download = (K.label || "image").split("/").pop() || "image", document.body.appendChild(te), te.click(), te.remove());
+		function _n() {
+			const N = u.value;
+			if (!N) return;
+			const le = document.createElement("a"), ke = Cn.value;
+			ke && (le.href = ke, le.download = (N.label || "image").split("/").pop() || "image", document.body.appendChild(le), le.click(), le.remove());
 		}
 		function Un() {
 			u.value?.onWorkflow?.(), l.inline || r("close");
 		}
-		function ut(K) {
-			K < 0 || K >= c.value || r("update:index", K);
+		function st(N) {
+			N < 0 || N >= c.value || r("update:index", N);
 		}
 		const Qt = /* @__PURE__ */ ref(!1), Ft = /* @__PURE__ */ ref(!0), Et = /* @__PURE__ */ ref(!0);
 		let At;
@@ -8616,89 +8675,89 @@ var Ou = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 		let Kt = setTimeout(() => {
 			Kt = void 0, Ft.value = Et.value = !1;
 		}, 2200);
-		function hn(K) {
+		function hn(N) {
 			if (Xn(), Kt) return;
-			const te = K.currentTarget.getBoundingClientRect(), ke = K.clientY - te.top;
-			Ft.value = ke < $l, Et.value = ke > te.height - Math.max($l, (nt.value?.offsetHeight ?? 0) + 40);
+			const le = N.currentTarget.getBoundingClientRect(), ke = N.clientY - le.top;
+			Ft.value = ke < $l, Et.value = ke > le.height - Math.max($l, (bt.value?.offsetHeight ?? 0) + 40);
 		}
 		function Yn() {
 			Kt || (Ft.value = Et.value = !1);
 		}
 		onBeforeUnmount(() => {
 			clearTimeout(At), clearTimeout(Kt);
-		}), watch(() => l.index, (K) => {
-			for (const te of [K + 1, K - 1]) {
-				const ke = l.items[te];
+		}), watch(() => l.index, (N) => {
+			for (const le of [N + 1, N - 1]) {
+				const ke = l.items[le];
 				if (ke && (ke.kind ?? "image") === "image") {
-					const et = new Image();
-					et.src = ke.src, et.decode?.().catch(() => {});
+					const Je = new Image();
+					Je.src = ke.src, Je.decode?.().catch(() => {});
 				}
 			}
 		}, { immediate: !0 });
 		const Tn = /* @__PURE__ */ ref("next"), Pn = /* @__PURE__ */ ref(460);
 		let Ot = !1;
-		watch(() => l.index, (K, te) => {
-			Tn.value = !Ot && l.grid && Math.abs(K - te) === l.grid ? K > te ? "down" : "up" : !Ot && K < te && !(te === c.value - 1 && K === 0) ? "prev" : "next", Pn.value = Ot ? 700 : 460, Ot = !1;
+		watch(() => l.index, (N, le) => {
+			Tn.value = !Ot && l.grid && Math.abs(N - le) === l.grid ? N > le ? "down" : "up" : !Ot && N < le && !(le === c.value - 1 && N === 0) ? "prev" : "next", Pn.value = Ot ? 700 : 460, Ot = !1;
 		}, { flush: "sync" });
-		const f = computed(() => l.index > 0), T = computed(() => l.index < c.value - 1);
+		const f = computed(() => l.index > 0), P = computed(() => l.index < c.value - 1);
 		watch(() => l.index, () => {
-			gt(), nextTick(Fe);
+			ht(), nextTick(ye);
 		});
-		function m(K) {
-			K.preventDefault();
-			const te = K.deltaMode === 1 ? K.deltaY * Fu : K.deltaY, ke = Ke, et = pn(ke * Math.exp(-te * (K.ctrlKey ? .01 : .0014)));
-			if (et !== ke) {
-				if (ze(), Ae = setTimeout(Re, 150), Ke = et, et === 1) Ye = tt = 0;
-				else if (qe && $e.value) {
-					if (!Qe) {
-						const Ut = $e.value.getBoundingClientRect();
-						Qe = {
-							x: Ut.left + qe.offsetLeft + qe.offsetWidth / 2,
-							y: Ut.top + qe.offsetTop + qe.offsetHeight / 2
+		function m(N) {
+			N.preventDefault();
+			const le = N.deltaMode === 1 ? N.deltaY * Fu : N.deltaY, ke = Ae, Je = pn(ke * Math.exp(-le * (N.ctrlKey ? .01 : .0014)));
+			if (Je !== ke) {
+				if (be(), ge = setTimeout(Ee, 150), Ae = Je, Je === 1) _e = Qe = 0;
+				else if (Ne && we.value) {
+					if (!qe) {
+						const Ut = we.value.getBoundingClientRect();
+						qe = {
+							x: Ut.left + Ne.offsetLeft + Ne.offsetWidth / 2,
+							y: Ut.top + Ne.offsetTop + Ne.offsetHeight / 2
 						};
 					}
-					const Nt = et / ke, St = K.clientX - Qe.x, Zt = K.clientY - Qe.y;
-					Ye = St - Nt * (St - Ye), tt = Zt - Nt * (Zt - tt);
+					const Zt = Je / ke, St = N.clientX - qe.x, _t = N.clientY - qe.y;
+					_e = St - Zt * (St - _e), Qe = _t - Zt * (_t - Qe);
 				}
-				se();
+				T();
 			}
 		}
-		function Q() {
-			gt();
+		function ee() {
+			ht();
 		}
-		const v = /* @__PURE__ */ ref(null), ne = /* @__PURE__ */ ref(null);
-		function we(K) {
-			v.value = K instanceof HTMLMediaElement ? K : null;
+		const v = /* @__PURE__ */ ref(null), se = /* @__PURE__ */ ref(null);
+		function $e(N) {
+			v.value = N instanceof HTMLMediaElement ? N : null;
 		}
-		function De(K) {
-			we(K), be(K);
+		function Be(N) {
+			$e(N), D(N);
 		}
-		let Ce = !1;
+		let Se = !1;
 		function Ie() {
-			Ce || ne.value?.toggle();
+			Se || se.value?.toggle();
 		}
-		function Se(K) {
-			if (Ce = !1, Ke <= 1 || K.button !== 0) return;
-			K.preventDefault(), ze();
-			const te = K.clientX - Ye, ke = K.clientY - tt, et = K.clientX, Nt = K.clientY, St = (Ut) => {
-				Math.hypot(Ut.clientX - et, Ut.clientY - Nt) > 3 && (Ce = !0), Ye = Ut.clientX - te, tt = Ut.clientY - ke, se();
-			}, Zt = () => {
-				window.removeEventListener("pointermove", St), window.removeEventListener("pointerup", Zt), window.removeEventListener("pointercancel", Zt), Re();
+		function Le(N) {
+			if (Se = !1, Ae <= 1 || N.button !== 0) return;
+			N.preventDefault(), be();
+			const le = N.clientX - _e, ke = N.clientY - Qe, Je = N.clientX, Zt = N.clientY, St = (Ut) => {
+				Math.hypot(Ut.clientX - Je, Ut.clientY - Zt) > 3 && (Se = !0), _e = Ut.clientX - le, Qe = Ut.clientY - ke, T();
+			}, _t = () => {
+				window.removeEventListener("pointermove", St), window.removeEventListener("pointerup", _t), window.removeEventListener("pointercancel", _t), Ee();
 			};
-			window.addEventListener("pointermove", St), window.addEventListener("pointerup", Zt), window.addEventListener("pointercancel", Zt);
+			window.addEventListener("pointermove", St), window.addEventListener("pointerup", _t), window.addEventListener("pointercancel", _t);
 		}
-		const He = {
+		const De = {
 			min: 1,
 			max: 30,
 			step: .5
 		};
-		function Ne() {
+		function Fe() {
 			try {
-				const K = JSON.parse(localStorage.getItem(xl) || "{}"), te = Number(K.ms);
+				const N = JSON.parse(localStorage.getItem(xl) || "{}"), le = Number(N.ms);
 				return {
-					ms: Number.isFinite(te) && te >= He.min * 1e3 && te <= He.max * 1e3 ? te : 3e3,
-					shuffle: K.shuffle === !0,
-					toEnd: K.toEnd !== !1
+					ms: Number.isFinite(le) && le >= De.min * 1e3 && le <= De.max * 1e3 ? le : 3e3,
+					shuffle: N.shuffle === !0,
+					toEnd: N.toEnd !== !1
 				};
 			} catch {
 				return {
@@ -8708,81 +8767,81 @@ var Ou = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 				};
 			}
 		}
-		const Ze = /* @__PURE__ */ ref(Ne());
-		watch(Ze, (K) => {
+		const Ke = /* @__PURE__ */ ref(Fe());
+		watch(Ke, (N) => {
 			try {
-				localStorage.setItem(xl, JSON.stringify(K));
+				localStorage.setItem(xl, JSON.stringify(N));
 			} catch {}
 		}, { deep: !0 });
-		const lt = computed(() => Math.max(500, l.inline ? l.slideshowMs : Ze.value.ms)), wt = (K) => `${K / 1e3}s`, ot = /* @__PURE__ */ ref(!1);
-		let ht = null;
-		function _t() {
-			if (!(c.value < 2)) if (Ot = !0, Ze.value.shuffle && !l.inline) {
-				const K = Math.floor(Math.random() * (c.value - 1));
-				ut(K >= l.index ? K + 1 : K);
-			} else ut(l.index < c.value - 1 ? l.index + 1 : 0);
+		const et = computed(() => Math.max(500, l.inline ? l.slideshowMs : Ke.value.ms)), kt = (N) => `${N / 1e3}s`, tt = /* @__PURE__ */ ref(!1);
+		let mt = null;
+		function Nt() {
+			if (!(c.value < 2)) if (Ot = !0, Ke.value.shuffle && !l.inline) {
+				const N = Math.floor(Math.random() * (c.value - 1));
+				st(N >= l.index ? N + 1 : N);
+			} else st(l.index < c.value - 1 ? l.index + 1 : 0);
 		}
-		function bt() {
-			ht && (clearTimeout(ht), ht = null);
+		function yt() {
+			mt && (clearTimeout(mt), mt = null);
 		}
 		function yn() {
-			ot.value = !ot.value;
+			tt.value = !tt.value;
 		}
-		const Rt = computed(() => ot.value && (l.inline ? l.slideshowToEnd : Ze.value.toEnd) && (u.value?.kind === "video" || u.value?.kind === "audio"));
+		const Rt = computed(() => tt.value && (l.inline ? l.slideshowToEnd : Ke.value.toEnd) && (u.value?.kind === "video" || u.value?.kind === "audio"));
 		function qn() {
-			bt(), ot.value && !Rt.value && (ht = setTimeout(_t, lt.value));
+			yt(), tt.value && !Rt.value && (mt = setTimeout(Nt, et.value));
 		}
 		watch([
-			ot,
-			lt,
+			tt,
+			et,
 			() => l.index,
 			Rt
-		], qn), watch([v, Rt], ([K, te], ke, et) => {
-			if (!K || !te) return;
-			const Nt = () => _t(), St = () => {
-				bt(), ht = setTimeout(_t, lt.value);
+		], qn), watch([v, Rt], ([N, le], ke, Je) => {
+			if (!N || !le) return;
+			const Zt = () => Nt(), St = () => {
+				yt(), mt = setTimeout(Nt, et.value);
 			};
-			K.addEventListener("ended", Nt), K.addEventListener("error", St), K.paused && K.play().catch(St), et(() => {
-				K.removeEventListener("ended", Nt), K.removeEventListener("error", St);
+			N.addEventListener("ended", Zt), N.addEventListener("error", St), N.paused && N.play().catch(St), Je(() => {
+				N.removeEventListener("ended", Zt), N.removeEventListener("error", St);
 			});
 		});
-		const jn = computed(() => `${l.index}:${lt.value}:${ot.value}`);
-		function gn(K) {
-			const te = K;
-			if (!te || !te.tagName) return !1;
-			const ke = te.tagName;
-			return ke === "INPUT" || ke === "TEXTAREA" || ke === "SELECT" || te.isContentEditable;
+		const jn = computed(() => `${l.index}:${et.value}:${tt.value}`);
+		function gn(N) {
+			const le = N;
+			if (!le || !le.tagName) return !1;
+			const ke = le.tagName;
+			return ke === "INPUT" || ke === "TEXTAREA" || ke === "SELECT" || le.isContentEditable;
 		}
-		function Lt(K) {
-			if (!gn(K.target) && !(K.ctrlKey || K.metaKey || K.altKey)) {
-				if (ne.value?.onKey(K)) {
-					K.preventDefault();
+		function Lt(N) {
+			if (!gn(N.target) && !(N.ctrlKey || N.metaKey || N.altKey)) {
+				if (se.value?.onKey(N)) {
+					N.preventDefault();
 					return;
 				}
-				switch (K.key) {
+				switch (N.key) {
 					case "Escape":
-						if (In?.escape(K)) r("close");
+						if (In?.escape(N)) r("close");
 						else return;
 						break;
 					case "ArrowLeft":
 					case "a":
 						if (l.grid && l.index % l.grid === 0) return;
-						ut(l.index - 1);
+						st(l.index - 1);
 						break;
 					case "ArrowRight":
 					case "d":
 						if (l.grid && (l.index % l.grid === l.grid - 1 || l.index + 1 >= c.value)) return;
-						ut(l.index + 1);
+						st(l.index + 1);
 						break;
 					case "ArrowUp":
 					case "w":
 						if (!l.grid || l.index - l.grid < 0) return;
-						ut(l.index - l.grid);
+						st(l.index - l.grid);
 						break;
 					case "ArrowDown":
 					case "s":
 						if (!l.grid || l.index + l.grid >= c.value) return;
-						ut(l.index + l.grid);
+						st(l.index + l.grid);
 						break;
 					case "+":
 					case "=":
@@ -8792,81 +8851,81 @@ var Ou = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 						It(1 / 1.2);
 						break;
 					case "0":
-						gt();
+						ht();
 						break;
 					case "r":
-						mt(90);
+						dt(90);
 						break;
 					case "m":
 						if (!u.value?.overlay) return;
 						d.value = !d.value;
 						break;
 					case "R":
-						mt(-90);
+						dt(-90);
 						break;
 					case " ":
 						yn();
 						break;
 					default: return;
 				}
-				K.preventDefault();
+				N.preventDefault();
 			}
 		}
-		const In = l.inline ? null : Mt(Je$1.lightbox);
+		const In = l.inline ? null : zt(Ye$1.lightbox);
 		return onMounted(() => {
 			l.inline || window.addEventListener("keydown", Lt);
 		}), onBeforeUnmount(() => {
-			In?.release(), window.removeEventListener("keydown", Lt), bt(), Z?.disconnect(), _e?.disconnect();
+			In?.release(), window.removeEventListener("keydown", Lt), yt(), G?.disconnect(), ft?.disconnect();
 		}), o({
-			zoom: X,
-			rot: re,
-			playing: ot,
+			zoom: U,
+			rot: ie,
+			playing: tt,
 			zoomIn: () => It(1.2),
 			zoomOut: () => It(1 / 1.2),
-			reset: gt,
-			rotate: mt,
+			reset: ht,
+			rotate: dt,
 			togglePlay: yn,
-			prev: () => ut(l.index - 1),
-			next: () => ut(l.index + 1)
-		}), (K, te) => (openBlock(), createBlock(resolveDynamicComponent(e.inline ? "div" : Teleport), normalizeProps(guardReactiveProps(e.inline ? {} : { to: "body" })), {
+			prev: () => st(l.index - 1),
+			next: () => st(l.index + 1)
+		}), (N, le) => (openBlock(), createBlock(resolveDynamicComponent(e.inline ? "div" : Teleport), normalizeProps(guardReactiveProps(e.inline ? {} : { to: "body" })), {
 			default: withCtx(() => [createBaseVNode("div", {
 				class: normalizeClass(["zlb", { inline: e.inline }]),
 				"data-zen-layer": e.inline ? void 0 : "",
 				style: normalizeStyle(unref(In) ? { zIndex: unref(In).z } : void 0)
 			}, [
 				createVNode(Transition, { name: "zlb-side" }, {
-					default: withCtx(() => [I.value ? (openBlock(), createElementBlock("aside", {
+					default: withCtx(() => [Z.value ? (openBlock(), createElementBlock("aside", {
 						key: 0,
 						class: "zlb-side",
 						style: normalizeStyle({
-							flexBasis: E.value + "px",
-							"--zlb-side-w": E.value + "px"
+							flexBasis: S.value + "px",
+							"--zlb-side-w": S.value + "px"
 						})
 					}, [
-						e.searchable ? (openBlock(), createElementBlock("div", ou, [createBaseVNode("div", au, [te[18] || (te[18] = createBaseVNode("i", { class: "mdi mdi-magnify" }, null, -1)), withDirectives(createBaseVNode("input", {
-							"onUpdate:modelValue": te[0] || (te[0] = (ke) => R.value = ke),
+						e.searchable ? (openBlock(), createElementBlock("div", ou, [createBaseVNode("div", au, [le[18] || (le[18] = createBaseVNode("i", { class: "mdi mdi-magnify" }, null, -1)), withDirectives(createBaseVNode("input", {
+							"onUpdate:modelValue": le[0] || (le[0] = (ke) => B.value = ke),
 							placeholder: "Search…",
 							spellcheck: "false"
-						}, null, 512), [[vModelText, R.value]])])])) : createCommentVNode("", !0),
+						}, null, 512), [[vModelText, B.value]])])])) : createCommentVNode("", !0),
 						createVNode(tl, {
 							ref_key: "sideScroll",
-							ref: S,
+							ref: $,
 							class: "zlb-tscroll",
 							overlay: "",
-							onScroll: P
+							onScroll: g
 						}, {
 							default: withCtx(() => [createBaseVNode("div", {
 								class: "zlb-tpad",
-								style: normalizeStyle({ height: h.value + "px" })
+								style: normalizeStyle({ height: z.value + "px" })
 							}, [createBaseVNode("div", {
 								class: normalizeClass(["zlb-grid", { contain: p.value === "contain" }]),
-								style: normalizeStyle(ve.value)
-							}, [(openBlock(!0), createElementBlock(Fragment, null, renderList(ue.value, (ke) => (openBlock(), createElementBlock("button", {
+								style: normalizeStyle(q.value)
+							}, [(openBlock(!0), createElementBlock(Fragment, null, renderList(F.value, (ke) => (openBlock(), createElementBlock("button", {
 								key: ke.i,
 								type: "button",
 								class: normalizeClass(["zlb-cell", { on: ke.i === e.index }]),
 								title: ke.it.label,
-								onClick: withModifiers((et) => ut(ke.i), ["stop"])
+								onClick: withModifiers((Je) => st(ke.i), ["stop"])
 							}, [
 								ke.it.kind === "video" ? (openBlock(), createElementBlock("video", {
 									key: 0,
@@ -8886,33 +8945,33 @@ var Ou = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 							_: 1
 						}, 512),
 						createBaseVNode("div", vu, [
-							createVNode(Ge$1, {
+							createVNode(je$1, {
 								icon: "mdi mdi-magnify-minus-outline",
 								title: "Smaller thumbnails",
-								onClick: te[1] || (te[1] = withModifiers((ke) => q(-1), ["stop"]))
+								onClick: le[1] || (le[1] = withModifiers((ke) => R(-1), ["stop"]))
 							}),
-							createVNode(Ge$1, {
+							createVNode(je$1, {
 								icon: "mdi mdi-magnify-plus-outline",
 								title: "Larger thumbnails",
-								onClick: te[2] || (te[2] = withModifiers((ke) => q(1), ["stop"]))
+								onClick: le[2] || (le[2] = withModifiers((ke) => R(1), ["stop"]))
 							}),
-							createVNode(Ge$1, {
+							createVNode(je$1, {
 								icon: p.value === "cover" ? "mdi mdi-crop" : "mdi mdi-fit-to-page-outline",
 								title: p.value === "cover" ? "Cropped to fill: click to show each picture whole" : "Each picture whole: click to crop them to fill",
-								onClick: withModifiers(g, ["stop"])
+								onClick: withModifiers(h, ["stop"])
 							}, null, 8, ["icon", "title"]),
-							te[19] || (te[19] = createBaseVNode("span", { class: "zlb-grow" }, null, -1)),
+							le[19] || (le[19] = createBaseVNode("span", { class: "zlb-grow" }, null, -1)),
 							createBaseVNode("span", {
 								class: "zlb-foot-n",
-								title: _.value.length !== c.value ? `${_.value.length} match the search` : void 0
-							}, [createTextVNode(toDisplayString(c.value ? e.index + 1 : 0) + " / " + toDisplayString(c.value) + " ", 1), _.value.length !== c.value ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [createTextVNode("· " + toDisplayString(_.value.length) + " shown", 1)], 64)) : createCommentVNode("", !0)], 8, fu)
+								title: O.value.length !== c.value ? `${O.value.length} match the search` : void 0
+							}, [createTextVNode(toDisplayString(c.value ? e.index + 1 : 0) + " / " + toDisplayString(c.value) + " ", 1), O.value.length !== c.value ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [createTextVNode("· " + toDisplayString(O.value.length) + " shown", 1)], 64)) : createCommentVNode("", !0)], 8, fu)
 						]),
 						createBaseVNode("div", {
 							class: "zlb-resize",
 							title: "Drag to resize",
-							onPointerdown: U,
-							onPointermove: ie,
-							onPointerup: me
+							onPointerdown: oe,
+							onPointermove: ce,
+							onPointerup: pe
 						}, null, 32)
 					], 4)) : createCommentVNode("", !0)]),
 					_: 1
@@ -8927,7 +8986,7 @@ var Ou = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 					onPointerleave: Yn
 				}, [
 					s.value ? (openBlock(), createElementBlock("header", mu, [
-						de.value || e.grid || !I.value ? (openBlock(), createElementBlock("div", pu, [de.value ? (openBlock(), createElementBlock("span", hu, [createVNode(Ol, {
+						de.value || e.grid || !Z.value ? (openBlock(), createElementBlock("div", pu, [de.value ? (openBlock(), createElementBlock("span", hu, [createVNode(Ol, {
 							text: de.value,
 							label: "About this picture"
 						}, null, 8, ["text"])])) : createCommentVNode("", !0), e.grid ? (openBlock(), createElementBlock("span", {
@@ -8935,52 +8994,52 @@ var Ou = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 							class: "zlb-pos",
 							style: normalizeStyle({ minWidth: `${(String(Math.ceil(c.value / e.grid)).length + String(e.grid).length) * 2 + 7}ch` }),
 							title: "←→ / A D along the row · ↑↓ / W S between rows"
-						}, toDisplayString(Math.floor(e.index / e.grid) + 1) + "/" + toDisplayString(Math.ceil(c.value / e.grid)) + " · " + toDisplayString(e.index % e.grid + 1) + "/" + toDisplayString(e.grid), 5)) : I.value ? createCommentVNode("", !0) : (openBlock(), createElementBlock("span", {
+						}, toDisplayString(Math.floor(e.index / e.grid) + 1) + "/" + toDisplayString(Math.ceil(c.value / e.grid)) + " · " + toDisplayString(e.index % e.grid + 1) + "/" + toDisplayString(e.grid), 5)) : Z.value ? createCommentVNode("", !0) : (openBlock(), createElementBlock("span", {
 							key: 2,
 							class: "zlb-pos",
 							style: normalizeStyle({ minWidth: `${String(c.value).length * 2 + 3}ch` })
 						}, toDisplayString(c.value ? e.index + 1 : 0) + " / " + toDisplayString(c.value), 5))])) : createCommentVNode("", !0),
-						te[20] || (te[20] = createBaseVNode("span", { class: "zlb-grow" }, null, -1)),
-						createBaseVNode("div", yu, [u.value?.onWorkflow ? (openBlock(), createBlock(Ge$1, {
+						le[20] || (le[20] = createBaseVNode("span", { class: "zlb-grow" }, null, -1)),
+						createBaseVNode("div", yu, [u.value?.onWorkflow ? (openBlock(), createBlock(je$1, {
 							key: 0,
 							icon: "mdi mdi-sitemap-outline",
 							title: "Load this image's workflow",
 							onClick: withModifiers(Un, ["stop"])
-						})) : createCommentVNode("", !0), e.inline ? createCommentVNode("", !0) : (openBlock(), createBlock(Ge$1, {
+						})) : createCommentVNode("", !0), e.inline ? createCommentVNode("", !0) : (openBlock(), createBlock(je$1, {
 							key: 1,
 							icon: "mdi mdi-close",
 							title: "Close (Esc)",
-							onClick: te[3] || (te[3] = (ke) => r("close"))
+							onClick: le[3] || (le[3] = (ke) => r("close"))
 						}))])
 					])) : createCommentVNode("", !0),
 					createBaseVNode("div", {
 						ref_key: "stageEl",
-						ref: $e,
+						ref: we,
 						class: normalizeClass(["zlb-stage", { "has-mc": u.value?.kind === "video" || u.value?.kind === "audio" }]),
 						style: normalizeStyle({
-							"--zlb-slide": `${F.value + 48}px`,
-							"--zlb-slide-y": `${oe.value + 48}px`,
+							"--zlb-slide": `${He.value + 48}px`,
+							"--zlb-slide-y": `${Ge.value + 48}px`,
 							"--zlb-slide-ms": `${Pn.value}ms`,
-							"--zlb-foot": `${ft.value ? ft.value + 8 : 0}px`
+							"--zlb-foot": `${Mt.value ? Mt.value + 8 : 0}px`
 						}),
 						onWheel: m,
-						onPointerdown: Se,
-						onDblclick: Q,
-						onClick: withModifiers(le, ["self"])
+						onPointerdown: Le,
+						onDblclick: ee,
+						onClick: withModifiers(J, ["self"])
 					}, [
-						s.value && X.value <= 1 ? (openBlock(), createElementBlock("button", {
+						s.value && U.value <= 1 ? (openBlock(), createElementBlock("button", {
 							key: 0,
 							type: "button",
 							class: "zlb-nav prev",
 							disabled: !f.value,
 							title: "Previous (Left)",
-							onClick: te[4] || (te[4] = withModifiers((ke) => ut(e.index - 1), ["stop"])),
-							onPointerdown: te[5] || (te[5] = withModifiers(() => {}, ["stop"]))
-						}, [...te[21] || (te[21] = [createBaseVNode("i", { class: "mdi mdi-chevron-left" }, null, -1)])], 40, gu)) : createCommentVNode("", !0),
+							onClick: le[4] || (le[4] = withModifiers((ke) => st(e.index - 1), ["stop"])),
+							onPointerdown: le[5] || (le[5] = withModifiers(() => {}, ["stop"]))
+						}, [...le[21] || (le[21] = [createBaseVNode("i", { class: "mdi mdi-chevron-left" }, null, -1)])], 40, gu)) : createCommentVNode("", !0),
 						createVNode(Transition, { name: `zlb-slide-${Tn.value}` }, {
 							default: withCtx(() => [u.value && u.value.kind === "video" ? (openBlock(), createElementBlock("video", {
 								key: `v${e.index}`,
-								ref: De,
+								ref: Be,
 								src: u.value.src,
 								class: "zlb-media",
 								style: normalizeStyle(Jt.value),
@@ -8994,16 +9053,16 @@ var Ou = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 								key: `a${e.index}`,
 								class: "zlb-audio"
 							}, [
-								te[22] || (te[22] = createBaseVNode("i", { class: "mdi mdi-music-circle-outline" }, null, -1)),
+								le[22] || (le[22] = createBaseVNode("i", { class: "mdi mdi-music-circle-outline" }, null, -1)),
 								u.value.label ? (openBlock(), createElementBlock("span", ku, toDisplayString(u.value.label), 1)) : createCommentVNode("", !0),
 								createBaseVNode("audio", {
-									ref: we,
+									ref: $e,
 									src: u.value.src,
 									autoplay: ""
 								}, null, 8, wu)
 							])) : u.value?.overlay ? (openBlock(), createElementBlock("div", {
 								key: `o${e.index}`,
-								ref: be,
+								ref: D,
 								class: "zlb-media zlb-layered",
 								style: normalizeStyle(Jt.value)
 							}, [createBaseVNode("img", {
@@ -9027,32 +9086,32 @@ var Ou = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 								alt: ""
 							}, null, 8, zu)), [[vShow, d.value]])], 4)) : u.value ? (openBlock(), createElementBlock("img", {
 								key: e.index,
-								ref: be,
+								ref: D,
 								src: u.value.src,
 								class: "zlb-media",
 								style: normalizeStyle(Jt.value),
 								draggable: "false",
 								alt: "",
 								onLoad: mn
-							}, null, 44, Mu)) : (openBlock(), createElementBlock("div", Eu, [...te[23] || (te[23] = [createBaseVNode("i", { class: "mdi mdi-image-off-outline" }, null, -1)])]))]),
+							}, null, 44, Mu)) : (openBlock(), createElementBlock("div", Eu, [...le[23] || (le[23] = [createBaseVNode("i", { class: "mdi mdi-image-off-outline" }, null, -1)])]))]),
 							_: 1
 						}, 8, ["name"]),
-						s.value && X.value <= 1 ? (openBlock(), createElementBlock("button", {
+						s.value && U.value <= 1 ? (openBlock(), createElementBlock("button", {
 							key: 1,
 							type: "button",
 							class: "zlb-nav next",
-							disabled: !T.value,
+							disabled: !P.value,
 							title: "Next (Right)",
-							onClick: te[6] || (te[6] = withModifiers((ke) => ut(e.index + 1), ["stop"])),
-							onPointerdown: te[7] || (te[7] = withModifiers(() => {}, ["stop"]))
-						}, [...te[24] || (te[24] = [createBaseVNode("i", { class: "mdi mdi-chevron-right" }, null, -1)])], 40, Lu)) : createCommentVNode("", !0),
+							onClick: le[6] || (le[6] = withModifiers((ke) => st(e.index + 1), ["stop"])),
+							onPointerdown: le[7] || (le[7] = withModifiers(() => {}, ["stop"]))
+						}, [...le[24] || (le[24] = [createBaseVNode("i", { class: "mdi mdi-chevron-right" }, null, -1)])], 40, Lu)) : createCommentVNode("", !0),
 						v.value && (u.value?.kind === "video" || u.value?.kind === "audio") ? (openBlock(), createBlock(Qi, {
 							key: 2,
 							ref_key: "mediaControls",
-							ref: ne,
+							ref: se,
 							class: "zlb-mc",
 							media: v.value,
-							compact: F.value < 420,
+							compact: He.value < 420,
 							"no-loop": Rt.value
 						}, null, 8, [
 							"media",
@@ -9063,115 +9122,115 @@ var Ou = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 					s.value ? (openBlock(), createElementBlock("footer", {
 						key: 1,
 						ref_key: "footEl",
-						ref: nt,
+						ref: bt,
 						class: "zlb-bottom"
 					}, [createBaseVNode("div", Su, [
-						ot.value && !Rt.value ? (openBlock(), createElementBlock("span", {
+						tt.value && !Rt.value ? (openBlock(), createElementBlock("span", {
 							key: jn.value,
 							class: "zlb-progress",
-							style: normalizeStyle({ animationDuration: `${lt.value}ms` })
+							style: normalizeStyle({ animationDuration: `${et.value}ms` })
 						}, null, 4)) : createCommentVNode("", !0),
-						c.value > 1 && !e.inline && !e.grid ? (openBlock(), createBlock(Ge$1, {
+						c.value > 1 && !e.inline && !e.grid ? (openBlock(), createBlock(je$1, {
 							key: 1,
 							icon: "mdi mdi-view-grid-outline",
 							title: "Thumbnails",
 							active: M.value,
-							onClick: te[8] || (te[8] = withModifiers((ke) => M.value = !M.value, ["stop"]))
+							onClick: le[8] || (le[8] = withModifiers((ke) => M.value = !M.value, ["stop"]))
 						}, null, 8, ["active"])) : createCommentVNode("", !0),
-						c.value > 1 ? (openBlock(), createElementBlock(Fragment, { key: 2 }, [createVNode(Ge$1, {
-							icon: ot.value ? "mdi mdi-pause" : "mdi mdi-play",
-							title: ot.value ? "Pause slideshow (Space)" : "Play slideshow (Space)",
-							active: ot.value,
+						c.value > 1 ? (openBlock(), createElementBlock(Fragment, { key: 2 }, [createVNode(je$1, {
+							icon: tt.value ? "mdi mdi-pause" : "mdi mdi-play",
+							title: tt.value ? "Pause slideshow (Space)" : "Play slideshow (Space)",
+							active: tt.value,
 							onClick: withModifiers(yn, ["stop"])
 						}, null, 8, [
 							"icon",
 							"title",
 							"active"
-						]), createVNode(On, {
+						]), createVNode(cl, {
 							placement: "top-start",
 							offset: 10
 						}, {
-							trigger: withCtx(({ toggle: ke, active: et }) => [createBaseVNode("button", {
+							trigger: withCtx(({ toggle: ke, active: Je }) => [createBaseVNode("button", {
 								type: "button",
-								class: normalizeClass(["zlb-caret", { on: et }]),
+								class: normalizeClass(["zlb-caret", { on: Je }]),
 								title: "Slideshow settings",
 								onClick: withModifiers(ke, ["stop"])
-							}, [...te[25] || (te[25] = [createBaseVNode("i", { class: "mdi mdi-chevron-up" }, null, -1)])], 10, Cu)]),
+							}, [...le[25] || (le[25] = [createBaseVNode("i", { class: "mdi mdi-chevron-up" }, null, -1)])], 10, Cu)]),
 							default: withCtx(() => [createBaseVNode("div", {
 								class: "zlb-slidepop",
-								onClick: te[12] || (te[12] = withModifiers(() => {}, ["stop"]))
+								onClick: le[12] || (le[12] = withModifiers(() => {}, ["stop"]))
 							}, [
-								createBaseVNode("div", Tu, [te[26] || (te[26] = createBaseVNode("span", { class: "zlb-slidepop-label" }, "Time per picture", -1)), createBaseVNode("div", Pu, [createVNode(Qs, {
-									"model-value": Ze.value.ms / 1e3,
-									min: He.min,
-									max: He.max,
-									step: He.step,
-									"onUpdate:modelValue": te[9] || (te[9] = (ke) => Ze.value.ms = ke * 1e3)
+								createBaseVNode("div", Tu, [le[26] || (le[26] = createBaseVNode("span", { class: "zlb-slidepop-label" }, "Time per picture", -1)), createBaseVNode("div", Pu, [createVNode(Qs, {
+									"model-value": Ke.value.ms / 1e3,
+									min: De.min,
+									max: De.max,
+									step: De.step,
+									"onUpdate:modelValue": le[9] || (le[9] = (ke) => Ke.value.ms = ke * 1e3)
 								}, null, 8, [
 									"model-value",
 									"min",
 									"max",
 									"step"
-								]), createBaseVNode("span", Iu, toDisplayString(wt(Ze.value.ms)), 1)])]),
-								createBaseVNode("label", Au, [te[27] || (te[27] = createBaseVNode("span", { class: "zlb-slidepop-label" }, "Play videos to the end", -1)), createVNode(Hn, {
-									modelValue: Ze.value.toEnd,
-									"onUpdate:modelValue": te[10] || (te[10] = (ke) => Ze.value.toEnd = ke)
+								]), createBaseVNode("span", Iu, toDisplayString(kt(Ke.value.ms)), 1)])]),
+								createBaseVNode("label", Au, [le[27] || (le[27] = createBaseVNode("span", { class: "zlb-slidepop-label" }, "Play videos to the end", -1)), createVNode(yl, {
+									modelValue: Ke.value.toEnd,
+									"onUpdate:modelValue": le[10] || (le[10] = (ke) => Ke.value.toEnd = ke)
 								}, null, 8, ["modelValue"])]),
-								createBaseVNode("label", Ru, [te[28] || (te[28] = createBaseVNode("span", { class: "zlb-slidepop-label" }, "Shuffle", -1)), createVNode(Hn, {
-									modelValue: Ze.value.shuffle,
-									"onUpdate:modelValue": te[11] || (te[11] = (ke) => Ze.value.shuffle = ke)
+								createBaseVNode("label", Ru, [le[28] || (le[28] = createBaseVNode("span", { class: "zlb-slidepop-label" }, "Shuffle", -1)), createVNode(yl, {
+									modelValue: Ke.value.shuffle,
+									"onUpdate:modelValue": le[11] || (le[11] = (ke) => Ke.value.shuffle = ke)
 								}, null, 8, ["modelValue"])])
 							])]),
 							_: 1
 						})], 64)) : createCommentVNode("", !0),
-						te[30] || (te[30] = createBaseVNode("span", { class: "zlb-sep" }, null, -1)),
-						u.value?.overlay ? (openBlock(), createElementBlock(Fragment, { key: 3 }, [createVNode(Ge$1, {
+						le[30] || (le[30] = createBaseVNode("span", { class: "zlb-sep" }, null, -1)),
+						u.value?.overlay ? (openBlock(), createElementBlock(Fragment, { key: 3 }, [createVNode(je$1, {
 							icon: "mdi mdi-layers-outline",
 							title: "Overlay (M)",
 							active: d.value,
-							onClick: te[13] || (te[13] = withModifiers((ke) => d.value = !d.value, ["stop"]))
-						}, null, 8, ["active"]), te[29] || (te[29] = createBaseVNode("span", { class: "zlb-sep" }, null, -1))], 64)) : createCommentVNode("", !0),
-						createVNode(Ge$1, {
+							onClick: le[13] || (le[13] = withModifiers((ke) => d.value = !d.value, ["stop"]))
+						}, null, 8, ["active"]), le[29] || (le[29] = createBaseVNode("span", { class: "zlb-sep" }, null, -1))], 64)) : createCommentVNode("", !0),
+						createVNode(je$1, {
 							icon: "mdi mdi-rotate-left",
 							title: "Rotate left (Shift+R)",
-							onClick: te[14] || (te[14] = withModifiers((ke) => mt(-90), ["stop"]))
+							onClick: le[14] || (le[14] = withModifiers((ke) => dt(-90), ["stop"]))
 						}),
-						createVNode(Ge$1, {
+						createVNode(je$1, {
 							icon: "mdi mdi-rotate-right",
 							title: "Rotate right (R)",
-							onClick: te[15] || (te[15] = withModifiers((ke) => mt(90), ["stop"]))
+							onClick: le[15] || (le[15] = withModifiers((ke) => dt(90), ["stop"]))
 						}),
-						te[31] || (te[31] = createBaseVNode("span", { class: "zlb-sep" }, null, -1)),
-						createVNode(Ge$1, {
+						le[31] || (le[31] = createBaseVNode("span", { class: "zlb-sep" }, null, -1)),
+						createVNode(je$1, {
 							icon: "mdi mdi-magnify-minus-outline",
 							title: "Zoom out (-)",
-							onClick: te[16] || (te[16] = withModifiers((ke) => It(1 / 1.2), ["stop"]))
+							onClick: le[16] || (le[16] = withModifiers((ke) => It(1 / 1.2), ["stop"]))
 						}),
-						createBaseVNode("span", Bu, toDisplayString(Math.round(X.value * 100)) + "%", 1),
-						createVNode(Ge$1, {
+						createBaseVNode("span", Bu, toDisplayString(Math.round(U.value * 100)) + "%", 1),
+						createVNode(je$1, {
 							icon: "mdi mdi-magnify-plus-outline",
 							title: "Zoom in (+)",
-							onClick: te[17] || (te[17] = withModifiers((ke) => It(1.2), ["stop"]))
+							onClick: le[17] || (le[17] = withModifiers((ke) => It(1.2), ["stop"]))
 						}),
-						createVNode(Ge$1, {
+						createVNode(je$1, {
 							icon: "mdi mdi-fit-to-screen-outline",
 							title: "Fit (0 / double-click)",
-							onClick: withModifiers(gt, ["stop"])
+							onClick: withModifiers(ht, ["stop"])
 						}),
-						te[32] || (te[32] = createBaseVNode("span", { class: "zlb-sep" }, null, -1)),
-						Cn.value ? (openBlock(), createBlock(Ge$1, {
+						le[32] || (le[32] = createBaseVNode("span", { class: "zlb-sep" }, null, -1)),
+						Cn.value ? (openBlock(), createBlock(je$1, {
 							key: 4,
 							icon: "mdi mdi-download",
 							title: "Download",
-							onClick: withModifiers(Zn, ["stop"])
+							onClick: withModifiers(_n, ["stop"])
 						})) : createCommentVNode("", !0)
 					])], 512)) : createCommentVNode("", !0)
 				], 34),
-				K.$slots.side && u.value && !e.inline ? (openBlock(), createElementBlock("aside", Vu, [createVNode(tl, {
+				N.$slots.side && u.value && !e.inline ? (openBlock(), createElementBlock("aside", Du, [createVNode(tl, {
 					class: "zlb-panel-scroll",
 					overlay: ""
 				}, {
-					default: withCtx(() => [createBaseVNode("div", Du, [renderSlot(K.$slots, "side", {
+					default: withCtx(() => [createBaseVNode("div", Vu, [renderSlot(N.$slots, "side", {
 						item: u.value,
 						index: e.index
 					}, void 0, !0)])]),
@@ -9181,7 +9240,7 @@ var Ou = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			_: 3
 		}, 16));
 	}
-}), [["__scopeId", "data-v-33f25bb1"]]);
+}), [["__scopeId", "data-v-92030b8f"]]);
 var Uu = { class: "zft" };
 var Xu = [
 	"title",
@@ -9198,7 +9257,7 @@ var Gu = {
 	key: 2,
 	class: "zft-count"
 };
-var ql = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var ql = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenFolderTree",
 	props: /* @__PURE__ */ mergeModels({
 		folders: {},
@@ -9212,8 +9271,8 @@ var ql = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 		const o = e, t = useModel(e, "modelValue"), l = /* @__PURE__ */ ref(/* @__PURE__ */ new Set());
 		try {
 			if (o.storageKey) {
-				const x = JSON.parse(localStorage.getItem(o.storageKey) ?? "[]");
-				Array.isArray(x) && (l.value = new Set(x));
+				const k = JSON.parse(localStorage.getItem(o.storageKey) ?? "[]");
+				Array.isArray(k) && (l.value = new Set(k));
 			}
 		} catch {}
 		function r() {
@@ -9221,134 +9280,128 @@ var ql = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 				localStorage.setItem(o.storageKey, JSON.stringify([...l.value]));
 			} catch {}
 		}
-		const s = (x) => x.split("/").slice(0, -1).map((p, g, R) => R.slice(0, g + 1).join("/"));
-		function u(x, p) {
-			const g = new Set(l.value);
-			for (const R of x) p ? g.add(R) : g.delete(R);
-			l.value = g, r();
+		const s = (k) => k.split("/").slice(0, -1).map((p, h, B) => B.slice(0, h + 1).join("/"));
+		function u(k, p) {
+			const h = new Set(l.value);
+			for (const B of k) p ? h.add(B) : h.delete(B);
+			l.value = h, r();
 		}
-		const d = (x) => l.value.has(x);
-		function c(x) {
-			u([x], !d(x));
+		const d = (k) => l.value.has(k);
+		function c(k) {
+			u([k], !d(k));
 		}
-		function z(x) {
-			t.value = x, d(x) || u([x], !0);
+		function x(k) {
+			t.value = k, d(k) || u([k], !0);
 		}
-		watch(t, (x) => {
-			if (x) {
-				const p = s(x).filter((g) => !l.value.has(g));
+		watch(t, (k) => {
+			if (k) {
+				const p = s(k).filter((h) => !l.value.has(h));
 				p.length && u(p, !0);
 			}
 		}, { immediate: !0 });
 		const M = computed(() => {
-			const x = /* @__PURE__ */ new Map();
-			for (const g of o.folders) {
-				x.set(g.path, g.count);
-				for (const R of s(g.path)) x.has(R) || x.set(R, void 0);
+			const k = /* @__PURE__ */ new Map();
+			for (const h of o.folders) {
+				k.set(h.path, h.count);
+				for (const B of s(h.path)) k.has(B) || k.set(B, void 0);
 			}
 			const p = /* @__PURE__ */ new Map();
-			for (const g of x.keys()) {
-				const R = g.includes("/") ? g.slice(0, g.lastIndexOf("/")) : "";
-				p.has(R) || p.set(R, []), p.get(R).push(g);
+			for (const h of k.keys()) {
+				const B = h.includes("/") ? h.slice(0, h.lastIndexOf("/")) : "";
+				p.has(B) || p.set(B, []), p.get(B).push(h);
 			}
-			for (const g of p.values()) g.sort((R, J) => R.localeCompare(J));
+			for (const h of p.values()) h.sort((B, te) => B.localeCompare(te));
 			return {
-				counts: x,
+				counts: k,
 				children: p
 			};
-		}), B = computed(() => {
-			const x = [], p = (g, R) => {
-				for (const J of M.value.children.get(g) ?? []) {
-					const E = (M.value.children.get(J)?.length ?? 0) > 0;
-					x.push({
-						path: J,
-						label: J.split("/").pop(),
-						depth: R,
-						count: M.value.counts.get(J),
-						hasChildren: E
-					}), E && d(J) && p(J, R + 1);
+		}), V = computed(() => {
+			const k = [], p = (h, B) => {
+				for (const te of M.value.children.get(h) ?? []) {
+					const S = (M.value.children.get(te)?.length ?? 0) > 0;
+					k.push({
+						path: te,
+						label: te.split("/").pop(),
+						depth: B,
+						count: M.value.counts.get(te),
+						hasChildren: S
+					}), S && d(te) && p(te, B + 1);
 				}
 			};
-			return p("", 0), x;
+			return p("", 0), k;
 		});
-		return (x, p) => (openBlock(), createElementBlock("div", Uu, [(openBlock(!0), createElementBlock(Fragment, null, renderList(B.value, (g) => (openBlock(), createElementBlock("div", {
-			key: g.path,
-			class: normalizeClass(["zft-row", { on: t.value === g.path }]),
-			style: normalizeStyle({ paddingLeft: `${4 + g.depth * 14}px` }),
-			title: g.path,
+		return (k, p) => (openBlock(), createElementBlock("div", Uu, [(openBlock(!0), createElementBlock(Fragment, null, renderList(V.value, (h) => (openBlock(), createElementBlock("div", {
+			key: h.path,
+			class: normalizeClass(["zft-row", { on: t.value === h.path }]),
+			style: normalizeStyle({ paddingLeft: `${4 + h.depth * 14}px` }),
+			title: h.path,
 			tabindex: "0",
-			onClick: (R) => z(g.path),
-			onKeydown: withKeys(withModifiers((R) => z(g.path), ["self", "prevent"]), ["enter"])
+			onClick: (B) => x(h.path),
+			onKeydown: withKeys(withModifiers((B) => x(h.path), ["self", "prevent"]), ["enter"])
 		}, [
-			g.hasChildren ? (openBlock(), createElementBlock("button", {
+			h.hasChildren ? (openBlock(), createElementBlock("button", {
 				key: 0,
 				type: "button",
 				class: "zft-chev",
-				"aria-label": d(g.path) ? "Collapse" : "Expand",
-				onClick: withModifiers((R) => c(g.path), ["stop"])
-			}, [createBaseVNode("i", { class: normalizeClass(["mdi", d(g.path) ? "mdi-chevron-down" : "mdi-chevron-right"]) }, null, 2)], 8, Yu)) : (openBlock(), createElementBlock("span", qu)),
-			createBaseVNode("i", { class: normalizeClass(["mdi zft-icon", t.value === g.path || d(g.path) ? "mdi-folder-open-outline" : "mdi-folder-outline"]) }, null, 2),
-			createBaseVNode("span", ju, toDisplayString(g.label), 1),
-			g.count !== void 0 ? (openBlock(), createElementBlock("span", Gu, toDisplayString(g.count), 1)) : createCommentVNode("", !0)
+				"aria-label": d(h.path) ? "Collapse" : "Expand",
+				onClick: withModifiers((B) => c(h.path), ["stop"])
+			}, [createBaseVNode("i", { class: normalizeClass(["mdi", d(h.path) ? "mdi-chevron-down" : "mdi-chevron-right"]) }, null, 2)], 8, Yu)) : (openBlock(), createElementBlock("span", qu)),
+			createBaseVNode("i", { class: normalizeClass(["mdi zft-icon", t.value === h.path || d(h.path) ? "mdi-folder-open-outline" : "mdi-folder-outline"]) }, null, 2),
+			createBaseVNode("span", ju, toDisplayString(h.label), 1),
+			h.count !== void 0 ? (openBlock(), createElementBlock("span", Gu, toDisplayString(h.count), 1)) : createCommentVNode("", !0)
 		], 46, Xu))), 128))]));
 	}
 }), [["__scopeId", "data-v-86083019"]]);
 function nl(e, o, t) {
-	const l = (H, ae) => typeof H == "function" ? H() : H ?? ae, r = computed(() => l(t.gap, 10)), s = computed(() => l(t.padding, 12)), u = Math.max(1, t.overscan ?? 2), d = /* @__PURE__ */ ref(0), c = /* @__PURE__ */ ref(0), z = /* @__PURE__ */ ref(0), M = /* @__PURE__ */ ref(0), B = computed(() => Math.max(1, Math.floor((d.value - s.value * 2 + r.value) / (t.minWidth() + r.value)))), x = computed(() => (d.value - s.value * 2 - r.value * (B.value - 1)) / B.value), p = computed(() => M.value || t.estimate?.(x.value) || x.value), g = computed(() => p.value + r.value), R = computed(() => Math.ceil(o() / B.value)), J = computed(() => {
-		const H = Math.max(0, Math.floor((z.value - s.value) / g.value));
-		return Math.max(0, (Math.floor(H / u) - 1) * u);
-	}), E = computed(() => {
-		const H = Math.ceil((z.value + c.value) / g.value);
-		return Math.min(R.value, (Math.ceil(H / u) + 1) * u);
-	}), S = computed(() => J.value * B.value), O = computed(() => Math.min(o(), E.value * B.value)), j = computed(() => ({
-		gridTemplateColumns: `repeat(${B.value}, minmax(0, 1fr))`,
-		gap: `${r.value}px`,
-		padding: `${s.value}px`,
-		overflowAnchor: "none"
-	})), I = (H) => ({
+	const l = t.gap ?? 10, r = t.padding ?? 12, s = Math.max(1, t.overscan ?? 2), u = /* @__PURE__ */ ref(0), d = /* @__PURE__ */ ref(0), c = /* @__PURE__ */ ref(0), x = /* @__PURE__ */ ref(0), M = computed(() => Math.max(1, Math.floor((u.value - r * 2 + l) / (t.minWidth() + l)))), V = computed(() => (u.value - r * 2 - l * (M.value - 1)) / M.value), k = computed(() => x.value || t.estimate?.(V.value) || V.value), p = computed(() => k.value + l), h = computed(() => Math.ceil(o() / M.value)), B = computed(() => {
+		const R = Math.max(0, Math.floor((c.value - r) / p.value));
+		return Math.max(0, (Math.floor(R / s) - 1) * s);
+	}), te = computed(() => {
+		const R = Math.ceil((c.value + d.value) / p.value);
+		return Math.min(h.value, (Math.ceil(R / s) + 1) * s);
+	}), S = computed(() => B.value * M.value), $ = computed(() => Math.min(o(), te.value * M.value)), X = computed(() => ({
+		gridTemplateColumns: `repeat(${M.value}, minmax(0, 1fr))`,
+		overflowAnchor: "none",
+		willChange: "scroll-position"
+	})), ne = (R) => ({
 		gridColumn: "1 / -1",
-		display: H ? "block" : "none",
-		height: `${Math.max(0, H * g.value - r.value)}px`
-	}), de = computed(() => I(J.value)), he = computed(() => I(R.value - E.value));
-	function Z(H) {
-		if (t.fixedRows && M.value) return;
+		display: R ? "block" : "none",
+		height: `${Math.max(0, R * p.value - l)}px`
+	}), Z = computed(() => ne(B.value)), de = computed(() => ne(h.value - te.value));
+	function fe(R) {
+		if (t.fixedRows && x.value) return;
 		let ae = 0;
-		e.value?.querySelectorAll(H).forEach((U) => {
-			ae = Math.max(ae, y(U));
-		}), ae > M.value + .5 && (M.value = ae);
+		e.value?.querySelectorAll(R).forEach((Q) => {
+			ae = Math.max(ae, G(Q));
+		}), ae > x.value + .5 && (x.value = ae);
 	}
-	function y(H) {
-		const ae = H.getBoundingClientRect().height;
-		return Math.abs(ae - H.offsetHeight) < 1 ? ae : H.offsetHeight;
+	function G(R) {
+		const ae = R.getBoundingClientRect().height;
+		return Math.abs(ae - R.offsetHeight) < 1 ? ae : R.offsetHeight;
 	}
-	function P(H) {
+	function E(R) {
 		const ae = e.value;
-		if (!ae || H < 0) return;
-		const U = s.value + Math.floor(H / B.value) * g.value;
-		U < ae.scrollTop ? ae.scrollTop = U - s.value : U + p.value > ae.scrollTop + ae.clientHeight && (ae.scrollTop = U + p.value - ae.clientHeight + s.value);
+		if (!ae || R < 0) return;
+		const Q = r + Math.floor(R / M.value) * p.value;
+		Q < ae.scrollTop ? ae.scrollTop = Q - r : Q + k.value > ae.scrollTop + ae.clientHeight && (ae.scrollTop = Q + k.value - ae.clientHeight + r);
 	}
-	const k = () => z.value = e.value?.scrollTop ?? 0;
-	let q = null;
-	watch(e, (H, ae) => {
-		ae?.removeEventListener("scroll", k), q?.disconnect(), H && (H.addEventListener("scroll", k, { passive: !0 }), d.value = H.clientWidth, c.value = H.clientHeight, z.value = H.scrollTop, q = new ResizeObserver(() => {
-			d.value = H.clientWidth, c.value = H.clientHeight;
-		}), q.observe(H));
-	}, { immediate: !0 }), watch(x, () => M.value = 0);
-	function fe() {
-		M.value = 0;
-	}
-	return onBeforeUnmount(() => {
-		e.value?.removeEventListener("scroll", k), q?.disconnect();
+	const g = () => c.value = e.value?.scrollTop ?? 0;
+	let b = null;
+	return watch(e, (R, ae) => {
+		ae?.removeEventListener("scroll", g), b?.disconnect(), R && (R.addEventListener("scroll", g, { passive: !0 }), u.value = R.clientWidth, d.value = R.clientHeight, c.value = R.scrollTop, b = new ResizeObserver(() => {
+			u.value = R.clientWidth, d.value = R.clientHeight;
+		}), b.observe(R));
+	}, { immediate: !0 }), watch(V, () => x.value = 0), onBeforeUnmount(() => {
+		e.value?.removeEventListener("scroll", g), b?.disconnect();
 	}), {
 		start: S,
-		end: O,
-		columns: B,
-		containerStyle: j,
-		padTop: de,
-		padBottom: he,
-		measure: Z,
-		remeasure: fe,
-		reveal: P
+		end: $,
+		columns: M,
+		containerStyle: X,
+		padTop: Z,
+		padBottom: de,
+		measure: fe,
+		reveal: E
 	};
 }
 var Qu = { class: "zmp-search" };
@@ -9357,75 +9410,72 @@ var tr = { class: "zmp-fname" };
 var nr = { class: "zmp-count" };
 var lr = { class: "zmp-main" };
 var or = { class: "zmp-filters" };
-var ar = { class: "zmp-opts" };
-var sr = { class: "zmp-opt" };
-var ir = { class: "zmp-opt" };
-var ur = [
+var ar = [
 	"title",
 	"onClick",
 	"onDblclick",
 	"onMouseenter"
 ];
-var rr = { class: "zmp-thumb" };
-var cr = ["src"];
-var dr = ["src"];
-var vr = {
+var sr = { class: "zmp-thumb" };
+var ir = ["src"];
+var ur = ["src"];
+var rr = {
 	key: 2,
 	class: "zmp-audio"
 };
-var fr = {
+var cr = {
 	key: 3,
 	class: "zmp-kind"
 };
-var mr = {
+var dr = {
 	key: 4,
 	class: "zmp-tick"
 };
-var pr = {
+var vr = {
 	key: 0,
 	class: "mdi mdi-check"
 };
-var hr = { class: "zmp-name" };
-var yr = {
+var fr = { class: "zmp-name" };
+var mr = {
 	key: 0,
 	class: "zmp-dir"
 };
-var gr = {
+var pr = {
 	key: 0,
 	class: "zmp-empty"
 };
-var br = {
+var hr = {
 	key: 1,
 	class: "zmp-empty"
 };
-var kr = {
+var yr = {
 	key: 2,
 	class: "zmp-empty"
 };
-var wr = { key: 0 };
-var $r = { class: "zmp-preview" };
-var xr = { class: "zmp-big" };
-var zr = ["src"];
-var Mr = ["src"];
-var Er = {
+var gr = { key: 0 };
+var br = { class: "zmp-preview" };
+var kr = { class: "zmp-big" };
+var wr = ["src"];
+var $r = ["src"];
+var xr = {
 	key: 2,
 	class: "zmp-bigaudio"
 };
-var Lr = ["src"];
-var Sr = { class: "zmp-meta" };
-var Cr = ["title"];
-var Tr = {
+var zr = ["src"];
+var Mr = { class: "zmp-meta" };
+var Er = ["title"];
+var Lr = {
 	key: 1,
 	class: "zmp-hint"
 };
-var Pr = {
+var Sr = {
 	key: 0,
 	class: "zmp-drop"
 };
-var Ir = { class: "zmp-foot" };
-var Ar = { class: "zmp-soft" };
+var Cr = { class: "zmp-foot" };
+var Tr = { class: "zmp-soft" };
 var zl = "zenkit.mediaPicker";
-var rm = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var sm = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenMediaPicker",
 	props: {
 		open: { type: Boolean },
@@ -9482,389 +9532,355 @@ var rm = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			s: 96,
 			m: 136,
 			l: 196
-		}, z = /* @__PURE__ */ ref([]), M = /* @__PURE__ */ ref("idle"), B = /* @__PURE__ */ ref(!1), x = /* @__PURE__ */ ref(""), p = /* @__PURE__ */ ref(t.library.roots[0] ?? "input"), g = /* @__PURE__ */ ref(null), R = /* @__PURE__ */ ref(""), J = /* @__PURE__ */ ref("all"), E = /* @__PURE__ */ ref("new"), S = /* @__PURE__ */ ref("m"), O = /* @__PURE__ */ ref(!0), j = /* @__PURE__ */ ref(!1), I = /* @__PURE__ */ ref([]), de = /* @__PURE__ */ ref(""), he = /* @__PURE__ */ ref("");
-		let Z = 0, y = 0;
-		function P(F) {
+		}, x = /* @__PURE__ */ ref([]), M = /* @__PURE__ */ ref("idle"), V = /* @__PURE__ */ ref(""), k = /* @__PURE__ */ ref(t.library.roots[0] ?? "input"), p = /* @__PURE__ */ ref(null), h = /* @__PURE__ */ ref(""), B = /* @__PURE__ */ ref("all"), te = /* @__PURE__ */ ref("new"), S = /* @__PURE__ */ ref("m"), $ = /* @__PURE__ */ ref([]), X = /* @__PURE__ */ ref(""), ne = /* @__PURE__ */ ref("");
+		let Z = 0, de = 0;
+		function fe(C) {
 			window.clearTimeout(Z), Z = window.setTimeout(() => {
-				performance.now() - y > 200 && (he.value = F);
+				performance.now() - de > 200 && (ne.value = C);
 			}, 250);
 		}
-		function k() {
-			y = performance.now(), window.clearTimeout(Z), he.value && (he.value = "");
+		function G() {
+			de = performance.now(), window.clearTimeout(Z), ne.value && (ne.value = "");
 		}
-		function q(F) {
+		function E(C) {
 			window.clearTimeout(Z);
-			const oe = F.currentTarget?.querySelector("video");
-			oe && (oe.removeAttribute("src"), oe.load()), he.value = "";
+			const T = C.currentTarget?.querySelector("video");
+			T && (T.removeAttribute("src"), T.load()), ne.value = "";
 		}
-		const fe = /* @__PURE__ */ ref(""), H = /* @__PURE__ */ ref(!1), ae = /* @__PURE__ */ ref(null);
-		let U = -1;
+		const g = /* @__PURE__ */ ref(""), b = /* @__PURE__ */ ref(!1), R = /* @__PURE__ */ ref(null);
+		let ae = -1;
 		try {
-			const F = JSON.parse(localStorage.getItem(zl) ?? "{}");
-			typeof F.sort == "string" && F.sort && (E.value = F.sort), typeof F.size == "string" && F.size && (S.value = F.size), typeof F.root == "string" && t.library.roots.includes(F.root) && (p.value = F.root), typeof F.names == "boolean" && (O.value = F.names), typeof F.compact == "boolean" && (j.value = F.compact);
+			const C = JSON.parse(localStorage.getItem(zl) ?? "{}");
+			C.sort && (te.value = C.sort), C.size && (S.value = C.size), C.root && t.library.roots.includes(C.root) && (k.value = C.root);
 		} catch {}
 		watch([
-			E,
+			te,
 			S,
-			p,
-			O,
-			j
+			k
 		], () => {
 			try {
 				localStorage.setItem(zl, JSON.stringify({
-					sort: E.value,
+					sort: te.value,
 					size: S.value,
-					root: p.value,
-					names: O.value,
-					compact: j.value
+					root: k.value
 				}));
 			} catch {}
 		});
-		const ie = computed(() => t.library.roots.map((F) => ({
-			value: F,
-			label: F[0].toUpperCase() + F.slice(1)
-		}))), me = computed(() => z.value.filter((F) => t.kinds.includes(F.kind))), _ = computed(() => [{
+		const Q = computed(() => t.library.roots.map((C) => ({
+			value: C,
+			label: C[0].toUpperCase() + C.slice(1)
+		}))), ve = computed(() => x.value.filter((C) => t.kinds.includes(C.kind))), oe = computed(() => [{
 			value: "all",
-			label: `All ${me.value.length}`
-		}, ...t.kinds.map((F) => ({
-			value: F,
-			label: `${r[F]} ${me.value.filter((oe) => oe.kind === F).length}`,
-			icon: `mdi ${F === "image" ? "mdi-image-outline" : F === "video" ? "mdi-filmstrip" : "mdi-music-note-outline"}`
-		}))]), ee = computed(() => J.value === "all" ? me.value : me.value.filter((F) => F.kind === J.value)), W = computed(() => J.value !== "all" ? s[J.value] : t.kinds.length === 1 ? s[t.kinds[0]] : "files"), C = computed(() => {
-			const F = /* @__PURE__ */ new Map();
-			for (const G of ee.value) {
-				const Ve = G.folder ? G.folder.split("/") : [];
-				for (let _e = 0; _e <= Ve.length; _e++) {
-					const nt = Ve.slice(0, _e).join("/");
-					F.set(nt, (F.get(nt) ?? 0) + (_e === Ve.length ? 1 : 0));
+			label: `All ${ve.value.length}`
+		}, ...t.kinds.map((C) => ({
+			value: C,
+			label: `${r[C]} ${ve.value.filter((T) => T.kind === C).length}`,
+			icon: `mdi ${C === "image" ? "mdi-image-outline" : C === "video" ? "mdi-filmstrip" : "mdi-music-note-outline"}`
+		}))]), ce = computed(() => B.value === "all" ? ve.value : ve.value.filter((C) => C.kind === B.value)), pe = computed(() => B.value !== "all" ? s[B.value] : t.kinds.length === 1 ? s[t.kinds[0]] : "files"), O = computed(() => {
+			const C = /* @__PURE__ */ new Map();
+			for (const D of ce.value) {
+				const ge = D.folder ? D.folder.split("/") : [];
+				for (let be = 0; be <= ge.length; be++) {
+					const Ee = ge.slice(0, be).join("/");
+					C.set(Ee, (C.get(Ee) ?? 0) + (be === ge.length ? 1 : 0));
 				}
 			}
-			const oe = (G) => [...F].reduce((Ve, [_e, nt]) => Ve + (_e === G || _e.startsWith(`${G}/`) ? nt : 0), 0);
-			return [...F.keys()].filter((G) => G !== "").sort((G, Ve) => G.localeCompare(Ve)).map((G) => ({
-				path: G,
-				depth: G.split("/").length - 1,
-				label: G.split("/").pop(),
-				count: oe(G)
+			const T = (D) => [...C].reduce((ge, [be, Ee]) => ge + (be === D || be.startsWith(`${D}/`) ? Ee : 0), 0);
+			return [...C.keys()].filter((D) => D !== "").sort((D, ge) => D.localeCompare(ge)).map((D) => ({
+				path: D,
+				depth: D.split("/").length - 1,
+				label: D.split("/").pop(),
+				count: T(D)
 			}));
-		}), Y = computed(() => {
-			const F = R.value.trim().toLowerCase(), oe = ee.value.filter((G) => (g.value === null || G.folder === g.value || G.folder.startsWith(`${g.value}/`)) && (!F || `${G.folder}/${G.filename}`.toLowerCase().includes(F)));
-			return E.value === "name" ? oe.sort((G, Ve) => G.filename.localeCompare(Ve.filename, void 0, { numeric: !0 })) : oe.sort((G, Ve) => Ve.mtime - G.mtime);
-		}), h = nl(ae, () => Y.value.length, {
+		}), _ = computed(() => {
+			const C = h.value.trim().toLowerCase(), T = ce.value.filter((D) => (p.value === null || D.folder === p.value || D.folder.startsWith(`${p.value}/`)) && (!C || `${D.folder}/${D.filename}`.toLowerCase().includes(C)));
+			return te.value === "name" ? T.sort((D, ge) => D.filename.localeCompare(ge.filename, void 0, { numeric: !0 })) : T.sort((D, ge) => ge.mtime - D.mtime);
+		}), K = nl(R, () => _.value.length, {
 			minWidth: () => c[S.value],
-			gap: () => j.value ? 4 : 10,
-			padding: () => j.value ? 8 : 12,
-			estimate: (F) => F + (O.value ? 30 : 10)
-		});
-		watch([O, j], () => {
-			h.remeasure(), nextTick(() => h.measure(".zmp-card"));
-		});
-		const $ = computed(() => Y.value.slice(h.start.value, h.end.value));
-		watch($, () => void nextTick(() => h.measure(".zmp-card"))), watch([
+			estimate: (C) => C + 30
+		}), Y = computed(() => _.value.slice(K.start.value, K.end.value));
+		watch(Y, () => void nextTick(() => K.measure(".zmp-card"))), watch([
+			k,
 			p,
-			g,
-			R,
-			J,
-			E
+			h,
+			B,
+			te
 		], () => {
-			ae.value && (ae.value.scrollTop = 0);
+			R.value && (R.value.scrollTop = 0);
 		});
-		const L = computed(() => z.value.find((F) => F.ref === de.value) ?? null), ue = (F) => I.value.indexOf(F) + 1;
-		let ve = 0, Fe = "", le = [];
-		function X(F) {
-			le = F, z.value = F;
-		}
-		async function re(F = !1) {
-			const oe = p.value, G = ++ve, Ve = t.library.peek?.(oe);
-			Ve ? Ve !== le && X(Ve) : Fe !== oe && X([]), Fe = oe, M.value = Ve || le.length ? "idle" : "loading", B.value = !0;
+		const ue = computed(() => x.value.find((C) => C.ref === X.value) ?? null), z = (C) => $.value.indexOf(C) + 1;
+		async function L(C = !1) {
+			M.value = "loading";
 			try {
-				const _e = await t.library.list(oe, F);
-				if (G !== ve) return;
-				_e !== le && X(_e), M.value = "idle", g.value !== null && !C.value.some((nt) => nt.path === g.value) && (g.value = null);
-			} catch (_e) {
-				if (G !== ve) return;
-				x.value = _e instanceof Error ? _e.message : String(_e), M.value = "error";
-			} finally {
-				G === ve && (B.value = !1);
+				x.value = await t.library.list(k.value, C), M.value = "idle", p.value !== null && !O.value.some((T) => T.path === p.value) && (p.value = null);
+			} catch (T) {
+				V.value = T instanceof Error ? T.message : String(T), M.value = "error";
 			}
 		}
-		function Ke(F) {
-			p.value = F, g.value = null, U = -1, re();
+		function A(C) {
+			k.value = C, p.value = null, ae = -1, L();
 		}
-		watch(() => t.open, (F) => {
-			if (!F) return;
-			I.value = [...t.selected], de.value = t.selected[0] ?? "", R.value = "", J.value = t.kinds.length === 1 ? t.kinds[0] : "all", U = -1;
-			const oe = t.selected[0]?.split("/")[0];
-			oe && t.library.roots.includes(oe) && (p.value = oe), re();
-		}, { immediate: !0 }), watch(L, (F) => {
-			if (fe.value = "", !F || F.kind === "audio") return;
-			const oe = (G, Ve) => de.value === F.ref && G && (fe.value = `${G}×${Ve}`);
-			if (F.kind === "image") {
-				const G = new Image();
-				G.onload = () => oe(G.naturalWidth, G.naturalHeight), G.src = F.url;
+		watch(() => t.open, (C) => {
+			if (!C) return;
+			$.value = [...t.selected], X.value = t.selected[0] ?? "", h.value = "", B.value = t.kinds.length === 1 ? t.kinds[0] : "all", ae = -1;
+			const T = t.selected[0]?.split("/")[0];
+			T && t.library.roots.includes(T) && (k.value = T), L();
+		}, { immediate: !0 }), watch(ue, (C) => {
+			if (g.value = "", !C || C.kind === "audio") return;
+			const T = (D, ge) => X.value === C.ref && D && (g.value = `${D}×${ge}`);
+			if (C.kind === "image") {
+				const D = new Image();
+				D.onload = () => T(D.naturalWidth, D.naturalHeight), D.src = C.url;
 			} else {
-				const G = document.createElement("video");
-				G.preload = "metadata", G.onloadedmetadata = () => {
-					oe(G.videoWidth, G.videoHeight), de.value === F.ref && Number.isFinite(G.duration) && (fe.value += ` · ${G.duration.toFixed(1)} s`);
-				}, G.src = F.url;
+				const D = document.createElement("video");
+				D.preload = "metadata", D.onloadedmetadata = () => {
+					T(D.videoWidth, D.videoHeight), X.value === C.ref && Number.isFinite(D.duration) && (g.value += ` · ${D.duration.toFixed(1)} s`);
+				}, D.src = C.url;
 			}
 		});
-		function Ye(F, oe, G) {
-			if (de.value = F.ref, !t.multiple) {
-				I.value = [F.ref];
+		function F(C, T, D) {
+			if (X.value = C.ref, !t.multiple) {
+				$.value = [C.ref];
 				return;
 			}
-			if (G.shiftKey && U >= 0) {
-				const [Ve, _e] = U < oe ? [U, oe] : [oe, U], nt = Y.value.slice(Ve, _e + 1).map((ft) => ft.ref);
-				I.value = [...I.value, ...nt.filter((ft) => !I.value.includes(ft))];
-			} else I.value = ue(F.ref) ? I.value.filter((Ve) => Ve !== F.ref) : [...I.value, F.ref];
-			U = oe;
+			if (D.shiftKey && ae >= 0) {
+				const [ge, be] = ae < T ? [ae, T] : [T, ae], Ee = _.value.slice(ge, be + 1).map((we) => we.ref);
+				$.value = [...$.value, ...Ee.filter((we) => !$.value.includes(we))];
+			} else $.value = z(C.ref) ? $.value.filter((ge) => ge !== C.ref) : [...$.value, C.ref];
+			ae = T;
 		}
-		function tt(F) {
-			const oe = t.multiple && !I.value.includes(F.ref) ? [...I.value, F.ref] : t.multiple ? I.value : [F.ref];
-			l("pick", oe), Qe();
+		function q(C) {
+			const T = t.multiple && !$.value.includes(C.ref) ? [...$.value, C.ref] : t.multiple ? $.value : [C.ref];
+			l("pick", T), J();
 		}
-		function qe() {
-			I.value.length && (l("pick", [...I.value]), Qe());
+		function ye() {
+			$.value.length && (l("pick", [...$.value]), J());
 		}
-		function Qe() {
+		function J() {
 			l("update:open", !1);
 		}
-		const A = {
+		const U = {
 			image: "image/*",
 			video: "video/*",
 			audio: "audio/*"
 		};
-		function pe() {
-			const F = document.createElement("input");
-			F.type = "file", F.multiple = t.multiple, F.accept = t.kinds.map((oe) => A[oe]).join(","), F.onchange = () => void se(Array.from(F.files ?? [])), F.click();
+		function ie() {
+			const C = document.createElement("input");
+			C.type = "file", C.multiple = t.multiple, C.accept = t.kinds.map((T) => U[T]).join(","), C.onchange = () => void Ae(Array.from(C.files ?? [])), C.click();
 		}
-		async function se(F) {
-			const oe = F.filter((G) => t.kinds.some((Ve) => G.type.startsWith(`${Ve}/`)));
-			if (!(!oe.length || !t.library.upload)) {
+		async function Ae(C) {
+			const T = C.filter((D) => t.kinds.some((ge) => D.type.startsWith(`${ge}/`)));
+			if (!(!T.length || !t.library.upload)) {
 				M.value = "loading";
 				try {
-					const G = await t.library.upload(oe, t.subfolder);
-					p.value = "input", await re(!0), g.value = null, I.value = t.multiple ? [...I.value, ...G.filter((Ve) => !I.value.includes(Ve))] : G.slice(-1), de.value = G[G.length - 1] ?? "", await nextTick(), h.reveal(Y.value.findIndex((Ve) => Ve.ref === de.value));
-				} catch (G) {
-					x.value = G instanceof Error ? G.message : String(G), M.value = "error";
+					const D = await t.library.upload(T, t.subfolder);
+					k.value = "input", await L(!0), p.value = null, $.value = t.multiple ? [...$.value, ...D.filter((ge) => !$.value.includes(ge))] : D.slice(-1), X.value = D[D.length - 1] ?? "", await nextTick(), K.reveal(_.value.findIndex((ge) => ge.ref === X.value));
+				} catch (D) {
+					V.value = D instanceof Error ? D.message : String(D), M.value = "error";
 				}
 			}
 		}
-		function be(F) {
-			t.library.upload && F.dataTransfer?.types.includes("Files") && (H.value = !0);
+		function _e(C) {
+			t.library.upload && C.dataTransfer?.types.includes("Files") && (b.value = !0);
 		}
-		function Ae(F) {
-			F.currentTarget.contains(F.relatedTarget) || (H.value = !1);
+		function Qe(C) {
+			C.currentTarget.contains(C.relatedTarget) || (b.value = !1);
 		}
-		function ze(F) {
-			H.value = !1, se(Array.from(F.dataTransfer?.files ?? []));
+		function Ne(C) {
+			b.value = !1, Ae(Array.from(C.dataTransfer?.files ?? []));
 		}
-		function Re(F) {
-			return F < 1024 ? `${F} B` : F < 1024 ** 2 ? `${(F / 1024).toFixed(0)} KB` : F < 1024 ** 3 ? `${(F / 1024 ** 2).toFixed(1)} MB` : `${(F / 1024 ** 3).toFixed(2)} GB`;
+		function qe(C) {
+			return C < 1024 ? `${C} B` : C < 1024 ** 2 ? `${(C / 1024).toFixed(0)} KB` : C < 1024 ** 3 ? `${(C / 1024 ** 2).toFixed(1)} MB` : `${(C / 1024 ** 3).toFixed(2)} GB`;
 		}
-		function $e(F) {
-			return F ? (/* @__PURE__ */ new Date(F * 1e3)).toLocaleString(void 0, {
+		function I(C) {
+			return C ? (/* @__PURE__ */ new Date(C * 1e3)).toLocaleString(void 0, {
 				dateStyle: "medium",
 				timeStyle: "short"
 			}) : "";
 		}
-		return (F, oe) => (openBlock(), createBlock(cl, {
+		return (C, T) => (openBlock(), createBlock(dl, {
 			open: e.open,
 			title: e.title,
-			width: "min(90vw, 1600px)",
-			height: "86vh",
-			"onUpdate:open": oe[11] || (oe[11] = (G) => !G && Qe())
+			width: "1080px",
+			height: "82vh",
+			"onUpdate:open": T[9] || (T[9] = (D) => !D && J())
 		}, {
 			header: withCtx(() => [
-				createBaseVNode("span", Qu, [createVNode(Nl, {
-					modelValue: R.value,
-					"onUpdate:modelValue": oe[0] || (oe[0] = (G) => R.value = G),
+				createBaseVNode("span", Qu, [createVNode(Zl, {
+					modelValue: h.value,
+					"onUpdate:modelValue": T[0] || (T[0] = (D) => h.value = D),
 					sm: "",
 					placeholder: "Search names and folders…"
 				}, null, 8, ["modelValue"])]),
 				createVNode(Tt, {
-					"model-value": p.value,
-					options: ie.value,
-					"onUpdate:modelValue": Ke
+					"model-value": k.value,
+					options: Q.value,
+					"onUpdate:modelValue": A
 				}, null, 8, ["model-value", "options"]),
-				createVNode(Ge$1, {
-					icon: B.value ? "mdi mdi-loading mdi-spin" : "mdi mdi-refresh",
+				createVNode(je$1, {
+					icon: "mdi mdi-refresh",
 					title: "Refresh",
-					onClick: oe[1] || (oe[1] = (G) => re(!0))
-				}, null, 8, ["icon"]),
+					onClick: T[1] || (T[1] = (D) => L(!0))
+				}),
 				e.library.upload ? (openBlock(), createBlock(Yt, {
 					key: 0,
 					sm: "",
 					icon: "mdi mdi-upload",
-					onClick: pe
+					onClick: ie
 				}, {
-					default: withCtx(() => [...oe[12] || (oe[12] = [createTextVNode(" Upload… ", -1)])]),
+					default: withCtx(() => [...T[10] || (T[10] = [createTextVNode(" Upload… ", -1)])]),
 					_: 1
 				})) : createCommentVNode("", !0)
 			]),
-			footer: withCtx(() => [createBaseVNode("div", Ir, [
-				createBaseVNode("span", Ar, [I.value.length ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [createTextVNode(toDisplayString(I.value.length) + " selected", 1)], 64)) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [createTextVNode(toDisplayString(Y.value.length) + " " + toDisplayString(W.value), 1)], 64))]),
-				I.value.length ? (openBlock(), createBlock(Yt, {
+			footer: withCtx(() => [createBaseVNode("div", Cr, [
+				createBaseVNode("span", Tr, [$.value.length ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [createTextVNode(toDisplayString($.value.length) + " selected", 1)], 64)) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [createTextVNode(toDisplayString(_.value.length) + " " + toDisplayString(pe.value), 1)], 64))]),
+				$.value.length ? (openBlock(), createBlock(Yt, {
 					key: 0,
 					variant: "ghost",
 					sm: "",
-					onClick: oe[10] || (oe[10] = (G) => I.value = [])
+					onClick: T[8] || (T[8] = (D) => $.value = [])
 				}, {
-					default: withCtx(() => [...oe[24] || (oe[24] = [createTextVNode("Clear", -1)])]),
+					default: withCtx(() => [...T[20] || (T[20] = [createTextVNode("Clear", -1)])]),
 					_: 1
 				})) : createCommentVNode("", !0),
-				oe[26] || (oe[26] = createBaseVNode("span", { class: "zmp-grow" }, null, -1)),
+				T[22] || (T[22] = createBaseVNode("span", { class: "zmp-grow" }, null, -1)),
 				createVNode(Yt, {
 					variant: "ghost",
 					sm: "",
-					onClick: Qe
+					onClick: J
 				}, {
-					default: withCtx(() => [...oe[25] || (oe[25] = [createTextVNode("Cancel", -1)])]),
+					default: withCtx(() => [...T[21] || (T[21] = [createTextVNode("Cancel", -1)])]),
 					_: 1
 				}),
 				createVNode(Yt, {
 					variant: "primary",
 					sm: "",
-					disabled: !I.value.length,
-					onClick: qe
+					disabled: !$.value.length,
+					onClick: ye
 				}, {
-					default: withCtx(() => [createTextVNode(toDisplayString(e.confirmLabel) + toDisplayString(e.multiple && I.value.length > 1 ? ` ${I.value.length}` : ""), 1)]),
+					default: withCtx(() => [createTextVNode(toDisplayString(e.confirmLabel) + toDisplayString(e.multiple && $.value.length > 1 ? ` ${$.value.length}` : ""), 1)]),
 					_: 1
 				}, 8, ["disabled"])
 			])]),
 			default: withCtx(() => [createBaseVNode("div", {
-				class: normalizeClass(["zmp", { dropping: H.value }]),
-				onDragover: withModifiers(be, ["prevent"]),
-				onDragleave: Ae,
-				onDrop: withModifiers(ze, ["prevent"])
+				class: normalizeClass(["zmp", { dropping: b.value }]),
+				onDragover: withModifiers(_e, ["prevent"]),
+				onDragleave: Qe,
+				onDrop: withModifiers(Ne, ["prevent"])
 			}, [
 				createBaseVNode("nav", er, [createBaseVNode("button", {
 					type: "button",
-					class: normalizeClass(["zmp-folder", { on: g.value === null }]),
-					onClick: oe[2] || (oe[2] = (G) => g.value = null)
+					class: normalizeClass(["zmp-folder", { on: p.value === null }]),
+					onClick: T[2] || (T[2] = (D) => p.value = null)
 				}, [
-					oe[13] || (oe[13] = createBaseVNode("i", { class: "mdi mdi-folder-multiple-outline" }, null, -1)),
-					createBaseVNode("span", tr, "All of " + toDisplayString(p.value) + "/", 1),
-					createBaseVNode("span", nr, toDisplayString(ee.value.length), 1)
+					T[11] || (T[11] = createBaseVNode("i", { class: "mdi mdi-folder-multiple-outline" }, null, -1)),
+					createBaseVNode("span", tr, "All of " + toDisplayString(k.value) + "/", 1),
+					createBaseVNode("span", nr, toDisplayString(ce.value.length), 1)
 				], 2), createVNode(ql, {
-					folders: C.value,
-					"model-value": g.value,
+					folders: O.value,
+					"model-value": p.value,
 					"storage-key": "zenkit.mediaPicker.open",
-					"onUpdate:modelValue": oe[3] || (oe[3] = (G) => g.value = G)
+					"onUpdate:modelValue": T[3] || (T[3] = (D) => p.value = D)
 				}, null, 8, ["folders", "model-value"])]),
 				createBaseVNode("section", lr, [createBaseVNode("div", or, [
-					_.value.length > 2 ? (openBlock(), createBlock(Tt, {
+					oe.value.length > 2 ? (openBlock(), createBlock(Tt, {
 						key: 0,
-						modelValue: J.value,
-						"onUpdate:modelValue": oe[4] || (oe[4] = (G) => J.value = G),
-						options: _.value
+						modelValue: B.value,
+						"onUpdate:modelValue": T[4] || (T[4] = (D) => B.value = D),
+						options: oe.value
 					}, null, 8, ["modelValue", "options"])) : createCommentVNode("", !0),
-					oe[16] || (oe[16] = createBaseVNode("span", { class: "zmp-grow" }, null, -1)),
+					T[12] || (T[12] = createBaseVNode("span", { class: "zmp-grow" }, null, -1)),
 					createVNode(Tt, {
-						modelValue: E.value,
-						"onUpdate:modelValue": oe[5] || (oe[5] = (G) => E.value = G),
+						modelValue: te.value,
+						"onUpdate:modelValue": T[5] || (T[5] = (D) => te.value = D),
 						options: u
 					}, null, 8, ["modelValue"]),
 					createVNode(Tt, {
 						modelValue: S.value,
-						"onUpdate:modelValue": oe[6] || (oe[6] = (G) => S.value = G),
+						"onUpdate:modelValue": T[6] || (T[6] = (D) => S.value = D),
 						options: d
-					}, null, 8, ["modelValue"]),
-					createVNode(On, {
-						placement: "bottom-end",
-						role: "dialog"
-					}, {
-						trigger: withCtx(({ toggle: G, active: Ve }) => [createVNode(Ge$1, {
-							icon: "mdi mdi-cog-outline",
-							title: "Grid options",
-							active: Ve,
-							onClick: G
-						}, null, 8, ["active", "onClick"])]),
-						default: withCtx(() => [createBaseVNode("div", ar, [createBaseVNode("label", sr, [oe[14] || (oe[14] = createBaseVNode("span", null, "File names", -1)), createVNode(Hn, {
-							modelValue: O.value,
-							"onUpdate:modelValue": oe[7] || (oe[7] = (G) => O.value = G)
-						}, null, 8, ["modelValue"])]), createBaseVNode("label", ir, [oe[15] || (oe[15] = createBaseVNode("span", null, "Compact", -1)), createVNode(Hn, {
-							modelValue: j.value,
-							"onUpdate:modelValue": oe[8] || (oe[8] = (G) => j.value = G)
-						}, null, 8, ["modelValue"])])])]),
-						_: 1
-					})
+					}, null, 8, ["modelValue"])
 				]), createBaseVNode("div", {
 					ref_key: "gridEl",
-					ref: ae,
-					class: normalizeClass(["zmp-grid zen-scroll", { compact: j.value }]),
-					style: normalizeStyle(unref(h).containerStyle.value),
-					onScrollPassive: k
+					ref: R,
+					class: "zmp-grid zen-scroll",
+					style: normalizeStyle(unref(K).containerStyle.value),
+					onScrollPassive: G
 				}, [
-					createBaseVNode("div", { style: normalizeStyle(unref(h).padTop.value) }, null, 4),
-					(openBlock(!0), createElementBlock(Fragment, null, renderList($.value, (G, Ve) => (openBlock(), createElementBlock("button", {
-						key: G.ref,
+					createBaseVNode("div", { style: normalizeStyle(unref(K).padTop.value) }, null, 4),
+					(openBlock(!0), createElementBlock(Fragment, null, renderList(Y.value, (D, ge) => (openBlock(), createElementBlock("button", {
+						key: D.ref,
 						type: "button",
 						class: normalizeClass(["zmp-card", {
-							sel: ue(G.ref) > 0,
-							focus: L.value?.ref === G.ref
+							sel: z(D.ref) > 0,
+							focus: ue.value?.ref === D.ref
 						}]),
-						title: G.ref,
-						onClick: (_e) => Ye(G, unref(h).start.value + Ve, _e),
-						onDblclick: (_e) => tt(G),
-						onMouseenter: (_e) => P(G.ref),
-						onMouseleave: oe[9] || (oe[9] = (_e) => q(_e))
-					}, [createBaseVNode("span", rr, [
-						G.kind === "video" && he.value === G.ref ? (openBlock(), createElementBlock("video", {
-							key: 0,
-							src: G.url,
-							preload: "metadata",
-							muted: "",
-							autoplay: "",
-							loop: "",
-							playsinline: ""
-						}, null, 8, cr)) : G.thumb ? (openBlock(), createElementBlock("img", {
-							key: 1,
-							src: G.thumb,
-							decoding: "async",
-							alt: ""
-						}, null, 8, dr)) : (openBlock(), createElementBlock("span", vr, [...oe[17] || (oe[17] = [createBaseVNode("i", { class: "mdi mdi-waveform" }, null, -1)])])),
-						G.kind !== "image" ? (openBlock(), createElementBlock("span", fr, [createBaseVNode("i", { class: normalizeClass(["mdi", G.kind === "video" ? "mdi-play" : "mdi-music-note"]) }, null, 2)])) : createCommentVNode("", !0),
-						ue(G.ref) ? (openBlock(), createElementBlock("span", mr, [createTextVNode(toDisplayString(e.multiple ? ue(G.ref) : "") + " ", 1), e.multiple ? createCommentVNode("", !0) : (openBlock(), createElementBlock("i", pr))])) : createCommentVNode("", !0)
-					]), O.value ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [createBaseVNode("span", hr, toDisplayString(G.filename), 1), g.value === null ? (openBlock(), createElementBlock("span", yr, toDisplayString(G.folder || "\xA0"), 1)) : createCommentVNode("", !0)], 64)) : createCommentVNode("", !0)], 42, ur))), 128)),
-					createBaseVNode("div", { style: normalizeStyle(unref(h).padBottom.value) }, null, 4),
-					M.value === "loading" ? (openBlock(), createElementBlock("div", gr, [oe[18] || (oe[18] = createBaseVNode("i", { class: "mdi mdi-loading mdi-spin" }, null, -1)), createTextVNode(" Loading " + toDisplayString(p.value) + "/… ", 1)])) : M.value === "error" ? (openBlock(), createElementBlock("div", br, [oe[19] || (oe[19] = createBaseVNode("i", { class: "mdi mdi-alert-circle-outline" }, null, -1)), createTextVNode(" " + toDisplayString(x.value), 1)])) : Y.value.length ? createCommentVNode("", !0) : (openBlock(), createElementBlock("div", kr, [
-						oe[20] || (oe[20] = createBaseVNode("i", { class: "mdi mdi-image-off-outline" }, null, -1)),
-						createTextVNode(" " + toDisplayString(R.value ? `Nothing matches “${R.value}”.` : `No ${W.value} here yet.`) + " ", 1),
-						e.library.upload ? (openBlock(), createElementBlock("span", wr, "Drop files here or use Upload.")) : createCommentVNode("", !0)
+						title: D.ref,
+						onClick: (be) => F(D, unref(K).start.value + ge, be),
+						onDblclick: (be) => q(D),
+						onMouseenter: (be) => fe(D.ref),
+						onMouseleave: T[7] || (T[7] = (be) => E(be))
+					}, [
+						createBaseVNode("span", sr, [
+							D.kind === "video" && ne.value === D.ref ? (openBlock(), createElementBlock("video", {
+								key: 0,
+								src: D.url,
+								preload: "metadata",
+								muted: "",
+								autoplay: "",
+								loop: "",
+								playsinline: ""
+							}, null, 8, ir)) : D.thumb ? (openBlock(), createElementBlock("img", {
+								key: 1,
+								src: D.thumb,
+								loading: "lazy",
+								decoding: "async",
+								alt: ""
+							}, null, 8, ur)) : (openBlock(), createElementBlock("span", rr, [...T[13] || (T[13] = [createBaseVNode("i", { class: "mdi mdi-waveform" }, null, -1)])])),
+							D.kind !== "image" ? (openBlock(), createElementBlock("span", cr, [createBaseVNode("i", { class: normalizeClass(["mdi", D.kind === "video" ? "mdi-play" : "mdi-music-note"]) }, null, 2)])) : createCommentVNode("", !0),
+							z(D.ref) ? (openBlock(), createElementBlock("span", dr, [createTextVNode(toDisplayString(e.multiple ? z(D.ref) : "") + " ", 1), e.multiple ? createCommentVNode("", !0) : (openBlock(), createElementBlock("i", vr))])) : createCommentVNode("", !0)
+						]),
+						createBaseVNode("span", fr, toDisplayString(D.filename), 1),
+						p.value === null ? (openBlock(), createElementBlock("span", mr, toDisplayString(D.folder || "\xA0"), 1)) : createCommentVNode("", !0)
+					], 42, ar))), 128)),
+					createBaseVNode("div", { style: normalizeStyle(unref(K).padBottom.value) }, null, 4),
+					M.value === "loading" ? (openBlock(), createElementBlock("div", pr, [T[14] || (T[14] = createBaseVNode("i", { class: "mdi mdi-loading mdi-spin" }, null, -1)), createTextVNode(" Loading " + toDisplayString(k.value) + "/… ", 1)])) : M.value === "error" ? (openBlock(), createElementBlock("div", hr, [T[15] || (T[15] = createBaseVNode("i", { class: "mdi mdi-alert-circle-outline" }, null, -1)), createTextVNode(" " + toDisplayString(V.value), 1)])) : _.value.length ? createCommentVNode("", !0) : (openBlock(), createElementBlock("div", yr, [
+						T[16] || (T[16] = createBaseVNode("i", { class: "mdi mdi-image-off-outline" }, null, -1)),
+						createTextVNode(" " + toDisplayString(h.value ? `Nothing matches “${h.value}”.` : `No ${pe.value} here yet.`) + " ", 1),
+						e.library.upload ? (openBlock(), createElementBlock("span", gr, "Drop files here or use Upload.")) : createCommentVNode("", !0)
 					]))
-				], 38)]),
-				createBaseVNode("aside", $r, [L.value ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [createBaseVNode("div", xr, [L.value.kind === "image" ? (openBlock(), createElementBlock("img", {
+				], 36)]),
+				createBaseVNode("aside", br, [ue.value ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [createBaseVNode("div", kr, [ue.value.kind === "image" ? (openBlock(), createElementBlock("img", {
 					key: 0,
-					src: L.value.url,
+					src: ue.value.url,
 					alt: ""
-				}, null, 8, zr)) : L.value.kind === "video" ? (openBlock(), createElementBlock("video", {
-					key: L.value.ref,
-					src: L.value.url,
+				}, null, 8, wr)) : ue.value.kind === "video" ? (openBlock(), createElementBlock("video", {
+					key: ue.value.ref,
+					src: ue.value.url,
 					controls: "",
 					muted: "",
 					loop: "",
 					playsinline: ""
-				}, null, 8, Mr)) : (openBlock(), createElementBlock("div", Er, [oe[21] || (oe[21] = createBaseVNode("i", { class: "mdi mdi-waveform" }, null, -1)), (openBlock(), createElementBlock("audio", {
-					key: L.value.ref,
-					src: L.value.url,
+				}, null, 8, $r)) : (openBlock(), createElementBlock("div", xr, [T[17] || (T[17] = createBaseVNode("i", { class: "mdi mdi-waveform" }, null, -1)), (openBlock(), createElementBlock("audio", {
+					key: ue.value.ref,
+					src: ue.value.url,
 					controls: ""
-				}, null, 8, Lr))]))]), createBaseVNode("div", Sr, [
-					createBaseVNode("b", { title: L.value.filename }, toDisplayString(L.value.filename), 9, Cr),
-					createBaseVNode("span", null, toDisplayString(L.value.root) + "/" + toDisplayString(L.value.folder ? `${L.value.folder}/` : ""), 1),
-					createBaseVNode("span", null, [createTextVNode(toDisplayString(r[L.value.kind]) + " · " + toDisplayString(Re(L.value.size)) + " ", 1), fe.value ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [createTextVNode("· " + toDisplayString(fe.value), 1)], 64)) : createCommentVNode("", !0)]),
-					createBaseVNode("span", null, toDisplayString($e(L.value.mtime)), 1)
-				])], 64)) : (openBlock(), createElementBlock("div", Tr, [
-					oe[22] || (oe[22] = createBaseVNode("i", { class: "mdi mdi-gesture-tap" }, null, -1)),
+				}, null, 8, zr))]))]), createBaseVNode("div", Mr, [
+					createBaseVNode("b", { title: ue.value.filename }, toDisplayString(ue.value.filename), 9, Er),
+					createBaseVNode("span", null, toDisplayString(ue.value.root) + "/" + toDisplayString(ue.value.folder ? `${ue.value.folder}/` : ""), 1),
+					createBaseVNode("span", null, [createTextVNode(toDisplayString(r[ue.value.kind]) + " · " + toDisplayString(qe(ue.value.size)) + " ", 1), g.value ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [createTextVNode("· " + toDisplayString(g.value), 1)], 64)) : createCommentVNode("", !0)]),
+					createBaseVNode("span", null, toDisplayString(I(ue.value.mtime)), 1)
+				])], 64)) : (openBlock(), createElementBlock("div", Lr, [
+					T[18] || (T[18] = createBaseVNode("i", { class: "mdi mdi-gesture-tap" }, null, -1)),
 					createTextVNode(" Click to " + toDisplayString(e.multiple ? "select (in order)" : "select") + ", double-click to add right away. ", 1),
 					e.multiple ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [createTextVNode("Shift-click selects a range.")], 64)) : createCommentVNode("", !0)
 				]))]),
-				H.value ? (openBlock(), createElementBlock("div", Pr, [oe[23] || (oe[23] = createBaseVNode("i", { class: "mdi mdi-tray-arrow-down" }, null, -1)), createTextVNode(" Drop to upload into input/" + toDisplayString(e.subfolder) + "/ ", 1)])) : createCommentVNode("", !0)
+				b.value ? (openBlock(), createElementBlock("div", Sr, [T[19] || (T[19] = createBaseVNode("i", { class: "mdi mdi-tray-arrow-down" }, null, -1)), createTextVNode(" Drop to upload into input/" + toDisplayString(e.subfolder) + "/ ", 1)])) : createCommentVNode("", !0)
 			], 34)]),
 			_: 1
 		}, 8, ["open", "title"]));
 	}
-}), [["__scopeId", "data-v-bf8a1376"]]);
+}), [["__scopeId", "data-v-3cc842c8"]]);
 var Ml = [
 	"nw",
 	"n",
@@ -9876,7 +9892,7 @@ var Ml = [
 	"w"
 ];
 var Pt = (e) => Math.min(1, Math.max(0, e));
-function dm(e, o, t = .03) {
+function um(e, o, t = .03) {
 	const l = ll(e);
 	if (!l) return [];
 	let r = o ? o[0] - (l.x + l.w / 2) : t, s = o ? o[1] - (l.y + l.h / 2) : t;
@@ -9909,27 +9925,27 @@ function Ll(e, o, t, l = 0) {
 }
 function Sl(e, o, t, l, r = {}) {
 	const { min: s = .01, step: u = 0, keepAspect: d = !1, aspect: c = 1 } = r;
-	let z = e.x, M = e.y, B = e.x + e.w, x = e.y + e.h;
-	if (o.includes("w") && (z = Math.min(B - s, Pt(on(z + t, u)))), o.includes("e") && (B = Math.max(z + s, Pt(on(B + t, u)))), o.includes("n") && (M = Math.min(x - s, Pt(on(M + l, u)))), o.includes("s") && (x = Math.max(M + s, Pt(on(x + l, u)))), d && e.w > 0 && e.h > 0) return Sc(e, o, B - z, x - M, c) || e;
+	let x = e.x, M = e.y, V = e.x + e.w, k = e.y + e.h;
+	if (o.includes("w") && (x = Math.min(V - s, Pt(on(x + t, u)))), o.includes("e") && (V = Math.max(x + s, Pt(on(V + t, u)))), o.includes("n") && (M = Math.min(k - s, Pt(on(M + l, u)))), o.includes("s") && (k = Math.max(M + s, Pt(on(k + l, u)))), d && e.w > 0 && e.h > 0) return Mc(e, o, V - x, k - M, c) || e;
 	return {
-		x: z,
+		x,
 		y: M,
-		w: B - z,
-		h: x - M
+		w: V - x,
+		h: k - M
 	};
 }
-function Sc(e, o, t, l, r) {
+function Mc(e, o, t, l, r) {
 	const s = e.w * r / e.h, u = o === "e" || o === "w", d = o === "n" || o === "s";
 	u ? l = t * r / s : d || t * r / l > s ? t = l * s / r : l = t * r / s;
-	const c = o.includes("w") ? e.x + e.w - t : d ? e.x + (e.w - t) / 2 : e.x, z = o.includes("n") ? e.y + e.h - l : u ? e.y + (e.h - l) / 2 : e.y;
-	return c < 0 || z < 0 || c + t > 1 || z + l > 1 ? null : {
+	const c = o.includes("w") ? e.x + e.w - t : d ? e.x + (e.w - t) / 2 : e.x, x = o.includes("n") ? e.y + e.h - l : u ? e.y + (e.h - l) / 2 : e.y;
+	return c < 0 || x < 0 || c + t > 1 || x + l > 1 ? null : {
 		x: c,
-		y: z,
+		y: x,
 		w: t,
 		h: l
 	};
 }
-function Cc(e, o) {
+function Ec(e, o) {
 	return e.x < o.x + o.w && o.x < e.x + e.w && e.y < o.y + o.h && o.y < e.y + e.h;
 }
 function ll(e) {
@@ -9942,7 +9958,7 @@ function ll(e) {
 		h: r - t
 	};
 }
-function Tc(e, o, t) {
+function Lc(e, o, t) {
 	const l = o.w > 0 ? t.w / o.w : 1, r = o.h > 0 ? t.h / o.h : 1;
 	return {
 		x: t.x + (e.x - o.x) * l,
@@ -9951,7 +9967,7 @@ function Tc(e, o, t) {
 		h: e.h * r
 	};
 }
-function Pc(e, o, t) {
+function Sc(e, o, t) {
 	for (let l = e.length - 1; l >= 0; l--) {
 		const r = e[l];
 		if (!r.hidden && o >= r.x && o <= r.x + r.w && t >= r.y && t <= r.y + r.h) return r;
@@ -9979,41 +9995,41 @@ function jl(e, o) {
 		e.h / l
 	];
 }
-function Ic(e, o) {
-	const [t, l, r, s] = jl(e, o), u = (c, z) => Math.abs(1 - z) < 1e-6 ? 0 : c / (1 - z) * 100, d = (c) => `${Math.round(c * 1e4) / 1e4}%`;
+function Cc(e, o) {
+	const [t, l, r, s] = jl(e, o), u = (c, x) => Math.abs(1 - x) < 1e-6 ? 0 : c / (1 - x) * 100, d = (c) => `${Math.round(c * 1e4) / 1e4}%`;
 	return {
 		size: `${d(r * 100)} ${d(s * 100)}`,
 		position: `${d(u(t, r))} ${d(u(l, s))}`
 	};
 }
-var Ac = ["src"];
-var Rc = ["data-box-id"];
-var Bc = {
+var Tc = ["src"];
+var Pc = ["data-box-id"];
+var Ic = {
 	key: 0,
 	class: "zbc-content"
 };
-var Vc = {
+var Ac = {
 	key: 1,
 	class: "zbc-tag"
 };
-var Dc = { class: "zbc-n" };
-var Hc = {
+var Rc = { class: "zbc-n" };
+var Bc = {
 	key: 0,
 	class: "zbc-label"
 };
-var Wc = {
+var Dc = {
 	key: 1,
 	class: "mdi mdi-lock"
 };
-var Fc = ["data-handle"];
-var Kc = ["data-handle"];
-var Oc = {
+var Vc = ["data-handle"];
+var Hc = ["data-handle"];
+var Wc = {
 	key: 7,
 	class: "zbc-empty"
 };
-var rt = 512;
-var yt$1 = 256;
-var vm = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var it = 512;
+var pt$1 = 256;
+var rm = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenBoxCanvas",
 	props: /* @__PURE__ */ mergeModels({
 		aspect: { default: 1 },
@@ -10057,346 +10073,346 @@ var vm = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 		"update:tool"
 	]),
 	setup(e, { emit: o }) {
-		const t = e, l = useModel(e, "boxes"), r = useModel(e, "selected"), s = useModel(e, "tool"), u = o, d = getCurrentInstance()?.vnode.props ?? {}, c = (A) => !!d[A], z = /* @__PURE__ */ ref(null), M = /* @__PURE__ */ ref(null), B = /* @__PURE__ */ ref(null), x = /* @__PURE__ */ ref(null), p = /* @__PURE__ */ ref({
+		const t = e, l = useModel(e, "boxes"), r = useModel(e, "selected"), s = useModel(e, "tool"), u = o, d = getCurrentInstance()?.vnode.props ?? {}, c = (I) => !!d[I], x = /* @__PURE__ */ ref(null), M = /* @__PURE__ */ ref(null), V = /* @__PURE__ */ ref(null), k = /* @__PURE__ */ ref(null), p = /* @__PURE__ */ ref({
 			width: 0,
 			height: 0
 		});
-		let g = null;
-		function R() {
-			const A = z.value;
-			if (!A) return;
-			const pe = Math.min(A.clientWidth, A.clientHeight * t.aspect);
+		let h = null;
+		function B() {
+			const I = x.value;
+			if (!I) return;
+			const C = Math.min(I.clientWidth, I.clientHeight * t.aspect);
 			p.value = {
-				width: pe,
-				height: pe / t.aspect
+				width: C,
+				height: C / t.aspect
 			};
 		}
 		onMounted(() => {
-			g = new ResizeObserver(R), z.value && g.observe(z.value), R();
-		}), onBeforeUnmount(() => g?.disconnect()), watch(() => t.aspect, R);
-		const J = computed(() => l.value.filter((A) => !A.hidden)), E = computed(() => new Set(r.value)), S = computed(() => r.value.length === 1 ? l.value.find((A) => A.id === r.value[0]) : void 0), O = computed(() => l.value.filter((A) => E.value.has(A.id))), j = computed(() => O.value.length > 1 ? ll(O.value) : null);
-		let I = null;
-		const de = /* @__PURE__ */ ref(null), he = /* @__PURE__ */ ref(null), Z = /* @__PURE__ */ ref(null), y = /* @__PURE__ */ ref(null), P = /* @__PURE__ */ ref(null);
-		function k(A) {
-			const pe = B.value.getBoundingClientRect();
-			return [(A.clientX - pe.left) / pe.width, (A.clientY - pe.top) / pe.height];
+			h = new ResizeObserver(B), x.value && h.observe(x.value), B();
+		}), onBeforeUnmount(() => h?.disconnect()), watch(() => t.aspect, B);
+		const te = computed(() => l.value.filter((I) => !I.hidden)), S = computed(() => new Set(r.value)), $ = computed(() => r.value.length === 1 ? l.value.find((I) => I.id === r.value[0]) : void 0), X = computed(() => l.value.filter((I) => S.value.has(I.id))), ne = computed(() => X.value.length > 1 ? ll(X.value) : null);
+		let Z = null;
+		const de = /* @__PURE__ */ ref(null), fe = /* @__PURE__ */ ref(null), G = /* @__PURE__ */ ref(null), E = /* @__PURE__ */ ref(null), g = /* @__PURE__ */ ref(null);
+		function b(I) {
+			const C = V.value.getBoundingClientRect();
+			return [(I.clientX - C.left) / C.width, (I.clientY - C.top) / C.height];
 		}
-		function q(A) {
-			l.value = l.value.map((pe) => {
-				const se = A.get(pe.id);
-				return se ? {
-					...pe,
-					...se
-				} : pe;
+		function R(I) {
+			l.value = l.value.map((C) => {
+				const T = I.get(C.id);
+				return T ? {
+					...C,
+					...T
+				} : C;
 			});
 		}
-		function fe(A) {
-			if (A.button !== 0 || !B.value) return;
-			me();
-			const [pe, se] = k(A), be = A.target;
+		function ae(I) {
+			if (I.button !== 0 || !V.value) return;
+			pe();
+			const [C, T] = b(I), D = I.target;
 			if (s.value !== "select") {
-				const F = S.value && !S.value.locked && W(S.value, pe, se) && S.value || Pc(l.value, pe, se);
-				if (!F || F.locked) return;
-				r.value = [F.id], $(F, s.value === "erase", pe, se), _(A);
+				const He = $.value && !$.value.locked && K($.value, C, T) && $.value || Sc(l.value, C, T);
+				if (!He || He.locked) return;
+				r.value = [He.id], L(He, s.value === "erase", C, T), O(I);
 				return;
 			}
-			const Ae = be.closest("[data-handle]");
-			if (Ae) {
-				const F = Ae.dataset.handle;
-				Ae.dataset.group && j.value ? I = {
+			const ge = D.closest("[data-handle]");
+			if (ge) {
+				const He = ge.dataset.handle;
+				ge.dataset.group && ne.value ? Z = {
 					kind: "group",
-					handle: F,
-					ax: pe,
-					ay: se,
-					from: j.value,
-					starts: new Map(O.value.filter((oe) => !oe.locked).map((oe) => [oe.id, ee(oe)]))
-				} : S.value && (I = {
+					handle: He,
+					ax: C,
+					ay: T,
+					from: ne.value,
+					starts: new Map(X.value.filter((Ge) => !Ge.locked).map((Ge) => [Ge.id, _(Ge)]))
+				} : $.value && (Z = {
 					kind: "resize",
-					id: S.value.id,
-					handle: F,
-					ax: pe,
-					ay: se,
-					start: ee(S.value)
-				}, he.value = {
-					id: S.value.id,
-					start: ee(S.value)
-				}), _(A);
+					id: $.value.id,
+					handle: He,
+					ax: C,
+					ay: T,
+					start: _($.value)
+				}, fe.value = {
+					id: $.value.id,
+					start: _($.value)
+				}), O(I);
 				return;
 			}
-			const ze = Cl(l.value, pe, se), $e = (A.altKey ? Tl(ze, ze.find((F) => E.value.has(F.id))?.id) : ze.find((F) => E.value.has(F.id)) ?? ze[0])?.id;
-			if ($e) {
-				if (A.shiftKey || A.ctrlKey || A.metaKey) {
-					const G = A.altKey ? $e : ze[0].id;
-					r.value = E.value.has(G) ? r.value.filter((Ve) => Ve !== G) : [...r.value, G];
+			const be = Cl(l.value, C, T), we = (I.altKey ? Tl(be, be.find((He) => S.value.has(He.id))?.id) : be.find((He) => S.value.has(He.id)) ?? be[0])?.id;
+			if (we) {
+				if (I.shiftKey || I.ctrlKey || I.metaKey) {
+					const Ue = I.altKey ? we : be[0].id;
+					r.value = S.value.has(Ue) ? r.value.filter((at) => at !== Ue) : [...r.value, Ue];
 					return;
 				}
-				const F = E.value.has($e), oe = F ? new Set(r.value) : /* @__PURE__ */ new Set([$e]);
-				F || (r.value = [$e]), I = {
+				const He = S.value.has(we), Ge = He ? new Set(r.value) : /* @__PURE__ */ new Set([we]);
+				He || (r.value = [we]), Z = {
 					kind: "move",
-					ax: pe,
-					ay: se,
+					ax: C,
+					ay: T,
 					moved: !1,
-					cycleTo: F && !A.altKey && ze.length > 1 ? Tl(ze, $e)?.id : void 0,
-					starts: new Map(l.value.filter((G) => oe.has(G.id) && !G.locked).map((G) => [G.id, ee(G)]))
-				}, _(A);
+					cycleTo: He && !I.altKey && be.length > 1 ? Tl(be, we)?.id : void 0,
+					starts: new Map(l.value.filter((Ue) => Ge.has(Ue.id) && !Ue.locked).map((Ue) => [Ue.id, _(Ue)]))
+				}, O(I);
 				return;
 			}
-			A.shiftKey || A.ctrlKey || A.metaKey ? I = {
+			I.shiftKey || I.ctrlKey || I.metaKey ? Z = {
 				kind: "marquee",
-				ax: pe,
-				ay: se,
+				ax: C,
+				ay: T,
 				base: [...r.value]
-			} : (r.value = [], t.draw && (I = {
+			} : (r.value = [], t.draw && (Z = {
 				kind: "draw",
-				ax: pe,
-				ay: se
-			})), _(A);
+				ax: C,
+				ay: T
+			})), O(I);
 		}
-		function H(A) {
-			if (!B.value) return;
-			const [pe, se] = k(A);
-			P.value = [pe, se];
-			const be = I;
-			if (!be) return;
-			const Ae = A.altKey ? 0 : t.snap;
-			switch (be.kind) {
+		function Q(I) {
+			if (!V.value) return;
+			const [C, T] = b(I);
+			g.value = [C, T];
+			const D = Z;
+			if (!D) return;
+			const ge = I.altKey ? 0 : t.snap;
+			switch (D.kind) {
 				case "draw":
-					de.value = El(be.ax, be.ay, pe, se);
+					de.value = El(D.ax, D.ay, C, T);
 					break;
 				case "marquee": {
-					const ze = El(be.ax, be.ay, pe, se);
-					Z.value = ze;
-					const Re = J.value.filter(($e) => Cc($e, ze)).map(($e) => $e.id);
-					r.value = [.../* @__PURE__ */ new Set([...be.base, ...Re])];
+					const be = El(D.ax, D.ay, C, T);
+					G.value = be;
+					const Ee = te.value.filter((we) => Ec(we, be)).map((we) => we.id);
+					r.value = [.../* @__PURE__ */ new Set([...D.base, ...Ee])];
 					break;
 				}
 				case "move": {
-					let ze = pe - be.ax, Re = se - be.ay;
-					A.shiftKey && (Math.abs(ze) > Math.abs(Re) ? Re = 0 : ze = 0);
-					const $e = ll([...be.starts.values()]);
-					$e && (ze = Math.min(1 - $e.x - $e.w, Math.max(-$e.x, ze)), Re = Math.min(1 - $e.y - $e.h, Math.max(-$e.y, Re))), be.moved = be.moved || Math.abs(ze) + Math.abs(Re) > .002;
-					const F = /* @__PURE__ */ new Map();
-					for (const [oe, G] of be.starts) F.set(oe, Ll(G, ze, Re, Ae));
-					q(F);
+					let be = C - D.ax, Ee = T - D.ay;
+					I.shiftKey && (Math.abs(be) > Math.abs(Ee) ? Ee = 0 : be = 0);
+					const we = ll([...D.starts.values()]);
+					we && (be = Math.min(1 - we.x - we.w, Math.max(-we.x, be)), Ee = Math.min(1 - we.y - we.h, Math.max(-we.y, Ee))), D.moved = D.moved || Math.abs(be) + Math.abs(Ee) > .002;
+					const He = /* @__PURE__ */ new Map();
+					for (const [Ge, Ue] of D.starts) He.set(Ge, Ll(Ue, be, Ee, ge));
+					R(He);
 					break;
 				}
 				case "resize":
-					q(/* @__PURE__ */ new Map([[be.id, Sl(be.start, be.handle, pe - be.ax, se - be.ay, {
-						step: Ae,
-						keepAspect: A.shiftKey,
+					R(/* @__PURE__ */ new Map([[D.id, Sl(D.start, D.handle, C - D.ax, T - D.ay, {
+						step: ge,
+						keepAspect: I.shiftKey,
 						aspect: t.aspect
 					})]]));
 					break;
 				case "group": {
-					const ze = Sl(be.from, be.handle, pe - be.ax, se - be.ay, {
-						step: Ae,
-						keepAspect: A.shiftKey,
+					const be = Sl(D.from, D.handle, C - D.ax, T - D.ay, {
+						step: ge,
+						keepAspect: I.shiftKey,
 						aspect: t.aspect
-					}), Re = /* @__PURE__ */ new Map();
-					for (const [$e, F] of be.starts) Re.set($e, Tc(F, be.from, ze));
-					q(Re);
+					}), Ee = /* @__PURE__ */ new Map();
+					for (const [we, He] of D.starts) Ee.set(we, Lc(He, D.from, be));
+					R(Ee);
 					break;
 				}
-				case "paint": L(be, pe, se);
+				case "paint": A(D, C, T);
 			}
 		}
-		function ae() {
-			const A = I;
-			if (I = null, !!A) switch (A.kind) {
+		function ve() {
+			const I = Z;
+			if (Z = null, !!I) switch (I.kind) {
 				case "draw": {
-					const pe = de.value;
-					de.value = null, pe && pe.w >= t.minSize && pe.h >= t.minSize && u("create", pe);
+					const C = de.value;
+					de.value = null, C && C.w >= t.minSize && C.h >= t.minSize && u("create", C);
 					break;
 				}
 				case "marquee":
-					Z.value = null;
+					G.value = null;
 					break;
 				case "move":
-					A.moved ? u("commit") : A.cycleTo && (r.value = [A.cycleTo]);
+					I.moved ? u("commit") : I.cycleTo && (r.value = [I.cycleTo]);
 					break;
 				case "resize":
-					Fe(A.id, A.start), he.value = null, u("commit");
+					ye(I.id, I.start), fe.value = null, u("commit");
 					break;
 				case "group":
 					u("commit");
 					break;
-				case "paint": ve(A.id);
+				case "paint": q(I.id);
 			}
 		}
-		function U(A) {
-			if (A.preventDefault(), !B.value || !c("onMenu")) return;
-			A.stopPropagation(), me();
-			const [pe, se] = k(A), be = Cl(l.value, pe, se), Ae = be.find((Re) => E.value.has(Re.id)) ?? be[0], ze = Ae ? E.value.has(Ae.id) ? [...r.value] : [Ae.id] : [];
-			r.value = ze, u("menu", A, ze);
+		function oe(I) {
+			if (I.preventDefault(), !V.value || !c("onMenu")) return;
+			I.stopPropagation(), pe();
+			const [C, T] = b(I), D = Cl(l.value, C, T), ge = D.find((Ee) => S.value.has(Ee.id)) ?? D[0], be = ge ? S.value.has(ge.id) ? [...r.value] : [ge.id] : [];
+			r.value = be, u("menu", I, be);
 		}
-		function ie(A) {
-			const pe = A.target.closest("[data-box-id]")?.dataset.boxId;
-			pe && u("open", pe);
+		function ce(I) {
+			const C = I.target.closest("[data-box-id]")?.dataset.boxId;
+			C && u("open", C);
 		}
-		function me() {
-			(M.value ?? B.value)?.focus({ preventScroll: !0 });
+		function pe() {
+			(M.value ?? V.value)?.focus({ preventScroll: !0 });
 		}
-		function _(A) {
+		function O(I) {
 			try {
-				B.value?.setPointerCapture(A.pointerId);
+				V.value?.setPointerCapture(I.pointerId);
 			} catch {}
 		}
-		function ee(A) {
+		function _(I) {
 			return {
-				x: A.x,
-				y: A.y,
-				w: A.w,
-				h: A.h
+				x: I.x,
+				y: I.y,
+				w: I.w,
+				h: I.h
 			};
 		}
-		function W(A, pe, se) {
-			return pe >= A.x && pe <= A.x + A.w && se >= A.y && se <= A.y + A.h;
+		function K(I, C, T) {
+			return C >= I.x && C <= I.x + I.w && T >= I.y && T <= I.y + I.h;
 		}
-		function C(A) {
-			const pe = A.shiftKey ? .025 : .005, se = {
-				ArrowLeft: [-pe, 0],
-				ArrowRight: [pe, 0],
-				ArrowUp: [0, -pe],
-				ArrowDown: [0, pe]
-			}, be = A.ctrlKey || A.metaKey, Ae = A.key.toLowerCase();
-			if (be && t.history && (Ae === "z" || Ae === "y")) Ae === "y" || A.shiftKey ? t.history.redo() : t.history.undo();
-			else if (be && (Ae === "c" || Ae === "x") && r.value.length && c("onCopy")) u("copy", [...r.value]), Ae === "x" && u("delete", [...r.value]);
-			else if (be && Ae === "v" && c("onPaste")) u("paste", P.value ? [...P.value] : null);
-			else if (be && Ae === "d" && r.value.length && c("onDuplicate")) u("duplicate", [...r.value]);
-			else if ((A.key === "Delete" || A.key === "Backspace") && r.value.length) u("delete", [...r.value]);
-			else if (A.key === "Escape") r.value = [];
-			else if (A.key in se && r.value.length) {
-				const [ze, Re] = se[A.key], $e = /* @__PURE__ */ new Map();
-				for (const F of O.value) F.locked || $e.set(F.id, Ll(F, ze, Re));
-				q($e), u("commit");
-			} else if (A.key === "a" && (A.ctrlKey || A.metaKey)) r.value = J.value.map((ze) => ze.id);
-			else if (A.key === "b" || A.key === "e" || A.key === "v") s.value = A.key === "b" ? "brush" : A.key === "e" ? "erase" : "select";
+		function Y(I) {
+			const C = I.shiftKey ? .025 : .005, T = {
+				ArrowLeft: [-C, 0],
+				ArrowRight: [C, 0],
+				ArrowUp: [0, -C],
+				ArrowDown: [0, C]
+			}, D = I.ctrlKey || I.metaKey, ge = I.key.toLowerCase();
+			if (D && t.history && (ge === "z" || ge === "y")) ge === "y" || I.shiftKey ? t.history.redo() : t.history.undo();
+			else if (D && (ge === "c" || ge === "x") && r.value.length && c("onCopy")) u("copy", [...r.value]), ge === "x" && u("delete", [...r.value]);
+			else if (D && ge === "v" && c("onPaste")) u("paste", g.value ? [...g.value] : null);
+			else if (D && ge === "d" && r.value.length && c("onDuplicate")) u("duplicate", [...r.value]);
+			else if ((I.key === "Delete" || I.key === "Backspace") && r.value.length) u("delete", [...r.value]);
+			else if (I.key === "Escape") r.value = [];
+			else if (I.key in T && r.value.length) {
+				const [be, Ee] = T[I.key], we = /* @__PURE__ */ new Map();
+				for (const He of X.value) He.locked || we.set(He.id, Ll(He, be, Ee));
+				R(we), u("commit");
+			} else if (I.key === "a" && (I.ctrlKey || I.metaKey)) r.value = te.value.map((be) => be.id);
+			else if (I.key === "b" || I.key === "e" || I.key === "v") s.value = I.key === "b" ? "brush" : I.key === "e" ? "erase" : "select";
 			else return;
-			A.preventDefault(), A.stopPropagation();
+			I.preventDefault(), I.stopPropagation();
 		}
-		const Y = /* @__PURE__ */ new Map();
-		watch(() => l.value.map((A) => A.mask).filter((A) => !!A), (A) => {
-			for (const pe of A) {
-				if (Y.has(pe)) continue;
-				const se = new Image();
-				se.src = pe, Y.set(pe, se);
+		const ue = /* @__PURE__ */ new Map();
+		watch(() => l.value.map((I) => I.mask).filter((I) => !!I), (I) => {
+			for (const C of I) {
+				if (ue.has(C)) continue;
+				const T = new Image();
+				T.src = C, ue.set(C, T);
 			}
 		}, { immediate: !0 });
-		const h = computed(() => l.value.find((A) => A.id === y.value) ?? null);
-		function $(A, pe, se, be) {
-			const Ae = x.value, ze = Ae?.getContext("2d");
-			if (!Ae || !ze) return;
-			Ae.width = rt, Ae.height = rt, ze.clearRect(0, 0, rt, rt);
-			const Re = A.mask ? Y.get(A.mask) : void 0;
-			Re?.complete && Re.naturalWidth ? ze.drawImage(Re, 0, 0, rt, rt) : !A.mask && pe && (ze.fillStyle = A.color ?? "#ffffff", ze.fillRect(0, 0, rt, rt)), y.value = A.id;
-			const $e = {
+		const z = computed(() => l.value.find((I) => I.id === E.value) ?? null);
+		function L(I, C, T, D) {
+			const ge = k.value, be = ge?.getContext("2d");
+			if (!ge || !be) return;
+			ge.width = it, ge.height = it, be.clearRect(0, 0, it, it);
+			const Ee = I.mask ? ue.get(I.mask) : void 0;
+			Ee?.complete && Ee.naturalWidth ? be.drawImage(Ee, 0, 0, it, it) : !I.mask && C && (be.fillStyle = I.color ?? "#ffffff", be.fillRect(0, 0, it, it)), E.value = I.id;
+			const we = {
 				kind: "paint",
-				id: A.id,
-				erase: pe,
+				id: I.id,
+				erase: C,
 				last: null
 			};
-			I = $e, L($e, se, be);
+			Z = we, A(we, T, D);
 		}
-		function L(A, pe, se) {
-			const be = h.value, Ae = x.value?.getContext("2d");
-			if (!be || !Ae || be.w <= 0 || be.h <= 0) return;
-			const ze = (pe - be.x) / be.w * rt, Re = (se - be.y) / be.h * rt, $e = Math.max(1, t.brushSize / be.w * rt / 2), F = Math.max(1, t.brushSize * t.aspect / be.h * (rt / 2)), [oe, G] = A.last ?? [ze, Re], Ve = Math.hypot(ze - oe, Re - G), _e = Math.max(1, Math.ceil(Ve / (Math.min($e, F) * .35)));
-			Ae.globalCompositeOperation = A.erase ? "destination-out" : "source-over";
-			for (let nt = 1; nt <= _e; nt++) {
-				const ft = nt / _e;
-				ue(Ae, oe + (ze - oe) * ft, G + (Re - G) * ft, $e, F, be.color ?? "#ffffff");
+		function A(I, C, T) {
+			const D = z.value, ge = k.value?.getContext("2d");
+			if (!D || !ge || D.w <= 0 || D.h <= 0) return;
+			const be = (C - D.x) / D.w * it, Ee = (T - D.y) / D.h * it, we = Math.max(1, t.brushSize / D.w * it / 2), He = Math.max(1, t.brushSize * t.aspect / D.h * (it / 2)), [Ge, Ue] = I.last ?? [be, Ee], at = Math.hypot(be - Ge, Ee - Ue), ft = Math.max(1, Math.ceil(at / (Math.min(we, He) * .35)));
+			ge.globalCompositeOperation = I.erase ? "destination-out" : "source-over";
+			for (let bt = 1; bt <= ft; bt++) {
+				const Mt = bt / ft;
+				F(ge, Ge + (be - Ge) * Mt, Ue + (Ee - Ue) * Mt, we, He, D.color ?? "#ffffff");
 			}
-			A.last = [ze, Re];
+			I.last = [be, Ee];
 		}
-		function ue(A, pe, se, be, Ae, ze) {
-			A.save(), A.translate(pe, se), A.scale(1, Ae / be);
-			const Re = 1 - Pt(t.brushSoftness), $e = A.createRadialGradient(0, 0, be * Re, 0, 0, be);
-			$e.addColorStop(0, ze), $e.addColorStop(1, "rgba(255,255,255,0)"), A.fillStyle = Re >= 1 ? ze : $e, A.beginPath(), A.arc(0, 0, be, 0, Math.PI * 2), A.fill(), A.restore();
+		function F(I, C, T, D, ge, be) {
+			I.save(), I.translate(C, T), I.scale(1, ge / D);
+			const Ee = 1 - Pt(t.brushSoftness), we = I.createRadialGradient(0, 0, D * Ee, 0, 0, D);
+			we.addColorStop(0, be), we.addColorStop(1, "rgba(255,255,255,0)"), I.fillStyle = Ee >= 1 ? be : we, I.beginPath(), I.arc(0, 0, D, 0, Math.PI * 2), I.fill(), I.restore();
 		}
-		function ve(A) {
-			const pe = x.value;
-			if (y.value = null, !pe) return;
-			const be = pe.getContext("2d")?.getImageData(0, 0, rt, rt).data;
-			let Ae = !!be;
-			if (be) {
-				for (let Re = 3; Re < be.length; Re += 4) if (be[Re] < 250) {
-					Ae = !1;
+		function q(I) {
+			const C = k.value;
+			if (E.value = null, !C) return;
+			const D = C.getContext("2d")?.getImageData(0, 0, it, it).data;
+			let ge = !!D;
+			if (D) {
+				for (let Ee = 3; Ee < D.length; Ee += 4) if (D[Ee] < 250) {
+					ge = !1;
 					break;
 				}
 			}
-			const ze = Ae ? null : le(pe);
-			if (ze) {
-				const Re = new Image();
-				Re.src = ze, Y.set(ze, Re);
+			const be = ge ? null : J(C);
+			if (be) {
+				const Ee = new Image();
+				Ee.src = be, ue.set(be, Ee);
 			}
-			u("update:mask", A, ze), u("commit");
+			u("update:mask", I, be), u("commit");
 		}
-		function Fe(A, pe) {
-			const se = l.value.find((_e) => _e.id === A), be = se?.mask ? Y.get(se.mask) : void 0;
-			if (!se || !be?.complete || !be.naturalWidth) return;
-			const [Ae, ze, Re, $e] = jl(pe, se);
-			if (Math.abs(Ae) < 1e-6 && Math.abs(ze) < 1e-6 && Math.abs(Re - 1) < 1e-6 && Math.abs($e - 1) < 1e-6) return;
-			const F = document.createElement("canvas");
-			F.width = yt$1, F.height = yt$1;
-			const oe = F.getContext("2d");
-			if (!oe) return;
-			oe.drawImage(be, Ae * yt$1, ze * yt$1, Re * yt$1, $e * yt$1);
-			const G = F.toDataURL("image/png"), Ve = new Image();
-			Ve.src = G, Y.set(G, Ve), u("update:mask", A, G);
+		function ye(I, C) {
+			const T = l.value.find((ft) => ft.id === I), D = T?.mask ? ue.get(T.mask) : void 0;
+			if (!T || !D?.complete || !D.naturalWidth) return;
+			const [ge, be, Ee, we] = jl(C, T);
+			if (Math.abs(ge) < 1e-6 && Math.abs(be) < 1e-6 && Math.abs(Ee - 1) < 1e-6 && Math.abs(we - 1) < 1e-6) return;
+			const He = document.createElement("canvas");
+			He.width = pt$1, He.height = pt$1;
+			const Ge = He.getContext("2d");
+			if (!Ge) return;
+			Ge.drawImage(D, ge * pt$1, be * pt$1, Ee * pt$1, we * pt$1);
+			const Ue = He.toDataURL("image/png"), at = new Image();
+			at.src = Ue, ue.set(Ue, at), u("update:mask", I, Ue);
 		}
-		function le(A) {
-			const pe = document.createElement("canvas");
-			pe.width = yt$1, pe.height = yt$1;
-			const se = pe.getContext("2d");
-			return se ? (se.drawImage(A, 0, 0, yt$1, yt$1), se.globalCompositeOperation = "source-in", se.fillStyle = "#ffffff", se.fillRect(0, 0, yt$1, yt$1), pe.toDataURL("image/png")) : A.toDataURL("image/png");
+		function J(I) {
+			const C = document.createElement("canvas");
+			C.width = pt$1, C.height = pt$1;
+			const T = C.getContext("2d");
+			return T ? (T.drawImage(I, 0, 0, pt$1, pt$1), T.globalCompositeOperation = "source-in", T.fillStyle = "#ffffff", T.fillRect(0, 0, pt$1, pt$1), C.toDataURL("image/png")) : I.toDataURL("image/png");
 		}
-		const X = (A) => `${A * 100}%`;
-		function re(A) {
+		const U = (I) => `${I * 100}%`;
+		function ie(I) {
 			return {
-				left: X(A.x),
-				top: X(A.y),
-				width: X(A.w),
-				height: X(A.h)
+				left: U(I.x),
+				top: U(I.y),
+				width: U(I.w),
+				height: U(I.h)
 			};
 		}
-		function Ke(A) {
+		function Ae(I) {
 			return {
-				...re(A),
-				"--zbc-color": A.color ?? "var(--zen-accent, #6366f1)"
+				...ie(I),
+				"--zbc-color": I.color ?? "var(--zen-accent, #6366f1)"
 			};
 		}
-		function Ye(A) {
-			const pe = A.maskView ?? A.mask;
-			if (!pe) return;
-			const se = `url("${pe}")`, { size: Ae, position: ze } = Ic(he.value?.id === A.id ? he.value.start : A, A);
+		function _e(I) {
+			const C = I.maskView ?? I.mask;
+			if (!C) return;
+			const T = `url("${C}")`, { size: ge, position: be } = Cc(fe.value?.id === I.id ? fe.value.start : I, I);
 			return {
-				maskImage: se,
-				WebkitMaskImage: se,
-				maskSize: Ae,
-				WebkitMaskSize: Ae,
-				maskPosition: ze,
-				WebkitMaskPosition: ze,
+				maskImage: T,
+				WebkitMaskImage: T,
+				maskSize: ge,
+				WebkitMaskSize: ge,
+				maskPosition: be,
+				WebkitMaskPosition: be,
 				maskRepeat: "no-repeat",
 				WebkitMaskRepeat: "no-repeat"
 			};
 		}
-		const tt = computed(() => s.value === "select" && !!S.value && !S.value.locked), qe = computed(() => {
-			if (s.value === "select" || !P.value) return null;
-			const [A, pe] = P.value, se = t.brushSize;
+		const Qe = computed(() => s.value === "select" && !!$.value && !$.value.locked), Ne = computed(() => {
+			if (s.value === "select" || !g.value) return null;
+			const [I, C] = g.value, T = t.brushSize;
 			return {
-				left: X(A - se / 2),
-				top: X(pe - se * t.aspect / 2),
-				width: X(se),
-				height: X(se * t.aspect)
+				left: U(I - T / 2),
+				top: U(C - T * t.aspect / 2),
+				width: U(T),
+				height: U(T * t.aspect)
 			};
-		}), Qe = computed(() => t.grid > 0 ? { backgroundSize: `${t.grid * 100}% ${t.grid * 100}%` } : void 0);
-		return (A, pe) => (openBlock(), createElementBlock("div", {
+		}), qe = computed(() => t.grid > 0 ? { backgroundSize: `${t.grid * 100}% ${t.grid * 100}%` } : void 0);
+		return (I, C) => (openBlock(), createElementBlock("div", {
 			ref_key: "frame",
-			ref: z,
+			ref: x,
 			class: "zbc-frame"
 		}, [createBaseVNode("div", {
 			ref_key: "stage",
-			ref: B,
+			ref: V,
 			class: normalizeClass(["zbc", [`tool-${s.value}`]]),
 			style: normalizeStyle({
 				width: `${p.value.width}px`,
@@ -10404,16 +10420,16 @@ var vm = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			}),
 			tabindex: "-1",
 			"data-zen-drag": "",
-			onPointerdown: fe,
-			onMousedown: pe[0] || (pe[0] = withModifiers(() => {}, ["prevent"])),
-			onPointermove: H,
-			onPointerup: ae,
-			onPointercancel: ae,
-			onLostpointercapture: ae,
-			onPointerleave: pe[1] || (pe[1] = (se) => P.value = null),
-			onDblclick: ie,
-			onKeydown: C,
-			onContextmenu: U
+			onPointerdown: ae,
+			onMousedown: C[0] || (C[0] = withModifiers(() => {}, ["prevent"])),
+			onPointermove: Q,
+			onPointerup: ve,
+			onPointercancel: ve,
+			onLostpointercapture: ve,
+			onPointerleave: C[1] || (C[1] = (T) => g.value = null),
+			onDblclick: ce,
+			onKeydown: Y,
+			onContextmenu: oe
 		}, [
 			createBaseVNode("input", {
 				ref_key: "keysEl",
@@ -10430,123 +10446,123 @@ var vm = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 				style: normalizeStyle({ opacity: e.backdropOpacity }),
 				draggable: "false",
 				alt: ""
-			}, null, 12, Ac)) : createCommentVNode("", !0),
+			}, null, 12, Tc)) : createCommentVNode("", !0),
 			e.grid > 0 ? (openBlock(), createElementBlock("div", {
 				key: 1,
 				class: "zbc-grid",
-				style: normalizeStyle(Qe.value)
+				style: normalizeStyle(qe.value)
 			}, null, 4)) : createCommentVNode("", !0),
-			(openBlock(!0), createElementBlock(Fragment, null, renderList(J.value, (se, be) => (openBlock(), createElementBlock("div", {
-				key: se.id,
+			(openBlock(!0), createElementBlock(Fragment, null, renderList(te.value, (T, D) => (openBlock(), createElementBlock("div", {
+				key: T.id,
 				class: normalizeClass(["zbc-box", {
-					sel: E.value.has(se.id),
-					primary: S.value?.id === se.id,
-					locked: se.locked,
-					masked: !!se.mask && se.maskClips !== !1,
-					painting: y.value === se.id
+					sel: S.value.has(T.id),
+					primary: $.value?.id === T.id,
+					locked: T.locked,
+					masked: !!T.mask && T.maskClips !== !1,
+					painting: E.value === T.id
 				}]),
-				style: normalizeStyle(Ke(se)),
-				"data-box-id": se.id
+				style: normalizeStyle(Ae(T)),
+				"data-box-id": T.id
 			}, [
-				A.$slots.box ? (openBlock(), createElementBlock("div", Bc, [renderSlot(A.$slots, "box", mergeProps({ ref_for: !0 }, {
-					box: se,
-					index: be,
-					maskStyle: Ye(se)
+				I.$slots.box ? (openBlock(), createElementBlock("div", Ic, [renderSlot(I.$slots, "box", mergeProps({ ref_for: !0 }, {
+					box: T,
+					index: D,
+					maskStyle: _e(T)
 				}), void 0, !0)])) : createCommentVNode("", !0),
 				createBaseVNode("div", {
 					class: "zbc-fill",
-					style: normalizeStyle(se.maskClips === !1 ? void 0 : Ye(se))
+					style: normalizeStyle(T.maskClips === !1 ? void 0 : _e(T))
 				}, null, 4),
-				e.showLabels ? (openBlock(), createElementBlock("span", Vc, [
-					createBaseVNode("span", Dc, toDisplayString(be + 1), 1),
-					se.label ? (openBlock(), createElementBlock("span", Hc, toDisplayString(se.label), 1)) : createCommentVNode("", !0),
-					se.locked ? (openBlock(), createElementBlock("i", Wc)) : createCommentVNode("", !0)
+				e.showLabels ? (openBlock(), createElementBlock("span", Ac, [
+					createBaseVNode("span", Rc, toDisplayString(D + 1), 1),
+					T.label ? (openBlock(), createElementBlock("span", Bc, toDisplayString(T.label), 1)) : createCommentVNode("", !0),
+					T.locked ? (openBlock(), createElementBlock("i", Dc)) : createCommentVNode("", !0)
 				])) : createCommentVNode("", !0)
-			], 14, Rc))), 128)),
+			], 14, Pc))), 128)),
 			withDirectives(createBaseVNode("canvas", {
 				ref_key: "paintEl",
-				ref: x,
+				ref: k,
 				class: "zbc-paint",
-				style: normalizeStyle(h.value ? re(h.value) : void 0)
-			}, null, 4), [[vShow, h.value]]),
-			tt.value && S.value && !S.value.hidden ? (openBlock(), createElementBlock("div", {
+				style: normalizeStyle(z.value ? ie(z.value) : void 0)
+			}, null, 4), [[vShow, z.value]]),
+			Qe.value && $.value && !$.value.hidden ? (openBlock(), createElementBlock("div", {
 				key: 2,
 				class: "zbc-selframe",
-				style: normalizeStyle(Ke(S.value))
-			}, [(openBlock(!0), createElementBlock(Fragment, null, renderList(unref(Ml), (se) => (openBlock(), createElementBlock("i", {
-				key: se,
-				class: normalizeClass(["zbc-h", `h-${se}`]),
-				"data-handle": se
-			}, null, 10, Fc))), 128))], 4)) : createCommentVNode("", !0),
-			j.value && s.value === "select" ? (openBlock(), createElementBlock("div", {
+				style: normalizeStyle(Ae($.value))
+			}, [(openBlock(!0), createElementBlock(Fragment, null, renderList(unref(Ml), (T) => (openBlock(), createElementBlock("i", {
+				key: T,
+				class: normalizeClass(["zbc-h", `h-${T}`]),
+				"data-handle": T
+			}, null, 10, Vc))), 128))], 4)) : createCommentVNode("", !0),
+			ne.value && s.value === "select" ? (openBlock(), createElementBlock("div", {
 				key: 3,
 				class: "zbc-group",
-				style: normalizeStyle(re(j.value))
-			}, [(openBlock(!0), createElementBlock(Fragment, null, renderList(unref(Ml), (se) => (openBlock(), createElementBlock("i", {
-				key: se,
-				class: normalizeClass(["zbc-h", `h-${se}`]),
-				"data-handle": se,
+				style: normalizeStyle(ie(ne.value))
+			}, [(openBlock(!0), createElementBlock(Fragment, null, renderList(unref(Ml), (T) => (openBlock(), createElementBlock("i", {
+				key: T,
+				class: normalizeClass(["zbc-h", `h-${T}`]),
+				"data-handle": T,
 				"data-group": "1"
-			}, null, 10, Kc))), 128))], 4)) : createCommentVNode("", !0),
+			}, null, 10, Hc))), 128))], 4)) : createCommentVNode("", !0),
 			de.value ? (openBlock(), createElementBlock("div", {
 				key: 4,
 				class: "zbc-draft",
-				style: normalizeStyle(re(de.value))
+				style: normalizeStyle(ie(de.value))
 			}, null, 4)) : createCommentVNode("", !0),
-			Z.value ? (openBlock(), createElementBlock("div", {
+			G.value ? (openBlock(), createElementBlock("div", {
 				key: 5,
 				class: "zbc-marquee",
-				style: normalizeStyle(re(Z.value))
+				style: normalizeStyle(ie(G.value))
 			}, null, 4)) : createCommentVNode("", !0),
-			qe.value ? (openBlock(), createElementBlock("div", {
+			Ne.value ? (openBlock(), createElementBlock("div", {
 				key: 6,
 				class: normalizeClass(["zbc-ring", { erase: s.value === "erase" }]),
-				style: normalizeStyle(qe.value)
+				style: normalizeStyle(Ne.value)
 			}, null, 6)) : createCommentVNode("", !0),
-			renderSlot(A.$slots, "overlay", {}, void 0, !0),
-			!J.value.length && A.$slots.empty ? (openBlock(), createElementBlock("div", Oc, [renderSlot(A.$slots, "empty", {}, void 0, !0)])) : createCommentVNode("", !0)
+			renderSlot(I.$slots, "overlay", {}, void 0, !0),
+			!te.value.length && I.$slots.empty ? (openBlock(), createElementBlock("div", Wc, [renderSlot(I.$slots, "empty", {}, void 0, !0)])) : createCommentVNode("", !0)
 		], 38)], 512));
 	}
 }), [["__scopeId", "data-v-657d6f53"]]);
-function Nc(e, o, t, l = 0, r = e.length - 1) {
+function Kc(e, o, t, l = 0, r = e.length - 1) {
 	const s = e.filter((u, d) => d !== o && u < t).length;
 	return Math.min(r, Math.max(l, s));
 }
-function Zc(e, o, t) {
+function Oc(e, o, t) {
 	return o < 0 || t < 0 || e === o ? 0 : o < t && e > o && e <= t ? -1 : o > t && e < o && e >= t ? 1 : 0;
 }
-function Uc(e, o, t) {
+function Nc(e, o, t) {
 	const l = o[t] ?? 0, r = e[t + 1];
 	if (r !== void 0) return r - (e[t] ?? 0);
 	const s = e[t - 1];
 	return s !== void 0 ? (e[t] ?? 0) - s - (o[t - 1] ?? 0) + l : l;
 }
-function Xc(e, o, t, l) {
+function Zc(e, o, t, l) {
 	return l <= t ? e[l] ?? 0 : (e[l] ?? 0) + (o[l] ?? 0) - (o[t] ?? 0);
 }
-function Yc(e, o) {
+function _c(e, o) {
 	return e ? { transform: `translateY(${e * o}px)` } : void 0;
 }
-var qc = [
+var Uc = [
 	"aria-selected",
 	"data-layer-index",
 	"onClick"
 ];
-var jc = ["onPointerdown", "onPointermove"];
-var Gc = {
+var Xc = ["onPointerdown", "onPointermove"];
+var Yc = {
 	key: 1,
 	class: "zll-grip pin"
 };
-var Jc = ["src"];
-var Qc = { class: "zll-text" };
-var ed = { class: "zll-label" };
-var td = {
+var qc = ["src"];
+var jc = { class: "zll-text" };
+var Gc = { class: "zll-label" };
+var Jc = {
 	key: 0,
 	class: "zll-sub"
 };
-var nd = ["title", "onClick"];
-var ld = ["title", "onClick"];
-var fm = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var Qc = ["title", "onClick"];
+var ed = ["title", "onClick"];
+var cm = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "ZenLayerList",
 	props: /* @__PURE__ */ mergeModels({
 		items: {},
@@ -10565,113 +10581,113 @@ var fm = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 	], ["update:selected"]),
 	setup(e, { emit: o }) {
 		const t = e, l = useModel(e, "selected"), r = o, s = /* @__PURE__ */ ref(null), u = computed(() => new Set(l.value));
-		function d(y, P) {
-			P.shiftKey || P.ctrlKey || P.metaKey ? l.value = u.value.has(y.id) ? l.value.filter((k) => k !== y.id) : [...l.value, y.id] : l.value = [y.id];
+		function d(E, g) {
+			g.shiftKey || g.ctrlKey || g.metaKey ? l.value = u.value.has(E.id) ? l.value.filter((b) => b !== E.id) : [...l.value, E.id] : l.value = [E.id];
 		}
-		const c = /* @__PURE__ */ ref(null), z = /* @__PURE__ */ ref(-1), M = /* @__PURE__ */ ref(0), B = /* @__PURE__ */ ref(0);
-		let x = [], p = [], g = [];
-		const R = /* @__PURE__ */ ref(!1), J = /* @__PURE__ */ ref(null);
-		let E = 0, S = 1, O = 0, j = 0;
-		function I(y, P, k) {
-			if (y.button !== 0 || P.pinned || !s.value) return;
-			const q = [...s.value.querySelectorAll("[data-layer-index]")], fe = q[k];
-			if (fe) {
-				S = fe.getBoundingClientRect().height / (fe.offsetHeight || 1) || 1, x = q.map((H) => {
-					const ae = H.getBoundingClientRect();
-					return ae.top + ae.height / 2;
-				}), p = q.map((H) => H.offsetTop), g = q.map((H) => H.offsetHeight), B.value = Uc(p, g, k), O = 0, j = t.items.length - 1;
-				for (let H = k - 1; H >= 0; H--) if (t.items[H]?.pinned) {
-					O = H + 1;
+		const c = /* @__PURE__ */ ref(null), x = /* @__PURE__ */ ref(-1), M = /* @__PURE__ */ ref(0), V = /* @__PURE__ */ ref(0);
+		let k = [], p = [], h = [];
+		const B = /* @__PURE__ */ ref(!1), te = /* @__PURE__ */ ref(null);
+		let S = 0, $ = 1, X = 0, ne = 0;
+		function Z(E, g, b) {
+			if (E.button !== 0 || g.pinned || !s.value) return;
+			const R = [...s.value.querySelectorAll("[data-layer-index]")], ae = R[b];
+			if (ae) {
+				$ = ae.getBoundingClientRect().height / (ae.offsetHeight || 1) || 1, k = R.map((Q) => {
+					const ve = Q.getBoundingClientRect();
+					return ve.top + ve.height / 2;
+				}), p = R.map((Q) => Q.offsetTop), h = R.map((Q) => Q.offsetHeight), V.value = Nc(p, h, b), X = 0, ne = t.items.length - 1;
+				for (let Q = b - 1; Q >= 0; Q--) if (t.items[Q]?.pinned) {
+					X = Q + 1;
 					break;
 				}
-				for (let H = k + 1; H < t.items.length; H++) if (t.items[H]?.pinned) {
-					j = H - 1;
+				for (let Q = b + 1; Q < t.items.length; Q++) if (t.items[Q]?.pinned) {
+					ne = Q - 1;
 					break;
 				}
-				E = y.clientY, c.value = P.id, z.value = k, M.value = 0, y.currentTarget.setPointerCapture(y.pointerId), y.preventDefault();
+				S = E.clientY, c.value = g.id, x.value = b, M.value = 0, E.currentTarget.setPointerCapture(E.pointerId), E.preventDefault();
 			}
 		}
-		function de(y, P) {
+		function de(E, g) {
 			if (c.value === null) return;
-			M.value = (y.clientY - E) / S;
-			const k = (x[P] ?? y.clientY) + (y.clientY - E);
-			z.value = Nc(x, P, k, O, j);
+			M.value = (E.clientY - S) / $;
+			const b = (k[g] ?? E.clientY) + (E.clientY - S);
+			x.value = Kc(k, g, b, X, ne);
 		}
-		function he() {
-			const y = c.value, P = z.value, k = M.value;
-			if (c.value = null, z.value = -1, M.value = 0, y === null) return;
-			const q = t.items.findIndex((fe) => fe.id === y);
-			q < 0 || P < 0 || (R.value = !0, J.value = {
-				id: y,
-				y: (p[q] ?? 0) + k - Xc(p, g, q, P)
-			}, P !== q && r("reorder", y, P), requestAnimationFrame(() => requestAnimationFrame(() => {
-				R.value = !1, J.value = null;
+		function fe() {
+			const E = c.value, g = x.value, b = M.value;
+			if (c.value = null, x.value = -1, M.value = 0, E === null) return;
+			const R = t.items.findIndex((ae) => ae.id === E);
+			R < 0 || g < 0 || (B.value = !0, te.value = {
+				id: E,
+				y: (p[R] ?? 0) + b - Zc(p, h, R, g)
+			}, g !== R && r("reorder", E, g), requestAnimationFrame(() => requestAnimationFrame(() => {
+				B.value = !1, te.value = null;
 			})));
 		}
-		function Z(y) {
+		function G(E) {
 			if (c.value === null) return;
-			return Yc(Zc(y, t.items.findIndex((k) => k.id === c.value), z.value), B.value);
+			return _c(Oc(E, t.items.findIndex((b) => b.id === c.value), x.value), V.value);
 		}
-		return (y, P) => (openBlock(), createElementBlock("div", {
+		return (E, g) => (openBlock(), createElementBlock("div", {
 			ref_key: "list",
 			ref: s,
-			class: normalizeClass(["zll", { settling: R.value }]),
+			class: normalizeClass(["zll", { settling: B.value }]),
 			role: "listbox",
 			"aria-multiselectable": "true"
-		}, [(openBlock(!0), createElementBlock(Fragment, null, renderList(e.items, (k, q) => (openBlock(), createElementBlock("div", {
-			key: k.id,
+		}, [(openBlock(!0), createElementBlock(Fragment, null, renderList(e.items, (b, R) => (openBlock(), createElementBlock("div", {
+			key: b.id,
 			class: normalizeClass(["zll-row", {
-				sel: u.value.has(k.id),
-				hidden: k.hidden,
-				pinned: k.pinned,
-				dragging: c.value === k.id
+				sel: u.value.has(b.id),
+				hidden: b.hidden,
+				pinned: b.pinned,
+				dragging: c.value === b.id
 			}]),
 			role: "option",
-			"aria-selected": u.value.has(k.id),
-			style: normalizeStyle(c.value === k.id ? { transform: `translateY(${M.value}px)` } : J.value?.id === k.id ? { transform: `translateY(${J.value.y}px)` } : Z(q)),
-			"data-layer-index": q,
-			onClick: (fe) => d(k, fe)
+			"aria-selected": u.value.has(b.id),
+			style: normalizeStyle(c.value === b.id ? { transform: `translateY(${M.value}px)` } : te.value?.id === b.id ? { transform: `translateY(${te.value.y}px)` } : G(R)),
+			"data-layer-index": R,
+			onClick: (ae) => d(b, ae)
 		}, [
-			k.pinned ? (openBlock(), createElementBlock("span", Gc, [...P[2] || (P[2] = [createBaseVNode("i", { class: "mdi mdi-pin-outline" }, null, -1)])])) : (openBlock(), createElementBlock("span", {
+			b.pinned ? (openBlock(), createElementBlock("span", Yc, [...g[2] || (g[2] = [createBaseVNode("i", { class: "mdi mdi-pin-outline" }, null, -1)])])) : (openBlock(), createElementBlock("span", {
 				key: 0,
 				class: "zll-grip",
 				"data-zen-drag": "",
 				title: "Drag to reorder",
-				onPointerdown: withModifiers((fe) => I(fe, k, q), ["stop"]),
-				onPointermove: (fe) => de(fe, q),
-				onPointerup: he,
-				onPointercancel: he,
-				onLostpointercapture: he,
-				onClick: P[0] || (P[0] = withModifiers(() => {}, ["stop"]))
-			}, [...P[1] || (P[1] = [createBaseVNode("i", { class: "mdi mdi-drag-vertical" }, null, -1)])], 40, jc)),
+				onPointerdown: withModifiers((ae) => Z(ae, b, R), ["stop"]),
+				onPointermove: (ae) => de(ae, R),
+				onPointerup: fe,
+				onPointercancel: fe,
+				onLostpointercapture: fe,
+				onClick: g[0] || (g[0] = withModifiers(() => {}, ["stop"]))
+			}, [...g[1] || (g[1] = [createBaseVNode("i", { class: "mdi mdi-drag-vertical" }, null, -1)])], 40, Xc)),
 			createBaseVNode("span", {
 				class: "zll-swatch",
-				style: normalizeStyle({ background: k.color ?? "var(--zen-muted, #9aa0aa)" })
-			}, [k.thumb ? (openBlock(), createElementBlock("img", {
+				style: normalizeStyle({ background: b.color ?? "var(--zen-muted, #9aa0aa)" })
+			}, [b.thumb ? (openBlock(), createElementBlock("img", {
 				key: 0,
-				src: k.thumb,
+				src: b.thumb,
 				alt: "",
 				draggable: "false"
-			}, null, 8, Jc)) : createCommentVNode("", !0)], 4),
-			createBaseVNode("span", Qc, [createBaseVNode("span", ed, toDisplayString(k.label), 1), k.sub ? (openBlock(), createElementBlock("span", td, toDisplayString(k.sub), 1)) : createCommentVNode("", !0)]),
-			renderSlot(y.$slots, "actions", { item: k }, void 0, !0),
-			e.lockable && !k.pinned ? (openBlock(), createElementBlock("button", {
+			}, null, 8, qc)) : createCommentVNode("", !0)], 4),
+			createBaseVNode("span", jc, [createBaseVNode("span", Gc, toDisplayString(b.label), 1), b.sub ? (openBlock(), createElementBlock("span", Jc, toDisplayString(b.sub), 1)) : createCommentVNode("", !0)]),
+			renderSlot(E.$slots, "actions", { item: b }, void 0, !0),
+			e.lockable && !b.pinned ? (openBlock(), createElementBlock("button", {
 				key: 2,
 				type: "button",
-				class: normalizeClass(["zll-btn", { on: k.locked }]),
-				title: k.locked ? "Unlock" : "Lock",
-				onClick: withModifiers((fe) => r("toggle-locked", k.id), ["stop"])
-			}, [createBaseVNode("i", { class: normalizeClass(["mdi", k.locked ? "mdi-lock" : "mdi-lock-open-variant-outline"]) }, null, 2)], 10, nd)) : createCommentVNode("", !0),
+				class: normalizeClass(["zll-btn", { on: b.locked }]),
+				title: b.locked ? "Unlock" : "Lock",
+				onClick: withModifiers((ae) => r("toggle-locked", b.id), ["stop"])
+			}, [createBaseVNode("i", { class: normalizeClass(["mdi", b.locked ? "mdi-lock" : "mdi-lock-open-variant-outline"]) }, null, 2)], 10, Qc)) : createCommentVNode("", !0),
 			createBaseVNode("button", {
 				type: "button",
-				class: normalizeClass(["zll-btn", { on: k.hidden }]),
-				title: k.hidden ? "Show" : "Hide",
-				onClick: withModifiers((fe) => r("toggle-hidden", k.id), ["stop"])
-			}, [createBaseVNode("i", { class: normalizeClass(["mdi", k.hidden ? "mdi-eye-off-outline" : "mdi-eye-outline"]) }, null, 2)], 10, ld)
-		], 14, qc))), 128)), e.items.length ? createCommentVNode("", !0) : renderSlot(y.$slots, "empty", {}, void 0, !0, 0)], 2));
+				class: normalizeClass(["zll-btn", { on: b.hidden }]),
+				title: b.hidden ? "Show" : "Hide",
+				onClick: withModifiers((ae) => r("toggle-hidden", b.id), ["stop"])
+			}, [createBaseVNode("i", { class: normalizeClass(["mdi", b.hidden ? "mdi-eye-off-outline" : "mdi-eye-outline"]) }, null, 2)], 10, ed)
+		], 14, Uc))), 128)), e.items.length ? createCommentVNode("", !0) : renderSlot(E.$slots, "empty", {}, void 0, !0, 0)], 2));
 	}
 }), [["__scopeId", "data-v-6dd767a3"]]);
-function mm({ read: e, write: o, limit: t = 80 }) {
+function dm({ read: e, write: o, limit: t = 80 }) {
 	const l = () => JSON.stringify(e()), r = /* @__PURE__ */ shallowRef([l()]), s = /* @__PURE__ */ shallowRef(0);
 	function u(d) {
 		s.value = d, o(JSON.parse(r.value[d]));
@@ -10680,8 +10696,8 @@ function mm({ read: e, write: o, limit: t = 80 }) {
 		record() {
 			const d = l();
 			if (d === r.value[s.value]) return;
-			const c = [...r.value.slice(0, s.value + 1), d], z = Math.max(0, c.length - Math.max(1, t) - 1);
-			r.value = c.slice(z), s.value = r.value.length - 1;
+			const c = [...r.value.slice(0, s.value + 1), d], x = Math.max(0, c.length - Math.max(1, t) - 1);
+			r.value = c.slice(x), s.value = r.value.length - 1;
 		},
 		undo() {
 			return s.value <= 0 ? !1 : (u(s.value - 1), !0);
@@ -10697,26 +10713,26 @@ function mm({ read: e, write: o, limit: t = 80 }) {
 	};
 }
 var dn = null;
-function ad(e) {
+function nd(e) {
 	dn = e, $n = null, fn.value = !1, al.clear();
 }
-function _n() {
+function Nn() {
 	if (!dn) throw new Error("[zenkit-ui] No LoRA source registered — call setLoraSource() before rendering a LoRA picker.");
 	return dn;
 }
-var xt = /* @__PURE__ */ ref([]);
+var $t = /* @__PURE__ */ ref([]);
 var qt = /* @__PURE__ */ ref([]);
 var fn = /* @__PURE__ */ ref(!1);
-var dl = /* @__PURE__ */ ref(!0);
-function sd(e) {
-	dl.value = e;
+var vl = /* @__PURE__ */ ref(!0);
+function ld(e) {
+	vl.value = e;
 }
-var Wn = /* @__PURE__ */ ref(!0);
-function id(e) {
-	Wn.value = e;
+var Fn = /* @__PURE__ */ ref(!0);
+function od(e) {
+	Fn.value = e;
 }
-var ud = computed(() => new Set(qt.value));
-var rd = computed(() => new Set(xt.value.map((e) => e.name)));
+var ad = computed(() => new Set(qt.value));
+var sd = computed(() => new Set($t.value.map((e) => e.name)));
 var Wt = computed(() => {
 	const e = /* @__PURE__ */ new Map(), o = (t) => {
 		let l = e.get(t);
@@ -10727,7 +10743,7 @@ var Wt = computed(() => {
 		}), l;
 	};
 	o("");
-	for (const { name: t } of xt.value) {
+	for (const { name: t } of $t.value) {
 		const l = t.split("/");
 		let r = "";
 		o("").total++;
@@ -10737,7 +10753,7 @@ var Wt = computed(() => {
 		}
 		o(r).files.push(t);
 	}
-	for (const t of e.values()) t.folders.sort((l, r) => l.localeCompare(r)), t.files.sort((l, r) => dt(l).localeCompare(dt(r)));
+	for (const t of e.values()) t.folders.sort((l, r) => l.localeCompare(r)), t.files.sort((l, r) => rt(l).localeCompare(rt(r)));
 	return e;
 });
 var rn = /* @__PURE__ */ ref(/* @__PURE__ */ new Set());
@@ -10745,56 +10761,56 @@ var ol = /* @__PURE__ */ ref(/* @__PURE__ */ new Set());
 var $n = null;
 function vn(e = !1) {
 	if (e && ($n = null), !$n) {
-		const o = _n();
+		const o = Nn();
 		$n = Promise.all([o.list(e), o.favorites(e)]).then(([t, l]) => {
-			xt.value = t, qt.value = l, rn.value = new Set(t.filter((r) => r.has_preview).map((r) => r.name)), fn.value = !0;
+			$t.value = t, qt.value = l, rn.value = new Set(t.filter((r) => r.has_preview).map((r) => r.name)), fn.value = !0;
 		});
 	}
 	return $n;
 }
-function dt(e) {
+function rt(e) {
 	return (String(e).split("/").pop() || String(e)).replace(/\.(safetensors|pt|ckpt|bin|lora)$/i, "");
 }
-function $t(e) {
+function wt(e) {
 	const o = String(e).split("/");
 	return o.length > 1 ? o.slice(0, -1).join("/") : "";
 }
-function Fn(e) {
+function Kn(e) {
 	return rn.value.has(String(e));
 }
 function jt(e, o) {
 	const t = o && Math.ceil(o * (globalThis.devicePixelRatio || 1));
-	return _n().previewUrl(String(e), t || void 0);
+	return Nn().previewUrl(String(e), t || void 0);
 }
-var cd = computed(() => new Map(xt.value.map((e) => [e.name, e.preview ?? (e.has_preview ? "image" : null)])));
+var id = computed(() => new Map($t.value.map((e) => [e.name, e.preview ?? (e.has_preview ? "image" : null)])));
 function cn(e) {
-	return cd.value.get(String(e)) ?? null;
+	return id.value.get(String(e)) ?? null;
 }
 function xn(e) {
-	const o = _n();
+	const o = Nn();
 	return o.mediaUrl ? o.mediaUrl(String(e)) : o.previewUrl(String(e));
 }
 function Gl() {
 	return !!dn?.info;
 }
 var al = /* @__PURE__ */ new Map();
-function vl(e) {
+function fl(e) {
 	const o = String(e), t = dn;
 	if (!o || !t?.info) return Promise.resolve(null);
 	let l = al.get(o);
 	return l || (l = t.info(o).catch(() => null), al.set(o, l)), l;
 }
-function at(e) {
-	return ud.value.has(String(e));
+function nt(e) {
+	return ad.value.has(String(e));
 }
 async function zn(e) {
-	qt.value = await _n().setFavorite(String(e), !at(e));
+	qt.value = await Nn().setFavorite(String(e), !nt(e));
 }
 function Mn(e) {
 	const o = String(e);
-	return fn.value && !!o && !rd.value.has(o);
+	return fn.value && !!o && !sd.value.has(o);
 }
-function Nn(e) {
+function Zn(e) {
 	const o = String(e);
 	return !o || ol.value.has(o) ? !1 : fn.value ? rn.value.has(o) : (dn && vn().catch(() => {}), !1);
 }
@@ -10809,229 +10825,229 @@ function an(e) {
 	}
 	o.style.display = "none";
 }
-var pm = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+var vm = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
 	__proto__: null,
-	blurMature: Wn,
+	blurMature: Fn,
 	ensure: vn,
 	favorites: qt,
-	folder: $t,
+	folder: wt,
 	folderIndex: Wt,
-	folderNav: dl,
+	folderNav: vl,
 	hasInfo: Gl,
-	hasPreview: Fn,
-	hasThumb: Nn,
-	info: vl,
-	isFav: at,
+	hasPreview: Kn,
+	hasThumb: Zn,
+	info: fl,
+	isFav: nt,
 	isMissing: Mn,
 	listLoaded: fn,
-	loras: xt,
+	loras: $t,
 	media: xn,
 	onImageError: an,
 	onThumbError: Jl,
 	preview: jt,
 	previewKind: cn,
-	setBlurMature: id,
-	setFolderNav: sd,
-	setLoraSource: ad,
-	short: dt,
+	setBlurMature: od,
+	setFolderNav: ld,
+	setLoraSource: nd,
+	short: rt,
 	toggleFav: zn
 }, Symbol.toStringTag, { value: "Module" }));
-var ct = /* @__PURE__ */ shallowRef(null);
+var ut$1 = /* @__PURE__ */ shallowRef(null);
 var En = /* @__PURE__ */ ref(!1);
 var sl = /* @__PURE__ */ ref("");
-var Bn = /* @__PURE__ */ ref(!1);
+var Vn = /* @__PURE__ */ ref(!1);
 var kn = /* @__PURE__ */ ref(!1);
-var dd = {
+var ud = {
 	key: 0,
 	class: "lpk-media"
 };
-var vd = ["src"];
-var fd = ["src"];
-var md = { class: "lpk-body" };
-var pd = { class: "lpk-title" };
-var hd = { class: "lpk-chips" };
-var yd = {
+var rd = ["src"];
+var cd = ["src"];
+var dd = { class: "lpk-body" };
+var vd = { class: "lpk-title" };
+var fd = { class: "lpk-chips" };
+var md = {
 	key: 0,
 	class: "lpk-chip"
 };
-var gd = {
+var pd = {
 	key: 1,
 	class: "lpk-chip"
 };
-var bd = {
+var hd = {
 	key: 2,
 	class: "lpk-chip"
 };
-var kd = {
+var yd = {
 	key: 0,
 	class: "lpk-words"
 };
-var wd = {
+var gd = {
 	key: 1,
 	class: "lpk-hint"
 };
 var Gn = 340;
-var $d = 480;
+var bd = 480;
 var Pl = 12;
-var zd = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var wd = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "LoraPeek",
 	setup(e) {
 		const o = /* @__PURE__ */ ref(null);
-		watch(() => En.value ? ct.value?.name : void 0, (s) => {
-			o.value = null, s && vl(s).then((u) => {
-				ct.value?.name === s && (o.value = u);
+		watch(() => En.value ? ut$1.value?.name : void 0, (s) => {
+			o.value = null, s && fl(s).then((u) => {
+				ut$1.value?.name === s && (o.value = u);
 			});
 		});
-		const t = computed(() => !!ct.value && Nn(ct.value.name)), l = computed(() => o.value?.usage?.strength ?? null), r = computed(() => {
-			const s = ct.value?.el;
+		const t = computed(() => !!ut$1.value && Zn(ut$1.value.name)), l = computed(() => o.value?.usage?.strength ?? null), r = computed(() => {
+			const s = ut$1.value?.el;
 			if (!s) return {};
 			const u = s.getBoundingClientRect();
 			let d = u.right + Pl;
 			d + Gn > window.innerWidth - 8 && (d = Math.max(8, u.left - Pl - Gn));
-			const c = Math.max(8, Math.min(u.top, window.innerHeight - 8 - $d));
+			const c = Math.max(8, Math.min(u.top, window.innerHeight - 8 - bd));
 			return {
 				left: `${d}px`,
 				top: `${c}px`,
 				width: `${Gn}px`,
-				zIndex: rl(Je$1.peek)
+				zIndex: rl(Ye$1.peek)
 			};
 		});
-		return (s, u) => unref(ct) && unref(En) ? (openBlock(), createElementBlock("div", {
+		return (s, u) => unref(ut$1) && unref(En) ? (openBlock(), createElementBlock("div", {
 			key: 0,
 			class: "lpk",
 			style: normalizeStyle(r.value),
 			"data-zen-layer": ""
-		}, [t.value ? (openBlock(), createElementBlock("div", dd, [cn(unref(ct).name) === "video" ? (openBlock(), createElementBlock("video", {
+		}, [t.value ? (openBlock(), createElementBlock("div", ud, [cn(unref(ut$1).name) === "video" ? (openBlock(), createElementBlock("video", {
 			key: 0,
-			src: xn(unref(ct).name),
+			src: xn(unref(ut$1).name),
 			autoplay: "",
 			muted: "",
 			loop: "",
 			playsinline: ""
-		}, null, 8, vd)) : (openBlock(), createElementBlock("img", {
+		}, null, 8, rd)) : (openBlock(), createElementBlock("img", {
 			key: 1,
-			src: jt(unref(ct).name, 360)
-		}, null, 8, fd))])) : createCommentVNode("", !0), createBaseVNode("div", md, [
-			createBaseVNode("div", pd, toDisplayString(o.value?.title || dt(unref(ct).name)), 1),
-			createBaseVNode("div", hd, [
-				o.value?.base_model ? (openBlock(), createElementBlock("span", yd, toDisplayString(o.value.base_model), 1)) : createCommentVNode("", !0),
-				o.value?.version ? (openBlock(), createElementBlock("span", gd, toDisplayString(o.value.version), 1)) : createCommentVNode("", !0),
-				l.value != null ? (openBlock(), createElementBlock("span", bd, "strength " + toDisplayString(l.value), 1)) : createCommentVNode("", !0)
+			src: jt(unref(ut$1).name, 360)
+		}, null, 8, cd))])) : createCommentVNode("", !0), createBaseVNode("div", dd, [
+			createBaseVNode("div", vd, toDisplayString(o.value?.title || rt(unref(ut$1).name)), 1),
+			createBaseVNode("div", fd, [
+				o.value?.base_model ? (openBlock(), createElementBlock("span", md, toDisplayString(o.value.base_model), 1)) : createCommentVNode("", !0),
+				o.value?.version ? (openBlock(), createElementBlock("span", pd, toDisplayString(o.value.version), 1)) : createCommentVNode("", !0),
+				l.value != null ? (openBlock(), createElementBlock("span", hd, "strength " + toDisplayString(l.value), 1)) : createCommentVNode("", !0)
 			]),
-			o.value?.trigger_words?.length ? (openBlock(), createElementBlock("div", kd, toDisplayString(o.value.trigger_words.join(", ")), 1)) : createCommentVNode("", !0),
-			Gl() ? (openBlock(), createElementBlock("div", wd, "Shift+click for details")) : createCommentVNode("", !0)
+			o.value?.trigger_words?.length ? (openBlock(), createElementBlock("div", yd, toDisplayString(o.value.trigger_words.join(", ")), 1)) : createCommentVNode("", !0),
+			Gl() ? (openBlock(), createElementBlock("div", gd, "Shift+click for details")) : createCommentVNode("", !0)
 		])], 4)) : createCommentVNode("", !0);
 	}
 }), [["__scopeId", "data-v-9a639d76"]]);
-var Md = { class: "ld zen-scroll" };
-var Ed = { class: "ld-head" };
-var Ld = ["disabled"];
-var Sd = ["src"];
-var Cd = ["src"];
-var Td = {
+var $d = { class: "ld zen-scroll" };
+var xd = { class: "ld-head" };
+var zd = ["disabled"];
+var Md = ["src"];
+var Ed = ["src"];
+var Ld = {
 	key: 2,
 	class: "mdi mdi-cube-outline"
 };
-var Pd = { class: "ld-id" };
-var Id = ["title"];
-var Ad = ["title"];
-var Rd = { class: "ld-chips" };
-var Bd = {
+var Sd = { class: "ld-id" };
+var Cd = ["title"];
+var Td = ["title"];
+var Pd = { class: "ld-chips" };
+var Id = {
 	key: 0,
 	class: "ld-chip accent"
 };
-var Vd = {
+var Ad = {
 	key: 1,
 	class: "ld-chip"
 };
-var Dd = {
+var Rd = {
 	key: 2,
 	class: "ld-chip"
 };
-var Hd = { class: "ld-actions" };
-var Wd = ["href"];
-var Fd = {
+var Bd = { class: "ld-actions" };
+var Dd = ["href"];
+var Vd = {
 	key: 0,
 	class: "ld-muted"
 };
-var Kd = {
+var Hd = {
 	key: 1,
 	class: "ld-sec"
 };
-var Od = { class: "ld-chips" };
-var _d = ["onClick"];
-var Nd = {
+var Wd = { class: "ld-chips" };
+var Fd = ["onClick"];
+var Kd = {
 	key: 0,
 	class: "mdi mdi-check"
 };
-var Zd = {
+var Od = {
 	key: 2,
 	class: "ld-sec ld-examples"
 };
-var Ud = { class: "ld-count" };
-var Xd = { class: "ld-look" };
-var Yd = ["src"];
-var qd = ["src"];
-var jd = { class: "ld-counter" };
-var Gd = [
+var Nd = { class: "ld-count" };
+var Zd = { class: "ld-look" };
+var _d = ["src"];
+var Ud = ["src"];
+var Xd = { class: "ld-counter" };
+var Yd = [
 	"data-i",
 	"title",
 	"onClick"
 ];
-var Jd = [
+var qd = [
 	"src",
 	"onLoadedmetadata",
 	"onError"
 ];
-var Qd = [
+var jd = [
 	"src",
 	"onLoad",
 	"onError"
 ];
-var ev = {
+var Gd = {
 	key: 2,
 	class: "mdi mdi-play-circle ld-badge"
 };
-var tv = { class: "ld-params" };
-var nv = { class: "ld-k" };
-var lv = ["onClick"];
-var ov = { class: "ld-text" };
-var av = {
+var Jd = { class: "ld-params" };
+var Qd = { class: "ld-k" };
+var ev = ["onClick"];
+var tv = { class: "ld-text" };
+var nv = {
 	key: 0,
 	class: "ld-kv"
 };
-var sv = ["title"];
-var iv = {
+var lv = ["title"];
+var ov = {
 	key: 1,
 	class: "ld-muted"
 };
-var uv = {
+var av = {
 	key: 3,
 	class: "ld-sec"
 };
-var rv = { class: "ld-chips" };
-var cv = {
+var sv = { class: "ld-chips" };
+var iv = {
 	key: 4,
 	class: "ld-sec"
 };
-var dv = {
+var uv = {
 	key: 5,
 	class: "ld-sec"
 };
-var vv = { class: "ld-desc open" };
-var fv = {
+var rv = { class: "ld-desc open" };
+var cv = {
 	key: 6,
 	class: "ld-sec"
 };
-var mv = { class: "ld-kv" };
-var pv = ["title"];
-var hv = {
+var dv = { class: "ld-kv" };
+var vv = ["title"];
+var fv = {
 	key: 7,
 	class: "ld-muted"
 };
 var Il = 4;
-var yv = 64;
-var Ql = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var mv = 64;
+var Ql = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "LoraDetail",
 	props: {
 		name: {},
@@ -11054,336 +11070,336 @@ var Ql = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			cfgScale: "CFG",
 			clipSkip: "Clip skip",
 			Size: "Size"
-		}, d = /* @__PURE__ */ ref(null), c = /* @__PURE__ */ ref(!1), z = /* @__PURE__ */ ref(0), M = /* @__PURE__ */ ref(!1), B = /* @__PURE__ */ ref(""), x = /* @__PURE__ */ ref(null), p = /* @__PURE__ */ ref(/* @__PURE__ */ new Set()), g = /* @__PURE__ */ ref({});
-		watch(() => t.name, (le) => {
-			d.value = null, z.value = 0, M.value = !1, x.value = null, p.value = /* @__PURE__ */ new Set(), g.value = {}, le && (c.value = !0, vn(), vl(le).then((X) => {
-				t.name === le && (d.value = X, c.value = !1);
+		}, d = /* @__PURE__ */ ref(null), c = /* @__PURE__ */ ref(!1), x = /* @__PURE__ */ ref(0), M = /* @__PURE__ */ ref(!1), V = /* @__PURE__ */ ref(""), k = /* @__PURE__ */ ref(null), p = /* @__PURE__ */ ref(/* @__PURE__ */ new Set()), h = /* @__PURE__ */ ref({});
+		watch(() => t.name, (J) => {
+			d.value = null, x.value = 0, M.value = !1, k.value = null, p.value = /* @__PURE__ */ new Set(), h.value = {}, J && (c.value = !0, vn(), fl(J).then((U) => {
+				t.name === J && (d.value = U, c.value = !1);
 			}));
 		}, { immediate: !0 });
-		const R = computed(() => cn(t.name) ?? d.value?.preview ?? null), J = computed(() => !!R.value || Nn(t.name)), E = computed(() => d.value?.images ?? []), S = computed(() => nu(d.value?.url)), O = computed(() => E.value[z.value]), j = computed(() => Wn.value && E.value.some((le) => (le.nsfw_level ?? 0) >= Il)), I = computed(() => [d.value?.description, d.value?.version_description].filter(Boolean).join(`
+		const B = computed(() => cn(t.name) ?? d.value?.preview ?? null), te = computed(() => !!B.value || Zn(t.name)), S = computed(() => d.value?.images ?? []), $ = computed(() => nu(d.value?.url)), X = computed(() => S.value[x.value]), ne = computed(() => Fn.value && S.value.some((J) => (J.nsfw_level ?? 0) >= Il)), Z = computed(() => [d.value?.description, d.value?.version_description].filter(Boolean).join(`
 
-`)), de = computed(() => !d.value?.title && !E.value.length && !h.value.length);
-		function he(le) {
-			return Wn.value && !kn.value && (le.nsfw_level ?? 0) >= Il;
+`)), de = computed(() => !d.value?.title && !S.value.length && !z.value.length);
+		function fe(J) {
+			return Fn.value && !kn.value && (J.nsfw_level ?? 0) >= Il;
 		}
-		function Z(le) {
-			return Yl(p.value.has(le.url) && le.remote ? le.remote : le.url) ?? "";
+		function G(J) {
+			return Yl(p.value.has(J.url) && J.remote ? J.remote : J.url) ?? "";
 		}
-		function y(le) {
-			const X = Z(le);
-			return X === le.remote ? X.replace("/original=true/", "/width=320/") : X;
+		function E(J) {
+			const U = G(J);
+			return U === J.remote ? U.replace("/original=true/", "/width=320/") : U;
 		}
-		function P(le) {
-			le.remote && le.remote !== le.url && !p.value.has(le.url) && (p.value = new Set(p.value).add(le.url));
+		function g(J) {
+			J.remote && J.remote !== J.url && !p.value.has(J.url) && (p.value = new Set(p.value).add(J.url));
 		}
-		function k(le) {
-			return g.value[le.url] || (le.width && le.height ? le.width / le.height : .75);
+		function b(J) {
+			return h.value[J.url] || (J.width && J.height ? J.width / J.height : .75);
 		}
-		function q(le) {
-			return Math.round(Math.min(Math.max(yv * k(le), 40), 120));
+		function R(J) {
+			return Math.round(Math.min(Math.max(mv * b(J), 40), 120));
 		}
-		const fe = /* @__PURE__ */ ref(null);
-		function H(le) {
-			const X = E.value.length;
-			X && (z.value = (z.value + le + X) % X);
+		const ae = /* @__PURE__ */ ref(null);
+		function Q(J) {
+			const U = S.value.length;
+			U && (x.value = (x.value + J + U) % U);
 		}
-		function ae(le) {
-			const X = {
+		function ve(J) {
+			const U = {
 				ArrowLeft: -1,
 				ArrowRight: 1,
-				Home: -z.value,
-				End: E.value.length - 1 - z.value
-			}[le.key];
-			X !== void 0 && (le.preventDefault(), H(X));
+				Home: -x.value,
+				End: S.value.length - 1 - x.value
+			}[J.key];
+			U !== void 0 && (J.preventDefault(), Q(U));
 		}
-		function U(le) {
-			const X = fe.value;
-			!X || Math.abs(le.deltaX) > Math.abs(le.deltaY) || X.scrollWidth <= X.clientWidth || (le.preventDefault(), X.scrollLeft += le.deltaY);
+		function oe(J) {
+			const U = ae.value;
+			!U || Math.abs(J.deltaX) > Math.abs(J.deltaY) || U.scrollWidth <= U.clientWidth || (J.preventDefault(), U.scrollLeft += J.deltaY);
 		}
-		watch(z, (le) => nextTick(() => fe.value?.querySelector(`[data-i="${le}"]`)?.scrollIntoView({
+		watch(x, (J) => nextTick(() => ae.value?.querySelector(`[data-i="${J}"]`)?.scrollIntoView({
 			block: "nearest",
 			inline: "nearest"
 		})));
-		function ie(le, X, re) {
-			X > 0 && re > 0 && Math.abs(X / re - k(le)) > .01 && (g.value = {
-				...g.value,
-				[le.url]: X / re
+		function ce(J, U, ie) {
+			U > 0 && ie > 0 && Math.abs(U / ie - b(J)) > .01 && (h.value = {
+				...h.value,
+				[J.url]: U / ie
 			});
 		}
-		function me(le, X) {
-			const re = X.target;
-			ie(le, re.naturalWidth, re.naturalHeight);
+		function pe(J, U) {
+			const ie = U.target;
+			ce(J, ie.naturalWidth, ie.naturalHeight);
 		}
-		function _(le, X) {
-			const re = X.target;
-			ie(le, re.videoWidth, re.videoHeight);
+		function O(J, U) {
+			const ie = U.target;
+			ce(J, ie.videoWidth, ie.videoHeight);
 		}
-		function ee(le) {
-			return u[le] ?? le.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/^./, (X) => X.toUpperCase());
+		function _(J) {
+			return u[J] ?? J.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/^./, (U) => U.toUpperCase());
 		}
-		function W(le) {
-			return Array.isArray(le) ? le.join(", ") : String(le);
+		function K(J) {
+			return Array.isArray(J) ? J.join(", ") : String(J);
 		}
-		const C = computed(() => {
-			const le = O.value?.meta ?? {};
-			return r.filter(([X]) => le[X] != null && String(le[X]).trim()).map(([X, re]) => ({
-				key: X,
-				label: re,
-				text: W(le[X])
+		const Y = computed(() => {
+			const J = X.value?.meta ?? {};
+			return r.filter(([U]) => J[U] != null && String(J[U]).trim()).map(([U, ie]) => ({
+				key: U,
+				label: ie,
+				text: K(J[U])
 			}));
-		}), Y = computed(() => {
-			const le = O.value?.meta ?? {}, X = (re) => {
-				const Ke = s.indexOf(re);
-				return Ke < 0 ? s.length : Ke;
+		}), ue = computed(() => {
+			const J = X.value?.meta ?? {}, U = (ie) => {
+				const Ae = s.indexOf(ie);
+				return Ae < 0 ? s.length : Ae;
 			};
-			return Object.keys(le).filter((re) => !r.some(([Ke]) => Ke === re) && W(le[re]) !== "").sort((re, Ke) => X(re) - X(Ke)).map((re) => ({
-				key: re,
-				label: ee(re),
-				text: W(le[re])
+			return Object.keys(J).filter((ie) => !r.some(([Ae]) => Ae === ie) && K(J[ie]) !== "").sort((ie, Ae) => U(ie) - U(Ae)).map((ie) => ({
+				key: ie,
+				label: _(ie),
+				text: K(J[ie])
 			}));
-		}), h = computed(() => Object.entries(d.value?.training ?? {}).map(([le, X]) => ({
-			key: le,
-			label: ee(le.replace(/_/g, " ")),
-			text: W(X)
+		}), z = computed(() => Object.entries(d.value?.training ?? {}).map(([J, U]) => ({
+			key: J,
+			label: _(J.replace(/_/g, " ")),
+			text: K(U)
 		})));
-		function $(le) {
-			return le >= 1 << 30 ? (le / (1 << 30)).toFixed(2) + " GB" : (le / (1 << 20)).toFixed(1) + " MB";
+		function L(J) {
+			return J >= 1 << 30 ? (J / (1 << 30)).toFixed(2) + " GB" : (J / (1 << 20)).toFixed(1) + " MB";
 		}
-		let L;
-		async function ue(le, X) {
+		let A;
+		async function F(J, U) {
 			try {
-				await navigator.clipboard.writeText(X);
+				await navigator.clipboard.writeText(U);
 			} catch {
 				return;
 			}
-			B.value = le, clearTimeout(L), L = setTimeout(() => B.value = "", 1200);
+			V.value = J, clearTimeout(A), A = setTimeout(() => V.value = "", 1200);
 		}
-		onBeforeUnmount(() => clearTimeout(L));
-		function ve() {
-			if (!J.value) return;
-			const le = R.value === "video";
-			x.value = {
+		onBeforeUnmount(() => clearTimeout(A));
+		function q() {
+			if (!te.value) return;
+			const J = B.value === "video";
+			k.value = {
 				items: [{
-					src: le ? xn(t.name) : jt(t.name),
-					kind: le ? "video" : "image",
-					label: d.value?.title || dt(t.name)
+					src: J ? xn(t.name) : jt(t.name),
+					kind: J ? "video" : "image",
+					label: d.value?.title || rt(t.name)
 				}],
 				index: 0
 			};
 		}
-		function Fe() {
-			x.value = {
-				items: E.value.map((le, X) => ({
-					src: Z(le),
-					kind: le.kind,
-					label: `${d.value?.title || dt(t.name)} · ${X + 1}/${E.value.length}`,
-					meta: le.width && le.height ? `${le.width}×${le.height}` : void 0
+		function ye() {
+			k.value = {
+				items: S.value.map((J, U) => ({
+					src: G(J),
+					kind: J.kind,
+					label: `${d.value?.title || rt(t.name)} · ${U + 1}/${S.value.length}`,
+					meta: J.width && J.height ? `${J.width}×${J.height}` : void 0
 				})),
-				index: z.value
+				index: x.value
 			};
 		}
-		return (le, X) => (openBlock(), createElementBlock("div", Md, [
-			createBaseVNode("header", Ed, [createBaseVNode("button", {
+		return (J, U) => (openBlock(), createElementBlock("div", $d, [
+			createBaseVNode("header", xd, [createBaseVNode("button", {
 				type: "button",
 				class: "ld-cover",
-				disabled: !J.value,
+				disabled: !te.value,
 				title: "Enlarge",
-				onClick: ve
-			}, [J.value && R.value === "video" ? (openBlock(), createElementBlock("video", {
+				onClick: q
+			}, [te.value && B.value === "video" ? (openBlock(), createElementBlock("video", {
 				key: 0,
 				src: xn(e.name),
 				autoplay: "",
 				muted: "",
 				loop: "",
 				playsinline: ""
-			}, null, 8, Sd)) : J.value ? (openBlock(), createElementBlock("img", {
+			}, null, 8, Md)) : te.value ? (openBlock(), createElementBlock("img", {
 				key: 1,
 				src: jt(e.name)
-			}, null, 8, Cd)) : (openBlock(), createElementBlock("i", Td))], 8, Ld), createBaseVNode("div", Pd, [
+			}, null, 8, Ed)) : (openBlock(), createElementBlock("i", Ld))], 8, zd), createBaseVNode("div", Sd, [
 				createBaseVNode("div", {
 					class: "ld-title",
 					title: d.value?.title || e.name
-				}, toDisplayString(d.value?.title || dt(e.name)), 9, Id),
+				}, toDisplayString(d.value?.title || rt(e.name)), 9, Cd),
 				createBaseVNode("div", {
 					class: "ld-file",
 					title: e.name
-				}, [createTextVNode(toDisplayString(e.name) + " ", 1), d.value?.size ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [createTextVNode("· " + toDisplayString($(d.value.size)), 1)], 64)) : createCommentVNode("", !0)], 8, Ad),
-				createBaseVNode("div", Rd, [
-					d.value?.base_model ? (openBlock(), createElementBlock("span", Bd, toDisplayString(d.value.base_model), 1)) : createCommentVNode("", !0),
-					d.value?.version ? (openBlock(), createElementBlock("span", Vd, toDisplayString(d.value.version), 1)) : createCommentVNode("", !0),
-					d.value?.creator ? (openBlock(), createElementBlock("span", Dd, [X[11] || (X[11] = createBaseVNode("i", { class: "mdi mdi-account-outline" }, null, -1)), createTextVNode(" " + toDisplayString(d.value.creator), 1)])) : createCommentVNode("", !0),
-					(openBlock(!0), createElementBlock(Fragment, null, renderList(d.value?.usage, (re, Ke) => (openBlock(), createElementBlock("span", {
-						key: Ke,
+				}, [createTextVNode(toDisplayString(e.name) + " ", 1), d.value?.size ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [createTextVNode("· " + toDisplayString(L(d.value.size)), 1)], 64)) : createCommentVNode("", !0)], 8, Td),
+				createBaseVNode("div", Pd, [
+					d.value?.base_model ? (openBlock(), createElementBlock("span", Id, toDisplayString(d.value.base_model), 1)) : createCommentVNode("", !0),
+					d.value?.version ? (openBlock(), createElementBlock("span", Ad, toDisplayString(d.value.version), 1)) : createCommentVNode("", !0),
+					d.value?.creator ? (openBlock(), createElementBlock("span", Rd, [U[11] || (U[11] = createBaseVNode("i", { class: "mdi mdi-account-outline" }, null, -1)), createTextVNode(" " + toDisplayString(d.value.creator), 1)])) : createCommentVNode("", !0),
+					(openBlock(!0), createElementBlock(Fragment, null, renderList(d.value?.usage, (ie, Ae) => (openBlock(), createElementBlock("span", {
+						key: Ae,
 						class: "ld-chip"
-					}, toDisplayString(Ke) + " " + toDisplayString(re), 1))), 128))
+					}, toDisplayString(Ae) + " " + toDisplayString(ie), 1))), 128))
 				]),
-				createBaseVNode("div", Hd, [
-					createVNode(Ge$1, {
-						icon: at(e.name) ? "mdi mdi-star" : "mdi mdi-star-outline",
-						active: at(e.name),
-						title: at(e.name) ? "Remove bookmark" : "Bookmark",
-						onClick: X[0] || (X[0] = (re) => zn(e.name))
+				createBaseVNode("div", Bd, [
+					createVNode(je$1, {
+						icon: nt(e.name) ? "mdi mdi-star" : "mdi mdi-star-outline",
+						active: nt(e.name),
+						title: nt(e.name) ? "Remove bookmark" : "Bookmark",
+						onClick: U[0] || (U[0] = (ie) => zn(e.name))
 					}, null, 8, [
 						"icon",
 						"active",
 						"title"
 					]),
-					S.value ? (openBlock(), createElementBlock("a", {
+					$.value ? (openBlock(), createElementBlock("a", {
 						key: 0,
 						class: "ld-link",
-						href: S.value,
+						href: $.value,
 						target: "_blank",
 						rel: "noopener"
-					}, [...X[12] || (X[12] = [createBaseVNode("i", { class: "mdi mdi-open-in-new" }, null, -1), createTextVNode(" Civitai ", -1)])], 8, Wd)) : createCommentVNode("", !0),
+					}, [...U[12] || (U[12] = [createBaseVNode("i", { class: "mdi mdi-open-in-new" }, null, -1), createTextVNode(" Civitai ", -1)])], 8, Dd)) : createCommentVNode("", !0),
 					e.pickable ? (openBlock(), createBlock(Yt, {
 						key: 1,
 						sm: "",
 						icon: "mdi mdi-check",
-						onClick: X[1] || (X[1] = (re) => l("pick", e.name))
+						onClick: U[1] || (U[1] = (ie) => l("pick", e.name))
 					}, {
-						default: withCtx(() => [...X[13] || (X[13] = [createTextVNode(" Use ", -1)])]),
+						default: withCtx(() => [...U[13] || (U[13] = [createTextVNode(" Use ", -1)])]),
 						_: 1
 					})) : createCommentVNode("", !0)
 				])
 			])]),
-			c.value ? (openBlock(), createElementBlock("p", Fd, "Loading…")) : createCommentVNode("", !0),
-			d.value?.trigger_words?.length ? (openBlock(), createElementBlock("section", Kd, [createBaseVNode("h4", null, [X[14] || (X[14] = createTextVNode(" Trigger words ", -1)), createBaseVNode("button", {
+			c.value ? (openBlock(), createElementBlock("p", Vd, "Loading…")) : createCommentVNode("", !0),
+			d.value?.trigger_words?.length ? (openBlock(), createElementBlock("section", Hd, [createBaseVNode("h4", null, [U[14] || (U[14] = createTextVNode(" Trigger words ", -1)), createBaseVNode("button", {
 				type: "button",
 				class: "ld-copy",
-				onClick: X[2] || (X[2] = (re) => ue("words", d.value.trigger_words.join(", ")))
-			}, [createBaseVNode("i", { class: normalizeClass(["mdi", B.value === "words" ? "mdi-check" : "mdi-content-copy"]) }, null, 2)])]), createBaseVNode("div", Od, [(openBlock(!0), createElementBlock(Fragment, null, renderList(d.value.trigger_words, (re) => (openBlock(), createElementBlock("button", {
-				key: re,
+				onClick: U[2] || (U[2] = (ie) => F("words", d.value.trigger_words.join(", ")))
+			}, [createBaseVNode("i", { class: normalizeClass(["mdi", V.value === "words" ? "mdi-check" : "mdi-content-copy"]) }, null, 2)])]), createBaseVNode("div", Wd, [(openBlock(!0), createElementBlock(Fragment, null, renderList(d.value.trigger_words, (ie) => (openBlock(), createElementBlock("button", {
+				key: ie,
 				type: "button",
 				class: "ld-chip word",
 				title: "Copy",
-				onClick: (Ke) => ue("w:" + re, re)
-			}, [B.value === "w:" + re ? (openBlock(), createElementBlock("i", Nd)) : createCommentVNode("", !0), createTextVNode(" " + toDisplayString(re), 1)], 8, _d))), 128))])])) : createCommentVNode("", !0),
-			E.value.length ? (openBlock(), createElementBlock("section", Zd, [createBaseVNode("h4", null, [
-				X[16] || (X[16] = createTextVNode(" Examples ", -1)),
-				createBaseVNode("span", Ud, toDisplayString(E.value.length), 1),
-				j.value ? (openBlock(), createElementBlock("button", {
+				onClick: (Ae) => F("w:" + ie, ie)
+			}, [V.value === "w:" + ie ? (openBlock(), createElementBlock("i", Kd)) : createCommentVNode("", !0), createTextVNode(" " + toDisplayString(ie), 1)], 8, Fd))), 128))])])) : createCommentVNode("", !0),
+			S.value.length ? (openBlock(), createElementBlock("section", Od, [createBaseVNode("h4", null, [
+				U[16] || (U[16] = createTextVNode(" Examples ", -1)),
+				createBaseVNode("span", Nd, toDisplayString(S.value.length), 1),
+				ne.value ? (openBlock(), createElementBlock("button", {
 					key: 0,
 					type: "button",
 					class: normalizeClass(["ld-toggle", { on: unref(kn) }]),
-					onClick: X[3] || (X[3] = (re) => kn.value = !unref(kn))
-				}, [createBaseVNode("i", { class: normalizeClass(["mdi", unref(kn) ? "mdi-eye-outline" : "mdi-eye-off-outline"]) }, null, 2), X[15] || (X[15] = createTextVNode(" Mature ", -1))], 2)) : createCommentVNode("", !0)
+					onClick: U[3] || (U[3] = (ie) => kn.value = !unref(kn))
+				}, [createBaseVNode("i", { class: normalizeClass(["mdi", unref(kn) ? "mdi-eye-outline" : "mdi-eye-off-outline"]) }, null, 2), U[15] || (U[15] = createTextVNode(" Mature ", -1))], 2)) : createCommentVNode("", !0)
 			]), createBaseVNode("div", {
 				class: "ld-viewer",
 				tabindex: "0",
-				onKeydown: ae
-			}, [createBaseVNode("div", Xd, [O.value ? (openBlock(), createElementBlock("div", {
+				onKeydown: ve
+			}, [createBaseVNode("div", Zd, [X.value ? (openBlock(), createElementBlock("div", {
 				key: 0,
-				class: normalizeClass(["ld-stage", { blur: he(O.value) }])
+				class: normalizeClass(["ld-stage", { blur: fe(X.value) }])
 			}, [
 				createBaseVNode("button", {
 					type: "button",
 					class: "ld-stage-media",
 					title: "Open fullscreen",
-					onClick: Fe
-				}, [O.value.kind === "video" ? (openBlock(), createElementBlock("video", {
-					key: Z(O.value),
-					src: Z(O.value),
+					onClick: ye
+				}, [X.value.kind === "video" ? (openBlock(), createElementBlock("video", {
+					key: G(X.value),
+					src: G(X.value),
 					autoplay: "",
 					muted: "",
 					loop: "",
 					playsinline: "",
-					onError: X[4] || (X[4] = (re) => P(O.value))
-				}, null, 40, Yd)) : (openBlock(), createElementBlock("img", {
-					key: Z(O.value),
-					src: Z(O.value),
-					onError: X[5] || (X[5] = (re) => P(O.value))
-				}, null, 40, qd))]),
-				E.value.length > 1 ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [createBaseVNode("button", {
+					onError: U[4] || (U[4] = (ie) => g(X.value))
+				}, null, 40, _d)) : (openBlock(), createElementBlock("img", {
+					key: G(X.value),
+					src: G(X.value),
+					onError: U[5] || (U[5] = (ie) => g(X.value))
+				}, null, 40, Ud))]),
+				S.value.length > 1 ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [createBaseVNode("button", {
 					type: "button",
 					class: "ld-nav prev",
 					title: "Previous (←)",
-					onClick: X[6] || (X[6] = (re) => H(-1))
-				}, [...X[17] || (X[17] = [createBaseVNode("i", { class: "mdi mdi-chevron-left" }, null, -1)])]), createBaseVNode("button", {
+					onClick: U[6] || (U[6] = (ie) => Q(-1))
+				}, [...U[17] || (U[17] = [createBaseVNode("i", { class: "mdi mdi-chevron-left" }, null, -1)])]), createBaseVNode("button", {
 					type: "button",
 					class: "ld-nav next",
 					title: "Next (→)",
-					onClick: X[7] || (X[7] = (re) => H(1))
-				}, [...X[18] || (X[18] = [createBaseVNode("i", { class: "mdi mdi-chevron-right" }, null, -1)])])], 64)) : createCommentVNode("", !0),
-				createBaseVNode("span", jd, toDisplayString(z.value + 1) + " / " + toDisplayString(E.value.length), 1)
-			], 2)) : createCommentVNode("", !0), E.value.length > 1 ? (openBlock(), createElementBlock("div", {
+					onClick: U[7] || (U[7] = (ie) => Q(1))
+				}, [...U[18] || (U[18] = [createBaseVNode("i", { class: "mdi mdi-chevron-right" }, null, -1)])])], 64)) : createCommentVNode("", !0),
+				createBaseVNode("span", Xd, toDisplayString(x.value + 1) + " / " + toDisplayString(S.value.length), 1)
+			], 2)) : createCommentVNode("", !0), S.value.length > 1 ? (openBlock(), createElementBlock("div", {
 				key: 1,
 				ref_key: "strip",
-				ref: fe,
+				ref: ae,
 				class: "ld-strip zen-scroll",
-				onWheel: U
-			}, [(openBlock(!0), createElementBlock(Fragment, null, renderList(E.value, (re, Ke) => (openBlock(), createElementBlock("button", {
-				key: re.url || Ke,
+				onWheel: oe
+			}, [(openBlock(!0), createElementBlock(Fragment, null, renderList(S.value, (ie, Ae) => (openBlock(), createElementBlock("button", {
+				key: ie.url || Ae,
 				type: "button",
 				class: normalizeClass(["ld-thumb", {
-					sel: Ke === z.value,
-					blur: he(re)
+					sel: Ae === x.value,
+					blur: fe(ie)
 				}]),
-				style: normalizeStyle({ width: `${q(re)}px` }),
-				"data-i": Ke,
-				title: `Example ${Ke + 1}`,
-				onClick: (Ye) => z.value = Ke
-			}, [re.kind === "video" ? (openBlock(), createElementBlock("video", {
+				style: normalizeStyle({ width: `${R(ie)}px` }),
+				"data-i": Ae,
+				title: `Example ${Ae + 1}`,
+				onClick: (_e) => x.value = Ae
+			}, [ie.kind === "video" ? (openBlock(), createElementBlock("video", {
 				key: 0,
-				src: Z(re) + "#t=0.1",
+				src: G(ie) + "#t=0.1",
 				preload: "metadata",
 				muted: "",
-				onLoadedmetadata: (Ye) => _(re, Ye),
-				onError: (Ye) => P(re)
-			}, null, 40, Jd)) : (openBlock(), createElementBlock("img", {
+				onLoadedmetadata: (_e) => O(ie, _e),
+				onError: (_e) => g(ie)
+			}, null, 40, qd)) : (openBlock(), createElementBlock("img", {
 				key: 1,
-				src: y(re),
+				src: E(ie),
 				loading: "lazy",
-				onLoad: (Ye) => me(re, Ye),
-				onError: (Ye) => P(re)
-			}, null, 40, Qd)), re.kind === "video" ? (openBlock(), createElementBlock("i", ev)) : createCommentVNode("", !0)], 14, Gd))), 128))], 544)) : createCommentVNode("", !0)]), createBaseVNode("div", tv, [
-				(openBlock(!0), createElementBlock(Fragment, null, renderList(C.value, (re) => (openBlock(), createElementBlock("div", {
-					key: re.key,
+				onLoad: (_e) => pe(ie, _e),
+				onError: (_e) => g(ie)
+			}, null, 40, jd)), ie.kind === "video" ? (openBlock(), createElementBlock("i", Gd)) : createCommentVNode("", !0)], 14, Yd))), 128))], 544)) : createCommentVNode("", !0)]), createBaseVNode("div", Jd, [
+				(openBlock(!0), createElementBlock(Fragment, null, renderList(Y.value, (ie) => (openBlock(), createElementBlock("div", {
+					key: ie.key,
 					class: "ld-prompt"
-				}, [createBaseVNode("div", nv, [createTextVNode(toDisplayString(re.label) + " ", 1), createBaseVNode("button", {
+				}, [createBaseVNode("div", Qd, [createTextVNode(toDisplayString(ie.label) + " ", 1), createBaseVNode("button", {
 					type: "button",
 					class: "ld-copy",
-					onClick: (Ke) => ue(re.key, re.text)
-				}, [createBaseVNode("i", { class: normalizeClass(["mdi", B.value === re.key ? "mdi-check" : "mdi-content-copy"]) }, null, 2)], 8, lv)]), createBaseVNode("div", ov, toDisplayString(re.text), 1)]))), 128)),
-				Y.value.length ? (openBlock(), createElementBlock("dl", av, [(openBlock(!0), createElementBlock(Fragment, null, renderList(Y.value, (re) => (openBlock(), createElementBlock(Fragment, { key: re.key }, [createBaseVNode("dt", null, toDisplayString(re.label), 1), createBaseVNode("dd", { title: re.text }, toDisplayString(re.text), 9, sv)], 64))), 128))])) : createCommentVNode("", !0),
-				!C.value.length && !Y.value.length ? (openBlock(), createElementBlock("p", iv, " No generation details were published for this example. ")) : createCommentVNode("", !0)
+					onClick: (Ae) => F(ie.key, ie.text)
+				}, [createBaseVNode("i", { class: normalizeClass(["mdi", V.value === ie.key ? "mdi-check" : "mdi-content-copy"]) }, null, 2)], 8, ev)]), createBaseVNode("div", tv, toDisplayString(ie.text), 1)]))), 128)),
+				ue.value.length ? (openBlock(), createElementBlock("dl", nv, [(openBlock(!0), createElementBlock(Fragment, null, renderList(ue.value, (ie) => (openBlock(), createElementBlock(Fragment, { key: ie.key }, [createBaseVNode("dt", null, toDisplayString(ie.label), 1), createBaseVNode("dd", { title: ie.text }, toDisplayString(ie.text), 9, lv)], 64))), 128))])) : createCommentVNode("", !0),
+				!Y.value.length && !ue.value.length ? (openBlock(), createElementBlock("p", ov, " No generation details were published for this example. ")) : createCommentVNode("", !0)
 			])], 32)])) : createCommentVNode("", !0),
-			d.value?.tags?.length ? (openBlock(), createElementBlock("section", uv, [X[19] || (X[19] = createBaseVNode("h4", null, "Tags", -1)), createBaseVNode("div", rv, [(openBlock(!0), createElementBlock(Fragment, null, renderList(d.value.tags, (re) => (openBlock(), createElementBlock("span", {
-				key: re,
+			d.value?.tags?.length ? (openBlock(), createElementBlock("section", av, [U[19] || (U[19] = createBaseVNode("h4", null, "Tags", -1)), createBaseVNode("div", sv, [(openBlock(!0), createElementBlock(Fragment, null, renderList(d.value.tags, (ie) => (openBlock(), createElementBlock("span", {
+				key: ie,
 				class: "ld-chip"
-			}, toDisplayString(re), 1))), 128))])])) : createCommentVNode("", !0),
-			I.value ? (openBlock(), createElementBlock("section", cv, [
-				X[20] || (X[20] = createBaseVNode("h4", null, "About", -1)),
-				createBaseVNode("div", { class: normalizeClass(["ld-desc", { open: M.value }]) }, toDisplayString(I.value), 3),
-				I.value.length > 400 ? (openBlock(), createElementBlock("button", {
+			}, toDisplayString(ie), 1))), 128))])])) : createCommentVNode("", !0),
+			Z.value ? (openBlock(), createElementBlock("section", iv, [
+				U[20] || (U[20] = createBaseVNode("h4", null, "About", -1)),
+				createBaseVNode("div", { class: normalizeClass(["ld-desc", { open: M.value }]) }, toDisplayString(Z.value), 3),
+				Z.value.length > 400 ? (openBlock(), createElementBlock("button", {
 					key: 0,
 					type: "button",
 					class: "ld-more",
-					onClick: X[8] || (X[8] = (re) => M.value = !M.value)
+					onClick: U[8] || (U[8] = (ie) => M.value = !M.value)
 				}, toDisplayString(M.value ? "Show less" : "Show more"), 1)) : createCommentVNode("", !0)
 			])) : createCommentVNode("", !0),
-			d.value?.notes ? (openBlock(), createElementBlock("section", dv, [X[21] || (X[21] = createBaseVNode("h4", null, "Notes", -1)), createBaseVNode("div", vv, toDisplayString(d.value.notes), 1)])) : createCommentVNode("", !0),
-			h.value.length ? (openBlock(), createElementBlock("section", fv, [X[22] || (X[22] = createBaseVNode("h4", null, "Training", -1)), createBaseVNode("dl", mv, [(openBlock(!0), createElementBlock(Fragment, null, renderList(h.value, (re) => (openBlock(), createElementBlock(Fragment, { key: re.key }, [createBaseVNode("dt", null, toDisplayString(re.label), 1), createBaseVNode("dd", { title: re.text }, toDisplayString(re.text), 9, pv)], 64))), 128))])])) : createCommentVNode("", !0),
-			!c.value && de.value ? (openBlock(), createElementBlock("p", hv, [...X[23] || (X[23] = [
+			d.value?.notes ? (openBlock(), createElementBlock("section", uv, [U[21] || (U[21] = createBaseVNode("h4", null, "Notes", -1)), createBaseVNode("div", rv, toDisplayString(d.value.notes), 1)])) : createCommentVNode("", !0),
+			z.value.length ? (openBlock(), createElementBlock("section", cv, [U[22] || (U[22] = createBaseVNode("h4", null, "Training", -1)), createBaseVNode("dl", dv, [(openBlock(!0), createElementBlock(Fragment, null, renderList(z.value, (ie) => (openBlock(), createElementBlock(Fragment, { key: ie.key }, [createBaseVNode("dt", null, toDisplayString(ie.label), 1), createBaseVNode("dd", { title: ie.text }, toDisplayString(ie.text), 9, vv)], 64))), 128))])])) : createCommentVNode("", !0),
+			!c.value && de.value ? (openBlock(), createElementBlock("p", fv, [...U[23] || (U[23] = [
 				createTextVNode(" No metadata found. A ", -1),
 				createBaseVNode("code", null, ".metadata.json", -1),
 				createTextVNode(" sidecar (as written by Lora Manager) adds Civitai details and example images. ", -1)
 			])])) : createCommentVNode("", !0),
-			x.value ? (openBlock(), createBlock(Ou, {
+			k.value ? (openBlock(), createBlock(Ou, {
 				key: 8,
-				items: x.value.items,
-				index: x.value.index,
-				"onUpdate:index": X[9] || (X[9] = (re) => x.value.index = re),
-				onClose: X[10] || (X[10] = (re) => x.value = null)
+				items: k.value.items,
+				index: k.value.index,
+				"onUpdate:index": U[9] || (U[9] = (ie) => k.value.index = ie),
+				onClose: U[10] || (U[10] = (ie) => k.value = null)
 			}, null, 8, ["items", "index"])) : createCommentVNode("", !0)
 		]));
 	}
-}), [["__scopeId", "data-v-4262c681"]]);
-var bv = /* @__PURE__ */ defineComponent({
+}), [["__scopeId", "data-v-a9e6a30b"]]);
+var hv = /* @__PURE__ */ defineComponent({
 	__name: "LoraDetailModal",
 	setup(e) {
-		return (o, t) => (openBlock(), createBlock(cl, {
-			open: unref(Bn),
-			"onUpdate:open": t[0] || (t[0] = (l) => /* @__PURE__ */ isRef(Bn) ? Bn.value = l : null),
+		return (o, t) => (openBlock(), createBlock(dl, {
+			open: unref(Vn),
+			"onUpdate:open": t[0] || (t[0] = (l) => /* @__PURE__ */ isRef(Vn) ? Vn.value = l : null),
 			title: "LoRA details",
 			width: "640px",
 			height: "82vh"
@@ -11404,31 +11420,31 @@ function eo(e) {
 	document.body.appendChild(o), createApp(e).mount(o);
 }
 var Rl = !1;
-function kv() {
+function yv() {
 	if (Rl) return;
 	Rl = !0;
 	const e = (o) => En.value = o.shiftKey;
-	window.addEventListener("keydown", e, !0), window.addEventListener("keyup", e, !0), window.addEventListener("blur", () => En.value = !1), eo(zd);
+	window.addEventListener("keydown", e, !0), window.addEventListener("keyup", e, !0), window.addEventListener("blur", () => En.value = !1), eo(wd);
 }
 function to(e, o, t) {
-	kv(), t !== void 0 && (En.value = t), ct.value = e ? {
+	yv(), t !== void 0 && (En.value = t), ut$1.value = e ? {
 		name: e,
 		el: o
 	} : null;
 }
 function no(e) {
-	ct.value?.el === e && (ct.value = null);
+	ut$1.value?.el === e && (ut$1.value = null);
 }
 var lo = null;
-function hm(e) {
+function fm(e) {
 	lo = e;
 }
-function wv(e) {
-	e && (ct.value = null, sl.value = e, !lo?.(e) && (eo(bv), Bn.value = !0));
+function gv(e) {
+	e && (ut$1.value = null, sl.value = e, !lo?.(e) && (eo(hv), Vn.value = !0));
 }
-var $v = ["title"];
-var xv = ["src"];
-var Bl = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var bv = ["title"];
+var kv = ["src"];
+var Bl = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "LoraThumb",
 	props: {
 		name: {},
@@ -11446,7 +11462,7 @@ var Bl = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 		}
 	},
 	setup(e) {
-		const o = e, t = computed(() => o.checkMissing && Mn(o.name)), l = computed(() => !!o.name && (o.strict ? Fn(o.name) : Nn(o.name)));
+		const o = e, t = computed(() => o.checkMissing && Mn(o.name)), l = computed(() => !!o.name && (o.strict ? Kn(o.name) : Zn(o.name)));
 		let r = null;
 		const s = {
 			mouseenter(d) {
@@ -11459,7 +11475,7 @@ var Bl = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 				d.shiftKey && o.name && d.stopPropagation();
 			},
 			click(d) {
-				!d.shiftKey || !o.name || (d.preventDefault(), d.stopPropagation(), wv(o.name));
+				!d.shiftKey || !o.name || (d.preventDefault(), d.stopPropagation(), gv(o.name));
 			}
 		};
 		onBeforeUnmount(() => s.mouseleave());
@@ -11470,34 +11486,34 @@ var Bl = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			key: 0,
 			class: normalizeClass(["mdi mdi-alert lt warn", { sm: e.sm }]),
 			title: `LoRA not found on disk: ${e.name}`
-		}, null, 10, $v)) : l.value ? (openBlock(), createElementBlock("img", mergeProps({
+		}, null, 10, bv)) : l.value ? (openBlock(), createElementBlock("img", mergeProps({
 			key: 1,
 			class: ["lt", { sm: e.sm }],
 			src: jt(e.name, e.sm ? 18 : 40),
 			loading: "lazy"
-		}, toHandlers(s, !0), { onError: u }), null, 16, xv)) : (openBlock(), createElementBlock("i", mergeProps({
+		}, toHandlers(s, !0), { onError: u }), null, 16, kv)) : (openBlock(), createElementBlock("i", mergeProps({
 			key: 2,
 			class: ["mdi mdi-cube-outline lt ph", { sm: e.sm }]
 		}, toHandlers(s, !0)), null, 16));
 	}
 }), [["__scopeId", "data-v-40f2868d"]]);
-var Mv = { class: "lp-sel-name" };
-var Ev = ["title", "onClick"];
-var Lv = { class: "lp-crumbs" };
-var Sv = ["disabled"];
-var Cv = ["onClick"];
+var $v = { class: "lp-sel-name" };
+var xv = ["title", "onClick"];
+var zv = { class: "lp-crumbs" };
+var Mv = ["disabled"];
+var Ev = ["onClick"];
+var Lv = { class: "lp-opt" };
+var Sv = { class: "lp-opt-name" };
+var Cv = { class: "lp-opt-dir" };
 var Tv = { class: "lp-opt" };
 var Pv = { class: "lp-opt-name" };
-var Iv = { class: "lp-opt-dir" };
-var Av = { class: "lp-opt" };
-var Rv = { class: "lp-opt-name" };
-var Bv = {
+var Iv = {
 	key: 0,
 	class: "lp-opt-dir"
 };
-var Vv = ["title", "onClick"];
+var Av = ["title", "onClick"];
 var Jn = "\0dir:";
-var ym = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var mm = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "LoraPicker",
 	props: {
 		modelValue: {},
@@ -11506,63 +11522,63 @@ var ym = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 	},
 	emits: ["update:modelValue", "browse"],
 	setup(e, { emit: o }) {
-		const t = e, l = o, r = /* @__PURE__ */ ref(""), s = /* @__PURE__ */ ref(""), u = computed(() => Wt.value.has(r.value) ? r.value : ""), d = computed(() => u.value ? u.value.split("/") : []), c = computed(() => dl.value && !s.value.trim() && (Wt.value.get("")?.folders.length ?? 0) > 0);
-		function z(E) {
+		const t = e, l = o, r = /* @__PURE__ */ ref(""), s = /* @__PURE__ */ ref(""), u = computed(() => Wt.value.has(r.value) ? r.value : ""), d = computed(() => u.value ? u.value.split("/") : []), c = computed(() => vl.value && !s.value.trim() && (Wt.value.get("")?.folders.length ?? 0) > 0);
+		function x(S) {
 			return {
-				value: E,
-				label: dt(E),
-				keywords: E
+				value: S,
+				label: rt(S),
+				keywords: S
 			};
 		}
 		const M = computed(() => {
-			if (!c.value) return xt.value.map((de) => z(de.name));
-			const E = Wt.value.get(u.value);
-			if (!E) return [];
-			const S = E.folders.map((de) => {
-				const he = u.value ? `${u.value}/${de}` : de;
+			if (!c.value) return $t.value.map((de) => x(de.name));
+			const S = Wt.value.get(u.value);
+			if (!S) return [];
+			const $ = S.folders.map((de) => {
+				const fe = u.value ? `${u.value}/${de}` : de;
 				return {
-					value: Jn + he,
+					value: Jn + fe,
 					label: de,
 					folder: !0,
-					count: Wt.value.get(he)?.total
+					count: Wt.value.get(fe)?.total
 				};
-			}), O = qt.value.filter((de) => !Mn(de));
+			}), X = qt.value.filter((de) => !Mn(de));
 			if (!u.value) {
-				const de = E.files.filter((he) => !at(he));
+				const de = S.files.filter((fe) => !nt(fe));
 				return [
-					...O.map(z),
-					...S,
-					...de.map(z)
+					...X.map(x),
+					...$,
+					...de.map(x)
 				];
 			}
-			const j = E.files.filter((de) => at(de)), I = E.files.filter((de) => !at(de));
+			const ne = S.files.filter((de) => nt(de)), Z = S.files.filter((de) => !nt(de));
 			return [
-				...S,
-				...j.map(z),
-				...I.map(z)
+				...$,
+				...ne.map(x),
+				...Z.map(x)
 			];
 		});
-		function B(E) {
-			const S = $t(E);
-			return !!S && (!c.value || S !== u.value);
+		function V(S) {
+			const $ = wt(S);
+			return !!$ && (!c.value || $ !== u.value);
 		}
-		function x() {
-			vn(), s.value = "", r.value = $t(t.modelValue);
+		function k() {
+			vn(), s.value = "", r.value = wt(t.modelValue);
 		}
-		function p(E) {
-			const S = String(E);
-			return S.startsWith(Jn) ? (r.value = S.slice(5), !0) : !1;
+		function p(S) {
+			const $ = String(S);
+			return $.startsWith(Jn) ? (r.value = $.slice(5), !0) : !1;
 		}
-		function g() {
+		function h() {
 			r.value = u.value.split("/").slice(0, -1).join("/");
 		}
-		function R(E) {
-			E.key === "Backspace" && c.value && u.value && (E.preventDefault(), g());
+		function B(S) {
+			S.key === "Backspace" && c.value && u.value && (S.preventDefault(), h());
 		}
-		function J(E) {
-			E(), l("browse");
+		function te(S) {
+			S(), l("browse");
 		}
-		return (E, S) => (openBlock(), createBlock($s, {
+		return (S, $) => (openBlock(), createBlock($s, {
 			"model-value": e.modelValue,
 			items: M.value,
 			pinned: qt.value,
@@ -11572,60 +11588,60 @@ var ym = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			"item-height": 54,
 			placeholder: e.placeholder,
 			"empty-text": "No LoRAs found",
-			"onUpdate:modelValue": S[1] || (S[1] = (O) => l("update:modelValue", String(O))),
-			onOpen: x,
-			onQuery: S[2] || (S[2] = (O) => s.value = O),
-			onKey: R
+			"onUpdate:modelValue": $[1] || ($[1] = (X) => l("update:modelValue", String(X))),
+			onOpen: k,
+			onQuery: $[2] || ($[2] = (X) => s.value = X),
+			onKey: B
 		}, createSlots({
 			selected: withCtx(() => [createBaseVNode("span", { class: normalizeClass(["lp-sel", { missing: Mn(e.modelValue) }]) }, [createVNode(Bl, {
 				name: e.modelValue,
 				sm: "",
 				"check-missing": ""
-			}, null, 8, ["name"]), createBaseVNode("span", Mv, toDisplayString(e.modelValue ? dt(e.modelValue) : e.placeholder), 1)], 2)]),
-			search: withCtx(({ close: O }) => [createBaseVNode("button", {
+			}, null, 8, ["name"]), createBaseVNode("span", $v, toDisplayString(e.modelValue ? rt(e.modelValue) : e.placeholder), 1)], 2)]),
+			search: withCtx(({ close: X }) => [createBaseVNode("button", {
 				type: "button",
 				class: "lp-browse",
-				title: `Browse all (${xt.value.length})`,
-				onClick: (j) => J(O)
-			}, [...S[3] || (S[3] = [createBaseVNode("i", { class: "mdi mdi-view-grid-outline" }, null, -1)])], 8, Ev)]),
-			option: withCtx(({ item: O }) => [O.folder ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
-				S[6] || (S[6] = createBaseVNode("i", { class: "mdi mdi-folder lp-folder" }, null, -1)),
-				createBaseVNode("span", Tv, [createBaseVNode("span", Pv, toDisplayString(O.label), 1), createBaseVNode("span", Iv, toDisplayString(O.count) + " LoRA" + toDisplayString(O.count === 1 ? "" : "s"), 1)]),
-				S[7] || (S[7] = createBaseVNode("i", { class: "mdi mdi-chevron-right lp-chev" }, null, -1))
+				title: `Browse all (${$t.value.length})`,
+				onClick: (ne) => te(X)
+			}, [...$[3] || ($[3] = [createBaseVNode("i", { class: "mdi mdi-view-grid-outline" }, null, -1)])], 8, xv)]),
+			option: withCtx(({ item: X }) => [X.folder ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
+				$[6] || ($[6] = createBaseVNode("i", { class: "mdi mdi-folder lp-folder" }, null, -1)),
+				createBaseVNode("span", Lv, [createBaseVNode("span", Sv, toDisplayString(X.label), 1), createBaseVNode("span", Cv, toDisplayString(X.count) + " LoRA" + toDisplayString(X.count === 1 ? "" : "s"), 1)]),
+				$[7] || ($[7] = createBaseVNode("i", { class: "mdi mdi-chevron-right lp-chev" }, null, -1))
 			], 64)) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
 				createVNode(Bl, {
-					name: String(O.value),
+					name: String(X.value),
 					strict: ""
 				}, null, 8, ["name"]),
-				createBaseVNode("span", Av, [createBaseVNode("span", Rv, toDisplayString(dt(O.value)), 1), B(O.value) ? (openBlock(), createElementBlock("span", Bv, toDisplayString($t(O.value)), 1)) : createCommentVNode("", !0)]),
+				createBaseVNode("span", Tv, [createBaseVNode("span", Pv, toDisplayString(rt(X.value)), 1), V(X.value) ? (openBlock(), createElementBlock("span", Iv, toDisplayString(wt(X.value)), 1)) : createCommentVNode("", !0)]),
 				createBaseVNode("button", {
 					type: "button",
-					class: normalizeClass(["lp-star", { on: at(O.value) }]),
-					title: at(O.value) ? "Remove bookmark" : "Bookmark",
-					onClick: withModifiers((j) => zn(O.value), ["stop"])
-				}, [createBaseVNode("i", { class: normalizeClass(["mdi", at(O.value) ? "mdi-star" : "mdi-star-outline"]) }, null, 2)], 10, Vv)
+					class: normalizeClass(["lp-star", { on: nt(X.value) }]),
+					title: nt(X.value) ? "Remove bookmark" : "Bookmark",
+					onClick: withModifiers((ne) => zn(X.value), ["stop"])
+				}, [createBaseVNode("i", { class: normalizeClass(["mdi", nt(X.value) ? "mdi-star" : "mdi-star-outline"]) }, null, 2)], 10, Av)
 			], 64))]),
 			_: 2
 		}, [c.value ? {
 			name: "header",
-			fn: withCtx(() => [createBaseVNode("div", Lv, [
+			fn: withCtx(() => [createBaseVNode("div", zv, [
 				createBaseVNode("button", {
 					type: "button",
 					class: "lp-up",
 					disabled: !u.value,
 					title: "Up (Backspace)",
-					onClick: g
-				}, [...S[4] || (S[4] = [createBaseVNode("i", { class: "mdi mdi-arrow-up" }, null, -1)])], 8, Sv),
+					onClick: h
+				}, [...$[4] || ($[4] = [createBaseVNode("i", { class: "mdi mdi-arrow-up" }, null, -1)])], 8, Mv),
 				createBaseVNode("button", {
 					type: "button",
 					class: normalizeClass(["lp-crumb", { on: !u.value }]),
-					onClick: S[0] || (S[0] = (O) => r.value = "")
+					onClick: $[0] || ($[0] = (X) => r.value = "")
 				}, " All ", 2),
-				(openBlock(!0), createElementBlock(Fragment, null, renderList(d.value, (O, j) => (openBlock(), createElementBlock(Fragment, { key: j }, [S[5] || (S[5] = createBaseVNode("i", { class: "mdi mdi-chevron-right" }, null, -1)), createBaseVNode("button", {
+				(openBlock(!0), createElementBlock(Fragment, null, renderList(d.value, (X, ne) => (openBlock(), createElementBlock(Fragment, { key: ne }, [$[5] || ($[5] = createBaseVNode("i", { class: "mdi mdi-chevron-right" }, null, -1)), createBaseVNode("button", {
 					type: "button",
-					class: normalizeClass(["lp-crumb", { on: j === d.value.length - 1 }]),
-					onClick: (I) => r.value = d.value.slice(0, j + 1).join("/")
-				}, toDisplayString(O), 11, Cv)], 64))), 128))
+					class: normalizeClass(["lp-crumb", { on: ne === d.value.length - 1 }]),
+					onClick: (Z) => r.value = d.value.slice(0, ne + 1).join("/")
+				}, toDisplayString(X), 11, Ev)], 64))), 128))
 			])]),
 			key: "0"
 		} : void 0]), 1032, [
@@ -11638,101 +11654,101 @@ var ym = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 		]));
 	}
 }), [["__scopeId", "data-v-ba2b3a49"]]);
-var Hv = { class: "lb-search" };
-var Wv = { class: "lb-folders zen-scroll" };
-var Fv = { class: "lb-count" };
+var Bv = { class: "lb-search" };
+var Dv = { class: "lb-folders zen-scroll" };
+var Vv = { class: "lb-count" };
+var Hv = { class: "lb-count" };
+var Wv = ["title", "onClick"];
+var Fv = { class: "lb-fname" };
 var Kv = { class: "lb-count" };
-var Ov = ["title", "onClick"];
-var _v = { class: "lb-fname" };
-var Nv = { class: "lb-count" };
-var Zv = {
+var Ov = {
 	key: 1,
 	class: "lb-sep"
 };
-var Uv = { class: "lb-main" };
-var Xv = { class: "lb-filters" };
-var Yv = { class: "lb-scope" };
-var qv = { class: "lb-soft" };
-var jv = {
+var Nv = { class: "lb-main" };
+var Zv = { class: "lb-filters" };
+var _v = { class: "lb-scope" };
+var Uv = { class: "lb-soft" };
+var Xv = {
 	key: 0,
 	class: "lb-list"
 };
-var Gv = [
+var Yv = [
 	"data-name",
 	"title",
 	"onClick",
 	"onDblclick",
 	"onMouseenter"
 ];
-var Jv = { class: "lb-rthumb" };
-var Qv = ["src"];
-var ef = {
+var qv = { class: "lb-rthumb" };
+var jv = ["src"];
+var Gv = {
 	key: 1,
 	class: "mdi mdi-cube-outline"
 };
-var tf = { class: "lb-rname" };
-var nf = {
+var Jv = { class: "lb-rname" };
+var Qv = {
 	key: 0,
 	class: "mdi mdi-play-circle-outline"
 };
-var lf = {
+var ef = {
 	key: 1,
 	class: "mdi mdi-check lb-rcur",
 	title: "Already chosen here"
 };
-var of = { class: "lb-rdir" };
-var af = { class: "num" };
-var sf = { class: "num" };
-var uf = ["title", "onClick"];
-var rf = [
+var tf = { class: "lb-rdir" };
+var nf = { class: "num" };
+var lf = { class: "num" };
+var of = ["title", "onClick"];
+var af = [
 	"data-name",
 	"title",
 	"onClick",
 	"onDblclick",
 	"onMouseenter"
 ];
-var cf = { class: "lb-img" };
-var df = ["src"];
-var vf = ["src"];
-var ff = {
+var sf = { class: "lb-img" };
+var uf = ["src"];
+var rf = ["src"];
+var cf = {
 	key: 2,
 	class: "mdi mdi-cube-outline lb-noimg"
 };
-var mf = {
+var df = {
 	key: 3,
 	class: "lb-badge"
 };
-var pf = ["title", "onClick"];
-var hf = {
+var vf = ["title", "onClick"];
+var ff = {
 	key: 4,
 	class: "lb-inuse",
 	title: "Already chosen here"
 };
-var yf = { class: "lb-name" };
-var gf = {
+var mf = { class: "lb-name" };
+var pf = {
 	key: 0,
 	class: "lb-dir"
 };
-var bf = {
+var hf = {
 	key: 0,
 	class: "lb-empty"
 };
-var kf = {
+var yf = {
 	key: 1,
 	class: "lb-empty"
 };
-var wf = { class: "lb-detail zen-scroll" };
-var $f = {
+var gf = { class: "lb-detail zen-scroll" };
+var bf = {
 	key: 1,
 	class: "lb-hint"
 };
-var xf = { class: "lb-foot" };
-var zf = { class: "lb-soft lb-foot-name" };
-var Dt = "\0all";
+var kf = { class: "lb-foot" };
+var wf = { class: "lb-soft lb-foot-name" };
+var Vt = "\0all";
 var Ct = "\0fav";
-var Vl = "zenkit.loraBrowser";
-var Dl = "zenkit.loraBrowser.pinned";
-var gm = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
+var Dl = "zenkit.loraBrowser";
+var Vl = "zenkit.loraBrowser.pinned";
+var pm = /* @__PURE__ */ Pe$1(/* @__PURE__ */ defineComponent({
 	__name: "LoraBrowser",
 	props: {
 		open: { type: Boolean },
@@ -11789,235 +11805,235 @@ var gm = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 			s: 104,
 			m: 148,
 			l: 210
-		}, c = /* @__PURE__ */ ref(Dt), z = /* @__PURE__ */ ref(""), M = /* @__PURE__ */ ref("name"), B = /* @__PURE__ */ ref("grid"), x = /* @__PURE__ */ ref(null), p = /* @__PURE__ */ ref("m"), g = /* @__PURE__ */ ref(""), R = /* @__PURE__ */ ref(""), J = /* @__PURE__ */ ref(null);
+		}, c = /* @__PURE__ */ ref(Vt), x = /* @__PURE__ */ ref(""), M = /* @__PURE__ */ ref("name"), V = /* @__PURE__ */ ref("grid"), k = /* @__PURE__ */ ref(null), p = /* @__PURE__ */ ref("m"), h = /* @__PURE__ */ ref(""), B = /* @__PURE__ */ ref(""), te = /* @__PURE__ */ ref(null);
 		try {
-			const h = JSON.parse(localStorage.getItem(Vl) ?? "{}");
-			h.sort && (M.value = h.sort), h.size && (p.value = h.size), (h.view === "list" || h.view === "grid") && (B.value = h.view);
+			const z = JSON.parse(localStorage.getItem(Dl) ?? "{}");
+			z.sort && (M.value = z.sort), z.size && (p.value = z.size), (z.view === "list" || z.view === "grid") && (V.value = z.view);
 		} catch {}
 		watch([
 			M,
 			p,
-			B
+			V
 		], () => {
 			try {
-				localStorage.setItem(Vl, JSON.stringify({
+				localStorage.setItem(Dl, JSON.stringify({
 					sort: M.value,
 					size: p.value,
-					view: B.value
+					view: V.value
 				}));
 			} catch {}
-		}), watch(() => t.open, (h) => {
-			if (!h) return;
-			z.value = "", g.value = t.selected ?? "";
-			const $ = t.selected ? $t(t.selected) : "";
-			c.value = $ && Wt.value.has($) ? $ : Dt, vn().then(() => nextTick(C));
+		}), watch(() => t.open, (z) => {
+			if (!z) return;
+			x.value = "", h.value = t.selected ?? "";
+			const L = t.selected ? wt(t.selected) : "";
+			c.value = L && Wt.value.has(L) ? L : Vt, vn().then(() => nextTick(Y));
 		}, { immediate: !0 });
-		function E(h) {
-			const $ = h.currentTarget;
-			return $.querySelector(".lb-rthumb") ?? $;
+		function S(z) {
+			const L = z.currentTarget;
+			return L.querySelector(".lb-rthumb") ?? L;
 		}
-		function S(h) {
-			l("update:open", h);
+		function $(z) {
+			l("update:open", z);
 		}
-		function O(h) {
-			c.value = h;
+		function X(z) {
+			c.value = z;
 		}
-		const j = /* @__PURE__ */ ref(I());
-		function I() {
+		const ne = /* @__PURE__ */ ref(Z());
+		function Z() {
 			try {
-				const h = JSON.parse(localStorage.getItem(Dl) ?? "[]");
-				return Array.isArray(h) ? h.filter(($) => typeof $ == "string") : [];
+				const z = JSON.parse(localStorage.getItem(Vl) ?? "[]");
+				return Array.isArray(z) ? z.filter((L) => typeof L == "string") : [];
 			} catch {
 				return [];
 			}
 		}
-		function de(h) {
-			return j.value.includes(h);
+		function de(z) {
+			return ne.value.includes(z);
 		}
-		function he(h) {
-			j.value = de(h) ? j.value.filter(($) => $ !== h) : [...j.value, h];
+		function fe(z) {
+			ne.value = de(z) ? ne.value.filter((L) => L !== z) : [...ne.value, z];
 			try {
-				localStorage.setItem(Dl, JSON.stringify(j.value));
+				localStorage.setItem(Vl, JSON.stringify(ne.value));
 			} catch {}
 		}
-		const Z = computed(() => j.value.flatMap((h) => {
-			const $ = Wt.value.get(h);
-			return $ ? [{
-				path: h,
-				count: $.total
+		const G = computed(() => ne.value.flatMap((z) => {
+			const L = Wt.value.get(z);
+			return L ? [{
+				path: z,
+				count: L.total
 			}] : [];
-		})), y = computed(() => qt.value.filter((h) => !Mn(h)).length), P = computed(() => c.value === Dt ? "all LoRAs" : c.value === Ct ? "bookmarks" : c.value.split("/").pop() ?? c.value), k = computed(() => [...Wt.value.entries()].filter(([h]) => h).map(([h, $]) => ({
-			path: h,
-			count: $.total
-		}))), q = computed(() => {
-			const h = z.value.trim().toLowerCase(), $ = (ve) => c.value === Dt || (c.value === Ct ? at(ve.name) : ve.name.startsWith(`${c.value}/`)), L = xt.value.filter((ve) => $(ve) && (!h || ve.name.toLowerCase().includes(h))), ue = (ve, Fe) => dt(ve.name).localeCompare(dt(Fe.name), void 0, { numeric: !0 });
-			return M.value === "folder" ? L.sort((ve, Fe) => $t(ve.name).localeCompare($t(Fe.name)) || ue(ve, Fe)) : M.value === "new" ? L.sort((ve, Fe) => (Fe.mtime ?? 0) - (ve.mtime ?? 0) || ue(ve, Fe)) : M.value === "big" ? L.sort((ve, Fe) => (Fe.size ?? 0) - (ve.size ?? 0) || ue(ve, Fe)) : L.sort(ue);
+		})), E = computed(() => qt.value.filter((z) => !Mn(z)).length), g = computed(() => c.value === Vt ? "all LoRAs" : c.value === Ct ? "bookmarks" : c.value.split("/").pop() ?? c.value), b = computed(() => [...Wt.value.entries()].filter(([z]) => z).map(([z, L]) => ({
+			path: z,
+			count: L.total
+		}))), R = computed(() => {
+			const z = x.value.trim().toLowerCase(), L = (q) => c.value === Vt || (c.value === Ct ? nt(q.name) : q.name.startsWith(`${c.value}/`)), A = $t.value.filter((q) => L(q) && (!z || q.name.toLowerCase().includes(z))), F = (q, ye) => rt(q.name).localeCompare(rt(ye.name), void 0, { numeric: !0 });
+			return M.value === "folder" ? A.sort((q, ye) => wt(q.name).localeCompare(wt(ye.name)) || F(q, ye)) : M.value === "new" ? A.sort((q, ye) => (ye.mtime ?? 0) - (q.mtime ?? 0) || F(q, ye)) : M.value === "big" ? A.sort((q, ye) => (ye.size ?? 0) - (q.size ?? 0) || F(q, ye)) : A.sort(F);
 		});
-		function fe(h) {
-			const $ = $t(h);
-			return !!$ && $ !== c.value;
+		function ae(z) {
+			const L = wt(z);
+			return !!L && L !== c.value;
 		}
-		const H = computed(() => q.value.some((h) => fe(h.name))), ae = nl(J, () => q.value.length, {
+		const Q = computed(() => R.value.some((z) => ae(z.name))), ve = nl(te, () => R.value.length, {
 			minWidth: () => d[p.value],
-			estimate: (h) => h * (4 / 3) + 44
-		}), U = computed(() => q.value.slice(ae.start.value, ae.end.value));
-		watch(U, () => void nextTick(() => ae.measure(".lb-card")));
-		const ie = nl(x, () => q.value.length, {
+			estimate: (z) => z * (4 / 3) + 44
+		}), oe = computed(() => R.value.slice(ve.start.value, ve.end.value));
+		watch(oe, () => void nextTick(() => ve.measure(".lb-card")));
+		const ce = nl(k, () => R.value.length, {
 			minWidth: () => 1e5,
 			gap: 0,
 			padding: 0,
 			estimate: () => 34,
 			overscan: 8,
 			fixedRows: !0
-		}), me = computed(() => q.value.slice(ie.start.value, ie.end.value));
-		watch(me, () => void nextTick(() => ie.measure(".lb-row"))), watch([
+		}), pe = computed(() => R.value.slice(ce.start.value, ce.end.value));
+		watch(pe, () => void nextTick(() => ce.measure(".lb-row"))), watch([
 			c,
-			z,
+			x,
 			M,
-			B
+			V
 		], () => {
-			J.value && (J.value.scrollTop = 0), x.value && (x.value.scrollTop = 0);
+			te.value && (te.value.scrollTop = 0), k.value && (k.value.scrollTop = 0);
 		});
-		function _(h) {
-			return h ? h >= 1024 ** 3 ? `${(h / 1024 ** 3).toFixed(1)} GB` : `${(h / 1024 ** 2).toFixed(0)} MB` : "—";
+		function O(z) {
+			return z ? z >= 1024 ** 3 ? `${(z / 1024 ** 3).toFixed(1)} GB` : `${(z / 1024 ** 2).toFixed(0)} MB` : "—";
 		}
-		const ee = new Intl.DateTimeFormat(void 0, { dateStyle: "medium" });
-		function W(h) {
-			return h ? ee.format(h * 1e3) : "—";
+		const _ = new Intl.DateTimeFormat(void 0, { dateStyle: "medium" });
+		function K(z) {
+			return z ? _.format(z * 1e3) : "—";
 		}
-		function C() {
-			const h = q.value.findIndex(($) => $.name === g.value);
-			B.value === "list" ? ie.reveal(h) : ae.reveal(h);
+		function Y() {
+			const z = R.value.findIndex((L) => L.name === h.value);
+			V.value === "list" ? ce.reveal(z) : ve.reveal(z);
 		}
-		function Y(h) {
-			if (h.target.closest("input, textarea") && (h.key === "Enter" && g.value && l("pick", g.value), h.key !== "ArrowDown")) return;
-			const L = q.value.map((Fe) => Fe.name);
-			if (!L.length) return;
-			const ue = L.indexOf(g.value), ve = {
+		function ue(z) {
+			if (z.target.closest("input, textarea") && (z.key === "Enter" && h.value && l("pick", h.value), z.key !== "ArrowDown")) return;
+			const A = R.value.map((ye) => ye.name);
+			if (!A.length) return;
+			const F = A.indexOf(h.value), q = {
 				ArrowRight: 1,
 				ArrowLeft: -1,
-				ArrowDown: B.value === "list" ? 1 : ae.columns.value,
-				ArrowUp: B.value === "list" ? -1 : -ae.columns.value
+				ArrowDown: V.value === "list" ? 1 : ve.columns.value,
+				ArrowUp: V.value === "list" ? -1 : -ve.columns.value
 			};
-			h.key in ve ? (h.preventDefault(), g.value = L[Math.min(L.length - 1, Math.max(0, ue < 0 ? 0 : ue + ve[h.key]))], nextTick(C)) : h.key === "Enter" && g.value && (h.preventDefault(), l("pick", g.value));
+			z.key in q ? (z.preventDefault(), h.value = A[Math.min(A.length - 1, Math.max(0, F < 0 ? 0 : F + q[z.key]))], nextTick(Y)) : z.key === "Enter" && h.value && (z.preventDefault(), l("pick", h.value));
 		}
-		return (h, $) => (openBlock(), createBlock(cl, {
+		return (z, L) => (openBlock(), createBlock(dl, {
 			open: e.open,
 			title: "LoRA browser",
 			width: "1240px",
 			height: "82vh",
-			"onUpdate:open": S
+			"onUpdate:open": $
 		}, {
 			header: withCtx(() => [
-				createBaseVNode("span", Hv, [createVNode(Nl, {
-					modelValue: z.value,
-					"onUpdate:modelValue": $[0] || ($[0] = (L) => z.value = L),
+				createBaseVNode("span", Bv, [createVNode(Zl, {
+					modelValue: x.value,
+					"onUpdate:modelValue": L[0] || (L[0] = (A) => x.value = A),
 					sm: "",
-					placeholder: `Search ${P.value}…`
+					placeholder: `Search ${g.value}…`
 				}, null, 8, ["modelValue", "placeholder"])]),
-				$[18] || ($[18] = createBaseVNode("span", { class: "lb-grow" }, null, -1)),
+				L[18] || (L[18] = createBaseVNode("span", { class: "lb-grow" }, null, -1)),
 				createVNode(Tt, {
 					modelValue: M.value,
-					"onUpdate:modelValue": $[1] || ($[1] = (L) => M.value = L),
+					"onUpdate:modelValue": L[1] || (L[1] = (A) => M.value = A),
 					options: r
 				}, null, 8, ["modelValue"]),
-				B.value === "grid" ? (openBlock(), createBlock(Tt, {
+				V.value === "grid" ? (openBlock(), createBlock(Tt, {
 					key: 0,
 					modelValue: p.value,
-					"onUpdate:modelValue": $[2] || ($[2] = (L) => p.value = L),
+					"onUpdate:modelValue": L[2] || (L[2] = (A) => p.value = A),
 					options: u
 				}, null, 8, ["modelValue"])) : createCommentVNode("", !0),
 				createVNode(Tt, {
-					modelValue: B.value,
-					"onUpdate:modelValue": $[3] || ($[3] = (L) => B.value = L),
+					modelValue: V.value,
+					"onUpdate:modelValue": L[3] || (L[3] = (A) => V.value = A),
 					options: s
 				}, null, 8, ["modelValue"]),
-				createVNode(Ge$1, {
+				createVNode(je$1, {
 					icon: "mdi mdi-refresh",
 					title: "Rescan the LoRA folders",
-					onClick: $[4] || ($[4] = (L) => vn(!0))
+					onClick: L[4] || (L[4] = (A) => vn(!0))
 				})
 			]),
-			footer: withCtx(() => [createBaseVNode("div", xf, [
-				createBaseVNode("span", zf, [g.value ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [createTextVNode(toDisplayString(g.value), 1)], 64)) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [createTextVNode(toDisplayString(xt.value.length) + " LoRAs", 1)], 64))]),
-				$[32] || ($[32] = createBaseVNode("span", { class: "lb-grow" }, null, -1)),
+			footer: withCtx(() => [createBaseVNode("div", kf, [
+				createBaseVNode("span", wf, [h.value ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [createTextVNode(toDisplayString(h.value), 1)], 64)) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [createTextVNode(toDisplayString($t.value.length) + " LoRAs", 1)], 64))]),
+				L[32] || (L[32] = createBaseVNode("span", { class: "lb-grow" }, null, -1)),
 				createVNode(Yt, {
 					variant: "ghost",
 					sm: "",
-					onClick: $[16] || ($[16] = (L) => S(!1))
+					onClick: L[16] || (L[16] = (A) => $(!1))
 				}, {
-					default: withCtx(() => [...$[30] || ($[30] = [createTextVNode("Cancel", -1)])]),
+					default: withCtx(() => [...L[30] || (L[30] = [createTextVNode("Cancel", -1)])]),
 					_: 1
 				}),
 				createVNode(Yt, {
 					variant: "primary",
 					sm: "",
-					disabled: !g.value,
-					onClick: $[17] || ($[17] = (L) => g.value && l("pick", g.value))
+					disabled: !h.value,
+					onClick: L[17] || (L[17] = (A) => h.value && l("pick", h.value))
 				}, {
-					default: withCtx(() => [...$[31] || ($[31] = [createTextVNode(" Use ", -1)])]),
+					default: withCtx(() => [...L[31] || (L[31] = [createTextVNode(" Use ", -1)])]),
 					_: 1
 				}, 8, ["disabled"])
 			])]),
 			default: withCtx(() => [createBaseVNode("div", {
 				class: "lb",
-				onKeydown: Y
+				onKeydown: ue
 			}, [
-				createBaseVNode("nav", Wv, [
+				createBaseVNode("nav", Dv, [
 					createBaseVNode("button", {
 						type: "button",
-						class: normalizeClass(["lb-folder", { on: c.value === Dt }]),
-						onClick: $[5] || ($[5] = (L) => O(Dt))
+						class: normalizeClass(["lb-folder", { on: c.value === Vt }]),
+						onClick: L[5] || (L[5] = (A) => X(Vt))
 					}, [
-						$[19] || ($[19] = createBaseVNode("i", { class: "mdi mdi-folder-multiple-outline" }, null, -1)),
-						$[20] || ($[20] = createBaseVNode("span", { class: "lb-fname" }, "All LoRAs", -1)),
-						createBaseVNode("span", Fv, toDisplayString(xt.value.length), 1)
+						L[19] || (L[19] = createBaseVNode("i", { class: "mdi mdi-folder-multiple-outline" }, null, -1)),
+						L[20] || (L[20] = createBaseVNode("span", { class: "lb-fname" }, "All LoRAs", -1)),
+						createBaseVNode("span", Vv, toDisplayString($t.value.length), 1)
 					], 2),
 					createBaseVNode("button", {
 						type: "button",
 						class: normalizeClass(["lb-folder", { on: c.value === Ct }]),
-						onClick: $[6] || ($[6] = (L) => O(Ct))
+						onClick: L[6] || (L[6] = (A) => X(Ct))
 					}, [
-						$[21] || ($[21] = createBaseVNode("i", { class: "mdi mdi-star" }, null, -1)),
-						$[22] || ($[22] = createBaseVNode("span", { class: "lb-fname" }, "Bookmarked", -1)),
-						createBaseVNode("span", Kv, toDisplayString(y.value), 1)
+						L[21] || (L[21] = createBaseVNode("i", { class: "mdi mdi-star" }, null, -1)),
+						L[22] || (L[22] = createBaseVNode("span", { class: "lb-fname" }, "Bookmarked", -1)),
+						createBaseVNode("span", Hv, toDisplayString(E.value), 1)
 					], 2),
-					Z.value.length ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [$[24] || ($[24] = createBaseVNode("div", { class: "lb-sep" }, null, -1)), (openBlock(!0), createElementBlock(Fragment, null, renderList(Z.value, (L) => (openBlock(), createElementBlock("button", {
-						key: L.path,
+					G.value.length ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [L[24] || (L[24] = createBaseVNode("div", { class: "lb-sep" }, null, -1)), (openBlock(!0), createElementBlock(Fragment, null, renderList(G.value, (A) => (openBlock(), createElementBlock("button", {
+						key: A.path,
 						type: "button",
-						class: normalizeClass(["lb-folder", { on: c.value === L.path }]),
-						title: L.path,
-						onClick: (ue) => O(L.path)
+						class: normalizeClass(["lb-folder", { on: c.value === A.path }]),
+						title: A.path,
+						onClick: (F) => X(A.path)
 					}, [
-						$[23] || ($[23] = createBaseVNode("i", { class: "mdi mdi-pin-outline" }, null, -1)),
-						createBaseVNode("span", _v, toDisplayString(L.path.split("/").pop()), 1),
-						createBaseVNode("span", Nv, toDisplayString(L.count), 1)
-					], 10, Ov))), 128))], 64)) : createCommentVNode("", !0),
-					k.value.length ? (openBlock(), createElementBlock("div", Zv)) : createCommentVNode("", !0),
+						L[23] || (L[23] = createBaseVNode("i", { class: "mdi mdi-pin-outline" }, null, -1)),
+						createBaseVNode("span", Fv, toDisplayString(A.path.split("/").pop()), 1),
+						createBaseVNode("span", Kv, toDisplayString(A.count), 1)
+					], 10, Wv))), 128))], 64)) : createCommentVNode("", !0),
+					b.value.length ? (openBlock(), createElementBlock("div", Ov)) : createCommentVNode("", !0),
 					createVNode(ql, {
-						folders: k.value,
-						"model-value": c.value === Dt || c.value === Ct ? null : c.value,
+						folders: b.value,
+						"model-value": c.value === Vt || c.value === Ct ? null : c.value,
 						"storage-key": "zenkit.loraBrowser.open",
-						"onUpdate:modelValue": $[7] || ($[7] = (L) => L && O(L))
+						"onUpdate:modelValue": L[7] || (L[7] = (A) => A && X(A))
 					}, null, 8, ["folders", "model-value"])
 				]),
-				createBaseVNode("section", Uv, [createBaseVNode("div", Xv, [createBaseVNode("span", Yv, [
+				createBaseVNode("section", Nv, [createBaseVNode("div", Zv, [createBaseVNode("span", _v, [
 					createBaseVNode("i", { class: normalizeClass(["mdi", c.value === Ct ? "mdi-star" : "mdi-folder-outline"]) }, null, 2),
-					createTextVNode(" " + toDisplayString(P.value) + " ", 1),
-					createBaseVNode("span", qv, "· " + toDisplayString(q.value.length), 1),
-					c.value !== Dt && c.value !== Ct ? (openBlock(), createBlock(Ge$1, {
+					createTextVNode(" " + toDisplayString(g.value) + " ", 1),
+					createBaseVNode("span", Uv, "· " + toDisplayString(R.value.length), 1),
+					c.value !== Vt && c.value !== Ct ? (openBlock(), createBlock(je$1, {
 						key: 0,
 						icon: de(c.value) ? "mdi mdi-pin" : "mdi mdi-pin-outline",
 						title: de(c.value) ? "Unpin this folder" : "Pin this folder to the top",
 						active: de(c.value),
 						size: "sm",
-						onClick: $[8] || ($[8] = (L) => he(c.value))
+						onClick: L[8] || (L[8] = (A) => fe(c.value))
 					}, null, 8, [
 						"icon",
 						"title",
 						"active"
 					])) : createCommentVNode("", !0)
-				])]), B.value === "list" ? (openBlock(), createElementBlock("div", jv, [$[25] || ($[25] = createBaseVNode("div", { class: "lb-lhead" }, [
+				])]), V.value === "list" ? (openBlock(), createElementBlock("div", Xv, [L[25] || (L[25] = createBaseVNode("div", { class: "lb-lhead" }, [
 					createBaseVNode("span"),
 					createBaseVNode("span", null, "Name"),
 					createBaseVNode("span", null, "Folder"),
@@ -12026,114 +12042,114 @@ var gm = /* @__PURE__ */ Pe(/* @__PURE__ */ defineComponent({
 					createBaseVNode("span")
 				], -1)), createBaseVNode("div", {
 					ref_key: "listEl",
-					ref: x,
+					ref: k,
 					class: "lb-lrows zen-scroll",
 					tabindex: "0",
-					style: normalizeStyle(unref(ie).containerStyle.value)
+					style: normalizeStyle(unref(ce).containerStyle.value)
 				}, [
-					createBaseVNode("div", { style: normalizeStyle(unref(ie).padTop.value) }, null, 4),
-					(openBlock(!0), createElementBlock(Fragment, null, renderList(me.value, (L) => (openBlock(), createElementBlock("div", {
-						key: L.name,
+					createBaseVNode("div", { style: normalizeStyle(unref(ce).padTop.value) }, null, 4),
+					(openBlock(!0), createElementBlock(Fragment, null, renderList(pe.value, (A) => (openBlock(), createElementBlock("div", {
+						key: A.name,
 						class: normalizeClass(["lb-row", {
-							focus: g.value === L.name,
-							current: e.selected === L.name
+							focus: h.value === A.name,
+							current: e.selected === A.name
 						}]),
-						"data-name": L.name,
-						title: L.name,
-						onClick: (ue) => g.value = L.name,
-						onDblclick: (ue) => l("pick", L.name),
-						onMouseenter: (ue) => unref(to)(L.name, E(ue), ue.shiftKey),
-						onMouseleave: $[11] || ($[11] = (ue) => unref(no)(E(ue)))
+						"data-name": A.name,
+						title: A.name,
+						onClick: (F) => h.value = A.name,
+						onDblclick: (F) => l("pick", A.name),
+						onMouseenter: (F) => unref(to)(A.name, S(F), F.shiftKey),
+						onMouseleave: L[11] || (L[11] = (F) => unref(no)(S(F)))
 					}, [
-						createBaseVNode("span", Jv, [Fn(L.name) ? (openBlock(), createElementBlock("img", {
+						createBaseVNode("span", qv, [Kn(A.name) ? (openBlock(), createElementBlock("img", {
 							key: 0,
-							src: jt(L.name, 26),
+							src: jt(A.name, 26),
 							loading: "lazy",
 							decoding: "async",
 							alt: "",
-							onError: $[9] || ($[9] = (...ue) => an && an(...ue))
-						}, null, 40, Qv)) : (openBlock(), createElementBlock("i", ef))]),
-						createBaseVNode("span", tf, [
-							createTextVNode(toDisplayString(dt(L.name)) + " ", 1),
-							cn(L.name) === "video" ? (openBlock(), createElementBlock("i", nf)) : createCommentVNode("", !0),
-							e.selected === L.name ? (openBlock(), createElementBlock("i", lf)) : createCommentVNode("", !0)
+							onError: L[9] || (L[9] = (...F) => an && an(...F))
+						}, null, 40, jv)) : (openBlock(), createElementBlock("i", Gv))]),
+						createBaseVNode("span", Jv, [
+							createTextVNode(toDisplayString(rt(A.name)) + " ", 1),
+							cn(A.name) === "video" ? (openBlock(), createElementBlock("i", Qv)) : createCommentVNode("", !0),
+							e.selected === A.name ? (openBlock(), createElementBlock("i", ef)) : createCommentVNode("", !0)
 						]),
-						createBaseVNode("span", of, toDisplayString($t(L.name) || "—"), 1),
-						createBaseVNode("span", af, toDisplayString(_(L.size)), 1),
-						createBaseVNode("span", sf, toDisplayString(W(L.mtime)), 1),
+						createBaseVNode("span", tf, toDisplayString(wt(A.name) || "—"), 1),
+						createBaseVNode("span", nf, toDisplayString(O(A.size)), 1),
+						createBaseVNode("span", lf, toDisplayString(K(A.mtime)), 1),
 						createBaseVNode("span", {
-							class: normalizeClass(["lb-rstar", { on: at(L.name) }]),
-							title: at(L.name) ? "Remove bookmark" : "Bookmark",
-							onClick: withModifiers((ue) => zn(L.name), ["stop"]),
-							onDblclick: $[10] || ($[10] = withModifiers(() => {}, ["stop"]))
-						}, [createBaseVNode("i", { class: normalizeClass(["mdi", at(L.name) ? "mdi-star" : "mdi-star-outline"]) }, null, 2)], 42, uf)
-					], 42, Gv))), 128)),
-					createBaseVNode("div", { style: normalizeStyle(unref(ie).padBottom.value) }, null, 4)
+							class: normalizeClass(["lb-rstar", { on: nt(A.name) }]),
+							title: nt(A.name) ? "Remove bookmark" : "Bookmark",
+							onClick: withModifiers((F) => zn(A.name), ["stop"]),
+							onDblclick: L[10] || (L[10] = withModifiers(() => {}, ["stop"]))
+						}, [createBaseVNode("i", { class: normalizeClass(["mdi", nt(A.name) ? "mdi-star" : "mdi-star-outline"]) }, null, 2)], 42, of)
+					], 42, Yv))), 128)),
+					createBaseVNode("div", { style: normalizeStyle(unref(ce).padBottom.value) }, null, 4)
 				], 4)])) : (openBlock(), createElementBlock("div", {
 					key: 1,
 					ref_key: "gridEl",
-					ref: J,
+					ref: te,
 					class: "lb-grid zen-scroll",
 					tabindex: "0",
-					style: normalizeStyle(unref(ae).containerStyle.value)
+					style: normalizeStyle(unref(ve).containerStyle.value)
 				}, [
-					createBaseVNode("div", { style: normalizeStyle(unref(ae).padTop.value) }, null, 4),
-					(openBlock(!0), createElementBlock(Fragment, null, renderList(U.value, (L) => (openBlock(), createElementBlock("button", {
-						key: L.name,
+					createBaseVNode("div", { style: normalizeStyle(unref(ve).padTop.value) }, null, 4),
+					(openBlock(!0), createElementBlock(Fragment, null, renderList(oe.value, (A) => (openBlock(), createElementBlock("button", {
+						key: A.name,
 						type: "button",
 						class: normalizeClass(["lb-card", {
-							focus: g.value === L.name,
-							current: e.selected === L.name
+							focus: h.value === A.name,
+							current: e.selected === A.name
 						}]),
-						"data-name": L.name,
-						title: L.name,
-						onClick: (ue) => g.value = L.name,
-						onDblclick: (ue) => l("pick", L.name),
-						onMouseenter: (ue) => R.value = L.name,
-						onMouseleave: $[14] || ($[14] = (ue) => R.value = "")
+						"data-name": A.name,
+						title: A.name,
+						onClick: (F) => h.value = A.name,
+						onDblclick: (F) => l("pick", A.name),
+						onMouseenter: (F) => B.value = A.name,
+						onMouseleave: L[14] || (L[14] = (F) => B.value = "")
 					}, [
-						createBaseVNode("span", cf, [
-							cn(L.name) === "video" && R.value === L.name ? (openBlock(), createElementBlock("video", {
+						createBaseVNode("span", sf, [
+							cn(A.name) === "video" && B.value === A.name ? (openBlock(), createElementBlock("video", {
 								key: 0,
-								src: xn(L.name),
+								src: xn(A.name),
 								muted: "",
 								autoplay: "",
 								loop: "",
 								playsinline: ""
-							}, null, 8, df)) : Fn(L.name) ? (openBlock(), createElementBlock("img", {
+							}, null, 8, uf)) : Kn(A.name) ? (openBlock(), createElementBlock("img", {
 								key: 1,
-								src: jt(L.name, (d[p.value] ?? 148) * 1.4),
+								src: jt(A.name, (d[p.value] ?? 148) * 1.4),
 								loading: "lazy",
 								decoding: "async",
 								alt: "",
-								onError: $[12] || ($[12] = (...ue) => an && an(...ue))
-							}, null, 40, vf)) : (openBlock(), createElementBlock("i", ff)),
-							cn(L.name) === "video" ? (openBlock(), createElementBlock("span", mf, [...$[26] || ($[26] = [createBaseVNode("i", { class: "mdi mdi-play" }, null, -1)])])) : createCommentVNode("", !0),
+								onError: L[12] || (L[12] = (...F) => an && an(...F))
+							}, null, 40, rf)) : (openBlock(), createElementBlock("i", cf)),
+							cn(A.name) === "video" ? (openBlock(), createElementBlock("span", df, [...L[26] || (L[26] = [createBaseVNode("i", { class: "mdi mdi-play" }, null, -1)])])) : createCommentVNode("", !0),
 							createBaseVNode("span", {
-								class: normalizeClass(["lb-star", { on: at(L.name) }]),
-								title: at(L.name) ? "Remove bookmark" : "Bookmark",
-								onClick: withModifiers((ue) => zn(L.name), ["stop"]),
-								onDblclick: $[13] || ($[13] = withModifiers(() => {}, ["stop"]))
-							}, [createBaseVNode("i", { class: normalizeClass(["mdi", at(L.name) ? "mdi-star" : "mdi-star-outline"]) }, null, 2)], 42, pf),
-							e.selected === L.name ? (openBlock(), createElementBlock("span", hf, [...$[27] || ($[27] = [createBaseVNode("i", { class: "mdi mdi-check" }, null, -1)])])) : createCommentVNode("", !0)
+								class: normalizeClass(["lb-star", { on: nt(A.name) }]),
+								title: nt(A.name) ? "Remove bookmark" : "Bookmark",
+								onClick: withModifiers((F) => zn(A.name), ["stop"]),
+								onDblclick: L[13] || (L[13] = withModifiers(() => {}, ["stop"]))
+							}, [createBaseVNode("i", { class: normalizeClass(["mdi", nt(A.name) ? "mdi-star" : "mdi-star-outline"]) }, null, 2)], 42, vf),
+							e.selected === A.name ? (openBlock(), createElementBlock("span", ff, [...L[27] || (L[27] = [createBaseVNode("i", { class: "mdi mdi-check" }, null, -1)])])) : createCommentVNode("", !0)
 						]),
-						createBaseVNode("span", yf, toDisplayString(dt(L.name)), 1),
-						H.value ? (openBlock(), createElementBlock("span", gf, toDisplayString(fe(L.name) ? $t(L.name) : "\xA0"), 1)) : createCommentVNode("", !0)
-					], 42, rf))), 128)),
-					createBaseVNode("div", { style: normalizeStyle(unref(ae).padBottom.value) }, null, 4),
-					fn.value ? q.value.length ? createCommentVNode("", !0) : (openBlock(), createElementBlock("div", kf, [createBaseVNode("i", { class: normalizeClass(["mdi", c.value === Ct ? "mdi-star-outline" : "mdi-magnify-close"]) }, null, 2), createTextVNode(" " + toDisplayString(z.value.trim() ? `Nothing matches “${z.value.trim()}” in ${P.value}.` : c.value === Ct ? "No bookmarks yet — star a LoRA to keep it here." : "No LoRAs in this folder."), 1)])) : (openBlock(), createElementBlock("div", bf, [...$[28] || ($[28] = [createBaseVNode("i", { class: "mdi mdi-loading mdi-spin" }, null, -1), createTextVNode(" Loading LoRAs… ", -1)])]))
+						createBaseVNode("span", mf, toDisplayString(rt(A.name)), 1),
+						Q.value ? (openBlock(), createElementBlock("span", pf, toDisplayString(ae(A.name) ? wt(A.name) : "\xA0"), 1)) : createCommentVNode("", !0)
+					], 42, af))), 128)),
+					createBaseVNode("div", { style: normalizeStyle(unref(ve).padBottom.value) }, null, 4),
+					fn.value ? R.value.length ? createCommentVNode("", !0) : (openBlock(), createElementBlock("div", yf, [createBaseVNode("i", { class: normalizeClass(["mdi", c.value === Ct ? "mdi-star-outline" : "mdi-magnify-close"]) }, null, 2), createTextVNode(" " + toDisplayString(x.value.trim() ? `Nothing matches “${x.value.trim()}” in ${g.value}.` : c.value === Ct ? "No bookmarks yet — star a LoRA to keep it here." : "No LoRAs in this folder."), 1)])) : (openBlock(), createElementBlock("div", hf, [...L[28] || (L[28] = [createBaseVNode("i", { class: "mdi mdi-loading mdi-spin" }, null, -1), createTextVNode(" Loading LoRAs… ", -1)])]))
 				], 4))]),
-				createBaseVNode("aside", wf, [g.value ? (openBlock(), createBlock(Ql, {
-					key: g.value,
-					name: g.value,
+				createBaseVNode("aside", gf, [h.value ? (openBlock(), createBlock(Ql, {
+					key: h.value,
+					name: h.value,
 					pickable: "",
-					onPick: $[15] || ($[15] = (L) => l("pick", L))
-				}, null, 8, ["name"])) : (openBlock(), createElementBlock("div", $f, [...$[29] || ($[29] = [createBaseVNode("i", { class: "mdi mdi-gesture-tap" }, null, -1), createTextVNode(" Click a LoRA to see its details — trigger words, examples, base model. Double-click (or Enter) to use it. ", -1)])]))])
+					onPick: L[15] || (L[15] = (A) => l("pick", A))
+				}, null, 8, ["name"])) : (openBlock(), createElementBlock("div", bf, [...L[29] || (L[29] = [createBaseVNode("i", { class: "mdi mdi-gesture-tap" }, null, -1), createTextVNode(" Click a LoRA to see its details — trigger words, examples, base model. Double-click (or Enter) to use it. ", -1)])]))])
 			], 32)]),
 			_: 1
 		}, 8, ["open"]));
 	}
-}), [["__scopeId", "data-v-7cd4fbea"]]);
+}), [["__scopeId", "data-v-e37dd837"]]);
 //#endregion
 //#region frontend/lib/sceneUtil.ts
 /** `v` as a finite number, else `fallback`. */
@@ -12326,7 +12342,7 @@ var BgConfig_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defineC
 			};
 		});
 		return (_ctx, _cache) => {
-			return openBlock(), createBlock(unref(Vf), {
+			return openBlock(), createBlock(unref(Af), {
 				gap: 6,
 				pad: "6px 4px",
 				class: "bp"
@@ -12335,13 +12351,13 @@ var BgConfig_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defineC
 					"model-value": cfg.value.bg_mode,
 					options: MODE_OPTS,
 					"onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => set("bg_mode", String($event)))
-				}, null, 8, ["model-value"])]), cfg.value.bg_mode === "solid" ? (openBlock(), createElementBlock("div", _hoisted_2$35, [_cache[19] || (_cache[19] = createBaseVNode("label", { class: "bp-lbl" }, "Color", -1)), createVNode(unref(Gf), {
+				}, null, 8, ["model-value"])]), cfg.value.bg_mode === "solid" ? (openBlock(), createElementBlock("div", _hoisted_2$35, [_cache[19] || (_cache[19] = createBaseVNode("label", { class: "bp-lbl" }, "Color", -1)), createVNode(unref(Yf), {
 					"model-value": cfg.value.bg_color,
 					"onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => set("bg_color", String($event)))
-				}, null, 8, ["model-value"])])) : cfg.value.bg_mode === "gradient" ? (openBlock(), createElementBlock(Fragment, { key: 1 }, [createBaseVNode("div", _hoisted_3$32, [_cache[20] || (_cache[20] = createBaseVNode("label", { class: "bp-lbl" }, "From → To", -1)), createBaseVNode("div", _hoisted_4$29, [createVNode(unref(Gf), {
+				}, null, 8, ["model-value"])])) : cfg.value.bg_mode === "gradient" ? (openBlock(), createElementBlock(Fragment, { key: 1 }, [createBaseVNode("div", _hoisted_3$32, [_cache[20] || (_cache[20] = createBaseVNode("label", { class: "bp-lbl" }, "From → To", -1)), createBaseVNode("div", _hoisted_4$29, [createVNode(unref(Yf), {
 					"model-value": cfg.value.bg_color,
 					"onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => set("bg_color", String($event)))
-				}, null, 8, ["model-value"]), createVNode(unref(Gf), {
+				}, null, 8, ["model-value"]), createVNode(unref(Yf), {
 					"model-value": cfg.value.bg_color2,
 					"onUpdate:modelValue": _cache[3] || (_cache[3] = ($event) => set("bg_color2", String($event)))
 				}, null, 8, ["model-value"])])]), createBaseVNode("div", _hoisted_5$26, [_cache[21] || (_cache[21] = createBaseVNode("label", { class: "bp-lbl" }, "Angle", -1)), createVNode(unref(un), {
@@ -12352,10 +12368,10 @@ var BgConfig_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defineC
 					precision: 0,
 					"onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => set("bg_angle", Number($event)))
 				}, null, 8, ["model-value"])])], 64)) : cfg.value.bg_mode === "pattern" ? (openBlock(), createElementBlock(Fragment, { key: 2 }, [
-					createBaseVNode("div", _hoisted_6$22, [_cache[22] || (_cache[22] = createBaseVNode("label", { class: "bp-lbl" }, "Base / Tint", -1)), createBaseVNode("div", _hoisted_7$19, [createVNode(unref(Gf), {
+					createBaseVNode("div", _hoisted_6$22, [_cache[22] || (_cache[22] = createBaseVNode("label", { class: "bp-lbl" }, "Base / Tint", -1)), createBaseVNode("div", _hoisted_7$19, [createVNode(unref(Yf), {
 						"model-value": cfg.value.bg_color,
 						"onUpdate:modelValue": _cache[5] || (_cache[5] = ($event) => set("bg_color", String($event)))
-					}, null, 8, ["model-value"]), createVNode(unref(Gf), {
+					}, null, 8, ["model-value"]), createVNode(unref(Yf), {
 						"model-value": cfg.value.pattern_color,
 						"onUpdate:modelValue": _cache[6] || (_cache[6] = ($event) => set("pattern_color", String($event)))
 					}, null, 8, ["model-value"])])]),
@@ -12389,23 +12405,23 @@ var BgConfig_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defineC
 					}, null, 8, ["model-value"])])
 				], 64)) : cfg.value.bg_mode === "transparent" ? (openBlock(), createElementBlock("p", _hoisted_12$12, [..._cache[25] || (_cache[25] = [createBaseVNode("i", { class: "mdi mdi-checkerboard" }, null, -1), createTextVNode(" See-through ground — saves a PNG/WebP with real transparency. For a glowing border, give each cell a coloured drop shadow on the Grid Style node (big blur, offset 0) so it blooms as a halo. ", -1)])])) : (openBlock(), createElementBlock(Fragment, { key: 4 }, [
 					_cache[35] || (_cache[35] = createBaseVNode("p", { class: "bp-hint" }, [createBaseVNode("i", { class: "mdi mdi-information-outline" }), createTextVNode(" Wire icon image(s) into the node — one tiles evenly, a batch shuffles by seed. ")], -1)),
-					createBaseVNode("div", _hoisted_13$11, [_cache[26] || (_cache[26] = createBaseVNode("label", { class: "bp-lbl" }, "Base", -1)), createVNode(unref(Gf), {
+					createBaseVNode("div", _hoisted_13$11, [_cache[26] || (_cache[26] = createBaseVNode("label", { class: "bp-lbl" }, "Base", -1)), createVNode(unref(Yf), {
 						"model-value": cfg.value.bg_color,
 						"onUpdate:modelValue": _cache[9] || (_cache[9] = ($event) => set("bg_color", String($event)))
 					}, null, 8, ["model-value"])]),
-					createBaseVNode("div", _hoisted_14$11, [_cache[27] || (_cache[27] = createBaseVNode("label", { class: "bp-lbl" }, "Tint", -1)), createVNode(unref(Hn), {
+					createBaseVNode("div", _hoisted_14$11, [_cache[27] || (_cache[27] = createBaseVNode("label", { class: "bp-lbl" }, "Tint", -1)), createVNode(unref(yl), {
 						"model-value": cfg.value.tint,
 						"on-icon": "mdi mdi-check",
 						"onUpdate:modelValue": _cache[10] || (_cache[10] = ($event) => set("tint", !!$event))
 					}, null, 8, ["model-value"])]),
-					cfg.value.tint ? (openBlock(), createElementBlock("div", _hoisted_15$11, [_cache[28] || (_cache[28] = createBaseVNode("label", { class: "bp-lbl" }, "Tint color", -1)), createVNode(unref(Gf), {
+					cfg.value.tint ? (openBlock(), createElementBlock("div", _hoisted_15$11, [_cache[28] || (_cache[28] = createBaseVNode("label", { class: "bp-lbl" }, "Tint color", -1)), createVNode(unref(Yf), {
 						"model-value": cfg.value.tint_color,
 						"onUpdate:modelValue": _cache[11] || (_cache[11] = ($event) => set("tint_color", String($event)))
 					}, null, 8, ["model-value"])])) : createCommentVNode("", true),
 					createBaseVNode("div", _hoisted_16$10, [_cache[29] || (_cache[29] = createBaseVNode("label", {
 						class: "bp-lbl",
 						title: "Flip the icon's shape — for dark-on-light source icons"
-					}, "Invert shape", -1)), createVNode(unref(Hn), {
+					}, "Invert shape", -1)), createVNode(unref(yl), {
 						"model-value": cfg.value.invert_alpha,
 						"on-icon": "mdi mdi-check",
 						"onUpdate:modelValue": _cache[12] || (_cache[12] = ($event) => set("invert_alpha", !!$event))
@@ -12473,9 +12489,9 @@ var BgConfig_exports = /* @__PURE__ */ __exportAll({
 	nodeDef: () => nodeDef$9,
 	widgetOptions: () => widgetOptions$15
 });
-var BgConfig_default = /* @__PURE__ */ _plugin_vue_export_helper_default(BgConfig_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-32c9ebc0"]]);
+var BgConfig_default = /*#__PURE__*/ _plugin_vue_export_helper_default(BgConfig_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-32c9ebc0"]]);
 //#endregion
-//#region ../ZenKit/packages/nodekit/dist/identity-YgEOIRDu.js
+//#region node_modules/.pnpm/@nynxz+zenkit-nodekit@0.5.0_@vitejs+plugin-vue@6.0.8_vite@8.2.2_@types+node@26.4.1__vue_ab243c316f3570c59a6fb21838af6a48/node_modules/@nynxz/zenkit-nodekit/dist/identity-YgEOIRDu.js
 function n(a) {
 	const t = a.namespace, o = "/" + t.split(".").join("/"), r = t.toUpperCase().replace(/[.-]/g, "_") + "_";
 	return {
@@ -12490,13 +12506,13 @@ function n(a) {
 	};
 }
 //#endregion
-//#region ../ZenKit/packages/nodekit/dist/index.js
-var ge = "ZenKit.Security.AllowedHosts";
+//#region node_modules/.pnpm/@nynxz+zenkit-nodekit@0.5.0_@vitejs+plugin-vue@6.0.8_vite@8.2.2_@types+node@26.4.1__vue_ab243c316f3570c59a6fb21838af6a48/node_modules/@nynxz/zenkit-nodekit/dist/index.js
+var me = "ZenKit.Security.AllowedHosts";
 var q = "__zenkitAllowedHostsSetting";
-function we() {
+function ge() {
 	const e = globalThis;
 	return e[q] ? [] : (e[q] = !0, [{
-		id: ge,
+		id: me,
 		category: [
 			"ZenKit",
 			"Security",
@@ -12508,26 +12524,7 @@ function we() {
 		defaultValue: ""
 	}]);
 }
-function ye(e, t) {
-	if (e.getLink) return e.getLink(t);
-	const n = e.links;
-	return n instanceof Map ? n.get(t) : n?.[t];
-}
-function re(e, t, n = 0) {
-	const r = e, o = r.graph, a = o?.rootGraph;
-	if (!o || !a || o === a || n > 8) return [];
-	const s = r.inputs?.findIndex((l) => l.name === t) ?? -1;
-	if (s < 0) return [];
-	const i = (o.inputNode?.slots ?? []).filter((l) => (l.linkIds ?? []).some((f) => {
-		const u = ye(o, f);
-		return !!u && String(u.target_id) === String(r.id) && u.target_slot === s;
-	})).map((l) => l.name);
-	return i.length ? [a, ...a.subgraphs?.values() ?? []].flatMap((l) => l.nodes ?? []).filter((l) => l.subgraph === o).flatMap((l) => i.flatMap((f) => {
-		const u = l.widgets?.find((p) => p.name === f);
-		return [...u ? [u] : [], ...re(l, f, n + 1)];
-	})) : [];
-}
-function ve(e, t) {
+function we(e, t) {
 	if (e === t) return !0;
 	try {
 		return JSON.stringify(e) === JSON.stringify(t);
@@ -12535,320 +12532,307 @@ function ve(e, t) {
 		return !1;
 	}
 }
-function be(e) {
+function ye(e) {
 	const t = /* @__PURE__ */ new Set(), n = { refresh: e };
-	let r = null;
-	const o = /* @__PURE__ */ new Set();
-	let a = !1;
-	function s() {
-		a = !1;
-		const i = [...o];
-		o.clear();
+	let o = null;
+	const r = /* @__PURE__ */ new Set();
+	let s = !1;
+	function a() {
+		s = !1;
+		const i = [...r];
+		r.clear();
 		for (const c of i) try {
 			c.refresh();
-		} catch (l) {
-			console.error("[ZenKit] widget mirror refresh failed", l);
+		} catch (u) {
+			console.error("[ZenKit] widget mirror refresh failed", u);
 		}
 	}
 	return {
 		original: n,
 		changed(i, c) {
-			if (ve(i, c)) return;
-			const l = r ?? n;
-			for (const f of [n, ...t]) f !== l && o.add(f);
-			!o.size || a || (a = !0, queueMicrotask(s));
+			if (we(i, c)) return;
+			const u = o ?? n;
+			for (const f of [n, ...t]) f !== u && r.add(f);
+			!r.size || s || (s = !0, queueMicrotask(a));
 		},
 		add(i) {
 			return t.add(i), () => {
-				t.delete(i), o.delete(i);
+				t.delete(i), r.delete(i);
 			};
 		},
 		writerFor(i, c) {
-			return new Proxy(i, { set(l, f, u) {
-				if (f !== "value") return Reflect.set(l, f, u);
-				const p = r;
-				r = c;
+			return new Proxy(i, { set(u, f, l) {
+				if (f !== "value") return Reflect.set(u, f, l);
+				const p = o;
+				o = c;
 				try {
-					l.value = u;
+					u.value = l;
 				} finally {
-					r = p;
+					o = p;
 				}
 				return !0;
 			} });
 		}
 	};
 }
-var C = /* @__PURE__ */ new WeakMap();
+var M = /* @__PURE__ */ new WeakMap();
 function V(e) {
 	e.addEventListener("pointerdown", (t) => {
-		const r = t.target?.closest?.(Se);
-		r && e.contains(r) && t.stopPropagation();
+		const o = t.target?.closest?.(ve);
+		o && e.contains(o) && t.stopPropagation();
 	});
 }
-var Se = "button, input, select, textarea, a[href], [contenteditable=\"true\"], [data-zen-drag],[draggable=\"true\"], [role=\"button\"], [role=\"slider\"], [role=\"switch\"], [role=\"tab\"], [role=\"combobox\"], [role=\"checkbox\"]";
-var ie = "zenSlot";
-function ze(e, t) {
+var ve = "button, input, select, textarea, a[href], [contenteditable=\"true\"], [data-zen-drag],[draggable=\"true\"], [role=\"button\"], [role=\"slider\"], [role=\"switch\"], [role=\"tab\"], [role=\"combobox\"], [role=\"checkbox\"]";
+var re = "zenSlot";
+function be(e, t) {
 	return [
 		e.graph?.id ?? "root",
 		String(e.id),
 		t
 	].map(encodeURIComponent).join(":");
 }
-function xe(e, t) {
+function Se(e, t) {
 	if (e.isConnected) return !0;
-	for (const n of document.querySelectorAll("[data-zen-slot]")) if (!(n === e || n.dataset[ie] !== t)) return n.replaceWith(e), !0;
+	for (const n of document.querySelectorAll("[data-zen-slot]")) if (!(n === e || n.dataset[re] !== t)) return n.replaceWith(e), !0;
 	return !1;
 }
-function se(e, t, n) {
-	const r = !!t.fill, o = document.createElement("div");
-	o.dataset.packWidget = t.widgetType, Object.assign(o.style, {
+function ie(e, t, n) {
+	const o = !!t.fill, r = document.createElement("div");
+	r.dataset.packWidget = t.widgetType, Object.assign(r.style, {
 		width: "100%",
 		height: "100%",
-		overflow: r ? "hidden" : "visible",
+		overflow: o ? "hidden" : "visible",
 		pointerEvents: t.dragThrough ? "none" : "auto",
-		...r ? { minHeight: `${t.minHeight ?? 80}px` } : {}
+		...o ? { minHeight: `${t.minHeight ?? 80}px` } : {}
 	});
-	const a = document.createElement("div");
-	Object.assign(a.style, {
+	const s = document.createElement("div");
+	Object.assign(s.style, {
 		width: "100%",
 		display: "flex",
 		flexDirection: "column",
 		boxSizing: "border-box",
-		...r ? {
+		...o ? {
 			height: "100%",
 			overflow: "hidden"
 		} : { minHeight: "100%" }
-	}), o.appendChild(a), t.dragThrough || V(o);
-	const s = t.minHeight ?? 40, i = t.serialize !== !1;
+	}), r.appendChild(s), t.dragThrough || V(r);
+	const a = t.minHeight ?? 40, i = t.serialize !== !1;
 	let c = t.defaultValue;
-	const l = (d, w) => {
+	const u = (d, m) => {
 		const S = createApp(t.component, {
-			widget: w,
+			widget: m,
 			node: e,
 			...t.props
 		});
 		return S.mount(d), S;
-	}, f = be(() => {
-		const d = C.get(u);
-		d && (d.app.unmount(), d.app = l(a, u));
-	}), u = e.addDOMWidget(t.widgetName, t.widgetType, o, {
-		getMinHeight: () => r ? s : Math.max(s, Math.ceil(y())),
+	}, f = ye(() => {
+		const d = M.get(l);
+		d && (d.app.unmount(), d.app = u(s, l));
+	}), l = e.addDOMWidget(t.widgetName, t.widgetType, r, {
+		getMinHeight: () => o ? a : Math.max(a, Math.ceil(p())),
 		hideOnZoom: !1,
 		serialize: i,
 		getValue: () => i ? c : t.defaultValue,
 		setValue: (d) => {
-			const w = c;
-			if (c = d, f.changed(w, d), i) try {
-				for (const S of re(e, t.widgetName)) S.value !== d && (S.value = d);
-			} catch {}
+			const m = c;
+			c = d, f.changed(m, d);
 		}
 	});
-	u.serializeValue = i ? () => c : () => {}, i || (u.serialize = !1), u.zenMirror = {
-		fill: r,
+	l.serializeValue = i ? () => c : () => {}, i || (l.serialize = !1), l.zenMirror = {
+		fill: o,
 		mount(d) {
-			const w = document.createElement("div");
-			Object.assign(w.style, {
+			const m = document.createElement("div");
+			Object.assign(m.style, {
 				width: "100%",
 				display: "flex",
 				flexDirection: "column",
 				boxSizing: "border-box",
-				...r ? {
+				...o ? {
 					height: "100%",
 					minHeight: "0",
 					overflow: "hidden"
 				} : {}
-			}), V(w), d.appendChild(w);
+			}), V(m), d.appendChild(m);
 			const S = { refresh: () => {
-				z.unmount(), z = l(w, k);
-			} }, k = f.writerFor(u, S);
-			let z = l(w, k);
-			const m = f.add(S);
+				b.unmount(), b = u(m, x);
+			} }, x = f.writerFor(l, S);
+			let b = u(m, x);
+			const I = f.add(S);
 			return () => {
-				m(), z.unmount(), w.remove();
+				I(), b.unmount(), m.remove();
 			};
 		}
 	};
-	const p = 500;
-	let g = null;
-	function y() {
-		const d = performance.now();
-		return g && d - g.at < p || (g = {
-			height: v(),
-			at: d
-		}), g.height;
-	}
-	function v() {
+	function p() {
 		let d = 0;
-		for (const w of a.children) {
-			const S = w;
+		for (const m of s.children) {
+			const S = m;
 			d += Math.max(S.offsetHeight, S.scrollHeight);
 		}
-		for (const w of a.querySelectorAll("[data-zen-spacer]")) d -= w.offsetHeight;
+		for (const m of s.querySelectorAll("[data-zen-spacer]")) d -= m.offsetHeight;
 		return d;
 	}
-	const b = t.minWidth ?? 0;
-	if (b && typeof e.computeSize == "function") {
+	const w = t.minWidth ?? 0;
+	if (w && typeof e.computeSize == "function") {
 		const d = e.computeSize.bind(e);
 		e.computeSize = () => {
-			const w = d();
-			return [Math.max(w[0], b), w[1]];
+			const m = d();
+			return [Math.max(m[0], w), m[1]];
 		};
 	}
-	function h() {
-		if (!b) return;
-		const d = o.closest("[data-node-id]");
-		d && d.style.minWidth !== `${b}px` && (d.style.minWidth = `${b}px`), e.size && e.size[0] < b && e.setSize?.([b, e.size[1]]);
+	function v() {
+		if (!w) return;
+		const d = r.closest("[data-node-id]");
+		d && d.style.minWidth !== `${w}px` && (d.style.minWidth = `${w}px`), e.size && e.size[0] < w && e.setSize?.([w, e.size[1]]);
 	}
-	let x = 0;
-	function A() {
-		h();
+	let y = 0;
+	function z() {
+		v();
 		try {
 			if (typeof e.computeSize == "function" && typeof e.setSize == "function") {
 				const d = e.computeSize()[1];
-				if (d === x) return;
-				const w = e.size?.[1] ?? d, S = x > 0 && w <= x + 1;
-				e.setSize([e.size?.[0] ?? e.computeSize()[0], S ? d : Math.max(w, d)]), x = d;
+				if (d === y) return;
+				const m = e.size?.[1] ?? d, S = y > 0 && m <= y + 1;
+				e.setSize([e.size?.[0] ?? e.computeSize()[0], S ? d : Math.max(m, d)]), y = d;
 			}
 		} catch {}
 		e.graph?.setDirtyCanvas?.(!0, !0);
 	}
-	let N;
 	Promise.resolve().then(() => {
 		try {
-			const d = l(a, u);
-			let w;
-			if (!r && typeof ResizeObserver < "u") {
-				const z = /* @__PURE__ */ new Set(), m = () => {
-					for (const E of [
-						a,
-						...a.children,
-						...a.querySelectorAll("[data-zen-spacer]")
-					]) z.has(E) || (z.add(E), w?.observe(E));
+			const d = u(s, l);
+			let m;
+			if (!o && typeof ResizeObserver < "u") {
+				const b = /* @__PURE__ */ new Set(), I = () => {
+					for (const N of [
+						s,
+						...s.children,
+						...s.querySelectorAll("[data-zen-spacer]")
+					]) b.has(N) || (b.add(N), m?.observe(N));
 				};
-				w = new ResizeObserver(() => {
-					g = null, m(), A();
-				}), m();
+				m = new ResizeObserver(() => {
+					I(), z();
+				}), I();
 			}
-			C.set(u, {
+			M.set(l, {
 				app: d,
-				ro: w
-			}), r || A();
+				ro: m
+			}), o || z();
 			const S = () => {
 				if (!t.dragThrough) return;
-				const z = o.parentElement;
-				z && (z.style.pointerEvents = "none");
-			}, k = () => {
-				const z = ze(e, t.widgetName);
-				o.dataset[ie] = z, xe(o, z), S(), h();
+				const b = r.parentElement;
+				b && (b.style.pointerEvents = "none");
+			}, x = () => {
+				const b = be(e, t.widgetName);
+				r.dataset[re] = b, Se(r, b), S(), v();
 			};
-			typeof requestAnimationFrame == "function" ? requestAnimationFrame(k) : k(), [
+			typeof requestAnimationFrame == "function" ? requestAnimationFrame(x) : x(), [
 				60,
 				200,
 				600,
 				1500
-			].forEach((z) => window.setTimeout(k, z)), t.dragThrough && (N = window.setInterval(S, 400));
+			].forEach((b) => window.setTimeout(x, b));
 		} catch (d) {
 			console.error(`[${n.DISPLAY_NAME}] failed to mount widget`, t.widgetType, d);
 		}
 	});
-	const O = u.onRemove;
-	return u.onRemove = () => {
-		window.clearInterval(N);
+	const h = l.onRemove;
+	return l.onRemove = () => {
 		try {
-			const d = C.get(u);
-			d && (d.ro?.disconnect(), d.app.unmount(), C.delete(u));
+			const d = M.get(l);
+			d && (d.ro?.disconnect(), d.app.unmount(), M.delete(l));
 		} catch (d) {
 			console.error(`[${n.DISPLAY_NAME}] widget unmount error`, d);
 		}
 		try {
-			O?.call(u);
+			h?.call(l);
 		} catch (d) {
 			console.error(`[${n.DISPLAY_NAME}] chained onRemove error`, d);
 		}
-	}, { widget: u };
+	}, { widget: l };
 }
-var Ee = [
+var ze = [
 	"output",
 	"input",
 	"temp"
 ];
-function W(e) {
+function B(e) {
 	if (typeof e != "string") return null;
-	const [t, ...n] = e.split("/"), r = n.pop();
-	return !r || !Ee.includes(t) || [...n, r].some((o) => !o || o === "." || o === "..") ? null : {
+	const [t, ...n] = e.split("/"), o = n.pop();
+	return !o || !ze.includes(t) || [...n, o].some((r) => !r || r === "." || r === "..") ? null : {
 		type: t,
 		subfolder: n.join("/"),
-		filename: r
+		filename: o
 	};
 }
-var Ae = /\.(mp4|webm|mov|mkv|avi|m4v)(\?|#|$)/i;
-var ke = /\.(mp3|wav|flac|ogg|oga|m4a|aac|opus)(\?|#|$)/i;
+var xe = /\.(mp4|webm|mov|mkv|avi|m4v)(\?|#|$)/i;
+var Ee = /\.(mp3|wav|flac|ogg|oga|m4a|aac|opus)(\?|#|$)/i;
 function R(e) {
 	const t = e || "", n = /^data:(image|video|audio)\//i.exec(t);
-	return n ? n[1].toLowerCase() : Ae.test(t) ? "video" : ke.test(t) ? "audio" : "image";
+	return n ? n[1].toLowerCase() : xe.test(t) ? "video" : Ee.test(t) ? "audio" : "image";
 }
-var Ie = "background:#b45309;color:#fff;border-radius:3px;padding:1px 6px;font-weight:700";
-function Me(e, ...t) {
-	console.warn("%cZenKit%c " + e, Ie, "color:inherit", ...t);
+var Ae = "background:#b45309;color:#fff;border-radius:3px;padding:1px 6px;font-weight:700";
+function ke(e, ...t) {
+	console.warn("%cZenKit%c " + e, Ae, "color:inherit", ...t);
 }
-function M() {
+function A() {
 	return typeof window < "u" && window.ZenKit || null;
 }
-var Te = 6e3;
+var Ie = 6e3;
 var X = !1;
-var $e = 6e4;
-var Ne = "/zenkit/themes";
+var Ne = 6e4;
+var $e = "/zenkit/themes";
 var G = null;
 function Ce() {
-	return G ??= fetch(Ne, {
+	return G ??= fetch($e, {
 		method: "HEAD",
 		credentials: "include"
 	}).then((e) => e.ok ? !0 : e.status === 404 ? !1 : null).catch(() => null), G;
 }
-function $(e = Te) {
-	const t = M();
-	return t ? t.ready ?? Promise.resolve(t) : typeof window > "u" ? Promise.resolve(null) : window.ZenKitPending ? new Promise((n) => window.addEventListener("zen:ready", () => n(M()), { once: !0 })) : X ? Promise.resolve(null) : new Promise((n) => {
-		let r = !1, o;
-		const a = (i) => {
-			r || (r = !0, clearTimeout(o), window.removeEventListener("zen:ready", s), i || (X = !0, Le()), n(i));
-		}, s = () => a(M());
-		window.addEventListener("zen:ready", s), o = setTimeout(() => a(M()), e), Ce().then((i) => {
-			i === null || r || (clearTimeout(o), i ? o = setTimeout(() => a(M()), $e) : a(M()));
+function C(e = Ie) {
+	const t = A();
+	return t ? t.ready ?? Promise.resolve(t) : typeof window > "u" ? Promise.resolve(null) : window.ZenKitPending ? new Promise((n) => window.addEventListener("zen:ready", () => n(A()), { once: !0 })) : X ? Promise.resolve(null) : new Promise((n) => {
+		let o = !1, r;
+		const s = (i) => {
+			o || (o = !0, clearTimeout(r), window.removeEventListener("zen:ready", a), i || (X = !0, Me()), n(i));
+		}, a = () => s(A());
+		window.addEventListener("zen:ready", a), r = setTimeout(() => s(A()), e), Ce().then((i) => {
+			i === null || o || (clearTimeout(r), i ? r = setTimeout(() => s(A()), Ne) : s(A()));
 		});
 	});
 }
 var J = !1;
-function Le() {
-	J || (J = !0, Me("runtime not detected — ZenKit-integrated panels will use their fallback UI. Install ComfyUI-ZenKit for the full experience."));
+function Me() {
+	J || (J = !0, ke("runtime not detected — ZenKit-integrated panels will use their fallback UI. Install ComfyUI-ZenKit for the full experience."));
 }
-var B = "application/x-zenkit-image";
-var j = "application/x-comfy-asset-info";
+var H = "application/x-zenkit-image";
+var W = "application/x-comfy-asset-info";
 var Z = "application/x-zenkit-media-list";
-async function _e(e) {
-	const t = await $();
+async function Le(e) {
+	const t = await C();
 	try {
 		return t ? t.graph.slotLink(e) : () => {};
 	} catch {
 		return () => {};
 	}
 }
-function De(e, t) {
-	return Object.entries(e).sort(([n], [r]) => n.localeCompare(r)).flatMap(([n, r]) => {
-		const o = r?.default;
-		return o ? Array.isArray(o) ? o : [o] : (console.warn(`[${t?.DISPLAY_NAME ?? "nodekit"}] ${n} has no default export — skipped`), []);
+function Pe(e, t) {
+	return Object.entries(e).sort(([n], [o]) => n.localeCompare(o)).flatMap(([n, o]) => {
+		const r = o?.default;
+		return r ? Array.isArray(r) ? r : [r] : (console.warn(`[${t?.DISPLAY_NAME ?? "nodekit"}] ${n} has no default export — skipped`), []);
 	});
 }
 var Q = (e) => Array.isArray(e) ? e : [e];
-function Oe(e) {
+function De(e) {
 	if (Array.isArray(e)) return e[1]?.default;
 	if (e && typeof e == "object") return e.default;
 }
-function Re(e, t, n) {
-	const r = /* @__PURE__ */ new Map();
-	for (const s of e) for (const i of Q(s.is ?? [])) r.set(i, s);
-	const o = {};
-	for (const s of e) for (const i of s.widgets ?? []) o[i.type] || (o[i.type] = (c, l, f) => se(c, {
-		widgetName: i.name ?? l,
+function Oe(e, t, n) {
+	const o = /* @__PURE__ */ new Map();
+	for (const a of e) for (const i of Q(a.is ?? [])) o.set(i, a);
+	const r = {};
+	for (const a of e) for (const i of a.widgets ?? []) r[i.type] || (r[i.type] = (c, u, f) => ie(c, {
+		widgetName: i.name ?? u,
 		widgetType: i.type,
 		component: i.component,
 		minHeight: i.minHeight,
@@ -12856,34 +12840,34 @@ function Re(e, t, n) {
 		fill: i.fill,
 		dragThrough: i.dragThrough,
 		serialize: i.serialize,
-		defaultValue: i.default !== void 0 ? i.default : Oe(f)
+		defaultValue: i.default !== void 0 ? i.default : De(f)
 	}, n));
-	const a = [...e.flatMap((s) => s.settings ?? []), ...we()];
+	const s = [...e.flatMap((a) => a.settings ?? []), ...ge()];
 	app.registerExtension({
 		name: t,
-		...a.length ? { settings: a } : {},
+		...s.length ? { settings: s } : {},
 		getCustomWidgets() {
-			return o;
+			return r;
 		},
-		nodeCreated(s) {
-			const i = s, c = r.get(i.constructor?.comfyClass ?? "");
+		nodeCreated(a) {
+			const i = a, c = o.get(i.constructor?.comfyClass ?? "");
 			if (c && (c.minSize && i.setSize([Math.max(i.size[0], c.minSize[0]), Math.max(i.size[1], c.minSize[1])]), c.hideOutputImages && (i.hideOutputImages = !0), c.output)) {
-				const { widget: l, from: f } = c.output, u = i.onExecuted;
+				const { widget: u, from: f } = c.output, l = i.onExecuted;
 				i.onExecuted = function(p) {
-					u?.call(this, p);
-					const g = i.widgets?.find((v) => v.name === l);
-					if (!g) return;
-					const y = f(p ?? {});
+					l?.call(this, p);
+					const w = i.widgets?.find((y) => y.name === u);
+					if (!w) return;
+					const v = f(p ?? {});
 					try {
-						g.callback?.(y);
-					} catch (v) {
-						console.warn(`[${n.DISPLAY_NAME}] output handler failed for ${l}`, v);
+						w.callback?.(v);
+					} catch (y) {
+						console.warn(`[${n.DISPLAY_NAME}] output handler failed for ${u}`, y);
 					}
 				};
 			}
 		}
 	});
-	for (const s of e) for (const i of s.slotLinks ?? []) for (const c of Q(s.is ?? [])) _e({
+	for (const a of e) for (const i of a.slotLinks ?? []) for (const c of Q(a.is ?? [])) Le({
 		on: i.input != null ? {
 			node: c,
 			input: i.input
@@ -12894,58 +12878,52 @@ function Re(e, t, n) {
 		spawn: i.spawn
 	});
 }
-function le(e) {
+function ce(e) {
 	return e.split("/").pop().replace(/\.vue$/, "");
 }
-function Ue(e, t) {
-	const n = /* @__PURE__ */ new Set(), r = [];
-	for (const [o, a] of Object.entries(e).sort(([s], [i]) => s.localeCompare(i))) {
-		const s = a, i = le(o), c = t.typeId(i);
-		if (!s?.default) {
-			console.warn(`[${t.DISPLAY_NAME}] ${o} has no default export — skipped`);
+function Re(e, t) {
+	const n = /* @__PURE__ */ new Set(), o = [];
+	for (const [r, s] of Object.entries(e).sort(([a], [i]) => a.localeCompare(i))) {
+		const a = s, i = ce(r), c = t.typeId(i);
+		if (!a?.default) {
+			console.warn(`[${t.DISPLAY_NAME}] ${r} has no default export — skipped`);
 			continue;
 		}
 		if (n.has(c)) {
-			console.warn(`[${t.DISPLAY_NAME}] duplicate widget type ${c} from ${o} — skipped`);
+			console.warn(`[${t.DISPLAY_NAME}] duplicate widget type ${c} from ${r} — skipped`);
 			continue;
 		}
-		n.add(c), r.push({
-			...s.nodeDef,
+		n.add(c), o.push({
+			...a.nodeDef,
 			widgets: [{
 				type: c,
-				component: s.default,
-				...s.widgetOptions
+				component: a.default,
+				...a.widgetOptions
 			}]
 		});
 	}
-	return r;
+	return o;
 }
-function He(e, t) {
-	return Object.keys(e).map((n) => t.typeId(le(n))).sort();
+function _e(e, t) {
+	return Object.keys(e).map((n) => t.typeId(ce(n))).sort();
 }
 var ee = "#6366f1";
-var We = "#0f1f0f";
+var Ue = "#0f1f0f";
 function Be(e) {
 	let t = e;
 	for (let n = 0; t && n < 12; n++) {
-		const r = t.querySelector?.(".lg-node-header");
-		if (r) return r;
+		const o = t.querySelector?.(".lg-node-header");
+		if (o) return o;
 		t = t.parentElement;
 	}
 	return null;
 }
-function je(e, t) {
-	const n = app?.canvas?.graph;
-	if (n && e.graph && e.graph !== n) return !1;
-	const r = t.closest("[data-node-id]")?.dataset.nodeId;
-	return r === void 0 || e.id === void 0 || r === String(e.id);
-}
-function Ze(e, t, n, r) {
-	let o = !1, a = !1;
-	const s = document.createElement("button");
-	s.type = "button", s.className = `${r.NAMESPACE}-hdr-btn`, s.title = n.title ?? "";
+function He(e, t, n, o) {
+	let r = !1, s = !1;
+	const a = document.createElement("button");
+	a.type = "button", a.className = `${o.NAMESPACE}-hdr-btn`, a.title = n.title ?? "";
 	const i = document.createElement("i");
-	i.className = n.icon, s.appendChild(i), Object.assign(s.style, {
+	i.className = n.icon, a.appendChild(i), Object.assign(a.style, {
 		position: "absolute",
 		right: "10px",
 		top: "50%",
@@ -12962,75 +12940,75 @@ function Ze(e, t, n, r) {
 		fontSize: "15px",
 		lineHeight: "1",
 		transition: "opacity .12s ease, color .12s ease"
-	}), s.addEventListener("pointerdown", (h) => h.stopPropagation()), s.addEventListener("pointerup", (h) => h.stopPropagation()), s.addEventListener("click", (h) => {
-		h.stopPropagation(), n.onClick(s);
-	}), s.addEventListener("pointerenter", () => {
-		a = !0, f();
-	}), s.addEventListener("pointerleave", () => {
-		a = !1, f();
-	}), s.addEventListener("dblclick", (h) => {
+	}), a.addEventListener("pointerdown", (h) => h.stopPropagation()), a.addEventListener("pointerup", (h) => h.stopPropagation()), a.addEventListener("click", (h) => {
+		h.stopPropagation(), n.onClick(a);
+	}), a.addEventListener("pointerenter", () => {
+		s = !0, f();
+	}), a.addEventListener("pointerleave", () => {
+		s = !1, f();
+	}), a.addEventListener("dblclick", (h) => {
 		h.stopPropagation(), h.preventDefault();
 	});
 	const c = () => {
 		const h = Be(t);
-		if (!h || !je(e, h)) {
-			s.parentElement && s.remove();
+		if (!h) {
+			a.parentElement && a.remove();
 			return;
 		}
-		getComputedStyle(h).position === "static" && (h.style.position = "relative"), s.parentElement !== h && h.appendChild(s);
+		getComputedStyle(h).position === "static" && (h.style.position = "relative"), a.parentElement !== h && h.appendChild(a);
 	};
 	c();
-	const l = window.setInterval(c, 500);
+	const u = window.setInterval(c, 500);
 	function f() {
-		const h = o || a;
-		s.style.opacity = h ? "1" : "0.6", s.style.color = h ? `var(--zen-accent, ${ee})` : "inherit";
+		const h = r || s;
+		a.style.opacity = h ? "1" : "0.6", a.style.color = h ? `var(--zen-accent, ${ee})` : "inherit";
 	}
-	const u = e, p = () => (u.setDirtyCanvas ?? u.graph?.setDirtyCanvas)?.(!0, !0);
-	let g = null;
-	const y = {
+	const l = e, p = () => (l.setDirtyCanvas ?? l.graph?.setDirtyCanvas)?.(!0, !0);
+	let w = null;
+	const v = {
 		x: 0,
 		y: 0
-	}, v = (h) => {
-		y.x = h.clientX, y.y = h.clientY;
+	}, y = (h) => {
+		v.x = h.clientX, v.y = h.clientY;
 	};
-	if (typeof u.addTitleButton == "function") try {
-		window.addEventListener("pointerdown", v, !0), g = u.addTitleButton({
+	if (typeof l.addTitleButton == "function") try {
+		window.addEventListener("pointerdown", y, !0), w = l.addTitleButton({
 			text: n.text ?? "⚙",
-			name: `${r.NAMESPACE}-header-btn`,
+			name: `${o.NAMESPACE}-header-btn`,
 			xOffset: -8
 		});
-		const h = u.onTitleButtonClick;
-		u.onTitleButtonClick = function(x, A) {
-			h?.call(this, x, A), x === g && n.onClick({ ...y });
+		const h = l.onTitleButtonClick;
+		l.onTitleButtonClick = function(d, m) {
+			h?.call(this, d, m), d === w && n.onClick({ ...v });
 		};
 	} catch {
-		g = null;
+		w = null;
 	}
-	const b = () => {
-		f(), g && (g.bgColor = o ? n.activeColor ?? ee : We, p());
+	const z = () => {
+		f(), w && (w.bgColor = r ? n.activeColor ?? ee : Ue, p());
 	};
 	return {
 		destroy() {
-			if (window.clearInterval(l), window.removeEventListener("pointerdown", v, !0), s.remove(), g && Array.isArray(u.title_buttons)) {
-				const h = u.title_buttons.indexOf(g);
-				h >= 0 && u.title_buttons.splice(h, 1), p();
+			if (window.clearInterval(u), window.removeEventListener("pointerdown", y, !0), a.remove(), w && Array.isArray(l.title_buttons)) {
+				const h = l.title_buttons.indexOf(w);
+				h >= 0 && l.title_buttons.splice(h, 1), p();
 			}
 		},
 		setActive(h) {
-			o = h, b();
+			r = h, z();
 		}
 	};
 }
-function Fe(e) {
+function We(e) {
 	const t = new URLSearchParams(e).toString(), n = app.getRandParam?.() ?? `&r=${t.length}`;
 	return api.apiURL(`/view?${t}${n}`);
 }
-function Ye(e) {
-	const t = W(e);
-	return t ? Fe(t) : Ke();
+function Ze(e) {
+	const t = B(e);
+	return t ? We(t) : je();
 }
-var Ke = () => api.apiURL("/view?filename=");
-function H(e) {
+var je = () => api.apiURL("/view?filename=");
+function U(e) {
 	try {
 		const t = new URL(e, location.href), n = t.searchParams.get("filename");
 		return !t.pathname.endsWith("/view") || !n ? null : [
@@ -13042,7 +13020,7 @@ function H(e) {
 		return null;
 	}
 }
-function U(e) {
+function _(e) {
 	try {
 		const t = JSON.parse(e);
 		return t && typeof t == "object" ? t : null;
@@ -13050,110 +13028,104 @@ function U(e) {
 		return null;
 	}
 }
-async function qe(e) {
+async function Fe(e) {
 	try {
 		if (new URL(e, location.href).origin !== location.origin) return [];
 		const t = await fetch(e, { credentials: "include" });
 		if (!t.ok) return [];
 		const { items: n } = await t.json();
-		return (n ?? []).flatMap((r) => {
-			const o = typeof r.url == "string" ? H(r.url) : null;
-			return o ? [o] : [];
+		return (n ?? []).flatMap((o) => {
+			const r = typeof o.url == "string" ? U(o.url) : null;
+			return r ? [r] : [];
 		});
 	} catch {
 		return [];
 	}
 }
-async function F(e, t = "zenkit") {
+async function j(e, t = "zenkit") {
 	const n = new FormData();
 	n.append("image", e), n.append("subfolder", t);
-	const r = await api.fetchApi("/upload/image", {
+	const o = await api.fetchApi("/upload/image", {
 		method: "POST",
 		body: n
 	});
-	if (!r.ok) throw new Error(`Upload failed (${r.status}).`);
-	const o = await r.json();
+	if (!o.ok) throw new Error(`Upload failed (${o.status}).`);
+	const r = await o.json();
 	return [
 		"input",
-		o.subfolder,
-		o.name
+		r.subfolder,
+		r.name
 	].filter(Boolean).join("/");
 }
-function ht(e) {
+function ut(e) {
 	const t = e.dataTransfer?.types ?? [];
-	return t.includes(Z) || t.includes("application/x-zenkit-image") || t.includes(j) || t.includes("text/uri-list") || t.includes("Files");
+	return t.includes(Z) || t.includes("application/x-zenkit-image") || t.includes(W) || t.includes("text/uri-list") || t.includes("Files");
 }
-async function mt(e, t = "zenkit", n = F) {
-	const r = e.dataTransfer;
-	if (!r) return [];
-	const o = U(r.getData(B)), a = U(r.getData(j)), s = (r.getData("text/uri-list") || "").split(`
-`)[0]?.trim() ?? "", i = Array.from(r.files).filter((p) => /^(image|video|audio)\//.test(p.type)), c = U(r.getData(Z));
+async function ft(e, t = "zenkit", n = j) {
+	const o = e.dataTransfer;
+	if (!o) return [];
+	const r = _(o.getData(H)), s = _(o.getData(W)), a = (o.getData("text/uri-list") || "").split(`
+`)[0]?.trim() ?? "", i = Array.from(o.files).filter((p) => /^(image|video|audio)\//.test(p.type)), c = _(o.getData(Z));
 	if (c && typeof c.url == "string") {
-		const p = await qe(c.url);
+		const p = await Fe(c.url);
 		if (p.length) return p;
 	}
-	if (o) {
-		const p = typeof o.ref == "string" && W(o.ref) ? o.ref : typeof o.url == "string" ? H(o.url) : null;
+	if (r) {
+		const p = typeof r.ref == "string" && B(r.ref) ? r.ref : typeof r.url == "string" ? U(r.url) : null;
 		if (p) return [p];
 	}
-	if (a && typeof a.filename == "string") return [[
-		String(a.type || "input"),
-		String(a.subfolder || ""),
-		a.filename
+	if (s && typeof s.filename == "string") return [[
+		String(s.type || "input"),
+		String(s.subfolder || ""),
+		s.filename
 	].filter(Boolean).join("/")];
-	const l = s ? H(s) : null;
-	if (l) return [l];
+	const u = a ? U(a) : null;
+	if (u) return [u];
 	if (i.length) return Promise.all(i.map((p) => n(p, t)));
-	const f = o && typeof o.url == "string" && o.url || s;
+	const f = r && typeof r.url == "string" && r.url || a;
 	if (!f) return [];
-	const u = await Ve(f, o && typeof o.filename == "string" ? o.filename : "");
-	return u ? [await n(u, t)] : [];
+	const l = await Ye(f, r && typeof r.filename == "string" ? r.filename : "");
+	return l ? [await n(l, t)] : [];
 }
-async function Ve(e, t) {
+async function Ye(e, t) {
 	try {
 		const n = new URL(e, location.href);
 		if (!/^https?:$/.test(n.protocol)) return null;
-		const r = await fetch(n.href, { credentials: n.origin === location.origin ? "include" : "omit" });
-		if (!r.ok) return null;
-		const o = await r.blob();
-		if (!/^(image|video|audio)\//.test(o.type)) return null;
-		const a = t || decodeURIComponent(n.pathname.split("/").pop() || "") || `dropped.${o.type.split("/")[1] || "png"}`;
-		return new File([o], a, { type: o.type });
+		const o = await fetch(n.href, { credentials: n.origin === location.origin ? "include" : "omit" });
+		if (!o.ok) return null;
+		const r = await o.blob();
+		if (!/^(image|video|audio)\//.test(r.type)) return null;
+		const s = t || decodeURIComponent(n.pathname.split("/").pop() || "") || `dropped.${r.type.split("/")[1] || "png"}`;
+		return new File([r], s, { type: r.type });
 	} catch {
 		return null;
 	}
 }
 var te = (e) => api.apiURL(e);
-function Xe(e) {
-	const t = /* @__PURE__ */ new Map(), n = /* @__PURE__ */ new Map();
-	async function r(o, a) {
-		const s = await fetch(te(`${e}?type=${o}${a ? "&fresh=1" : ""}`));
-		if (!s.ok) throw new Error(`Could not list ${o}/ (${s.status}).`);
-		const i = s.headers.get("ETag"), c = t.get(o);
-		if (c && i && c.etag === i) return s.body?.cancel(), c.items;
-		const f = ((await s.json()).items ?? []).map((u) => {
-			const p = String(u.name), g = `${o}/${p}`, y = Number(u.mtime) || 0, v = u.kind ?? "image", b = new URLSearchParams({
+function Ke(e) {
+	const t = /* @__PURE__ */ new Map();
+	async function n(o) {
+		const r = await fetch(te(`${e}?type=${o}`));
+		if (!r.ok) throw new Error(`Could not list ${o}/ (${r.status}).`);
+		return ((await r.json()).items ?? []).map((a) => {
+			const i = String(a.name), c = `${o}/${i}`, u = Number(a.mtime) || 0, f = a.kind ?? "image", l = new URLSearchParams({
 				type: o,
-				name: p,
+				name: i,
 				size: "320",
-				v: String(y)
+				v: String(u)
 			});
 			return {
-				ref: g,
+				ref: c,
 				root: o,
-				folder: String(u.subfolder ?? ""),
-				filename: String(u.filename ?? p.split("/").pop()),
-				kind: v,
-				size: Number(u.size) || 0,
-				mtime: y,
-				url: Ye(g),
-				thumb: v === "audio" ? void 0 : te(`${e}/thumb?${b}`)
+				folder: String(a.subfolder ?? ""),
+				filename: String(a.filename ?? i.split("/").pop()),
+				kind: f,
+				size: Number(a.size) || 0,
+				mtime: u,
+				url: Ze(c),
+				thumb: f === "audio" ? void 0 : te(`${e}/thumb?${l}`)
 			};
 		});
-		return t.set(o, {
-			etag: i,
-			items: f
-		}), f;
 	}
 	return {
 		roots: [
@@ -13161,78 +13133,79 @@ function Xe(e) {
 			"output",
 			"temp"
 		],
-		list(o, a = !1) {
-			const s = `${o}|${a}`;
-			let i = n.get(s);
-			return i || (i = r(o, a).finally(() => n.delete(s)), n.set(s, i)), i;
+		list(o, r = !1) {
+			if (r || !t.has(o)) {
+				const s = n(o);
+				s.catch(() => t.delete(o)), t.set(o, s);
+			}
+			return t.get(o);
 		},
-		peek: (o) => t.get(o)?.items,
-		async upload(o, a = "zenkit") {
-			const s = await this.list("input").catch(() => []), i = new Map(s.map((l) => [`${l.filename}|${l.size}`, l.ref])), c = [];
-			for (const l of o) {
-				const f = i.get(`${l.name}|${l.size}`);
-				if (f) {
-					c.push(f);
+		async upload(o, r = "zenkit") {
+			const s = await this.list("input").catch(() => []), a = new Map(s.map((c) => [`${c.filename}|${c.size}`, c.ref])), i = [];
+			for (const c of o) {
+				const u = a.get(`${c.name}|${c.size}`);
+				if (u) {
+					i.push(u);
 					continue;
 				}
-				const u = await F(l, a);
-				i.set(`${l.name}|${l.size}`, u), c.push(u);
+				const f = await j(c, r);
+				a.set(`${c.name}|${c.size}`, f), i.push(f);
 			}
-			return c;
+			return t.delete("input"), i;
 		}
 	};
 }
-var L = (e) => api.apiURL(e);
-async function Ge(e) {
+var T = (e) => api.apiURL(e);
+async function qe(e) {
 	if (!globalThis.crypto?.subtle) return null;
 	const t = await crypto.subtle.digest("SHA-256", await e.arrayBuffer());
 	return Array.from(new Uint8Array(t), (n) => n.toString(16).padStart(2, "0")).join("");
 }
-function Je(e) {
-	async function t(a) {
+function Ve(e) {
+	async function t(s) {
 		try {
-			const s = await Ge(a);
-			if (!s) return null;
+			const a = await qe(s);
+			if (!a) return null;
 			const i = new URLSearchParams({
-				size: String(a.size),
-				sha256: s
-			}), c = await fetch(L(`${e}/find?${i}`));
+				size: String(s.size),
+				sha256: a
+			}), c = await fetch(T(`${e}/find?${i}`));
 			return c.ok ? (await c.json()).ref : null;
 		} catch {
 			return null;
 		}
 	}
 	const n = /* @__PURE__ */ shallowRef(null);
-	let r = !1;
-	function o(a) {
-		r || (r = !0, fetch(a, { cache: "no-store" }).then((s) => {
-			s.ok && (n.value = s.headers.has("X-Thumb-Time"));
-		}).catch(() => {}).finally(() => r = !1));
+	let o = !1;
+	function r(s) {
+		o || (o = !0, fetch(s, { cache: "no-store" }).then((a) => {
+			a.ok && (n.value = a.headers.has("X-Thumb-Time"));
+		}).catch(() => {}).finally(() => o = !1));
 	}
 	return {
-		thumbUrl(a, s = 256, i) {
-			const c = W(a);
-			if (!c || R(a) === "audio") return "";
-			const l = c.subfolder ? `${c.subfolder}/${c.filename}` : c.filename, f = new URLSearchParams({
+		thumbUrl(s, a = 256, i) {
+			const c = B(s);
+			if (!c || R(s) === "audio") return "";
+			const u = c.subfolder ? `${c.subfolder}/${c.filename}` : c.filename, f = new URLSearchParams({
 				type: c.type,
-				name: l,
-				size: String(s)
-			}), u = L(`${e}/thumb?${f}`);
-			if (!i || !(i > 0) || R(a) !== "video") return u;
+				name: u,
+				size: String(a)
+			}), l = T(`${e}/thumb?${f}`);
+			if (!i || !(i > 0) || R(s) !== "video") return l;
 			f.set("t", i.toFixed(6));
-			const p = L(`${e}/thumb?${f}`);
-			return n.value ? p : (n.value === null && o(p), u);
+			const p = T(`${e}/thumb?${f}`);
+			return n.value ? p : (n.value === null && r(p), l);
 		},
-		async uploadOrReuse(a, s = "zenkit") {
-			return await t(a) ?? F(a, s);
+		async uploadOrReuse(s, a = "zenkit") {
+			return await t(s) ?? j(s, a);
 		},
-		async mediaInfo(a) {
+		async mediaInfo(s) {
 			try {
-				const s = await fetch(L(`${e}/info?${new URLSearchParams({ ref: a })}`));
-				if (!s.ok) return null;
-				const i = await s.json(), c = (l) => typeof l == "number" ? l : null;
+				const a = await fetch(T(`${e}/info?${new URLSearchParams({ ref: s })}`));
+				if (!a.ok) return null;
+				const i = await a.json(), c = (u) => typeof u == "number" ? u : null;
 				return {
-					kind: i.kind ?? R(a),
+					kind: i.kind ?? R(s),
 					duration: c(i.duration),
 					width: c(i.width),
 					height: c(i.height),
@@ -13245,79 +13218,79 @@ function Je(e) {
 		}
 	};
 }
-function gt(e) {
+function dt(e) {
 	const t = n(e);
 	return {
 		...t,
 		routeUrl: (n) => api.apiURL(t.route(n)),
-		registerNodes: (n, r) => Re(n, r ?? t.NAMESPACE, t),
-		discoverNodes: (n) => De(n, t),
-		discoverWidgets: (n) => Ue(n, t),
-		widgetTypes: (n) => He(n, t),
-		mountWidget: (n, r) => se(n, r, t),
-		addNodeHeaderButton: (n, r, o) => Ze(n, r, o, t),
-		mediaLibrary: Xe(t.route("media")),
-		...Je(t.route("media"))
+		registerNodes: (n, o) => Oe(n, o ?? t.NAMESPACE, t),
+		discoverNodes: (n) => Pe(n, t),
+		discoverWidgets: (n) => Re(n, t),
+		widgetTypes: (n) => _e(n, t),
+		mountWidget: (n, o) => ie(n, o, t),
+		addNodeHeaderButton: (n, o, r) => He(n, o, r, t),
+		mediaLibrary: Ke(t.route("media")),
+		...Ve(t.route("media"))
 	};
 }
-function wt(e) {
+function pt(e) {
 	return e;
 }
-function yt(e) {
+function ht(e) {
 	const t = /* @__PURE__ */ ref(null), n = /* @__PURE__ */ ref(!1);
-	let r = 0, o = 0;
-	function a(l) {
+	let o = 0, r = 0;
+	function s(u) {
 		const f = t.value;
 		if (!f) return null;
-		const u = f.getBoundingClientRect();
-		if (!u.width || !u.height) return null;
-		const p = u.width / (f.offsetWidth || u.width) || 1;
+		const l = f.getBoundingClientRect();
+		if (!l.width || !l.height) return null;
+		const p = l.width / (f.offsetWidth || l.width) || 1;
 		return {
 			ratio: {
-				x: (l.clientX - u.left) / u.width,
-				y: (l.clientY - u.top) / u.height
+				x: (u.clientX - l.left) / l.width,
+				y: (u.clientY - l.top) / l.height
 			},
 			deltaRatio: {
-				x: (l.clientX - r) / u.width,
-				y: (l.clientY - o) / u.height
+				x: (u.clientX - o) / l.width,
+				y: (u.clientY - r) / l.height
 			},
 			delta: {
-				x: (l.clientX - r) / p,
-				y: (l.clientY - o) / p
+				x: (u.clientX - o) / p,
+				y: (u.clientY - r) / p
 			},
-			rect: u,
-			event: l
+			rect: l,
+			event: u
 		};
 	}
-	function s(l) {
-		r = l.clientX, o = l.clientY;
-		const f = a(l);
+	function a(u) {
+		o = u.clientX, r = u.clientY;
+		const f = s(u);
 		if (f && e.onStart?.(f) !== !1) {
 			n.value = !0;
 			try {
-				t.value?.setPointerCapture(l.pointerId);
+				t.value?.setPointerCapture(u.pointerId);
 			} catch {}
 		}
 	}
-	function i(l) {
+	function i(u) {
 		if (!n.value) return;
-		const f = a(l);
+		const f = s(u);
 		f && e.onMove(f);
 	}
-	function c(l) {
+	function c(u) {
 		if (!n.value) return;
 		n.value = !1;
 		try {
-			t.value?.releasePointerCapture(l.pointerId);
+			t.value?.releasePointerCapture(u.pointerId);
 		} catch {}
-		const f = a(l);
+		const f = s(u);
 		f && e.onEnd?.(f);
 	}
 	return {
 		el: t,
 		dragging: n,
 		handlers: {
-			onPointerdown: s,
+			onPointerdown: a,
 			onPointermove: i,
 			onPointerup: c,
 			onPointercancel: c,
@@ -13325,108 +13298,108 @@ function yt(e) {
 		}
 	};
 }
-function et(e) {
+function Xe(e) {
 	return e.tiledIn ? !e.parked && e.current !== e.tiledIn ? "hide" : e.parked && e.current === e.tiledIn ? "show" : "stay" : "stay";
 }
-function tt(e) {
+function Ge(e) {
 	return !e.tiledIn || e.tiledIn === e.current ? "open" : e.reveal ? "reveal" : "park";
 }
-function bt() {
-	return typeof M()?.panels?.open == "function";
+function mt() {
+	return typeof A()?.panels?.open == "function";
 }
-var _ = /* @__PURE__ */ new Map();
-function St(e, t) {
-	const n = M();
+var P = /* @__PURE__ */ new Map();
+function gt(e, t) {
+	const n = A();
 	if (!n?.panels?.open) return null;
 	try {
-		const r = _.get(e.id);
-		return r && e.followWorkspace !== !1 ? (r.again(e, t), r.handle) : nt(n, e, t);
+		const o = P.get(e.id);
+		return o && e.followWorkspace !== !1 ? (o.again(e, t), o.handle) : Je(n, e, t);
 	} catch {
 		return null;
 	}
 }
-function nt(e, t, n) {
-	const r = t.id, o = e.workspaces, a = t.followWorkspace !== !1 && typeof o?.of == "function" && typeof o.current == "function" && typeof o.onChange == "function";
-	let s = t, i = n, c = t.title, l = t.onClose, f = null, u, p = !1, g = !1, y, v = !1;
-	const b = /* @__PURE__ */ new Set(), h = (m) => {
-		if (v !== m) {
-			v = m;
-			for (const E of [...b]) try {
-				E(m);
-			} catch (fe) {
-				console.error("[ZenKit] panel onShown failed", r, fe);
+function Je(e, t, n) {
+	const o = t.id, r = e.workspaces, s = t.followWorkspace !== !1 && typeof r?.of == "function" && typeof r.current == "function" && typeof r.onChange == "function";
+	let a = t, i = n, c = t.title, u = t.onClose, f = null, l, p = !1, w = !1, v, y = !1;
+	const z = /* @__PURE__ */ new Set(), h = (g) => {
+		if (y !== g) {
+			y = g;
+			for (const E of [...z]) try {
+				E(g);
+			} catch (ue) {
+				console.error("[ZenKit] panel onShown failed", o, ue);
 			}
 		}
-	}, x = () => {
-		if (g) return;
-		g = !0, h(!1), u?.(), y?.(), _.get(r) === S && _.delete(r);
-		const m = l;
-		l = void 0;
+	}, d = () => {
+		if (w) return;
+		w = !0, h(!1), l?.(), v?.(), P.get(o) === N && P.delete(o);
+		const g = u;
+		u = void 0;
 		try {
-			m?.();
+			g?.();
 		} catch (E) {
-			console.error("[ZenKit] panel onClose failed", r, E);
+			console.error("[ZenKit] panel onClose failed", o, E);
 		}
-	}, A = () => {
+	}, m = () => {
 		p = !1, f = e.panels.open({
-			id: r,
+			id: o,
 			title: c,
-			icon: s.icon,
-			width: s.width,
-			height: s.height,
-			minWidth: s.minWidth,
-			minHeight: s.minHeight,
-			persist: s.persist,
-			render(m) {
-				const E = createApp(i, s.props ?? {});
-				return E.mount(m), () => E.unmount();
+			icon: a.icon,
+			width: a.width,
+			height: a.height,
+			minWidth: a.minWidth,
+			minHeight: a.minHeight,
+			persist: a.persist,
+			render(g) {
+				const E = createApp(i, a.props ?? {});
+				return E.mount(g), () => E.unmount();
 			}
-		}), u?.(), u = f?.on?.("close", x) ?? void 0, h(!!f);
-	}, N = () => {
-		p = !0, u?.(), u = void 0;
-		const m = f;
-		f = null, m?.close?.({ keep: !0 }), h(!1);
-	}, O = () => {
-		if (g || !a) return;
-		const m = et({
-			tiledIn: o.of(r),
-			current: o.current(),
+		}), l?.(), l = f?.on?.("close", d) ?? void 0, h(!!f);
+	}, S = () => {
+		p = !0, l?.(), l = void 0;
+		const g = f;
+		f = null, g?.close?.({ keep: !0 }), h(!1);
+	}, x = () => {
+		if (w || !s) return;
+		const g = Xe({
+			tiledIn: r.of(o),
+			current: r.current(),
 			parked: p
 		});
-		m === "hide" ? N() : m === "show" && A();
-	}, d = () => {
-		if (g) return;
+		g === "hide" ? S() : g === "show" && m();
+	}, b = () => {
+		if (w) return;
 		if (!p) return f?.focus?.();
-		const m = a ? o.of(r) : null;
-		m && m !== o.current() && o.activate(m), A();
-	}, w = {
-		close: (m) => {
-			g || (f ? f.close?.(m) : e.panels.close?.(r, m), x());
+		const g = s ? r.of(o) : null;
+		g && g !== r.current() && r.activate(g), m();
+	}, I = {
+		close: (g) => {
+			w || (f ? f.close?.(g) : e.panels.close?.(o, g), d());
 		},
-		setTitle: (m) => {
-			c = m, f?.setTitle?.(m);
+		setTitle: (g) => {
+			c = g, f?.setTitle?.(g);
 		},
-		focus: d,
+		focus: b,
 		get shown() {
-			return v;
+			return y;
 		},
-		onShown(m) {
-			return b.add(m), () => b.delete(m);
+		onShown(g) {
+			return z.add(g), () => z.delete(g);
 		}
-	}, S = {
-		handle: w,
-		again(m, E) {
-			g || (s = {
-				...m,
-				id: r
-			}, i = E, c = m.title, m.onClose && (l = m.onClose), (m.reveal ?? !0) && d());
+	}, N = {
+		handle: I,
+		again(g, E) {
+			w || (a = {
+				...g,
+				id: o
+			}, i = E, c = g.title, g.onClose && (u = g.onClose), (g.reveal ?? !0) && b());
 		}
-	}, k = a ? o.of(r) : null, z = tt({
-		tiledIn: k,
-		current: a ? o.current() : null,
+	}, O = s ? r.of(o) : null, Y = Ge({
+		tiledIn: O,
+		current: s ? r.current() : null,
 		reveal: !!t.reveal
 	});
-	return z === "park" ? (p = !0, e.panels.get?.(r) || e.panels.close?.(r, { keep: !0 })) : (z === "reveal" && k && o.activate(k), A()), a && (_.set(r, S), y = o.onChange(O)), w;
+	return Y === "park" ? (p = !0, e.panels.get?.(o) || e.panels.close?.(o, { keep: !0 })) : (Y === "reveal" && O && r.activate(O), m()), s && (P.set(o, N), v = r.onChange(x)), I;
 }
 //#endregion
 //#region frontend/components/WidgetActions.vue?vue&type=script&setup=true&lang.ts
@@ -13438,7 +13411,7 @@ var _hoisted_3$31 = {
 };
 //#endregion
 //#region frontend/components/WidgetActions.vue
-var WidgetActions_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
+var WidgetActions_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
 	__name: "WidgetActions",
 	props: {
 		label: {},
@@ -13480,7 +13453,7 @@ function isOwnMount(props) {
 }
 //#endregion
 //#region frontend/framework.ts
-var { NAMESPACE, DISPLAY_NAME, CATEGORY, nodeId, route, routeUrl, settingId, typeId, registerNodes, discoverNodes, discoverWidgets, widgetTypes, mountWidget, addNodeHeaderButton, mediaLibrary, mediaInfo, thumbUrl: thumbUrl$1, uploadOrReuse } = gt({
+var { NAMESPACE, DISPLAY_NAME, CATEGORY, nodeId, route, routeUrl, settingId, typeId, registerNodes, discoverNodes, discoverWidgets, widgetTypes, mountWidget, addNodeHeaderButton, mediaLibrary, mediaInfo, thumbUrl: thumbUrl$1, uploadOrReuse } = dt({
 	namespace: "nynxz",
 	displayName: "Nynxz's Custom Nodes",
 	category: "Nynxz",
@@ -13876,9 +13849,9 @@ var ChoiceList_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defin
 		function rowStyle(i) {
 			if (dragIndex.value === i) return { transform: `translateY(${dragOffset.value}px)` };
 			if (settle.value?.index === i) return { transform: `translateY(${settle.value.y}px)` };
-			return Yc(Zc(i, dragIndex.value, dropIndex.value), stride.value);
+			return _c(Oc(i, dragIndex.value, dropIndex.value), stride.value);
 		}
-		const reorder = yt({
+		const reorder = ht({
 			onStart(ctx) {
 				const grip = ctx.event.target?.closest?.(".cl-grip");
 				const surface = reorder.el.value;
@@ -13889,7 +13862,7 @@ var ChoiceList_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defin
 				rowMids = kids.map((k) => k.offsetTop + k.offsetHeight / 2);
 				rowTops = kids.map((k) => k.offsetTop);
 				rowHeights = kids.map((k) => k.offsetHeight);
-				stride.value = Uc(rowTops, rowHeights, i);
+				stride.value = Nc(rowTops, rowHeights, i);
 				dragIndex.value = i;
 				dropIndex.value = i;
 				dragOffset.value = 0;
@@ -13897,7 +13870,7 @@ var ChoiceList_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defin
 			onMove(ctx) {
 				if (dragIndex.value < 0) return;
 				dragOffset.value = ctx.delta.y;
-				dropIndex.value = Nc(rowMids, dragIndex.value, (rowMids[dragIndex.value] ?? 0) + ctx.delta.y);
+				dropIndex.value = Kc(rowMids, dragIndex.value, (rowMids[dragIndex.value] ?? 0) + ctx.delta.y);
 			},
 			onEnd() {
 				const from = dragIndex.value;
@@ -13910,7 +13883,7 @@ var ChoiceList_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defin
 				settling.value = true;
 				settle.value = {
 					index: to,
-					y: (rowTops[from] ?? 0) + offset - Xc(rowTops, rowHeights, from, to)
+					y: (rowTops[from] ?? 0) + offset - Zc(rowTops, rowHeights, from, to)
 				};
 				if (from !== to) {
 					rows.value.splice(to, 0, rows.value.splice(from, 1)[0]);
@@ -13923,7 +13896,7 @@ var ChoiceList_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defin
 			}
 		});
 		return (_ctx, _cache) => {
-			return openBlock(), createBlock(unref(Vf), {
+			return openBlock(), createBlock(unref(Af), {
 				ref_key: "rootEl",
 				ref: rootEl,
 				gap: 6,
@@ -13937,7 +13910,7 @@ var ChoiceList_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defin
 					count: live.value.length,
 					onPrimary: _cache[2] || (_cache[2] = ($event) => add())
 				}, {
-					default: withCtx(() => [createVNode(unref(Ge$1), {
+					default: withCtx(() => [createVNode(unref(je$1), {
 						icon: "mdi mdi-check",
 						title: "Done editing",
 						onClick: _cache[1] || (_cache[1] = ($event) => setEditing(false))
@@ -13968,7 +13941,7 @@ var ChoiceList_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defin
 							"data-zen-drag": "",
 							title: "Drag to reorder"
 						}, [createBaseVNode("i", { class: "mdi mdi-drag-vertical" })], -1)),
-						createVNode(unref(qf), {
+						createVNode(unref(Uf), {
 							"model-value": row.id === chosenRow.value?.id,
 							disabled: !row.text.trim(),
 							title: "Choose this one",
@@ -13988,14 +13961,14 @@ var ChoiceList_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defin
 							onInput: ($event) => setText(row, $event.target.value),
 							onKeydown: withKeys(withModifiers(($event) => addAfter(row), ["prevent"]), ["enter"])
 						}, null, 40, _hoisted_1$37),
-						createVNode(unref(Ge$1), {
+						createVNode(unref(je$1), {
 							size: "sm",
 							icon: "mdi mdi-close",
 							title: "Remove",
 							onClick: ($event) => remove(row)
 						}, null, 8, ["onClick"])
 					], 6);
-				}), 128))], 16)) : createCommentVNode("", true), createVNode(unref(On), {
+				}), 128))], 16)) : createCommentVNode("", true), createVNode(unref(cl), {
 					open: outputsOpen.value,
 					"onUpdate:open": _cache[0] || (_cache[0] = ($event) => outputsOpen.value = $event),
 					anchor: outputsAnchor.value,
@@ -14005,14 +13978,14 @@ var ChoiceList_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defin
 					default: withCtx(() => [
 						_cache[6] || (_cache[6] = createBaseVNode("div", { class: "cl-pop-head" }, "Outputs", -1)),
 						(openBlock(true), createElementBlock(Fragment, null, renderList(unref(OPTIONAL_OUTPUTS$1), (o) => {
-							return openBlock(), createBlock(unref(lm), {
+							return openBlock(), createBlock(unref(em), {
 								key: o.name,
 								icon: o.icon,
 								title: o.hint,
 								disabled: shown.value.length === 1 && shown.value[0] === o.name,
 								onSelect: ($event) => toggleShown(o.name)
 							}, {
-								lead: withCtx(() => [createVNode(unref(qf), { "model-value": shown.value.includes(o.name) }, null, 8, ["model-value"])]),
+								lead: withCtx(() => [createVNode(unref(Uf), { "model-value": shown.value.includes(o.name) }, null, 8, ["model-value"])]),
 								default: withCtx(() => [createTextVNode(toDisplayString(o.name) + " ", 1)]),
 								_: 2
 							}, 1032, [
@@ -14023,15 +13996,15 @@ var ChoiceList_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defin
 							]);
 						}), 128)),
 						shown.value.includes("index") ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
-							createVNode(unref(om)),
+							createVNode(unref(tm)),
 							_cache[5] || (_cache[5] = createBaseVNode("div", { class: "cl-pop-head" }, "Index", -1)),
 							(openBlock(true), createElementBlock(Fragment, null, renderList(unref(INDEX_FLAGS), (f) => {
-								return openBlock(), createBlock(unref(lm), {
+								return openBlock(), createBlock(unref(em), {
 									key: f.name,
 									icon: f.icon,
 									onSelect: ($event) => toggleIndex(f.name)
 								}, {
-									lead: withCtx(() => [createVNode(unref(qf), { "model-value": flags.value.includes(f.name) }, null, 8, ["model-value"])]),
+									lead: withCtx(() => [createVNode(unref(Uf), { "model-value": flags.value.includes(f.name) }, null, 8, ["model-value"])]),
 									default: withCtx(() => [createTextVNode(toDisplayString(f.label) + " ", 1)]),
 									_: 2
 								}, 1032, ["icon", "onSelect"]);
@@ -14051,7 +14024,7 @@ var ChoiceList_exports = /* @__PURE__ */ __exportAll({
 	default: () => ChoiceList_default,
 	widgetOptions: () => widgetOptions$14
 });
-var ChoiceList_default = /* @__PURE__ */ _plugin_vue_export_helper_default(ChoiceList_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-299b8ff3"]]);
+var ChoiceList_default = /*#__PURE__*/ _plugin_vue_export_helper_default(ChoiceList_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-299b8ff3"]]);
 //#endregion
 //#region frontend/widgets/ColorField.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$36 = { class: "cf" };
@@ -14117,7 +14090,7 @@ var ColorField_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defin
 			});
 		});
 		return (_ctx, _cache) => {
-			return openBlock(), createElementBlock("div", _hoisted_1$36, [createBaseVNode("span", _hoisted_2$33, toDisplayString(label.value), 1), !linked.value ? (openBlock(), createElementBlock("div", _hoisted_3$30, [createVNode(unref(Gf), {
+			return openBlock(), createElementBlock("div", _hoisted_1$36, [createBaseVNode("span", _hoisted_2$33, toDisplayString(label.value), 1), !linked.value ? (openBlock(), createElementBlock("div", _hoisted_3$30, [createVNode(unref(Yf), {
 				compact: "",
 				"model-value": swatch.value,
 				"onUpdate:modelValue": set
@@ -14138,7 +14111,7 @@ var ColorField_exports = /* @__PURE__ */ __exportAll({
 	default: () => ColorField_default,
 	widgetOptions: () => widgetOptions$13
 });
-var ColorField_default = /* @__PURE__ */ _plugin_vue_export_helper_default(ColorField_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-22d311f2"]]);
+var ColorField_default = /*#__PURE__*/ _plugin_vue_export_helper_default(ColorField_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-22d311f2"]]);
 //#endregion
 //#region frontend/lib/mediaRefs.ts
 var _cache$1 = /* @__PURE__ */ new Map();
@@ -14610,7 +14583,7 @@ function sharedLayout(widget, mode, { unwrap = (v) => v, wrap = (s) => s } = {})
 	const known = widget && layouts.get(widget);
 	if (known) return known;
 	const scene = /* @__PURE__ */ ref(mode.read(unwrap(widget?.value)));
-	const history = mm({
+	const history = dm({
 		read: () => scene.value,
 		write: (s) => {
 			scene.value = s;
@@ -14740,7 +14713,7 @@ var _hoisted_5$24 = {
 };
 //#endregion
 //#region frontend/components/fresco/FrescoBoxFace.vue
-var FrescoBoxFace_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
+var FrescoBoxFace_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
 	__name: "FrescoBoxFace",
 	props: {
 		layer: {},
@@ -14800,7 +14773,7 @@ var FrescoBoxFace_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/*
 var _hoisted_1$34 = { class: "fl" };
 //#endregion
 //#region frontend/components/fresco/FrescoLoras.vue
-var FrescoLoras_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
+var FrescoLoras_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
 	__name: "FrescoLoras",
 	props: {
 		"modelValue": { required: true },
@@ -14810,7 +14783,7 @@ var FrescoLoras_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @
 	setup(__props) {
 		/** A layer's LoRAs: each runs only on the layer's tokens, at its own strength. */
 		const loras = useModel(__props, "modelValue");
-		if (loras.value.some((r) => r.name)) pm.ensure();
+		if (loras.value.some((r) => r.name)) vm.ensure();
 		const browse = /* @__PURE__ */ ref(false);
 		const target = /* @__PURE__ */ ref(-1);
 		function patch(i, fields) {
@@ -14836,12 +14809,12 @@ var FrescoLoras_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @
 					key: row.id,
 					class: normalizeClass(["fl-row", { off: !row.on }])
 				}, [
-					createVNode(unref(qf), {
+					createVNode(unref(Uf), {
 						"model-value": row.on,
 						title: "Enable",
 						"onUpdate:modelValue": ($event) => patch(i, { on: $event })
 					}, null, 8, ["model-value", "onUpdate:modelValue"]),
-					createVNode(unref(ym), {
+					createVNode(unref(mm), {
 						class: "fl-pick",
 						"model-value": row.name,
 						"onUpdate:modelValue": ($event) => patch(i, { name: $event }),
@@ -14859,14 +14832,14 @@ var FrescoLoras_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @
 						max: 4,
 						"onUpdate:modelValue": ($event) => patch(i, { strength: $event })
 					}, null, 8, ["model-value", "onUpdate:modelValue"]),
-					createVNode(unref(Ge$1), {
+					createVNode(unref(je$1), {
 						size: "sm",
 						icon: "mdi mdi-close",
 						title: "Remove",
 						onClick: ($event) => remove(i)
 					}, null, 8, ["onClick"])
 				], 2);
-			}), 128)), createVNode(unref(gm), {
+			}), 128)), createVNode(unref(pm), {
 				open: browse.value,
 				"onUpdate:open": _cache[0] || (_cache[0] = ($event) => browse.value = $event),
 				selected: loras.value[target.value]?.name,
@@ -14889,7 +14862,7 @@ var _hoisted_2$31 = [
 ];
 //#endregion
 //#region frontend/components/fresco/FrescoPills.vue
-var FrescoPills_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
+var FrescoPills_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
 	__name: "FrescoPills",
 	props: {
 		modelValue: {},
@@ -14927,7 +14900,7 @@ var _hoisted_6$21 = ["onClick"];
 var _hoisted_7$18 = ["disabled"];
 //#endregion
 //#region frontend/components/fresco/FrescoRefs.vue
-var FrescoRefs_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
+var FrescoRefs_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
 	__name: "FrescoRefs",
 	props: {
 		"modelValue": { required: true },
@@ -14993,7 +14966,7 @@ var FrescoRefs_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 			input.value = "";
 		}
 		function onDragOver(e) {
-			if (!ht(e)) return;
+			if (!ut(e)) return;
 			e.preventDefault();
 			e.stopPropagation();
 			dragOver.value = true;
@@ -15001,13 +14974,13 @@ var FrescoRefs_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 		/** Anything nodekit knows how to read: the asset browser, the Media Viewer, ZenKit media, a URL,
 		*  or files from the desktop (uploaded into input/fresco). */
 		async function onDrop(e) {
-			if (!ht(e)) return;
+			if (!ut(e)) return;
 			e.preventDefault();
 			e.stopPropagation();
 			dragOver.value = false;
 			busy.value = true;
 			try {
-				add((await mt(e, "fresco")).filter(isImage).map(refFromMedia));
+				add((await ft(e, "fresco")).filter(isImage).map(refFromMedia));
 			} finally {
 				busy.value = false;
 			}
@@ -15097,7 +15070,7 @@ var FrescoRefs_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @_
 					style: { "display": "none" },
 					onChange: onUpload
 				}, null, 544),
-				createVNode(unref(rm), {
+				createVNode(unref(sm), {
 					open: browse.value,
 					"onUpdate:open": _cache[1] || (_cache[1] = ($event) => browse.value = $event),
 					library: unref(mediaLibrary),
@@ -15123,7 +15096,7 @@ var _hoisted_4$25 = {
 var _hoisted_5$22 = { class: "fsec-acts" };
 //#endregion
 //#region frontend/components/fresco/FrescoSection.vue
-var FrescoSection_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
+var FrescoSection_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
 	__name: "FrescoSection",
 	props: {
 		label: {},
@@ -15160,7 +15133,7 @@ var READ_TIP = "Meaning: the references' vision tokens inside this area's prompt
 var DENOISE_TIP$1 = "How much of a source image this may rewrite. Only used when Fresco Apply has an image.";
 //#endregion
 //#region frontend/components/fresco/FrescoContentForm.vue
-var FrescoContentForm_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
+var FrescoContentForm_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
 	__name: "FrescoContentForm",
 	props: {
 		content: {},
@@ -15202,7 +15175,7 @@ var FrescoContentForm_default = /* @__PURE__ */ _plugin_vue_export_helper_defaul
 		return (_ctx, _cache) => {
 			return openBlock(), createElementBlock("div", _hoisted_1$30, [
 				createVNode(FrescoSection_default, { label: "Prompt" }, {
-					default: withCtx(() => [createVNode(unref(Nl), {
+					default: withCtx(() => [createVNode(unref(Zl), {
 						ref_key: "promptInput",
 						ref: promptInput,
 						type: "textarea",
@@ -15222,13 +15195,13 @@ var FrescoContentForm_default = /* @__PURE__ */ _plugin_vue_export_helper_defaul
 					label: "References",
 					note: __props.content.refs.length ? String(__props.content.refs.length) : ""
 				}, {
-					actions: withCtx(() => [createVNode(unref(Ge$1), {
+					actions: withCtx(() => [createVNode(unref(je$1), {
 						size: "sm",
 						icon: "mdi mdi-upload-outline",
 						title: "Upload images",
 						disabled: refsPanel.value?.busy,
 						onClick: _cache[1] || (_cache[1] = ($event) => refsPanel.value?.upload())
-					}, null, 8, ["disabled"]), createVNode(unref(Ge$1), {
+					}, null, 8, ["disabled"]), createVNode(unref(je$1), {
 						size: "sm",
 						icon: "mdi mdi-view-grid-plus-outline",
 						title: "Browse images",
@@ -15248,7 +15221,7 @@ var FrescoContentForm_default = /* @__PURE__ */ _plugin_vue_export_helper_defaul
 						}, null, 8, ["model-value"])])) : createCommentVNode("", true),
 						activeRefs.value > 1 && __props.content.read === "meaning" ? (openBlock(), createElementBlock("div", _hoisted_3$26, [
 							createBaseVNode("span", { title: BLEND_TIP$1 }, "blend"),
-							createVNode(unref(Xf), {
+							createVNode(unref(Zf), {
 								size: "sm",
 								"model-value": __props.content.blend,
 								options: unref(BLENDS),
@@ -15274,7 +15247,7 @@ var FrescoContentForm_default = /* @__PURE__ */ _plugin_vue_export_helper_defaul
 					label: "LoRAs",
 					note: __props.content.loras.length ? String(__props.content.loras.length) : ""
 				}, {
-					actions: withCtx(() => [createVNode(unref(Ge$1), {
+					actions: withCtx(() => [createVNode(unref(je$1), {
 						size: "sm",
 						icon: "mdi mdi-plus",
 						title: "Add a LoRA",
@@ -15415,7 +15388,7 @@ var _hoisted_4$23 = ["x", "y"];
 var SIDE = 240;
 //#endregion
 //#region frontend/components/layout/LayoutThumb.vue
-var LayoutThumb_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
+var LayoutThumb_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
 	__name: "LayoutThumb",
 	props: {
 		preview: {},
@@ -15584,7 +15557,7 @@ var _hoisted_24$2 = {
 var ALL = "all";
 //#endregion
 //#region frontend/components/layout/LayoutBrowser.vue
-var LayoutBrowser_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
+var LayoutBrowser_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
 	__name: "LayoutBrowser",
 	props: {
 		open: { type: Boolean },
@@ -15702,7 +15675,7 @@ var LayoutBrowser_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/*
 			});
 		}
 		return (_ctx, _cache) => {
-			return openBlock(), createBlock(unref(cl), {
+			return openBlock(), createBlock(unref(dl), {
 				open: __props.open,
 				title: "Layouts",
 				width: "1180px",
@@ -15710,14 +15683,14 @@ var LayoutBrowser_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/*
 				"onUpdate:open": setOpen
 			}, {
 				header: withCtx(() => [
-					createBaseVNode("span", _hoisted_1$28, [createVNode(unref(Nl), {
+					createBaseVNode("span", _hoisted_1$28, [createVNode(unref(Zl), {
 						modelValue: query.value,
 						"onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => query.value = $event),
 						sm: "",
 						placeholder: "Search names and prompts…"
 					}, null, 8, ["modelValue"])]),
 					_cache[5] || (_cache[5] = createBaseVNode("span", { class: "lb-grow" }, null, -1)),
-					createBaseVNode("span", _hoisted_2$26, [createVNode(unref(Nl), {
+					createBaseVNode("span", _hoisted_2$26, [createVNode(unref(Zl), {
 						modelValue: saveName.value,
 						"onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => saveName.value = $event),
 						sm: "",
@@ -15732,7 +15705,7 @@ var LayoutBrowser_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/*
 						default: withCtx(() => [..._cache[4] || (_cache[4] = [createTextVNode(" Save ", -1)])]),
 						_: 1
 					}, 8, ["disabled"])]),
-					createVNode(unref(Ge$1), {
+					createVNode(unref(je$1), {
 						icon: "mdi mdi-refresh",
 						title: "Refresh",
 						onClick: refresh
@@ -15773,7 +15746,7 @@ var LayoutBrowser_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/*
 							preview: picked.value.preview,
 							labels: ""
 						}, null, 8, ["preview"])]),
-						createBaseVNode("div", _hoisted_18$9, [createVNode(unref(Nl), {
+						createBaseVNode("div", _hoisted_18$9, [createVNode(unref(Zl), {
 							modelValue: renameTo.value,
 							"onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => renameTo.value = $event),
 							sm: "",
@@ -15877,7 +15850,7 @@ var _hoisted_24$1 = { class: "le-note le-grow" };
 var SCENE_ROW = "background";
 //#endregion
 //#region frontend/components/layout/LayoutEditor.vue
-var LayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
+var LayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
 	__name: "LayoutEditor",
 	props: /*@__PURE__*/ mergeModels({
 		mode: {},
@@ -15951,7 +15924,7 @@ var LayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 		function showTab(id) {
 			tab.value = id;
 		}
-		const canPopOut = !props.inPanel && bt();
+		const canPopOut = !props.inPanel && mt();
 		const hostModes = computed(() => props.modes ?? [props.mode]);
 		const scene = props.layout.scene;
 		const size = computed(() => props.mode.size(scene.value));
@@ -16103,11 +16076,11 @@ var LayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 		}
 		function pasteAt(at) {
 			const copied = copiedFor(props.mode.id);
-			if (copied) landCopies(copied.items, dm(copied.rects, at));
+			if (copied) landCopies(copied.items, um(copied.rects, at));
 		}
 		function duplicate(ids) {
 			const ordered = layoutBoxes.value.filter((b) => ids.includes(b.id)).map((b) => b.id);
-			landCopies(props.mode.copy(scene.value, ordered), dm(rectsOf(ordered), null));
+			landCopies(props.mode.copy(scene.value, ordered), um(rectsOf(ordered), null));
 		}
 		/** Move boxes `ids` in the stack: +1 up, -1 down, Infinity to the top, -Infinity to the bottom. */
 		function restack(ids, by) {
@@ -16155,7 +16128,7 @@ var LayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 					icon: "mdi mdi-plus-box-outline",
 					run: () => {
 						const [x, y] = at ?? [.5, .5];
-						addBox(dm([{
+						addBox(um([{
 							x: 0,
 							y: 0,
 							w: .3,
@@ -16361,13 +16334,13 @@ var LayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 		}
 		const dropOver = /* @__PURE__ */ ref(false);
 		function onStageDragOver(e) {
-			if (!props.acceptsDrops || !ht(e)) return;
+			if (!props.acceptsDrops || !ut(e)) return;
 			e.preventDefault();
 			dropOver.value = true;
 		}
 		function onStageDrop(e) {
 			dropOver.value = false;
-			if (!props.acceptsDrops || !ht(e)) return;
+			if (!props.acceptsDrops || !ut(e)) return;
 			const at = stagePoint(e);
 			if (!at) return;
 			e.preventDefault();
@@ -16375,7 +16348,7 @@ var LayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 			emit("drop", e, {
 				x: at[0],
 				y: at[1]
-			}, Pc(boxes.value, at[0], at[1])?.id ?? null);
+			}, Sc(boxes.value, at[0], at[1])?.id ?? null);
 		}
 		/** Over the canvas while painting, the wheel sizes the brush; anywhere else it scrolls a panel
 		*  or goes to the graph (see `wheel`). */
@@ -16386,7 +16359,7 @@ var LayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 			const step = e.deltaY < 0 ? 1.12 : 1 / 1.12;
 			brushSize.value = Math.min(.3, Math.max(.01, brushSize.value * step));
 		}
-		const wheel = nm({
+		const wheel = Qf({
 			ours: (_e, target) => tool.value !== "select" && !!target.closest(".le-stage"),
 			focusTarget: () => wheel.el.value?.querySelector(".zbc-keys") ?? null
 		});
@@ -16473,7 +16446,7 @@ var LayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 				onKeydown: onKey,
 				onContextmenu: _cache[28] || (_cache[28] = (...args) => unref(keepContextMenu) && unref(keepContextMenu)(...args))
 			}), [
-				createVNode(unref(Kf), {
+				createVNode(unref(Hf), {
 					class: "le-main",
 					panes: COLUMNS,
 					sizes: splits.value.columns,
@@ -16482,7 +16455,7 @@ var LayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 				}, {
 					"pane-0": withCtx(() => [createBaseVNode("div", _hoisted_1$27, [createBaseVNode("header", _hoisted_2$25, [
 						tools.value.length > 1 ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [(openBlock(true), createElementBlock(Fragment, null, renderList(tools.value, (t) => {
-							return openBlock(), createBlock(unref(Ge$1), {
+							return openBlock(), createBlock(unref(je$1), {
 								key: t.value,
 								size: "sm",
 								icon: t.icon,
@@ -16513,11 +16486,11 @@ var LayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 						}),
 						renderSlot(_ctx.$slots, "add", {}, void 0, true),
 						_cache[37] || (_cache[37] = createBaseVNode("span", { class: "le-sep" }, null, -1)),
-						createVNode(unref(On), {
+						createVNode(unref(cl), {
 							placement: "bottom-start",
 							role: "dialog"
 						}, {
-							trigger: withCtx(({ toggle }) => [createVNode(unref(Ge$1), {
+							trigger: withCtx(({ toggle }) => [createVNode(unref(je$1), {
 								size: "sm",
 								icon: "mdi mdi-image-outline",
 								active: !!backdropUrl.value,
@@ -16590,7 +16563,7 @@ var LayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 							class: "le-link",
 							onClick: matchSource
 						}, "match")])) : createCommentVNode("", true),
-						createVNode(unref(On), {
+						createVNode(unref(cl), {
 							placement: "bottom-end",
 							role: "dialog"
 						}, {
@@ -16604,7 +16577,7 @@ var LayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 								createTextVNode(" " + toDisplayString(size.value.width) + "×" + toDisplayString(size.value.height) + " ", 1),
 								_cache[36] || (_cache[36] = createBaseVNode("i", { class: "mdi mdi-chevron-down" }, null, -1))
 							], 8, _hoisted_7$16)]),
-							default: withCtx(() => [createVNode(unref(Uf), {
+							default: withCtx(() => [createVNode(unref(Nf), {
 								width: size.value.width,
 								height: size.value.height,
 								snap: __props.sizeSnap,
@@ -16632,7 +16605,7 @@ var LayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 						onDragover: onStageDragOver,
 						onDragleave: _cache[12] || (_cache[12] = ($event) => dropOver.value = false),
 						onDrop: onStageDrop
-					}, [createVNode(unref(vm), {
+					}, [createVNode(unref(rm), {
 						boxes: boxes.value,
 						"onUpdate:boxes": _cache[8] || (_cache[8] = ($event) => boxes.value = $event),
 						selected: selected.value,
@@ -16671,7 +16644,7 @@ var LayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 						"backdrop-opacity",
 						"brush-size"
 					])], 34)])]),
-					"pane-1": withCtx(() => [createVNode(unref(Kf), {
+					"pane-1": withCtx(() => [createVNode(unref(Hf), {
 						class: "le-side",
 						direction: "vertical",
 						panes: ROWS,
@@ -16680,7 +16653,7 @@ var LayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 						"onUpdate:sizes": _cache[19] || (_cache[19] = ($event) => saveSplit("rows", $event))
 					}, {
 						"pane-0": withCtx(() => [createBaseVNode("section", _hoisted_8$16, [createBaseVNode("header", _hoisted_9$13, [_cache[40] || (_cache[40] = createBaseVNode("span", { class: "le-title" }, "Layers", -1)), createBaseVNode("span", _hoisted_10$11, toDisplayString(layoutBoxes.value.length), 1)]), createVNode(unref(tl), { class: "le-body" }, {
-							default: withCtx(() => [createVNode(unref(fm), {
+							default: withCtx(() => [createVNode(unref(cm), {
 								selected: listSelection.value,
 								items: layerItems.value,
 								"onUpdate:selected": selectFromList,
@@ -16718,21 +16691,21 @@ var LayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 									class: "le-swatch",
 									style: normalizeStyle({ background: current.value.color })
 								}, null, 4),
-								createVNode(unref(Nl), {
+								createVNode(unref(Zl), {
 									class: "le-grow",
 									sm: "",
 									"model-value": current.value.name,
 									"onUpdate:modelValue": _cache[16] || (_cache[16] = ($event) => patchBoxes([current.value.id], () => ({ name: String($event ?? "") })))
 								}, null, 8, ["model-value"]),
 								renderSlot(_ctx.$slots, "element-actions", { id: current.value.id }, void 0, true),
-								createVNode(unref(Ge$1), {
+								createVNode(unref(je$1), {
 									size: "sm",
 									danger: "",
 									icon: "mdi mdi-delete-outline",
 									title: "Delete this box",
 									onClick: _cache[17] || (_cache[17] = ($event) => removeBoxes([current.value.id]))
 								})
-							], 64)) : view.value === "multi" ? (openBlock(), createElementBlock(Fragment, { key: 1 }, [createBaseVNode("span", _hoisted_17$8, toDisplayString(selected.value.length) + " boxes", 1), createVNode(unref(Ge$1), {
+							], 64)) : view.value === "multi" ? (openBlock(), createElementBlock(Fragment, { key: 1 }, [createBaseVNode("span", _hoisted_17$8, toDisplayString(selected.value.length) + " boxes", 1), createVNode(unref(je$1), {
 								size: "sm",
 								danger: "",
 								icon: "mdi mdi-delete-outline",
@@ -16749,14 +16722,14 @@ var LayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 					_: 3
 				}, 8, ["sizes"]),
 				createBaseVNode("footer", _hoisted_19$5, [
-					createVNode(unref(Ge$1), {
+					createVNode(unref(je$1), {
 						size: "sm",
 						icon: "mdi mdi-undo",
 						disabled: !__props.layout.history.canUndo.value,
 						title: "Undo — Ctrl+Z",
 						onClick: undo
 					}, null, 8, ["disabled"]),
-					createVNode(unref(Ge$1), {
+					createVNode(unref(je$1), {
 						size: "sm",
 						icon: "mdi mdi-redo",
 						disabled: !__props.layout.history.canRedo.value,
@@ -16765,11 +16738,11 @@ var LayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 					}, null, 8, ["disabled"]),
 					_cache[48] || (_cache[48] = createBaseVNode("span", { class: "le-sep" }, null, -1)),
 					renderSlot(_ctx.$slots, "foot", {}, void 0, true),
-					createVNode(unref(On), {
+					createVNode(unref(cl), {
 						placement: "top-start",
 						role: "dialog"
 					}, {
-						trigger: withCtx(({ toggle }) => [createVNode(unref(Ge$1), {
+						trigger: withCtx(({ toggle }) => [createVNode(unref(je$1), {
 							size: "sm",
 							icon: "mdi mdi-help-circle-outline",
 							title: "Controls and shortcuts",
@@ -16792,7 +16765,7 @@ var LayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 						default: withCtx(() => [..._cache[42] || (_cache[42] = [createTextVNode(" Layouts ", -1)])]),
 						_: 1
 					}),
-					createVNode(unref(On), {
+					createVNode(unref(cl), {
 						open: jsonOpen.value,
 						"onUpdate:open": _cache[24] || (_cache[24] = ($event) => jsonOpen.value = $event),
 						placement: "top-end",
@@ -16826,7 +16799,7 @@ var LayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 								default: withCtx(() => [..._cache[45] || (_cache[45] = [createTextVNode(" Copy prompt ", -1)])]),
 								_: 1
 							})) : createCommentVNode("", true)]),
-							createVNode(unref(Nl), {
+							createVNode(unref(Zl), {
 								modelValue: jsonText.value,
 								"onUpdate:modelValue": _cache[23] || (_cache[23] = ($event) => jsonText.value = $event),
 								type: "textarea",
@@ -16846,7 +16819,7 @@ var LayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 						])]),
 						_: 1
 					}, 8, ["open"]),
-					unref(canPopOut) ? (openBlock(), createBlock(unref(Ge$1), {
+					unref(canPopOut) ? (openBlock(), createBlock(unref(je$1), {
 						key: 0,
 						size: "sm",
 						icon: "mdi mdi-open-in-new",
@@ -16854,7 +16827,7 @@ var LayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 						onClick: _cache[25] || (_cache[25] = ($event) => emit("popOut"))
 					})) : createCommentVNode("", true)
 				]),
-				createVNode(unref(sm), {
+				createVNode(unref(lm), {
 					ref_key: "menu",
 					ref: menu,
 					items: menuItems.value
@@ -16872,7 +16845,7 @@ var LayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 					"scene",
 					"modes"
 				]),
-				createVNode(unref(rm), {
+				createVNode(unref(sm), {
 					open: backdropBrowse.value,
 					"onUpdate:open": _cache[27] || (_cache[27] = ($event) => backdropBrowse.value = $event),
 					library: unref(mediaLibrary),
@@ -16942,7 +16915,7 @@ var PHOTO_TIP = "How the photo being edited is read. Plain: it is only the pictu
 var FACES_KEY$1 = "nynxzFrescoFaces";
 //#endregion
 //#region frontend/components/fresco/FrescoEditor.vue
-var FrescoEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
+var FrescoEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
 	__name: "FrescoEditor",
 	props: {
 		widget: {},
@@ -17108,7 +17081,7 @@ var FrescoEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 		/** Media dropped on a layer becomes its reference; dropped on empty canvas, a new layer around
 		*  the drop with it as the reference. */
 		async function onDrop(e, at, hit) {
-			const media = (await mt(e, "fresco")).filter(isImage);
+			const media = (await ft(e, "fresco")).filter(isImage);
 			if (!media.length) return;
 			const refs = media.map((m) => newRef(refFromMedia(m)));
 			const target = hit ? layerById.value.get(hit) : void 0;
@@ -17138,7 +17111,7 @@ var FrescoEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 			};
 			const inside = (l) => x >= l.x && x <= l.x + l.w && y >= l.y && y <= l.y + l.h;
 			const selectedLayer = currentLayer.value;
-			const under = Pc(scene.value.layers.filter((l) => l.on), x, y);
+			const under = Sc(scene.value.layers.filter((l) => l.on), x, y);
 			const hit = selectedLayer && selectedLayer.on && inside(selectedLayer) ? selectedLayer : under;
 			if (hit) {
 				selected.value = [hit.id];
@@ -17293,13 +17266,13 @@ var FrescoEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 				onOpen: openLayer,
 				onDrop
 			}, createSlots({
-				rail: withCtx(() => [createVNode(unref(Ge$1), {
+				rail: withCtx(() => [createVNode(unref(je$1), {
 					size: "sm",
 					icon: "mdi mdi-auto-fix",
 					active: wand.value,
 					title: "Select with SAM3 — click what to capture, Alt+click what to leave out (W). Needs a photo and SAM3 wired into Fresco.",
 					onClick: _cache[0] || (_cache[0] = ($event) => setWand(!wand.value))
-				}, null, 8, ["active"]), createVNode(unref(Ge$1), {
+				}, null, 8, ["active"]), createVNode(unref(je$1), {
 					size: "sm",
 					icon: showFaces.value ? "mdi mdi-card-text-outline" : "mdi mdi-card-off-outline",
 					active: showFaces.value,
@@ -17325,12 +17298,12 @@ var FrescoEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 						onPointercancel: _cache[2] || (_cache[2] = ($event) => pointDrag.value = null)
 					}, null, 46, _hoisted_1$26);
 				}), 128)) : createCommentVNode("", true)]),
-				"element-actions": withCtx(() => [unref(scene).layers.length > 1 ? (openBlock(), createBlock(unref(On), {
+				"element-actions": withCtx(() => [unref(scene).layers.length > 1 ? (openBlock(), createBlock(unref(cl), {
 					key: 0,
 					placement: "bottom-end",
 					role: "dialog"
 				}, {
-					trigger: withCtx(({ toggle }) => [createVNode(unref(Ge$1), {
+					trigger: withCtx(({ toggle }) => [createVNode(unref(je$1), {
 						size: "sm",
 						icon: "mdi mdi-swap-horizontal",
 						title: "Swap content with another layer — prompt, references and LoRAs trade places; each keeps its own box and shape",
@@ -17363,20 +17336,20 @@ var FrescoEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 						label: "Capture",
 						note: captureNote.value
 					}, {
-						actions: withCtx(() => [currentLayer.value.points.length ? (openBlock(), createBlock(unref(Ge$1), {
+						actions: withCtx(() => [currentLayer.value.points.length ? (openBlock(), createBlock(unref(je$1), {
 							key: 0,
 							size: "sm",
 							icon: "mdi mdi-close-circle-outline",
 							title: "Clear the click points",
 							onClick: _cache[3] || (_cache[3] = ($event) => patchCurrent({ points: [] }))
-						})) : createCommentVNode("", true), createVNode(unref(Ge$1), {
+						})) : createCommentVNode("", true), createVNode(unref(je$1), {
 							size: "sm",
 							icon: "mdi mdi-auto-fix",
 							disabled: segmenting.value || !currentLayer.value.capture.trim() && !currentLayer.value.points.length,
 							title: "Segment now with SAM3 (Fresco runs on its own)",
 							onClick: segment
 						}, null, 8, ["disabled"])]),
-						default: withCtx(() => [createVNode(unref(Nl), {
+						default: withCtx(() => [createVNode(unref(Zl), {
 							sm: "",
 							"model-value": currentLayer.value.capture,
 							placeholder: "e.g. jacket, -hands — or click with the wand (W)",
@@ -17388,7 +17361,7 @@ var FrescoEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 						label: "Shape",
 						note: currentLayer.value.mask ? "painted · B paint, E erase" : "whole box · B to paint"
 					}, {
-						actions: withCtx(() => [currentLayer.value.mask ? (openBlock(), createBlock(unref(Ge$1), {
+						actions: withCtx(() => [currentLayer.value.mask ? (openBlock(), createBlock(unref(je$1), {
 							key: 0,
 							size: "sm",
 							icon: "mdi mdi-crop-square",
@@ -17424,7 +17397,7 @@ var FrescoEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 				}, 8, ["content"])) : createCommentVNode("", true)]),
 				scene: withCtx(() => [createBaseVNode("div", _hoisted_7$15, [
 					createVNode(FrescoSection_default, { label: "Scene prompt" }, {
-						default: withCtx(() => [createVNode(unref(Nl), {
+						default: withCtx(() => [createVNode(unref(Zl), {
 							type: "textarea",
 							rows: 3,
 							sm: "",
@@ -17497,7 +17470,7 @@ var _hoisted_3$21 = { class: "fsum-bar" };
 var _hoisted_4$19 = { class: "fsum-text" };
 //#endregion
 //#region frontend/components/fresco/FrescoSummary.vue
-var FrescoSummary_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
+var FrescoSummary_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
 	__name: "FrescoSummary",
 	props: { scene: {} },
 	emits: ["focus"],
@@ -17522,7 +17495,7 @@ var FrescoSummary_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/*
 			mask: l.mask
 		})));
 		return (_ctx, _cache) => {
-			return openBlock(), createElementBlock("div", _hoisted_1$25, [createBaseVNode("div", _hoisted_2$23, [createVNode(unref(vm), {
+			return openBlock(), createElementBlock("div", _hoisted_1$25, [createBaseVNode("div", _hoisted_2$23, [createVNode(unref(rm), {
 				boxes: boxes.value,
 				selected: [],
 				aspect: __props.scene.width / __props.scene.height,
@@ -18151,7 +18124,7 @@ function usePopOut(props, options) {
 	*  The restore on load doesn't: it waits quietly for its workspace. */
 	function popOut(reveal = false) {
 		const node = props.node;
-		const handle = St({
+		const handle = gt({
 			id: panelId(),
 			title: options.title,
 			icon: options.icon,
@@ -18187,7 +18160,7 @@ function usePopOut(props, options) {
 		let tries = 0;
 		const attempt = () => {
 			if (isPanelOpen(options.openKey) || props.node && handles.has(props.node)) return;
-			if (bt()) popOut();
+			if (mt()) popOut();
 			else if (++tries < 40) setTimeout(attempt, 250);
 		};
 		attempt();
@@ -18294,7 +18267,7 @@ var FrescoScene_exports = /* @__PURE__ */ __exportAll({
 	nodeDef: () => nodeDef$8,
 	widgetOptions: () => widgetOptions$12
 });
-var FrescoScene_default = /* @__PURE__ */ _plugin_vue_export_helper_default(FrescoScene_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-4623400c"]]);
+var FrescoScene_default = /*#__PURE__*/ _plugin_vue_export_helper_default(FrescoScene_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-4623400c"]]);
 //#endregion
 //#region frontend/widgets/FusionGrid.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$23 = {
@@ -18778,18 +18751,18 @@ var FusionGrid_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defin
 						createTextVNode(" " + toDisplayString(busy.value ? "Uploading…" : "Add images") + " ", 1),
 						rows.value.length ? (openBlock(), createElementBlock("span", _hoisted_20$4, toDisplayString(rows.value.length), 1)) : createCommentVNode("", true)
 					], 8, _hoisted_19$4),
-					createVNode(unref(Ge$1), {
+					createVNode(unref(je$1), {
 						icon: "mdi mdi-view-grid-outline",
 						title: "Browse images",
 						onClick: openBrowse
 					}),
-					createVNode(unref(Ge$1), {
+					createVNode(unref(je$1), {
 						icon: "mdi mdi-scale-balance",
 						title: "Reset every strength to 1.0",
 						disabled: !rows.value.length,
 						onClick: balance
 					}, null, 8, ["disabled"]),
-					rows.value.length ? (openBlock(), createBlock(unref(Ge$1), {
+					rows.value.length ? (openBlock(), createBlock(unref(je$1), {
 						key: 0,
 						icon: "mdi mdi-broom",
 						danger: "",
@@ -18806,7 +18779,7 @@ var FusionGrid_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defin
 					style: { "display": "none" },
 					onChange: onUpload
 				}, null, 544),
-				createVNode(unref(rm), {
+				createVNode(unref(sm), {
 					open: browse.value,
 					"onUpdate:open": _cache[0] || (_cache[0] = ($event) => browse.value = $event),
 					library: unref(mediaLibrary),
@@ -18827,7 +18800,7 @@ var FusionGrid_exports = /* @__PURE__ */ __exportAll({
 	nodeDef: () => nodeDef$7,
 	widgetOptions: () => widgetOptions$11
 });
-var FusionGrid_default = /* @__PURE__ */ _plugin_vue_export_helper_default(FusionGrid_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-bbb08a38"]]);
+var FusionGrid_default = /*#__PURE__*/ _plugin_vue_export_helper_default(FusionGrid_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-bbb08a38"]]);
 //#endregion
 //#region frontend/widgets/FusionInspector.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$22 = { class: "fi" };
@@ -19606,7 +19579,7 @@ var FusionInspector_exports = /* @__PURE__ */ __exportAll({
 	nodeDef: () => nodeDef$6,
 	widgetOptions: () => widgetOptions$10
 });
-var FusionInspector_default = /* @__PURE__ */ _plugin_vue_export_helper_default(FusionInspector_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-dec39350"]]);
+var FusionInspector_default = /*#__PURE__*/ _plugin_vue_export_helper_default(FusionInspector_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-dec39350"]]);
 //#endregion
 //#region frontend/lib/gridApi.ts
 var DEFAULT_GRID_STYLE = {
@@ -19818,7 +19791,7 @@ var GridStyleConfig_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ 
 			};
 		});
 		return (_ctx, _cache) => {
-			return openBlock(), createBlock(unref(Vf), {
+			return openBlock(), createBlock(unref(Af), {
 				gap: 2,
 				pad: "4px 4px 6px",
 				class: "gs"
@@ -19846,13 +19819,13 @@ var GridStyleConfig_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ 
 							"model-value": cfg.value.border_mode,
 							options: BORDER_OPTS,
 							"onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => set("border_mode", String($event)))
-						}, null, 8, ["model-value"])]), cfg.value.border_mode === "solid" ? (openBlock(), createElementBlock("div", _hoisted_5$15, [_cache[21] || (_cache[21] = createBaseVNode("label", { class: "gs-lbl" }, "Color", -1)), createVNode(unref(Gf), {
+						}, null, 8, ["model-value"])]), cfg.value.border_mode === "solid" ? (openBlock(), createElementBlock("div", _hoisted_5$15, [_cache[21] || (_cache[21] = createBaseVNode("label", { class: "gs-lbl" }, "Color", -1)), createVNode(unref(Yf), {
 							"model-value": cfg.value.border_color,
 							"onUpdate:modelValue": _cache[3] || (_cache[3] = ($event) => set("border_color", String($event)))
-						}, null, 8, ["model-value"])])) : cfg.value.border_mode === "gradient" ? (openBlock(), createElementBlock(Fragment, { key: 1 }, [createBaseVNode("div", _hoisted_6$14, [_cache[22] || (_cache[22] = createBaseVNode("label", { class: "gs-lbl" }, "From → To", -1)), createBaseVNode("div", _hoisted_7$12, [createVNode(unref(Gf), {
+						}, null, 8, ["model-value"])])) : cfg.value.border_mode === "gradient" ? (openBlock(), createElementBlock(Fragment, { key: 1 }, [createBaseVNode("div", _hoisted_6$14, [_cache[22] || (_cache[22] = createBaseVNode("label", { class: "gs-lbl" }, "From → To", -1)), createBaseVNode("div", _hoisted_7$12, [createVNode(unref(Yf), {
 							"model-value": cfg.value.border_color,
 							"onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => set("border_color", String($event)))
-						}, null, 8, ["model-value"]), createVNode(unref(Gf), {
+						}, null, 8, ["model-value"]), createVNode(unref(Yf), {
 							"model-value": cfg.value.border_color2,
 							"onUpdate:modelValue": _cache[5] || (_cache[5] = ($event) => set("border_color2", String($event)))
 						}, null, 8, ["model-value"])])]), createBaseVNode("div", _hoisted_8$12, [_cache[23] || (_cache[23] = createBaseVNode("label", { class: "gs-lbl" }, "Angle", -1)), createVNode(unref(un), {
@@ -19881,7 +19854,7 @@ var GridStyleConfig_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ 
 						createBaseVNode("span", null, toDisplayString(cfg.value.shadow_mode === "glow" ? "Glow" : "Shadow"), 1),
 						cfg.value.shadow ? (openBlock(), createElementBlock("span", _hoisted_11$8, "on")) : createCommentVNode("", true)
 					]),
-					open.value.shadow ? (openBlock(), createElementBlock("div", _hoisted_12$7, [createBaseVNode("div", _hoisted_13$6, [_cache[26] || (_cache[26] = createBaseVNode("label", { class: "gs-lbl" }, "Enable", -1)), createVNode(unref(Hn), {
+					open.value.shadow ? (openBlock(), createElementBlock("div", _hoisted_12$7, [createBaseVNode("div", _hoisted_13$6, [_cache[26] || (_cache[26] = createBaseVNode("label", { class: "gs-lbl" }, "Enable", -1)), createVNode(unref(yl), {
 						"model-value": cfg.value.shadow,
 						"on-icon": "mdi mdi-check",
 						"onUpdate:modelValue": _cache[9] || (_cache[9] = ($event) => set("shadow", !!$event))
@@ -19921,12 +19894,12 @@ var GridStyleConfig_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ 
 						borderIsAuto.value ? (openBlock(), createElementBlock("div", _hoisted_19$2, [_cache[30] || (_cache[30] = createBaseVNode("label", {
 							class: "gs-lbl",
 							title: "Tint the glow with each cell's own auto-border colour"
-						}, "Match border", -1)), createVNode(unref(Hn), {
+						}, "Match border", -1)), createVNode(unref(yl), {
 							"model-value": cfg.value.shadow_match,
 							"on-icon": "mdi mdi-check",
 							"onUpdate:modelValue": _cache[14] || (_cache[14] = ($event) => set("shadow_match", !!$event))
 						}, null, 8, ["model-value"])])) : createCommentVNode("", true),
-						!(cfg.value.shadow_match && borderIsAuto.value) ? (openBlock(), createElementBlock("div", _hoisted_20$2, [_cache[31] || (_cache[31] = createBaseVNode("label", { class: "gs-lbl" }, "Color", -1)), createVNode(unref(Gf), {
+						!(cfg.value.shadow_match && borderIsAuto.value) ? (openBlock(), createElementBlock("div", _hoisted_20$2, [_cache[31] || (_cache[31] = createBaseVNode("label", { class: "gs-lbl" }, "Color", -1)), createVNode(unref(Yf), {
 							"model-value": cfg.value.shadow_color,
 							"onUpdate:modelValue": _cache[15] || (_cache[15] = ($event) => set("shadow_color", String($event)))
 						}, null, 8, ["model-value"])])) : createCommentVNode("", true),
@@ -19952,7 +19925,7 @@ var GridStyleConfig_exports = /* @__PURE__ */ __exportAll({
 	nodeDef: () => nodeDef$5,
 	widgetOptions: () => widgetOptions$9
 });
-var GridStyleConfig_default = /* @__PURE__ */ _plugin_vue_export_helper_default(GridStyleConfig_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-b38d9f08"]]);
+var GridStyleConfig_default = /*#__PURE__*/ _plugin_vue_export_helper_default(GridStyleConfig_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-b38d9f08"]]);
 //#endregion
 //#region frontend/lib/compareBox.ts
 var DEFAULT_BOX = {
@@ -20122,8 +20095,8 @@ var nodeDef$4 = {
 	output: {
 		widget: "compare_view",
 		from: (o) => ({
-			beforeImages: (o.a_images ?? []).map(Fe),
-			afterImages: (o.b_images ?? []).map(Fe)
+			beforeImages: (o.a_images ?? []).map(We),
+			afterImages: (o.b_images ?? []).map(We)
 		})
 	}
 };
@@ -20425,7 +20398,7 @@ var ImageCompare_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ def
 		watch(optsOpen, (v) => headerCog?.setActive(v));
 		onBeforeUnmount(() => headerCog?.destroy());
 		return (_ctx, _cache) => {
-			return openBlock(), createBlock(unref(Vf), {
+			return openBlock(), createBlock(unref(Af), {
 				fill: "",
 				gap: 6,
 				pad: "4px 2px",
@@ -20435,28 +20408,28 @@ var ImageCompare_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ def
 			}, {
 				default: withCtx(() => [
 					showBatchNav.value ? (openBlock(), createElementBlock("div", _hoisted_1$20, [createBaseVNode("div", _hoisted_2$18, [
-						createVNode(unref(Ge$1), {
+						createVNode(unref(je$1), {
 							icon: "mdi mdi-chevron-left",
 							title: "Previous A",
 							disabled: beforeCount.value <= 1,
 							onClick: _cache[0] || (_cache[0] = ($event) => bumpBefore(-1))
 						}, null, 8, ["disabled"]),
 						createBaseVNode("span", _hoisted_3$16, "A " + toDisplayString(beforeCount.value ? beforeIndex.value + 1 : 0) + "/" + toDisplayString(beforeCount.value), 1),
-						createVNode(unref(Ge$1), {
+						createVNode(unref(je$1), {
 							icon: "mdi mdi-chevron-right",
 							title: "Next A",
 							disabled: beforeCount.value <= 1,
 							onClick: _cache[1] || (_cache[1] = ($event) => bumpBefore(1))
 						}, null, 8, ["disabled"]),
 						_cache[5] || (_cache[5] = createBaseVNode("span", { class: "ic-nav-gap" }, null, -1)),
-						createVNode(unref(Ge$1), {
+						createVNode(unref(je$1), {
 							icon: "mdi mdi-chevron-left",
 							title: "Previous B",
 							disabled: afterCount.value <= 1,
 							onClick: _cache[2] || (_cache[2] = ($event) => bumpAfter(-1))
 						}, null, 8, ["disabled"]),
 						createBaseVNode("span", _hoisted_4$15, "B " + toDisplayString(afterCount.value ? afterIndex.value + 1 : 0) + "/" + toDisplayString(afterCount.value), 1),
-						createVNode(unref(Ge$1), {
+						createVNode(unref(je$1), {
 							icon: "mdi mdi-chevron-right",
 							title: "Next B",
 							disabled: afterCount.value <= 1,
@@ -20505,7 +20478,7 @@ var ImageCompare_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ def
 							style: normalizeStyle(boxStyle.value)
 						}, [createBaseVNode("span", _hoisted_7$11, toDisplayString(swapped.value ? "B" : "A"), 1)], 4)) : createCommentVNode("", true)
 					], 38)) : (openBlock(), createElementBlock("div", _hoisted_8$11, [..._cache[6] || (_cache[6] = [createBaseVNode("i", { class: "mdi mdi-image-multiple-outline" }, null, -1)])])),
-					createVNode(unref(On), {
+					createVNode(unref(cl), {
 						open: optsOpen.value,
 						"onUpdate:open": _cache[4] || (_cache[4] = ($event) => optsOpen.value = $event),
 						anchor: optsAnchor.value,
@@ -20515,31 +20488,31 @@ var ImageCompare_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ def
 						default: withCtx(() => [
 							_cache[8] || (_cache[8] = createBaseVNode("div", { class: "ic-pop-head" }, "Compare", -1)),
 							(openBlock(), createElementBlock(Fragment, null, renderList(MODES, (m) => {
-								return createVNode(unref(lm), {
+								return createVNode(unref(em), {
 									key: m.value,
 									icon: m.icon,
 									onSelect: ($event) => setOpt("mode", m.value)
 								}, {
-									lead: withCtx(() => [createVNode(unref(qf), { "model-value": mode.value === m.value }, null, 8, ["model-value"])]),
+									lead: withCtx(() => [createVNode(unref(Uf), { "model-value": mode.value === m.value }, null, 8, ["model-value"])]),
 									default: withCtx(() => [createTextVNode(toDisplayString(m.label) + " ", 1)]),
 									_: 2
 								}, 1032, ["icon", "onSelect"]);
 							}), 64)),
-							createVNode(unref(lm), {
+							createVNode(unref(em), {
 								icon: "mdi mdi-swap-horizontal",
 								onSelect: toggleSwap
 							}, {
-								lead: withCtx(() => [createVNode(unref(qf), { "model-value": swapped.value }, null, 8, ["model-value"])]),
+								lead: withCtx(() => [createVNode(unref(Uf), { "model-value": swapped.value }, null, 8, ["model-value"])]),
 								default: withCtx(() => [_cache[7] || (_cache[7] = createTextVNode(" Swap A / B ", -1))]),
 								_: 1
 							}),
 							(openBlock(true), createElementBlock(Fragment, null, renderList(visibleToggles.value, (t) => {
-								return openBlock(), createBlock(unref(lm), {
+								return openBlock(), createBlock(unref(em), {
 									key: t.key,
 									icon: t.icon,
 									onSelect: ($event) => setOpt(t.key, isOn(t) ? t.off : t.on)
 								}, {
-									lead: withCtx(() => [createVNode(unref(qf), { "model-value": isOn(t) }, null, 8, ["model-value"])]),
+									lead: withCtx(() => [createVNode(unref(Uf), { "model-value": isOn(t) }, null, 8, ["model-value"])]),
 									default: withCtx(() => [createTextVNode(toDisplayString(t.label) + " ", 1)]),
 									_: 2
 								}, 1032, ["icon", "onSelect"]);
@@ -20560,7 +20533,7 @@ var ImageCompare_exports = /* @__PURE__ */ __exportAll({
 	nodeDef: () => nodeDef$4,
 	widgetOptions: () => widgetOptions$8
 });
-var ImageCompare_default = /* @__PURE__ */ _plugin_vue_export_helper_default(ImageCompare_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-dd66395d"]]);
+var ImageCompare_default = /*#__PURE__*/ _plugin_vue_export_helper_default(ImageCompare_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-dd66395d"]]);
 //#endregion
 //#region frontend/lib/maskUpload.ts
 var SAVE_TYPE = "temp";
@@ -21156,12 +21129,12 @@ var ImagePick_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 			await takeDrop(e);
 		}
 		function canTake(e) {
-			return ht(e);
+			return ut(e);
 		}
 		/** Whatever the drop carries — a desktop file, a ComfyUI asset or output, a ZenKit or Stash card,
 		*  an image from a web page — as the selected image. Reads the drop before awaiting anything. */
 		async function takeDrop(e) {
-			const ref = (await mt(e, "", uploadOrReuse)).find((r) => R(r) === "image");
+			const ref = (await ft(e, "", uploadOrReuse)).find((r) => R(r) === "image");
 			if (!ref) return false;
 			await selectRef(ref);
 			return true;
@@ -21204,7 +21177,7 @@ var ImagePick_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 			if (dropTarget?.onDragDrop === dropOnNode) dropTarget.onDragDrop = void 0;
 		});
 		return (_ctx, _cache) => {
-			return openBlock(), createBlock(unref(Vf), {
+			return openBlock(), createBlock(unref(Af), {
 				ref_key: "rootEl",
 				ref: rootEl,
 				fill: "",
@@ -21271,11 +21244,11 @@ var ImagePick_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 									options: SORT_OPTS,
 									"onUpdate:modelValue": setSort
 								}, null, 8, ["model-value"]),
-								viewMode.value === "grid" ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [createVNode(unref(Ge$1), {
+								viewMode.value === "grid" ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [createVNode(unref(je$1), {
 									icon: "mdi mdi-magnify-minus-outline",
 									title: "Smaller",
 									onClick: _cache[0] || (_cache[0] = ($event) => zoomBy(-20))
-								}), createVNode(unref(Ge$1), {
+								}), createVNode(unref(je$1), {
 									icon: "mdi mdi-magnify-plus-outline",
 									title: "Larger",
 									onClick: _cache[1] || (_cache[1] = ($event) => zoomBy(20))
@@ -21299,12 +21272,12 @@ var ImagePick_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 							"items",
 							"empty-text"
 						]),
-						createVNode(unref(Ge$1), {
+						createVNode(unref(je$1), {
 							icon: "mdi mdi-view-grid-outline",
 							title: "Browse images",
 							onClick: _cache[3] || (_cache[3] = ($event) => openBrowse())
 						}),
-						createVNode(unref(Ge$1), {
+						createVNode(unref(je$1), {
 							icon: "mdi mdi-upload",
 							title: "Upload an image",
 							onClick: triggerUpload
@@ -21315,18 +21288,18 @@ var ImagePick_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 						src: previewUrl.value,
 						onLoad: onPreviewLoad
 					}, null, 40, _hoisted_12$6)) : (openBlock(), createElementBlock("span", _hoisted_13$5, "Loading…")), createBaseVNode("div", _hoisted_14$5, [
-						createBaseVNode("div", _hoisted_15$5, [createVNode(unref(Ge$1), {
+						createBaseVNode("div", _hoisted_15$5, [createVNode(unref(je$1), {
 							class: "li-ov-btn",
 							icon: "mdi mdi-draw",
 							title: "Edit mask",
 							onClick: _cache[4] || (_cache[4] = ($event) => (unfocus($event), openMaskEditor()))
-						}), createVNode(unref(Ge$1), {
+						}), createVNode(unref(je$1), {
 							class: "li-ov-btn",
 							icon: "mdi mdi-fullscreen",
 							title: "Open in viewer",
 							onClick: _cache[5] || (_cache[5] = ($event) => (unfocus($event), lightbox.value = true))
 						})]),
-						createVNode(unref(Ge$1), {
+						createVNode(unref(je$1), {
 							ref_key: "infoBtn",
 							ref: infoBtn,
 							class: "li-ov-btn li-ov-info li-ov-corner",
@@ -21360,7 +21333,7 @@ var ImagePick_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 						style: { "display": "none" },
 						onChange: onUpload
 					}, null, 544),
-					createVNode(unref(On), {
+					createVNode(unref(cl), {
 						open: outputsOpen.value,
 						"onUpdate:open": _cache[8] || (_cache[8] = ($event) => outputsOpen.value = $event),
 						anchor: outputsAnchor.value,
@@ -21368,19 +21341,19 @@ var ImagePick_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 						role: "dialog"
 					}, {
 						default: withCtx(() => [_cache[20] || (_cache[20] = createBaseVNode("div", { class: "li-pop-head" }, "Outputs", -1)), (openBlock(true), createElementBlock(Fragment, null, renderList(unref(OPTIONAL_OUTPUTS), (o) => {
-							return openBlock(), createBlock(unref(lm), {
+							return openBlock(), createBlock(unref(em), {
 								key: o.name,
 								icon: o.icon,
 								onSelect: ($event) => toggleShown(o.name)
 							}, {
-								lead: withCtx(() => [createVNode(unref(qf), { "model-value": shown.value.includes(o.name) }, null, 8, ["model-value"])]),
+								lead: withCtx(() => [createVNode(unref(Uf), { "model-value": shown.value.includes(o.name) }, null, 8, ["model-value"])]),
 								default: withCtx(() => [createTextVNode(toDisplayString(o.name) + " ", 1)]),
 								_: 2
 							}, 1032, ["icon", "onSelect"]);
 						}), 128))]),
 						_: 1
 					}, 8, ["open", "anchor"]),
-					createVNode(unref(rm), {
+					createVNode(unref(sm), {
 						open: pickerOpen.value,
 						library: unref(mediaLibrary),
 						kinds: ["image"],
@@ -21407,14 +21380,14 @@ var ImagePick_exports = /* @__PURE__ */ __exportAll({
 	nodeDef: () => nodeDef$3,
 	widgetOptions: () => widgetOptions$7
 });
-var ImagePick_default = /* @__PURE__ */ _plugin_vue_export_helper_default(ImagePick_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-b38870a5"]]);
+var ImagePick_default = /*#__PURE__*/ _plugin_vue_export_helper_default(ImagePick_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-b38870a5"]]);
 //#endregion
 //#region frontend/components/layout/MixinAvatar.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$18 = ["title"];
 var _hoisted_2$16 = ["src"];
 //#endregion
 //#region frontend/components/layout/MixinAvatar.vue
-var MixinAvatar_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
+var MixinAvatar_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
 	__name: "MixinAvatar",
 	props: {
 		mixin: {},
@@ -21467,7 +21440,7 @@ var _hoisted_6$11 = {
 };
 //#endregion
 //#region frontend/components/layout/LayoutBoxFace.vue
-var LayoutBoxFace_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
+var LayoutBoxFace_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
 	__name: "LayoutBoxFace",
 	props: {
 		scene: {},
@@ -21546,7 +21519,7 @@ var _hoisted_3$13 = { class: "lsum-bar" };
 var _hoisted_4$12 = { class: "lsum-text" };
 //#endregion
 //#region frontend/components/layout/LayoutSummary.vue
-var LayoutSummary_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
+var LayoutSummary_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
 	__name: "LayoutSummary",
 	props: {
 		boxes: {},
@@ -21566,7 +21539,7 @@ var LayoutSummary_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/*
 			locked: true
 		})));
 		return (_ctx, _cache) => {
-			return openBlock(), createElementBlock("div", _hoisted_1$16, [createBaseVNode("div", _hoisted_2$14, [createVNode(unref(vm), {
+			return openBlock(), createElementBlock("div", _hoisted_1$16, [createBaseVNode("div", _hoisted_2$14, [createVNode(unref(rm), {
 				boxes: boxes.value,
 				selected: [],
 				aspect: __props.aspect,
@@ -21797,7 +21770,7 @@ var _hoisted_18$3 = {
 };
 //#endregion
 //#region frontend/components/layout/LayoutAgent.vue
-var LayoutAgent_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
+var LayoutAgent_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
 	__name: "LayoutAgent",
 	props: {
 		open: { type: Boolean },
@@ -21870,7 +21843,7 @@ var LayoutAgent_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @
 			emit("update:open", false);
 		}
 		return (_ctx, _cache) => {
-			return openBlock(), createBlock(unref(cl), {
+			return openBlock(), createBlock(unref(dl), {
 				open: __props.open,
 				title: "Layout agent",
 				width: "980px",
@@ -21884,18 +21857,18 @@ var LayoutAgent_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @
 							src: imageUrl.value,
 							alt: ""
 						}, null, 8, _hoisted_4$11)) : (openBlock(), createElementBlock("span", _hoisted_5$11, [..._cache[7] || (_cache[7] = [createBaseVNode("i", { class: "mdi mdi-image-off-outline" }, null, -1), createTextVNode(" No trace image. Pick one with the image button on the rail, or wire a photo into Layout Inputs and run. ", -1)])]))], 2),
-						createBaseVNode("label", { class: normalizeClass(["la-toggle", { dim: !__props.image }]) }, [createVNode(unref(Hn), {
+						createBaseVNode("label", { class: normalizeClass(["la-toggle", { dim: !__props.image }]) }, [createVNode(unref(yl), {
 							"model-value": useImage.value && !!__props.image,
 							disabled: !__props.image,
 							"onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => useImage.value = $event)
 						}, null, 8, ["model-value", "disabled"]), _cache[8] || (_cache[8] = createTextVNode(" Read the trace image ", -1))], 2),
-						createBaseVNode("label", { class: normalizeClass(["la-toggle", { dim: !__props.scene.boxes.length }]) }, [createVNode(unref(Hn), {
+						createBaseVNode("label", { class: normalizeClass(["la-toggle", { dim: !__props.scene.boxes.length }]) }, [createVNode(unref(yl), {
 							"model-value": revise.value && __props.scene.boxes.length > 0,
 							disabled: !__props.scene.boxes.length,
 							"onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => revise.value = $event)
 						}, null, 8, ["model-value", "disabled"]), _cache[9] || (_cache[9] = createTextVNode(" Start from the boxes there are now ", -1))], 2)
 					]),
-					createVNode(unref(Nl), {
+					createVNode(unref(Zl), {
 						modelValue: request.value,
 						"onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => request.value = $event),
 						type: "textarea",
@@ -22027,7 +22000,7 @@ var _hoisted_17$2 = { class: "lm-head" };
 var _hoisted_18$2 = ["value"];
 //#endregion
 //#region frontend/components/layout/LayoutMixins.vue
-var LayoutMixins_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
+var LayoutMixins_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
 	__name: "LayoutMixins",
 	props: /*@__PURE__*/ mergeModels({
 		boxes: {},
@@ -22135,7 +22108,7 @@ var LayoutMixins_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 		}
 		return (_ctx, _cache) => {
 			return openBlock(), createElementBlock("div", _hoisted_1$14, [
-				createBaseVNode("div", _hoisted_2$12, [_cache[16] || (_cache[16] = createBaseVNode("span", { class: "lm-bar-note" }, "Shared across boxes — refs, LoRAs & triggers", -1)), createVNode(unref(On), {
+				createBaseVNode("div", _hoisted_2$12, [_cache[16] || (_cache[16] = createBaseVNode("span", { class: "lm-bar-note" }, "Shared across boxes — refs, LoRAs & triggers", -1)), createVNode(unref(cl), {
 					open: libOpen.value,
 					"onUpdate:open": _cache[0] || (_cache[0] = ($event) => libOpen.value = $event),
 					placement: "bottom-end",
@@ -22173,7 +22146,7 @@ var LayoutMixins_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 						}, [createVNode(MixinAvatar_default, {
 							mixin: unref(readMixin)(item.mixin, 0),
 							size: 24
-						}, null, 8, ["mixin"]), createBaseVNode("span", _hoisted_8$8, toDisplayString(item.name), 1)], 8, _hoisted_7$8), createVNode(unref(Ge$1), {
+						}, null, 8, ["mixin"]), createBaseVNode("span", _hoisted_8$8, toDisplayString(item.name), 1)], 8, _hoisted_7$8), createVNode(unref(je$1), {
 							size: "sm",
 							danger: "",
 							icon: "mdi mdi-delete-outline",
@@ -22223,7 +22196,7 @@ var LayoutMixins_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 							mixin: current.value,
 							size: 28
 						}, null, 8, ["mixin"]),
-						createVNode(unref(Nl), {
+						createVNode(unref(Zl), {
 							sm: "",
 							class: "lm-name",
 							"model-value": current.value.name,
@@ -22237,21 +22210,21 @@ var LayoutMixins_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 							title: "Its colour",
 							onInput: _cache[3] || (_cache[3] = ($event) => patch({ color: $event.target.value }))
 						}, null, 40, _hoisted_18$2),
-						__props.selectedBoxes.length ? (openBlock(), createBlock(unref(Ge$1), {
+						__props.selectedBoxes.length ? (openBlock(), createBlock(unref(je$1), {
 							key: 0,
 							size: "sm",
 							icon: "mdi mdi-checkbox-marked-circle-plus-outline",
 							title: `Assign ${current.value.name} to the ${__props.selectedBoxes.length} selected box(es)`,
 							onClick: _cache[4] || (_cache[4] = ($event) => emit("assignSelected", current.value.id))
 						}, null, 8, ["title"])) : createCommentVNode("", true),
-						createVNode(unref(Ge$1), {
+						createVNode(unref(je$1), {
 							size: "sm",
 							icon: "mdi mdi-select-group",
 							title: `Select the ${boxCount(current.value.id)} box(es) it's in`,
 							disabled: !boxCount(current.value.id),
 							onClick: _cache[5] || (_cache[5] = ($event) => emit("selectBoxes", current.value.id))
 						}, null, 8, ["title", "disabled"]),
-						createVNode(unref(Ge$1), {
+						createVNode(unref(je$1), {
 							size: "sm",
 							danger: "",
 							icon: "mdi mdi-delete-outline",
@@ -22263,7 +22236,7 @@ var LayoutMixins_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 						label: "Description",
 						note: "who or what it is — in every box that uses it"
 					}, {
-						default: withCtx(() => [createVNode(unref(Nl), {
+						default: withCtx(() => [createVNode(unref(Zl), {
 							type: "textarea",
 							rows: 3,
 							sm: "",
@@ -22277,7 +22250,7 @@ var LayoutMixins_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 						label: "Trigger words",
 						note: "added to each box's prompt"
 					}, {
-						default: withCtx(() => [createVNode(unref(Nl), {
+						default: withCtx(() => [createVNode(unref(Zl), {
 							sm: "",
 							"model-value": current.value.trigger,
 							placeholder: "e.g. amb3r",
@@ -22289,13 +22262,13 @@ var LayoutMixins_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 						label: "References",
 						note: current.value.refs.length ? String(current.value.refs.length) : "visual refs"
 					}, {
-						actions: withCtx(() => [createVNode(unref(Ge$1), {
+						actions: withCtx(() => [createVNode(unref(je$1), {
 							size: "sm",
 							icon: "mdi mdi-upload-outline",
 							title: "Upload images",
 							disabled: refsPanel.value?.busy,
 							onClick: _cache[9] || (_cache[9] = ($event) => refsPanel.value?.upload())
-						}, null, 8, ["disabled"]), createVNode(unref(Ge$1), {
+						}, null, 8, ["disabled"]), createVNode(unref(je$1), {
 							size: "sm",
 							icon: "mdi mdi-view-grid-plus-outline",
 							title: "Browse images",
@@ -22313,7 +22286,7 @@ var LayoutMixins_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* 
 						label: "LoRAs",
 						note: current.value.loras.length ? String(current.value.loras.length) : ""
 					}, {
-						actions: withCtx(() => [createVNode(unref(Ge$1), {
+						actions: withCtx(() => [createVNode(unref(je$1), {
 							size: "sm",
 							icon: "mdi mdi-plus",
 							title: "Add a LoRA",
@@ -22346,7 +22319,7 @@ var _hoisted_4$9 = { class: "mc-model" };
 var _hoisted_5$9 = { class: "mc-what" };
 //#endregion
 //#region frontend/components/layout/ModeCards.vue
-var ModeCards_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
+var ModeCards_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
 	__name: "ModeCards",
 	props: { modelValue: {} },
 	emits: ["update:modelValue"],
@@ -22401,7 +22374,7 @@ var ModeCards_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__
 var _hoisted_1$12 = { class: "ls" };
 //#endregion
 //#region frontend/components/layout/LayoutSettings.vue
-var LayoutSettings_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
+var LayoutSettings_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
 	__name: "LayoutSettings",
 	props: {
 		open: { type: Boolean },
@@ -22412,7 +22385,7 @@ var LayoutSettings_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/
 		/** Pick the layout's mode. Everything else about the layout lives in the editor's sidebar. */
 		const emit = __emit;
 		return (_ctx, _cache) => {
-			return openBlock(), createBlock(unref(cl), {
+			return openBlock(), createBlock(unref(dl), {
 				open: __props.open,
 				title: "Layout mode",
 				width: "760px",
@@ -22441,7 +22414,7 @@ var _hoisted_3$9 = {
 };
 //#endregion
 //#region frontend/components/layout/PaletteEdit.vue
-var PaletteEdit_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
+var PaletteEdit_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
 	__name: "PaletteEdit",
 	props: {
 		modelValue: {},
@@ -22467,13 +22440,13 @@ var PaletteEdit_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @
 						key: i,
 						class: "pal-chip",
 						onContextmenu: withModifiers(($event) => remove(i), ["prevent"])
-					}, [createVNode(unref(Gf), {
+					}, [createVNode(unref(Yf), {
 						compact: "",
 						"model-value": c,
 						"onUpdate:modelValue": ($event) => set(i, $event)
 					}, null, 8, ["model-value", "onUpdate:modelValue"])], 40, _hoisted_2$10);
 				}), 128)),
-				__props.modelValue.length < __props.max ? (openBlock(), createBlock(unref(Ge$1), {
+				__props.modelValue.length < __props.max ? (openBlock(), createBlock(unref(je$1), {
 					key: 0,
 					size: "sm",
 					icon: "mdi mdi-plus",
@@ -22491,7 +22464,7 @@ var _hoisted_1$10 = { class: "preset" };
 var _hoisted_2$9 = { class: "preset-menu" };
 //#endregion
 //#region frontend/components/layout/PresetInput.vue
-var PresetInput_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
+var PresetInput_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
 	__name: "PresetInput",
 	props: {
 		modelValue: {},
@@ -22508,20 +22481,20 @@ var PresetInput_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @
 			emit("update:modelValue", p);
 		}
 		return (_ctx, _cache) => {
-			return openBlock(), createElementBlock("div", _hoisted_1$10, [createVNode(unref(Nl), {
+			return openBlock(), createElementBlock("div", _hoisted_1$10, [createVNode(unref(Zl), {
 				class: "preset-input",
 				sm: "",
 				"model-value": __props.modelValue,
 				placeholder: __props.placeholder,
 				"onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => emit("update:modelValue", String($event ?? "")))
-			}, null, 8, ["model-value", "placeholder"]), __props.presets.length ? (openBlock(), createBlock(unref(On), {
+			}, null, 8, ["model-value", "placeholder"]), __props.presets.length ? (openBlock(), createBlock(unref(cl), {
 				key: 0,
 				open: open.value,
 				"onUpdate:open": _cache[1] || (_cache[1] = ($event) => open.value = $event),
 				placement: "bottom-end",
 				role: "menu"
 			}, {
-				trigger: withCtx(({ toggle }) => [createVNode(unref(Ge$1), {
+				trigger: withCtx(({ toggle }) => [createVNode(unref(je$1), {
 					size: "sm",
 					icon: "mdi mdi-chevron-down",
 					active: open.value,
@@ -22529,7 +22502,7 @@ var PresetInput_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @
 					onClick: toggle
 				}, null, 8, ["active", "onClick"])]),
 				default: withCtx(() => [createBaseVNode("div", _hoisted_2$9, [(openBlock(true), createElementBlock(Fragment, null, renderList(__props.presets, (p) => {
-					return openBlock(), createBlock(unref(lm), {
+					return openBlock(), createBlock(unref(em), {
 						key: p,
 						onSelect: ($event) => pick(p)
 					}, {
@@ -22710,7 +22683,7 @@ var DENOISE_TIP = "How much of a source photo this box may rewrite when editing 
 var FACES_KEY = "nynxzLayoutFaces";
 //#endregion
 //#region frontend/components/layout/PromptLayoutEditor.vue
-var PromptLayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
+var PromptLayoutEditor_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
 	__name: "PromptLayoutEditor",
 	props: {
 		layout: {},
@@ -23174,7 +23147,7 @@ var PromptLayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_defau
 			});
 		}
 		async function onDrop(e, at, hit) {
-			const media = (await mt(e, "fresco")).filter(isImage);
+			const media = (await ft(e, "fresco")).filter(isImage);
 			if (!media.length) return;
 			const refs = media.map((m) => newRef(refFromMedia(m)));
 			const target = hit ? boxById.value.get(hit) : void 0;
@@ -23211,7 +23184,7 @@ var PromptLayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_defau
 			};
 			const inside = (b) => x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h;
 			const current = box.value;
-			const under = Pc(scene.value.boxes.filter((b) => !b.hidden), x, y);
+			const under = Sc(scene.value.boxes.filter((b) => !b.hidden), x, y);
 			const hit = current && !current.hidden && inside(current) ? current : under;
 			if (hit) {
 				selected.value = [hit.id];
@@ -23480,14 +23453,14 @@ var PromptLayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_defau
 						_: 1
 					})) : createCommentVNode("", true)]),
 					rail: withCtx(() => [
-						createVNode(unref(Ge$1), {
+						createVNode(unref(je$1), {
 							size: "sm",
 							icon: "mdi mdi-auto-fix",
 							active: wand.value,
 							title: "Select with SAM3 — click what to capture, Alt+click what to leave out (W). Needs a photo and SAM3 on Layout Inputs.",
 							onClick: _cache[3] || (_cache[3] = ($event) => setWand(!wand.value))
 						}, null, 8, ["active"]),
-						createVNode(unref(Ge$1), {
+						createVNode(unref(je$1), {
 							size: "sm",
 							icon: showFaces.value ? "mdi mdi-card-text-outline" : "mdi mdi-card-off-outline",
 							active: showFaces.value,
@@ -23505,7 +23478,7 @@ var PromptLayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_defau
 							_: 1
 						})
 					]),
-					status: withCtx(() => [createVNode(unref(On), {
+					status: withCtx(() => [createVNode(unref(cl), {
 						placement: "top-end",
 						role: "dialog"
 					}, {
@@ -23546,12 +23519,12 @@ var PromptLayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_defau
 						default: withCtx(() => [createTextVNode(toDisplayString(mode.value.label) + " ", 1), _cache[54] || (_cache[54] = createBaseVNode("i", { class: "mdi mdi-chevron-up pl-cog" }, null, -1))]),
 						_: 1
 					}, 8, ["icon"])]),
-					"element-actions": withCtx(() => [unref(scene).boxes.length > 1 && box.value ? (openBlock(), createBlock(unref(On), {
+					"element-actions": withCtx(() => [unref(scene).boxes.length > 1 && box.value ? (openBlock(), createBlock(unref(cl), {
 						key: 0,
 						placement: "bottom-end",
 						role: "dialog"
 					}, {
-						trigger: withCtx(({ toggle }) => [createVNode(unref(Ge$1), {
+						trigger: withCtx(({ toggle }) => [createVNode(unref(je$1), {
 							size: "sm",
 							icon: "mdi mdi-swap-horizontal",
 							title: "Swap content with another box — description, mixins, references and LoRAs trade places; each keeps its position and shape",
@@ -23578,20 +23551,20 @@ var PromptLayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_defau
 							note: mixinNote.value
 						}, {
 							actions: withCtx(() => [
-								canPromote.value ? (openBlock(), createBlock(unref(Ge$1), {
+								canPromote.value ? (openBlock(), createBlock(unref(je$1), {
 									key: 0,
 									size: "sm",
 									icon: "mdi mdi-share-variant-outline",
 									title: "Promote this box's description, references and LoRAs into a reusable mixin",
 									onClick: promoteToMixin
 								})) : createCommentVNode("", true),
-								createVNode(unref(Ge$1), {
+								createVNode(unref(je$1), {
 									size: "sm",
 									icon: "mdi mdi-plus",
 									title: "New mixin, in this box",
 									onClick: _cache[7] || (_cache[7] = ($event) => addMixin(box.value.name))
 								}),
-								createVNode(unref(Ge$1), {
+								createVNode(unref(je$1), {
 									size: "sm",
 									icon: "mdi mdi-pencil-outline",
 									title: "Edit mixins",
@@ -23630,7 +23603,7 @@ var PromptLayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_defau
 							label: "Text",
 							note: "rendered exactly"
 						}, {
-							default: withCtx(() => [createVNode(unref(Nl), {
+							default: withCtx(() => [createVNode(unref(Zl), {
 								sm: "",
 								"model-value": box.value.text,
 								placeholder: "The words to render",
@@ -23642,7 +23615,7 @@ var PromptLayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_defau
 							label: "Description",
 							note: citeNote.value
 						}, createSlots({
-							default: withCtx(() => [createVNode(unref(Nl), {
+							default: withCtx(() => [createVNode(unref(Zl), {
 								ref_key: "descInput",
 								ref: descInput,
 								type: "textarea",
@@ -23655,7 +23628,7 @@ var PromptLayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_defau
 							_: 2
 						}, [citeId.value ? {
 							name: "actions",
-							fn: withCtx(() => [createVNode(unref(Ge$1), {
+							fn: withCtx(() => [createVNode(unref(je$1), {
 								size: "sm",
 								icon: "mdi mdi-at",
 								title: `Add <${citeId.value}> to the end of the prompt`,
@@ -23667,13 +23640,13 @@ var PromptLayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_defau
 							label: "References",
 							note: boxRefNote.value
 						}, {
-							actions: withCtx(() => [createVNode(unref(Ge$1), {
+							actions: withCtx(() => [createVNode(unref(je$1), {
 								size: "sm",
 								icon: "mdi mdi-upload-outline",
 								title: "Upload reference images for this box",
 								disabled: boxRefsPanel.value?.busy,
 								onClick: _cache[13] || (_cache[13] = ($event) => boxRefsPanel.value?.upload())
-							}, null, 8, ["disabled"]), createVNode(unref(Ge$1), {
+							}, null, 8, ["disabled"]), createVNode(unref(je$1), {
 								size: "sm",
 								icon: "mdi mdi-view-grid-plus-outline",
 								title: "Browse images for this box",
@@ -23700,7 +23673,7 @@ var PromptLayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_defau
 								}, null, 8, ["model-value"]),
 								totalActiveRefs.value > 1 ? (openBlock(), createElementBlock("div", _hoisted_18$1, [
 									createBaseVNode("span", { title: BLEND_TIP }, "blend"),
-									createVNode(unref(Xf), {
+									createVNode(unref(Zf), {
 										size: "sm",
 										"model-value": box.value.blend,
 										options: unref(BLENDS),
@@ -23726,7 +23699,7 @@ var PromptLayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_defau
 							label: "LoRAs",
 							note: boxLoraNote.value
 						}, {
-							actions: withCtx(() => [createVNode(unref(Ge$1), {
+							actions: withCtx(() => [createVNode(unref(je$1), {
 								size: "sm",
 								icon: "mdi mdi-plus",
 								title: "Add a LoRA just for this box",
@@ -23755,20 +23728,20 @@ var PromptLayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_defau
 							label: "Capture",
 							note: captureNote.value
 						}, {
-							actions: withCtx(() => [box.value.points.length ? (openBlock(), createBlock(unref(Ge$1), {
+							actions: withCtx(() => [box.value.points.length ? (openBlock(), createBlock(unref(je$1), {
 								key: 0,
 								size: "sm",
 								icon: "mdi mdi-close-circle-outline",
 								title: "Clear the click points",
 								onClick: _cache[19] || (_cache[19] = ($event) => patchBox({ points: [] }))
-							})) : createCommentVNode("", true), createVNode(unref(Ge$1), {
+							})) : createCommentVNode("", true), createVNode(unref(je$1), {
 								size: "sm",
 								icon: "mdi mdi-auto-fix",
 								disabled: segmenting.value || !box.value.capture.trim() && !box.value.points.length,
 								title: "Segment now with SAM3 (Layout runs on its own)",
 								onClick: segment
 							}, null, 8, ["disabled"])]),
-							default: withCtx(() => [createVNode(unref(Nl), {
+							default: withCtx(() => [createVNode(unref(Zl), {
 								sm: "",
 								"model-value": box.value.capture,
 								placeholder: "e.g. jacket, -hands — or click with the wand (W)",
@@ -23781,7 +23754,7 @@ var PromptLayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_defau
 							label: "Shape",
 							note: box.value.mask ? "painted · B paint, E erase" : "whole box · B to paint"
 						}, {
-							actions: withCtx(() => [box.value.mask ? (openBlock(), createBlock(unref(Ge$1), {
+							actions: withCtx(() => [box.value.mask ? (openBlock(), createBlock(unref(je$1), {
 								key: 0,
 								size: "sm",
 								icon: "mdi mdi-crop-square",
@@ -23851,7 +23824,7 @@ var PromptLayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_defau
 							label: "Tags",
 							note: "comma separated"
 						}, {
-							default: withCtx(() => [createVNode(unref(Nl), {
+							default: withCtx(() => [createVNode(unref(Zl), {
 								sm: "",
 								"model-value": box.value.tags.join(", "),
 								placeholder: "e.g. 1girl, red scarf",
@@ -23912,7 +23885,7 @@ var PromptLayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_defau
 							label: PROMPT_LABEL[unref(scene).mode],
 							note: PROMPT_NOTE[unref(scene).mode]
 						}, {
-							default: withCtx(() => [createVNode(unref(Nl), {
+							default: withCtx(() => [createVNode(unref(Zl), {
 								type: "textarea",
 								rows: 4,
 								sm: "",
@@ -23927,7 +23900,7 @@ var PromptLayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_defau
 							label: "Background",
 							note: "behind every box"
 						}, {
-							default: withCtx(() => [createVNode(unref(Nl), {
+							default: withCtx(() => [createVNode(unref(Zl), {
 								type: "textarea",
 								rows: 2,
 								sm: "",
@@ -23948,7 +23921,7 @@ var PromptLayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_defau
 								options: STYLE_KINDS,
 								"onUpdate:modelValue": _cache[31] || (_cache[31] = ($event) => setStyleKind(String($event)))
 							}, null, 8, ["model-value"]), unref(scene).style.on ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [(openBlock(true), createElementBlock(Fragment, null, renderList(styleFields.value, (f) => {
-								return openBlock(), createBlock(unref(Hf), {
+								return openBlock(), createBlock(unref(Bf), {
 									key: f.key,
 									label: f.label,
 									stack: ""
@@ -23966,7 +23939,7 @@ var PromptLayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_defau
 									])]),
 									_: 2
 								}, 1032, ["label"]);
-							}), 128)), createVNode(unref(Hf), {
+							}), 128)), createVNode(unref(Bf), {
 								label: "Palette",
 								stack: "",
 								hint: "Up to 16. Right-click a colour to drop it."
@@ -23985,7 +23958,7 @@ var PromptLayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_defau
 								label: "Meta",
 								note: "what kind of image"
 							}, {
-								default: withCtx(() => [createVNode(unref(Nl), {
+								default: withCtx(() => [createVNode(unref(Zl), {
 									sm: "",
 									"model-value": unref(scene).meta.join(", "),
 									placeholder: "poster, illustration",
@@ -23997,7 +23970,7 @@ var PromptLayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_defau
 								label: "Layout",
 								note: "one picture, panels or a collage"
 							}, {
-								default: withCtx(() => [createVNode(unref(Xf), {
+								default: withCtx(() => [createVNode(unref(Zf), {
 									size: "sm",
 									"model-value": unref(scene).canvas,
 									options: CANVAS_OPTIONS,
@@ -24037,13 +24010,13 @@ var PromptLayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_defau
 							label: "Background region",
 							note: "wherever no box is"
 						}, {
-							actions: withCtx(() => [createVNode(unref(qf), {
+							actions: withCtx(() => [createVNode(unref(Uf), {
 								"model-value": unref(scene).backdrop.on,
 								title: "Enable background region (for edits or regional backdrop prompt/LoRAs)",
 								"onUpdate:modelValue": _cache[38] || (_cache[38] = ($event) => patchBackdrop({ on: $event }))
 							}, null, 8, ["model-value"])]),
 							default: withCtx(() => [unref(scene).backdrop.on ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
-								createVNode(unref(Nl), {
+								createVNode(unref(Zl), {
 									type: "textarea",
 									rows: 2,
 									sm: "",
@@ -24055,7 +24028,7 @@ var PromptLayoutEditor_default = /* @__PURE__ */ _plugin_vue_export_helper_defau
 									"model-value": unref(scene).backdrop.refs,
 									"onUpdate:modelValue": _cache[40] || (_cache[40] = ($event) => patchBackdrop({ refs: $event }))
 								}, null, 8, ["model-value"]),
-								createBaseVNode("div", _hoisted_41, [_cache[61] || (_cache[61] = createBaseVNode("span", { class: "pl-sub" }, "Background LoRAs", -1)), createVNode(unref(Ge$1), {
+								createBaseVNode("div", _hoisted_41, [_cache[61] || (_cache[61] = createBaseVNode("span", { class: "pl-sub" }, "Background LoRAs", -1)), createVNode(unref(je$1), {
 									size: "sm",
 									icon: "mdi mdi-plus",
 									title: "Add a LoRA for the background",
@@ -24228,7 +24201,7 @@ var LayoutScene_exports = /* @__PURE__ */ __exportAll({
 	nodeDef: () => nodeDef$2,
 	widgetOptions: () => widgetOptions$6
 });
-var LayoutScene_default = /* @__PURE__ */ _plugin_vue_export_helper_default(LayoutScene_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-caa49d38"]]);
+var LayoutScene_default = /*#__PURE__*/ _plugin_vue_export_helper_default(LayoutScene_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-caa49d38"]]);
 //#endregion
 //#region frontend/lib/widgetRows.ts
 /** Coerce a saved widget value (list, or the JSON string an older graph may hold) into entries. */
@@ -24651,7 +24624,7 @@ var LoraStack_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 		const dragOffset = /* @__PURE__ */ ref(0);
 		const browse = /* @__PURE__ */ ref(false);
 		const browseRow = /* @__PURE__ */ ref(null);
-		if (rows.value.some((r) => r.name)) pm.ensure();
+		if (rows.value.some((r) => r.name)) vm.ensure();
 		function edit(row, fields) {
 			Object.assign(row, fields);
 			if (fields.on) onlyOne(groupById(row.group), row);
@@ -24733,7 +24706,7 @@ var LoraStack_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 			if (item.group.muted) return "muted";
 			if (!item.group.solo) return `${item.on}/${item.count}`;
 			const active = rows.value.find((row) => row.group === item.group.id && row.on);
-			return active ? pm.short(active.name) || "unnamed" : "none on";
+			return active ? vm.short(active.name) || "unnamed" : "none on";
 		}
 		function ungroup(group) {
 			for (const row of rows.value) if (row.group === group.id) row.group = 0;
@@ -24798,7 +24771,7 @@ var LoraStack_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 		let rowHeights = [];
 		const settling = /* @__PURE__ */ ref(false);
 		const settle = /* @__PURE__ */ ref(null);
-		const reorder = yt({
+		const reorder = ht({
 			onStart(ctx) {
 				const grip = ctx.event.target?.closest?.(".ls-grip");
 				const host = reorder.el.value;
@@ -24810,7 +24783,7 @@ var LoraStack_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 				rowMids = kids.map((k) => k.offsetTop + k.offsetHeight / 2);
 				rowTops = kids.map((k) => k.offsetTop);
 				rowHeights = kids.map((k) => k.offsetHeight);
-				stride.value = Uc(rowTops, rowHeights, i);
+				stride.value = Nc(rowTops, rowHeights, i);
 				dragIndex.value = i;
 				dropIndex.value = i;
 				dragOffset.value = 0;
@@ -24819,7 +24792,7 @@ var LoraStack_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 				if (dragIndex.value < 0) return;
 				dragOffset.value = ctx.delta.y;
 				const center = (rowMids[dragIndex.value] ?? 0) + ctx.delta.y;
-				dropIndex.value = Nc(rowMids, dragIndex.value, center);
+				dropIndex.value = Kc(rowMids, dragIndex.value, center);
 			},
 			onEnd() {
 				const from = dragIndex.value;
@@ -24830,7 +24803,7 @@ var LoraStack_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 				settling.value = true;
 				settle.value = {
 					index: to,
-					y: (rowTops[from] ?? 0) + offset - Xc(rowTops, rowHeights, from, to)
+					y: (rowTops[from] ?? 0) + offset - Zc(rowTops, rowHeights, from, to)
 				};
 				if (from !== to) dropAt(from, to);
 				requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -24869,7 +24842,7 @@ var LoraStack_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 		function itemStyle(i) {
 			if (dragIndex.value === i) return { transform: `translateY(${dragOffset.value}px)` };
 			if (settle.value?.index === i) return { transform: `translateY(${settle.value.y}px)` };
-			return Yc(Zc(i, dragIndex.value, dropIndex.value), stride.value);
+			return _c(Oc(i, dragIndex.value, dropIndex.value), stride.value);
 		}
 		function endReorder() {
 			dragIndex.value = -1;
@@ -24887,7 +24860,7 @@ var LoraStack_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 			browse.value = false;
 		}
 		return (_ctx, _cache) => {
-			return openBlock(), createBlock(unref(Vf), {
+			return openBlock(), createBlock(unref(Af), {
 				ref_key: "rootEl",
 				ref: rootEl,
 				gap: 6,
@@ -24900,17 +24873,17 @@ var LoraStack_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 					onPrimary: _cache[16] || (_cache[16] = ($event) => addRow())
 				}, {
 					default: withCtx(() => [
-						createVNode(unref(Ge$1), {
+						createVNode(unref(je$1), {
 							icon: "mdi mdi-folder-plus-outline",
 							title: "New group: LoRAs you can fold away or mute together",
 							onClick: addGroup
 						}),
-						createVNode(unref(Ge$1), {
+						createVNode(unref(je$1), {
 							icon: "mdi mdi-view-grid-outline",
 							title: "Browse library",
 							onClick: _cache[15] || (_cache[15] = ($event) => openBrowse(null))
 						}),
-						items.value.length ? (openBlock(), createBlock(unref(Ge$1), {
+						items.value.length ? (openBlock(), createBlock(unref(je$1), {
 							key: 0,
 							icon: "mdi mdi-broom",
 							danger: "",
@@ -24940,7 +24913,7 @@ var LoraStack_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 								title: item.group.open ? "Fold" : "Unfold",
 								onClick: ($event) => toggleOpen(item.group)
 							}, [createBaseVNode("i", { class: normalizeClass(["mdi", item.group.open ? "mdi-chevron-down" : "mdi-chevron-right"]) }, null, 2)], 8, _hoisted_2$7),
-							createVNode(unref(qf), {
+							createVNode(unref(Uf), {
 								"model-value": !item.group.muted,
 								title: item.group.muted ? "Muted: none of these apply" : "Mute the whole group",
 								"onUpdate:modelValue": ($event) => setMuted(item.group, !$event)
@@ -24973,13 +24946,13 @@ var LoraStack_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 								class: "ls-gcount",
 								title: `${item.on} of ${item.count} on`
 							}, toDisplayString(summary(item)), 9, _hoisted_6$7),
-							createVNode(unref(Ge$1), {
+							createVNode(unref(je$1), {
 								size: "sm",
 								icon: "mdi mdi-plus",
 								title: "Add a LoRA to this group",
 								onClick: ($event) => addRow("", item.group.id)
 							}, null, 8, ["onClick"]),
-							createVNode(unref(Ge$1), {
+							createVNode(unref(je$1), {
 								size: "sm",
 								icon: "mdi mdi-dots-horizontal",
 								title: "Group options",
@@ -24999,12 +24972,12 @@ var LoraStack_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 								class: "ls-grip",
 								"data-zen-drag": "",
 								title: "Drag to reorder, or into a group"
-							}, [createBaseVNode("i", { class: "mdi mdi-drag-vertical" })], -1)), createVNode(unref(qf), {
+							}, [createBaseVNode("i", { class: "mdi mdi-drag-vertical" })], -1)), createVNode(unref(Uf), {
 								"model-value": item.row.on,
 								title: "Enable",
 								"onUpdate:modelValue": ($event) => edit(item.row, { on: $event })
 							}, null, 8, ["model-value", "onUpdate:modelValue"])]),
-							createVNode(unref(ym), {
+							createVNode(unref(mm), {
 								class: "ls-pick",
 								"model-value": item.row.name,
 								"onUpdate:modelValue": ($event) => edit(item.row, { name: $event }),
@@ -25022,43 +24995,43 @@ var LoraStack_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 								max: 10,
 								"onUpdate:modelValue": ($event) => edit(item.row, { strength: $event })
 							}, null, 8, ["model-value", "onUpdate:modelValue"]),
-							createVNode(unref(Ge$1), {
+							createVNode(unref(je$1), {
 								icon: "mdi mdi-close",
 								title: "Remove",
 								onClick: ($event) => removeRow(item.row)
 							}, null, 8, ["onClick"])
 						], 6))], 64);
 					}), 128))], 16)) : (openBlock(), createElementBlock("div", _hoisted_8$6, [..._cache[19] || (_cache[19] = [createBaseVNode("i", { class: "mdi mdi-layers-triple-outline" }, null, -1), createBaseVNode("span", null, "No LoRAs in this stack yet", -1)])]))]),
-					createVNode(unref(On), {
+					createVNode(unref(cl), {
 						open: menuOpen.value,
 						"onUpdate:open": _cache[11] || (_cache[11] = ($event) => menuOpen.value = $event),
 						anchor: menuAnchor.value,
 						placement: "bottom-end"
 					}, {
 						default: withCtx(() => [menuGroup.value ? (openBlock(), createElementBlock(Fragment, { key: 0 }, [
-							createVNode(unref(lm), {
+							createVNode(unref(em), {
 								icon: "mdi mdi-pencil-outline",
 								onSelect: _cache[4] || (_cache[4] = ($event) => menuDo(startRename))
 							}, {
 								default: withCtx(() => [..._cache[20] || (_cache[20] = [createTextVNode(" Rename ", -1)])]),
 								_: 1
 							}),
-							createVNode(unref(lm), {
+							createVNode(unref(em), {
 								icon: menuGroup.value.muted ? "mdi mdi-volume-high" : "mdi mdi-volume-off",
 								onSelect: _cache[5] || (_cache[5] = ($event) => menuDo((g) => setMuted(g, !g.muted)))
 							}, {
 								default: withCtx(() => [createTextVNode(toDisplayString(menuGroup.value.muted ? "Unmute" : "Mute"), 1)]),
 								_: 1
 							}, 8, ["icon"]),
-							createVNode(unref(lm), {
+							createVNode(unref(em), {
 								icon: "mdi mdi-radiobox-marked",
 								onSelect: _cache[6] || (_cache[6] = ($event) => menuDo((g) => setSolo(g, !g.solo)))
 							}, {
-								lead: withCtx(() => [createVNode(unref(qf), { "model-value": menuGroup.value.solo }, null, 8, ["model-value"])]),
+								lead: withCtx(() => [createVNode(unref(Uf), { "model-value": menuGroup.value.solo }, null, 8, ["model-value"])]),
 								default: withCtx(() => [_cache[21] || (_cache[21] = createTextVNode(" Solo: one at a time ", -1))]),
 								_: 1
 							}),
-							createVNode(unref(lm), {
+							createVNode(unref(em), {
 								icon: "mdi mdi-arrow-up",
 								disabled: !canMove(-1),
 								onSelect: _cache[7] || (_cache[7] = ($event) => menuDo(moveUp))
@@ -25066,7 +25039,7 @@ var LoraStack_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 								default: withCtx(() => [..._cache[22] || (_cache[22] = [createTextVNode(" Move up ", -1)])]),
 								_: 1
 							}, 8, ["disabled"]),
-							createVNode(unref(lm), {
+							createVNode(unref(em), {
 								icon: "mdi mdi-arrow-down",
 								disabled: !canMove(1),
 								onSelect: _cache[8] || (_cache[8] = ($event) => menuDo(moveDown))
@@ -25074,15 +25047,15 @@ var LoraStack_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 								default: withCtx(() => [..._cache[23] || (_cache[23] = [createTextVNode(" Move down ", -1)])]),
 								_: 1
 							}, 8, ["disabled"]),
-							createVNode(unref(om)),
-							createVNode(unref(lm), {
+							createVNode(unref(tm)),
+							createVNode(unref(em), {
 								icon: "mdi mdi-folder-open-outline",
 								onSelect: _cache[9] || (_cache[9] = ($event) => menuDo(ungroup))
 							}, {
 								default: withCtx(() => [..._cache[24] || (_cache[24] = [createTextVNode(" Ungroup, keep the LoRAs ", -1)])]),
 								_: 1
 							}),
-							createVNode(unref(lm), {
+							createVNode(unref(em), {
 								icon: "mdi mdi-delete-outline",
 								danger: "",
 								onSelect: _cache[10] || (_cache[10] = ($event) => menuDo(deleteGroup))
@@ -25093,7 +25066,7 @@ var LoraStack_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 						], 64)) : createCommentVNode("", true)]),
 						_: 1
 					}, 8, ["open", "anchor"]),
-					mode.value ? (openBlock(), createBlock(unref(On), {
+					mode.value ? (openBlock(), createBlock(unref(cl), {
 						key: 0,
 						open: modeOpen.value,
 						"onUpdate:open": _cache[12] || (_cache[12] = ($event) => modeOpen.value = $event),
@@ -25104,30 +25077,30 @@ var LoraStack_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 						default: withCtx(() => [
 							_cache[27] || (_cache[27] = createBaseVNode("div", { class: "ls-pop-head" }, "Applies to", -1)),
 							(openBlock(true), createElementBlock(Fragment, null, renderList(unref(LORA_MODES), (m) => {
-								return openBlock(), createBlock(unref(lm), {
+								return openBlock(), createBlock(unref(em), {
 									key: m.value,
 									icon: m.icon,
 									onSelect: ($event) => pickMode(m.value)
 								}, {
-									lead: withCtx(() => [createVNode(unref(qf), { "model-value": m.value === mode.value }, null, 8, ["model-value"])]),
+									lead: withCtx(() => [createVNode(unref(Uf), { "model-value": m.value === mode.value }, null, 8, ["model-value"])]),
 									default: withCtx(() => [createTextVNode(toDisplayString(m.label) + " ", 1)]),
 									_: 2
 								}, 1032, ["icon", "onSelect"]);
 							}), 128)),
-							createVNode(unref(om)),
+							createVNode(unref(tm)),
 							_cache[28] || (_cache[28] = createBaseVNode("div", { class: "ls-pop-head" }, "Inputs", -1)),
-							createVNode(unref(lm), {
+							createVNode(unref(em), {
 								icon: "mdi mdi-connection",
 								onSelect: toggleSelect
 							}, {
-								lead: withCtx(() => [createVNode(unref(qf), { "model-value": selectOn.value }, null, 8, ["model-value"])]),
+								lead: withCtx(() => [createVNode(unref(Uf), { "model-value": selectOn.value }, null, 8, ["model-value"])]),
 								default: withCtx(() => [_cache[26] || (_cache[26] = createTextVNode(" Select: choose a group's LoRAs from the graph ", -1))]),
 								_: 1
 							})
 						]),
 						_: 1
 					}, 8, ["open", "anchor"])) : createCommentVNode("", true),
-					createVNode(unref(On), {
+					createVNode(unref(cl), {
 						open: clearOpen.value,
 						"onUpdate:open": _cache[14] || (_cache[14] = ($event) => clearOpen.value = $event),
 						anchor: clearAnchor.value,
@@ -25152,7 +25125,7 @@ var LoraStack_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 						})])])]),
 						_: 1
 					}, 8, ["open", "anchor"]),
-					createVNode(unref(gm), {
+					createVNode(unref(pm), {
 						open: browse.value,
 						"onUpdate:open": _cache[17] || (_cache[17] = ($event) => browse.value = $event),
 						selected: browseRow.value?.name,
@@ -25170,7 +25143,7 @@ var LoraStack_exports = /* @__PURE__ */ __exportAll({
 	default: () => LoraStack_default,
 	widgetOptions: () => widgetOptions$5
 });
-var LoraStack_default = /* @__PURE__ */ _plugin_vue_export_helper_default(LoraStack_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-c21f11cb"]]);
+var LoraStack_default = /*#__PURE__*/ _plugin_vue_export_helper_default(LoraStack_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-04aebb5a"]]);
 //#endregion
 //#region frontend/widgets/NumberRange.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$6 = { class: "nr-row" };
@@ -25405,7 +25378,7 @@ var NumberRange_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defi
 			endDrag();
 		});
 		return (_ctx, _cache) => {
-			return openBlock(), createBlock(unref(Vf), {
+			return openBlock(), createBlock(unref(Af), {
 				ref_key: "rootEl",
 				ref: rootEl,
 				gap: 0,
@@ -25444,7 +25417,7 @@ var NumberRange_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defi
 							top: `${tip.value.y}px`
 						})
 					}, toDisplayString(value.value.toFixed(decimals.value)), 5)) : createCommentVNode("", true)])),
-					createVNode(unref(On), {
+					createVNode(unref(cl), {
 						open: menuOpen.value,
 						"onUpdate:open": _cache[6] || (_cache[6] = ($event) => menuOpen.value = $event),
 						anchor: menuAnchor.value,
@@ -25507,7 +25480,7 @@ var NumberRange_exports = /* @__PURE__ */ __exportAll({
 	default: () => NumberRange_default,
 	widgetOptions: () => widgetOptions$4
 });
-var NumberRange_default = /* @__PURE__ */ _plugin_vue_export_helper_default(NumberRange_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-616b0b9a"]]);
+var NumberRange_default = /*#__PURE__*/ _plugin_vue_export_helper_default(NumberRange_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-616b0b9a"]]);
 //#endregion
 //#region frontend/widgets/RegionLoras.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$5 = ["data-region"];
@@ -25664,7 +25637,7 @@ var RegionLoras_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defi
 		}
 		const browse = /* @__PURE__ */ ref(false);
 		const browseTarget = /* @__PURE__ */ ref(-1);
-		if (rows.value.some((r) => r.name)) pm.ensure();
+		if (rows.value.some((r) => r.name)) vm.ensure();
 		function addRow(region) {
 			rows.value.push({
 				id: store.nextId(),
@@ -25729,7 +25702,7 @@ var RegionLoras_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defi
 			if (b > regionCount.value) setSlots(b);
 			store.commit();
 		}
-		const drag = yt({
+		const drag = ht({
 			onStart(ctx) {
 				const grip = ctx.event.target?.closest?.(".rg-grip");
 				const host = drag.el.value;
@@ -25781,7 +25754,7 @@ var RegionLoras_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defi
 			}
 		});
 		return (_ctx, _cache) => {
-			return openBlock(), createBlock(unref(Vf), {
+			return openBlock(), createBlock(unref(Af), {
 				gap: 6,
 				pad: "2px",
 				class: "rg"
@@ -25810,19 +25783,19 @@ var RegionLoras_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defi
 								class: "rg-label",
 								title: `The ${ordinal(group.region)} mask in the regions batch`
 							}, [createBaseVNode("span", _hoisted_4$5, "Region " + toDisplayString(group.region), 1), group.entries.length ? (openBlock(), createElementBlock("span", _hoisted_5$5, toDisplayString(group.entries.length), 1)) : createCommentVNode("", true)], 8, _hoisted_3$5),
-							group.region === regionCount.value && canRemoveRegion.value ? (openBlock(), createBlock(unref(Ge$1), {
+							group.region === regionCount.value && canRemoveRegion.value ? (openBlock(), createBlock(unref(je$1), {
 								key: 0,
 								icon: "mdi mdi-close",
 								title: "Remove this region slot",
 								onClick: removeRegion
 							})) : createCommentVNode("", true),
-							createVNode(unref(Ge$1), {
+							createVNode(unref(je$1), {
 								icon: "mdi mdi-plus",
 								title: "Add a LoRA to this region",
 								onClick: ($event) => addRow(group.region)
 							}, null, 8, ["onClick"])
 						]),
-						createVNode(unref(Nl), {
+						createVNode(unref(Zl), {
 							class: "rg-prompt",
 							type: "textarea",
 							rows: 1,
@@ -25848,12 +25821,12 @@ var RegionLoras_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defi
 									"data-zen-drag": "",
 									title: "Drag onto another region"
 								}, [createBaseVNode("i", { class: "mdi mdi-drag-vertical" })], -1)),
-								createVNode(unref(qf), {
+								createVNode(unref(Uf), {
 									"model-value": entry.row.on,
 									title: "Enable",
 									"onUpdate:modelValue": ($event) => unref(store).patch(entry.index, { on: $event })
 								}, null, 8, ["model-value", "onUpdate:modelValue"]),
-								createVNode(unref(ym), {
+								createVNode(unref(mm), {
 									class: "rg-pick",
 									"model-value": entry.row.name,
 									"onUpdate:modelValue": ($event) => unref(store).patch(entry.index, { name: $event }),
@@ -25871,7 +25844,7 @@ var RegionLoras_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defi
 									max: 4,
 									"onUpdate:modelValue": ($event) => unref(store).patch(entry.index, { strength: $event })
 								}, null, 8, ["model-value", "onUpdate:modelValue"]),
-								createVNode(unref(Ge$1), {
+								createVNode(unref(je$1), {
 									icon: "mdi mdi-close",
 									title: "Remove",
 									onClick: ($event) => removeRow(entry.index)
@@ -25886,7 +25859,7 @@ var RegionLoras_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defi
 					active: dropRegion.value === regionCount.value + 1,
 					onPrimary: addRegion
 				}, {
-					default: withCtx(() => [unref(rows).length ? (openBlock(), createBlock(unref(Ge$1), {
+					default: withCtx(() => [unref(rows).length ? (openBlock(), createBlock(unref(je$1), {
 						key: 0,
 						icon: "mdi mdi-broom",
 						danger: "",
@@ -25898,7 +25871,7 @@ var RegionLoras_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defi
 					"label",
 					"title",
 					"active"
-				])], 16), createVNode(unref(gm), {
+				])], 16), createVNode(unref(pm), {
 					open: browse.value,
 					"onUpdate:open": _cache[0] || (_cache[0] = ($event) => browse.value = $event),
 					selected: unref(rows)[browseTarget.value]?.name,
@@ -25915,7 +25888,7 @@ var RegionLoras_exports = /* @__PURE__ */ __exportAll({
 	default: () => RegionLoras_default,
 	widgetOptions: () => widgetOptions$3
 });
-var RegionLoras_default = /* @__PURE__ */ _plugin_vue_export_helper_default(RegionLoras_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-c9d8e03d"]]);
+var RegionLoras_default = /*#__PURE__*/ _plugin_vue_export_helper_default(RegionLoras_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-c9d8e03d"]]);
 //#endregion
 //#region frontend/lib/saveApi.ts
 var DEFAULT_CONFIG = {
@@ -26120,7 +26093,7 @@ var SaveInfoConfig_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ d
 			};
 		});
 		return (_ctx, _cache) => {
-			return openBlock(), createBlock(unref(Vf), {
+			return openBlock(), createBlock(unref(Af), {
 				gap: 7,
 				pad: "6px 4px 4px",
 				class: "si"
@@ -26150,12 +26123,12 @@ var SaveInfoConfig_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ d
 							_: 1
 						}, 8, ["onClick"])]),
 						_: 1
-					}, 8, ["model-value", "items"]), createVNode(unref(Ge$1), {
+					}, 8, ["model-value", "items"]), createVNode(unref(je$1), {
 						icon: "mdi mdi-folder-plus-outline",
 						title: "New project",
 						onClick: _cache[1] || (_cache[1] = ($event) => startCreate())
 					})], 64)) : (openBlock(), createElementBlock(Fragment, { key: 1 }, [
-						createVNode(unref(Nl), {
+						createVNode(unref(Zl), {
 							ref_key: "newInput",
 							ref: newInput,
 							class: "si-grow",
@@ -26165,24 +26138,24 @@ var SaveInfoConfig_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ d
 							"onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => newName.value = String($event)),
 							onKeydown: [withKeys(confirmCreate, ["enter"]), withKeys(cancelCreate, ["esc"])]
 						}, null, 8, ["model-value"]),
-						createVNode(unref(Ge$1), {
+						createVNode(unref(je$1), {
 							icon: "mdi mdi-check",
 							title: "Create",
 							onClick: confirmCreate
 						}),
-						createVNode(unref(Ge$1), {
+						createVNode(unref(je$1), {
 							icon: "mdi mdi-close",
 							title: "Cancel",
 							onClick: cancelCreate
 						})
 					], 64))])]),
-					createBaseVNode("div", _hoisted_6$4, [_cache[13] || (_cache[13] = createBaseVNode("label", { class: "si-lbl" }, [createBaseVNode("i", { class: "mdi mdi-source-branch" }), createTextVNode(" Subfolder")], -1)), createVNode(unref(Nl), {
+					createBaseVNode("div", _hoisted_6$4, [_cache[13] || (_cache[13] = createBaseVNode("label", { class: "si-lbl" }, [createBaseVNode("i", { class: "mdi mdi-source-branch" }), createTextVNode(" Subfolder")], -1)), createVNode(unref(Zl), {
 						"model-value": cfg.value.subfolder,
 						placeholder: "optional, e.g. renders",
 						sm: "",
 						"onUpdate:modelValue": _cache[3] || (_cache[3] = ($event) => set("subfolder", String($event)))
 					}, null, 8, ["model-value"])]),
-					createBaseVNode("div", _hoisted_7$3, [_cache[14] || (_cache[14] = createBaseVNode("label", { class: "si-lbl" }, [createBaseVNode("i", { class: "mdi mdi-tag-outline" }), createTextVNode(" Prefix")], -1)), createVNode(unref(Nl), {
+					createBaseVNode("div", _hoisted_7$3, [_cache[14] || (_cache[14] = createBaseVNode("label", { class: "si-lbl" }, [createBaseVNode("i", { class: "mdi mdi-tag-outline" }), createTextVNode(" Prefix")], -1)), createVNode(unref(Zl), {
 						"model-value": cfg.value.filename_prefix,
 						placeholder: "optional, supports %date%…",
 						sm: "",
@@ -26206,7 +26179,7 @@ var SaveInfoConfig_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ d
 					createBaseVNode("div", _hoisted_10$2, [_cache[17] || (_cache[17] = createBaseVNode("label", {
 						class: "si-lbl",
 						title: "Embed the workflow + prompt inside saved files"
-					}, [createBaseVNode("i", { class: "mdi mdi-database-outline" }), createTextVNode(" Embed metadata")], -1)), createVNode(unref(Hn), {
+					}, [createBaseVNode("i", { class: "mdi mdi-database-outline" }), createTextVNode(" Embed metadata")], -1)), createVNode(unref(yl), {
 						"model-value": cfg.value.embed_metadata,
 						"on-icon": "mdi mdi-check",
 						"onUpdate:modelValue": _cache[7] || (_cache[7] = ($event) => set("embed_metadata", !!$event))
@@ -26214,7 +26187,7 @@ var SaveInfoConfig_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ d
 					createBaseVNode("div", _hoisted_11$2, [_cache[18] || (_cache[18] = createBaseVNode("label", {
 						class: "si-lbl",
 						title: "Also write a sidecar .json with the full workflow"
-					}, [createBaseVNode("i", { class: "mdi mdi-code-json" }), createTextVNode(" Workflow .json")], -1)), createVNode(unref(Hn), {
+					}, [createBaseVNode("i", { class: "mdi mdi-code-json" }), createTextVNode(" Workflow .json")], -1)), createVNode(unref(yl), {
 						"model-value": cfg.value.save_workflow_json,
 						"on-icon": "mdi mdi-check",
 						"onUpdate:modelValue": _cache[8] || (_cache[8] = ($event) => set("save_workflow_json", !!$event))
@@ -26228,7 +26201,7 @@ var SaveInfoConfig_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ d
 						_cache[20] || (_cache[20] = createBaseVNode("span", null, "Advanced", -1)),
 						cfg.value.base_directory.trim() ? (openBlock(), createElementBlock("span", _hoisted_12$2, "set")) : createCommentVNode("", true)
 					]),
-					showAdv.value ? (openBlock(), createElementBlock("div", _hoisted_13$1, [_cache[21] || (_cache[21] = createBaseVNode("label", { class: "si-sub" }, "Base directory override", -1)), createVNode(unref(Nl), {
+					showAdv.value ? (openBlock(), createElementBlock("div", _hoisted_13$1, [_cache[21] || (_cache[21] = createBaseVNode("label", { class: "si-sub" }, "Base directory override", -1)), createVNode(unref(Zl), {
 						"model-value": cfg.value.base_directory,
 						placeholder: "empty = Settings / output dir",
 						sm: "",
@@ -26251,7 +26224,7 @@ var SaveInfoConfig_exports = /* @__PURE__ */ __exportAll({
 	nodeDef: () => nodeDef$1,
 	widgetOptions: () => widgetOptions$2
 });
-var SaveInfoConfig_default = /* @__PURE__ */ _plugin_vue_export_helper_default(SaveInfoConfig_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-289f994b"]]);
+var SaveInfoConfig_default = /*#__PURE__*/ _plugin_vue_export_helper_default(SaveInfoConfig_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-289f994b"]]);
 //#endregion
 //#region frontend/widgets/SavePreview.vue?vue&type=script&setup=true&lang.ts
 var _hoisted_1$3 = ["src"];
@@ -26399,7 +26372,7 @@ var SavePreview_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defi
 			document.documentElement.removeEventListener("pointerleave", dropPointer);
 		});
 		return (_ctx, _cache) => {
-			return openBlock(), createBlock(unref(Vf), {
+			return openBlock(), createBlock(unref(Af), {
 				fill: "",
 				gap: 0,
 				pad: "4px 2px",
@@ -26421,24 +26394,24 @@ var SavePreview_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ defi
 						onError: _cache[0] || (_cache[0] = ($event) => onError(current.value.filename))
 					}, null, 40, _hoisted_1$3)) : (openBlock(), createElementBlock("i", _hoisted_2$3)),
 					items.value.length > 1 ? (openBlock(), createElementBlock("div", _hoisted_3$3, [
-						createVNode(unref(Ge$1), {
+						createVNode(unref(je$1), {
 							icon: "mdi mdi-chevron-left",
 							title: "Previous",
 							onClick: _cache[1] || (_cache[1] = ($event) => step(-1))
 						}),
 						createBaseVNode("span", _hoisted_4$3, toDisplayString(index.value + 1) + " / " + toDisplayString(items.value.length), 1),
-						createVNode(unref(Ge$1), {
+						createVNode(unref(je$1), {
 							icon: "mdi mdi-chevron-right",
 							title: "Next",
 							onClick: _cache[2] || (_cache[2] = ($event) => step(1))
 						})
 					])) : createCommentVNode("", true),
-					!isBroken.value ? (openBlock(), createElementBlock("div", _hoisted_5$3, [createVNode(unref(Ge$1), {
+					!isBroken.value ? (openBlock(), createElementBlock("div", _hoisted_5$3, [createVNode(unref(je$1), {
 						class: "sp-act",
 						icon: "mdi mdi-download",
 						title: "Download",
 						onClick: _cache[3] || (_cache[3] = ($event) => (unfocus($event), download()))
-					}), createVNode(unref(Ge$1), {
+					}), createVNode(unref(je$1), {
 						class: "sp-act",
 						icon: "mdi mdi-fullscreen",
 						title: "Open in viewer",
@@ -26466,7 +26439,7 @@ var SavePreview_exports = /* @__PURE__ */ __exportAll({
 	nodeDef: () => nodeDef,
 	widgetOptions: () => widgetOptions$1
 });
-var SavePreview_default = /* @__PURE__ */ _plugin_vue_export_helper_default(SavePreview_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-8adc7196"]]);
+var SavePreview_default = /*#__PURE__*/ _plugin_vue_export_helper_default(SavePreview_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-8adc7196"]]);
 //#endregion
 //#region frontend/lib/textLibrary.ts
 var texts = /* @__PURE__ */ ref([]);
@@ -26577,7 +26550,7 @@ var _hoisted_17 = { class: "tl-foot" };
 var _hoisted_18 = { class: "tl-count" };
 //#endregion
 //#region frontend/components/text/TextLibraryDialog.vue
-var TextLibraryDialog_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
+var TextLibraryDialog_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
 	__name: "TextLibraryDialog",
 	props: {
 		open: { type: Boolean },
@@ -26693,20 +26666,20 @@ var TextLibraryDialog_default = /* @__PURE__ */ _plugin_vue_export_helper_defaul
 			else draft.value = null;
 		}, { immediate: true });
 		return (_ctx, _cache) => {
-			return openBlock(), createBlock(unref(cl), {
+			return openBlock(), createBlock(unref(dl), {
 				open: __props.open,
 				title: "Saved text",
 				width: "min(960px, 94vw)",
 				height: "min(680px, 88vh)",
 				"onUpdate:open": onOpenChange
 			}, {
-				default: withCtx(() => [createBaseVNode("div", _hoisted_1$2, [createBaseVNode("div", _hoisted_2$2, [createBaseVNode("div", _hoisted_3$2, [createVNode(unref(Nl), {
+				default: withCtx(() => [createBaseVNode("div", _hoisted_1$2, [createBaseVNode("div", _hoisted_2$2, [createBaseVNode("div", _hoisted_3$2, [createVNode(unref(Zl), {
 					modelValue: query.value,
 					"onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => query.value = $event),
 					size: "sm",
 					placeholder: "Search…",
 					class: "tl-search"
-				}, null, 8, ["modelValue"]), createVNode(unref(Ge$1), {
+				}, null, 8, ["modelValue"]), createVNode(unref(je$1), {
 					size: "sm",
 					icon: "mdi mdi-plus",
 					title: "New text",
@@ -26720,7 +26693,7 @@ var TextLibraryDialog_default = /* @__PURE__ */ _plugin_vue_export_helper_defaul
 						}, [createBaseVNode("span", _hoisted_7$2, [createTextVNode(toDisplayString(entry.name) + " ", 1), entry.id === __props.usedId ? (openBlock(), createElementBlock("i", _hoisted_8$2)) : createCommentVNode("", true)]), createBaseVNode("span", _hoisted_9$1, toDisplayString(firstLine(entry.text) || "Empty"), 1)], 10, _hoisted_6$2);
 					}), 128))], 64);
 				}), 128)), !sections.value.length ? (openBlock(), createElementBlock("div", _hoisted_10$1, toDisplayString(query.value ? "Nothing matches" : "Nothing saved yet"), 1)) : createCommentVNode("", true)])]), draft.value ? (openBlock(), createElementBlock("div", _hoisted_11$1, [
-					createBaseVNode("div", _hoisted_12$1, [createBaseVNode("label", _hoisted_13, [_cache[13] || (_cache[13] = createBaseVNode("span", null, "Name", -1)), createVNode(unref(Nl), {
+					createBaseVNode("div", _hoisted_12$1, [createBaseVNode("label", _hoisted_13, [_cache[13] || (_cache[13] = createBaseVNode("span", null, "Name", -1)), createVNode(unref(Zl), {
 						modelValue: draft.value.name,
 						"onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => draft.value.name = $event),
 						placeholder: "What this text is"
@@ -26761,14 +26734,14 @@ var TextLibraryDialog_default = /* @__PURE__ */ _plugin_vue_export_helper_defaul
 						}, {
 							default: withCtx(() => [..._cache[15] || (_cache[15] = [createTextVNode(" Delete for good ", -1)])]),
 							_: 1
-						})) : (openBlock(), createBlock(unref(Ge$1), {
+						})) : (openBlock(), createBlock(unref(je$1), {
 							key: 1,
 							size: "sm",
 							danger: "",
 							icon: "mdi mdi-delete-outline",
 							title: "Delete",
 							onClick: _cache[8] || (_cache[8] = ($event) => confirming.value = true)
-						})), createVNode(unref(Ge$1), {
+						})), createVNode(unref(je$1), {
 							size: "sm",
 							icon: "mdi mdi-content-copy",
 							title: "Duplicate",
@@ -26794,7 +26767,7 @@ var TextLibraryDialog_default = /* @__PURE__ */ _plugin_vue_export_helper_defaul
 							_: 1
 						}, 8, ["disabled"])) : createCommentVNode("", true)
 					])
-				])) : (openBlock(), createBlock(unref(Nf), {
+				])) : (openBlock(), createBlock(unref(Kf), {
 					key: 1,
 					class: "tl-edit",
 					icon: "mdi mdi-text-box-outline",
@@ -26911,7 +26884,7 @@ var SavedText_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 			if (entry && (entry.text !== value.value.text || entry.name !== value.value.name)) use(entry);
 		}, { deep: true });
 		return (_ctx, _cache) => {
-			return openBlock(), createBlock(unref(Vf), {
+			return openBlock(), createBlock(unref(Af), {
 				fill: "",
 				gap: 6,
 				pad: "2px",
@@ -26936,7 +26909,7 @@ var SavedText_vue_vue_type_script_setup_true_lang_default = /*@__PURE__*/ define
 						selected: withCtx(() => [value.value.name ? (openBlock(), createElementBlock("span", _hoisted_2$1, toDisplayString(value.value.name), 1)) : (openBlock(), createElementBlock("span", _hoisted_3$1, "Pick a saved text…"))]),
 						option: withCtx(({ item }) => [createBaseVNode("span", _hoisted_4$1, [createBaseVNode("span", _hoisted_5$1, toDisplayString(item.name), 1), item.category ? (openBlock(), createElementBlock("span", _hoisted_6$1, toDisplayString(item.category), 1)) : createCommentVNode("", true)])]),
 						_: 1
-					}, 8, ["model-value", "items"]), createVNode(unref(Ge$1), {
+					}, 8, ["model-value", "items"]), createVNode(unref(je$1), {
 						icon: "mdi mdi-pencil-outline",
 						title: value.value.id ? "Edit this text" : "Open the editor",
 						onClick: _cache[1] || (_cache[1] = ($event) => editing.value = true)
@@ -26984,11 +26957,11 @@ var SavedText_exports = /* @__PURE__ */ __exportAll({
 	default: () => SavedText_default,
 	widgetOptions: () => widgetOptions
 });
-var SavedText_default = /* @__PURE__ */ _plugin_vue_export_helper_default(SavedText_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-b520f037"]]);
+var SavedText_default = /*#__PURE__*/ _plugin_vue_export_helper_default(SavedText_vue_vue_type_script_setup_true_lang_default, [["__scopeId", "data-v-b520f037"]]);
 //#endregion
 //#region frontend/nodes/gridFromImages.ts
 var gridFromImages_exports = /* @__PURE__ */ __exportAll({ default: () => gridFromImages_default });
-var gridFromImages_default = wt({
+var gridFromImages_default = pt({
 	is: "nynxz.Preview.GridFromImages",
 	minSize: [300, 320],
 	hideOutputImages: true,
@@ -27007,7 +26980,7 @@ var gridFromImages_default = wt({
 //#endregion
 //#region frontend/nodes/previewImage.ts
 var previewImage_exports = /* @__PURE__ */ __exportAll({ default: () => previewImage_default });
-var previewImage_default = wt({
+var previewImage_default = pt({
 	is: "nynxz.Preview.Image",
 	minSize: [300, 320],
 	hideOutputImages: true,
@@ -27083,9 +27056,9 @@ var loraSource = {
 /** One ZenKit panel per LoRA, titled with its name. Opened by code only, never listed in the
 *  ZenBar; returns false without ZenKit so zenkit-ui falls back to its modal. */
 function openLoraDetailPanel(name) {
-	const handle = St({
+	const handle = gt({
 		id: `${NAMESPACE}:lora:${name}`,
-		title: pm.short(name),
+		title: vm.short(name),
 		icon: "mdi mdi-information-outline",
 		width: 560,
 		height: 720,
@@ -27095,7 +27068,7 @@ function openLoraDetailPanel(name) {
 		props: { name }
 	}, Ql);
 	if (!handle) return false;
-	pm.info(name).then((info) => {
+	vm.info(name).then((info) => {
 		if (info?.title) handle.setTitle(info.title);
 	});
 	return true;
@@ -27194,7 +27167,7 @@ var _hoisted_12 = {
 var REFRESH_MS = 500;
 //#endregion
 //#region frontend/groupSwitcher/GroupSwitcher.vue
-var GroupSwitcher_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
+var GroupSwitcher_default = /*#__PURE__*/ _plugin_vue_export_helper_default(/* @__PURE__ */ defineComponent({
 	__name: "GroupSwitcher",
 	props: {
 		widget: {},
@@ -27284,7 +27257,7 @@ var GroupSwitcher_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/*
 			commit({ expanded: expanded.includes(g.key) ? expanded.filter((k) => k !== g.key) : [...expanded, g.key] });
 		}
 		return (_ctx, _cache) => {
-			return openBlock(), createBlock(unref(Vf), {
+			return openBlock(), createBlock(unref(Af), {
 				gap: 6,
 				pad: "2px",
 				class: "gs"
@@ -27319,7 +27292,7 @@ var GroupSwitcher_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/*
 						}],
 						"onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => setOff($event))
 					}, null, 8, ["model-value"]),
-					createVNode(unref(Hn), {
+					createVNode(unref(yl), {
 						"model-value": allOn.value,
 						disabled: !switchable.value.length,
 						title: allOn.value ? "Turn every listed group off" : "Turn every listed group on",
@@ -27347,7 +27320,7 @@ var GroupSwitcher_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/*
 							class: normalizeClass(["gs-count", { mixed: g.state === "mixed" }]),
 							title: `${onCount(g)} of ${g.nodes.length} nodes running`
 						}, toDisplayString(onCount(g)) + "/" + toDisplayString(g.nodes.length), 11, _hoisted_8)], 8, _hoisted_6),
-						g.nodes.length ? (openBlock(), createBlock(unref(Ge$1), {
+						g.nodes.length ? (openBlock(), createBlock(unref(je$1), {
 							key: 0,
 							icon: isExpanded(g) ? "mdi mdi-chevron-up" : "mdi mdi-chevron-down",
 							title: isExpanded(g) ? "Hide nodes" : "Show nodes",
@@ -27357,7 +27330,7 @@ var GroupSwitcher_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/*
 							"title",
 							"onClick"
 						])) : createCommentVNode("", true),
-						createVNode(unref(Hn), {
+						createVNode(unref(yl), {
 							"model-value": g.state !== "off",
 							disabled: !g.nodes.length,
 							title: g.state === "on" ? "Turn group off" : "Turn group on",
@@ -27375,7 +27348,7 @@ var GroupSwitcher_default = /* @__PURE__ */ _plugin_vue_export_helper_default(/*
 						}, [createBaseVNode("button", {
 							class: "gs-name",
 							onClick: ($event) => toggleNode(n)
-						}, [createBaseVNode("span", _hoisted_11, toDisplayString(n.title), 1)], 8, _hoisted_10), createVNode(unref(Hn), {
+						}, [createBaseVNode("span", _hoisted_11, toDisplayString(n.title), 1)], 8, _hoisted_10), createVNode(unref(yl), {
 							class: "gs-node-switch",
 							"model-value": n.on,
 							title: n.on ? "Turn node off" : "Turn node on",
@@ -27441,7 +27414,7 @@ app.registerExtension({
 	name: `${nodeId("Lora")}.Settings`,
 	/** ComfyUI's Refresh (R) re-reads the model folders; the pickers' shared list follows it. */
 	async refreshComboInNodes() {
-		if (pm.listLoaded.value) await pm.ensure(true);
+		if (vm.listLoaded.value) await vm.ensure(true);
 	},
 	settings: [{
 		id: settingId("Lora.FolderNav"),
@@ -27454,7 +27427,7 @@ app.registerExtension({
 		type: "boolean",
 		defaultValue: true,
 		tooltip: "Step through LoRA folders in the picker dropdown. Off lists every LoRA in one flat list. Typing always searches every folder.",
-		onChange: (on) => pm.setFolderNav(on !== false)
+		onChange: (on) => vm.setFolderNav(on !== false)
 	}, {
 		id: settingId("Lora.BlurMature"),
 		name: "Blur mature example images",
@@ -27466,7 +27439,7 @@ app.registerExtension({
 		type: "boolean",
 		defaultValue: true,
 		tooltip: "Blur LoRA examples Civitai rates R or above until revealed. Off always shows them.",
-		onChange: (on) => pm.setBlurMature(on !== false)
+		onChange: (on) => vm.setBlurMature(on !== false)
 	}]
 });
 //#endregion
@@ -27493,8 +27466,8 @@ var extraNodes = /* #__PURE__ */ Object.assign({
 	"./nodes/gridFromImages.ts": gridFromImages_exports,
 	"./nodes/previewImage.ts": previewImage_exports
 });
-ad(loraSource);
-hm(openLoraDetailPanel);
+nd(loraSource);
+fm(openLoraDetailPanel);
 registerNodes([...discoverWidgets(widgets), ...discoverNodes(extraNodes)]);
 console.log(`[${DISPLAY_NAME}] widgets: ${widgetTypes(widgets).join(", ") || "(none)"}`);
 //#endregion

@@ -11,8 +11,8 @@ importers:
   .:
     dependencies:
       '@nynxz/zenkit-ui':
-        specifier: ^0.4.0
-        version: 0.4.0(vue@3.5.42(typescript@5.9.3))
+        specifier: ^0.5.0
+        version: 0.5.0(vue@3.5.42(typescript@5.9.3))
       primevue:
         specifier: 5.0.1
         version: 5.0.1(vue@3.5.42(typescript@5.9.3))
@@ -30,8 +30,8 @@ importers:
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.9.1)
       '@nynxz/zenkit-nodekit':
-        specifier: ^0.4.0
-        version: 0.4.0(@vitejs/plugin-vue@6.0.8(vite@8.2.2(@types/node@26.4.1))(vue@3.5.42(typescript@5.9.3)))(vite@8.2.2(@types/node@26.4.1))(vue@3.5.42(typescript@5.9.3))
+        specifier: ^0.5.0
+        version: 0.5.0(@vitejs/plugin-vue@6.0.8(vite@8.2.2(@types/node@26.4.1))(vue@3.5.42(typescript@5.9.3)))(vite@8.2.2(@types/node@26.4.1))(vue@3.5.42(typescript@5.9.3))
       '@types/node':
         specifier: ^26.4.1
         version: 26.4.1
@@ -173,8 +173,8 @@ packages:
   '@jridgewell/sourcemap-codec@1.6.0':
     resolution: {integrity: sha512-T7jf+5zgsZHwNJ4lvQ7/aezbyk0nNX+zJVWpmHA7VYsEx7a7qr5Rg5IbtJFqkgze5Y2sruq1RUY8Q837Od7iFw==}
 
-  '@nynxz/zenkit-nodekit@0.4.0':
-    resolution: {integrity: sha512-nBHmCAyMJffaZZQ3nl9Sy7t5Srju+H+2vmnBLlnhMLeiWgNaJmcE8+tKVRc3QHO6mcmypVY3OMVzituUH/CbQw==}
+  '@nynxz/zenkit-nodekit@0.5.0':
+    resolution: {integrity: sha512-NSLKnUTHcNFM15vNX1evQm6w5a2ANpKc4BQe6h4AWOM1EuiCknXg8iUNffhS3dNJ2t2PtbHjvpWZUsQrorIuRQ==}
     hasBin: true
     peerDependencies:
       '@vitejs/plugin-vue': '>=5'
@@ -186,10 +186,10 @@ packages:
       vite:
         optional: true
 
-  '@nynxz/zenkit-ui@0.4.0':
-    resolution: {integrity: sha512-pqsMoOFJBuR58yd9l0jAZY3TplWtupYnmg2SoEK8T/ipgJuhfhcyJN5yhAZ+NGRJyHe3i0BeWKfe6iqD7cCOlg==}
+  '@nynxz/zenkit-ui@0.5.0':
+    resolution: {integrity: sha512-LzMfwCmZKy/sdREc8pUhrh5vf9CJauoH9iNRMNBSJK56I4GtobUm6p/2lukUQBCZ5ieABIFd2skQpEXrZuiahQ==}
     peerDependencies:
-      '@nynxz/zenkit-client': ^0.4.0
+      '@nynxz/zenkit-client': ^0.5.0
       vue: ^3.5.0
     peerDependenciesMeta:
       '@nynxz/zenkit-client':
@@ -1075,14 +1075,14 @@ snapshots:
 
   '@jridgewell/sourcemap-codec@1.6.0': {}
 
-  '@nynxz/zenkit-nodekit@0.4.0(@vitejs/plugin-vue@6.0.8(vite@8.2.2(@types/node@26.4.1))(vue@3.5.42(typescript@5.9.3)))(vite@8.2.2(@types/node@26.4.1))(vue@3.5.42(typescript@5.9.3))':
+  '@nynxz/zenkit-nodekit@0.5.0(@vitejs/plugin-vue@6.0.8(vite@8.2.2(@types/node@26.4.1))(vue@3.5.42(typescript@5.9.3)))(vite@8.2.2(@types/node@26.4.1))(vue@3.5.42(typescript@5.9.3))':
     dependencies:
       vue: 3.5.42(typescript@5.9.3)
     optionalDependencies:
       '@vitejs/plugin-vue': 6.0.8(vite@8.2.2(@types/node@26.4.1))(vue@3.5.42(typescript@5.9.3))
       vite: 8.2.2(@types/node@26.4.1)
 
-  '@nynxz/zenkit-ui@0.4.0(vue@3.5.42(typescript@5.9.3))':
+  '@nynxz/zenkit-ui@0.5.0(vue@3.5.42(typescript@5.9.3))':
     dependencies:
       vue: 3.5.42(typescript@5.9.3)
 
