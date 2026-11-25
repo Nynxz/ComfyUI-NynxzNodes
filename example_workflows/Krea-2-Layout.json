@@ -1,0 +1,814 @@
+{
+  "id": "b8e4f302-5b6c-4d7e-9f0a-203040506002",
+  "revision": 1,
+  "last_node_id": 13,
+  "last_link_id": 17,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "UNETLoader",
+      "pos": [
+        40,
+        80
+      ],
+      "size": [
+        280,
+        90
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            1
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UNETLoader"
+      },
+      "widgets_values": [
+        "krea2_turbo_int8_convrot.safetensors",
+        "default"
+      ]
+    },
+    {
+      "id": 2,
+      "type": "CLIPLoader",
+      "pos": [
+        40,
+        210
+      ],
+      "size": [
+        280,
+        110
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            2,
+            3
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPLoader"
+      },
+      "widgets_values": [
+        "qwen3vl_4b_bf16.safetensors",
+        "krea2",
+        "default"
+      ]
+    },
+    {
+      "id": 3,
+      "type": "VAELoader",
+      "pos": [
+        40,
+        360
+      ],
+      "size": [
+        280,
+        60
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            4,
+            5
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "qwen_image_vae.safetensors"
+      ]
+    },
+    {
+      "id": 4,
+      "type": "nynxz.Layout.Inputs",
+      "pos": [
+        370,
+        220
+      ],
+      "size": [
+        280,
+        140
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "shape": 7,
+          "link": 3
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "shape": 7,
+          "link": null
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "shape": 7,
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "name": "inputs",
+          "type": "NYNXZ_LAYOUT_INPUTS",
+          "links": [
+            6
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "nynxz.Layout.Inputs"
+      },
+      "widgets_values": [
+        "none"
+      ]
+    },
+    {
+      "id": 5,
+      "type": "nynxz.Layout",
+      "pos": [
+        40,
+        470
+      ],
+      "size": [
+        610,
+        500
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "inputs",
+          "type": "NYNXZ_LAYOUT_INPUTS",
+          "shape": 7,
+          "link": 6
+        }
+      ],
+      "outputs": [
+        {
+          "name": "layout",
+          "type": "NYNXZ_LAYOUT",
+          "links": [
+            7,
+            13
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "nynxz.Layout"
+      },
+      "widgets_values": [
+        {
+          "mode": "regions",
+          "width": 1024,
+          "height": 1024,
+          "prompt": "Candid outdoor portrait of two friends standing in front of a brick cafe storefront in warm afternoon light, 50mm lens, natural skin texture.",
+          "background": "",
+          "style": {
+            "presets": [],
+            "color": "",
+            "lighting": "",
+            "mood": "",
+            "composition": ""
+          },
+          "meta": [],
+          "canvas": "",
+          "palette": [],
+          "mixins": [
+            {
+              "id": "mx_a",
+              "name": "Subject A",
+              "color": "#3B82F6",
+              "desc": "woman with short red hair wearing an olive utility jacket",
+              "trigger": "",
+              "refs": [],
+              "loras": []
+            },
+            {
+              "id": "mx_b",
+              "name": "Subject B",
+              "color": "#F59E0B",
+              "desc": "older man with a neatly trimmed grey beard wearing a navy wool coat",
+              "trigger": "",
+              "refs": [],
+              "loras": []
+            }
+          ],
+          "backdrop": {
+            "on": true,
+            "prompt": "warm sunlit brick cafe storefront with potted plants and soft afternoon bokeh",
+            "refs": [],
+            "loras": [],
+            "denoise": 0.15,
+            "influence": 1.0,
+            "blend": "mix",
+            "softness": 0.5
+          },
+          "settings": {
+            "overlap": "top",
+            "visual_size": 384
+          },
+          "boxes": [
+            {
+              "id": "bx_a",
+              "name": "Subject A",
+              "color": "#3B82F6",
+              "x": 0.08,
+              "y": 0.12,
+              "w": 0.38,
+              "h": 0.8,
+              "hidden": false,
+              "locked": false,
+              "kind": "character",
+              "desc": "smiling casually toward the camera on the left",
+              "text": "",
+              "palette": [],
+              "tags": [],
+              "mixins": [
+                "mx_a"
+              ],
+              "refs": [],
+              "loras": [],
+              "denoise": 0.85,
+              "influence": 1.0,
+              "blend": "mix",
+              "softness": 0.5,
+              "mask": null,
+              "shapeFor": "layer",
+              "grow": 16,
+              "feather": 8,
+              "capture": "",
+              "points": [],
+              "maskSource": ""
+            },
+            {
+              "id": "bx_b",
+              "name": "Subject B",
+              "color": "#F59E0B",
+              "x": 0.54,
+              "y": 0.1,
+              "w": 0.38,
+              "h": 0.82,
+              "hidden": false,
+              "locked": false,
+              "kind": "character",
+              "desc": "standing beside her on the right with a warm expression",
+              "text": "",
+              "palette": [],
+              "tags": [],
+              "mixins": [
+                "mx_b"
+              ],
+              "refs": [],
+              "loras": [],
+              "denoise": 0.85,
+              "influence": 1.0,
+              "blend": "mix",
+              "softness": 0.5,
+              "mask": null,
+              "shapeFor": "layer",
+              "grow": 16,
+              "feather": 8,
+              "capture": "",
+              "points": [],
+              "maskSource": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "nynxz.Layout.Apply",
+      "pos": [
+        710,
+        80
+      ],
+      "size": [
+        300,
+        320
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 2
+        },
+        {
+          "name": "layout",
+          "type": "NYNXZ_LAYOUT",
+          "link": 7
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "shape": 7,
+          "link": null
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "shape": 7,
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "links": [
+            8
+          ]
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [
+            9,
+            10
+          ]
+        },
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "links": [
+            11
+          ]
+        },
+        {
+          "name": "regions",
+          "type": "NYNXZ_REGIONS",
+          "links": []
+        },
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "nynxz.Layout.Apply"
+      },
+      "widgets_values": [
+        false,
+        1.5,
+        0.0,
+        0.35,
+        0.3,
+        0.25,
+        0.15,
+        0.2,
+        0.0,
+        0,
+        "blend clean",
+        0.5
+      ]
+    },
+    {
+      "id": 7,
+      "type": "ConditioningZeroOut",
+      "pos": [
+        710,
+        440
+      ],
+      "size": [
+        220,
+        40
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 10
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            12
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ConditioningZeroOut"
+      }
+    },
+    {
+      "id": 8,
+      "type": "KSampler",
+      "pos": [
+        1070,
+        80
+      ],
+      "size": [
+        280,
+        270
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 8
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 9
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 12
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 11
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            14,
+            15
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        42,
+        "fixed",
+        10,
+        1,
+        "euler",
+        "simple",
+        1
+      ]
+    },
+    {
+      "id": 9,
+      "type": "VAEDecode",
+      "pos": [
+        1070,
+        390
+      ],
+      "size": [
+        190,
+        50
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 14
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 5
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            16,
+            17
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      }
+    },
+    {
+      "id": 10,
+      "type": "SaveImage",
+      "pos": [
+        1410,
+        80
+      ],
+      "size": [
+        420,
+        460
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 16
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "krea2-layout"
+      ]
+    },
+    {
+      "id": 11,
+      "type": "nynxz.Layout.Overlay",
+      "pos": [
+        1410,
+        590
+      ],
+      "size": [
+        420,
+        380
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 17
+        },
+        {
+          "name": "layout",
+          "type": "NYNXZ_LAYOUT",
+          "link": 13
+        }
+      ],
+      "outputs": [
+        {
+          "name": "overlay",
+          "type": "IMAGE",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "nynxz.Layout.Overlay"
+      }
+    },
+    {
+      "id": 12,
+      "type": "nynxz.Regions.Preview",
+      "pos": [
+        1070,
+        490
+      ],
+      "size": [
+        280,
+        120
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "link": 15
+        }
+      ],
+      "outputs": [
+        {
+          "name": "maps",
+          "type": "IMAGE",
+          "links": []
+        },
+        {
+          "name": "report",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "drift",
+          "type": "FLOAT",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "nynxz.Regions.Preview"
+      },
+      "widgets_values": [
+        12
+      ]
+    },
+    {
+      "id": 13,
+      "type": "MarkdownNote",
+      "pos": [
+        710,
+        520
+      ],
+      "size": [
+        300,
+        360
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Regions Mode & Photo Edit Guide",
+      "properties": {},
+      "widgets_values": [
+        "## Unified Layout in Regions Mode (Krea 2)\n\nWorks out of the box from scratch \u2014 or drop a photo in to edit:\n\n- **Visual references & LoRAs**: drag images straight onto a box or Mixin in **Layout**, and bind per-character or per-box LoRAs.\n- **Photo editing + SAM3**: wire a `LoadImage` into **Layout Inputs**' `image`, pick a SAM3 checkpoint if you want wand/capture segmentation, and enable `edit_image` on **Layout Apply**.\n- **Agent**: `Layout Inputs`' `clip` lets the Layout editor's AI agent propose or refine boxes using your loaded Qwen3-VL encoder.\n- **Switch modes any time**: flip `Regions` -> `MOSS-Image` / `Ideogram 4` / `FLUX 3 Klein` without losing boxes, mixins, refs or LoRAs."
+      ]
+    }
+  ],
+  "links": [
+    [
+      1,
+      1,
+      0,
+      6,
+      0,
+      "MODEL"
+    ],
+    [
+      2,
+      2,
+      0,
+      6,
+      1,
+      "CLIP"
+    ],
+    [
+      3,
+      2,
+      0,
+      4,
+      0,
+      "CLIP"
+    ],
+    [
+      4,
+      3,
+      0,
+      4,
+      2,
+      "VAE"
+    ],
+    [
+      5,
+      3,
+      0,
+      9,
+      1,
+      "VAE"
+    ],
+    [
+      6,
+      4,
+      0,
+      5,
+      0,
+      "NYNXZ_LAYOUT_INPUTS"
+    ],
+    [
+      7,
+      5,
+      0,
+      6,
+      2,
+      "NYNXZ_LAYOUT"
+    ],
+    [
+      8,
+      6,
+      0,
+      8,
+      0,
+      "MODEL"
+    ],
+    [
+      9,
+      6,
+      1,
+      8,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      10,
+      6,
+      1,
+      7,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      11,
+      6,
+      2,
+      8,
+      3,
+      "LATENT"
+    ],
+    [
+      12,
+      7,
+      0,
+      8,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      13,
+      5,
+      0,
+      11,
+      1,
+      "NYNXZ_LAYOUT"
+    ],
+    [
+      14,
+      8,
+      0,
+      9,
+      0,
+      "LATENT"
+    ],
+    [
+      15,
+      8,
+      0,
+      12,
+      0,
+      "LATENT"
+    ],
+    [
+      16,
+      9,
+      0,
+      10,
+      0,
+      "IMAGE"
+    ],
+    [
+      17,
+      9,
+      0,
+      11,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}

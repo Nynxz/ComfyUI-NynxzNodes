@@ -143,7 +143,8 @@ class NynxzLayoutApply(NynxzNode):
                         min=0.0,
                         max=1.0,
                         step=0.05,
-                        tooltip="How far a region may follow its subject off the drawn box (Krea 2).",
+                        tooltip="How far a region may follow its subject off the drawn box (Krea 2, "
+                        "MOSS-Image).",
                     )
                 ),
                 advanced(

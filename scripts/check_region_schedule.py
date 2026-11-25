@@ -259,6 +259,35 @@ class TheGateActuallyMoves(unittest.TestCase):
         self.assertEqual(values[:5], [0.0] * 5)  # later than the exact path's 3
         self.assertEqual(values[-1], 1.0)  # but it does get there
 
+    def test_release_stays_local_when_tracked_map_has_background_tail(self):
+        """Tracking softmax leaves a small non-zero probability everywhere; `_near` must still keep
+        `release` within RELEASE_REACH of the actual region rather than lifting the whole canvas."""
+        grid = (20, 20)
+        mask = torch.zeros(grid)
+        mask[2:6, 2:6] = 1.0
+        state = self.state_mod.GateState(
+            [{"mask": mask, "loras": [{"lora_name": "a.safetensors", "strength": 1.0}]}],
+            schedule.Schedule(commit_at=0.0, preheat=1.0, ramp=0.0, release=0.25),
+            track=0.25,
+        )
+        state.grid = grid
+        state.canvas_tokens = grid[0] * grid[1]
+        state.ensure_anchor(torch.device("cpu"))
+        state.note_step(1.0, SHIFTED)
+        # Simulate a tracked map with a 0.10 softmax tail across the whole background.
+        tail = state.anchor.clone()
+        outside = tail[:, 0] < 0.5
+        tail[outside, 0] = 0.10
+        tail[outside, 1] = 0.90
+        state.map = tail
+        gates = state.build_gates(1, state.canvas_tokens, torch.device("cpu"))[0, :, 0].reshape(
+            grid
+        )
+        # Far corner (row 19, col 19) is well outside RELEASE_REACH: release must add 0.0 there.
+        self.assertAlmostEqual(float(gates[19, 19]), 0.10, places=5)
+        # Just outside the region edge (row 6, col 3): release lifts it above the 0.10 tail.
+        self.assertGreater(float(gates[6, 3]), 0.15)
+
 
 class SecondOrderSamplers(unittest.TestCase):
     """heun / dpmpp_2s / dpmpp_sde call the model again at a sigma that is in NO schedule.

@@ -68,6 +68,12 @@ per region if you have one.
 
 <img src="example_workflows/Krea%202%20Regions.webp" alt="The Krea 2 Regions workflow">
 
+Also in `example_workflows/` (and ComfyUI's **Templates** under this pack):
+
+- **MOSS-Image Layout** (`MOSS-Image-Layout.json`) — unified `Layout` in `MOSS-Image` mode with mixins, boxes, backdrop, `Layout Apply`, `Layout Overlay`, and `Regions Preview`.
+- **Krea 2 Layout** (`Krea-2-Layout.json`) — unified `Layout` in `Regions` mode with `Layout Inputs` (optional photo edit, SAM3, and Qwen3-VL agent), `Layout Apply`, and `Layout Overlay`.
+- **MOSS-Image Regions** (`MOSS-Image-Regions.json`) — `Region Boxes` + `Region Backdrop` + `Region LoRAs` + `Regions Apply` wired from an external bounding-box prompt builder.
+
 ## Install
 
 Search for **Nynxz** in ComfyUI Manager, or:

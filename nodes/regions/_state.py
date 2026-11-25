@@ -216,7 +216,14 @@ class GateState:
                 )
                 others = (claim * runs).sum(dim=-1, keepdim=True) - claim * runs
                 free = (1.0 - others).clamp(0.0, 1.0)
-                claim = claim + self.floor * (1.0 - claim) * free * self._near(claim)
+                # Measure proximity from the region core, not a tracked map's softmax tail over the
+                # background — otherwise tracking turns `release` into a whole-canvas floor.
+                core = (
+                    claim
+                    if self.map is None or current.shape[1] <= regions
+                    else torch.where(claim >= current[:canvas, regions : regions + 1], claim, 0.0)
+                )
+                claim = claim + self.floor * (1.0 - claim) * free * self._near(core)
             weighted = claim * self.scale
             gates[:, rows, :] = weighted.unsqueeze(0)
         for slot in self.copy_slots():

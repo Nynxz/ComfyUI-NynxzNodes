@@ -142,8 +142,8 @@ class NynxzRegionsApply(RegionNode):
                     "clip",
                     optional=True,
                     tooltip="The text encoder, for regions given a prompt of their own in "
-                    "Region LoRAs. A region reads its prompt where it would read the main one "
-                    "(on Z-Image, after the main prompt). Not needed otherwise.",
+                    "Region LoRAs. On Z-Image a region's prompt appends to the main prompt; on "
+                    "MOSS-Image it replaces the main prompt for that region. Not needed otherwise.",
                 ),
                 advanced(
                     io.Float.Input(
