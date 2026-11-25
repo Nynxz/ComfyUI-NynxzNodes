@@ -212,7 +212,7 @@
                 <button
                   type="button"
                   :class="['le-tab', { on: tab === 'scene' }]"
-                  @click="tab = 'scene'"
+                  @click="selectScene"
                 >
                   Scene
                 </button>
@@ -525,6 +525,10 @@ const view = computed<"element" | "multi" | "scene" | "extra">(() => {
 });
 function showTab(id: string) {
   tab.value = id;
+}
+function selectScene() {
+  selected.value = [];
+  tab.value = "scene";
 }
 
 const canPopOut = !props.inPanel && hasZenPanels();
@@ -928,7 +932,9 @@ const layerItems = computed<LayerItem[]>(() => [
 ]);
 const listSelection = computed(() => (selected.value.length ? selected.value : [SCENE_ROW]));
 function selectFromList(ids: string[]) {
-  selected.value = ids.filter((id) => id !== SCENE_ROW);
+  const next = ids.filter((id) => id !== SCENE_ROW);
+  selected.value = next;
+  tab.value = next.length ? "box" : "scene";
 }
 /** `index` is a display position, top-first; boxes are stored bottom-first. */
 function reorder(id: string, index: number) {

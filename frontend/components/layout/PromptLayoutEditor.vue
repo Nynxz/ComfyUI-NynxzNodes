@@ -240,6 +240,7 @@
 
           <FrescoSection v-if="scene.mode !== 'regions'" label="Kind">
             <ZenToggleGroup
+              class="pl-seg"
               size="sm"
               :model-value="box.kind"
               :options="kindOptions"
@@ -581,6 +582,7 @@
 
           <FrescoSection v-if="scene.mode === 'ideogram'" label="Style" note="style_description">
             <ZenToggleGroup
+              class="pl-seg"
               size="sm"
               :model-value="scene.style.on ? scene.style.kind : 'off'"
               :options="STYLE_KINDS"
@@ -1526,6 +1528,14 @@ async function copyOutput() {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+.pl-seg {
+  display: flex;
+  width: 100%;
+}
+.pl-seg :deep(.zen-tg-b) {
+  flex: 1 1 0;
+  min-width: 0;
 }
 .pl-chips {
   display: flex;
