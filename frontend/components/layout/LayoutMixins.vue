@@ -1,23 +1,12 @@
 <template>
   <div class="lm">
-    <div class="lm-bar">
-      <ZenButton
-        sm
-        variant="ghost"
-        icon="mdi mdi-bookshelf"
-        title="Open Mixin Library — browse, inspect, create, and swap saved mixins"
-        @click="emit('openLibrary')"
-      >
-        Library
-      </ZenButton>
-    </div>
-
     <div class="lm-grid">
       <button
         v-for="(mixin, idx) in mixins"
         :key="mixin.id"
         type="button"
         draggable="true"
+        data-zen-drag
         :class="[
           'lm-tile',
           {
@@ -26,6 +15,7 @@
             'drop-target': dropIndex === idx && dragIndex !== null && dragIndex !== idx,
           },
         ]"
+        :style="{ '--lm-c': mixin.color }"
         :title="tileTooltip(mixin)"
         @click="open(mixin.id)"
         @contextmenu.prevent.stop="openTileMenu($event, mixin)"
@@ -35,30 +25,58 @@
         @drop.prevent="onTileDrop(idx)"
         @dragend="onTileDragEnd"
       >
-        <MixinAvatar :mixin="mixin" :size="40" />
-        <span class="lm-tile-name">{{ mixin.name }}</span>
-        <span class="lm-tile-meta">
-          <span>{{ boxCount(mixin.id) }} box{{ boxCount(mixin.id) === 1 ? "" : "es" }}</span>
-          <i
-            v-if="mixin.libraryId"
-            class="mdi mdi-link-variant lm-linked-ico"
-            title="Linked to Mixin Library preset"
+        <span class="lm-hero">
+          <img
+            v-if="firstRef(mixin)"
+            class="lm-hero-img"
+            :src="thumbUrl(firstRef(mixin)!.ref, firstRef(mixin)!.type)"
+            alt=""
+            draggable="false"
           />
-          <i
-            v-if="refCount(mixin)"
-            class="mdi mdi-image-outline"
-            :title="`${refCount(mixin)} reference(s)`"
-          />
-          <i
-            v-if="loraCount(mixin)"
-            class="mdi mdi-puzzle-outline"
-            :title="`${loraCount(mixin)} LoRA(s)`"
-          />
+          <span v-else class="lm-hero-mono">{{ initial(mixin) }}</span>
+          <span class="lm-dot" />
+          <span v-if="mixin.libraryId || refCount(mixin) > 1" class="lm-hero-badges">
+            <i
+              v-if="mixin.libraryId"
+              class="mdi mdi-link-variant lm-linked-ico"
+              title="Linked to Mixin Library preset"
+            />
+            <span v-if="refCount(mixin) > 1" class="lm-more">+{{ refCount(mixin) - 1 }}</span>
+          </span>
+        </span>
+        <span class="lm-foot">
+          <span class="lm-tile-name">{{ mixin.name || "Untitled" }}</span>
+          <span class="lm-tile-meta">
+            <span class="lm-stat" :class="{ active: boxCount(mixin.id) > 0 }">
+              <i class="mdi mdi-vector-square" />{{ boxCount(mixin.id) }}
+            </span>
+            <span v-if="refCount(mixin)" class="lm-stat">
+              <i class="mdi mdi-image-outline" />{{ refCount(mixin) }}
+            </span>
+            <span v-if="loraCount(mixin)" class="lm-stat">
+              <i class="mdi mdi-puzzle-outline" />{{ loraCount(mixin) }}
+            </span>
+          </span>
         </span>
       </button>
-      <button type="button" class="lm-tile lm-new" title="New mixin" @click="emit('create')">
+
+      <button
+        type="button"
+        class="lm-tile lm-action"
+        title="Create a new mixin"
+        @click="emit('create')"
+      >
         <i class="mdi mdi-plus" />
-        <span class="lm-tile-name">New</span>
+        <span class="lm-action-label">New</span>
+      </button>
+      <button
+        type="button"
+        class="lm-tile lm-action"
+        title="Open Mixin Library — browse, inspect, create, and swap saved mixins"
+        @click="emit('openLibrary')"
+      >
+        <i class="mdi mdi-bookshelf" />
+        <span class="lm-action-label">Library</span>
       </button>
     </div>
 
@@ -208,16 +226,10 @@
 
 <script setup lang="ts">
 /**
- * The layout's Mixins tab: every mixin as a tile (right-click to swap, inspect, duplicate, save or
- * delete), a button for the full Mixin Library modal, and the open mixin's inline editor.
+ * The layout's Mixins tab: visual mixin cards (drag to reorder, right-click to swap, inspect,
+ * duplicate, save or delete), matching New & Library utility cards, and the open mixin's editor.
  */
-import {
-  ZenButton,
-  ZenContextMenu,
-  ZenIconButton,
-  ZenInput,
-  type ContextMenuItem,
-} from "@nynxz/zenkit-ui";
+import { ZenContextMenu, ZenIconButton, ZenInput, type ContextMenuItem } from "@nynxz/zenkit-ui";
 import { computed, ref } from "vue";
 
 import FrescoLoras from "@/components/fresco/FrescoLoras.vue";
@@ -227,7 +239,8 @@ import MixinAvatar from "@/components/layout/MixinAvatar.vue";
 import MixinFusionBar from "@/components/layout/MixinFusionBar.vue";
 import { saveMixinPreset } from "@/layout/library";
 import type { Mixin, PromptBox } from "@/layout/promptScene";
-import type { FrescoLora } from "@/lib/frescoScene";
+import type { FrescoLora, FrescoRef } from "@/lib/frescoScene";
+import { thumbUrl } from "@/lib/mediaRefs";
 import { uid } from "@/lib/sceneUtil";
 
 const props = withDefaults(defineProps<{ boxes: PromptBox[]; selectedBoxes?: string[] }>(), {
@@ -311,6 +324,12 @@ function patch(change: Partial<Mixin>) {
 function remove(id: string) {
   mixins.value = mixins.value.filter((m) => m.id !== id);
   if (openId.value === id) openId.value = null;
+}
+function firstRef(mixin: Mixin): FrescoRef | null {
+  return mixin.refs.find((r) => r.on) ?? null;
+}
+function initial(mixin: Mixin): string {
+  return (mixin.name.trim()[0] ?? "?").toUpperCase();
 }
 function boxCount(id: string): number {
   return props.boxes.filter((b) => b.mixins.includes(id)).length;
@@ -482,77 +501,177 @@ const tileMenuItems = computed<ContextMenuItem[]>(() => {
   flex-direction: column;
   gap: 10px;
 }
-.lm-bar {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 6px;
-}
 .lm-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
-  gap: 6px;
+  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  grid-auto-rows: 1fr;
+  gap: 7px;
 }
 .lm-tile {
+  position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 4px;
   min-width: 0;
-  padding: 8px 4px 6px;
-  border: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 70%, transparent);
-  border-radius: var(--zen-radius, 7px);
-  background: transparent;
+  min-height: 96px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 75%, transparent);
+  border-radius: 8px;
+  background: var(--zen-surface-2, #222229);
   color: var(--zen-text, #e5e5ea);
+  font: inherit;
+  text-align: left;
   cursor: grab;
   transition:
-    border-color 0.12s ease,
-    background 0.12s ease,
+    border-color 0.14s ease,
+    box-shadow 0.14s ease,
+    background 0.14s ease,
     opacity 0.12s ease;
+}
+.lm-tile:hover {
+  border-color: color-mix(in srgb, var(--zen-text, #fff) 28%, var(--zen-border, #34343c));
+  background: color-mix(in srgb, var(--zen-text, #fff) 4%, var(--zen-surface-2, #222229));
 }
 .lm-tile:active {
   cursor: grabbing;
+}
+.lm-tile.on {
+  border-color: var(--zen-accent, #6366f1);
+  box-shadow: 0 0 0 1px var(--zen-accent, #6366f1);
 }
 .lm-tile.dragging {
   opacity: 0.4;
 }
 .lm-tile.drop-target {
   border-color: var(--zen-accent, #6366f1);
-  box-shadow: 0 0 0 1px var(--zen-accent, #6366f1);
-  background: color-mix(in srgb, var(--zen-accent, #6366f1) 14%, transparent);
+  box-shadow: 0 0 0 1.5px var(--zen-accent, #6366f1);
 }
-.lm-tile:hover {
-  background: color-mix(in srgb, var(--zen-text, #fff) 4%, transparent);
+.lm-hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 54px;
+  flex: none;
+  overflow: hidden;
+  background: linear-gradient(
+    155deg,
+    color-mix(in srgb, var(--lm-c, #6366f1) 34%, #18181f),
+    color-mix(in srgb, var(--lm-c, #6366f1) 12%, #18181f)
+  );
 }
-.lm-tile.on {
-  border-color: var(--zen-accent, #3b82f6);
-  background: color-mix(in srgb, var(--zen-accent, #3b82f6) 12%, transparent);
+.lm-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.lm-hero-mono {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid color-mix(in srgb, var(--lm-c, #6366f1) 80%, #fff);
+  background: color-mix(in srgb, var(--lm-c, #6366f1) 28%, rgb(0 0 0 / 35%));
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+}
+.lm-dot {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--lm-c, #6366f1);
+  box-shadow: 0 0 0 1.5px rgb(0 0 0 / 55%);
+}
+.lm-hero-badges {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 4px;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 62%);
+  color: #fff;
+  font-size: 9.5px;
+  line-height: 1.3;
+}
+.lm-linked-ico {
+  color: #a5b4fc;
+  font-size: 10px;
+}
+.lm-more {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.lm-foot {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  padding: 5px 6px 6px;
+  min-width: 0;
 }
 .lm-tile-name {
   max-width: 100%;
   overflow: hidden;
   font-size: 11px;
+  font-weight: 500;
+  line-height: 1.25;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 .lm-tile-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  line-height: 1.2;
+  color: var(--zen-muted, #9aa0aa);
+}
+.lm-stat {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
-  font-size: 10px;
-  color: var(--zen-muted, #9aa0aa);
+  gap: 2px;
+  font-variant-numeric: tabular-nums;
 }
-.lm-linked-ico {
-  color: var(--zen-accent, #6366f1);
+.lm-stat.active {
+  color: var(--zen-text, #e5e5ea);
 }
-.lm-new {
+.lm-stat .mdi {
+  font-size: 10.5px;
+}
+.lm-action {
+  align-items: center;
   justify-content: center;
+  gap: 5px;
+  padding: 8px 4px;
   border-style: dashed;
+  background: transparent;
   color: var(--zen-muted, #9aa0aa);
+  text-align: center;
   cursor: pointer;
 }
-.lm-new .mdi {
-  font-size: 22px;
+.lm-action:hover {
+  border-color: var(--zen-accent, #6366f1);
+  background: color-mix(in srgb, var(--zen-accent, #6366f1) 10%, transparent);
+  color: var(--zen-text, #e5e5ea);
+}
+.lm-action .mdi {
+  font-size: 20px;
+  line-height: 1;
+}
+.lm-action-label {
+  font-size: 11px;
+  font-weight: 500;
 }
 .lm-empty {
   margin: 0;

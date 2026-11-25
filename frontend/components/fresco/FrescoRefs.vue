@@ -6,49 +6,68 @@
     @dragleave="dragOver = false"
     @drop="onDrop"
   >
-    <div v-for="(r, i) in refs" :key="r.id" class="fr-row" :class="{ off: !r.on }">
-      <ZenDot
-        :model-value="r.on"
-        :title="r.on ? 'Enabled — click to mute' : 'Muted — click to enable'"
-        @update:model-value="patch(i, { on: $event })"
-      />
-      <div class="fr-thumb" :title="r.ref">
-        <img
-          :src="thumbUrl(r.ref, r.type)"
-          :style="{ objectFit: r.fit === 'stretch' ? 'fill' : r.fit }"
-          data-peek
-          loading="lazy"
-          draggable="false"
+    <div
+      v-if="refs.length"
+      :ref="(el) => (reorder.el.value = el as HTMLElement | null)"
+      class="fr-rows"
+      :class="{ settling }"
+      v-bind="reorder.handlers"
+    >
+      <div
+        v-for="(r, i) in refs"
+        :key="r.id"
+        class="fr-row"
+        :class="{ off: !r.on, dragging: dragIndex === i }"
+        :style="rowStyle(i)"
+      >
+        <div class="fr-gutter">
+          <div v-if="refs.length > 1" class="fr-grip" data-zen-drag title="Drag to reorder">
+            <i class="mdi mdi-drag-vertical" />
+          </div>
+          <ZenDot
+            :model-value="r.on"
+            :title="r.on ? 'Enabled — click to mute' : 'Muted — click to enable'"
+            @update:model-value="patch(i, { on: $event })"
+          />
+        </div>
+        <div class="fr-thumb" :title="r.ref">
+          <img
+            :src="thumbUrl(r.ref, r.type)"
+            :style="{ objectFit: r.fit === 'stretch' ? 'fill' : r.fit }"
+            data-peek
+            loading="lazy"
+            draggable="false"
+          />
+        </div>
+        <div class="fr-info">
+          <span class="fr-name" :title="r.ref">{{ shortName(r.ref) }}</span>
+          <button type="button" class="fr-fit" :title="FIT_LABEL[r.fit]" @click="cycleFit(i)">
+            <i class="mdi" :class="FIT_ICON[r.fit]" />
+            <span>{{ FIT_SHORT[r.fit] }}</span>
+          </button>
+        </div>
+        <ZenNumber
+          class="fr-str"
+          size="sm"
+          :model-value="r.strength"
+          :min="0"
+          :max="4"
+          :step="0.05"
+          title="Strength — this image's share when there are several"
+          @update:model-value="patch(i, { strength: Math.max(0, $event) })"
         />
+        <ZenIconButton
+          size="sm"
+          icon="mdi mdi-auto-fix"
+          title="Cut out subject with SAM3"
+          @click="openCutout(i)"
+        />
+        <ZenIconButton size="sm" icon="mdi mdi-close" title="Remove" @click="remove(i)" />
       </div>
-      <div class="fr-info">
-        <span class="fr-name" :title="r.ref">{{ shortName(r.ref) }}</span>
-        <button type="button" class="fr-fit" :title="FIT_LABEL[r.fit]" @click="cycleFit(i)">
-          <i class="mdi" :class="FIT_ICON[r.fit]" />
-          <span>{{ FIT_SHORT[r.fit] }}</span>
-        </button>
-      </div>
-      <ZenNumber
-        class="fr-str"
-        size="sm"
-        :model-value="r.strength"
-        :min="0"
-        :max="4"
-        :step="0.05"
-        title="Strength — this image's share when there are several"
-        @update:model-value="patch(i, { strength: Math.max(0, $event) })"
-      />
-      <ZenIconButton
-        size="sm"
-        icon="mdi mdi-auto-fix"
-        title="Cut out subject with SAM3"
-        @click="openCutout(i)"
-      />
-      <ZenIconButton size="sm" icon="mdi mdi-close" title="Remove" @click="remove(i)" />
     </div>
 
     <button
-      v-if="!refs.length"
+      v-else
       type="button"
       class="fr-empty"
       :disabled="busy"
@@ -82,13 +101,23 @@
 
 <script setup lang="ts">
 /**
- * Reference images as a LoRA-style vertical list, or a slim drop strip while there are none.
- * Each row exposes enable/mute, a thumbnail with hover-peek, filename + clickable fit pill,
- * strength, always-visible SAM3 cutout wand, and remove. Multiple references blend via the
- * Fusion encoder (`encode_fusion`).
+ * Reference images as a LoRA-style vertical list with drag-to-reorder, or a slim drop strip
+ * while there are none. Each row exposes drag grip, enable/mute, a thumbnail with hover-peek,
+ * filename + clickable fit pill, strength, always-visible SAM3 cutout wand, and remove.
  */
-import { computed, ref } from "vue";
-import { ZenDot, ZenIconButton, ZenMediaPicker, ZenNumber } from "@nynxz/zenkit-ui";
+import { useDragSurface } from "@nynxz/zenkit-nodekit";
+import {
+  ZenDot,
+  ZenIconButton,
+  ZenMediaPicker,
+  ZenNumber,
+  insertionIndex,
+  landingTop,
+  rowStride,
+  shiftStyle,
+  sortShift,
+} from "@nynxz/zenkit-ui";
+import { computed, ref, type CSSProperties } from "vue";
 
 import RefCutoutDialog from "@/components/fresco/RefCutoutDialog.vue";
 import { hasMediaDrop, mediaLibrary, readMediaDrop } from "@/framework";
@@ -130,6 +159,87 @@ const cutoutIndex = ref(-1);
 const cutoutSource = computed(() =>
   cutoutIndex.value >= 0 ? (refs.value[cutoutIndex.value] ?? null) : null,
 );
+
+// --- pointer drag-to-reorder (matches LoraStack's zoom-aware live-shift gesture) ----------------
+
+const dragIndex = ref(-1);
+const dropIndex = ref(-1);
+const dragOffset = ref(0);
+const stride = ref(0);
+const settling = ref(false);
+const settle = ref<{ index: number; y: number } | null>(null);
+let rowMids: number[] = [];
+let rowTops: number[] = [];
+let rowHeights: number[] = [];
+
+function resetDrag() {
+  dragIndex.value = -1;
+  dropIndex.value = -1;
+  dragOffset.value = 0;
+}
+
+const reorder = useDragSurface({
+  onStart(ctx) {
+    const grip = (ctx.event.target as HTMLElement | null)?.closest?.(".fr-grip");
+    const host = reorder.el.value;
+    if (!grip || !host) return false;
+    const kids = Array.from(host.children) as HTMLElement[];
+    const i = kids.indexOf(grip.closest(".fr-row") as HTMLElement);
+    if (i < 0) return false;
+    rowMids = kids.map((k) => k.offsetTop + k.offsetHeight / 2);
+    rowTops = kids.map((k) => k.offsetTop);
+    rowHeights = kids.map((k) => k.offsetHeight);
+    stride.value = rowStride(rowTops, rowHeights, i);
+    dragIndex.value = i;
+    dropIndex.value = i;
+    dragOffset.value = 0;
+  },
+  onMove(ctx) {
+    if (dragIndex.value < 0) return;
+    dragOffset.value = ctx.delta.y;
+    const center = (rowMids[dragIndex.value] ?? 0) + ctx.delta.y;
+    dropIndex.value = insertionIndex(rowMids, dragIndex.value, center);
+  },
+  onEnd() {
+    const from = dragIndex.value;
+    const to = dropIndex.value;
+    const offset = dragOffset.value;
+    resetDrag();
+    if (from < 0 || to < 0) return;
+    settling.value = true;
+    settle.value = {
+      index: to,
+      y: (rowTops[from] ?? 0) + offset - landingTop(rowTops, rowHeights, from, to),
+    };
+    if (from !== to) {
+      const next = [...refs.value];
+      const [moved] = next.splice(from, 1);
+      if (moved) {
+        next.splice(to, 0, moved);
+        refs.value = next;
+      }
+    }
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        settling.value = false;
+        settle.value = null;
+      }),
+    );
+  },
+});
+
+function rowStyle(i: number): CSSProperties {
+  if (settle.value && settle.value.index === i) {
+    return { transform: `translate3d(0, ${settle.value.y}px, 0)`, transition: "none" };
+  }
+  if (dragIndex.value === i) {
+    return { transform: `translate3d(0, ${dragOffset.value}px, 0)` };
+  }
+  if (dragIndex.value >= 0) {
+    return shiftStyle(sortShift(i, dragIndex.value, dropIndex.value), stride.value) ?? {};
+  }
+  return {};
+}
 
 function shortName(refPath: string): string {
   const leaf = refPath.split(/[\\/]/).pop() ?? refPath;
@@ -238,7 +348,17 @@ function addPicked(picked: string[]) {
   outline-color: var(--zen-accent, #6366f1);
   background: color-mix(in srgb, var(--zen-accent, #6366f1) 8%, transparent);
 }
+.fr-rows {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.fr-rows.settling .fr-row {
+  transition: none;
+}
 .fr-row {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -246,10 +366,47 @@ function addPicked(picked: string[]) {
   border: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 55%, transparent);
   border-radius: 6px;
   background: color-mix(in srgb, var(--zen-text, #fff) 3%, transparent);
+  transition: transform 0.14s ease;
+}
+.fr-row.dragging {
+  z-index: 2;
+  border-color: var(--zen-accent, #6366f1);
+  background: var(--zen-surface-2, #26262d);
+  box-shadow: 0 6px 16px rgb(0 0 0 / 35%);
+  transition: none;
 }
 .fr-row.off .fr-thumb,
 .fr-row.off .fr-info {
   opacity: 0.42;
+}
+.fr-gutter {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.fr-grip {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  cursor: grab;
+  color: var(--zen-muted, #9aa0aa);
+  font-size: 14px;
+  line-height: 1;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.fr-grip > * {
+  pointer-events: none;
+}
+.fr-grip:hover {
+  color: var(--zen-text, #e5e5ea);
+}
+.fr-grip:active {
+  cursor: grabbing;
 }
 .fr-thumb {
   flex: none;

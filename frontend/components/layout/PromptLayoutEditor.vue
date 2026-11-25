@@ -318,12 +318,39 @@
               @update:model-value="patchBox({ refs: $event })"
             />
             <div v-if="totalActiveRefs > 1" class="pl-blend-row">
-              <span :title="BLEND_TIP">blend</span>
+              <span class="pl-blend-lbl">
+                <span>blend</span>
+                <InfoHover label="How Blend and Softness work">
+                  <p class="pl-tip-title">Multi-reference Blend (Fusion Encode)</p>
+                  <p class="pl-tip-p">
+                    Overrides how this box's references combine (leave on Mix / 0.50 to inherit a
+                    mixin's own blend):
+                  </p>
+                  <ul class="pl-tip-list">
+                    <li :class="{ on: box.blend === 'mix' }">
+                      <strong>Mix</strong> — interleaves all references evenly across the grid.
+                    </li>
+                    <li :class="{ on: box.blend === 'weighted' }">
+                      <strong>Weighted</strong> — allocates space by each ref's strength slider.
+                    </li>
+                    <li :class="{ on: box.blend === 'tiled' }">
+                      <strong>Tiled</strong> — gives each ref its own grid cell.
+                    </li>
+                    <li :class="{ on: box.blend === 'salient' }">
+                      <strong>Salient</strong> — takes each area from whichever ref has the
+                      strongest detail there.
+                    </li>
+                  </ul>
+                  <p class="pl-tip-p">
+                    <strong>Softness</strong> (0–1): 0 keeps crisp cells per ref; 1 feathers
+                    smoothly between them.
+                  </p>
+                </InfoHover>
+              </span>
               <ZenSelect
                 size="sm"
                 :model-value="box.blend"
                 :options="BLENDS"
-                :title="BLEND_TIP"
                 @update:model-value="patchBox({ blend: $event as Blend })"
               />
               <ZenNumber
@@ -811,6 +838,7 @@ import FrescoLoras from "@/components/fresco/FrescoLoras.vue";
 import FrescoPills from "@/components/fresco/FrescoPills.vue";
 import FrescoRefs from "@/components/fresco/FrescoRefs.vue";
 import FrescoSection from "@/components/fresco/FrescoSection.vue";
+import InfoHover from "@/components/layout/InfoHover.vue";
 import LayoutAgent from "@/components/layout/LayoutAgent.vue";
 import LayoutBoxFace from "@/components/layout/LayoutBoxFace.vue";
 import LayoutEditor from "@/components/layout/LayoutEditor.vue";
@@ -910,8 +938,6 @@ const OVERLAPS = [
   { value: "top", label: "Cover", title: "Upper boxes cover lower ones, like paint" },
   { value: "share", label: "Share", title: "Overlapping boxes split the overlap" },
 ];
-const BLEND_TIP =
-  "How multiple references combine: Mix interleaves evenly, Weighted follows strengths, Tiled keeps parts apart, Salient picks what shows something there.";
 const INFLUENCE_TIP =
   "How strongly this region follows its own prompt and references against the rest of the picture.";
 const DENOISE_TIP = "How much of a source photo this box may rewrite when editing in Layout Apply.";
@@ -1899,11 +1925,51 @@ async function copyOutput() {
 }
 .pl-blend-row {
   display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) 82px;
+  grid-template-columns: 52px minmax(0, 1fr) 82px;
   align-items: center;
   gap: 6px;
   color: var(--zen-muted, #9aa0aa);
   font-size: 11px;
+}
+.pl-blend-lbl {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.pl-tip-title {
+  margin: 0 0 4px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--zen-text, #e5e5ea);
+}
+.pl-tip-p {
+  margin: 0 0 6px;
+  color: var(--zen-muted, #9aa0aa);
+}
+.pl-tip-p:last-child {
+  margin-bottom: 0;
+}
+.pl-tip-p strong {
+  color: var(--zen-text, #e5e5ea);
+  font-weight: 600;
+}
+.pl-tip-list {
+  margin: 0 0 6px;
+  padding-left: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  color: var(--zen-muted, #9aa0aa);
+}
+.pl-tip-list strong {
+  color: var(--zen-text, #e5e5ea);
+  font-weight: 600;
+}
+.pl-tip-list li.on {
+  color: var(--zen-text, #e5e5ea);
+}
+.pl-tip-list li.on strong {
+  color: var(--zen-accent, #818cf8);
 }
 .pl-pairs {
   display: grid;
