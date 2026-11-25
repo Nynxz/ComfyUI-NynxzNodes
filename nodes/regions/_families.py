@@ -39,7 +39,7 @@ FAMILIES = (
         _moss.already_regioned,
         _moss.install_regions,
         trim_prompts=True,
-        unsupported=("track", "layout_lock"),
+        unsupported=("layout_lock",),
     ),
     Family("Krea 2", _krea.is_krea2, _krea.already_regioned, _krea.install_regions),
 )

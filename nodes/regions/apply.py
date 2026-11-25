@@ -54,7 +54,8 @@ class NynxzRegionsApply(RegionNode):
                 "Runs each region's LoRA as a live per-token branch gated to that region's tokens, "
                 "instead of merging every delta into the weights where they collide, and gives "
                 "each region its own prompt when it has one. Composes with ordinary merged "
-                "LoRAs. Krea 2, Z-Image and MOSS-Image; tracking and layout lock are Krea 2 only for now."
+                "LoRAs. Krea 2, Z-Image and MOSS-Image; tracking is on Krea 2 and MOSS-Image, "
+                "layout lock is Krea 2 only for now."
             ),
             is_experimental=True,
             inputs=[

@@ -46,7 +46,7 @@ the prompt for its own region.
 MOSS runs its blocks inside a memory compiler region that recycles tensors allocated there between
 blocks, so the masks are built in the wrapper, before the blocks, never inside an attention call.
 
-Not here yet: tracking, the layout lock and region references.
+Not here yet: the layout lock and region references.
 """
 
 from __future__ import annotations
@@ -60,7 +60,7 @@ import comfy.patcher_extension
 import comfy.utils
 import torch
 
-from . import _bias, _branch, _copies, _lora, _zimage
+from . import _bias, _branch, _capture, _copies, _lora, _patches, _track, _zimage
 from ._bias import NEVER
 from ._branch import PROFILE, PROFILE_AT, profiled
 
@@ -315,6 +315,12 @@ class MossRegions(_copies.Routing):
         #: True while MOSS encodes the references on their own (`preprocess_refs`), whose attention
         #: is neither the text's nor the blocks' and is left alone.
         self.encoding_refs = False
+        #: Whether this forward carries a conditional row (which tracking reads, so CFG shares one
+        #: map across both cond and uncond passes).
+        self.conditional = True
+        #: Canvas `v` features collected across the `route_blocks` of this forward (MOSS applies
+        #: RoPE to `q` and `k` before calling the attention override, leaving `v` unrotated).
+        self._track_features: list[torch.Tensor] = []
 
     # -- the wrapper ---------------------------------------------------------------------------
 
@@ -330,6 +336,9 @@ class MossRegions(_copies.Routing):
         )
         self.encoding_refs = False
         batch = x.shape[0]
+        cond = _patches.conditional_rows(options, batch) or [True] * batch
+        self.conditional = any(cond)
+        self._track_features.clear()
         self._build_masks(batch, x.device, x.dtype)
         if self.lora_regions:
             self._build_gates(batch, x.device)
@@ -465,6 +474,13 @@ class MossRegions(_copies.Routing):
             if plan is not None and (seqlen == layout.joint) == joint:
                 return self._partitioned(plan, func, q, k, v, heads, args, kwargs)
             if joint and seqlen == layout.joint:
+                self._follow(
+                    v,
+                    options.get("block_index"),
+                    options.get("total_blocks"),
+                    q.device,
+                    q.dtype,
+                )
                 mask = self.masks.get(seqlen)
             elif joint and not self.warned:
                 self.warned = True
@@ -485,6 +501,39 @@ class MossRegions(_copies.Routing):
             previous = kwargs.get("mask")
             kwargs = {**kwargs, "mask": mask if previous is None else previous + mask}
         return self.call(func, q, k, v, heads, *args, **kwargs)
+
+    def _follow(self, v, block, total, device, dtype) -> None:
+        """Let the map follow each subject's canvas `v` features at `route_at`, averaged across
+        `route_blocks` (on conditional rows only, so cond and uncond share one map)."""
+        state, settings, layout = self.state, self.settings, self.layout
+        anchor = state.anchor
+        if (
+            not settings.tracking
+            or not self.conditional
+            or state.frozen
+            or anchor is None
+            or block is None
+            or not total
+        ):
+            return
+        wanted = _patches.route_block(settings.route_at, int(total), settings.route_blocks)
+        if block not in wanted:
+            return
+        self._track_features.append(_track.canvas_features(v.unsqueeze(1), slice(0, layout.canvas)))
+        if block != wanted[-1]:
+            return
+        features = torch.nn.functional.normalize(
+            torch.stack(self._track_features, dim=0).mean(dim=0), dim=-1
+        )
+        self._track_features.clear()
+        anchor = anchor.to(device)
+        tracked = _track.refine(anchor, features, settings.refine, settings.sharpness)
+        blended = _track.blend(anchor, tracked, settings.track)
+        state.map = _track.smooth(blended, state.grid, settings.smooth)
+        self._build_masks(v.shape[0], device, dtype)
+        if self.lora_regions:
+            self._build_gates(v.shape[0], device)
+        _capture.remember(state, _track.drift(anchor, state.map))
 
     def _partitioned(self, plan, func, q, k, v, heads, args, kwargs):
         """The routing as one unmasked attention call per group of queries that read the same keys
@@ -529,7 +578,7 @@ class MossRegions(_copies.Routing):
 
         and in the `text_embedder`, each prompt reads itself."""
         state, layout = self.state, self.layout
-        if not layout.slots:
+        if not layout.slots or self.settings.tracking:
             return None
         current = self.current()
         if current is None or self.isolation() > 0.0:
@@ -703,7 +752,7 @@ def install(patched, state, prompts: dict[int, torch.Tensor], settings, loaded=(
 def install_regions(patched, entries, prompts, settings, sources) -> list[str]:
     """Regions on `patched` (a clone): each region's own prompt, routed by attention, and its
     LoRAs, gated per token. Returns the log lines."""
-    state = _copies.LengthGateState(entries, settings.schedule, 0.0, sources)
+    state = _copies.LengthGateState(entries, settings.schedule, settings.track, sources)
     loaded = load_region_loras(patched, entries)
     install(patched, state, prompts, settings, loaded)
     if loaded:
@@ -719,6 +768,11 @@ def install_regions(patched, entries, prompts, settings, sources) -> list[str]:
         lines.append(
             f"LoRA branches: {count} distinct, rank {', '.join(map(str, sorted(ranks))) or '-'}, "
             f"{params * 2 / 1e6:.0f} MB at 16-bit on the GPU"
+        )
+    if settings.tracking:
+        lines.append(
+            f"tracking: {settings.track:.2f} toward canvas v-features, {settings.refine} rounds, "
+            f"smooth {settings.smooth}"
         )
     lines.append(f"schedule: {settings.schedule.describe()}")
     lines.append(f"isolation: {settings.isolation:.2f}")

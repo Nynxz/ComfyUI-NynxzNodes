@@ -487,6 +487,14 @@ class RegionLoras(Harness):
         self.assertFalse(moss._routable("diffusion_model.shared_block_modulation"))
         self.assertFalse(moss._routable("diffusion_model.video_embedder"))
 
+    def test_tracking_updates_map_on_conditional_pass(self):
+        state = copies.LengthGateState([region(left())], schedule_mod.Schedule(), 0.5)
+        settings = settings_mod.RegionSettings(track=0.5, refine=2, route_at=0.5, route_blocks=1)
+        routed = moss.MossRegions(state, {0: prompt(11)}, settings, self.model.rope)
+        self.run_routed(routed, prompt(10), options={"cond_or_uncond": [0]})
+        self.assertIsNone(routed.plans)
+        self.assertIsNotNone(state.map)
+
 
 if __name__ == "__main__":
     path = sys.argv[1] if len(sys.argv) > 1 else ""

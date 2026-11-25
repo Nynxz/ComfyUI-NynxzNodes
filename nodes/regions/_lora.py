@@ -53,6 +53,7 @@ import torch
 from comfy.weight_adapter import LoKrAdapter, LoRAAdapter
 
 from ..lora import _qkv
+from . import _branch
 
 
 class FactoredBranch:
@@ -84,10 +85,12 @@ class FactoredBranch:
             # rounds the product at that dtype's precision, and a low-strength LoRA in fp16 is
             # exactly where that shows. `up` is small, so the fp32 temporary costs nothing.
             scaled = self.up.to(dtype=torch.float32) * self.scale
-            self._cast = (
-                self.down.to(device=device, dtype=dtype),
-                scaled.to(device=device, dtype=dtype),
-            )
+            # These outlive the block that asked for them.
+            with _branch.outside_compiled_memory():
+                self._cast = (
+                    self.down.to(device=device, dtype=dtype),
+                    scaled.to(device=device, dtype=dtype),
+                )
             self._cast_key = key
         return self._cast
 
@@ -122,10 +125,11 @@ class KronBranch:
         key = (device, dtype)
         if self._cast_key != key:
             scaled = self.w1.to(dtype=torch.float32) * self.scale
-            self._cast = (
-                scaled.to(device=device, dtype=dtype),
-                self.w2.to(device=device, dtype=dtype),
-            )
+            with _branch.outside_compiled_memory():
+                self._cast = (
+                    scaled.to(device=device, dtype=dtype),
+                    self.w2.to(device=device, dtype=dtype),
+                )
             self._cast_key = key
         return self._cast
 
