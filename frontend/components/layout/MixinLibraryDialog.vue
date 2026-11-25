@@ -203,7 +203,7 @@
                 <ZenInput
                   sm
                   :model-value="draft.trigger"
-                  placeholder="e.g. amb3r"
+                  placeholder="e.g. ohwx, sks style"
                   @update:model-value="patchDraft({ trigger: String($event ?? '') })"
                 />
               </FrescoSection>

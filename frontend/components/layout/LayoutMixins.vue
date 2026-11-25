@@ -160,7 +160,7 @@
           :rows="3"
           sm
           :model-value="current.desc"
-          placeholder="e.g. Amber, a teenage girl with a short copper-red bob, green eyes and freckles"
+          placeholder="e.g. a red-haired traveler in a weathered green coat, or a watercolor style"
           @update:model-value="patch({ desc: String($event ?? '') })"
         />
       </FrescoSection>
@@ -172,7 +172,7 @@
         <ZenInput
           sm
           :model-value="current.trigger"
-          placeholder="e.g. amb3r"
+          placeholder="e.g. ohwx, sks style"
           @update:model-value="patch({ trigger: String($event ?? '') })"
         />
       </FrescoSection>
