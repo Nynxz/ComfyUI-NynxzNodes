@@ -18,22 +18,68 @@
   "meta": [],
   "canvas": "",
   "palette": [],
-  "mixins": [],
+  "mixins": [
+   {
+    "id": "amber",
+    "name": "Amber",
+    "color": "#EF4444",
+    "desc": "",
+    "trigger": "amb3r",
+    "refs": [],
+    "loras": [
+     {
+      "lora_name": "amber.safetensors",
+      "strength": 0.8
+     }
+    ]
+   }
+  ],
+  "backdrop": {
+   "on": false,
+   "prompt": "",
+   "refs": [],
+   "loras": [],
+   "denoise": 0.05,
+   "influence": 1.0,
+   "blend": "mix",
+   "softness": 0.5
+  },
+  "settings": {
+   "overlap": "top",
+   "visual_size": 384
+  },
   "boxes": [
    {
     "id": "b1",
     "name": "Amber",
+    "color": "#3B82F6",
     "x": 0.1,
     "y": 0.1,
     "w": 0.3,
     "h": 0.3,
     "hidden": false,
+    "locked": false,
     "kind": "object",
     "desc": "she waves",
     "text": "",
     "palette": [],
     "tags": [],
-    "mixins": []
+    "mixins": [
+     "amber"
+    ],
+    "refs": [],
+    "loras": [],
+    "denoise": 1.0,
+    "influence": 1.0,
+    "blend": "mix",
+    "softness": 0.5,
+    "mask": null,
+    "shape_for": "layer",
+    "grow": 0,
+    "feather": 0,
+    "capture": "",
+    "points": [],
+    "mask_source": ""
    }
   ]
  },
@@ -52,6 +98,6 @@
   }
  ],
  "region_prompts": [
-  "Anime style. she waves."
+  "Anime style. amb3r. she waves."
  ]
 }

@@ -119,6 +119,14 @@ reading, with a log note).
    workflows load and run) but are hidden from search and marked deprecated, ideally with a
    "convert to Layout" action. Decide how Fresco Apply's job is exposed for Layout (see decisions).
 
+**Phase 5 done:** unified `Layout` scene model (Regions, MOSS, Ideogram, Klein modes; `cast` and
+Fresco dict/JSON migration; `hidden`, `color`, `locked` preserved; per-box + mixin refs/LoRAs,
+painted shapes, SAM3 capture/wand, drag-drop images, box-face previews, multi-select mixin
+assignment, Mixin preset library, background region, swap content); `Layout Apply` and
+`Layout Overlay` nodes; per-run ref image & conditioning caching in `layout/_regions.py`; Fresco
+nodes deprecated (`is_deprecated=True`) with a "Copy for Layout" button; `web/` bundled directly in
+the repo with CI drift check.
+
 ## Decisions (2026-10-20)
 
 1. **Krea isolation:** fix it to spare the background like Z-Image and MOSS, after a test confirms

@@ -6,30 +6,66 @@ The full reference. The [README](../README.md) has the short tour.
 
 - **LoRA Loader** — a whole LoRA stack on one node: an on/off dot, a searchable picker with
   bookmarks and previews, and a strength per row. Set it to apply to `MODEL`, `CLIP` or both.
+  **Groups** keep a long stack readable: add one from the folder button, name it, and drag rows
+  under its header (or use the group's `+`). A group folds down to its header, and its dot mutes
+  every LoRA in it at once, so a set of speed-up LoRAs can sit folded and off until you want it.
+  Folding and renaming don't re-run anything; muting does, since it changes what is applied.
+  Set a group to **Solo** from its menu when its LoRAs are alternatives: switching one on
+  switches the others off, and the folded header shows which one is in use.
+  The **`select`** input chooses a group's LoRAs from the graph. It is off by default: turn it
+  on from the node's settings button, under Inputs. One group per line, places counting from 0:
+  `Styles: 0` uses only the first LoRA in Styles, `Styles: 1@0.6` the second at that strength,
+  `Styles: 0, 2@0.5` several,
+  `Styles: film@0.8` picks by name, `Speed-ups: off` uses none and `Speed-ups: all` every one.
+  Groups the text doesn't name stay as they are set on the node. Anything it can't make sense of
+  is reported in the console.
+- **LoRA Select** — writes that choice for one group, so you don't have to: type the group's name
+  and what to use. Chain several, each `select` output into the next `select` input, to choose
+  from several groups at once. Any text works in its place, a Saved Text included.
+- **Load LoRA (Bypass, Low Memory)** — runs one LoRA beside the model's weights instead of merging
+  it in, like ComfyUI's own Load LoRA (Bypass), but adds it into each layer's output in place. The
+  stock bypass holds three copies of that output at once and runs out of memory on long video
+  sequences (MiniMax H3 with the Viggle Remake LoRAs, for one); this holds one. Model only.
 
-## Layout — boxes on a canvas, in the prompt your model was trained on
+## Layout — boxes, shapes, references and regional LoRAs on one canvas
 
-Lay the picture out as boxes and the editor writes the layout prompt for the model you pick:
-Ideogram 4, FLUX 3 Image Klein or MOSS-Image. Switch modes any time; the boxes stay. Each box has
-its words, and in the Mixins tab you add the recurring things (a character, a prop) once, with
-reference images, LoRAs and trigger words, and tick the boxes they appear in.
+Compose a picture as boxes or painted shapes on a canvas, with four modes you can switch between at
+any time without losing a thing: **Regions** (plain regional prompting, visual references and LoRAs
+for Krea 2, Z-Image or MOSS-Image), **MOSS-Image**, **Ideogram 4** and **FLUX 3 Image Klein**.
+
+Each box can have its own description, direct reference images, direct LoRAs, painted/SAM3 shape,
+influence and denoise — and in the **Mixins** tab you define recurring characters, props or styles
+once (with a saved Mixin Library across layouts) and tick them on any box or multi-selection. Drop
+images straight onto a box on the canvas to attach references, or onto empty canvas for a new box.
 
 ```
-Layout Inputs ──> Layout ──> Layout Extras ──> prompt ──> your text encoder
-                                   └──────────> regions ──> Regions Apply
+Layout Inputs ──> Layout ──> Layout Apply (+ model, clip) ──> model / positive / latent ──> KSampler
+                    │                                    └──> regions ──> Regions Preview
+                    ├──> Layout Overlay (+ render) ──> overlay (and sends render back to trace)
+                    └──> Layout Extras ──> prompt / elements / bboxes / overlay / regions / mixin_sheet
 ```
 
-- **Layout** — the editor. Boxes, Scene settings and Mixins in tabs; a library to save and load
-  layouts; pop it out for a larger canvas.
-- **Layout Inputs** _(optional)_ — a photo to trace and remix in the editor, and a vision-language
-  model (Qwen3-VL) for the editor's agent to draw boxes with. The model only loads when you ask the
-  agent.
-- **Layout Extras** — the layout broken out: the `prompt`, core's `elements` and `bboxes` for its
-  own layout nodes, the canvas `width` and `height`, an `overlay` of the boxes (over a generation
-  you wire in, to check it against the plan), `regions` for Regions Apply, and the `mixin_sheet`.
-  With a CLIP wired, mixins' reference images are read into the prompt (see `prompt_mode`).
+- **Layout** — the unified editor: canvas with toggleable box-face previews, brush/erase paint tools,
+  SAM3 wand (`W`), Box / Scene / Mixins inspector tabs, multi-box mixin & strength editing, saved
+  layouts & saved mixins libraries, agent, and ZenKit pop-out panel.
+- **Layout Inputs** _(optional)_ — a photo to trace, segment with SAM3, remix or edit; its VAE
+  (carried to Layout Apply); a SAM3 checkpoint (lazy-loaded only when segmenting); and a Qwen3-VL
+  CLIP for the editor's agent (lazy-loaded only when asked).
+- **Layout Apply** — the one-wire node into KSampler: encodes the compiled prompt as `positive`,
+  routes each box's prompt, references, mixins and LoRAs through `Regions Apply` (`model`), builds
+  the `latent` (empty at canvas size, source image with per-box denoise mask, or blurred
+  `layout_start`), and outputs `regions` and the compiled `prompt` text.
+- **Layout Overlay** — draws the boxes and painted shapes over a rendered image to verify placement,
+  and sends the render back to the Layout editor as its trace image.
+- **Layout Extras** — breaks the layout out for manual wiring: `prompt`, core's `elements` and
+  `bboxes`, `width`/`height`, `overlay`/`alpha`, `regions`, and the `mixin_sheet`.
 
-## Fresco — paint ideas into places
+## Fresco _(deprecated — moved into Layout)_
+
+Fresco's painted shapes, SAM3 wand, drag-drop references, per-box LoRAs, background region, editing
+and one-wire apply are now built into **Layout** (Regions mode) and **Layout Apply**. The Fresco
+nodes stay registered (`is_deprecated=True`) so existing workflows keep loading and running, and
+Fresco shows a one-click **Copy for Layout** button to move a scene into a Layout node.
 
 _Experimental, Krea 2._ Compose a scene as layers on a canvas instead of wiring regions together.
 Drag on the canvas to draw a layer, then give it what belongs there:
@@ -443,6 +479,36 @@ clamped or wrapped index is visible rather than guessed at.
 - Wipe Compare Video
 
 ![Create Fade Compare Video](../.github/assets/create_compare_video.png)
+
+## Saved Text
+
+- **Saved Text** — outputs a piece of text from your own library: a system prompt, a style
+  line, a negative prompt. Pick one on the node; press the preview or the pencil to open the
+  editor, where texts are written, renamed, filed under a category, duplicated and deleted. The
+  library is shared by every workflow (it lives in ComfyUI's user folder), and an edit reaches
+  every node holding that text. The node also keeps its own copy, so a workflow opened on another
+  machine still outputs the same text, and offers to save it into the library there.
+
+## Float and Int
+
+- **Float**, **Int** — a number on a node, with a slider under it. The number itself is
+  ComfyUI's own widget, so it can be promoted into a subgraph, linked and scripted like any
+  other. The node's settings button sets the **minimum**, **maximum** and **step** the slider
+  and the number keep to, with a few common ranges one click away. The range is saved with the
+  workflow; changing it re-runs nothing, and a value left outside a new range is brought inside
+  it.
+
+## Choice
+
+- **Choice** — a dropdown whose options you write on the node, like core's Custom Combo. The
+  dropdown is ComfyUI's own combo widget, so it can be promoted into a subgraph, linked and
+  scripted like any other. "Edit options" opens the list it offers: type options (Enter starts
+  the next one), drag them into order, and pick one with its dot. Its outputs are switched from
+  the node's settings button: `text` (the chosen option, on to begin with), `index`, `count` and
+  `options` (the whole list, one per line). Any of them can be off, `text` included, as long as
+  one is left. With `index` on, the same menu sets how it is given: counted from 0 or from 1, as
+  a number or as text. Rewording or reordering options re-runs nothing unless `index`, `count`
+  or `options` is on.
 
 ## String Template Parser
 

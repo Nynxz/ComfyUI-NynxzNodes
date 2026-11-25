@@ -3,6 +3,7 @@
     <LayoutSummary
       v-if="!panel && poppedOut"
       :boxes="summaryBoxes"
+      :scene="layout.scene.value"
       :aspect="layout.scene.value.width / layout.scene.value.height"
       :line="summaryLine"
       @focus="popOut(true)"
@@ -21,12 +22,12 @@
 <script lang="ts">
 import { nodeId as nodeType, type NodeDef, type WidgetOptions } from "@/framework";
 
-export const widgetOptions: WidgetOptions = { minHeight: 480, fill: true, default: {} };
+export const widgetOptions: WidgetOptions = { minHeight: 500, fill: true, default: {} };
 
 export const nodeDef: Omit<NodeDef, "widgets"> = {
   is: nodeType("Layout"),
-  minSize: [900, 560],
-  slotLinks: [{ output: "layout", spawn: nodeType("Layout.Extras") }],
+  minSize: [960, 620],
+  slotLinks: [{ output: "layout", spawn: nodeType("Layout.Apply") }],
 };
 </script>
 

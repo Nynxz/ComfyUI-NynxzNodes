@@ -2,6 +2,14 @@
   <div class="lsum">
     <div class="lsum-stage">
       <ZenBoxCanvas :boxes="boxes" :selected="[]" :aspect="aspect" :draw="false">
+        <template v-if="scene" #box="{ box, maskStyle }">
+          <LayoutBoxFace
+            v-if="byId.get(box.id)"
+            :scene="scene"
+            :box="byId.get(box.id)!"
+            :mask-style="maskStyle"
+          />
+        </template>
         <template #empty>
           <span>No boxes yet</span>
         </template>
@@ -15,15 +23,23 @@
 </template>
 
 <script setup lang="ts">
-/** What a layout node shows while its editor is open in a panel: the boxes, read-only. */
+/** What a layout node shows while its editor is open in a panel: the boxes, live and read-only. */
 import { ZenBoxCanvas, ZenButton, type ZenBox } from "@nynxz/zenkit-ui";
 import { computed } from "vue";
 
+import LayoutBoxFace from "@/components/layout/LayoutBoxFace.vue";
 import type { LayoutBox } from "@/layout/mode";
+import type { PromptScene } from "@/layout/promptScene";
 
-const props = defineProps<{ boxes: LayoutBox[]; aspect: number; line: string }>();
+const props = defineProps<{
+  boxes: LayoutBox[];
+  aspect: number;
+  line: string;
+  scene?: PromptScene;
+}>();
 const emit = defineEmits<{ focus: [] }>();
 
+const byId = computed(() => new Map((props.scene?.boxes ?? []).map((b) => [b.id, b])));
 const boxes = computed<ZenBox[]>(() =>
   props.boxes.map((b) => ({ ...b, label: b.name, locked: true })),
 );

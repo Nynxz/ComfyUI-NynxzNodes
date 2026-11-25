@@ -159,7 +159,7 @@ class NynxzLayoutExtras(NynxzNode):
         width, height = parsed["width"], parsed["height"]
         size = (width, height) if image is None else (image.shape[2], image.shape[1])
         drawn = _overlay.render(
-            {**parsed, "boxes": [{**b, "color": c} for b, c in _colors(layout, parsed)]},
+            parsed,
             size,
             line_width,
             fill_alpha,
@@ -181,11 +181,3 @@ class NynxzLayoutExtras(NynxzNode):
             _regions.regions(parsed, clip, reference_size, reference_prompt, reference_blend),
             _to_tensor(_sheet.render(parsed, _open_ref).convert("RGBA"))[0],
         )
-
-
-def _colors(raw, parsed: dict):
-    """Each parsed box with the colour the editor shows it in (parse keeps only what prompts
-    read)."""
-    stored = raw.get("boxes", []) if isinstance(raw, dict) else []
-    by_id = {b.get("id"): b.get("color", "") for b in stored if isinstance(b, dict)}
-    return [(box, by_id.get(box["id"], "")) for box in parsed["boxes"]]

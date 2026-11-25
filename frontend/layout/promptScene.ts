@@ -1,22 +1,22 @@
-// The Layout node's value: boxes for a model that reads a layout from its prompt — Ideogram 4,
-// FLUX 3 Image Klein, MOSS-Image. The three share every field, so switching mode keeps it all;
-// nodes/layout/_prompt.py reads the same shape and writes each model's prompt (it's the one
-// place that does, so what you copy is what the node outputs).
+// The unified Layout node's value: boxes on a canvas, for plain regional prompting/LoRAs/refs
+// ("regions") or a model's native layout prompt (Ideogram 4, FLUX 3 Image Klein, MOSS-Image).
+// Every mode shares every field — including painted shapes, SAM3 capture, mixins, per-box
+// references/LoRAs, denoise and background — so switching mode loses nothing.
 //
-// Reading back goes the other way: a model's own prompt — an Ideogram caption, a MOSS layout,
-// Klein's caption and table, or core's prompt elements — becomes a layout.
+// `nodes/layout/_prompt.py` reads the same shape (including `cast`-era layouts and Fresco scenes).
 
 import type { BoxRect } from "@nynxz/zenkit-ui";
 
-import type { FrescoLora, FrescoRef } from "@/lib/frescoScene";
-import { readLoras, readRefs } from "@/lib/frescoScene";
+import type { Blend, FrescoLora, FrescoPoint, FrescoRef, Overlap } from "@/lib/frescoScene";
+import { BACKGROUND_DENOISE, BLENDS, readLoras, readRefs } from "@/lib/frescoScene";
 import { clamp01, nextColor as nextColorOf, num, uid } from "@/lib/sceneUtil";
 
 import { digJson } from "./jsonIo";
 
-export type PromptModeId = "ideogram" | "klein" | "moss";
+export type PromptModeId = "regions" | "ideogram" | "klein" | "moss";
 export type BoxKind = "object" | "character" | "text";
 export type MossCanvas = "" | "single" | "multi_panel" | "collage";
+export type ShapeFor = "layer" | "refs";
 
 export interface PromptBox extends BoxRect {
   id: string;
@@ -31,6 +31,32 @@ export interface PromptBox extends BoxRect {
   tags: string[];
   /** Ids of the mixins in this box. */
   mixins: string[];
+  /** Direct per-box reference images (combined with any mixin references). */
+  refs: FrescoRef[];
+  /** Direct per-box LoRAs (combined with any mixin LoRAs). */
+  loras: FrescoLora[];
+  /** How much of a source image this box may rewrite (0..1, for edits). */
+  denoise: number;
+  /** How strongly this box follows its own prompt/refs against the rest of the picture. */
+  influence: number;
+  /** How multiple references on this box combine. */
+  blend: Blend;
+  /** Softness between references (0..1). */
+  softness: number;
+  /** Optional box-local painted/segmented mask (PNG data URL). */
+  mask: string | null;
+  /** What the painted shape limits: the whole box, or only its references. */
+  shapeFor: ShapeFor;
+  /** Canvas pixels to grow/shrink the shape within the box. */
+  grow: number;
+  /** Edge feathering in canvas pixels. */
+  feather: number;
+  /** SAM3 signed capture text ("jacket, -hands"). */
+  capture: string;
+  /** SAM3 click points in canvas fractions. */
+  points: FrescoPoint[];
+  /** Signature of the segmentation that produced `mask`. */
+  maskSource: string;
 }
 
 /** Something several boxes share — a character, an object, a style: reference images, LoRAs and
@@ -47,6 +73,23 @@ export interface Mixin {
   trigger: string;
   refs: FrescoRef[];
   loras: FrescoLora[];
+}
+
+/** Background region (wherever no box sits), for Regions mode and source-image edits. */
+export interface LayoutBackdrop {
+  on: boolean;
+  prompt: string;
+  refs: FrescoRef[];
+  loras: FrescoLora[];
+  denoise: number;
+  influence: number;
+  blend: Blend;
+  softness: number;
+}
+
+export interface LayoutRegionSettings {
+  overlap: Overlap;
+  visual_size: number;
 }
 
 export interface IdeogramStyle {
@@ -71,6 +114,8 @@ export interface PromptScene {
   canvas: MossCanvas;
   palette: string[];
   mixins: Mixin[];
+  backdrop: LayoutBackdrop;
+  settings: LayoutRegionSettings;
   /** Bottom to top: background first, foreground last — the order the prompt lists them. */
   boxes: PromptBox[];
 }
@@ -88,7 +133,7 @@ export const BOX_COLORS = [
   "#06B6D4",
 ];
 
-const MODES: PromptModeId[] = ["ideogram", "klein", "moss"];
+const MODES: PromptModeId[] = ["regions", "ideogram", "klein", "moss"];
 const KINDS: BoxKind[] = ["object", "character", "text"];
 const CANVASES: MossCanvas[] = ["", "single", "multi_panel", "collage"];
 const SNAP = 16;
@@ -103,6 +148,17 @@ const strings = (v: unknown) =>
   Array.isArray(v) ? v.filter((s): s is string => typeof s === "string" && !!s.trim()) : [];
 const side = (v: unknown) =>
   Math.max(SNAP, Math.min(16384, Math.round(num(v, 1024) / SNAP) * SNAP));
+const readBlend = (v: unknown): Blend => (BLENDS.some((b) => b.value === v) ? (v as Blend) : "mix");
+const readPoints = (v: unknown): FrescoPoint[] =>
+  Array.isArray(v)
+    ? v
+        .filter((p): p is Record<string, unknown> => !!p && typeof p === "object")
+        .map((p) => ({
+          x: clamp01(num(p.x, 0)),
+          y: clamp01(num(p.y, 0)),
+          include: p.include !== false,
+        }))
+    : [];
 
 export function emptyStyle(): IdeogramStyle {
   return {
@@ -117,10 +173,39 @@ export function emptyStyle(): IdeogramStyle {
   };
 }
 
-export function readBox(raw: unknown, index = 0): PromptBox {
+export function emptyBackdrop(on = false): LayoutBackdrop {
+  return {
+    on,
+    prompt: "",
+    refs: [],
+    loras: [],
+    denoise: BACKGROUND_DENOISE,
+    influence: 1,
+    blend: "mix",
+    softness: 0.5,
+  };
+}
+
+export function readBackdrop(raw: unknown, defaultOn = false): LayoutBackdrop {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return emptyBackdrop(defaultOn);
+  const r = raw as Record<string, unknown>;
+  return {
+    on: r.on !== false,
+    prompt: str(r.prompt),
+    refs: readRefs(r.refs),
+    loras: readLoras(r.loras),
+    denoise: clamp01(num(r.denoise, BACKGROUND_DENOISE)),
+    influence: Math.min(4, Math.max(0, num(r.influence, 1))),
+    blend: readBlend(r.blend),
+    softness: clamp01(num(r.softness, 0.5)),
+  };
+}
+
+export function readBox(raw: unknown, index = 0, fromFresco = false): PromptBox {
   const b = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
   const x = clamp01(num(b.x, 0.3));
   const y = clamp01(num(b.y, 0.3));
+  const rawMixins = Array.isArray(b.mixins) ? b.mixins : b.cast;
   return {
     id: str(b.id) || boxId(),
     name: str(b.name) || `Box ${index + 1}`,
@@ -129,14 +214,27 @@ export function readBox(raw: unknown, index = 0): PromptBox {
     y,
     w: Math.min(1 - x, Math.max(0, num(b.w, 0.4))),
     h: Math.min(1 - y, Math.max(0, num(b.h, 0.4))),
-    hidden: !!b.hidden,
+    hidden: fromFresco ? b.on === false : !!b.hidden,
     locked: !!b.locked,
     kind: KINDS.includes(b.kind as BoxKind) ? (b.kind as BoxKind) : "object",
-    desc: str(b.desc),
+    desc: fromFresco ? str(b.prompt) || str(b.desc) : str(b.desc),
     text: str(b.text),
     palette: strings(b.palette),
     tags: strings(b.tags),
-    mixins: strings(b.mixins),
+    mixins: strings(rawMixins),
+    refs: readRefs(b.refs),
+    loras: readLoras(b.loras),
+    denoise: clamp01(num(b.denoise, 1)),
+    influence: Math.min(4, Math.max(0, num(b.influence, 1))),
+    blend: readBlend(b.blend),
+    softness: clamp01(num(b.softness, 0.5)),
+    mask: typeof b.mask === "string" && b.mask.startsWith("data:image/") ? b.mask : null,
+    shapeFor: b.shapeFor === "refs" || b.shape_for === "refs" ? "refs" : "layer",
+    grow: Math.round(num(b.grow, 0)),
+    feather: Math.max(0, Math.round(num(b.feather, 0))),
+    capture: str(b.capture),
+    points: readPoints(b.points),
+    maskSource: str(b.maskSource ?? b.mask_source),
   };
 }
 
@@ -153,16 +251,46 @@ export function readMixin(raw: unknown, index = 0): Mixin {
   };
 }
 
+export function isFrescoRaw(v: unknown): boolean {
+  return !!v && typeof v === "object" && !Array.isArray(v) && "layers" in v && !("boxes" in v);
+}
+
 export function readPromptScene(raw: unknown): PromptScene {
-  const s = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
+  let v = raw;
+  if (typeof v === "string") {
+    try {
+      v = JSON.parse(v || "{}");
+    } catch {
+      v = {};
+    }
+  }
+  const s = (v && typeof v === "object" && !Array.isArray(v) ? v : {}) as Record<string, unknown>;
+  const fresco = isFrescoRaw(s);
   const style = (s.style && typeof s.style === "object" ? s.style : {}) as Record<string, unknown>;
+  const settings = (s.settings && typeof s.settings === "object" ? s.settings : {}) as Record<
+    string,
+    unknown
+  >;
   const base = emptyStyle();
+  const rawMixins = Array.isArray(s.mixins) ? s.mixins : s.cast;
+  const rawBoxes = fresco ? s.layers : s.boxes;
+  const rawBg = s.background;
+  const rawBackdrop =
+    s.backdrop && typeof s.backdrop === "object"
+      ? s.backdrop
+      : rawBg && typeof rawBg === "object"
+        ? rawBg
+        : undefined;
   return {
-    mode: MODES.includes(s.mode as PromptModeId) ? (s.mode as PromptModeId) : "ideogram",
+    mode: fresco
+      ? "regions"
+      : MODES.includes(s.mode as PromptModeId)
+        ? (s.mode as PromptModeId)
+        : "ideogram",
     width: side(s.width),
     height: side(s.height),
     prompt: str(s.prompt),
-    background: str(s.background),
+    background: typeof rawBg === "string" ? rawBg : "",
     style: {
       on: !!style.on,
       kind: style.kind === "art" ? "art" : "photo",
@@ -176,9 +304,65 @@ export function readPromptScene(raw: unknown): PromptScene {
     meta: strings(s.meta),
     canvas: CANVASES.includes(s.canvas as MossCanvas) ? (s.canvas as MossCanvas) : "",
     palette: strings(s.palette),
-    mixins: Array.isArray(s.mixins) ? s.mixins.map((m, i) => readMixin(m, i)) : [],
-    boxes: Array.isArray(s.boxes) ? s.boxes.map((b, i) => readBox(b, i)) : [],
+    mixins: Array.isArray(rawMixins) ? rawMixins.map((m, i) => readMixin(m, i)) : [],
+    backdrop: readBackdrop(rawBackdrop, fresco),
+    settings: {
+      overlap: settings.overlap === "share" ? "share" : "top",
+      visual_size: Math.min(1024, Math.max(128, Math.round(num(settings.visual_size, 384)))),
+    },
+    boxes: Array.isArray(rawBoxes) ? rawBoxes.map((b, i) => readBox(b, i, fresco)) : [],
   };
+}
+
+/** Swap the content of boxes `a` and `b`, keeping each box's position, size, shape and colour. */
+const SWAP_KEYS = [
+  "name",
+  "kind",
+  "desc",
+  "text",
+  "palette",
+  "tags",
+  "mixins",
+  "refs",
+  "loras",
+  "denoise",
+  "influence",
+  "blend",
+  "softness",
+] as const;
+
+export function swapBoxContent(boxes: PromptBox[], a: string, b: string): PromptBox[] {
+  const first = boxes.find((x) => x.id === a);
+  const second = boxes.find((x) => x.id === b);
+  if (!first || !second || a === b) return boxes;
+  const take = (from: PromptBox) =>
+    Object.fromEntries(SWAP_KEYS.map((k) => [k, from[k]])) as Pick<
+      PromptBox,
+      (typeof SWAP_KEYS)[number]
+    >;
+  return boxes.map((x) =>
+    x.id === a ? { ...x, ...take(second) } : x.id === b ? { ...x, ...take(first) } : x,
+  );
+}
+
+/** Active references on a box: its mixins' active refs followed by its own active refs. */
+export function boxActiveRefs(scene: PromptScene, box: PromptBox): FrescoRef[] {
+  const byId = new Map(scene.mixins.map((m) => [m.id, m]));
+  const fromMixins = box.mixins
+    .map((id) => byId.get(id))
+    .filter((m): m is Mixin => !!m)
+    .flatMap((m) => m.refs.filter((r) => r.on));
+  return [...fromMixins, ...box.refs.filter((r) => r.on)];
+}
+
+/** Active LoRAs on a box: its mixins' active LoRAs followed by its own active LoRAs. */
+export function boxActiveLoras(scene: PromptScene, box: PromptBox): FrescoLora[] {
+  const byId = new Map(scene.mixins.map((m) => [m.id, m]));
+  const fromMixins = box.mixins
+    .map((id) => byId.get(id))
+    .filter((m): m is Mixin => !!m)
+    .flatMap((m) => m.loras.filter((l) => l.on && l.name));
+  return [...fromMixins, ...box.loras.filter((l) => l.on && l.name)];
 }
 
 /** The boxes the prompt lists: not hidden, with some area. */

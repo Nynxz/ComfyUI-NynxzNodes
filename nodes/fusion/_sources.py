@@ -59,13 +59,24 @@ def load_image(path) -> torch.Tensor | None:
     return torch.from_numpy(pixels.astype(np.float32) / 255.0)[None,]
 
 
-def load_refs(refs: list[dict], owner: str) -> tuple[list, list, list]:
+def load_refs(
+    refs: list[dict],
+    owner: str,
+    cache: dict[tuple[str, str], torch.Tensor | None] | None = None,
+) -> tuple[list, list, list]:
     """The images, strengths and fits of the `{ref, type, strength, fit}` references that load;
-    each one that doesn't is logged against `owner` ("Layout: box Amber")."""
+    each one that doesn't is logged against `owner` ("Layout: box Amber"). Pass a `cache` dict to
+    reuse decoded tensors when multiple boxes share the same reference files."""
     images, strengths, fits = [], [], []
     for ref in refs:
-        path = resolve_path(ref["ref"], ref["type"])
-        image = load_image(path) if path else None
+        key = (ref["ref"], ref["type"])
+        if cache is not None and key in cache:
+            image = cache[key]
+        else:
+            path = resolve_path(ref["ref"], ref["type"])
+            image = load_image(path) if path else None
+            if cache is not None:
+                cache[key] = image
         if image is None:
             logging.warning("Nynxz %s skips a missing reference: %s", owner, ref["ref"])
             continue

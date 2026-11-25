@@ -25,8 +25,7 @@ DisplayName = "Nynxz's Custom Nodes"
 Icon = "https://avatars.githubusercontent.com/u/60878743?v=4"
 Tags = []
 Repository = "https://github.com/Nynxz/ComfyUI-NynxzNodes"
-# The built frontend must ship in the registry package. It is gitignored, so CI
-# builds and stages it — see .github/workflows/publish.yml.
+# The built frontend ships in the repo and in the registry package.
 includes = ["web"]
 
 [tool.setuptools.package-data]

@@ -1,11 +1,14 @@
-"""Layout — draw boxes on a canvas for a model that reads a layout from its prompt.
+"""Layout — draw boxes and painted shapes on a canvas for regional prompting, LoRAs, visual
+references, and native layout prompts.
 
-One editor, a mode per model (see _prompt.py for the formats): Ideogram 4's caption, FLUX 3 Image
-Klein's caption and element table, MOSS-Image's layout JSON. The node has one output, `layout`;
-Layout Extras breaks it out into the prompt, core's elements, the canvas size and an overlay.
+One unified editor with four modes (see _prompt.py): Regions (plain regional prompting/LoRAs/refs),
+MOSS-Image, Ideogram 4, and FLUX 3 Image Klein. The node has one output, `layout`, which wires into
+Layout Apply (model, positive, latent, regions in one step) or Layout Extras (manual wiring).
 """
 
 from __future__ import annotations
+
+import logging
 
 from comfy_api.latest import io
 
@@ -13,14 +16,17 @@ from .. import _categories
 from .._base import NynxzNode
 from .._sent_back import sent_back
 from .._zenkit.io_types import widget_type
+from ..fresco import _segment
+from . import _prompt
 
 #: Bound to frontend/widgets/LayoutScene.vue -> io_type NYNXZ_LAYOUT_SCENE.
 LayoutSceneType = widget_type("LayoutScene", dict, doc="A layout: mode, canvas, prompt, boxes.")
 
-#: Layout -> Layout Extras: the layout as the editor stores it (see _prompt.py).
+#: Layout -> Layout Apply / Layout Extras / Layout Overlay: the layout as stored, plus optional
+#: `_runtime` metadata (`node`, `image`, `vae`) carried from Layout Inputs.
 Layout = io.Custom("NYNXZ_LAYOUT")
 
-#: Layout Inputs -> Layout: `{"image"}`. The agent's CLIP stays on Layout Inputs, unloaded.
+#: Layout Inputs -> Layout: `{"image", "vae", "sam3"}`. The agent's CLIP stays unloaded.
 LayoutInputs = io.Custom("NYNXZ_LAYOUT_INPUTS")
 
 
@@ -33,9 +39,9 @@ class NynxzLayout(NynxzNode):
             node_id="Layout",
             display_name="Layout",
             description=(
-                "Lay a picture out as boxes on a canvas and get the layout prompt your model was "
-                "trained on: Ideogram 4, FLUX 3 Image Klein or MOSS-Image. Switch modes any time; "
-                "the boxes stay."
+                "Compose a picture as boxes or painted shapes on a canvas — with mixins, visual "
+                "references, regional LoRAs, SAM3 capture, and native layout prompts for "
+                "MOSS-Image, Ideogram 4 or FLUX 3 Image Klein. Switch modes any time; everything stays."
             ),
             is_experimental=True,
             inputs=[
@@ -43,22 +49,84 @@ class NynxzLayout(NynxzNode):
                 LayoutInputs.Input(
                     "inputs",
                     optional=True,
-                    tooltip="Layout Inputs: a photo to trace and remix, and the agent's model.",
+                    tooltip="Layout Inputs: a photo to trace/segment/edit, its VAE, SAM3, and the "
+                    "agent's model.",
                 ),
             ],
-            outputs=[Layout.Output(display_name="layout", tooltip="Into Layout Extras.")],
+            outputs=[
+                Layout.Output(
+                    display_name="layout",
+                    tooltip="Into Layout Apply, Layout Extras or Layout Overlay.",
+                )
+            ],
             hidden=[io.Hidden.unique_id],
-            # An output node, so a run sends Layout Inputs' photo back to the editor.
+            # An output node, so a run sends Layout Inputs' photo and SAM3 masks back to the editor.
             is_output_node=True,
         )
 
     @classmethod
     def execute(cls, layout=None, inputs=None) -> io.NodeOutput:
-        value = layout if isinstance(layout, dict) else {}
-        image = inputs.get("image") if isinstance(inputs, dict) else None
+        raw = dict(layout) if isinstance(layout, dict) else {}
+        node_id = str(cls.hidden.unique_id or "")
+        sources = inputs if isinstance(inputs, dict) else {}
+        image = sources.get("image")
+        vae = sources.get("vae")
+        sam3 = sources.get("sam3")
+
+        segmented = cls._segment(raw, image, sam3)
+        if segmented:
+            by_id = {m["id"]: m for m in segmented}
+            boxes = raw.get("boxes")
+            if isinstance(boxes, list):
+                raw["boxes"] = [
+                    {**b, "mask": by_id[b["id"]]["mask"], "maskSource": by_id[b["id"]]["source"]}
+                    if isinstance(b, dict) and b.get("id") in by_id
+                    else b
+                    for b in boxes
+                ]
+
+        out = {
+            **raw,
+            "_runtime": {
+                "node": node_id,
+                "image": image,
+                "vae": vae,
+            },
+        }
         if image is None:
-            return io.NodeOutput(value)
-        return io.NodeOutput(
-            value,
-            ui=sent_back("layout", str(cls.hidden.unique_id), image, cls, "nynxz.layout.source"),
-        )
+            return io.NodeOutput(out)
+        ui_out = sent_back("layout", node_id, image, cls, "nynxz.layout.source")
+        if segmented:
+            ui_out["layout_masks"] = segmented
+        return io.NodeOutput(out, ui=ui_out)
+
+    @staticmethod
+    def _segment(raw: dict, image, checkpoint: str | None) -> list[dict]:
+        """Segment any shown box whose `capture` or `points` changed; SAM3 loads lazily."""
+        if image is None:
+            return []
+        parsed = _prompt.parse(raw)
+        boxes = _prompt.shown(parsed)
+        stale = [(box, src) for box in boxes if (src := _segment.stale(box, image))]
+        if not stale:
+            return []
+        if checkpoint is None:
+            logging.warning(
+                "Nynxz Layout: some boxes capture something — pick the SAM3 checkpoint on "
+                "Layout Inputs."
+            )
+            return []
+        model, sam_clip = _segment.load(checkpoint)
+        changed = []
+        for box, source in stale:
+            mask = _segment.segment(model, sam_clip, image, box)
+            if mask is None:
+                continue
+            changed.append(
+                {
+                    "id": box["id"],
+                    "mask": _segment.box_local(mask, box),
+                    "source": source,
+                }
+            )
+        return changed

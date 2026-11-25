@@ -126,10 +126,10 @@ class NynxzFrescoInputs(FrescoNode):
             node_id="Fresco.Inputs",
             display_name="Fresco Inputs",
             description=(
-                "Everything Fresco works with, in one wire: the text encoder, and optionally a "
-                "photo to trace, segment and edit, its VAE, and the SAM3 checkpoint for "
-                "segmenting layers."
+                "Deprecated — use Layout Inputs instead. Kept registered so saved workflows keep "
+                "loading."
             ),
+            is_deprecated=True,
             is_experimental=True,
             inputs=[
                 io.Clip.Input("clip", tooltip="The text encoder — Krea 2's."),
@@ -174,9 +174,10 @@ class NynxzFresco(FrescoNode):
             node_id="Fresco",
             display_name="Fresco",
             description=(
-                "Compose a scene as layers on a canvas: draw a box (and paint a shape in it), then "
-                "give it a prompt, reference images and LoRAs. Wire it into Fresco Apply."
+                "Deprecated — Fresco has been unified into Layout (Regions mode). Kept registered "
+                "so saved workflows keep loading."
             ),
+            is_deprecated=True,
             is_experimental=True,
             inputs=[
                 FrescoSceneType.Input("scene", default={}),
@@ -326,10 +327,10 @@ class NynxzFrescoApply(FrescoNode):
             node_id="Fresco.Apply",
             display_name="Fresco Apply",
             description=(
-                "Puts a Fresco scene on the model: each layer's LoRAs and prompt act only where "
-                "the layer is. Gives the sampler its model, positive and latent. Wire a source "
-                "image and a VAE to edit an image instead of generating one. Krea 2 only."
+                "Deprecated — use Layout Apply instead. Kept registered so saved workflows keep "
+                "loading."
             ),
+            is_deprecated=True,
             is_experimental=True,
             inputs=[
                 io.Model.Input("model", tooltip="A Krea 2 model."),

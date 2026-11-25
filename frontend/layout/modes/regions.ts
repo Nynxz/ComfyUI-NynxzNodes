@@ -102,6 +102,8 @@ export const regionsMode: LayoutMode<FrescoScene> = {
       color: l.color,
       prompt: l.prompt,
       mask: l.mask,
+      hidden: !l.on,
+      locked: l.locked,
     })),
   }),
   fromCommon: (c) =>
@@ -109,6 +111,11 @@ export const regionsMode: LayoutMode<FrescoScene> = {
       width: c.width,
       height: c.height,
       prompt: c.prompt,
-      layers: c.boxes.map((b) => ({ ...b, id: uid() })),
+      layers: c.boxes.map((b) => ({
+        ...b,
+        id: uid(),
+        on: !b.hidden,
+        locked: !!b.locked,
+      })),
     }),
 };

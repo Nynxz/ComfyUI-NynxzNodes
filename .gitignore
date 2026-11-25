@@ -22,10 +22,6 @@ node.zip
 # Reference packs cloned locally for comparison — separate repos, not ours.
 reference/
 
-# Built frontend. Generated, so it stays out of the history — CI builds it and
-# force-adds it into the registry archive (see .github/workflows/publish.yml).
-web/
-
 favorites.json
 
 # Video-preview poster frames (nodes/lora/meta.py).

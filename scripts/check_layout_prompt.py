@@ -269,6 +269,81 @@ class Mixins(unittest.TestCase):
         scene = prompt.parse(layout("moss", [box()]))
         self.assertEqual((scene["mixins"], scene["boxes"][0]["mixins"]), ([], []))
 
+    def test_cast_era_layouts_migrate_to_mixins(self):
+        raw = {
+            **layout("moss", [box(cast=["amber"], desc="she waves")], prompt="Anime style"),
+            "cast": [AMBER],
+        }
+        scene = prompt.parse(raw)
+        self.assertEqual([m["id"] for m in scene["mixins"]], ["amber"])
+        self.assertEqual(scene["boxes"][0]["mixins"], ["amber"])
+        self.assertEqual(
+            prompt.region_prompt(scene, scene["boxes"][0]), "Anime style. amb3r. she waves."
+        )
+
+    def test_fresco_scenes_parse_into_regions_mode(self):
+        fresco = {
+            "width": 1344,
+            "height": 768,
+            "prompt": "Rainy night",
+            "background": {"on": True, "prompt": "wet asphalt", "denoise": 0.1},
+            "settings": {"overlap": "share", "visual_size": 512},
+            "layers": [
+                {
+                    "id": "l1",
+                    "name": "Amber",
+                    "color": "#4f8cff",
+                    "on": True,
+                    "prompt": "yellow coat",
+                    "x": 0.1,
+                    "y": 0.2,
+                    "w": 0.3,
+                    "h": 0.6,
+                    "refs": [
+                        {"ref": "amber.png", "type": "input", "strength": 1.0, "fit": "cover"}
+                    ],
+                    "loras": [{"name": "amber.safetensors", "strength": 0.8}],
+                    "denoise": 0.75,
+                    "influence": 1.4,
+                    "grow": 4,
+                    "feather": 16,
+                    "locked": True,
+                },
+                {
+                    "id": "l2",
+                    "name": "Off",
+                    "on": False,
+                    "prompt": "hidden",
+                    "x": 0,
+                    "y": 0,
+                    "w": 0.2,
+                    "h": 0.2,
+                },
+            ],
+        }
+        scene = prompt.parse(json.dumps(fresco))
+        self.assertEqual(scene["mode"], "regions")
+        self.assertEqual(prompt.compile_prompt(scene), "Rainy night")
+        self.assertEqual(scene["settings"], {"overlap": "share", "visual_size": 512})
+        self.assertTrue(scene["backdrop"]["on"])
+        self.assertEqual(scene["backdrop"]["prompt"], "wet asphalt")
+        self.assertEqual(scene["boxes"][0]["desc"], "yellow coat")
+        self.assertEqual(scene["boxes"][0]["color"], "#4F8CFF")
+        self.assertTrue(scene["boxes"][0]["locked"])
+        self.assertFalse(scene["boxes"][0]["hidden"])
+        self.assertTrue(scene["boxes"][1]["hidden"])
+        self.assertEqual(len(scene["boxes"][0]["refs"]), 1)
+        self.assertEqual(len(scene["boxes"][0]["loras"]), 1)
+
+    def test_regions_mode_allows_boxes_with_only_loras_or_refs(self):
+        raw = layout(
+            "regions",
+            [box(desc="", loras=[{"name": "style.safetensors", "strength": 0.7}])],
+            prompt="A street",
+        )
+        self.assertEqual(prompt.compile_prompt(raw), "A street")
+        self.assertEqual(prompt.warnings(raw), [])
+
 
 try:
     import torch
@@ -410,6 +485,43 @@ class MixinRegions(unittest.TestCase):
         (region,) = self.regions([box(mixins=["amber"])], [gone], clip="vl")
         self.assertNotIn("conditioning", region)
         self.assertEqual(self.encoded, [])
+
+    def test_per_box_loras_and_refs_combine_with_mixins(self):
+        b = box(
+            mixins=["amber"],
+            desc="waves",
+            refs=[{"ref": "extra.png", "type": "input", "strength": 0.5, "fit": "contain"}],
+            loras=[{"name": "coat.safetensors", "strength": 0.6}],
+        )
+        (region,) = self.regions([b], [AMBER], clip="vl")
+        self.assertEqual(
+            region["loras"],
+            [
+                {"lora_name": "amber.safetensors", "strength": 0.8},
+                {"lora_name": "coat.safetensors", "strength": 0.6},
+            ],
+        )
+        self.assertEqual(self.encoded[0][1], 2)
+        self.assertEqual(self.encoded[0][2], [1.0, 0.5])
+
+    def test_shared_mixin_refs_cache_image_load_and_identical_conditionings(self):
+        loads = []
+        sources = sys.modules["nynxz_pack.fusion._sources"]
+        orig = sources.load_image
+
+        def counting_load(path):
+            loads.append(path)
+            return orig(path)
+
+        sources.load_image = counting_load
+        boxes = [
+            box(id="a", x=0.0, y=0.0, w=0.5, h=1.0, mixins=["amber"], desc="stands"),
+            box(id="b", x=0.5, y=0.0, w=0.5, h=1.0, mixins=["amber"], desc="stands"),
+        ]
+        r1, r2 = self.regions(boxes, [AMBER], clip="vl")
+        self.assertEqual(loads, ["amber.png [input]"])
+        self.assertEqual(len(self.encoded), 1)
+        self.assertIs(r1["conditioning"], r2["conditioning"])
 
 
 try:

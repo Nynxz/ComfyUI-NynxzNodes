@@ -76,3 +76,28 @@ export async function compileLayout(layout: unknown): Promise<CompiledPrompt> {
   const body = (await post("layouts/compile", { layout })) as Partial<CompiledPrompt>;
   return { prompt: body.prompt ?? "", warnings: body.warnings ?? [] };
 }
+
+// --- Saved Mixin library ------------------------------------------------------------------------
+
+export interface SavedMixin {
+  name: string;
+  saved: number;
+  mixin: Record<string, unknown>;
+}
+
+export async function listSavedMixins(): Promise<SavedMixin[]> {
+  try {
+    const body = (await call("layouts/mixins")) as { mixins?: SavedMixin[] };
+    return Array.isArray(body.mixins) ? body.mixins : [];
+  } catch {
+    return [];
+  }
+}
+
+export async function saveMixinPreset(name: string, mixin: unknown): Promise<string> {
+  return ((await post("layouts/mixins", { name, mixin })) as { name: string }).name;
+}
+
+export async function deleteMixinPreset(name: string): Promise<void> {
+  await post("layouts/mixins/delete", { name });
+}

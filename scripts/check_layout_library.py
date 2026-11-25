@@ -90,6 +90,18 @@ class Browsing(unittest.TestCase):
         self.assertIsNone(library.rename_layout(self.root, "moss", "A", "../x"))
         self.assertEqual(library.load_layout(self.root, "moss", "B")["layout"], {"b": 1})
 
+    def test_saved_mixins_stay_separate_from_layouts_and_roundtrip(self):
+        amber = {"id": "c1", "name": "Amber", "trigger": "amb3r", "refs": [], "loras": []}
+        self.assertEqual(library.save_mixin(self.root, "  Amber ", amber), "Amber")
+        self.assertIsNone(library.save_mixin(self.root, "../bad", amber))
+        self.assertEqual(library.list_all(self.root), [])
+        listed = library.list_mixins(self.root)
+        self.assertEqual(len(listed), 1)
+        self.assertEqual(listed[0]["name"], "Amber")
+        self.assertEqual(listed[0]["mixin"], amber)
+        self.assertTrue(library.delete_mixin(self.root, "Amber"))
+        self.assertEqual(library.list_mixins(self.root), [])
+
 
 if __name__ == "__main__":
     unittest.main()

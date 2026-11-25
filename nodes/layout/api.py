@@ -118,3 +118,26 @@ if _routes is not None and folder_paths is not None:
         if read is None:
             return web.json_response({"error": "no boxes in the answer"}, status=422)
         return web.json_response(read)
+
+    @_routes.get("/nynxz/layouts/mixins")
+    async def nynxz_layouts_mixins_list(request):
+        return web.json_response({"mixins": library.list_mixins(_root())})
+
+    @_routes.post("/nynxz/layouts/mixins")
+    async def nynxz_layouts_mixins_save(request):
+        if (denied := request_allowed(request)) is not None:
+            return denied
+        body = await _body(request)
+        saved = library.save_mixin(_root(), body.get("name", ""), body.get("mixin"))
+        if saved is None:
+            return web.json_response({"error": "can't save mixin under that name"}, status=400)
+        return web.json_response({"name": saved})
+
+    @_routes.post("/nynxz/layouts/mixins/delete")
+    async def nynxz_layouts_mixins_delete(request):
+        if (denied := request_allowed(request)) is not None:
+            return denied
+        body = await _body(request)
+        if not library.delete_mixin(_root(), body.get("name", "")):
+            return web.json_response({"error": "not found"}, status=404)
+        return web.json_response({"ok": True})

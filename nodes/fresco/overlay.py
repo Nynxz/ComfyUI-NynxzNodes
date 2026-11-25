@@ -92,9 +92,10 @@ class NynxzFrescoOverlay(FrescoNode):
             node_id="Fresco.Overlay",
             display_name="Fresco Overlay",
             description=(
-                "Draws the Fresco layout over a render, to check it followed the boxes, and sends "
-                "the render back to the Fresco editor as its trace image."
+                "Deprecated — use Layout Overlay instead. Kept registered so saved workflows keep "
+                "loading."
             ),
+            is_deprecated=True,
             is_experimental=True,
             inputs=[
                 io.Image.Input("image", tooltip="The render — VAE Decode's output."),

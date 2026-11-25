@@ -151,3 +151,67 @@ def rename_layout(root: str, mode: str, name: str, new_name: str) -> str | None:
     if os.path.normcase(new) != os.path.normcase(old):
         os.remove(old)
     return stem
+
+
+# --- Saved Mixins (reusable character/prop/style presets across layouts) -------------------------
+
+MIXINS_FOLDER = "_mixins"
+
+
+def _mixin_file(root: str, name: str) -> str | None:
+    stem = clean_name(name)
+    if stem is None:
+        return None
+    return os.path.join(root, FOLDER, MIXINS_FOLDER, f"{stem}.json")
+
+
+def list_mixins(root: str) -> list[dict]:
+    """Every saved mixin preset, newest first."""
+    folder = os.path.join(root, FOLDER, MIXINS_FOLDER)
+    if not os.path.isdir(folder):
+        return []
+    found = []
+    for entry in os.scandir(folder):
+        if not entry.is_file() or not entry.name.endswith(".json"):
+            continue
+        try:
+            with open(entry.path, encoding="utf-8") as f:
+                data = json.load(f)
+        except (OSError, ValueError):
+            continue
+        if not isinstance(data, dict) or not isinstance(data.get("mixin"), dict):
+            continue
+        found.append(
+            {
+                "name": entry.name[: -len(".json")],
+                "saved": data.get("saved") or entry.stat().st_mtime,
+                "mixin": data["mixin"],
+            }
+        )
+    found.sort(key=lambda item: item["saved"], reverse=True)
+    return found
+
+
+def save_mixin(root: str, name: str, mixin: object) -> str | None:
+    """Save a mixin preset and return its clean name, or None on invalid name/payload."""
+    path = _mixin_file(root, name)
+    if path is None or not isinstance(mixin, dict):
+        return None
+    stem = os.path.basename(path)[: -len(".json")]
+    body = json.dumps({"name": stem, "mixin": mixin, "saved": time.time()}, ensure_ascii=False)
+    if len(body.encode("utf-8")) > MAX_BYTES:
+        return None
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    temp = f"{path}.tmp"
+    with open(temp, "w", encoding="utf-8") as f:
+        f.write(body)
+    os.replace(temp, path)
+    return stem
+
+
+def delete_mixin(root: str, name: str) -> bool:
+    path = _mixin_file(root, name)
+    if path is None or not os.path.isfile(path):
+        return False
+    os.remove(path)
+    return True

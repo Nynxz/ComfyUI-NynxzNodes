@@ -76,16 +76,14 @@ Search for **Nynxz** in ComfyUI Manager, or:
 comfy node install comfyui-nynxz-nodes
 ```
 
-From source:
+From source (prebuilt frontend is bundled, no Node/build step required):
 
 ```bash
 cd ComfyUI/custom_nodes
 git clone https://github.com/Nynxz/ComfyUI-NynxzNodes
-cd ComfyUI-NynxzNodes
-pnpm install && pnpm build
 ```
 
-Then restart ComfyUI. [ZenKit](https://github.com/Nynxz/ZenKit) is optional and adds pop-out
+Then restart ComfyUI. (If developing the frontend, run `pnpm install && pnpm build` to rebuild `web/main.js`.) [ZenKit](https://github.com/Nynxz/ZenKit) is optional and adds pop-out
 panels. The H3 nodes moved to [ComfyUI-NynxzH3Studio](https://github.com/Nynxz/ComfyUI-NynxzH3Studio);
 workflows that use them open unchanged once it's installed.
 
