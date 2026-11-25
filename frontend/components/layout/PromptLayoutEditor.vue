@@ -635,8 +635,8 @@
             />
             <template v-if="sceneActiveRefCount >= 1">
               <div class="pl-scope-row">
-                <span class="pl-blend-lbl">
-                  <span>apply</span>
+                <span class="pl-scope-lbl">
+                  <span>Apply</span>
                   <InfoHover label="Where Base references apply">
                     <p class="pl-tip-title">Scene Base References (Fusion Encode)</p>
                     <p class="pl-tip-p">
@@ -660,8 +660,8 @@
                     </ul>
                   </InfoHover>
                 </span>
-                <ZenToggleGroup
-                  class="pl-seg"
+                <ZenSelect
+                  class="pl-scope-sel"
                   size="sm"
                   :model-value="scene.refsScope"
                   :options="SCENE_REFS_SCOPES"
@@ -2026,20 +2026,30 @@ async function copyOutput() {
 }
 .pl-blend-row {
   display: grid;
-  grid-template-columns: 52px minmax(0, 1fr) 82px;
+  grid-template-columns: 52px minmax(0, 1fr) auto;
   align-items: center;
   gap: 6px;
   color: var(--zen-muted, #9aa0aa);
   font-size: 11px;
 }
 .pl-scope-row {
-  display: grid;
-  grid-template-columns: 52px minmax(0, 1fr);
+  display: flex;
   align-items: center;
   gap: 6px;
   padding-top: 6px;
   color: var(--zen-muted, #9aa0aa);
   font-size: 11px;
+}
+.pl-scope-lbl {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  width: 48px;
+}
+.pl-scope-sel {
+  flex: 1;
+  min-width: 0;
 }
 .pl-blend-lbl {
   display: inline-flex;

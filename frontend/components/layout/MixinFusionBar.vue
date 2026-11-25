@@ -165,7 +165,6 @@ function onStyleMode(next: RefStyleMode) {
 }
 .mf-num {
   flex: none;
-  width: 62px;
 }
 .mf-tip-title {
   margin: 0 0 4px;

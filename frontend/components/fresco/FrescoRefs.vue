@@ -39,30 +39,34 @@
             draggable="false"
           />
         </div>
-        <div class="fr-info">
-          <span class="fr-name" :title="r.ref">{{ shortName(r.ref) }}</span>
-          <button type="button" class="fr-fit" :title="FIT_LABEL[r.fit]" @click="cycleFit(i)">
-            <i class="mdi" :class="FIT_ICON[r.fit]" />
-            <span>{{ FIT_SHORT[r.fit] }}</span>
-          </button>
+        <div class="fr-body">
+          <div class="fr-top">
+            <span class="fr-name" :title="r.ref">{{ shortName(r.ref) }}</span>
+            <ZenIconButton
+              size="sm"
+              icon="mdi mdi-auto-fix"
+              title="Cut out subject with SAM3"
+              @click="openCutout(i)"
+            />
+            <ZenIconButton size="sm" icon="mdi mdi-close" title="Remove" @click="remove(i)" />
+          </div>
+          <div class="fr-bot">
+            <button type="button" class="fr-fit" :title="FIT_LABEL[r.fit]" @click="cycleFit(i)">
+              <i class="mdi" :class="FIT_ICON[r.fit]" />
+              <span>{{ FIT_SHORT[r.fit] }}</span>
+            </button>
+            <ZenNumber
+              class="fr-str"
+              size="sm"
+              :model-value="r.strength"
+              :min="0"
+              :max="4"
+              :step="0.05"
+              title="Strength — this image's share when there are several"
+              @update:model-value="patch(i, { strength: Math.max(0, $event) })"
+            />
+          </div>
         </div>
-        <ZenNumber
-          class="fr-str"
-          size="sm"
-          :model-value="r.strength"
-          :min="0"
-          :max="4"
-          :step="0.05"
-          title="Strength — this image's share when there are several"
-          @update:model-value="patch(i, { strength: Math.max(0, $event) })"
-        />
-        <ZenIconButton
-          size="sm"
-          icon="mdi mdi-auto-fix"
-          title="Cut out subject with SAM3"
-          @click="openCutout(i)"
-        />
-        <ZenIconButton size="sm" icon="mdi mdi-close" title="Remove" @click="remove(i)" />
       </div>
     </div>
 
@@ -376,7 +380,7 @@ function addPicked(picked: string[]) {
   transition: none;
 }
 .fr-row.off .fr-thumb,
-.fr-row.off .fr-info {
+.fr-row.off .fr-body {
   opacity: 0.42;
 }
 .fr-gutter {
@@ -410,8 +414,8 @@ function addPicked(picked: string[]) {
 }
 .fr-thumb {
   flex: none;
-  width: 42px;
-  height: 42px;
+  width: 46px;
+  height: 46px;
   border-radius: min(var(--zen-radius, 7px), 5px);
   overflow: hidden;
   background-color: #18181d;
@@ -433,28 +437,42 @@ function addPicked(picked: string[]) {
   height: 100%;
   display: block;
 }
-.fr-info {
+.fr-body {
   flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 3px;
+  gap: 4px;
+}
+.fr-top {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
 }
 .fr-name {
-  max-width: 100%;
+  flex: 1;
+  min-width: 0;
   overflow: hidden;
   font-size: 11px;
-  line-height: 1.2;
+  line-height: 1.25;
   color: var(--zen-text, #e5e5ea);
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+.fr-bot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+}
 .fr-fit {
+  flex: none;
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  padding: 1px 6px;
+  padding: 2px 6px;
   border: 1px solid color-mix(in srgb, var(--zen-border, #34343c) 70%, transparent);
   border-radius: var(--zen-radius, 7px);
   background: transparent;
@@ -462,6 +480,7 @@ function addPicked(picked: string[]) {
   font: inherit;
   font-size: 10px;
   line-height: 1.3;
+  white-space: nowrap;
   cursor: pointer;
   transition:
     border-color 0.12s ease,
@@ -475,7 +494,6 @@ function addPicked(picked: string[]) {
   font-size: 11px;
 }
 .fr-str {
-  width: 58px;
   flex: none;
 }
 .fr-empty {
